@@ -1,0 +1,51 @@
+services:
+  app:
+    build: .
+    container_name: openbrigade_app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME:-openbrigade}
+      - DB_USER=${DB_USER:-openbrigade}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+    volumes:
+      - ./user-data:/var/www/html/user-data
+      - ./conf:/var/www/html/conf
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:10.11
+    container_name: openbrigade_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+      MARIADB_DATABASE: ${DB_NAME:-openbrigade}
+      MARIADB_USER: ${DB_USER:-openbrigade}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: openbrigade_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "${PMA_PORT:-8081}:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${DB_USER:-openbrigade}
+      PMA_PASSWORD: ${DB_PASSWORD:-secret}
+    depends_on:
+      - db
+
+volumes:
+  db_data:

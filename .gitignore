@@ -37,3 +37,6 @@
 ehthumbs.db
 Thumbs.db
 conf/sql.php
+
+# Local environment variables (copy from .env.example)
+.env

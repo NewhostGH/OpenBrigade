@@ -1,0 +1,38 @@
+{
+  "name": "OpenBrigade Dev Container",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/var/www/html",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "mblode.twig-language-2",
+        "ecodes.vscode-phpmd",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "intelephense.environment.phpVersion": "8.1.0",
+        "editor.formatOnSave": false,
+        "files.eol": "\n"
+      }
+    }
+  },
+
+  "forwardPorts": [8080, 8081, 3306],
+  "portsAttributes": {
+    "8080": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
+    "8081": { "label": "phpMyAdmin" },
+    "3306": { "label": "MySQL / MariaDB" }
+  },
+
+  "postCreateCommand": "echo 'Dev container ready. App → http://localhost:8080'",
+
+  "remoteUser": "www-data"
+}
