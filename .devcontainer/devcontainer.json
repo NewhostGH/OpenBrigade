@@ -1,0 +1,46 @@
+{
+  "name": "OpenBrigade Dev Container",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/var/www/html",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot-chat",
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "mblode.twig-language-2",
+        "ecodes.vscode-phpmd",
+        "streetsidesoftware.code-spell-checker",
+        "ms-azuretools.vscode-docker",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "intelephense.environment.phpVersion": "8.1.0",
+        "editor.formatOnSave": false,
+        "files.eol": "\n"
+      }
+    }
+  },
+
+  "forwardPorts": [8080, 8081, "db:3306"],
+  "portsAttributes": {
+    "8080": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
+    "8081": { "label": "phpMyAdmin", "onAutoForward": "notify" },
+    "db:3306": { "label": "MySQL / MariaDB" }
+  },
+
+  "postCreateCommand": "echo 'Dev container ready. App → http://localhost:8080  phpMyAdmin → http://localhost:8081'",
+
+  "remoteUser": "root"
+}
