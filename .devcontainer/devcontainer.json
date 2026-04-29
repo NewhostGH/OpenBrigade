@@ -5,12 +5,14 @@
   "workspaceFolder": "/var/www/html",
 
   "features": {
-    "ghcr.io/devcontainers/features/git:1": {}
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
 
   "customizations": {
     "vscode": {
       "extensions": [
+        "GitHub.copilot-chat",
         "bmewburn.vscode-intelephense-client",
         "xdebug.php-debug",
         "mblode.twig-language-2",
