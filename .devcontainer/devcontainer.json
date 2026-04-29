@@ -33,13 +33,14 @@
     }
   },
 
-  "forwardPorts": [80, "db:3306"],
+  "forwardPorts": [8080, 8081, "db:3306"],
   "portsAttributes": {
-    "80": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
+    "8080": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
+    "8081": { "label": "phpMyAdmin", "onAutoForward": "notify" },
     "db:3306": { "label": "MySQL / MariaDB" }
   },
 
-  "postCreateCommand": "echo 'Dev container ready. App → http://localhost:80'",
+  "postCreateCommand": "echo 'Dev container ready. App → http://localhost:8080  phpMyAdmin → http://localhost:8081'",
 
   "remoteUser": "root"
 }

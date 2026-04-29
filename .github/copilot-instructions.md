@@ -89,6 +89,19 @@ The application is licensed under the **GNU GPL v2.0 or later**.
 
 ---
 
+## How to Contribute
+
+The full contributing guide lives at [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md). Key points:
+
+- Fork the repository and create a branch (`fix/`, `feat/`, `docs/`, or `chore/` prefix).
+- Never commit directly to `main`.
+- Keep commits small and focused; use conventional commit messages (`fix:`, `feat:`, `docs:`, `chore:`).
+- Before opening a pull request, verify the app runs without PHP errors and that no credentials are committed.
+- Submit bugs and feature requests via [GitHub Issues](https://github.com/NewHostGH/OpenBrigade/issues) using the provided templates.
+- Report security vulnerabilities privately via the repository's security advisories page — **never** in a public issue.
+
+---
+
 ## Coding Guidelines
 
 - Match the existing procedural PHP style; do not introduce frameworks or autoloaders.
