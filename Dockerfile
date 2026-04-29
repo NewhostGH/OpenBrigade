@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     libldap2-dev \
     libonig-dev \
     unzip \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
