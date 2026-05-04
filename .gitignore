@@ -40,3 +40,20 @@ conf/sql.php
 
 # Local environment variables (copy from .env.example)
 .env
+
+# Laravel / Composer
+/vendor/
+/lib/vendor/
+/node_modules/
+/public/hot
+/public/storage
+/public/build
+/storage/*.key
+/storage/app/public/uploads/
+bootstrap/cache/*.php
+_ide_helper.php
+_ide_helper_models.php
+.phpactor.json
+.phpunit.result.cache
+phpunit.xml
+*.cache

@@ -1,0 +1,8 @@
+<?php
+
+return [
+    'preset' => 'laravel',
+    'rules' => [
+        \PhpCsFixer\Fixer\Import\NoUnusedImportsFixer::class,
+    ],
+];
