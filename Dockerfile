@@ -1,49 +1,93 @@
 # ──────────────────────────────────────────────
 # OpenBrigade – Dockerfile
-# PHP 8.1 + Apache
+# Multi-stage build: Composer deps → PHP 8.4 FPM Alpine + Nginx
 # ──────────────────────────────────────────────
-FROM php:8.1-apache
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libldap2-dev \
-    libonig-dev \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
+# ── Stage 1: Composer dependency install ──────
+FROM composer:2 AS vendor
 
-# Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu \
-    && docker-php-ext-install \
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --no-scripts \
+    --optimize-autoloader \
+    --ignore-platform-reqs
+
+# ── Stage 2: Runtime image ─────────────────────
+FROM php:8.4-fpm-alpine
+
+# Install runtime system dependencies
+RUN apk add --no-cache \
+    nginx \
+    libzip \
+    libpng \
+    libjpeg-turbo \
+    freetype \
+    openldap \
+    oniguruma \
+    icu-libs \
+    && apk add --no-cache --virtual .build-deps \
+        libzip-dev \
+        libpng-dev \
+        libjpeg-turbo-dev \
+        freetype-dev \
+        openldap-dev \
+        oniguruma-dev \
+        icu-dev \
+        $PHPIZE_DEPS \
+    && docker-php-ext-configure gd \
+        --with-freetype \
+        --with-jpeg \
+    && docker-php-ext-install -j"$(nproc)" \
         mysqli \
         pdo \
         pdo_mysql \
         mbstring \
         gd \
         zip \
-        ldap
+        ldap \
+        intl \
+        opcache \
+    && apk del .build-deps \
+    && rm -rf /var/cache/apk/*
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-
-# Apply custom php.ini settings
+# Apply PHP settings
 COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
 
-# Set working directory
+# Nginx configuration
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+
+# Application root
 WORKDIR /var/www/html
 
-# Copy application source
+# Copy vendor from build stage
+COPY --from=vendor /app/vendor ./vendor
+
+# Copy application source (vendor/ is already present from above)
 COPY . .
 
-# Ensure user-data and conf directories are writable
-RUN chown -R www-data:www-data /var/www/html/user-data /var/www/html/conf \
-    && chmod -R 775 /var/www/html/user-data /var/www/html/conf
+# Generate optimised autoloader inside the image
+RUN composer dump-autoload --optimize --no-dev 2>/dev/null || true
 
-# Apache: allow .htaccess overrides in document root
-RUN sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/apache2.conf
+# Storage and bootstrap/cache must be writable by www-data (Alpine: uid 82)
+RUN chown -R www-data:www-data \
+        storage \
+        bootstrap/cache \
+    && chmod -R 775 \
+        storage \
+        bootstrap/cache
 
+# Expose only the public/ directory via Nginx
 EXPOSE 80
+
+# Start Nginx + PHP-FPM
+COPY docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["/usr/local/bin/start.sh"]
+
