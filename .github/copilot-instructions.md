@@ -4,6 +4,8 @@
 
 **OpenBrigade** is a free, open-source PHP web application for managing volunteer emergency-response organizations (fire brigades, rescue teams, civil-protection associations, etc.). It is a community-maintained fork of **eBrigade 5.3.2**, the last open-source release of that project (original author: Nicolas MARCHE, eBrigade Technologies, © 2004–2021).
 
+The new name reflects the project's open-source nature and its new life as a community-driven initiative. The main contributor and maintainer is [Maximilian NEU] working at [Newhost], but we welcome contributions from anyone interested in improving the software.
+
 The application is licensed under the **GNU GPL v2.0 or later**.
 
 ---
