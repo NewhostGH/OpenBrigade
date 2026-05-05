@@ -48,8 +48,7 @@ conf/sql.php
 /public/hot
 /public/storage
 /public/build
-/storage/*.key
-/storage/app/public/uploads/
+/storage/
 bootstrap/cache/*.php
 _ide_helper.php
 _ide_helper_models.php
