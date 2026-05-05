@@ -1,6 +1,6 @@
 # ──────────────────────────────────────────────
 # OpenBrigade – Dockerfile
-# Multi-stage build: Composer deps → PHP 8.4 FPM Alpine + Nginx
+# Multi-stage build: Composer deps → PHP 8.4 FPM Debian + Nginx
 # ──────────────────────────────────────────────
 
 # ── Stage 1: Composer dependency install ──────
