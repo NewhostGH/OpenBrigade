@@ -19,28 +19,20 @@ RUN composer install \
     --ignore-platform-reqs
 
 # ── Stage 2: Runtime image ─────────────────────
-FROM php:8.4-fpm-alpine
+FROM php:8.4-fpm
 
-# Install runtime system dependencies
-RUN apk add --no-cache \
-    bash \
-    nginx \
-    libzip \
-    libpng \
-    libjpeg-turbo \
-    freetype \
-    openldap \
-    oniguruma \
-    icu-libs \
-    && apk add --no-cache --virtual .build-deps \
+# Install runtime/build system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        bash \
+        nginx \
         libzip-dev \
         libpng-dev \
-        libjpeg-turbo-dev \
-        freetype-dev \
-        openldap-dev \
-        oniguruma-dev \
-        icu-dev \
-        $PHPIZE_DEPS \
+        libjpeg62-turbo-dev \
+        libfreetype6-dev \
+        libldap2-dev \
+        libonig-dev \
+        libicu-dev \
     && docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
@@ -54,8 +46,7 @@ RUN apk add --no-cache \
         ldap \
         intl \
         opcache \
-    && apk del .build-deps \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Apply PHP settings
 COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
@@ -75,7 +66,7 @@ COPY . .
 # Generate optimised autoloader inside the image
 RUN composer dump-autoload --optimize --no-dev 2>/dev/null || true
 
-# Storage and bootstrap/cache must be writable by www-data (Alpine: uid 82)
+# Storage and bootstrap/cache must be writable by www-data
 RUN chown -R www-data:www-data \
         storage \
         bootstrap/cache \
