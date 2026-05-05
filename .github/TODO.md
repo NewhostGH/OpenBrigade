@@ -6,7 +6,7 @@ When implementing a TODO, cross out the checkbox and add the commit name.
 - [x] Stabilize Laravel 8.4 runtime and environment configuration (commit: chore: stabilize Laravel 8.4 runtime and environment configuration)
 - [x] Restore and validate the artisan CLI workflow (commit: chore: restore artisan CLI and validate end-to-end Laravel workflow)
 - [x] Define shared app structure (config, services, middleware, error handling) (commit: chore: define shared app structure with middleware, services, and error handling)
-- [ ] Set up baseline CI checks (lint, tests, static analysis)
+- [x] Set up baseline CI checks (lint, tests, static analysis) (commit: chore: setup baseline CI checks for lint, tests, and static analysis)
 
 ## Data and Persistence
 - [ ] Port legacy schema to Laravel migrations
