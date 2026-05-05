@@ -22,7 +22,8 @@
         "streetsidesoftware.code-spell-checker",
         "ms-azuretools.vscode-docker",
         "mtxr.sqltools",
-        "mtxr.sqltools-driver-mysql"
+        "mtxr.sqltools-driver-mysql",
+        "github.vscode-github-actions"
       ],
       "settings": {
         "php.validate.executablePath": "/usr/local/bin/php",
