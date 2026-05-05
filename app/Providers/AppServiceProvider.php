@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\BrigadeService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register singleton services (instantiated once per container)
+        $this->app->singleton(BrigadeService::class, function ($app) {
+            return new BrigadeService();
+        });
     }
 
     /**
@@ -19,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Set up locale and timezone from config
+        date_default_timezone_set(config('app.timezone'));
     }
 }

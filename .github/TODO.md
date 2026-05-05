@@ -5,7 +5,7 @@ When implementing a TODO, cross out the checkbox and add the commit name.
 ## Platform and Foundations
 - [x] Stabilize Laravel 8.4 runtime and environment configuration (commit: chore: stabilize Laravel 8.4 runtime and environment configuration)
 - [x] Restore and validate the artisan CLI workflow (commit: chore: restore artisan CLI and validate end-to-end Laravel workflow)
-- [ ] Define shared app structure (config, services, middleware, error handling)
+- [x] Define shared app structure (config, services, middleware, error handling) (commit: chore: define shared app structure with middleware, services, and error handling)
 - [ ] Set up baseline CI checks (lint, tests, static analysis)
 
 ## Data and Persistence
