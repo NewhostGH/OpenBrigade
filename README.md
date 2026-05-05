@@ -40,9 +40,9 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for development setup instruction
 
 | Dependency | Version |
 |------------|---------|
-| PHP        | 7.4 – 8.3 |
+| PHP        | 8.4 |
 | MySQL / MariaDB | 5.7+ / 10.3+ |
-| Web server | Apache 2.4+ (mod_rewrite) |
+| Web server | Nginx 1.24+ or Apache 2.4+ |
 
 ---
 

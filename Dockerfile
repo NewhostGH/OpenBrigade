@@ -63,9 +63,6 @@ COPY --from=vendor /app/vendor ./vendor
 # Copy application source (vendor/ is already present from above)
 COPY . .
 
-# Generate optimised autoloader inside the image
-RUN composer dump-autoload --optimize --no-dev 2>/dev/null || true
-
 # Storage and bootstrap/cache must be writable by www-data
 RUN chown -R www-data:www-data \
         storage \
