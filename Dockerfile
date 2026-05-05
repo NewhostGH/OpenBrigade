@@ -23,6 +23,7 @@ FROM php:8.4-fpm-alpine
 
 # Install runtime system dependencies
 RUN apk add --no-cache \
+    bash \
     nginx \
     libzip \
     libpng \
