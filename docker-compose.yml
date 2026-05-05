@@ -8,9 +8,10 @@ services:
     environment:
       APP_NAME: "${APP_NAME:-OpenBrigade}"
       APP_ENV: "${APP_ENV:-production}"
-      APP_KEY: "${APP_KEY}"
+      APP_KEY: "${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}"
       APP_DEBUG: "${APP_DEBUG:-false}"
       APP_URL: "${APP_URL:-http://localhost:8080}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-file}"
       DB_CONNECTION: mariadb
       DB_HOST: db
       DB_PORT: 3306
