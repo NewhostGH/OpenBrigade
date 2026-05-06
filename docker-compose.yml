@@ -46,16 +46,12 @@ services:
       timeout: 5s
       retries: 5
 
-  phpmyadmin:
-    image: phpmyadmin:5
-    container_name: openbrigade_phpmyadmin
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:24.3.0
+    container_name: openbrigade_cloudbeaver
     restart: unless-stopped
     ports:
-      - "${PMA_PORT:-8081}:80"
-    environment:
-      PMA_HOST: db
-      PMA_USER: "${DB_USER:-openbrigade}"
-      PMA_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
+      - "${CB_PORT:-8081}:8978"
     depends_on:
       - db
 

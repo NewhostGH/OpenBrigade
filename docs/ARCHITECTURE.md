@@ -27,6 +27,13 @@
 - **`logging.php`** – Log channels and handlers
 - **`queue.php`** – Queue connections and failed job handling
 
+### `/database`
+- **`migrations/`** – Versioned Laravel migrations
+  - Includes the baseline migration from legacy eBrigade 5.5 to OpenBrigade 6.0.0
+  - Holds all forward-only schema changes after baseline import
+- **`seeders/`** – Optional development and fixture seeders
+- **`factories/`** – Model factories for test and development data generation
+
 ### `/routes`
 - **`web.php`** – Web routes (traditional HTML responses)
 - **`api.php`** – API routes (JSON responses)

@@ -9,7 +9,7 @@ When implementing a TODO, cross out the checkbox and add the commit name.
 - [x] Set up baseline CI checks (lint, tests, static analysis) (commit: chore: setup baseline CI checks for lint, tests, and static analysis)
 
 ## Data and Persistence
-- [ ] Port legacy schema to Laravel migrations
+- [x] Port legacy schema to Laravel migrations (commit: chore: port legacy schema to Laravel migrations)
 - [ ] Create and wire Eloquent models and core relationships
 - [ ] Add seeders/factories for required development data
 - [ ] Plan and validate data migration from legacy tables
