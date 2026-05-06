@@ -18,6 +18,7 @@
 namespace App\Models;
 
 use App\Models\Pivots\EvenementParticipation;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Personnel extends Model
 {
+    use HasFactory;
+
     protected $table = 'pompier';
 
     protected $primaryKey = 'P_ID';

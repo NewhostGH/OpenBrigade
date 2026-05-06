@@ -1,27 +1,41 @@
 # ──────────────────────────────────────────────
-# OpenBrigade – Dockerfile
-# Multi-stage build: Composer deps → PHP 8.4 FPM Debian + Nginx
+# OpenBrigade – Multi-stage build
+# Composer deps → PHP 8.4 FPM + Nginx
 # ──────────────────────────────────────────────
 
-# ── Stage 1: Composer dependency install ──────
+# ── Stage 1: Composer dependencies ────────────
 FROM composer:2 AS vendor
 
 WORKDIR /app
 
+# Build-time flag ONLY (controls --dev / --no-dev)
+ARG BUILD_ENV=production
+RUN echo "Build environment: $BUILD_ENV"
+
 COPY composer.json composer.lock ./
 
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-progress \
-    --no-scripts \
-    --optimize-autoloader \
-    --ignore-platform-reqs
+RUN if [ "$BUILD_ENV" = "development" ]; then \
+        echo "Installing DEV dependencies"; \
+        composer install \
+            --no-interaction \
+            --no-progress \
+            --no-scripts \
+            --optimize-autoloader \
+            --ignore-platform-reqs; \
+    else \
+        echo "Installing PROD dependencies"; \
+        composer install \
+            --no-dev \
+            --no-interaction \
+            --no-progress \
+            --no-scripts \
+            --optimize-autoloader \
+            --ignore-platform-reqs; \
+    fi
 
 # ── Stage 2: Runtime image ─────────────────────
 FROM php:8.4-fpm
 
-# Install runtime/build system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         bash \
@@ -48,35 +62,27 @@ RUN apt-get update \
         opcache \
     && rm -rf /var/lib/apt/lists/*
 
-# Apply PHP settings
+# PHP config
 COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
 
-# Nginx configuration
+# Nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-# Application root
 WORKDIR /var/www/html
 
-# Copy vendor from build stage
+# Copy dependencies first (better caching)
 COPY --from=vendor /app/vendor ./vendor
 
-# Copy application source (vendor/ is already present from above)
+# Copy application
 COPY . .
 
-# Storage and bootstrap/cache must be writable by www-data
-RUN chown -R www-data:www-data \
-        storage \
-        bootstrap/cache \
-    && chmod -R 775 \
-        storage \
-        bootstrap/cache
+# Permissions
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-# Expose only the public/ directory via Nginx
 EXPOSE 80
 
-# Start Nginx + PHP-FPM
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 CMD ["/usr/local/bin/start.sh"]
-

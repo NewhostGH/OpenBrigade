@@ -1,30 +1,31 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        BUILD_ENV: ${APP_ENV:-development}
+
     container_name: openbrigade_app
     restart: unless-stopped
+
     ports:
       - "${APP_PORT:-8080}:80"
+
+    env_file:
+      - .env
+
     environment:
-      APP_NAME: "${APP_NAME:-OpenBrigade}"
-      APP_ENV: "${APP_ENV:-production}"
-      APP_KEY: "${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}"
-      APP_DEBUG: "${APP_DEBUG:-false}"
-      APP_URL: "${APP_URL:-http://localhost:8080}"
-      SESSION_DRIVER: "${SESSION_DRIVER:-file}"
-      DB_CONNECTION: mariadb
       DB_HOST: db
       DB_PORT: 3306
-      DB_NAME: "${DB_NAME:-openbrigade}"
-      DB_USER: "${DB_USER:-openbrigade}"
-      DB_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
-      LOG_CHANNEL: stack
-      LOG_LEVEL: "${LOG_LEVEL:-error}"
+
     volumes:
-      # Persistent uploads – replaces legacy user-data/ mount
+      # Laravel storage
       - storage_uploads:/var/www/html/storage/app/public/uploads
-      # Laravel logs
       - storage_logs:/var/www/html/storage/logs
+
+      # Laravel .env file (optional but common)
+      - ./.env:/var/www/html/.env
+
     depends_on:
       db:
         condition: service_healthy
@@ -33,15 +34,22 @@ services:
     image: mariadb:11.4
     container_name: openbrigade_db
     restart: unless-stopped
+
     ports:
       - "${DB_PORT_EXTERNAL:-3306}:3306"
+
+    env_file:
+      - .env
+
     environment:
       MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-CHANGE_ME_ROOT}"
       MARIADB_DATABASE: "${DB_NAME:-openbrigade}"
       MARIADB_USER: "${DB_USER:-openbrigade}"
       MARIADB_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
+
     volumes:
       - db_data:/var/lib/mysql
+
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -52,8 +60,10 @@ services:
     image: dbeaver/cloudbeaver:24.3.0
     container_name: openbrigade_cloudbeaver
     restart: unless-stopped
+
     ports:
       - "${CB_PORT:-8081}:8978"
+
     depends_on:
       - db
 
@@ -61,4 +71,3 @@ volumes:
   db_data:
   storage_uploads:
   storage_logs:
-

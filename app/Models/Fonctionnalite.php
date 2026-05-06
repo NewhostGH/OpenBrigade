@@ -17,6 +17,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -27,6 +28,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Fonctionnalite extends Model
 {
+    use HasFactory;
+
     protected $table = 'fonctionnalite';
 
     protected $primaryKey = 'F_ID';

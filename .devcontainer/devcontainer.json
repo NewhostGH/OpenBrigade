@@ -8,6 +8,15 @@
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "moby": false
+    },
+    "ghcr.io/devcontainers/features/php:1": {
+      "version": "8.4",
+      "extensions": [
+        "intelephense",
+        "xdebug",
+        "twig",
+        "phpmd"
+      ]
     }
   },
 
@@ -27,7 +36,7 @@
       ],
       "settings": {
         "php.validate.executablePath": "/usr/local/bin/php",
-        "intelephense.environment.phpVersion": "8.1.0",
+        "intelephense.environment.phpVersion": "8.4.0",
         "editor.formatOnSave": false,
         "files.eol": "\n"
       }
@@ -41,7 +50,7 @@
     "db:3306": { "label": "MySQL / MariaDB" }
   },
 
-  "postCreateCommand": "echo 'Dev container ready. App -> http://localhost:8080  CloudBeaver -> http://localhost:8081'",
+  "postCreateCommand": "APP_ENV=development",
 
   "remoteUser": "root"
 }

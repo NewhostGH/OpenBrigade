@@ -11,7 +11,7 @@ When implementing a TODO, cross out the checkbox and add the commit name.
 ## Data and Persistence
 - [x] Port legacy schema to Laravel migrations (commit: chore: port legacy schema to Laravel migrations)
 - [x] Create and wire Eloquent models and core relationships (commit: feat: create and wire Eloquent models and core relationships)
-- [ ] Add seeders/factories for required development data
+- [x] Add seeders/factories for required development data (commit: feat: add seeders and factories for required development data)
 - [ ] Plan and validate data migration from legacy tables
 
 ## Security and Access
