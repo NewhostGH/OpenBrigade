@@ -42,8 +42,8 @@
       }
     }
   },
-
-  "forwardPorts": [8080, 8081, "db:3306"],
+  "initializeCommand": "test -f .env || cp .env.example .env",
+  "forwardPorts": [8080, 8081],
   "portsAttributes": {
     "8080": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
     "8081": { "label": "CloudBeaver", "onAutoForward": "notify" },
