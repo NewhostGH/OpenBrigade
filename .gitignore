@@ -38,6 +38,7 @@
 ehthumbs.db
 Thumbs.db
 conf/sql.php
+index.nginx-debian.html
 
 # Local environment variables (copy from .env.example)
 .env

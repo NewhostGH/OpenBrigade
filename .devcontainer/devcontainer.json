@@ -42,15 +42,13 @@
       }
     }
   },
-  "initializeCommand": "test -f .env || cp .env.example .env",
+  "initializeCommand": "test -f .env || cp .env.example.dev .env",
   "forwardPorts": [8080, 8081],
   "portsAttributes": {
     "8080": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
     "8081": { "label": "CloudBeaver", "onAutoForward": "notify" },
     "db:3306": { "label": "MySQL / MariaDB" }
   },
-
-  "postCreateCommand": "APP_ENV=development",
 
   "remoteUser": "root"
 }
