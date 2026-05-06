@@ -33,6 +33,8 @@ services:
     image: mariadb:11.4
     container_name: openbrigade_db
     restart: unless-stopped
+    ports:
+      - "${DB_PORT_EXTERNAL:-3306}:3306"
     environment:
       MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-CHANGE_ME_ROOT}"
       MARIADB_DATABASE: "${DB_NAME:-openbrigade}"
