@@ -24,6 +24,7 @@
 ######################
 *.log
 *.sql
+!database/migrations/legacy/*.sql
 !sql/*.sql
 *.sqlite
 

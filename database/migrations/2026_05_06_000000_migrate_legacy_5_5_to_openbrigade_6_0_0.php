@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 | This migration imports the legacy eBrigade 5.5 SQL schema into the new
 | Laravel-based OpenBrigade 6.0.0 application.
 |
-| The SQL source is sql/reference.sql. New OpenBrigade schema changes must
+| The SQL source is database/migrations/legacy/reference.sql. New OpenBrigade
+| schema changes must
 | be introduced using dedicated incremental Laravel migration files.
 |
 */
@@ -46,7 +47,7 @@ return new class extends Migration
 
     private function loadReferenceSql(): string
     {
-        $path = base_path('sql/reference.sql');
+        $path = base_path('database/migrations/legacy/reference.sql');
 
         if (! is_file($path)) {
             throw new RuntimeException('Missing legacy schema file: '.$path);
