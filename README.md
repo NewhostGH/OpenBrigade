@@ -34,6 +34,15 @@ Then open `http://localhost:8080` in your browser and follow the setup wizard.
 
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for development setup instructions including the VS Code Dev Container.
 
+Frontend assets are built with Vite (npm) during Docker image build, so no CDN is required for Bootstrap.
+
+For local (non-Docker) frontend build:
+
+```bash
+npm install
+npm run build
+```
+
 User migration documentation:
 
 - [Database Migration Guide](docs/user/database-migration.md)

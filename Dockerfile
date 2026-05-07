@@ -33,6 +33,18 @@ RUN if [ "$BUILD_ENV" = "development" ]; then \
             --ignore-platform-reqs; \
     fi
 
+# ── Stage 1b: Frontend assets (Vite) ──────────
+FROM node:22-bookworm-slim AS frontend
+
+WORKDIR /app
+
+COPY package.json ./
+COPY vite.config.js ./
+COPY resources ./resources
+
+RUN npm install \
+    && npm run build
+
 # ── Stage 2: Runtime image ─────────────────────
 FROM php:8.4-fpm
 
@@ -75,6 +87,9 @@ COPY --from=vendor /app/vendor ./vendor
 
 # Copy application
 COPY . .
+
+# Copy built frontend assets
+COPY --from=frontend /app/public/build ./public/build
 
 # Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache \
