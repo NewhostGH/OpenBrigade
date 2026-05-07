@@ -1,6 +1,6 @@
 # Migration TODO
 
-When implementing a TODO, cross out the checkbox and add the commit name.
+When implementing a TODO, cross out the checkbox and add the commit name. If necessary add / update documentation in the [README](../README.md), [copilot instructions](copilot-instructions.md), or [docs](../docs).
 
 ## Platform and Foundations
 - [x] Stabilize Laravel 8.4 runtime and environment configuration (commit: chore: stabilize Laravel 8.4 runtime and environment configuration)
@@ -12,7 +12,7 @@ When implementing a TODO, cross out the checkbox and add the commit name.
 - [x] Port legacy schema to Laravel migrations (commit: chore: port legacy schema to Laravel migrations)
 - [x] Create and wire Eloquent models and core relationships (commit: feat: create and wire Eloquent models and core relationships)
 - [x] Add seeders/factories for required development data (commit: feat: add seeders and factories for required development data)
-- [ ] Plan and validate data migration from legacy tables
+- [x] Plan and validate data migration from legacy tables (commit: feat: add legacy data migration validation command and parity workflow)
 
 ## Security and Access
 - [x] Implement authentication flow (login, logout, session lifecycle) (commit: feat: implement laravel authentication flow with login logout and session lifecycle)
