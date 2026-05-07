@@ -9,7 +9,7 @@
             <div class="card-body p-4">
                 <h4 class="card-title text-center mb-4">{{ config('app.name') }}</h4>
 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login.attempt') }}">
                     @csrf
 
                     <div class="mb-3">

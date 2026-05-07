@@ -1,5 +1,13 @@
 # Copilot Instructions – OpenBrigade
 
+## Answer style guidelines
+- For code snippets, use triple backticks with the appropriate language tag (e.g. ```php```, ```js```, etc.).
+- Always answer in a concise and clear manner, avoiding unnecessary verbosity. Like a caveman explaining to another caveman.
+- If the question is ambiguous, ask for clarification instead of making assumptions.
+- Always provide the most relevant information first, and then add additional details if necessary.
+
+---
+
 ## Project Overview
 
 **OpenBrigade** is a free, open-source PHP web application for managing volunteer emergency-response organizations (fire brigades, rescue teams, civil-protection associations, etc.). It is a community-maintained fork of **eBrigade 5.3.2**, the last open-source release of that project (original author: Nicolas MARCHE, eBrigade Technologies, © 2004–2021).
@@ -41,13 +49,13 @@ The application is licensed under the **GNU GPL v2.0 or later**.
 
 | Layer | Technology |
 |-------|-----------|
-| Language | PHP 8.1 |
-| Database | MariaDB 10.11 / MySQL 5.7+ |
-| Web server | Apache 2.4 with `mod_rewrite` |
+| Language | PHP 8.4 |
+| Database | MariaDB 10.11 / MySQL 5.7+ -> will be upgraded to a newer version |
+| Web server | Apache 2.4 with `mod_rewrite` or Nginx |
 | Front-end | Plain HTML, CSS, JavaScript (jQuery), Bootstrap |
 | PDF generation | FPDF (via `lib/`) |
 | Excel exports | PHP spreadsheet helpers |
-| Containerisation | Docker Compose (app + db + phpMyAdmin) |
+| Containerisation | Docker Compose (app + db + CloudBeaver) |
 
 ---
 
@@ -58,8 +66,8 @@ The application is licensed under the **GNU GPL v2.0 or later**.
 ├── .devcontainer/          # VS Code Dev Container configuration
 ├── .github/                # GitHub templates, contributing guide, Copilot instructions
 ├── .env.example            # Environment variable template (copy to .env)
-├── Dockerfile              # PHP 8.1 + Apache image
-├── docker-compose.yml      # App (port 8080), MariaDB, phpMyAdmin (port 8081)
+├── Dockerfile              # PHP 8.4 + Apache image
+├── docker-compose.yml      # App (port 8080), MariaDB, CloudBeaver (port 8081)
 ├── php.ini                 # Custom PHP settings applied at container build
 │
 ├── conf/                   # Runtime configuration written by the setup wizard
@@ -95,32 +103,24 @@ The application is licensed under the **GNU GPL v2.0 or later**.
 └── api/                    # Lightweight REST-like API endpoints
 ```
 
+The target architecture is in [text](../docs/dev/ARCHITECTURE.md)
+
 ---
 
 ## Key Conventions
 
-- **Flat file layout** — almost all PHP pages live at the repository root; there is no MVC framework. Each `*.php` file is both a controller and a view.
-- **Database access** — uses procedural MySQLi (`mysqli_*`) and PDO helpers defined in `fonctions_sql.php`. No ORM.
-- **Authentication** — session-based (`$_SESSION`). Role/permission checks are done inline at the top of each page.
+- **Flat file layout** — almost all PHP pages live at the repository root; there is no MVC framework. Each `*.php` file is both a controller and a view. But this is will be refactored over time to introduce more structure and separation of concerns with Laravel.
+- **Database access** — uses procedural MySQLi (`mysqli_*`) and PDO helpers defined in `fonctions_sql.php`. No ORM. Laravel's Eloquent ORM will be introduced during the refactoring phase, but for now all database interactions follow the legacy style.
+- **Authentication** — session-based (`$_SESSION`). Role/permission checks are done inline at the top of each page. Laravel's authentication and authorization system will be implemented during the refactoring phase, but for now the legacy approach is maintained.
 - **Configuration** — database credentials and app settings are stored in `conf/` (written by the setup wizard) and loaded via `config.php`. Never commit real credentials.
 - **Internationalisation** — language strings are loaded from files in `lib/lang/`. The active language is set per-user.
 - **Assets** — CSS and JS are included directly via `<link>` / `<script>` tags; no build pipeline (no npm/webpack).
 
 ---
 
-## Development Setup
-
-1. Copy `.env.example` to `.env` and adjust credentials.
-2. Open the repo in VS Code — the Dev Container (`.devcontainer/`) will be detected automatically.
-3. The Dev Container mounts the source code directly into `/var/www/html` so edits are reflected immediately.
-4. Access the app at `http://localhost:8080` and run the setup wizard on first launch.
-5. phpMyAdmin is available at `http://localhost:8081`.
-
----
-
 ## How to Contribute
 
-The full contributing guide lives at [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md). Key points:
+The full contributing guide lives at [`.github/CONTRIBUTING.md`](CONTRIBUTING.md). Key points:
 
 - Fork the repository and create a branch (`fix/`, `feat/`, `docs/`, or `chore/` prefix).
 - Never commit directly to `main`.
@@ -128,13 +128,3 @@ The full contributing guide lives at [`.github/CONTRIBUTING.md`](.github/CONTRIB
 - Before opening a pull request, verify the app runs without PHP errors and that no credentials are committed.
 - Submit bugs and feature requests via [GitHub Issues](https://github.com/NewHostGH/OpenBrigade/issues) using the provided templates.
 - Report security vulnerabilities privately via the repository's security advisories page — **never** in a public issue.
-
----
-
-## Coding Guidelines
-
-- Match the existing procedural PHP style; do not introduce frameworks or autoloaders.
-- Keep SQL queries in `fonctions_sql.php` helper functions where possible; use prepared statements to prevent SQL injection.
-- Escape all output with `htmlspecialchars()` to prevent XSS.
-- Do not hard-code credentials, paths, or locale-specific strings.
-- Test any database changes against MariaDB 10.11 (the version in `docker-compose.yml`).

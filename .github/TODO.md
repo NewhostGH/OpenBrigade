@@ -15,7 +15,7 @@ When implementing a TODO, cross out the checkbox and add the commit name.
 - [ ] Plan and validate data migration from legacy tables
 
 ## Security and Access
-- [ ] Implement authentication flow (login, logout, session lifecycle)
+- [x] Implement authentication flow (login, logout, session lifecycle) (commit: feat: implement laravel authentication flow with login logout and session lifecycle)
 - [ ] Implement authorization model (roles, permissions, policies)
 - [ ] Replace inline legacy access checks with centralized guards/middleware
 - [ ] Apply security hardening (XSS, SQLi, CSRF, session settings)

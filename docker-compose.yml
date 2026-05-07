@@ -17,6 +17,7 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 3306
+      AUTO_RUN_MIGRATIONS: 1
 
     volumes:
       # Laravel storage
