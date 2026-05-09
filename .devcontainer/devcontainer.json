@@ -41,8 +41,8 @@
     }
   },
 
-  "initializeCommand": "test -f .env || cp .env.example.dev .env",
-  "postCreateCommand": "echo '\\n=== OpenBrigade Development Environment ===' && echo '\\nTo start the Docker Compose services, run:' && echo '\\n  docker-compose up -d\\n' && echo 'Services:' && echo '  - OpenBrigade App: http://localhost:8080' && echo '  - CloudBeaver: http://localhost:8081' && echo '  - MySQL/MariaDB: localhost:3306\\n'",
+  "initializeCommand": "mkdir -p /workspace && test -f .env || cp .env.example.dev .env",
+  "postCreateCommand": "echo '\\n=== OpenBrigade Development Environment ===' && echo '\\nTo start the Docker Compose services, run:' && echo '\\n  docker-compose up -d\\n' && echo 'Services:' && [...]",
   "forwardPorts": [8080, 8081],
   "portsAttributes": {
     "8080": { "label": "OpenBrigade App", "onAutoForward": "notify" },
