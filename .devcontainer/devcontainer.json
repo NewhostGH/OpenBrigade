@@ -1,5 +1,8 @@
 {
   "name": "OpenBrigade Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "workspaceFolder": "/workspace",
 
   "features": {
@@ -10,10 +13,7 @@
     "ghcr.io/devcontainers/features/php:1": {
       "version": "8.4",
       "extensions": [
-        "intelephense",
-        "xdebug",
-        "twig",
-        "phpmd"
+        "xdebug"
       ]
     }
   },
@@ -41,8 +41,8 @@
     }
   },
 
-  "initializeCommand": "mkdir -p /workspace && test -f .env || cp .env.example.dev .env",
-  "postCreateCommand": "echo '\\n=== OpenBrigade Development Environment ===' && echo '\\nTo start the Docker Compose services, run:' && echo '\\n  docker-compose up -d\\n' && echo 'Services:' && [...]",
+  "initializeCommand": "test -f .env || cp .env.example.dev .env",
+  "postCreateCommand": "echo '\\n=== OpenBrigade Development Environment ===' && echo '\\nTo start the Docker Compose services, run:' && echo '\\n  docker-compose up -d\\n' && echo 'Services:' && echo '  - OpenBrigade App : http://localhost:8080' && echo '  - CloudBeaver     : http://localhost:8081\\n'",
   "forwardPorts": [8080, 8081],
   "portsAttributes": {
     "8080": { "label": "OpenBrigade App", "onAutoForward": "notify" },
@@ -50,5 +50,5 @@
     "db:3306": { "label": "MySQL / MariaDB" }
   },
 
-  "remoteUser": "root"
+  "remoteUser": "codespace"
 }
