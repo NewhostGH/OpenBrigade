@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Trust proxy headers (reverse proxies)
         $middleware->trustProxies(at: '*');
+
+        // Route-level permission guard: Route::middleware('permission:52')
+        $middleware->alias([
+            'permission' => \App\Http\Middleware\RequirePermission::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Custom exception handling configuration
