@@ -56,6 +56,6 @@ class AuthController extends Controller
     {
         $this->authService->logout();
 
-        return redirect()->route('login')->with('success', __('Vous etes deconnecte.'));
+        return redirect()->route('login')->with('success', __('Vous êtes déconnecté.'));
     }
 }

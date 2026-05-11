@@ -16,7 +16,7 @@
 
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <a class="btn btn-outline-primary w-100" href="{{ route('legacy_migrated.personnel.index') }}">Personnel</a>
+                            <a class="btn btn-outline-primary w-100" href="{{ route('personnel.index') }}">Personnel</a>
                         </div>
                         <div class="col-md-4">
                             <a class="btn btn-outline-primary w-100" href="{{ route('legacy_migrated.evenement_detail.index') }}">Evenement Detail</a>

@@ -611,7 +611,6 @@ Route::middleware('auth')->prefix('legacy-migrated')->group(function () {
     Route::get('pdf_diplome', [PdfDiplomeController::class, 'index'])->name('legacy_migrated.pdf_diplome.index');
     Route::get('pdf_document', [PdfDocumentController::class, 'index'])->name('legacy_migrated.pdf_document.index');
     Route::get('pdf_livret', [PdfLivretController::class, 'index'])->name('legacy_migrated.pdf_livret.index');
-    Route::resource('personnel', PersonnelController::class)->names('legacy_migrated.personnel');
     Route::resource('personnel_contact', PersonnelContactController::class)->names('legacy_migrated.personnel_contact');
     Route::get('personnel_evenement_xls', [PersonnelEvenementXlsController::class, 'index'])->name('legacy_migrated.personnel_evenement_xls.index');
     Route::resource('personnel_formation', PersonnelFormationController::class)->names('legacy_migrated.personnel_formation');

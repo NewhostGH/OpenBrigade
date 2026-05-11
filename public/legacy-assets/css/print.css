@@ -1,0 +1,25 @@
+.noprint {
+  display: none !important;
+}
+.space-left {
+  margin-left: 0px !important;
+}
+.table-responsive {
+  float: none !important;
+  overflow-x: unset !important;
+}
+.dropdown-menu {
+  display: none;
+}
+
+a { 
+  text-decoration: none !important;
+}
+
+body {
+  padding: 15px;
+}
+
+.toggle-switch {
+  display:none;
+}

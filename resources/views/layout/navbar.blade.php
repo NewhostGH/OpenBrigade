@@ -1,26 +1,67 @@
-@auth
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2B2350;">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('home') }}">
-            {{ config('app.name') }}
+<div class="container-fluid noprint">
+<nav class="navbar navbar-expand-lg fixed-top noprint navbar-ebrigade">
+    <div class="nav-left">
+        <a class="navbar-brand logo-small" href="{{ route('dashboard') }}" title="Accueil">
+            <i class="fas fa-home fa-lg" style="color: rgb(188, 188, 207);"></i>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
-                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler button-open noboxshadow" type="button" data-toggle="collapse" data-target="#navLateral" aria-controls="navLateral" aria-expanded="false">
+            <span class="navbar-toggler-icon nav-picture"><i class="fa fa-bars py-1 text-violet"></i></span>
         </button>
-        {{-- Navigation items are added incrementally as modules are migrated --}}
-        <div class="collapse navbar-collapse" id="navbarMain">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-link nav-link">
-                            <i class="fa fa-sign-out"></i> Déconnexion
-                        </button>
-                    </form>
-                </li>
-            </ul>
+        <div class="nav-center">
+            <a href="{{ route('personnel.index') }}" class="nav-text navtop-hover" title="Liste du personnel" role="button">
+                <span class="navbar-toggler-icon nav-icon"><i class="fas fa-users fa-lg"></i></span>
+            </a>
         </div>
     </div>
+    <div class="nav-border">
+        <button class="navbar-toggler custom-toggler button-left noboxshadow" type="button" data-toggle="collapse" data-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false">
+            <i class="fas fa-angle-double-right py-1 text-violet"></i>
+        </button>
+    </div>
+    <div class="collapse navbar-collapse nav-right" id="navbarMain">
+        <ul class="navbar-nav nav-top">
+            {{-- Personnel dropdown --}}
+            <li class="nav-item dropdown nav-top-item navtop-hover margin-li">
+                <a class="dropdown-toggle nav-link hover-white text-violet nodowntoggle" data-toggle="dropdown" href="#" title="Personnel">
+                    <i class="fas fa-user fa-lg"></i> Personnel<i class="fas fa-chevron-down fa-xs"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item dropdown-item-profil" href="{{ route('personnel.index') }}">
+                        <i class="fas fa-list fa-lg"></i> Liste
+                    </a>
+                </div>
+            </li>
+
+            {{-- Help --}}
+            <a class="nav-text navtop-hover" style="padding-top:7px;" href="{{ route('about') }}" title="A propos" role="button">
+                <span class="navbar-toggler-icon nav-icon"><i class="far fa-question-circle fa-lg"></i></span>
+            </a>
+
+            {{-- User/profile --}}
+            <li class="nav-item dropdown nav-top-item navtop-hover margin-li">
+                <div class="dropdown-toggle nav-link hover-white text-violet nodowntoggle user-div" data-toggle="dropdown" href="#" title="Mon compte">
+                    <div class="user-infos">
+                        <p class="name">{{ auth()->user()->P_PRENOM ?? '' }} {{ auth()->user()->P_NOM ?? '' }}</p>
+                    </div>
+                    <div class="user-picture">
+                        <i class="fas fa-user profil-picture" style="border:2px white solid;padding:3px;border-radius:15px;"></i>
+                        <i class="ml-1 fas fa-chevron-down fa-xs"></i>
+                    </div>
+                </div>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item dropdown-item-profil" href="{{ route('personnel.show', auth()->user()->P_ID) }}">
+                        <i class="fas fa-user fa-lg"></i> Ma fiche
+                    </a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="dropdown-item dropdown-item-profil">
+                            <i class="fa fa-power-off fa-lg" style="color:red;"></i> Déconnexion
+                        </button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
 </nav>
-@endauth
+</div>
