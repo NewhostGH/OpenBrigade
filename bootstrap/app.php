@@ -24,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Automatically applied to all auth-guarded web routes
         $middleware->appendToGroup('web', \App\Http\Middleware\EnsureUserIsActive::class);
+
+        // Security headers on every web response
+        $middleware->prependToGroup('web', \App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Custom exception handling configuration

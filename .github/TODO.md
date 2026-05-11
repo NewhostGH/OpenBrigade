@@ -19,6 +19,7 @@ When implementing a TODO, cross out the checkbox and add the commit name. If nec
 - [x] Implement authorization model (roles, permissions, policies) (commit: feat: implement authorization model with legacy permission gates and RequirePermission middleware)
 - [x] Replace inline legacy access checks with centralized guards/middleware (commit: feat: replace inline legacy access checks with EnsureUserIsActive and RequirePermission middleware)
 - [ ] Apply security hardening (XSS, SQLi, CSRF, session settings)
+- [x] Apply security hardening (XSS, SQLi, CSRF, session settings) (commit: feat: apply security hardening with SecurityHeaders middleware and session hardening)
 
 ## Core Business Domains
 - [ ] Migrate personnel and profile management
