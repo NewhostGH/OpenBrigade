@@ -17,7 +17,7 @@ When implementing a TODO, cross out the checkbox and add the commit name. If nec
 ## Security and Access
 - [x] Implement authentication flow (login, logout, session lifecycle) (commit: feat: implement laravel authentication flow with login logout and session lifecycle)
 - [x] Implement authorization model (roles, permissions, policies) (commit: feat: implement authorization model with legacy permission gates and RequirePermission middleware)
-- [ ] Replace inline legacy access checks with centralized guards/middleware
+- [x] Replace inline legacy access checks with centralized guards/middleware (commit: feat: replace inline legacy access checks with EnsureUserIsActive and RequirePermission middleware)
 - [ ] Apply security hardening (XSS, SQLi, CSRF, session settings)
 
 ## Core Business Domains
