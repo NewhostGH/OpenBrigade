@@ -46,3 +46,7 @@
 
 ### `/bootstrap`
 - **`app.php`** – Application bootstrapper (routing, middleware, exceptions)
+
+## Related Developer Docs
+
+- [Authentication and Seeding (Local + Docker)](authentication-and-seeding.md)
