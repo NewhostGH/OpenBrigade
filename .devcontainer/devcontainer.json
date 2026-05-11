@@ -3,7 +3,6 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "workspaceFolder": "/workspace",
 
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
