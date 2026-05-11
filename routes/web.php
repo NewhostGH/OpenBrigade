@@ -28,5 +28,12 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/legacy', function () {
+        return redirect()->route('legacy_migrated.index');
+    })->name('dashboard.legacy');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+if (file_exists(__DIR__ . '/web_legacy_migrated.php')) {
+    require __DIR__ . '/web_legacy_migrated.php';
+}

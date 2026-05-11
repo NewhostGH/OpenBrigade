@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Http\Controllers\Legacy;
+
+use App\Http\Controllers\Controller;
+use App\Models\FonctionsGardesAuto;
+use Illuminate\Http\Request;
+
+/**
+ * Legacy migration source: fonctions_gardes_auto.php
+ * Legacy pattern: list
+ * Legacy permission id: 24
+ * This file stems from a legacy migration and requires functional verification.
+ */
+class FonctionsGardesAutoController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = FonctionsGardesAuto::query();
+
+        if ($request->filled('query')) {
+            $term = trim((string) $request->input('query'));
+            $query->where(function ($query) use ($term) {
+                $query->where('e_code', 'like', '%' . $term . '%');
+                $query->orWhere('s_id', 'like', '%' . $term . '%');
+                $query->orWhere('e_equipe', 'like', '%' . $term . '%');
+                $query->orWhere('eh_id', 'like', '%' . $term . '%');
+            });
+        }
+
+        $items = $query->paginate(20);
+
+        return view('legacy_migrated.fonctions_gardes_auto.index', [
+            'items' => $items,
+        ]);
+    }
+
+    public function create()
+    {
+        return view('legacy_migrated.fonctions_gardes_auto.form', [
+            'item' => null,
+        ]);
+    }
+                
+
+    public function edit($id)
+    {
+        $item = FonctionsGardesAuto::findOrFail($id);
+
+        return view('legacy_migrated.fonctions_gardes_auto.form', [
+            'item' => $item,
+        ]);
+    }
+                
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'nullable|integer',
+        ]);
+
+        $item = FonctionsGardesAuto::create([
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('legacy_migrated.fonctions_gardes_auto.edit', $item->id)
+            ->with('success', 'FonctionsGardesAuto created successfully');
+    }
+                
+
+    public function update(Request $request, $id)
+    {
+        $item = FonctionsGardesAuto::findOrFail($id);
+
+        $validated = $request->validate([
+            'id' => 'nullable|integer',
+        ]);
+
+        $item->update([
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('legacy_migrated.fonctions_gardes_auto.edit', $item->id)
+            ->with('success', 'FonctionsGardesAuto updated successfully');
+    }
+                
+
+    public function destroy($id)
+    {
+        $item = FonctionsGardesAuto::findOrFail($id);
+        $item->delete();
+
+        return redirect()->route('legacy_migrated.fonctions_gardes_auto.index')
+            ->with('success', 'FonctionsGardesAuto deleted successfully');
+    }
+                
+}
