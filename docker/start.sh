@@ -1,6 +1,20 @@
 #!/bin/sh
 set -e
 
+# When source is bind-mounted in dev, image files under /var/www/html are masked.
+# Restore critical build artifacts from /opt/bootstrap when missing.
+if [ ! -f /var/www/html/vendor/autoload.php ] && [ -d /opt/bootstrap/vendor ]; then
+	echo "vendor/ missing in bind mount. Restoring from image cache..."
+	mkdir -p /var/www/html/vendor
+	cp -a /opt/bootstrap/vendor/. /var/www/html/vendor/
+fi
+
+if [ ! -f /var/www/html/public/build/manifest.json ] && [ -d /opt/bootstrap/public-build ]; then
+	echo "public/build missing in bind mount. Restoring from image cache..."
+	mkdir -p /var/www/html/public/build
+	cp -a /opt/bootstrap/public-build/. /var/www/html/public/build/
+fi
+
 # Optional auto-migration on startup (enabled by default).
 # This ensures required tables like `sessions` exist on first boot.
 if [ "${AUTO_RUN_MIGRATIONS:-1}" = "1" ]; then

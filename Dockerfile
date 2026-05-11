@@ -10,6 +10,9 @@ WORKDIR /app
 
 # Build-time flag ONLY (controls --dev / --no-dev)
 ARG BUILD_ENV=production
+ARG COMPOSER_DISABLE_TLS=0
+ENV COMPOSER_DISABLE_TLS=${COMPOSER_DISABLE_TLS}
+RUN echo "Composer TLS disabled: $COMPOSER_DISABLE_TLS"
 RUN echo "Build environment: $BUILD_ENV"
 
 COPY composer.json composer.lock ./
@@ -33,17 +36,23 @@ RUN if [ "$BUILD_ENV" = "development" ]; then \
             --ignore-platform-reqs; \
     fi
 
+RUN echo "Installed Composer packages:" && composer show -i
+
 # ── Stage 1b: Frontend assets (Vite) ──────────
 FROM node:22-bookworm-slim AS frontend
 
 WORKDIR /app
 
+ARG NODE_TLS_REJECT_UNAUTHORIZED=1
+ENV NODE_TLS_REJECT_UNAUTHORIZED=${NODE_TLS_REJECT_UNAUTHORIZED}
+
 COPY package.json ./
 COPY vite.config.js ./
 COPY resources ./resources
 
-RUN npm install \
-    && npm run build
+RUN if [ "$NODE_TLS_REJECT_UNAUTHORIZED" = "0" ]; then npm config set strict-ssl false; else npm config set strict-ssl true; fi
+RUN npm install
+RUN npm run build
 
 # ── Stage 2: Runtime image ─────────────────────
 FROM php:8.4-fpm
@@ -85,14 +94,20 @@ WORKDIR /var/www/html
 # Copy dependencies first (better caching)
 COPY --from=vendor /app/vendor ./vendor
 
-# Copy application
-COPY . .
+# Keep a backup outside /var/www/html so bind mounts do not hide it.
+RUN mkdir -p /opt/bootstrap/vendor \
+    && cp -a ./vendor/. /opt/bootstrap/vendor/
 
 # Copy built frontend assets
 COPY --from=frontend /app/public/build ./public/build
 
+# Keep a backup outside /var/www/html so bind mounts do not hide it.
+RUN mkdir -p /opt/bootstrap/public-build \
+    && cp -a ./public/build/. /opt/bootstrap/public-build/
+
 # Permissions
-RUN chown -R www-data:www-data storage bootstrap/cache \
+RUN mkdir -p storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80

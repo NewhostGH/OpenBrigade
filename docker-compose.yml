@@ -4,6 +4,8 @@ services:
       context: .
       args:
         BUILD_ENV: ${APP_ENV:-development}
+        NODE_TLS_REJECT_UNAUTHORIZED: ${NODE_TLS_REJECT_UNAUTHORIZED:-1}
+        COMPOSER_DISABLE_TLS: ${COMPOSER_DISABLE_TLS:-0}
 
     container_name: openbrigade_app
     restart: unless-stopped
@@ -18,14 +20,16 @@ services:
       DB_HOST: db
       DB_PORT: 3306
       AUTO_RUN_MIGRATIONS: 1
+      NODE_TLS_REJECT_UNAUTHORIZED: ${NODE_TLS_REJECT_UNAUTHORIZED:-1}
+      COMPOSER_DISABLE_TLS: ${COMPOSER_DISABLE_TLS:-0}
 
     volumes:
+      # Use local source files directly (dev-friendly, no code copy inside running container)
+      - ./:/var/www/html
+
       # Laravel storage
       - storage_uploads:/var/www/html/storage/app/public/uploads
       - storage_logs:/var/www/html/storage/logs
-
-      # Laravel .env file (optional but common)
-      - ./.env:/var/www/html/.env
 
     depends_on:
       db:
