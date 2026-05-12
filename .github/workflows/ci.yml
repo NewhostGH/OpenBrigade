@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - chore/**
+      - feat/**
+      - fix/**
+      - docs/**
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+          extensions: mbstring, xml, ctype, json, intl, pdo_mysql, zip, gd, ldap
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run formatter check (Pint)
+        run: composer pint -- --test
+
+      - name: Run static analysis (PHPStan)
+        run: composer analyse -- --no-progress
+
+      - name: Detect test files
+        id: tests
+        run: |
+          if find tests -type f \( -name '*Test.php' -o -name '*.pest.php' \) | grep -q .; then
+            echo "has_tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_tests=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run tests (Pest)
+        if: steps.tests.outputs.has_tests == 'true'
+        run: composer test -- --colors=always
+
+      - name: Skip tests (none found)
+        if: steps.tests.outputs.has_tests != 'true'
+        run: echo "No tests found yet; skipping test stage."

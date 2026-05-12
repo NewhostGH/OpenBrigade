@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call(OrganisationTypeSeeder::class);
+        $this->call(DevelopmentDataSeeder::class);
     }
 }

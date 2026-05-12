@@ -34,15 +34,60 @@ Then open `http://localhost:8080` in your browser and follow the setup wizard.
 
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for development setup instructions including the VS Code Dev Container.
 
+Frontend assets are built with Vite (npm) during Docker image build, so no CDN is required for Bootstrap.
+
+For local (non-Docker) frontend build:
+
+```bash
+npm install
+npm run build
+```
+
+User migration documentation:
+
+- [Database Migration Guide](docs/user/database-migration.md)
+
+### Data Migration Validation
+
+OpenBrigade ships with an Artisan command to validate legacy table migration status:
+
+```bash
+php artisan legacy:migration:validate
+```
+
+This command reads `database/migrations/legacy/reference.sql`, checks each legacy table exists in the current OpenBrigade database, and reports row counts.
+
+To compare row counts against a live legacy database, set these optional variables in `.env`:
+
+```env
+LEGACY_DB_HOST=legacy-db-host
+LEGACY_DB_PORT=3306
+LEGACY_DB_DATABASE=ebrigade_legacy
+LEGACY_DB_USERNAME=legacy_user
+LEGACY_DB_PASSWORD=legacy_password
+```
+
+Then run strict parity validation:
+
+```bash
+php artisan legacy:migration:validate --strict
+```
+
+Useful options:
+
+```bash
+php artisan legacy:migration:validate --table=personnel --table=evenement
+```
+
 ---
 
 ## Requirements (manual install)
 
 | Dependency | Version |
 |------------|---------|
-| PHP        | 7.4 – 8.3 |
+| PHP        | 8.4 |
 | MySQL / MariaDB | 5.7+ / 10.3+ |
-| Web server | Apache 2.4+ (mod_rewrite) |
+| Web server | Nginx 1.24+ or Apache 2.4+ |
 
 ---
 

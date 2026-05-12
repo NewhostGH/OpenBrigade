@@ -1,76 +1,244 @@
-# Migration TODO: PHP 8.4→8.5 + Laravel Cutover
+# Migration TODO
 
-## PHP & Compatibility
+When implementing a TODO, cross out the checkbox and add the commit name. If necessary add / update documentation in the [README](../README.md), [copilot instructions](copilot-instructions.md), or [docs](../docs).
 
-- [ ] Replace `utf8_encode()` and `utf8_decode()` calls with `mb_convert_encoding()`
-- [ ] Remove unnecessary `stripslashes()` and `addslashes()` calls
-- [ ] Update `.devcontainer/devcontainer.json` PHP version from 8.1.0 to 8.4.0
-- [ ] Verify no PHP 8.0+ removed functions present
-- [ ] Test build with PHP 8.4 under `error_reporting=E_ALL` with no deprecation warnings
+---
 
-## Auth & Session
+## File Migration Strategy (apply to every menu section below)
 
-- [ ] Extract `create_session()` into `app/Services/AuthService.php`
-- [ ] Create `app/Services/SessionBridge.php` for `$_SESSION` ↔ Laravel Auth sync
-- [ ] Create `app/Middleware/LegacySessionMiddleware.php`
-- [ ] Create `app/Http/Controllers/Auth/LoginController.php` + route `/login`
-- [ ] Unit tests for auth service
+Each menu section follows this repeatable process:
 
-## Authorization & Policy
+1. **Inventory** — list all `archive/legacy_app/` files that belong to the menu (pages, save handlers, modals, XLS/PDF exports, JS helpers).
+2. **Controller** — create a Laravel controller under `app/Http/Controllers/<Menu>/`.
+3. **Views** — create Blade views under `resources/views/<menu>/`; reuse the existing layout shell.
+4. **Routes** — add named routes to `routes/web.php`; remove the corresponding entries from `routes/web_legacy_bridge.php` and `config/legacy_bridge.php`.
+5. **Services / Models** — move business logic into a service or Eloquent model; no raw SQL in controllers.
+6. **Tests** — add feature tests covering the happy path and key edge cases.
+7. **Parity check** — verify output parity against the legacy page (same data, same access rules).
+8. **Retire legacy files** — once parity passes, delete the legacy files from `archive/legacy_app/` and remove them from `archive/legacy_app/modified.txt` if listed.
 
-- [ ] Extract `check_rights()` into `app/Services/AuthorizationService.php`
-- [ ] Create `app/Policies/` with policy classes
-- [ ] Create `app/Middleware/CheckCapability.php` for route authorization
-- [ ] Unit tests for authorization scenarios
+---
 
-## Configuration
+## Platform and Foundations
+- [x] Stabilize Laravel 8.4 runtime and environment configuration (commit: chore: stabilize Laravel 8.4 runtime and environment configuration)
+- [x] Restore and validate the artisan CLI workflow (commit: chore: restore artisan CLI and validate end-to-end Laravel workflow)
+- [x] Define shared app structure (config, services, middleware, error handling) (commit: chore: define shared app structure with middleware, services, and error handling)
+- [x] Set up baseline CI checks (lint, tests, static analysis) (commit: chore: setup baseline CI checks for lint, tests, and static analysis)
 
-- [ ] Create `config/brigade.php` consolidating legacy `config.php`
-- [ ] Create `app/Services/ConfigurationService.php`
-- [ ] Update `.env.example` with all required variables
-- [ ] Create `app/Migration/ConfigurationImporter.php` for existing-install upgrades
+## Data and Persistence
+- [x] Port legacy schema to Laravel migrations (commit: chore: port legacy schema to Laravel migrations)
+- [x] Create and wire Eloquent models and core relationships (commit: feat: create and wire Eloquent models and core relationships)
+- [x] Add seeders/factories for required development data (commit: feat: add seeders and factories for required development data)
+- [x] Plan and validate data migration from legacy tables (commit: feat: add legacy data migration validation command and parity workflow)
 
-## Database & Queries
+## Security and Access
+- [x] Implement authentication flow (login, logout, session lifecycle) (commit: feat: implement laravel authentication flow with login logout and session lifecycle)
+- [x] Implement authorization model (roles, permissions, policies) (commit: feat: implement authorization model with legacy permission gates and RequirePermission middleware)
+- [x] Replace inline legacy access checks with centralized guards/middleware (commit: feat: replace inline legacy access checks with EnsureUserIsActive and RequirePermission middleware)
+- [x] Apply security hardening (XSS, SQLi, CSRF, session settings) (commit: feat: apply security hardening with SecurityHeaders middleware and session hardening)
 
-- [ ] Audit and convert auth queries to prepared statements
-- [ ] Audit and convert export queries to prepared statements
-- [ ] Create `app/Database/QueryBuilder.php` helper
-- [ ] Unit tests for SQL injection prevention
+## Legacy Bridge Stabilization
+- [x] Convert all legacy files to UTF-8 encoding (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
+- [x] Eliminate legacy DB redirect loop (configuration_db.php) (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
+- [x] Fix double /index.php URL prefix in bridge and dashboard (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
+- [x] Harden Docker storage/logs permissions (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
 
-## Testing Infrastructure
+---
 
-- [ ] Create `database/seeders/TestDataSeeder.php`
-- [ ] Write regression test suite (auth, dashboard, personnel, events, exports, documents)
-- [ ] Configure Pest + PHPStan level 8 + Pint
-- [ ] Setup Github Actions CI workflow
+## Phase 1 — Dashboard
 
-## Controllers & Routes
+> **Goal:** replace `index_d.php` with a native Laravel dashboard. This is the first page users see after login and anchors all future menu migrations.
 
-- [ ] Create `app/Http/Controllers/Dashboard/DashboardController.php` + view
-- [ ] Create `app/Http/Controllers/Personnel/PersonnelController.php` + routes
-- [ ] Create `app/Http/Controllers/Events/EventController.php` + routes
-- [ ] Create `app/Http/Controllers/Reports/ReportController.php` + exports
-- [ ] Create `app/Http/Controllers/Documents/DocumentController.php` + routes
-- [ ] Refactor HTML templates into Blade layouts
+- [ ] Inventory legacy dashboard widgets and KPIs (`index_d.php`, `save_accueil.php`)
+- [ ] Create `DashboardController` with Blade view `resources/views/dashboard/index.blade.php`
+- [ ] Migrate each widget as a Blade component (agenda, alerts, quick-stats, on-call summary)
+- [ ] Wire dashboard route as the post-login landing page
+- [ ] Add feature tests and parity check against `index_d.php`
+- [ ] Retire `index_d.php` from the bridge
 
-## Project Structure
+---
 
-- [ ] Move all PHP files from root directory to appropriate app/routes/legacy locations
-- [ ] Update `.gitignore` to prevent root PHP files
-- [ ] Verify all references to root PHP files are routed through Laravel
+## Phase 2 — Menu by Menu
 
-## Migration & Upgrade
+### Menu Coverage Map (legacy labels)
+- [ ] Personnel -> handled in Personnel (PERSO)
+- [ ] Activite -> handled in Activite - Events & Interventions (ACT)
+- [ ] Planning -> handled in Planning (PLA)
+- [ ] Calendrier -> handled in Activite (calendar.php) and Planning workflows
+- [ ] Disponibilites -> handled in Personnel and Garde workflows (dispo/indispo)
+- [ ] Absences -> handled in Personnel and Garde workflows (indispo/absence)
+- [ ] Logistique -> handled in Logistique - Vehicles (VEH) and Inventaire (MAT/CONSO)
+- [ ] Statistique -> handled in Statistique (STAT)
+- [ ] Document -> handled in Document (DOC)
+- [ ] Communication -> handled in Communication (COMM)
+- [ ] Organisation -> handled in Organisation (ORGA)
+- [ ] Module -> handled in Configuration - Admin via add-on/module management (ADDON)
+- [ ] Configuration -> handled in Configuration - Admin (ADMIN)
 
-- [ ] Create Artisan command `php artisan migrate:legacy --dry-run`
-- [ ] Implement idempotency checks for migration command
-- [ ] Document rollback steps in `app/Migration/README.md`
-- [ ] Test upgrade path from legacy install
+### Personnel (PERSO)
+> Files: `personnel.php`, `upd_personnel.php`, `ins_personnel.php`, `del_personnel.php`, `personnel_*.php`, `trombinoscope.php`, `organigramme.php`, `search_personnel*.php`, `export*.php`, `pdf_*.php`, `vcard*.php`, …
 
-## Documentation & Release
+- [ ] Inventory all PERSO legacy files (pages, handlers, exports, PDFs)
+- [ ] Migrate member list and profile view/edit
+- [ ] Migrate trombinoscope and org chart
+- [ ] Migrate personnel exports (XLS, CSV, vCard, PDF livret/carte)
+- [ ] Migrate qualifications and training records (`qualifications.php`, `personnel_formation.php`)
+- [ ] Migrate on-call availability and indisponibility management (`indispo*.php`, `dispo.php`)
+- [ ] Add tests and parity check; retire legacy files
 
-- [ ] Update `.github/CONTRIBUTING.md` with PHP 8.4–8.5 support
-- [ ] Update CHANGELOG.md with migration notes
-- [ ] Write upgrade guide for existing installs
-- [ ] Run full regression tests
-- [ ] Security audit
-- [ ] Version bump to 5.4.0
+### Activité — Events & Interventions (ACT)
+> Files: `evenements.php`, `evenement_*.php`, `calendar.php`, `horaires.php`, `export*.php`, …
+
+- [ ] Inventory all ACT legacy files
+- [ ] Migrate event list and detail view
+- [ ] Migrate event creation, edit, save, and delete
+- [ ] Migrate participant management (inscription, equipes, renforts)
+- [ ] Migrate event material and vehicle assignment
+- [ ] Migrate calendar view
+- [ ] Migrate event exports (XLS, PDF rapport, iCal)
+- [ ] Add tests and parity check; retire legacy files
+
+### Garde — On-call roster (GAR)
+> Files: `astreintes.php`, `astreinte_*.php`, `auto_garde.php`, `automaticPiquet.php`, `tableau_garde*.php`, `feuille_garde.php`, `repos_*.php`, …
+
+- [ ] Inventory all GAR legacy files
+- [ ] Migrate roster display and assignment
+- [ ] Migrate automatic piquet/guard generation
+- [ ] Migrate guard sheet and replacement management (`remplacements.php`, `remplacement_edit.php`)
+- [ ] Migrate rest periods (`repos_*.php`)
+- [ ] Migrate guard exports (XLS, PDF)
+- [ ] Add tests and parity check; retire legacy files
+
+### Planning (PLA)
+> Files: `planning.php`, `planning_xls.php`, `myagenda.php`, `horaires.php`, `horaires_modal.php`, …
+
+- [ ] Inventory all PLA legacy files
+- [ ] Migrate weekly/monthly planning view
+- [ ] Migrate personal agenda (`myagenda.php`)
+- [ ] Migrate schedule (horaires) management
+- [ ] Migrate planning exports
+- [ ] Add tests and parity check; retire legacy files
+
+### Client (CLI)
+> Files: `company.php`, `upd_company.php`, `ins_company.php`, `del_company.php`, `company_xls.php`, `cotisations.php`, `cotisation_edit.php`, `save_cotisations.php`, `prelevements.php`, `virements*.php`, `bilans.php`, `pdf_bilans.php`, `pdf_attestation_fiscale.php`, …
+
+- [ ] Inventory all CLI legacy files
+- [ ] Migrate company/client list and detail
+- [ ] Migrate membership fees (cotisations) management
+- [ ] Migrate direct-debit and wire transfer management
+- [ ] Migrate billing and financial exports
+- [ ] Migrate PDF attestations
+- [ ] Add tests and parity check; retire legacy files
+
+### Logistique — Vehicles (VEH)
+> Files: `vehicule.php`, `upd_vehicule.php`, `ins_vehicule.php`, `del_vehicule.php`, `vehicule_*.php`, `type_vehicule.php`, …
+
+- [ ] Inventory all VEH legacy files
+- [ ] Migrate vehicle list and detail view/edit
+- [ ] Migrate vehicle type management
+- [ ] Migrate vehicle assignment to events
+- [ ] Migrate vehicle exports (XLS)
+- [ ] Add tests and parity check; retire legacy files
+
+### Inventaire — Equipment & Consumables (MAT / CONSO)
+> Files: `materiel.php`, `upd_materiel.php`, `ins_materiel.php`, `del_materiel.php`, `materiel_*.php`, `type_materiel.php`, `consommable.php`, `upd_consommable.php`, `del_consommable.php`, `consommable_*.php`, `type_consommable.php`, …
+
+- [ ] Inventory all MAT/CONSO legacy files
+- [ ] Migrate equipment list and detail view/edit
+- [ ] Migrate equipment type and category management
+- [ ] Migrate consumable stock management
+- [ ] Migrate embarkation tracking (`materiel_embarquer.php`)
+- [ ] Migrate equipment and consumable exports (XLS)
+- [ ] Add tests and parity check; retire legacy files
+
+### Communication (COMM)
+> Files: `mail_*.php`, `mailer.php`, `mailto.php`, `alerte_*.php`, `sms` (fonctions_sms), `chat.php`, `chat_message.php`, `histo_sms.php`, `push_monitor.php`, `rss.php`, …
+
+- [ ] Inventory all COMM legacy files
+- [ ] Migrate internal messaging and chat
+- [ ] Migrate email composition and send (`mail_create.php`, `mail_send.php`)
+- [ ] Migrate alert creation and sending
+- [ ] Migrate SMS history view
+- [ ] Migrate push notification monitor
+- [ ] Add tests and parity check; retire legacy files
+
+### Document (DOC)
+> Files: `documents.php`, `upd_document.php`, `upd_folder.php`, `save_documents.php`, `save_folder.php`, `delete_file.php`, `delete_event_file.php`, `showfile.php`, `download_*.php`, `pdf_document.php`, …
+
+- [ ] Inventory all DOC legacy files
+- [ ] Migrate document and folder tree view
+- [ ] Migrate document upload and edit
+- [ ] Migrate file serving and download
+- [ ] Migrate document exports (PDF)
+- [ ] Add tests and parity check; retire legacy files
+
+### Statistique (STAT)
+> Files: `bilans.php`, `bilan_participation.php`, `export-*.php`, `export.php`, `report_cotisations.php`, `habilitations_xls.php`, …
+
+- [ ] Inventory all STAT legacy files
+- [ ] Migrate participation and event statistics
+- [ ] Migrate financial reports
+- [ ] Migrate custom exports (XLS, TCD, HTML, TXT, SQL)
+- [ ] Add tests and parity check; retire legacy files
+
+### Organisation (ORGA)
+> Files: `section.php`, `upd_section.php`, `ins_section.php`, `del_section.php`, `habilitations.php`, `upd_habilitations.php`, `poste.php`, `upd_poste.php`, `ins_poste.php`, `del_poste.php`, `grades*.php`, `equipe.php`, `upd_equipe.php`, `del_equipe.php`, `organigramme.php`, …
+
+- [ ] Inventory all ORGA legacy files
+- [ ] Migrate section/unit management
+- [ ] Migrate group and role (habilitations) management
+- [ ] Migrate rank and grade management
+- [ ] Migrate position (poste) management
+- [ ] Migrate team (equipe) management
+- [ ] Add tests and parity check; retire legacy files
+
+### Configuration — Admin (ADMIN)
+> Files: `configuration.php`, `save_configuration.php`, `parametrage.php`, `configuration_*.php`, `audit.php`, `backup.php`, `restore.php`, `upgrade.php`, `update_*.php`, `addons.php`, `addons_save.php`, `install_addon.php`, `download_*.php`, …
+
+- [ ] Inventory all ADMIN legacy files
+- [ ] Migrate application settings (configuration, parametrage)
+- [ ] Migrate theme and icon configuration
+- [ ] Migrate audit log view
+- [ ] Migrate backup and restore
+- [ ] Migrate upgrade / SQL migration runner
+- [ ] Migrate add-on / module management
+- [ ] Add tests and parity check; retire legacy files
+
+---
+
+## Phase 3 — API and Integrations
+
+- [ ] Inventory legacy `api/` endpoints and their consumers
+- [ ] Rewrite or proxy each endpoint as a versioned Laravel API route
+- [ ] Migrate iCal export (`evenement_ical.php`)
+- [ ] Migrate QR-code generation (`qrcode.php`, `qrcode_pic.php`)
+- [ ] Migrate geolocation helpers (`geolocalize_all_persons.php`, `gmaps_*.php`)
+- [ ] Add API tests and parity check; retire legacy API files
+
+---
+
+## Phase 3B — Non-Menu Plugins / Modules
+
+> **Goal:** migrate plugin/module features that are not exposed as standard menu entries but still provide business functionality.
+
+- [ ] Inventory non-menu plugin/module files (`addons.php`, `addons_save.php`, `install_addon.php`, `download_addon.php`, `download_module.php`, plugin entry scripts)
+- [ ] Classify each plugin by type (UI page, background task, import/export helper, integration hook)
+- [ ] Define Laravel module boundaries (`app/Modules/<ModuleName>/` or `app/Services/Modules/<ModuleName>Service.php`)
+- [ ] Migrate plugin configuration storage from legacy tables/files to Laravel config + DB tables
+- [ ] Migrate plugin routes and endpoints (web + api) with named routes and middleware
+- [ ] Migrate plugin assets (JS/CSS/images) into `resources/` + `public/` with Vite handling where needed
+- [ ] Migrate plugin permissions to centralized policies/gates (remove inline checks)
+- [ ] Add feature tests per module and parity checks against legacy behavior
+- [ ] Define plugin deprecation rules (disable in bridge, monitor logs, then remove legacy files)
+- [ ] Remove legacy non-menu plugin loader paths after successful cutover
+
+---
+
+## Phase 4 — Cutover and Decommission
+
+- [ ] Build and maintain a legacy-to-Laravel parity matrix (one row per legacy file)
+- [ ] Run user acceptance validation on all critical workflows
+- [ ] Remove the legacy bridge routes and LegacyBridgeController once all pages are migrated
+- [ ] Delete `archive/legacy_app/` and all bridge configuration
+- [ ] Execute production cutover plan
+- [ ] Update README and docs to reflect the fully-migrated state

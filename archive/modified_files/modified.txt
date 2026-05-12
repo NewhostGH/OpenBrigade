@@ -1,0 +1,7 @@
+Targeted legacy_app files modified during bridge/debug work
+
+This list excludes bulk encoding-only rewrites from the ISO-8859-1 to UTF-8 conversion.
+
+_configuration_db.php
+fonctions.php
+config.php

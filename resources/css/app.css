@@ -1,0 +1,101 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+body {
+    background: #eef1f5;
+    color: #1f2937;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ob-nav {
+    background: linear-gradient(180deg, #3a4354 0%, #2f3746 100%);
+    border-bottom: 1px solid #202736;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+.ob-nav .navbar-brand,
+.ob-nav .nav-link,
+.ob-nav .btn-link.nav-link {
+    color: #f4f6f8;
+    font-size: 0.92rem;
+}
+
+.ob-nav .nav-link.active {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+}
+
+.ob-toolbar {
+    background: #ffffff;
+    border: 1px solid #d3dae3;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.ob-toolbar-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.ob-toolbar-title h1 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.ob-toolbar-title span {
+    color: #5b6575;
+    font-size: 0.9rem;
+}
+
+.ob-filters {
+    display: grid;
+    grid-template-columns: 1.8fr 1.3fr 1fr 1fr 1fr auto;
+    gap: 8px;
+}
+
+.ob-table-wrap {
+    background: #fff;
+    border: 1px solid #d3dae3;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ob-table thead th {
+    background: #495565;
+    color: #f8fafc;
+    font-weight: 600;
+    border-bottom: 0;
+    white-space: nowrap;
+}
+
+.ob-table tbody td {
+    vertical-align: middle;
+    font-size: 0.92rem;
+}
+
+.ob-table tbody tr:nth-child(odd) {
+    background: #f9fbfd;
+}
+
+.ob-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid #c9d3df;
+    background: #e5e7eb;
+}
+
+@media (max-width: 1200px) {
+    .ob-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .ob-filters {
+        grid-template-columns: 1fr;
+    }
+}

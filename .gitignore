@@ -24,6 +24,7 @@
 ######################
 *.log
 *.sql
+!database/migrations/legacy/*.sql
 !sql/*.sql
 *.sqlite
 
@@ -37,6 +38,7 @@
 ehthumbs.db
 Thumbs.db
 conf/sql.php
+index.nginx-debian.html
 
 # Local environment variables (copy from .env.example)
 .env
@@ -48,8 +50,7 @@ conf/sql.php
 /public/hot
 /public/storage
 /public/build
-/storage/*.key
-/storage/app/public/uploads/
+/storage/
 bootstrap/cache/*.php
 _ide_helper.php
 _ide_helper_models.php

@@ -1,0 +1,35 @@
+DELETE FROM categorie_intervention;
+DELETE from type_intervention;
+INSERT INTO categorie_intervention (CI_CODE, CI_DESCRIPTION) VALUES ('MER', 'Secours en mer');
+
+INSERT INTO type_intervention (TI_CODE,TI_DESCRIPTION,CI_CODE) values 
+('10','Abordage','MER'),
+('2','Accident d''aéronef','MER'),
+('30','Accident de baignade','MER'),
+('40','Accident chasse sous-marine','MER'),
+('50','Accident de plongée en ampnée','MER'),
+('60','Accident de plongée en bouteille','MER'),
+('70','Avarie de barre','MER'),
+('80','Avarie moteur','MER'),
+('90','Avarie électrique','MER'),
+('100','Chavirement','MER'),
+('110','Chute de falaise / emporté par une lame','MER'),
+('120','Découverte explosif','MER'),
+('130','Démâtage','MER'),
+('140','Echouement','MER'),
+('150','En dérive cause inexpérience','MER'),
+('160','En dérive suite rupture mouillage','MER'),
+('170','Encalminé','MER'),
+('180','Evamed (moyen médicalisé)','MER'),
+('190','Evasan ( moyen non médicalisé)','MER'),
+('200','Explosion/feu/incendie','MER'),
+('210','Hélice engagée / immobilisée dans engin','MER'),
+('220','Heurt','MER'),
+('230','Homme à la mer','MER'),
+('240','Incertitude sur la position','MER'),
+('250','Inquiétude ( absence de nouvelles)','MER'),
+('260','Isolement par la marée','MER'),
+('270','Panne de carburant','MER'),
+('280','Signaux de détresse','MER'),
+('290','Suicide','MER'),
+('300','Voie d''eau','MER');

@@ -1,11 +1,14 @@
 {
   "name": "OpenBrigade Dev Container",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/var/www/html",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
 
   "features": {
-    "ghcr.io/devcontainers/features/git:1": {}
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
   },
 
   "customizations": {
@@ -19,7 +22,8 @@
         "streetsidesoftware.code-spell-checker",
         "ms-azuretools.vscode-docker",
         "mtxr.sqltools",
-        "mtxr.sqltools-driver-mysql"
+        "mtxr.sqltools-driver-mysql",
+        "github.vscode-github-actions"
       ],
       "settings": {
         "php.validate.executablePath": "/usr/local/bin/php",
@@ -30,15 +34,14 @@
     }
   },
 
-  "forwardPorts": [80, 8081, "db:3306"],
+  "initializeCommand": "test -f .env || cp .env.example.dev .env",
+  "postCreateCommand": "composer install && echo '\\n=== OpenBrigade Development Environment ===' && echo '\\nTo start the Docker Compose services, run:' && echo '\\n  docker-compose up -d\\n' && echo 'Services:' && echo '  - OpenBrigade App : http://localhost:8080' && echo '  - CloudBeaver     : http://localhost:8081\\n'",
+  "forwardPorts": [8080, 8081],
   "portsAttributes": {
-    "80": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
-    "8081": { "label": "phpMyAdmin", "onAutoForward": "notify" },
+    "8080": { "label": "OpenBrigade App", "onAutoForward": "notify" },
+    "8081": { "label": "CloudBeaver", "onAutoForward": "notify" },
     "db:3306": { "label": "MySQL / MariaDB" }
   },
 
-  "postCreateCommand": "composer install && echo 'Dev container ready. App → http://localhost  phpMyAdmin → http://localhost:8081'",
-  "postStartCommand": "service apache2 start",
-
-  "remoteUser": "root"
+  "remoteUser": "vscode"
 }

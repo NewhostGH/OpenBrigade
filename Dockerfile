@@ -1,45 +1,73 @@
 # ──────────────────────────────────────────────
-# OpenBrigade – Dockerfile
-# Multi-stage build: Composer deps → PHP 8.4 FPM Alpine + Nginx
+# OpenBrigade – Multi-stage build
+# Composer deps → PHP 8.4 FPM + Nginx
 # ──────────────────────────────────────────────
 
-# ── Stage 1: Composer dependency install ──────
+# ── Stage 1: Composer dependencies ────────────
 FROM composer:2 AS vendor
 
 WORKDIR /app
 
+# Build-time flag ONLY (controls --dev / --no-dev)
+ARG BUILD_ENV=production
+ARG COMPOSER_DISABLE_TLS=0
+ENV COMPOSER_DISABLE_TLS=${COMPOSER_DISABLE_TLS}
+RUN echo "Composer TLS disabled: $COMPOSER_DISABLE_TLS"
+RUN echo "Build environment: $BUILD_ENV"
+
 COPY composer.json composer.lock ./
 
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-progress \
-    --no-scripts \
-    --optimize-autoloader \
-    --ignore-platform-reqs
+RUN if [ "$BUILD_ENV" = "development" ]; then \
+        echo "Installing DEV dependencies"; \
+        composer install \
+            --no-interaction \
+            --no-progress \
+            --no-scripts \
+            --optimize-autoloader \
+            --ignore-platform-reqs; \
+    else \
+        echo "Installing PROD dependencies"; \
+        composer install \
+            --no-dev \
+            --no-interaction \
+            --no-progress \
+            --no-scripts \
+            --optimize-autoloader \
+            --ignore-platform-reqs; \
+    fi
+
+RUN echo "Installed Composer packages:" && composer show -i
+
+# ── Stage 1b: Frontend assets (Vite) ──────────
+FROM node:22-bookworm-slim AS frontend
+
+WORKDIR /app
+
+ARG NODE_TLS_REJECT_UNAUTHORIZED=1
+ENV NODE_TLS_REJECT_UNAUTHORIZED=${NODE_TLS_REJECT_UNAUTHORIZED}
+
+COPY package.json ./
+COPY vite.config.js ./
+COPY resources ./resources
+
+RUN if [ "$NODE_TLS_REJECT_UNAUTHORIZED" = "0" ]; then npm config set strict-ssl false; else npm config set strict-ssl true; fi
+RUN npm install
+RUN npm run build
 
 # ── Stage 2: Runtime image ─────────────────────
-FROM php:8.4-fpm-alpine
+FROM php:8.4-fpm
 
-# Install runtime system dependencies
-RUN apk add --no-cache \
-    nginx \
-    libzip \
-    libpng \
-    libjpeg-turbo \
-    freetype \
-    openldap \
-    oniguruma \
-    icu-libs \
-    && apk add --no-cache --virtual .build-deps \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        bash \
+        nginx \
         libzip-dev \
         libpng-dev \
-        libjpeg-turbo-dev \
-        freetype-dev \
-        openldap-dev \
-        oniguruma-dev \
-        icu-dev \
-        $PHPIZE_DEPS \
+        libjpeg62-turbo-dev \
+        libfreetype6-dev \
+        libldap2-dev \
+        libonig-dev \
+        libicu-dev \
     && docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
@@ -53,41 +81,42 @@ RUN apk add --no-cache \
         ldap \
         intl \
         opcache \
-    && apk del .build-deps \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/lib/apt/lists/*
 
-# Apply PHP settings
+# PHP config
 COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
 
-# Nginx configuration
+# Nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-# Application root
 WORKDIR /var/www/html
 
-# Copy vendor from build stage
+# Copy dependencies first (better caching)
 COPY --from=vendor /app/vendor ./vendor
 
-# Copy application source (vendor/ is already present from above)
-COPY . .
+# Keep a backup outside /var/www/html so bind mounts do not hide it.
+RUN mkdir -p /opt/bootstrap/vendor \
+    && cp -a ./vendor/. /opt/bootstrap/vendor/
 
-# Generate optimised autoloader inside the image
-RUN composer dump-autoload --optimize --no-dev 2>/dev/null || true
+# Copy built frontend assets
+COPY --from=frontend /app/public/build ./public/build
 
-# Storage and bootstrap/cache must be writable by www-data (Alpine: uid 82)
-RUN chown -R www-data:www-data \
-        storage \
+# Keep a backup outside /var/www/html so bind mounts do not hide it.
+RUN mkdir -p /opt/bootstrap/public-build \
+    && cp -a ./public/build/. /opt/bootstrap/public-build/
+
+# Permissions (image-level defaults; runtime volumes are reinforced in start.sh)
+RUN mkdir -p \
+        storage/logs \
+        storage/framework \
+        storage/app/public/uploads \
         bootstrap/cache \
-    && chmod -R 775 \
-        storage \
-        bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-# Expose only the public/ directory via Nginx
 EXPOSE 80
 
-# Start Nginx + PHP-FPM
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 CMD ["/usr/local/bin/start.sh"]
-

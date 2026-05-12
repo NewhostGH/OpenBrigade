@@ -1,0 +1,23 @@
+@page{ 
+size:29.7cm 21.0cm;
+margin-top:1.7cm;
+margin-bottom:1.4cm;
+margin-left:2cm;
+margin-right:2cm;
+}
+body{
+	width:29cm;
+	height:21cm;	
+}
+.print{
+	display: block;
+}
+.noprint{
+	display: none;
+}
+a{
+	text-decoration: none;
+}
+tr:hover{
+	
+}
