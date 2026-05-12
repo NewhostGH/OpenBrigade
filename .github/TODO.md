@@ -52,8 +52,10 @@ Each menu section follows this repeatable process:
 - [ ] Inventory legacy dashboard widgets and KPIs (`index_d.php`, `save_accueil.php`)
 - [ ] Create `DashboardController` with Blade view `resources/views/dashboard/index.blade.php`
 - [ ] Migrate each widget as a Blade component (agenda, alerts, quick-stats, on-call summary)
+- [ ] Conserve DB as link source
 - [ ] Wire dashboard route as the post-login landing page
-- [ ] Add feature tests and parity check against `index_d.php`
+- [ ] Add feature tests and check parity against `index_d.php`
+- [ ] Modernize the interface using latest bootstrap css
 - [ ] Retire `index_d.php` from the bridge
 
 ---
