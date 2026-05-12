@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libldap2-dev \
         libicu-dev \
+        libonig-dev \
     && docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
