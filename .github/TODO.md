@@ -16,6 +16,7 @@ Each menu section follows this repeatable process:
 6. **Tests** — add feature tests covering the happy path and key edge cases.
 7. **Parity check** — verify output parity against the legacy page (same data, same access rules).
 8. **Retire legacy files** — once parity passes, delete the legacy files from `archive/legacy_app/` and remove them from `archive/legacy_app/modified.txt` if listed.
+9. **Modernize** — after cutover, consider UI/UX improvements using latest Bootstrap and Vite assets.
 
 ---
 
@@ -205,6 +206,15 @@ Each menu section follows this repeatable process:
 - [ ] Migrate upgrade / SQL migration runner
 - [ ] Migrate add-on / module management
 - [ ] Add tests and parity check; retire legacy files
+
+---
+
+## Phase 2B - Login screen
+
+> **Goal:** improve the login experience by leveraging the current Laravel authentication flow and modernizing the login screen.
+
+- [ ] Add tests and check parity with legacy login page
+- [ ] Modernise login screen using latest bootstrap css
 
 ---
 
