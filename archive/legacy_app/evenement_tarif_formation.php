@@ -68,9 +68,9 @@ $out=  "<div align=center><p><table class='noBorder' cellspacing=0>
                 value='".$tarif."'></td>
             </tr>
             <tr>
-                <td>Payé</td>
+                <td>PayÃ©</td>
                 <td><input type=checkbox id='paid_".$P_ID."' name='paid_".$P_ID."'  $disabled_tarif
-                 title=\"cochez cette case si ".$for." a payé sa formation\" value='1' $checked></td>
+                 title=\"cochez cette case si ".$for." a payÃ© sa formation\" value='1' $checked></td>
             </tr>
             <tr>
                 <td>Mode paiement </td>
@@ -88,15 +88,15 @@ if ( $MODE_PAIEMENT == 4 ) $style="";
 else $style="style='display:none'";
 
 $out .= "<tr $style id='rowcheque_".$P_ID."' >
-        <td>Numéro chèque</td>
+        <td>NumÃ©ro chÃ¨que</td>
             <td> <input type=text id='numcheque_".$P_ID."' name='numcheque_".$P_ID."' style='width:100px;' $disabled_tarif
-            title=\"Facultatif: saisissez ici le numéro du chèque ".$for."\"
+            title=\"Facultatif: saisissez ici le numÃ©ro du chÃ¨que ".$for."\"
             value=\"".$NUM_CHEQUE."\"></td>
         </tr>
         <tr>
             <td>Nom du payeur</td>
             <td> <input type=text id='payeur_".$P_ID."' name='payeur_".$P_ID."' style='width:150px;' $disabled_tarif
-            title=\"Facultatif: saisissez ici le nom de la personne ou société qui a payé ".$for."\"
+            title=\"Facultatif: saisissez ici le nom de la personne ou sociÃ©tÃ© qui a payÃ© ".$for."\"
             value=\"".$NOM_PAYEUR."\"></td>
         </tr>
         </table><p>";

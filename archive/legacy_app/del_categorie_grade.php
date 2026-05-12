@@ -32,7 +32,7 @@ get_session_parameters();
 $CG_CATEGORY=secure_input($dbc,$_GET["CG_CATEGORY"]);
 
 //=====================================================================
-// suppression Catégorie de garde
+// suppression CatÃ©gorie de garde
 //=====================================================================
 $query="delete from categorie_grade where CG_CODE='".$CG_CATEGORY."'";
 $result=mysqli_query($dbc,$query);

@@ -28,7 +28,7 @@ $siteurl = "http://".$url;
 $siteinfo = $cisname;
 $siterss = "http://".$url."/index.php?";
 
-// Récupère le flux selon type_evenement, séparé par des virgules
+// RÃ©cupÃ¨re le flux selon type_evenement, sÃ©parÃ© par des virgules
 if ( isset($_GET['f'])) $F="'".str_replace(",","','",secure_input($dbc,$_GET['f'],$strict=true))."'";
 else $F='';
 $flux=strtoupper($F);
@@ -107,7 +107,7 @@ while($rows = mysqli_fetch_array($res)){
 <link>".$siterss.$link."</link>
 <guid isPermaLink=\"false\">".$permalink."</guid>
 <description>";
-$p_item .="- organisé par: ".$organisateur;
+$p_item .="- organisÃ© par: ".$organisateur;
 $p_item .="\n- dates: ".$datesheures;
 if ( $stagiaires <> "") $p_item .="\n- places stagiaires: ".$stagiaires;
 $p_item .="\n- lieu: ".$evtlieu;

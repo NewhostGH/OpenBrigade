@@ -26,7 +26,7 @@ if (strlen($q) > 0)
 // permission de voir les externes?
 if ( check_rights($_SESSION['id'], 37)) $externe=true;
 else  $externe=false;	 
-$badletters  = array("é","è","ê","ë","à","ç","ï","ü");
+$badletters  = array("Ã©","Ã¨","Ãª","Ã«","Ã ","Ã§","Ã¯","Ã¼");
 $goodletters = array("e","e","e","e","a","c","i","u"); 
 
 $query="select distinct P_ID, P_NOM , P_PRENOM, P_OLD_MEMBER, S_CODE, P_STATUT

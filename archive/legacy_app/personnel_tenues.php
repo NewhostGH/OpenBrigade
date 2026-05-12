@@ -65,7 +65,7 @@ if ( file_exists($guide))
 $html .= "<form action='save_personnel_tenues.php' method='POST'>";
 $html .= "<input type='hidden' name='pompier' value='".$pid."'><p>";
 
-// tenues déjà en sa possession
+// tenues dÃ©jÃ  en sa possession
 $query3="select s.S_CODE, tm.TM_DESCRIPTION, tm.TM_USAGE, tm.TM_CODE, m.TM_ID,
         m.MA_ID, m.MA_NB, m.MA_MODELE, m.MA_ANNEE, tt.TT_CODE, tt.TT_NAME, tt.TT_DESCRIPTION, tv.TV_NAME, tv.TV_ID
         from materiel m left join taille_vetement tv on m.TV_ID=tv.TV_ID,
@@ -90,8 +90,8 @@ if( $nb_lignes > 0 ) {
     $html .= "<td colspan=6>Habillement en dotation</b></td><tr>";
     $html .= "<tr class=newTabHeader>
             <td class='widget-title' >Type</td>
-            <td class='widget-title' >Modèle</td>
-            <td class='widget-title' >Année</td>
+            <td class='widget-title' >ModÃ¨le</td>
+            <td class='widget-title' >AnnÃ©e</td>
             <td class='widget-title' >Taille</td>
             <td class='widget-title' >Nombre</td>
             <td class='widget-title' ></td></tr>";
@@ -101,10 +101,10 @@ if( $nb_lignes > 0 ) {
         $html .= "<input type='hidden' name='TYPE_".$MA_ID."' value='".$TM_ID."'>
                       <td width=150 class='widget-text' ><a href=upd_materiel.php?from=personnel&mid=".$MA_ID." class='widget-text' >".$TM_CODE."</a></td>
                       <td width=150 align=left class='widget-text' >
-                        <input type='text' title=\"saisir le modèle\" name='MODELE_".$MA_ID."' size='15' maxlength='20' value=\"".$MA_MODELE."\" $disabled1>
+                        <input type='text' title=\"saisir le modÃ¨le\" name='MODELE_".$MA_ID."' size='15' maxlength='20' value=\"".$MA_MODELE."\" $disabled1>
                       </td>
                       <td width=60 align=left class='widget-text' >
-                        <input type='text' title=\"saisir l'année\" name='ANNEE_".$MA_ID."' size='4' maxlength='4' value='".$MA_ANNEE."'
+                        <input type='text' title=\"saisir l'annÃ©e\" name='ANNEE_".$MA_ID."' size='4' maxlength='4' value='".$MA_ANNEE."'
                             onchange='checkNumberOrNothing(form.ANNEE_".$MA_ID.",\"4\",\"".$MA_ANNEE."\");' $disabled1>
                       </td>";
                       
@@ -147,8 +147,8 @@ if ( $update_allowed ) {
     $html .= "<td colspan=6>Ajouter habillement pour ".my_ucfirst(get_prenom($pid))." ".strtoupper(get_nom($pid))."</b></td><tr>";
     $html .= "<tr class=newTabHeader>
             <td>Type</td>
-            <td>Modèle</td>
-            <td>Année</td>
+            <td>ModÃ¨le</td>
+            <td>AnnÃ©e</td>
             <td>Taille</td>
             <td>Nombre</td></tr>";
 
@@ -167,10 +167,10 @@ if ( $update_allowed ) {
         $html .= "<tr class=newTable-tr>
                   <td width=150 class='widget-text' >".$TM_CODE."</td>
                   <td width=150 align=left class='widget-text' >
-                    <input type='text' title=\"saisir le modèle\" name='MODELE_".$i."' size='15' maxlength='20' value=\"\">
+                    <input type='text' title=\"saisir le modÃ¨le\" name='MODELE_".$i."' size='15' maxlength='20' value=\"\">
                   </td>
                   <td width=60 align=left class='widget-text' >
-                    <input type='text' title=\"saisir l'année\" name='ANNEE_".$i."' size='4' maxlength='4' value=''
+                    <input type='text' title=\"saisir l'annÃ©e\" name='ANNEE_".$i."' size='4' maxlength='4' value=''
                         onchange='checkNumberOrNothing(form.ANNEE_".$i.",\"4\",\"".date('Y')."\");'>
                   </td>";
                  

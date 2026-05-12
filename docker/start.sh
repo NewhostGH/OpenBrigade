@@ -15,6 +15,23 @@ if [ ! -f /var/www/html/public/build/manifest.json ] && [ -d /opt/bootstrap/publ
 	cp -a /opt/bootstrap/public-build/. /var/www/html/public/build/
 fi
 
+# Ensure writable Laravel directories keep correct permissions even with mounted volumes.
+mkdir -p \
+	/var/www/html/storage/logs \
+	/var/www/html/storage/framework \
+	/var/www/html/storage/app/public/uploads \
+	/var/www/html/bootstrap/cache
+chown -R www-data:www-data \
+	/var/www/html/storage/logs \
+	/var/www/html/storage/framework \
+	/var/www/html/storage/app/public/uploads \
+	/var/www/html/bootstrap/cache
+chmod -R ug+rwX \
+	/var/www/html/storage/logs \
+	/var/www/html/storage/framework \
+	/var/www/html/storage/app/public/uploads \
+	/var/www/html/bootstrap/cache
+
 # Optional auto-migration on startup (enabled by default).
 # This ensures required tables like `sessions` exist on first boot.
 if [ "${AUTO_RUN_MIGRATIONS:-1}" = "1" ]; then

@@ -62,7 +62,7 @@ echo "<form name=r>";
 
 echo "<div class='div-decal-left' style='float:left'><select id='type_evenement' name='type_evenement' class='selectpicker' data-live-search='true' data-style='btn-default' data-container='body'
           onchange=\"orderfilter('".$order."',document.getElementById('type_evenement').value, '1')\">
-      <option value='ALL' class='option-ebrigade'>Tous types d'activités</option>";
+      <option value='ALL' class='option-ebrigade'>Tous types d'activitÃ©s</option>";
 
 $query2="select distinct TE_CODE, TE_LIBELLE from type_evenement order by TE_LIBELLE asc";
 $result2=mysqli_query($dbc,$query2);
@@ -110,7 +110,7 @@ if ( $number > 0 ) {
                 <a href=parametrage.php?tab=1&child=6&order=INSTRUCTOR >Instructeur</a></th>";
     if ( $competences == 1 ) {
         echo "<td class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=6&order=DESCRIPTION >Compétence requise</a></th>";
+                <a href=parametrage.php?tab=1&child=6&order=DESCRIPTION >CompÃ©tence requise</a></th>";
         echo "<td class='hide_mobile'>
                 <a href=parametrage.php?tab=1&child=6&order=DESCRIPTION2 >Ou</a></th>";
     }
@@ -146,7 +146,7 @@ if ( $number > 0 ) {
     echo "</table>";
 }
 else  {
-    echo "Aucune fonction trouvée.";
+    echo "Aucune fonction trouvÃ©e.";
 }
 echo @$later;
 writefoot();

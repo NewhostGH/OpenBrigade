@@ -48,7 +48,7 @@ if ( isset ($_FILES['userfile'])) {
             list($file_name, $error, $msgstring ) = explode(";", $upload_result);
 
             if ( $error == 0 ) {
-                // upload réussi: insérer les informations relatives au document dans la base
+                // upload rÃ©ussi: insÃ©rer les informations relatives au document dans la base
                 $query="insert into document(S_ID,D_NAME,M_ID,TD_CODE,DS_ID,D_CREATED_BY,D_CREATED_DATE)
                        values ($S_ID,'$file_name',$MA_ID,'$TD_CODE','$DS_ID.',".$_SESSION['id'].",NOW())";
                 $result=mysqli_query($dbc,$query);
@@ -204,12 +204,12 @@ if ( $operation == 'update' ) {
     $query="select TM_LOT from type_materiel where TM_ID=$TM_ID";
     $result=mysqli_query($dbc,$query); 
     $row=@mysqli_fetch_array($result);
-    // si lot de matériel, ne peut pas être inclus dans un lot (éviter les hiérarchies)
+    // si lot de matÃ©riel, ne peut pas Ãªtre inclus dans un lot (Ã©viter les hiÃ©rarchies)
     if ( $row[0] == 1 ) {
         $query="update materiel set MA_PARENT=null where MA_ID=".$MA_ID; 
         $result=mysqli_query($dbc,$query);
     }
-    // si plus lot, enlever les pièces de matériel attachées
+    // si plus lot, enlever les piÃ¨ces de matÃ©riel attachÃ©es
     else {
         $query="update materiel set MA_PARENT=null where MA_PARENT=".$MA_ID; 
         $result=mysqli_query($dbc,$query);

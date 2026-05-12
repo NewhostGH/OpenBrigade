@@ -68,7 +68,7 @@ function redirect(url) {
 
 if ( $action == 'nb') {
 	if ( $consommable > 0 ) {
-		// décrémenter stock ou remettre en stock
+		// dÃ©crÃ©menter stock ou remettre en stock
 		
 		$query="select C_NOMBRE from consommable where C_ID=".$consommable;
 		$result=mysqli_query($dbc,$query);
@@ -107,7 +107,7 @@ else if ( $action == 'remove') {
 }
 else if ( $action == 'add') {
 	if ( $consommable > 0 ) {
-		// décrémenter stock de 1
+		// dÃ©crÃ©menter stock de 1
 		$query="update consommable set C_NOMBRE = C_NOMBRE -1 where C_ID = ".$consommable." and C_NOMBRE > 0 ";
 		mysqli_query($dbc,$query);
 		

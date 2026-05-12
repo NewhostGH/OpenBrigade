@@ -33,7 +33,7 @@ writehead();
 echo "</head>";
 
 //============================================================
-//   fonction pour vérifier permissions de changer le statut
+//   fonction pour vÃ©rifier permissions de changer le statut
 //============================================================
 function change_status_note($note, $new, $old, $reject_comment) {
     global $dbc, $section, $departement, $id, $person, $national, $departemental, $don;
@@ -44,7 +44,7 @@ function change_status_note($note, $new, $old, $reject_comment) {
     else {
         if (! multi_check_rights_notes($id) ) check_all(73);
         if (! multi_check_rights_notes($id,"$section")) check_all(24);
-        if ( $id == $person  and  ! $tresorier_national) check_all(14); // seul admin ou trésorier national peut changer le statut de ses propres notes
+        if ( $id == $person  and  ! $tresorier_national) check_all(14); // seul admin ou trÃ©sorier national peut changer le statut de ses propres notes
         if ( $national == 1 ) {
             if (! $tresorier_national ) check_all(24);
         }
@@ -184,7 +184,7 @@ if ( get_level($section) < $nbmaxlevels -1 ) $departement = $section;
 else $departement =  get_section_parent("$section");
 
 //============================================================
-//   vérifier permissions de modifier la note
+//   vÃ©rifier permissions de modifier la note
 //============================================================
 if ($id <> $person ) {
     if (! multi_check_rights_notes($id) ) check_all(73);
@@ -207,7 +207,7 @@ if ( isset ($_FILES['userfile'])) {
             list($file_name, $error, $msgstring ) = explode(";", $upload_result);
 
             if ( $error == 0 ) {
-                // upload réussi: insérer les informations relatives au document dans la base
+                // upload rÃ©ussi: insÃ©rer les informations relatives au document dans la base
                 $query="insert into document(S_ID,D_NAME,NF_ID,D_CREATED_BY)
                        values (".$section.",\"".$file_name."\",".$nfid.",".$id.")";
                 $result=mysqli_query($dbc,$query);
@@ -233,7 +233,7 @@ if ( isset ($_FILES['userfile'])) {
 if ( $action == 'reject' ) {
     if ( $reject_comment == '' ) {
         echo "<input type='hidden' name='reject_comment' id='reject_comment' value='null'>";
-        write_msgbox("Note de frais à rejeter", $error_pic, "L'explication du rejet n'a pas été renseignée.<div align='center'><input type='button' class='btn btn-secondary' value='Retour' name='Retour' onclick=\"javascript:history.back(1);\"></div>",10,0);
+        write_msgbox("Note de frais Ã  rejeter", $error_pic, "L'explication du rejet n'a pas Ã©tÃ© renseignÃ©e.<div align='center'><input type='button' class='btn btn-secondary' value='Retour' name='Retour' onclick=\"javascript:history.back(1);\"></div>",10,0);
         exit;
     }
     else if ( $reject_comment == 'null' ) {
@@ -242,11 +242,11 @@ if ( $action == 'reject' ) {
         $boxbody = "Veuillez renseigner la raison du rejet <p> <textarea  cols=28 style='max-width:220px;' rows=6 id='reject_comment' name='reject_comment'></textarea><p>";
         $action_link="<div align='center'><input type='submit' class='btn btn-danger' value='Rejeter' onclick=\"confirm_reject('".$NF_ID."','".$csrf."');\">
                       <input type='button' class='btn btn-default' value='Annuler' name='annuler' onclick=\"javascript:history.back(1);\"></div>";
-        write_msgbox("Note de frais à rejeter", $question_pic, $boxbody." ".$action_link,10,0);
+        write_msgbox("Note de frais Ã  rejeter", $question_pic, $boxbody." ".$action_link,10,0);
         exit;
     }
     else {
-        $reject_comment="Note rejetée pour la raison suivante: ".$reject_comment;
+        $reject_comment="Note rejetÃ©e pour la raison suivante: ".$reject_comment;
     }
 }
 
@@ -267,7 +267,7 @@ if ($action == 'delete' ) {
     
     if ( $from=='export') $action_link="<input type=submit class='btn btn-default' value='fermer' onclick='window.close();'>";
     else $action_link="<a href='upd_personnel.php?from=notes_de_frais&id=".$person."'><input type='submit' class='btn btn-secondary' value='Retour'></a>";
-    write_msgbox("Note de frais supprimée", $star_pic, " La note de frais a bien été supprimée. <p align=center>".$action_link,10,0);
+    write_msgbox("Note de frais supprimÃ©e", $star_pic, " La note de frais a bien Ã©tÃ© supprimÃ©e. <p align=center>".$action_link,10,0);
     exit;
 }
 else if ( $action == 'insert' ) {
@@ -377,13 +377,13 @@ if ( $NF_ID > 0 ) {
     $url=get_plain_url($cisurl);
     $siteurl = "http://".$url."/index.php?note=".$NF_ID;
     $info="";
-    if ( $action == 'insert' ) $keyword="créée";
-    else if ( $action == 'validate' ) $keyword="validée";
-    else if ( $action == 'validate1' ) $keyword="validée";
-    else if ( $action == 'rembourser' ) $keyword="remboursée";
-    else if ( $action == 'reject' ) $keyword="rejetée";
-    else if ( $action == 'submit' ) $keyword="envoyée pour validation";
-    else $keyword="modifiée";
+    if ( $action == 'insert' ) $keyword="crÃ©Ã©e";
+    else if ( $action == 'validate' ) $keyword="validÃ©e";
+    else if ( $action == 'validate1' ) $keyword="validÃ©e";
+    else if ( $action == 'rembourser' ) $keyword="remboursÃ©e";
+    else if ( $action == 'reject' ) $keyword="rejetÃ©e";
+    else if ( $action == 'submit' ) $keyword="envoyÃ©e pour validation";
+    else $keyword="modifiÃ©e";
     if ( $from == 'export') $t='Fermer';
     else $t='Retour';
     
@@ -400,15 +400,15 @@ if ( $NF_ID > 0 ) {
 
     if ( $action == 'submit' ) {
         $subject="Nouvelle note de frais pour ".$nom;
-        $message="Bonjour,\nVeuillez valider la note de frais créée pour $nom\nn°".$NF_ID."\nMontant total: ".my_number_format($total).$default_money_symbol."\nLien: ".$siteurl;
-        if ( $don == 1 ) $message .= "\nLe bénéficiaire fait don du remboursement à l'association.";
-        if ( $NF_FRAIS_DEP == 1 ) $message .= "\nLes frais ont été payés par le département.";
-        else $message .= "\nLes frais ont été payés par le bénéficiaire.";
+        $message="Bonjour,\nVeuillez valider la note de frais crÃ©Ã©e pour $nom\nnÂ°".$NF_ID."\nMontant total: ".my_number_format($total).$default_money_symbol."\nLien: ".$siteurl;
+        if ( $don == 1 ) $message .= "\nLe bÃ©nÃ©ficiaire fait don du remboursement Ã  l'association.";
+        if ( $NF_FRAIS_DEP == 1 ) $message .= "\nLes frais ont Ã©tÃ© payÃ©s par le dÃ©partement.";
+        else $message .= "\nLes frais ont Ã©tÃ© payÃ©s par le bÃ©nÃ©ficiaire.";
         $K="";
         if ( $national == 1 ) $K=" nationale";
-        if ( $departemental == 1 ) $K=" départementale";
+        if ( $departemental == 1 ) $K=" dÃ©partementale";
         $message .= "\nNote de frais".$K;
-        if ( $S_CODE <> '' ) $message .= ", créée au niveau ".$S_CODE." ".$S_DESCRIPTION.".";
+        if ( $S_CODE <> '' ) $message .= ", crÃ©Ã©e au niveau ".$S_CODE." ".$S_DESCRIPTION.".";
 
         if ( intval($E_CODE) > 0 ) {
             $query1="select e.E_CODE, te.TE_LIBELLE, e.TE_CODE, e.E_LIBELLE, e.E_LIEU, eh.EH_DATE_DEBUT, eh.EH_DATE_FIN, TIME_FORMAT(eh.EH_DEBUT, '%k:%i') EH_DEBUT, TIME_FORMAT(eh.EH_FIN, '%k:%i') EH_FIN,
@@ -434,9 +434,9 @@ if ( $NF_ID > 0 ) {
             else {
                 $mydate=date_fran($month1, $day1 ,$year1)." ".moislettres($month1).", ".$year1." ".$EH_DEBUT."-".$EH_FIN;
             }
-            $message .= "\nEvénement: ".$TE_LIBELLE.", ".stripslashes($E_LIBELLE).", ".$mydate;
+            $message .= "\nEvÃ©nement: ".$TE_LIBELLE.", ".stripslashes($E_LIBELLE).", ".$mydate;
         }
-        // générer le PDF note de frais et l'attacher au mail
+        // gÃ©nÃ©rer le PDF note de frais et l'attacher au mail
         $generation_url ="pdf_document.php?P_ID=".$person."&evenement=".intval($evenement)."&note=".$NF_ID."&mode=13&tofile=1";
         $note_file = $filesdir."/files_personnel/".$person."/Note_de_frais_".$NF_ID.".pdf";
         generate_file($generation_url);
@@ -448,36 +448,36 @@ if ( $NF_ID > 0 ) {
         write_debugbox("departement=".$departement."<br>Section=".$section."<br>destid=".$destid."<br>departemental=".$departemental."<br>national=".$national);
         $nb = mysendmail("$destid" , $id , "$subject" , "$message" , $note_file);
         @unlink($note_file);
-        if ($destid <> '') $info="<p>Un email a été envoyé aux personnes suivantes, pour validation:<p><span>".show_names_dest($destid)."</span><p>";
+        if ($destid <> '') $info="<p>Un email a Ã©tÃ© envoyÃ© aux personnes suivantes, pour validation:<p><span>".show_names_dest($destid)."</span><p>";
         
         //echo "<pre>".$message."</pre>";
     }
     else if ( $action == 'validate' or $action == 'rembourser' or $action == 'validate1' or $action == 'reject') {
-        if ( $action <> 'reject' and $assoc and $don == 1 ) $statut_description = "Don à l'association";
+        if ( $action <> 'reject' and $assoc and $don == 1 ) $statut_description = "Don Ã  l'association";
         else $statut_description=get_description_statut($statut);
         $subject="Note de frais ".$statut_description." de ".$nom;
-        $message="Bonjour,\nVotre note de frais a été modifiée, son nouveau statut est: ".$statut_description."\nn°".$NF_ID."\nMontant total: ".my_number_format($total).$default_money_symbol."\nLien: ".$siteurl;
+        $message="Bonjour,\nVotre note de frais a Ã©tÃ© modifiÃ©e, son nouveau statut est: ".$statut_description."\nnÂ°".$NF_ID."\nMontant total: ".my_number_format($total).$default_money_symbol."\nLien: ".$siteurl;
         if ( $action == 'reject' )
             $message .= "\n".$reject_comment;
         if ( get_position("$person") == 0 ) {
             $nb = mysendmail("$person" , $id , "$subject" , "$message" );
-            $info="<p>Un email a été envoyé en notification à $nom, lui indiquant que sa note de frais est maintenant en statut '".$statut_description."'";
+            $info="<p>Un email a Ã©tÃ© envoyÃ© en notification Ã  $nom, lui indiquant que sa note de frais est maintenant en statut '".$statut_description."'";
         }
         // aussi notifier ceux qui doivent faire le remboursement
         if ( $statut == 'VAL2' and $don == 0 ) {
-            $subject="Note de frais à rembourser pour ".$nom;
+            $subject="Note de frais Ã  rembourser pour ".$nom;
             $destid=get_granted(75,"$section",'local','yes');
             if ( $destid == '' ) $destid=get_granted(75,"$section",'parent','yes');
             if ( $national == 1 ) $destid .= ",".get_granted_everywhere(75,'yes');
-            $message="Bonjour,\nLa note de frais pour ".$nom." a été doublement validée et peut maintenant être remboursée.\nn°".$NF_ID."\nMontant total: ".my_number_format($total).$default_money_symbol."\nLien: ".$siteurl;
+            $message="Bonjour,\nLa note de frais pour ".$nom." a Ã©tÃ© doublement validÃ©e et peut maintenant Ãªtre remboursÃ©e.\nnÂ°".$NF_ID."\nMontant total: ".my_number_format($total).$default_money_symbol."\nLien: ".$siteurl;
             $nb = mysendmail("$destid" , $id , "$subject" , "$message" );
-            if ($destid <> '') $info .="<p>Et un email a été envoyé aux personnes suivantes, pour remboursement:<p><span>".show_names_dest($destid)."</span><p>";
+            if ($destid <> '') $info .="<p>Et un email a Ã©tÃ© envoyÃ© aux personnes suivantes, pour remboursement:<p><span>".show_names_dest($destid)."</span><p>";
             //echo $destid."<p>".$subject."<p><pre>".$message."</pre>";
         }
         
         if ( $action == 'rembourser' and $don == 0 and $cotisations == 1 ) {
             $url="cotisation_edit.php?paiement_id=0&pid=$person&action=insert&rembourse=1&note=$NF_ID";
-            $info .="<div align=center><input type=submit class='btn btn-secondary' value='créer remboursement' onclick=\"javascript:self.location.href='".$url."';\" title='Créer un remboursement pour cette note'></div>";
+            $info .="<div align=center><input type=submit class='btn btn-secondary' value='crÃ©er remboursement' onclick=\"javascript:self.location.href='".$url."';\" title='CrÃ©er un remboursement pour cette note'></div>";
             $t='Retour';
         }
     }
@@ -489,13 +489,13 @@ if ( $NF_ID > 0 ) {
     if ( $action == 'insert' or ( $action == 'update' and ($statut == '' or $old == $statut)))
         echo "<body onload=\"javascript:self.location.href='upd_personnel.php?tab=9&nfid=".$NF_ID."&from=notes_de_frais&id=".$person."';\">";
     else {
-        if ( intval($justif_recus) == 0 and $syndicate == 1 and $action == 'submit' ) $cmt=" Attention, le remboursement n'interviendra que lorsque les justificatifs originaux auront été reçus.";
+        if ( intval($justif_recus) == 0 and $syndicate == 1 and $action == 'submit' ) $cmt=" Attention, le remboursement n'interviendra que lorsque les justificatifs originaux auront Ã©tÃ© reÃ§us.";
         else $cmt="";
         if ( $action == 'reject' ) 
             $info .= "<br><span class='red12'>".str_replace("\\","",$reject_comment)."</span>";
         write_msgbox("Note de frais ".$keyword, $star_pic, 
         " La note de frais de ".$nom." pour un montant total de <b>".my_number_format($total).$default_money_symbol."</b>". 
-        " <br>a bien été ".$keyword.$j.$cmt."<p align=center>".$info."<p align=center>".$action_link,10,0);
+        " <br>a bien Ã©tÃ© ".$keyword.$j.$cmt."<p align=center>".$info."<p align=center>".$action_link,10,0);
     }
 }
 

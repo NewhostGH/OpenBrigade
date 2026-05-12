@@ -21,7 +21,7 @@ include_once ("config.php");
 check_all(0);
 $id=$_SESSION['id'];
 
-$printed_by="imprimÈ par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y ‡ H:i");
+$printed_by="imprim√© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y √† H:i");
 
 if ( isset($_GET["year"])) $year=intval($_GET["year"]);
 else $year = date('Y') -1;
@@ -101,10 +101,10 @@ if (( $nb_rejets > 0 or $P_OLD_MEMBER > 0 ) and ! check_rights($id, 159, $his_se
     $nomenu=1;
     writehead();
     echo "<div align=center>";
-    $msg = "Pour votre attestation d'impÙt ".$year.", merci de prendre contact avec le service trÈsorerie ";
+    $msg = "Pour votre attestation d'imp√¥t ".$year.", merci de prendre contact avec le service tr√©sorerie ";
     if ( $cisname == 'FA/SPP-PATS' ) $msg .= " de la FA/SPP-PATS (email : <a href='mailto:tresorerie@faspp-pats.org'>tresorerie@faspp-pats.org</a> / tel : 04.93.34.81.09)";
     $msg .= "<p><input type=submit class='btn btn-default' value='fermer' onclick='javascript:window.close();'></p>";
-    write_msgbox("Attestation bloquÈe",$warning_pic,$msg,30,30);
+    write_msgbox("Attestation bloqu√©e",$warning_pic,$msg,30,30);
     exit;
 }
 
@@ -136,7 +136,7 @@ $pdf->SetXY($GoX + 20,$y);
 $pdf->MultiCell(120,7,"POUR LA REDUCTION D'IMPOT SUR L'IMPOSITION ".$year,"0","C");
 GoDown(1); 
 $pdf->SetXY($GoX + 25,$y);
-$pdf->MultiCell(100,7,"(Article 8 de la loi n∞88.1149 du 23.12.1988)","0","C");
+$pdf->MultiCell(100,7,"(Article 8 de la loi n¬∞88.1149 du 23.12.1988)","0","C");
 GoDown(5);
 
 // =========================================================
@@ -186,17 +186,17 @@ $pdf->SetFont('Helvetica','B',10);
 $pdf->Text($GoX + 20,$y,$P_ADDRESS." ".$P_ZIP_CODE." ".$P_CITY);
 GoDown(1);
 $pdf->SetFont('Helvetica','',10); 
-$pdf->Text($GoX,$y,"EmployÈ du Service DÈpartemental d'Incendie et de Secours du: ");
+$pdf->Text($GoX,$y,"Employ√© du Service D√©partemental d'Incendie et de Secours du: ");
 $pdf->SetFont('Helvetica','B',10);
 $pdf->Text($GoX + 102,$y,$DEPARTEMENT);
 GoDown(1);
 $pdf->SetFont('Helvetica','',10); 
-$pdf->Text($GoX,$y,"A acquittÈ sa cotisation pour l'annÈe ".$year);
+$pdf->Text($GoX,$y,"A acquitt√© sa cotisation pour l'ann√©e ".$year);
 $pdf->SetFont('Helvetica','B',10);
 $pdf->Text($GoX + 67,$y,"d'un montant de ".$montant." ".$default_money_symbol);
 GoDown(3);
 $pdf->SetFont('Helvetica','',10); 
-$pdf->Text($GoX + 50,$y,"Fait ‡ ".$city.", le 31 dÈcembre ".$year);
+$pdf->Text($GoX + 50,$y,"Fait √† ".$city.", le 31 d√©cembre ".$year);
     
 // =========================================================
 // FIN

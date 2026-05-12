@@ -38,7 +38,7 @@ if ( isset($_GET["message"]))  {
     $message=str_replace("</textarea>","",$_GET["message"]);
     $message=urldecode(str_replace('\n','%0A',secure_input($dbc,$message)));
 }
-else $message="\n\n\n\nEnvoyé par ".$from = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM']))." depuis ".$application_title);
+else $message="\n\n\n\nEnvoyÃ© par ".$from = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM']))." depuis ".$application_title);
 $nbchar=strlen($message);
 
 if ( isset($_GET["dispo"])) $dispo=secure_input($dbc,$_GET["dispo"]); 
@@ -125,7 +125,7 @@ $credits = get_sms_credits($mysection);
         }
          if (mode[0].checked) {
               choice="mail";
-              if ( confirm("Vous allez envoyer un email à "+ <?php echo $NB ?> +" personnes.\nContinuer?"))
+              if ( confirm("Vous allez envoyer un email Ã  "+ <?php echo $NB ?> +" personnes.\nContinuer?"))
                    confirmed = 1;
             else return;
          } 
@@ -135,18 +135,18 @@ $credits = get_sms_credits($mysection);
               //choice = sms
               credits = <?php echo "'".$credits."'" ?> ;
              if ( credits == 'ERREUR' ) {
-                   swalAlert("Vous n'avez pas de crédits SMS.");
+                   swalAlert("Vous n'avez pas de crÃ©dits SMS.");
                    return;
               }
               if ( credits == '0' ) {
-                   swalAlert("Vous n'avez plus de crédits SMS.");
+                   swalAlert("Vous n'avez plus de crÃ©dits SMS.");
                    return;
               }
               if ( compteur.value > MaxcharSMS ) {
-                   swalAlert("La longueur des messages SMS est limitée à " + MaxcharSMS + " caractères.\nVous avez: " + compteur.value + " caratères.");
+                   swalAlert("La longueur des messages SMS est limitÃ©e Ã  " + MaxcharSMS + " caractÃ¨res.\nVous avez: " + compteur.value + " caratÃ¨res.");
                    return;
               }
-              if ( confirm("Vous allez envoyer un SMS à "+ <?php echo $NB ?> +" personnes.\nATTENTION l'envoi de ces SMS a un coût.\nContinuer?"))
+              if ( confirm("Vous allez envoyer un SMS Ã  "+ <?php echo $NB ?> +" personnes.\nATTENTION l'envoi de ces SMS a un coÃ»t.\nContinuer?"))
                    confirmed = 1;
             else return;
          }
@@ -207,7 +207,7 @@ echo "<FORM name='formulaire' id='formulaire'>";
 $disabled='disabled';
 
 if (( check_rights($_SESSION['id'], 23)) and ( $SMS_CONFIG[1] > 0)) {
-    if ( intval($credits) > 0  or $credits == "Solde illimité" or $credits == "OK" ) $disabled='';
+    if ( intval($credits) > 0  or $credits == "Solde illimitÃ©" or $credits == "OK" ) $disabled='';
 }
 
 echo "<div class='div-decal-left' align=left style='float:left'>";
@@ -294,7 +294,7 @@ if ( check_rights($_SESSION['id'], 23)){
     echo "<div align=right class='dropdown-right'><div class='alert-container'>";    
     if ( $mail_allowed == 0 ) {
        echo "<div style='cursor: default;' class='alert-warning btn'>
-                Mails désactivés
+                Mails dÃ©sactivÃ©s
             </div>";
     }
     echo "<div class='btn btn-default' id='divalert' role='alert' style='width:fit-content;cursor: default;display: none;'>";
@@ -310,7 +310,7 @@ echo "<div class='table-responsive'>";
 echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Créer une alerte <span style='float:right'>Nombre personnes: $modal</span></strong></div>
+                <div class='card-title'><strong> CrÃ©er une alerte <span style='float:right'>Nombre personnes: $modal</span></strong></div>
             </div>
             <div class='card-body graycard'>";
 
@@ -320,7 +320,7 @@ echo "<tr id='subjectrow' name='subjectrow' >
     </tr>
     </table>
         <B style='font-size:small'>Votre message</B>
-          <span class=small2>caractères</span> <input type='text' class='form-control form-control-sm flex' name='comptage' size='1' value='".$nbchar."' readonly=readonly style='width:fit-content;height: 30px;font-weight: 600;margin-top: 5px;margin-bottom: 5px;'>
+          <span class=small2>caractÃ¨res</span> <input type='text' class='form-control form-control-sm flex' name='comptage' size='1' value='".$nbchar."' readonly=readonly style='width:fit-content;height: 30px;font-weight: 600;margin-top: 5px;margin-bottom: 5px;'>
           <span id='field1'>/<input type='text' class='form-control form-control-sm flex' name='maxchar' id='maxchar' size='1' value='".$maxchar_mail."' readonly=readonly style='width:fit-content;height: 30px;font-weight: 600;margin-top: 5px;margin-bottom: 5px;'></span>
           <BR>
     <table class='noBorder' cellspacing=0 border=0 align=center>

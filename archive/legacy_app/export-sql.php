@@ -26,7 +26,7 @@ function test_permission_facture($showfacture) {
     global  $error_pic;
     if ( $showfacture == 0) {
         write_msgbox("Erreur permission", $error_pic, 
-        "Vous n'avez pas la permission de voir ce rapport. Essayez à votre niveau local.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
+        "Vous n'avez pas la permission de voir ce rapport. Essayez Ã  votre niveau local.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
         exit;
     }
 }
@@ -44,7 +44,7 @@ $export_name = @$row["R_NAME"];
 
 if ( $export_name == '' and $exp <> '') {
     write_msgbox("Erreur reporting", $error_pic, 
-    "Le reporting demandé n'existe pas.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
+    "Le reporting demandÃ© n'existe pas.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
     exit;
 }
 
@@ -95,7 +95,7 @@ else if ( $list == 0 and $subsections==1) unset($list);
 if ( substr($exp,0,1)== 1)
     $export_name .= " du ".str_replace('-','-',$dtdb).(($dtdbq!=$dtfnq)?" au ".str_replace('-','-',$dtfn):"")."";
 if ( substr($exp,0,1)== 2)
-    $export_name .= " pour la période ".$yearreport;
+    $export_name .= " pour la pÃ©riode ".$yearreport;
 
 /* Recherche entre deux dates. */ 
 $champdatedebut = "eh_date_debut";
@@ -119,7 +119,7 @@ $horairesentredeuxdate = " ( $champdatedebut >= '$dtdbq' AND $champdatedebut <= 
 $champdatedebut = "ef.paiement_date";
 $paiemententredeuxdate = " ( $champdatedebut >= '$dtdbq' AND $champdatedebut <= '$dtfnq' ) ";
     
-/* Recherche adhésion entre deux dates. */ 
+/* Recherche adhÃ©sion entre deux dates. */ 
 $champdatedebut = "p.p_date_engagement";
 $adhesionentredeuxdate = " ( $champdatedebut >= '$dtdbq' AND $champdatedebut <= '$dtfnq' ) ";
     
@@ -151,7 +151,7 @@ when p.p_phone is not null and p.p_hide = 1 and ".$show."=0 then concat('*******
 when p.p_phone is not null and p.p_hide = 1 and ".$show."=1 then ".phone_display_mask('p.p_phone')." 
 when p.p_phone is not null and p.p_hide = 0 then ".phone_display_mask('p.p_phone')."
 end
-as 'Tél'";
+as 'TÃ©l'";
 
 
 
@@ -169,7 +169,7 @@ switch($exp){
 //-------------------------------------------
 case ( $exp == 'competencesfor' or $exp =='competencesope' ):
     if ( $exp == 'competencesope' )
-        $cat="Opérationnel";
+        $cat="OpÃ©rationnel";
     else
         $cat="Formation";
     $select =  "po.TYPE, po.DESCRIPTION,
@@ -191,7 +191,7 @@ case ( $exp == 'competencesfor' or $exp =='competencesope' ):
                 case
                 when q_expiration is null then '-'
                 when q.q_expiration >= NOW() then concat('<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Valide\"></i> ',date_format(q.q_expiration,'%d-%m-%Y'))
-                when q.q_expiration < NOW() then concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Périmé\"></i> ',date_format(q.q_expiration,'%d-%m-%Y'))
+                when q.q_expiration < NOW() then concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"PÃ©rimÃ©\"></i> ',date_format(q.q_expiration,'%d-%m-%Y'))
                 end as 'Expiration', 
                 TO_DAYS(q.q_expiration) - TO_DAYS(NOW()) 'Reste jours'
                 ";
@@ -213,7 +213,7 @@ case ( $exp == 'competencesfor' or $exp =='competencesope' ):
 //-------------------------------------------
 case "1fonctionsparpers":
     $select =  "concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'Nom',
-                CAP_FIRST(p.p_prenom) 'Prénom',
+                CAP_FIRST(p.p_prenom) 'PrÃ©nom',
                 p.P_GRADE 'Grade',
                 tp.tp_libelle 'Fonction',
                 count(1) 'Nombre (x12h)'";
@@ -262,7 +262,7 @@ case "1intervictimeparevt":
     break;
     
 case "1victimenationalite":
-    $select = "p.NAME 'Nationalité', count(distinct VI_ID ) 'nombre'";
+    $select = "p.NAME 'NationalitÃ©', count(distinct VI_ID ) 'nombre'";
     $table="evenement_log el join victime v on el.EL_ID = v.EL_ID,
            evenement e, pays p";
     $table="(select v.VI_ID,el.EL_DEBUT date1, v.VI_SEXE, v.VI_AGE, el.E_CODE, 'I' 'type_victime', v.VI_PAYS
@@ -286,7 +286,7 @@ case "1victimenationalite":
 case "1victimesexe":
     $select = "case 
         when VI_SEXE ='M' then 'Masculin'
-        else 'Féminin'
+        else 'FÃ©minin'
         end
         as 'Sexe',
         count(distinct VI_ID ) 'nombre'";
@@ -331,14 +331,14 @@ case "1victimeage":
 case "1statdetailvictime":
     $select = "date_format(date1,'%d-%m-%Y') 'date',
             count(distinct VI_ID ) 'personnes prises en charge',
-            sum(VI_DETRESSE_VITALE) 'détresses',
-            sum(VI_DECEDE) 'décès',
+            sum(VI_DETRESSE_VITALE) 'dÃ©tresses',
+            sum(VI_DECEDE) 'dÃ©cÃ¨s',
             sum(VI_MALAISE) 'malaises',
-            sum(VI_INFORMATION) 'assistées',
+            sum(VI_INFORMATION) 'assistÃ©es',
             sum(VI_SOINS) 'soins',
-            sum(VI_MEDICALISE) 'médicalisées',
+            sum(VI_MEDICALISE) 'mÃ©dicalisÃ©es',
             sum(VI_REFUS) 'refus',
-            sum(VI_IMPLIQUE) 'impliqués',
+            sum(VI_IMPLIQUE) 'impliquÃ©s',
             sum(VI_TRANSPORT) 'transports',
             sum(VI_VETEMENT) 'vetements',
             sum(VI_ALIMENTATION) 'alimentation',
@@ -364,7 +364,7 @@ case "1statdetailvictime":
     $where .= (isset($list)?"  and e.S_ID in(".$list.") ":"");
     $orderby="date1";
     $groupby="date1";
-    $SommeSur = array("personnes prises en charge","détresses","décès","malaises","assistées","soins","médicalisées","refus","impliqués","transports","vetements","alimentation","repos","traumatismes");
+    $SommeSur = array("personnes prises en charge","dÃ©tresses","dÃ©cÃ¨s","malaises","assistÃ©es","soins","mÃ©dicalisÃ©es","refus","impliquÃ©s","transports","vetements","alimentation","repos","traumatismes");
     break;
     
 
@@ -375,14 +375,14 @@ case "1statdetailvictimeparevt":
             concat('<a href=evenement_display.php?from=interventions&evenement=',e.E_CODE,' target=_blank title=\"voir evenement\">voir</a>') 'voir',
             date_format(date1,'%d-%m-%Y') 'date',
             count(distinct VI_ID ) 'personnes prises en charge',
-            sum(VI_DETRESSE_VITALE) 'détresses' ,
+            sum(VI_DETRESSE_VITALE) 'dÃ©tresses' ,
             sum(VI_DECEDE) 'DCD',
             sum(VI_MALAISE) 'malaises',
-            sum(VI_INFORMATION) 'assistées',
+            sum(VI_INFORMATION) 'assistÃ©es',
             sum(VI_SOINS) 'soins',
-            sum(VI_MEDICALISE) 'médicalisées',
+            sum(VI_MEDICALISE) 'mÃ©dicalisÃ©es',
             sum(VI_REFUS) 'refus',
-            sum(VI_IMPLIQUE) 'impliqués',
+            sum(VI_IMPLIQUE) 'impliquÃ©s',
             sum(VI_TRANSPORT) 'transports',
             sum(VI_VETEMENT) 'vetements',
             sum(VI_ALIMENTATION) 'alimentation',
@@ -409,7 +409,7 @@ case "1statdetailvictimeparevt":
     $where .= (isset($list)?"  and e.S_ID in(".$list.") ":"");
     $orderby="date1";
     $groupby="e.E_CODE";
-    $SommeSur = array("personnes prises en charge","détresses","malaises","assistées","soins","médicalisées","refus","impliqués","transports","vetements","alimentation","repos","DCD","traumatismes");
+    $SommeSur = array("personnes prises en charge","dÃ©tresses","malaises","assistÃ©es","soins","mÃ©dicalisÃ©es","refus","impliquÃ©s","transports","vetements","alimentation","repos","DCD","traumatismes");
     break;
 
 case "1transportdest":
@@ -475,24 +475,24 @@ case "1listevictime":
             e.E_LIBELLE 'Evenement',
             case 
             when VI_SEXE ='M' then 'Masculin'
-            else 'Féminin'
+            else 'FÃ©minin'
             end
             as 'Sexe',
             VI_AGE AS 'Age',
-            p.NAME 'Nationalité',
-            concat('<a href=victimes.php?from=interventions&victime=',VI_ID,' title=\"Voir fiche victime\" target=_blank>',REPLACE(REPLACE(VI_PRENOM,'é','e'),'è','e'),' ',REPLACE(REPLACE(VI_NOM,'é','e'),'è','e'),'</a>') 'voir',
-            VI_DETRESSE_VITALE 'détr.',
-            VI_DECEDE 'décès',
+            p.NAME 'NationalitÃ©',
+            concat('<a href=victimes.php?from=interventions&victime=',VI_ID,' title=\"Voir fiche victime\" target=_blank>',REPLACE(REPLACE(VI_PRENOM,'Ã©','e'),'Ã¨','e'),' ',REPLACE(REPLACE(VI_NOM,'Ã©','e'),'Ã¨','e'),'</a>') 'voir',
+            VI_DETRESSE_VITALE 'dÃ©tr.',
+            VI_DECEDE 'dÃ©cÃ¨s',
             VI_MALAISE 'malaise',
             VI_INFORMATION 'assist.',
             VI_SOINS 'soins',
             VI_REFUS 'refus',
-            VI_IMPLIQUE 'impliqués',
+            VI_IMPLIQUE 'impliquÃ©s',
             VI_VETEMENT 'vet.',
             VI_ALIMENTATION 'alim.',
             VI_TRAUMATISME 'trauma.',
             VI_REPOS 'repos.',
-            VI_TRANSPORT 'transporté',
+            VI_TRANSPORT 'transportÃ©',
             case 
             when VI_TRANSPORT = 1 then t.T_NAME
             else ''
@@ -524,7 +524,7 @@ case "1listevictime":
     $where .= " and victime.E_CODE = e.E_CODE";
     $where .= (isset($list)?"  and e.S_ID in(".$list.") ":"");
     $orderby="date1";
-    $SommeSur = array("détr.","décès","malaise","assist.","soins","refus","impliqués","vet.","alim.","transporté","repos.","trauma.");
+    $SommeSur = array("dÃ©tr.","dÃ©cÃ¨s","malaise","assist.","soins","refus","impliquÃ©s","vet.","alim.","transportÃ©","repos.","trauma.");
     break;
     
     
@@ -533,15 +533,15 @@ case "1listevictimeCAV":
             date_format(date1,'%d-%m-%Y') 'Date',
             substring(e.E_LIBELLE,1,40) 'Evenement',
             substring(CAV_NAME,1,30) 'Centre Accueil',
-            concat('<a href=victimes.php?from=interventions&victime=',VI_ID,' title=\"Voir fiche victime\" target=_blank>',REPLACE(REPLACE(VI_PRENOM,'é','e'),'è','e'),' ',REPLACE(REPLACE(VI_NOM,'é','e'),'è','e'),'</a>') 'Identité',
+            concat('<a href=victimes.php?from=interventions&victime=',VI_ID,' title=\"Voir fiche victime\" target=_blank>',REPLACE(REPLACE(VI_PRENOM,'Ã©','e'),'Ã¨','e'),' ',REPLACE(REPLACE(VI_NOM,'Ã©','e'),'Ã¨','e'),'</a>') 'IdentitÃ©',
             case 
             when VI_SEXE ='M' then 'Masculin'
-            else 'Féminin'
+            else 'FÃ©minin'
             end
             as 'Sexe',
             VI_AGE AS 'Age',
             VI_ADDRESS As 'Adresse',
-            p.NAME 'Nationalité',
+            p.NAME 'NationalitÃ©',
             case 
             when VI_TRANSPORT = 1 then d.D_NAME
             else ''
@@ -574,7 +574,7 @@ case "1listevictimeCAV":
 // sections 
 //-------------------
     case ( $exp == "sectionannuaire" or $exp == "departementannuaire" ):
-        $select="concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'ç','c'),'</a>') 'Code',
+        $select="concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'Ã§','c'),'</a>') 'Code',
         mys.s_description 'Nom long',";
         if ( $assoc == 1 )
             $select.= "
@@ -582,18 +582,18 @@ case "1listevictimeCAV":
                 when mys.S_INACTIVE=1 then 'oui'
                 else  ''
             end as 'Inactive',
-            mys.s_email 'Email opérationnel',
-            mys.s_email2 'Email secrétariat',
+            mys.s_email 'Email opÃ©rationnel',
+            mys.s_email2 'Email secrÃ©tariat',
             mys.s_email3 'Email formation',";
         else
             $select.= " mys.s_email 'Email',";
-        $select.= " ".phone_display_mask('mys.s_phone')." 'Téléphone',
+        $select.= " ".phone_display_mask('mys.s_phone')." 'TÃ©lÃ©phone',
         mys.s_address 'Adresse',
-        mys.s_address_complement 'Complément',
+        mys.s_address_complement 'ComplÃ©ment',
         mys.s_zip_code 'Code postal',
         mys.s_city 'Ville'";
         if ( $assoc == 1 ) $select .= ", mys.S_AFFILIATION 'Num Affiliation'";
-        $table="section_flat sf, ( select REPLACE(REPLACE(s_code,'é','e'),'è','e') s_code, s.s_id, substring(s.s_description,1,25) s_description, 
+        $table="section_flat sf, ( select REPLACE(REPLACE(s_code,'Ã©','e'),'Ã¨','e') s_code, s.s_id, substring(s.s_description,1,25) s_description, 
          s.s_email, s.s_email2, s.s_email3, substring(s.s_phone,1,10) s_phone,s.s_address,s.s_address_complement,s.s_zip_code,s.s_city, s.S_AFFILIATION, s.S_INACTIVE
          from section s
          ) as mys";
@@ -607,15 +607,15 @@ case "1listevictimeCAV":
         
     case ( $exp == "sectionannuaire2" or $exp == "sectionannuaire3"):
         $select="
-        concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'ç','c'),'</a>') 'Code',
+        concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'Ã§','c'),'</a>') 'Code',
         mys.s_description 'Nom',
         mys.s_address 'Adresse',
-        mys.s_address_complement 'Complément',
+        mys.s_address_complement 'ComplÃ©ment',
         mys.s_zip_code 'Code postal',
         mys.s_city 'Ville',";
-        $select.= " ".phone_display_mask('mys.s_phone')." 'Tél',"
-        ." ".phone_display_mask('mys.s_phone3')." 'Tél formation',
-        mys.s_email2 'Email secrétariat',
+        $select.= " ".phone_display_mask('mys.s_phone')." 'TÃ©l',"
+        ." ".phone_display_mask('mys.s_phone3')." 'TÃ©l formation',
+        mys.s_email2 'Email secrÃ©tariat',
         mys.s_email3 'Email formation',";
         if ( $exp == "sectionannuaire3" )
             $select.= "
@@ -623,15 +623,15 @@ case "1listevictimeCAV":
         else
             $select.= "mys.S_SIRET 'Siret',
             mys.S_URL 'Site internet',
-            CAP_FIRST(p.P_PRENOM) 'Prénom',
-            concat('<a href=\"upd_personnel.php?pompier=',mys.P_ID,'\" target=_blank>',UPPER(p.P_NOM),'</a>') 'Nom Président',";
+            CAP_FIRST(p.P_PRENOM) 'PrÃ©nom',
+            concat('<a href=\"upd_personnel.php?pompier=',mys.P_ID,'\" target=_blank>',UPPER(p.P_NOM),'</a>') 'Nom PrÃ©sident',";
         $select.= "case 
         when sf.NIV = 3 then concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id,'\" target=_blank>',mys.s_code,'</a>') 
         else concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id2,'\" target=_blank>',mys.s_code2,'</a>') 
-        end as Dép";
+        end as DÃ©p";
         if ( $assoc == 1 ) $select .= ", mys.S_AFFILIATION 'Num Affiliation'";
         $table="section_flat sf,
-        (   select REPLACE(REPLACE(s.s_code,'é','e'),'è','e') s_code, s.S_ID, REPLACE(REPLACE(sp.s_code,'é','e'),'è','e') s_code2, sp.S_ID S_ID2, s.s_description,
+        (   select REPLACE(REPLACE(s.s_code,'Ã©','e'),'Ã¨','e') s_code, s.S_ID, REPLACE(REPLACE(sp.s_code,'Ã©','e'),'Ã¨','e') s_code2, sp.S_ID S_ID2, s.s_description,
             s.s_email2, s.s_email3, substring(s.s_phone,1,10) s_phone, substring(s.s_phone3,1,10) s_phone3, s.S_SIRET, s.S_URL, sr.P_ID, sr2.P_ID P_ID2,
             s.s_address,s.s_address_complement,s.s_zip_code,s.s_city, s.S_AFFILIATION
             from section s left join section_role sr on (s.S_ID = sr.S_ID and sr.GP_ID=102 )
@@ -650,10 +650,10 @@ case "1listevictimeCAV":
         break;
         
     case "IDRadio":
-        $select="concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'ç','c'),'</a>') 'Code',
+        $select="concat('<a href=\"upd_section.php?from=export&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'Ã§','c'),'</a>') 'Code',
         mys.s_description 'Nom long',
         mys.S_ID_RADIO 'ID Radio'";
-        $table="section_flat sf, ( select REPLACE(REPLACE(s_code,'é','e'),'è','e') s_code, s.s_id, substring(s.s_description,1,25) s_description, s.S_ID_RADIO
+        $table="section_flat sf, ( select REPLACE(REPLACE(s_code,'Ã©','e'),'Ã¨','e') s_code, s.s_id, substring(s.s_description,1,25) s_description, s.S_ID_RADIO
          from section s
         ) as mys";
         $where = " mys.S_ID = sf.S_ID";
@@ -663,7 +663,7 @@ case "1listevictimeCAV":
         break;
         
     case "SMSsections":
-        $select="concat('<a href=\"upd_section.php?from=export&S_ID=',s_id,'\" target=_blank>',REPLACE(s_code,'ç','c'),'</a>') 'Code',
+        $select="concat('<a href=\"upd_section.php?from=export&S_ID=',s_id,'\" target=_blank>',REPLACE(s_code,'Ã§','c'),'</a>') 'Code',
             S_DESCRIPTION 'Section',
             case
                 when SMS_LOCAL_PROVIDER = 1 then 'envoyersmspro.com'
@@ -679,7 +679,7 @@ case "1listevictimeCAV":
         $where = " SMS_LOCAL_PROVIDER > 0";
         $where .= (isset($list)?" AND s_id in(".$list.") ":"");
         if ( $filter == 0 ) {
-            $where .= " \nunion select concat('<a href=\"upd_section.php?from=export&S_ID=0\" target=_blank>',REPLACE(\"".$cisname."\",'ç','c'),'</a>') 'Code',
+            $where .= " \nunion select concat('<a href=\"upd_section.php?from=export&S_ID=0\" target=_blank>',REPLACE(\"".$cisname."\",'Ã§','c'),'</a>') 'Code',
             \"".$organisation_name."\" as Section,
             case
                 when ".intval($sms_provider)." = 1 then 'envoyersmspro.com'
@@ -700,20 +700,20 @@ case "1listevictimeCAV":
 // entreprises 
 //-------------------
       case "entreprisesannuaire":
-        $select="concat('<a href=\"upd_company.php?from=export&C_ID=',mys.c_id,'\" target=_blank>',REPLACE(mys.c_name,'ç','c'),'</a>') 'Entreprise',
+        $select="concat('<a href=\"upd_company.php?from=export&C_ID=',mys.c_id,'\" target=_blank>',REPLACE(mys.c_name,'Ã§','c'),'</a>') 'Entreprise',
         mys.tc_libelle 'Type',
         mys.c_description 'Description',
         mys.c_siret 'SIRET',        
         mys.c_email 'Email',
-        mys.c_phone 'Téléphone',
+        mys.c_phone 'TÃ©lÃ©phone',
         mys.c_address 'Adresse',
         mys.c_zip_code 'Code postal',
         mys.c_city 'Ville',
-        mys.s_code 'Rattachée à'";
-        $table=" ( select REPLACE(REPLACE(c.c_name,'é','e'),'è','e') c_name, c.s_id, 
+        mys.s_code 'RattachÃ©e Ã '";
+        $table=" ( select REPLACE(REPLACE(c.c_name,'Ã©','e'),'Ã¨','e') c_name, c.s_id, 
          case 
          when c.c_siret = '' then c.c_siret
-         else concat('N° ',c.c_siret) 
+         else concat('NÂ° ',c.c_siret) 
          end
          as c_siret,
          tc.tc_libelle, c.c_id, substring(c.c_description,1,35) c_description, 
@@ -729,11 +729,11 @@ case "1listevictimeCAV":
         break;
         
 //-------------------
-// médecins référents 
+// mÃ©decins rÃ©fÃ©rents 
 //-------------------
     case "medecinsreferents":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')  
@@ -743,7 +743,7 @@ case "1listevictimeCAV":
         end
         as 'Email',
         concat(s.s_code,' - ',s.s_description)  'Section',
-        tcr.tcr_description  ' Rôle',
+        tcr.tcr_description  ' RÃ´le',
         c.c_name  'Entreprise'";
         $table="pompier p, section s, company c, company_role cr, type_company_role tcr";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
@@ -762,14 +762,14 @@ case "1listevictimeCAV":
 // agrements 
 //-------------------
       case "agrements":
-        $select="concat('<a href=\"upd_section.php?from=export&status=agrements&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'ç','c'),'</a>') 'Code',
+        $select="concat('<a href=\"upd_section.php?from=export&status=agrements&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'Ã§','c'),'</a>') 'Code',
         mys.s_description 'Nom',
         mys.ta_code 'Code',
-        mys.ta_description 'Description agrément',
-        date_format(mys.a_debut,'%d-%m-%Y')    'Début',
+        mys.ta_description 'Description agrÃ©ment',
+        date_format(mys.a_debut,'%d-%m-%Y')    'DÃ©but',
         date_format(mys.a_fin,'%d-%m-%Y')    'Fin'
         ";
-        $table=" ( select REPLACE(REPLACE(s.s_code,'é','e'),'è','e') s_code, s.s_id, substring(s.s_description,1,50) s_description, 
+        $table=" ( select REPLACE(REPLACE(s.s_code,'Ã©','e'),'Ã¨','e') s_code, s.s_id, substring(s.s_description,1,50) s_description, 
          a.ta_code, ta.ta_description, a.a_debut, a.a_fin
          from section s, agrement a, type_agrement ta
          where ta.ta_code=a.ta_code
@@ -784,14 +784,14 @@ case "1listevictimeCAV":
 // agrements DPS
 //-------------------
       case "agrements_dps":
-        $select="concat('<a href=\"upd_section.php?from=export&status=agrements&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'ç','c'),'</a>') 'Code',
+        $select="concat('<a href=\"upd_section.php?from=export&status=agrements&S_ID=',mys.s_id,'\" target=_blank>',REPLACE(mys.s_code,'Ã§','c'),'</a>') 'Code',
         mys.s_description 'Nom',
-        mys.ta_description 'Description agrément',
-        date_format(mys.a_debut,'%d-%m-%Y')    'Début',
+        mys.ta_description 'Description agrÃ©ment',
+        date_format(mys.a_debut,'%d-%m-%Y')    'DÃ©but',
         date_format(mys.a_fin,'%d-%m-%Y')    'Fin',
-        mys.ta_valeur    'DPS autorisés'
+        mys.ta_valeur    'DPS autorisÃ©s'
         ";
-        $table=" ( select REPLACE(REPLACE(s.s_code,'é','e'),'è','e') s_code, s.s_id, substring(s.s_description,1,50) s_description, 
+        $table=" ( select REPLACE(REPLACE(s.s_code,'Ã©','e'),'Ã¨','e') s_code, s.s_id, substring(s.s_description,1,50) s_description, 
          ta.ta_description, a.a_debut, a.a_fin, tav.ta_valeur
          from section s, agrement a, type_agrement ta, type_agrement_valeur tav
          where ta.ta_code=a.ta_code
@@ -813,19 +813,19 @@ case ( $exp == "1cadps" or $exp == "1cafor" or $exp == "1cadps_sansR"):
     test_permission_facture($showfacture);
     $select = " 
     e.statutFact 'Statut / Date',
-    e.e_libelle 'Libellé',    
+    e.e_libelle 'LibellÃ©',    
     e.e_lieu 'Lieu',
     e.S_CODE 'organisateur',
     if(e.e_parent >0,'Renfort',NULL) 'Renfort?',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     e.facture_montant 'Montant',
     e.voir
     ";    
     $table = " (
     select e.E_CODE, ef.facture_montant, s.S_CODE,
-    if(ef.paiement_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Payé\"></i> Payé : ',date_format(ef.paiement_date,'%d-%m-%Y')),
+    if(ef.paiement_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:green;\" title=\"PayÃ©\"></i> PayÃ© : ',date_format(ef.paiement_date,'%d-%m-%Y')),
     if(ef.relance_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Relance\"></i> Relance : ',date_format(ef.relance_date,'%d-%m-%Y')),
-    if(ef.facture_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Facturé\"></i> Facturé : ',date_format(ef.facture_date,'%d-%m-%Y')),
+    if(ef.facture_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"FacturÃ©\"></i> FacturÃ© : ',date_format(ef.facture_date,'%d-%m-%Y')),
     if(ef.devis_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:orange;\" title=\"Devis\"></i> Devis : ',date_format(ef.devis_date,'%d-%m-%Y')),
     ' ')))) 
     as 'statutFact',
@@ -846,7 +846,7 @@ case ( $exp == "1cadps" or $exp == "1cafor" or $exp == "1cadps_sansR"):
     ";
     $where = " $evenemententredeuxdate ";
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
-    $where .=" and e.e_canceled = 0"; // exclure les évènements annulés
+    $where .=" and e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $orderby  = " e.eh_date_debut, e.te_code";
     $SommeSur = array("Montant");
     break;
@@ -857,9 +857,9 @@ case ( $exp == "1facturepayeedps" or $exp == "1facturepayeefor" ):
     test_permission_facture($showfacture);
     $select = " 
     e.paiement_date 'Date Paiement',
-    e.e_libelle 'Libellé',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date événement' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date Ã©vÃ©nement' ,
     e.devis_montant 'Montant devis',
     e.facture_montant 'Montant facture',
     e.voir    
@@ -904,7 +904,7 @@ case ( $exp == "1facturepayeedps" or $exp == "1facturepayeefor" ):
     $where = "";
     $where = " $evenemententredeuxdate ";
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
-    $where .=" and e.e_canceled = 0"; // exclure les évènements annulés
+    $where .=" and e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $orderby = " e.paiement_date asc";
     $SommeSur = array("Montant devis","Montant facture");
     break;
@@ -914,18 +914,18 @@ case "1facturation":
     test_permission_facture($showfacture);
     $select = " 
     e.statutFact 'Statut / Date',
-    e.te_code 'Evénement',
-    e.e_libelle 'Libellé',
+    e.te_code 'EvÃ©nement',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y') 'Date début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y') 'Date dÃ©but' ,
     date_format(e.eh_date_fin,'%d-%m-%Y') 'Date fin' ,
     concat('<a href=''evenement_facturation.php?tab=2&from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
     $table = " (
     select 
-    if(ef.paiement_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Payé\"></i> Payé : ',date_format(ef.paiement_date,'%d-%m-%Y')),
+    if(ef.paiement_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:green;\" title=\"PayÃ©\"></i> PayÃ© : ',date_format(ef.paiement_date,'%d-%m-%Y')),
     if(ef.relance_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Relance\"></i> Relance : ',date_format(ef.relance_date,'%d-%m-%Y')),
-    if(ef.facture_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Facturé\"></i> Facture : ',date_format(ef.facture_date,'%d-%m-%Y')),
+    if(ef.facture_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"FacturÃ©\"></i> Facture : ',date_format(ef.facture_date,'%d-%m-%Y')),
     if(ef.devis_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:orange;\" title=\"Devis\"></i> Devis : ',date_format(ef.devis_date,'%d-%m-%Y')),
     ' ')))) 
     as 'statutFact',
@@ -944,7 +944,7 @@ case "1facturation":
     $where = "";
     $where = " $evenemententredeuxdate ";
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
-    $where .=" and e.e_canceled = 0"; // exclure les évènements annulés
+    $where .=" and e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $orderby  = " e.eh_date_debut, e.te_code";
     $groupby = " e.e_code";
     break;
@@ -953,10 +953,10 @@ case "1facturationRecap":
     test_permission_facture($showfacture);
     $select = " 
     concat('<a href=''evenement_facturation.php?tab=2&from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >',e.e_code,'</a>') 'Numero',
-    e.te_code 'Evénement',
-    e.e_libelle 'Libellé',
+    e.te_code 'EvÃ©nement',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     e.Devis 'Devis',
     e.devis_comment 'Commentaire1',
     e.Facture 'Facture',
@@ -990,7 +990,7 @@ case "1facturationRecap":
     $where = "";
     $where = " $evenemententredeuxdate ";
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
-    $where .=" and e.e_canceled = 0"; // exclure les évènements annulés
+    $where .=" and e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $orderby  = " e.eh_date_debut, e.te_code";
     $groupby = " e.te_code, e.e_code";
     break;    
@@ -998,10 +998,10 @@ case "1facturationRecap":
 case "fafacturer":
     test_permission_facture($showfacture);
     $select = " 
-    e.te_code 'Evénement', 
-    e.e_libelle 'Libellé',
+    e.te_code 'EvÃ©nement', 
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     if(ef.devis_date is not null,concat(date_format(ef.devis_date,'%d-%m-%Y')),NULL) 'Devis',
     if(ef.devis_date is not null,concat(ef.devis_montant),NULL) 'Montant',
     concat('<a href=''evenement_facturation.php?from=export&tab=2&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
@@ -1009,7 +1009,7 @@ case "fafacturer":
     $table = "evenement e, evenement_facturation ef, evenement_horaire eh ";
     $where = " e.e_code = ef.e_id ";
     $where .= (isset($list)?"  AND e.s_id in(".$list.") ":"");
-    $where .=" AND e.e_canceled = 0"; // exclure les évènements annulés
+    $where .=" AND e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $where .=" AND ef.facture_date is null "; 
     $where .=" AND ef.paiement_date is null ";
     $where .=" AND eh.eh_date_fin <= now() ";
@@ -1024,11 +1024,11 @@ case "1tnonpaye":
     test_permission_facture($showfacture);
     $select = " 
     e.te_code 'Evenement',
-    e.e_libelle 'Libellé',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(min(eh_date_debut),'%d-%m-%Y')  'Date début' ,
+    date_format(min(eh_date_debut),'%d-%m-%Y')  'Date dÃ©but' ,
     date_format(max(eh_date_fin),'%d-%m-%Y')  'Date fin' ,
-    if(ef.paiement_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Payé\"></i>Payé : ',date_format(ef.paiement_date,'%d-%m-%Y')),
+    if(ef.paiement_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:green;\" title=\"PayÃ©\"></i>PayÃ© : ',date_format(ef.paiement_date,'%d-%m-%Y')),
     if(ef.relance_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Relance\"></i> Relance : ',date_format(ef.relance_date,'%d-%m-%Y')),
     if(ef.facture_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Facture\"></i> Facture : ',date_format(ef.facture_date,'%d-%m-%Y')),
     if(ef.devis_date is not null,concat('<i class=\"fa fa-circle\" style=\"color:orange;\" title=\"Devis\"></i> Devis : ',date_format(ef.devis_date,'%d-%m-%Y')),
@@ -1037,7 +1037,7 @@ case "1tnonpaye":
     if(ef.facture_date is not null,concat(date_format(ef.facture_date,'%d-%m-%Y')),NULL) 'Date Facture',
     if(ef.relance_date is not null,concat(date_format(ef.relance_date,'%d-%m-%Y'),' No:',ef.relance_num),NULL) 'Relance',
     if(ef.devis_date is not null,concat(round(ef.devis_montant,2)),NULL) 'Montant devis',
-    if(ef.facture_date is not null, round(ef.facture_montant,2) ,NULL) 'Montant facturé',    
+    if(ef.facture_date is not null, round(ef.facture_montant,2) ,NULL) 'Montant facturÃ©',    
     concat(ef.facture_numero) 'Facture No',
     concat('<a href=''evenement_facturation.php?from=export&tab=2&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
@@ -1053,27 +1053,27 @@ case "1tnonpaye":
     $where .= " AND eh_date_fin < NOW() ";
     $orderby  = " eh_date_debut, e.te_code";
     $groupby = " e.e_code";
-    $SommeSur = array("Montant devis","Montant facturé");
+    $SommeSur = array("Montant devis","Montant facturÃ©");
     break;
 
 case "1fnonpaye":
     test_permission_facture($showfacture);
     $select = "
-    e.te_code 'Evénement',
-    e.e_libelle 'Libellé',
+    e.te_code 'EvÃ©nement',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     if(ef.facture_date is not null,concat(date_format(ef.facture_date,'%d-%m-%Y')),NULL) 'Date Facture',
     if(ef.relance_date is not null,concat(date_format(ef.relance_date,'%d-%m-%Y'),' No:',ef.relance_num),NULL) 'Relance',
     if(ef.devis_date is not null,concat(round(ef.devis_montant,2)),NULL) 'Montant devis',
-    if(ef.facture_date is not null, round(ef.facture_montant,2) ,NULL) 'Montant facturé',
+    if(ef.facture_date is not null, round(ef.facture_montant,2) ,NULL) 'Montant facturÃ©',
     concat(ef.facture_numero) 'Facture No',
     concat('<a href=''evenement_facturation.php?from=export&tab=4&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
     $table = "evenement e, evenement_facturation ef, evenement_horaire eh ";
     $where = " e.e_code = ef.e_id ";
     $where .= (isset($list)?"  AND e.s_id in(".$list.") ":"");
-    $where .=" AND e.e_canceled = 0"; // exclure les évènements annulés
+    $where .=" AND e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $where .=" AND ef.paiement_date is null "; 
     $where .=" AND ef.facture_date is not null ";
     $where .= " AND eh.e_code = e.e_code and e.te_code <> 'MC'";
@@ -1082,16 +1082,16 @@ case "1fnonpaye":
     between '$dtdbq' and '$dtfnq' ";
     $orderby  = " eh.eh_date_debut, e.te_code";
     $groupby = " e.te_code, e.e_code";
-    $SommeSur = array("Montant facturé");
+    $SommeSur = array("Montant facturÃ©");
     break;
     
     
 case "1paye":
     $select = " 
-    e.te_code 'Evénement',
-    e.e_libelle 'Libellé',
+    e.te_code 'EvÃ©nement',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     concat(ef.facture_numero) 'Facture No',
     if(ef.facture_date is not null,concat(date_format(ef.facture_date,'%d-%m-%Y')),NULL) 'Facture',    
     if(ef.paiement_date is not null,concat(date_format(ef.paiement_date,'%d-%m-%Y')),NULL) 'Paiement',
@@ -1103,7 +1103,7 @@ case "1paye":
     //$where = " $evenemententredeuxdate ";
     $where .= " AND ef.paiement_date between '$dtdbq' and '$dtfnq' ";
     $where .= (isset($list)?"  AND e.s_id in(".$list.") ":"");
-    //$where .=" AND e.e_canceled = 0"; // exclure les évènements annulés
+    //$where .=" AND e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $where .=" AND ef.paiement_date is not null ";
     $where .= " AND eh.e_code = e.e_code and e.te_code <> 'MC'";
     $where .= " AND eh.eh_id = 1";
@@ -1114,11 +1114,11 @@ case "1paye":
     
 case "1facturestoutes":
     $select = "
-    if(ef.paiement_date is null,'<i class=\"fa fa-circle\" style=\"color:red;\" title=\"non payé\"></i>','<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Payé\"></i>') 'Statut',
-    e.te_code 'Evénement',
-    e.e_libelle 'Libellé',
+    if(ef.paiement_date is null,'<i class=\"fa fa-circle\" style=\"color:red;\" title=\"non payÃ©\"></i>','<i class=\"fa fa-circle\" style=\"color:green;\" title=\"PayÃ©\"></i>') 'Statut',
+    e.te_code 'EvÃ©nement',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     if(ef.facture_date is not null,concat(date_format(ef.facture_date,'%d-%m-%Y')),NULL) 'Facture',
     if(ef.paiement_date is not null,concat(date_format(ef.paiement_date,'%d-%m-%Y')),NULL) 'Paiement',
     if(ef.paiement_date is not null,if(".$showfacture."<>1,'confidentiel',ef.facture_montant),NULL) 'Montant',
@@ -1132,16 +1132,16 @@ case "1facturestoutes":
     //$where = " $evenemententredeuxdate ";
     $where .= " AND ef.facture_date between '$dtdbq' and '$dtfnq' ";
     $where .= (isset($list)?"  AND e.s_id in(".$list.") ":"");
-    //$where .=" AND e.e_canceled = 0"; // exclure les évènements annulés
+    //$where .=" AND e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     //$where .=" AND ef.paiement_date is not null "; 
     $orderby  = " ef.facture_date, eh.eh_date_debut";
     $groupby = " e.te_code, e.e_code";
-    //$RuptureSur = array("Evénement");
+    //$RuptureSur = array("EvÃ©nement");
     $SommeSur = array("Montant");
     break;
 
 //-------------------
-// événements 
+// Ã©vÃ©nements 
 //-------------------
 case ( $exp == "1asigcs"):
     $select = "
@@ -1150,7 +1150,7 @@ case ( $exp == "1asigcs"):
     tc.TC_LIBELLE 'Pour',
     c.C_NAME 'Client',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -1215,7 +1215,7 @@ case ( $exp == "1activite" or $exp == "1point" or $exp == "1maraudes" or $exp ==
     $stats = rtrim($stats,',');
     // done
     $select = " e.te_code 'Type', 
-    e.e_libelle 'Libellé',
+    e.e_libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -1223,7 +1223,7 @@ case ( $exp == "1activite" or $exp == "1point" or $exp == "1maraudes" or $exp ==
     as 'Partie',
     e.S_CODE 'Org.',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     ".$query_join."
     sum(personnes) 'Participants.',
     e.eh_duree 'Heures.',
@@ -1253,7 +1253,7 @@ case ( $exp == "1activite" or $exp == "1point" or $exp == "1maraudes" or $exp ==
     
 case ( $exp == "pointdujour"):
     $select = " e.te_code 'Type',
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -1261,7 +1261,7 @@ case ( $exp == "pointdujour"):
     as 'Partie',
     e.S_CODE 'Org.',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
     sum(personnes) 'Participants.',
     e.eh_duree 'Heures.',
     (sum(personnes)*e.eh_duree) 'Total',
@@ -1286,7 +1286,7 @@ case ( $exp == "pointdujour"):
     $where .=" and e.te_code <> 'MC'";
     $orderby  = " e.te_code, e.eh_date_debut";
     $groupby = " e.te_code, e.e_code, e.eh_id";
-    $RuptureSur = array("Evénement");
+    $RuptureSur = array("EvÃ©nement");
     $SommeSur = array("Participants.","Heures.","Total");
     break;
     
@@ -1295,7 +1295,7 @@ case ( $exp == "personneldisponiblea" or $exp == "personneldisponibled"):
     if (  $exp == "personneldisponiblea" ) $export_name .= " le ".date('d-m-Y');
     else $export_name .= " le ".date("d-m-Y", $tomorrow);
     $select="distinct concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')
@@ -1321,11 +1321,11 @@ case ( $exp == "personneldisponiblea" or $exp == "personneldisponibled"):
     
 case ( $exp == "1nbparticipants" ):
     $select = " e.te_code 'Type', 
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     e.parties 'Nb parties',
     substring(e.S_CODE,1,2) 'Org.',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'DÃ©but' ,
     date_format(e.eh_date_fin,'%d-%m-%Y')  'Fin' ,
     personnes ' Participants.',
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
@@ -1349,7 +1349,7 @@ case ( $exp == "1nbparticipants" ):
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
     $orderby  = " e.te_code, e.eh_date_debut";
     $groupby = " e.te_code, e.e_code";
-    $RuptureSur = array("Evénement");
+    $RuptureSur = array("EvÃ©nement");
     $SommeSur = array("Participants.");
     break;    
 
@@ -1358,7 +1358,7 @@ case ( $exp == "1nbparticipants" ):
 //-------------------
 case "1promocom":
     $select = "
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -1366,7 +1366,7 @@ case "1promocom":
     as 'Partie',
     s.s_code 'Organisateur',
     substring(e.e_lieu,1,25) 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début.' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but.' ,
     sum(personnes) 'Participants.',
     e.eh_duree 'h/p.',
     e.eh_duree * sum(personnes) 'Heures',
@@ -1399,18 +1399,18 @@ case "1promocom":
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
     end
     as  'Fin',
-    eh.eh_duree as 'Durée',
+    eh.eh_duree as 'DurÃ©e',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
     end
-    as 'Présence'
+    as 'PrÃ©sence'
     ";
     $table = "evenement e, evenement_participation ep, pompier p, evenement_horaire eh";
     $where = " e.e_code = ep.e_code";
@@ -1424,7 +1424,7 @@ case "1promocom":
     $where .= (isset($list)?"  and p.p_section in(".$list.") ":"");
     $orderby  = "p.p_nom, p.p_prenom ,eh_date_debut";
     $groupby = "";
-    $SommeSur = array("Durée","Présence");
+    $SommeSur = array("DurÃ©e","PrÃ©sence");
     break;
     
     case "1participationsnautique":
@@ -1436,19 +1436,19 @@ case "1promocom":
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
     end
     as  'Fin',
     e.e_lieu 'Lieu',
-    eh.eh_duree as 'Durée',
+    eh.eh_duree as 'DurÃ©e',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
     end
-    as 'Présence'
+    as 'PrÃ©sence'
     ";
     $table = "evenement e, evenement_participation ep, pompier p, evenement_horaire eh";
     $where = " e.e_code = ep.e_code";
@@ -1462,7 +1462,7 @@ case "1promocom":
     $where .= (isset($list)?"  and p.p_section in(".$list.") ":"");
     $orderby  = "p.p_nom, p.p_prenom ,eh_date_debut";
     $groupby = "";
-    $SommeSur = array("Durée","Présence");
+    $SommeSur = array("DurÃ©e","PrÃ©sence");
     break;
     
 case "1participationsannules":
@@ -1476,14 +1476,14 @@ case "1participationsannules":
     when ep.ep_date_debut is null then date_format(e.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_date_fin is null then date_format(e.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
     end
     as  'Fin',
     e.e_lieu 'Lieu',
-    e.eh_duree as 'Durée'
+    e.eh_duree as 'DurÃ©e'
     ";
     $table = "evenement_participation ep, pompier p, section s, (
     select e.e_libelle, e.e_lieu, e.e_code, e.te_code,  eh.eh_id, eh.eh_date_debut, eh.eh_date_fin, eh.eh_duree
@@ -1501,13 +1501,13 @@ case "1participationsannules":
     $where .= (isset($list)?"  and p.p_section in(".$list.") ":"");
     $orderby  = "p.p_nom, p.p_prenom ,eh_date_debut";
     $groupby = "";
-    $SommeSur = array("Durée","Présence");
+    $SommeSur = array("DurÃ©e","PrÃ©sence");
     break;
 
 case "1horsdep":
     $select = "
     e.TE_CODE 'Type',
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -1515,7 +1515,7 @@ case "1horsdep":
     as 'Partie',
     s.s_code 'Organisateur',
     substring(e.e_lieu,1,30) 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début.' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but.' ,
     sum(personnes) 'Participants.',
     e.eh_duree 'h/p.',
     e.eh_duree * sum(personnes) 'Heures',
@@ -1549,7 +1549,7 @@ case ( $exp == "1ah" or $exp == "1soutienpopulations" or $exp == "1heurespartici
     else $type_event_filter=" and e.te_code not in ( 'MC')";
     $select = "
     e.TE_LIBELLE 'Type',
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -1557,9 +1557,9 @@ case ( $exp == "1ah" or $exp == "1soutienpopulations" or $exp == "1heurespartici
     as 'Partie',
     s.s_code 'Organisateur',
     substring(e.e_lieu,1,25) 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début.' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but.' ,
     case
-       when e.closed = 1 then '<font color=orange>cloturé</font>'
+       when e.closed = 1 then '<font color=orange>cloturÃ©</font>'
        else '<font color=green>ouvert</font>'
     end
     as 'Ouvert.',";
@@ -1568,7 +1568,7 @@ case ( $exp == "1ah" or $exp == "1soutienpopulations" or $exp == "1heurespartici
         when e.eh_id=1 and be.BE_VALUE <> '' then be.BE_VALUE
         else ''
         end
-        as 'Assistées.',";
+        as 'AssistÃ©es.',";
     $select .= "sum(personnes) 'Participants.',
     e.eh_duree 'h/p.',
     e.eh_duree * sum(personnes) 'Heures',
@@ -1591,7 +1591,7 @@ case ( $exp == "1ah" or $exp == "1soutienpopulations" or $exp == "1heurespartici
     $where = " e.e_canceled = 0 and s.s_id = e.s_id";
     $orderby  = " e.te_code, e.eh_date_debut, e.e_code";
     $groupby = " e.te_code, e.e_code, e.eh_id";
-    $SommeSur = array("Heures","Assistées.");
+    $SommeSur = array("Heures","AssistÃ©es.");
 
     break;
     
@@ -1648,7 +1648,7 @@ case ( $exp == "1dps" or $exp == "1garde" or $exp == "1alsan" or $exp == "1dpsre
     }
     
     // build smart query for stats
-    $SommeSur = array('Durée','Inscrits','Heures');
+    $SommeSur = array('DurÃ©e','Inscrits','Heures');
     $q1="select TB_NUM, TB_LIBELLE from type_bilan where TE_CODE=".$TE." order by TB_NUM";
     $r1=mysqli_query($dbc,$q1);
     $i=1; $query_join=""; $from_join="";
@@ -1661,8 +1661,8 @@ case ( $exp == "1dps" or $exp == "1garde" or $exp == "1alsan" or $exp == "1dpsre
     }
     // done
     $select = "
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Début' ,
-    e.libelle 'Libellé',
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'DÃ©but' ,
+    e.libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -1673,7 +1673,7 @@ case ( $exp == "1dps" or $exp == "1garde" or $exp == "1alsan" or $exp == "1dpsre
     if ( $tecode == 'DPS' )
     $select .= "
     case
-       when e.closed = 1 then '<font color=orange>cloturé</font>'
+       when e.closed = 1 then '<font color=orange>cloturÃ©</font>'
        else '<font color=green>ouvert</font>'
     end
     as 'Ouvert.',";
@@ -1694,7 +1694,7 @@ case ( $exp == "1dps" or $exp == "1garde" or $exp == "1alsan" or $exp == "1dpsre
         end
     as 'DPS',";
     $select .= "
-    e.eh_duree 'Durée',
+    e.eh_duree 'DurÃ©e',
     sum(personnes) 'Inscrits',
     e.ep_duree 'Heures',
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
@@ -1716,7 +1716,7 @@ case ( $exp == "1dps" or $exp == "1garde" or $exp == "1alsan" or $exp == "1dpsre
         $where .= " and ( e.e_parent is null or e.e_parent= 0 )";
     $orderby  = " e.te_code, e.eh_date_debut, e.e_code";
     $groupby = " e.te_code, e.e_code, e.eh_id";
-    $RuptureSur = array("Début");
+    $RuptureSur = array("DÃ©but");
 
     break;
     
@@ -1728,7 +1728,7 @@ case "1stats_salsan":
     $TE="'ALSAN'";
 
     // build smart query for stats
-    $SommeSur = array('Durée','Inscrits','Heures');
+    $SommeSur = array('DurÃ©e','Inscrits','Heures');
     $q1="select TB_NUM, TB_LIBELLE from type_bilan where TE_CODE=".$TE." order by TB_NUM";
     $r1=mysqli_query($dbc,$q1);
     $i=1; $query_join=""; $query_join2=""; $from_join="";
@@ -1762,8 +1762,8 @@ case "1stats_salsan":
     $subquery .= " group by e.e_code, e.eh_id";
     $subquery .= " ) as k ";
     
-    $select = "k.Date Début, ".$query_join2."
-    sum(k.eh_duree) 'Durée',
+    $select = "k.Date DÃ©but, ".$query_join2."
+    sum(k.eh_duree) 'DurÃ©e',
     sum(k.personnes) 'Inscrits',
     sum(k.ep_duree) 'Heures'";
     $table =$subquery;
@@ -1772,12 +1772,12 @@ case "1stats_salsan":
     break;
     
 //----------------------------------------------------------
-// statistiques par départements 
+// statistiques par dÃ©partements 
 //----------------------------------------------------------
     case "1alsanpardep":
         $TE="'ALSAN'";
         // build smart query for stats
-        $SommeSur = array('Inscrits','Durée événements','Heures participation');
+        $SommeSur = array('Inscrits','DurÃ©e Ã©vÃ©nements','Heures participation');
         $q1="select TB_NUM, TB_LIBELLE from type_bilan where TE_CODE=".$TE." order by TB_NUM";
         $r1=mysqli_query($dbc,$q1);
         $i=1; $query_join=""; $from_join=""; $fields="";
@@ -1792,8 +1792,8 @@ case "1stats_salsan":
         $fields = rtrim($fields,',');
         // done
         
-        $select = "DEP_DISPLAY(s.s_code, s.s_description) 'Département',
-        count(distinct e.e_code) 'Nombre événements',
+        $select = "DEP_DISPLAY(s.s_code, s.s_description) 'DÃ©partement',
+        count(distinct e.e_code) 'Nombre Ã©vÃ©nements',
         sum(personnes) 'Inscrits',
         round(sum(e.ep_duree)) 'Heures participation',";
         $select .= $fields;
@@ -1820,15 +1820,15 @@ case "1stats_salsan":
         break;
 
 //----------------------------------------------------------
-// kilomètres réalisés par véhicules sur alertes sanitaires 
+// kilomÃ¨tres rÃ©alisÃ©s par vÃ©hicules sur alertes sanitaires 
 //----------------------------------------------------------
     case "1kmalsan":
     $select ="
-    date_format(eh.eh_date_debut,'%d-%m-%Y') 'Début',
-    e.E_LIBELLE 'Libellé',
+    date_format(eh.eh_date_debut,'%d-%m-%Y') 'DÃ©but',
+    e.E_LIBELLE 'LibellÃ©',
     v.V_IMMATRICULATION 'immatric.',
-    v.TV_CODE 'Véhicule',
-    v.V_MODELE 'Modèle',
+    v.TV_CODE 'VÃ©hicule',
+    v.V_MODELE 'ModÃ¨le',
     s.S_CODE 'Section',
     e.E_LIEU 'Lieu',
     ev.ev_km 'Km',
@@ -1846,20 +1846,20 @@ case "1stats_salsan":
     $where .= " AND $evenemententredeuxdate";
     $where .= (isset($list)?" and v.s_id in(".$list.") ":"");
     $orderby = "eh.eh_date_debut,e.e_code,v.TV_CODE";
-    $RuptureSur = array("Début");
+    $RuptureSur = array("DÃ©but");
     $SommeSur = array("Km");
     break;
     
 //----------------------------------------------------------
-// kilomètres ALSAN par départements 
+// kilomÃ¨tres ALSAN par dÃ©partements 
 //----------------------------------------------------------
     case "1mkalsanpardep":
         $TE="'ALSAN'";
-        $select = "DEP_DISPLAY(s.s_code, s.s_description) 'Département',
+        $select = "DEP_DISPLAY(s.s_code, s.s_description) 'DÃ©partement',
         case 
         when sum(e.km) > 0 then  sum(e.km)
         else 0
-        end as 'Kilométrage réalisé'";
+        end as 'KilomÃ©trage rÃ©alisÃ©'";
         $table = " section_flat s left join (
         select sf.S_ID, e.e_code, sum(ev.ev_km) Km
         FROM vehicule v, evenement_horaire eh, evenement_vehicule ev,evenement e, section_flat sf 
@@ -1880,7 +1880,7 @@ case "1stats_salsan":
         $where .= (isset($list)?" and s.s_id in(".$list.") ":"");
         $orderby  = " s.S_CODE asc";
         $groupby = "s.S_CODE ";
-        $SommeSur = array("Kilométrage réalisé");
+        $SommeSur = array("KilomÃ©trage rÃ©alisÃ©");
         break;
 //-------------------
 // Horaires douteux 
@@ -1888,10 +1888,10 @@ case "1stats_salsan":
     case "1horairesdouteux":
     $select = "
     e.s_code 'Section',
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     e.te_code 'Type',
     substring(e.e_lieu,1,25) 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début.' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but.' ,
     date_format(e.eh_date_fin,'%d-%m-%Y')  'Date fin.' ,
     sum(personnes) 'Participants.',
     round(sum(e.ep_duree) ) 'Heures',
@@ -1924,12 +1924,12 @@ case "1stats_salsan":
 //-------------------
     case "1datecre":
     $select = "
-    date_format(e.e_create_date    ,'%Y-%m-%d') 'Créé le ',
-    concat( CAP_FIRST(e.p_prenom) ,' ', upper(e.p_nom) ) 'Créé par',
+    date_format(e.e_create_date    ,'%Y-%m-%d') 'CrÃ©Ã© le ',
+    concat( CAP_FIRST(e.p_prenom) ,' ', upper(e.p_nom) ) 'CrÃ©Ã© par',
     e.s_code 'Section',
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     substring(e.e_lieu,1,25) 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début.' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but.' ,
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
     $table = " (
@@ -1945,7 +1945,7 @@ case "1stats_salsan":
     GROUP BY e.e_code, e.e_libelle
     ) as e
     ";
-    $where ="  e.e_canceled = 0"; // exclure les évènements annulés
+    $where ="  e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $orderby  = " e.e_create_date, e.s_code, e.eh_date_debut";
     $groupby = " e.te_code, e.e_code";
     break;
@@ -1954,12 +1954,12 @@ case "1stats_salsan":
 //-------------------
     case "1formations_sd":
     $select = " 
-    e.e_libelle 'Libellé',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y') 'Début',
+    date_format(e.eh_date_debut,'%d-%m-%Y') 'DÃ©but',
     e.S_CODE 'Section',    
     e.NbStagiaires 'Stagiaires',
-    e2.Valides 'Validés',
+    e2.Valides 'ValidÃ©s',
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
     $table = " (
@@ -1998,12 +1998,12 @@ case "1stats_salsan":
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
     $orderby  = " e.e_code, e.eh_date_debut";
     $groupby = " e.e_code ";
-    $SommeSur = array("Stagiaires", "Validés");
+    $SommeSur = array("Stagiaires", "ValidÃ©s");
     break;
     
     case "1formations":
     $select = " 
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -2018,7 +2018,7 @@ case "1stats_salsan":
     sum(HrsFor) 'Hrs_Encadrants',
     e.eh_duree 'Heures.',
     (sum(personnes)*e.eh_duree) 'Total',
-    sum(HrsFor)+sum(HrsSta) 'Réel',
+    sum(HrsFor)+sum(HrsSta) 'RÃ©el',
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
     $table = " (
@@ -2065,12 +2065,12 @@ case "1stats_salsan":
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
     $orderby  = " e.e_code, e.eh_date_debut";
     $groupby = " e.e_code, e.eh_id";
-    $SommeSur = array("Hrs_Stagiaires","Encadrants","Hrs_Encadrants","Total","Réel");
+    $SommeSur = array("Hrs_Stagiaires","Encadrants","Hrs_Encadrants","Total","RÃ©el");
     break;
     
     case "1sst":
     $select = " 
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     case
        when e.e_parties=1 then ''
        else concat('<i>partie ', e.eh_id,' / ',e.e_parties,'</i> ')
@@ -2110,7 +2110,7 @@ case "1stats_salsan":
     
     case "1gqs":
     $select = " 
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     e.TYPE,
     case
        when e.e_parties=1 then ''
@@ -2153,23 +2153,23 @@ case "1stats_salsan":
 case "1formationsCE":
     $select = " 
     concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-    CAP_FIRST(p.p_prenom) 'Prénom',
+    CAP_FIRST(p.p_prenom) 'PrÃ©nom',
     s.S_CODE 'Section',
     p.P_EMAIL 'email',
     e.type_formation 'Type formation',
-    e.e_libelle 'Libellé',
+    e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
     e.e_parties 'Parties',
-    e.eh_date_debut 'Début',
+    e.eh_date_debut 'DÃ©but',
     e.eh_date_fin 'Fin',
     e.eh_duree 'Heures.',
     pf.pf_date 'Date validation',
     pf.pf_diplome 'Diplome',
-    pf.pf_responsable 'Délivré par',
-    pf.pf_update_date 'Enregistré le',
-    concat(CAP_FIRST(ppf.p_prenom),' ',upper(ppf.p_nom)) 'enregistré par',
+    pf.pf_responsable 'DÃ©livrÃ© par',
+    pf.pf_update_date 'EnregistrÃ© le',
+    concat(CAP_FIRST(ppf.p_prenom),' ',upper(ppf.p_nom)) 'enregistrÃ© par',
     pf.pf_print_date 'Date impression',
-    concat(CAP_FIRST(ppf2.p_prenom),' ',upper(ppf2.p_nom)) 'imprimé par',
+    concat(CAP_FIRST(ppf2.p_prenom),' ',upper(ppf2.p_nom)) 'imprimÃ© par',
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
     $table = " (
@@ -2205,10 +2205,10 @@ case "1formationsCE":
     break;
     
 case "1formationsnontraitees":
-    $select = " e.e_libelle 'Libellé',
+    $select = " e.e_libelle 'LibellÃ©',
     e.e_lieu 'Lieu',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date début' ,
-    REPLACE( convert( e.eh_duree, CHAR ) , '.', ',' )  'Durée (h)' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'Date dÃ©but' ,
+    REPLACE( convert( e.eh_duree, CHAR ) , '.', ',' )  'DurÃ©e (h)' ,
     sum(personnes) 'Stagiaires',
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_code,''' class=''noprint'' target=''_blank'' >voir</a>') 'voir'
     ";
@@ -2228,7 +2228,7 @@ case "1formationsnontraitees":
     $where = "";
     $where = " $evenemententredeuxdate ";
     $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
-    $where .=" and e.e_canceled = 0"; // exclure les évènements annulés
+    $where .=" and e.e_canceled = 0"; // exclure les Ã©vÃ¨nements annulÃ©s
     $where .=" and not exists (select 1 from personnel_formation pf where pf.e_code = e.e_code)";
     $orderby  = " e.eh_date_debut";
     $groupby = " e.e_code";
@@ -2241,12 +2241,12 @@ case "1formationsnontraitees":
     case "1conventions":
     case ( $exp == "1conventions" or $exp == "1conventionsmanquantes"):
     $select = " e.e_convention 'Convention',
-    e.e_libelle 'Libellé',    
+    e.e_libelle 'LibellÃ©',    
     date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date',
     s.s_code 'Section',
     case
-    when e.e_canceled = 1 then '<i class=\"fa fa-circle\" style=\"color:red;\" title=\"annulé\"></i><font color=red>annulé</font>'
-    when e.e_canceled = 0 and e.e_closed = 1  then '<i class=\"fa fa-circle\" style=\"color:orange;\" title=\"Fermé\"></i> <font color=orange>fermé</font>'
+    when e.e_canceled = 1 then '<i class=\"fa fa-circle\" style=\"color:red;\" title=\"annulÃ©\"></i><font color=red>annulÃ©</font>'
+    when e.e_canceled = 0 and e.e_closed = 1  then '<i class=\"fa fa-circle\" style=\"color:orange;\" title=\"FermÃ©\"></i> <font color=orange>fermÃ©</font>'
     when e.e_canceled = 0 and e.e_closed = 0  then '<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Ouvert\"></i><font color=green>ouvert</font>'
     end
     as 'Statut',
@@ -2270,12 +2270,12 @@ case "1formationsnontraitees":
 case "1statsmanquantes":
     $select = "
     e.TE_CODE 'Type',
-    e.e_libelle 'Libellé',
+    e.e_libelle 'LibellÃ©',
     date_format(eh.eh_date_debut,'%d-%m-%Y')  'Date',
     s.s_code 'Section',
     case
-    when e.e_canceled = 1 then '<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Annulé\"></i><font color=red>annulé</font>'
-    when e.e_canceled = 0 and e.e_closed = 1  then '<i class=\"fa fa-circle\" style=\"color:orange;\" title=\"Fermé\"></i> <font color=orange>fermé</font>'
+    when e.e_canceled = 1 then '<i class=\"fa fa-circle\" style=\"color:red;\" title=\"AnnulÃ©\"></i><font color=red>annulÃ©</font>'
+    when e.e_canceled = 0 and e.e_closed = 1  then '<i class=\"fa fa-circle\" style=\"color:orange;\" title=\"FermÃ©\"></i> <font color=orange>fermÃ©</font>'
     when e.e_canceled = 0 and e.e_closed = 0  then '<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Ouvert\"></i><font color=green>ouvert</font>'
     end
     as 'Statut',
@@ -2330,9 +2330,9 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
 // personnel 
 //-------------------
     case "effectif":
-        $select="tc.TC_SHORT 'Civilité',
+        $select="tc.TC_SHORT 'CivilitÃ©',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')  
@@ -2342,7 +2342,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         end
         as 'Email',
         concat(s.s_code,' - ',s.s_description)  'Section',
-        p.p_abbrege 'N° abrégé Dép',
+        p.p_abbrege 'NÂ° abrÃ©gÃ© DÃ©p',
         case 
         when p.p_birthdate is null then concat('')
         when p.p_birthdate is not null and p.p_hide = 1 and ".$show."=0 then concat('**********')
@@ -2394,7 +2394,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
     case "effectif50":
         $select="
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>') 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')  
@@ -2423,19 +2423,19 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
             when sf.NIV=3 then sf.S_CODE
             when sf.NIV=4 then sp.S_CODE
         end
-        as 'Dép',
+        as 'DÃ©p',
         DEP_DISPLAY (sf.S_CODE, sf.S_DESCRIPTION) 'Antenne',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>') 'Nom',
-        tc.TC_SHORT 'Civilité',
+        tc.TC_SHORT 'CivilitÃ©',
         upper(p.p_nom_naissance) 'Nom de naissance',
         p.P_ADDRESS 'Adresse',
         p.P_CITY 'Ville',
         p.P_ZIP_CODE 'Code postal',
         date_format(p.p_birthdate, '%d-%m-%Y') 'Date de naissance',
-        y.NAME 'Nationalité',
+        y.NAME 'NationalitÃ©',
         p.P_BIRTHPLACE 'Lieu naissance',
-        p.P_BIRTH_DEP 'Dép naissance'";
+        p.P_BIRTH_DEP 'DÃ©p naissance'";
         $table="pompier p, section_flat sf, section sp, type_civilite tc, pays y";
         if ( $exp == "effectif3" ) $table .= ", section_role sr";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
@@ -2466,11 +2466,11 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "infolue":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         concat(s.s_code,' - ',s.s_description) 'Section',
         case 
         when p.P_ACCEPT_DATE2 is null then '<i class=\"fas fa-times fa-lg\" style=\"color:red;\" title=\"pas encore lu\"></i> non'
-        else concat ('<i class=\"fas fa-check fa-lg\" style=\"color:green;\" title=\" note déjà lue\"></i> ',DATE_FORMAT(p.P_ACCEPT_DATE2,'le %d-%m-%Y à %H:%i'))
+        else concat ('<i class=\"fas fa-check fa-lg\" style=\"color:green;\" title=\" note dÃ©jÃ  lue\"></i> ',DATE_FORMAT(p.P_ACCEPT_DATE2,'le %d-%m-%Y Ã  %H:%i'))
         end
         as 'Date lecture'
         ";
@@ -2485,8 +2485,8 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "homonymes";
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
-        CAP_FIRST(p.p_prenom2) '2ème Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+        CAP_FIRST(p.p_prenom2) '2Ã¨me PrÃ©nom',
         date_format(p.p_birthdate, '%d-%m-%Y') 'Date de naissance',
         s.s_code 'section', 
         p.p_statut 'statut',
@@ -2495,24 +2495,24 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         else 'ancien'
         end
         as 'actif',
-        date_format(p.P_CREATE_DATE, '%d-%m-%Y') 'création fiche'
+        date_format(p.P_CREATE_DATE, '%d-%m-%Y') 'crÃ©ation fiche'
         ";
         if ( $licences ) $select .= ",p.P_LICENCE 'Licence', p.ID_API 'Num API'";
-        $table="(select p_nom, REPLACE(REPLACE(p_prenom,'è','e'),'é','e') p_prenom from pompier";
+        $table="(select p_nom, REPLACE(REPLACE(p_prenom,'Ã¨','e'),'Ã©','e') p_prenom from pompier";
         $table .= (isset($list)?" where p_section in(".$list.")":"");
-        $table .=  " group by p_nom, REPLACE(REPLACE(p_prenom,'è','e'),'é','e') having count(1)> 1)
+        $table .=  " group by p_nom, REPLACE(REPLACE(p_prenom,'Ã¨','e'),'Ã©','e') having count(1)> 1)
         homonymes,
         section s, pompier p";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
         $where .= " p.p_section = s.s_id ";
-        $where .= " and homonymes.p_nom = p.p_nom and REPLACE(REPLACE(homonymes.p_prenom,'è','e'),'é','e')  =  REPLACE(REPLACE(p.p_prenom,'è','e'),'é','e')";
+        $where .= " and homonymes.p_nom = p.p_nom and REPLACE(REPLACE(homonymes.p_prenom,'Ã¨','e'),'Ã©','e')  =  REPLACE(REPLACE(p.p_prenom,'Ã¨','e'),'Ã©','e')";
         $orderby=" p.p_nom, p.p_prenom, p.p_prenom2";
         break;
         
     case "doublons";
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
-        CAP_FIRST(p.p_prenom2) '2ème Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+        CAP_FIRST(p.p_prenom2) '2Ã¨me PrÃ©nom',
         date_format(p.p_birthdate, '%d-%m-%Y') 'Date de naissance',
         p.p_birthplace 'Lieu de Naissance',
         s.s_code 'section', 
@@ -2522,24 +2522,24 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         else 'ancien'
         end
         as 'actif',
-        date_format(p.P_CREATE_DATE, '%d-%m-%Y') 'création fiche'
+        date_format(p.P_CREATE_DATE, '%d-%m-%Y') 'crÃ©ation fiche'
         ";
         if ( $licences ) $select .= ",p.P_LICENCE 'Licence', p.ID_API 'Num API'";
-        $table="(select p_nom, REPLACE(REPLACE(p_prenom,'è','e'),'é','e') p_prenom, p_birthdate from pompier where p_birthdate is not null";
+        $table="(select p_nom, REPLACE(REPLACE(p_prenom,'Ã¨','e'),'Ã©','e') p_prenom, p_birthdate from pompier where p_birthdate is not null";
         //$table .= (isset($list)?" and p_section in(".$list.")":"");
-        $table .=  " group by p_nom, REPLACE(REPLACE(p_prenom,'è','e'),'é','e') , p_birthdate having count(1)> 1)
+        $table .=  " group by p_nom, REPLACE(REPLACE(p_prenom,'Ã¨','e'),'Ã©','e') , p_birthdate having count(1)> 1)
         homonymes,
         section s, pompier p";
         $where = " p.p_section = s.s_id ";
         //$where .= (isset($list)?" and p.p_section in(".$list.")":"");
-        $where .= " and homonymes.p_nom = p.p_nom and REPLACE(REPLACE(homonymes.p_prenom,'è','e'),'é','e')  =  REPLACE(REPLACE(p.p_prenom,'è','e'),'é','e')";
-        $where .= (isset($list)?" and exists (select 1 from pompier p2 where p2.p_section in(".$list.") and homonymes.p_nom = p2.p_nom and REPLACE(REPLACE(homonymes.p_prenom,'è','e'),'é','e') = REPLACE(REPLACE(p2.p_prenom,'è','e'),'é','e'))":"");
+        $where .= " and homonymes.p_nom = p.p_nom and REPLACE(REPLACE(homonymes.p_prenom,'Ã¨','e'),'Ã©','e')  =  REPLACE(REPLACE(p.p_prenom,'Ã¨','e'),'Ã©','e')";
+        $where .= (isset($list)?" and exists (select 1 from pompier p2 where p2.p_section in(".$list.") and homonymes.p_nom = p2.p_nom and REPLACE(REPLACE(homonymes.p_prenom,'Ã¨','e'),'Ã©','e') = REPLACE(REPLACE(p2.p_prenom,'Ã¨','e'),'Ã©','e'))":"");
         $orderby=" p.p_nom, p.p_prenom, p.p_prenom2";
         break;
         
     case "doubleaffect";
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         date_format(p.p_birthdate, '%d-%m-%Y') 'Date de naissance',
         sf.s_code 'section appartenance', 
         p.p_statut 'statut',
@@ -2565,7 +2565,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
     case "doublonlicence";
         $select="P_LICENCE 'Licence',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         date_format(p.p_birthdate, '%d-%m-%Y') 'Date de naissance',
         sf.s_code 'section appartenance', 
         p.p_statut 'statut'
@@ -2579,16 +2579,16 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         break;
         
     case "effectifadherents":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
@@ -2612,7 +2612,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "sansadresse":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')  
@@ -2634,7 +2634,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
 
     case "sansemail":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_hide = 1 and ".$show."=0 then concat(p.p_address,' ',p.p_zip_code,' ',p.p_city)
@@ -2654,10 +2654,10 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "sansnumeroapi":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         concat(s.s_code,' - ',s.s_description)  'Section',
-        date_format(p.P_CREATE_DATE, '%d-%m-%Y') 'création fiche'";
+        date_format(p.P_CREATE_DATE, '%d-%m-%Y') 'crÃ©ation fiche'";
         $table="pompier p, section s";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
         $where .= " p.p_section = s.s_id ";
@@ -2670,7 +2670,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "sans2emeprenom":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         concat(s.s_code,' - ',s.s_description)  'Section'";
         $table="pompier p, section s";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
@@ -2684,7 +2684,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "sansdatenaissance":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_birthplace 'Lieu naissance',
         concat(s.s_code,' - ',s.s_description)  'Section'";
         $table="pompier p, section s";
@@ -2699,7 +2699,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "sanslieunaissance":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         date_format(p.p_birthdate, '%d-%m-%Y') 'Date naissance',
         concat(s.s_code,' - ',s.s_description)  'Section'";
         $table="pompier p, section s";
@@ -2714,7 +2714,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "sansphoto":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_email 'Email',
         concat(s.s_code,' - ',s.s_description)  'Section'";
         $table="pompier p, section s";
@@ -2743,13 +2743,13 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         elseif ( $exp == "zello" ) $val=2;
         elseif ( $exp == "whatsapp" ) $val=3;
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'Nom',
-        CAP_FIRST(p.p_prenom) 'Prénom',";
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',";
         if ( $exp == "skype" )
             $select .= "concat('<a href=\"skype:',c.CONTACT_VALUE,'?call\">',c.CONTACT_VALUE,'</a>') as 'Skype',";
         else 
             $select .= "c.CONTACT_VALUE as '".ucfirst($exp)."',";
         $select .= "concat(s.s_code,' - ',s.s_description)  'Section',
-                    date_format(c.CONTACT_DATE, '%d-%m-%Y %H:%i') 'Modifié'";
+                    date_format(c.CONTACT_DATE, '%d-%m-%Y %H:%i') 'ModifiÃ©'";
         
         $table="pompier p, personnel_contact c, section s";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
@@ -2764,7 +2764,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "sanstel":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         case
         when p.p_email is null then concat('')  
         when p.p_email is not null and p.p_hide = 1 and ".$show."=0 then concat('**********')
@@ -2785,7 +2785,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "groupes":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p_id,'\" target=_blank>',upper(p_nom),'</a>')  'NOM',
-        CAP_FIRST(p_prenom) 'Prénom',
+        CAP_FIRST(p_prenom) 'PrÃ©nom',
         concat(s_code,' - ',s_description)  'Section',
         gp_description1 'Permission 1',
         case 
@@ -2817,9 +2817,9 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "roles":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        p.p_prenom 'Prénom',
+        p.p_prenom 'PrÃ©nom',
         concat(s.s_code,' - ',s.s_description)  'Section appartenance',
-        g.gp_description 'Rôle',
+        g.gp_description 'RÃ´le',
         concat(s2.s_code,' - ',s2.s_description)  'Pour la section '
         ";
         $table="pompier p, section s, section_role sr, groupe g, section s2";
@@ -2833,17 +2833,17 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         break;
         
     case "salarie":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
-        p.TC_SHORT 'Civilité',
+        p.TC_SHORT 'CivilitÃ©',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')
@@ -2853,11 +2853,11 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         end
         as 'Email',
         case
-        when p.p_statut = 'SAL' then 'salarié'
+        when p.p_statut = 'SAL' then 'salariÃ©'
         when p.p_statut = 'FONC' then 'fonctionnaire'
         when p.p_statut = 'PREST' then 'prestataire'
         end as 'Statut',
-        p.TS_LIBELLE 'type salarié',
+        p.TS_LIBELLE 'type salariÃ©',
         case
         when p.TS_HEURES is null then concat('')
         when p.TS_HEURES =0 then concat('')
@@ -2880,10 +2880,10 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
     case ( $exp == "1civique" or $exp == "1snu" ):
         if ( $exp == "1civique" ) $code="SC";
         else $code="SNU";
-        $select="p.TC_SHORT 'Civilité',
+        $select="p.TC_SHORT 'CivilitÃ©',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
-        date_format(p.P_DATE_ENGAGEMENT,'%d-%m-%Y') 'début',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+        date_format(p.P_DATE_ENGAGEMENT,'%d-%m-%Y') 'dÃ©but',
         date_format(p.P_FIN,'%d-%m-%Y') 'fin',
         s.s_code 'Section',
         p.TS_LIBELLE 'Statut',
@@ -2918,10 +2918,10 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "creationfiches":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         concat(s.s_code,' - ',s.s_description)  'Section',
         st.S_DESCRIPTION 'statut',
-        date_format(p.p_create_date,'%d-%m-%Y') 'Création le'";
+        date_format(p.p_create_date,'%d-%m-%Y') 'CrÃ©ation le'";
         $table = " (
         select p.p_id, p.p_nom, p.p_prenom, p.p_section, p.p_create_date, p.p_statut
         FROM pompier p
@@ -2937,12 +2937,12 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "provenantautres":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         concat(s.s_code,' - ',s.s_description)  'Section',
         st.S_DESCRIPTION 'statut',
         date_format(p.lh_stamp,'%d-%m-%Y') 'Changement le',
         p.par 'Par',
-        p.lh_complement 'Détail'";
+        p.lh_complement 'DÃ©tail'";
         $table = " (
         select p.p_id, p.p_nom, p.p_prenom, p.p_section, p.p_statut, concat(upper(p2.p_nom),' ',p2.p_prenom) 'par', lh.lh_stamp, lh.lh_complement
         FROM pompier p, log_history lh, pompier p2
@@ -2961,10 +2961,10 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
 
     case "veille":
         $select="
-        concat(s.s_code,' - ',s.s_description)  'Veille opérationnelle pour',
+        concat(s.s_code,' - ',s.s_description)  'Veille opÃ©rationnelle pour',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
-        ".phone_display_mask('s.s_phone2')." as 'Tél Veille',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+        ".phone_display_mask('s.s_phone2')." as 'TÃ©l Veille',
         ".$display_phone.",
         concat('<a href=mailto:',p.p_email,'>',p.p_email,'</a>') as 'Email'
         ";
@@ -2974,7 +2974,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         where p.P_ID = sr.P_ID
         and sr.gp_id = g.gp_id
         and s.s_id = sr.s_id
-        and g.gp_description='Veille opérationnelle' 
+        and g.gp_description='Veille opÃ©rationnelle' 
         ) as p, section s 
         ";
         $where = (isset($list)?" s.s_id in(".$list.") AND ":"");
@@ -2984,13 +2984,13 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         break;
         
     case ( $exp == 'presidents' or $exp =='responsablesformations' or $exp =='responsablesoperationnels' ):
-        if ( $exp == 'presidents' ) $pattern='Président (e)';
+        if ( $exp == 'presidents' ) $pattern='PrÃ©sident (e)';
         else if ( $exp == 'responsablesformations' ) $pattern='Directeur des Formations';
-        else $pattern='Directeur des Opérations';
+        else $pattern='Directeur des OpÃ©rations';
         $select="
         concat(s.s_code,' - ',s.s_description)  '".$pattern." de',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         case
         when p.p_address is null then concat('')
         when p.p_address is not null and p.p_hide = 1 and ".$show."=0 then concat('**********')
@@ -3024,13 +3024,13 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         break;
         
     case 'president_syndicate' :
-        $pattern='Président';
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $pattern='PrÃ©sident';
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         concat(s.s_code,' - ',s.s_description)  '".$pattern." de',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
-        ".phone_display_mask('p.p_phone')." as 'Téléphone',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+        ".phone_display_mask('p.p_phone')." as 'TÃ©lÃ©phone',
         concat('<a href=''mailto:',p.p_email,''' target=''_self''>',p.p_email,'</a>')  as 'Email'
         ";
         $table = " (
@@ -3050,16 +3050,16 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         break;
         
     case '1updateorganigramme' :
-        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Les nouveaux, présidents, secrétaires généraux ou trésoriers à partir du 8 juin 2019.";
-        $patterns="'Président (e)','Secrétaire général','Trésorier (e)'";
+        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Les nouveaux, prÃ©sidents, secrÃ©taires gÃ©nÃ©raux ou trÃ©soriers Ã  partir du 8 juin 2019.";
+        $patterns="'PrÃ©sident (e)','SecrÃ©taire gÃ©nÃ©ral','TrÃ©sorier (e)'";
       
         $select="
-        concat(s.s_code,' - ',s.s_description) 'Département',
-        p.gp_description as 'Rôle',
+        concat(s.s_code,' - ',s.s_description) 'DÃ©partement',
+        p.gp_description as 'RÃ´le',
         date_format(p.UPDATE_DATE, '%d-%m-%Y') 'Date',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'Nom',
-        CAP_FIRST(p.p_prenom) 'Prénom',
-        ".phone_display_mask('p.p_phone')." as 'Téléphone',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+        ".phone_display_mask('p.p_phone')." as 'TÃ©lÃ©phone',
         concat('<a href=''mailto:',p.p_email,''' target=''_self''>',p.p_email,'</a>')  as 'Email'";
         $table = " (
         select p.p_id, p.p_nom, p.p_prenom, p.p_phone, p.p_email, p.p_city, p.p_zip_code, p.p_address, sr.s_id, sr.UPDATE_DATE, g.gp_description
@@ -3080,9 +3080,9 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         break;
         
     case '1interdictions' :
-        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Certaines créations d'événements peuvent être 
-                    temporairement interdites pour éviter le manque de personnel sur les événements importants déjà planifiés.";
-        $select="concat('<a title=\"Voir le détail des interdictions pour cette section\" href=upd_section.php?tab=6&S_ID=',s.S_ID,'</a>',s.S_CODE,' ', s.S_DESCRIPTION, '</a>') Section,
+        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Certaines crÃ©ations d'Ã©vÃ©nements peuvent Ãªtre 
+                    temporairement interdites pour Ã©viter le manque de personnel sur les Ã©vÃ©nements importants dÃ©jÃ  planifiÃ©s.";
+        $select="concat('<a title=\"Voir le dÃ©tail des interdictions pour cette section\" href=upd_section.php?tab=6&S_ID=',s.S_ID,'</a>',s.S_CODE,' ', s.S_DESCRIPTION, '</a>') Section,
             case 
             when sse.TE_CODE = 'ALL' then '<b>Tous les types</b>'
             else concat(sse.TE_CODE,' - ', te.TE_LIBELLE) 
@@ -3094,7 +3094,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
             end
             as Active,
             concat('<small>',sse.SSE_COMMENT,'</small>') Commentaire,
-            concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',CAP_FIRST(p.p_prenom),' ',upper(p.p_nom), '</a>') 'Demandé par',
+            concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',CAP_FIRST(p.p_prenom),' ',upper(p.p_nom), '</a>') 'DemandÃ© par',
             date_format(sse.SSE_WHEN, '%d-%m-%Y %H:%i') Le";
         $table = " section_stop_evenement sse
                 left join pompier p on p.P_ID = sse.SSE_BY
@@ -3109,7 +3109,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         
     case "engagement":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',        
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',        
         concat(s.s_code,' - ',s.s_description)  'Section',
         date_format(p.p_date_engagement, '%d-%m-%Y') 'Date engagement'
         ";
@@ -3123,22 +3123,22 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
         break;
 
 //-------------------
-// ajout de compéténces 
+// ajout de compÃ©tÃ©nces 
 //-------------------
     case "1ajoutscompetences":
         $select="date_format(q.Q_UPDATE_DATE,'%d-%m-%Y') 'Date',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>') 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         s.s_code 'Section',
-        po.TYPE 'Compétence',
-        po.DESCRIPTION 'Détail',
+        po.TYPE 'CompÃ©tence',
+        po.DESCRIPTION 'DÃ©tail',
         date_format(q.Q_EXPIRATION,'%d-%m-%Y') 'Expiration',
         case 
         when q.Q_VAL=2 then 'secondaire'
         else ''
         end
         as 'Type',
-        concat(upper(p2.p_nom),' ',CAP_FIRST(p2.p_prenom)) 'Modifié par'";
+        concat(upper(p2.p_nom),' ',CAP_FIRST(p2.p_prenom)) 'ModifiÃ© par'";
         $table = " pompier p, section s, poste po, qualification q left join pompier p2 on p2.P_ID = q.Q_UPDATED_BY";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
         $where .= " p.p_section = s.s_id ";
@@ -3153,21 +3153,21 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
 // adresses 
 //-------------------
     case ( $exp == "adresses" or $exp == 'adresses2'):
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
-        tc.TC_LIBELLE 'Civilité',
+        tc.TC_LIBELLE 'CivilitÃ©',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',".
         (($syndicate==1)?" p.SERVICE 'Service', ":"")."
-        date_format(p.p_birthdate, '%d-%m-%Y') 'Né(e) le',
+        date_format(p.p_birthdate, '%d-%m-%Y') 'NÃ©(e) le',
         p_birthplace 'Lieu'";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent, type_civilite tc";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
@@ -3182,9 +3182,9 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
 // emails 
 //------------------- 
     case "emails":
-        $select="tc.TC_LIBELLE 'Civilité',
+        $select="tc.TC_LIBELLE 'CivilitÃ©',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_email 'Email',
         s.s_code 'Section'";
         $table="pompier p, section s, type_civilite tc";
@@ -3201,7 +3201,7 @@ case ( $exp == "1entreprisesDPS" or $exp == "1entreprisesFOR"):
 // cotisations 
 //-------------------
     case "montantactuel":
-        $select ="concat('<a href=\"upd_section.php?from=export&status=cotisations&S_ID=',s.s_id,'\" target=_blank>',s.s_code,'</a>') 'Département',
+        $select ="concat('<a href=\"upd_section.php?from=export&status=cotisations&S_ID=',s.s_id,'\" target=_blank>',s.s_code,'</a>') 'DÃ©partement',
                 s.s_description 'Nom',";
         if ( $syndicate == 1 ) $select .=" tp.TP_DESCRIPTION 'Profession',";
         $select .=" sc.montant 'Montant annuel',
@@ -3235,7 +3235,7 @@ case "2sommecotisations":
         if ( $filter > 1 ) $subtable2 .= (isset($list)?" and p.p_section in(".$list.") ":"");
         $subtable2 .=" group by sf.s_id, p.P_PROFESSION) as r";
 
-        $select = " DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', c.Profession, c.Nombre, round(c.Somme - IFNULL(r.Rejet,0), 2) 'Somme Cotisation nette'";
+        $select = " DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', c.Profession, c.Nombre, round(c.Somme - IFNULL(r.Rejet,0), 2) 'Somme Cotisation nette'";
         $table = "section_flat sf, ".$subtable1." left join ".$subtable2." on c.s_id = r.s_id and c.Profession = r.Profession";
         $where = "sf.s_id = c.s_id";
         $groupby =" sf.s_code, c.Profession";
@@ -3263,17 +3263,17 @@ case "2sommecotisationsprevues":
                         and (p.P_DATE_ENGAGEMENT is null or p.P_DATE_ENGAGEMENT < '".$yearreport."-12-31')";
         if ( $filter > 1 ) $subtable1 .= (isset($list)?" and p_section in(".$list.") ":"");
         $subtable1 .=   ")";
-        $select ="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département' , t.P_PROFESSION 'Profession', count(1) 'Nombre', round(sum(t.montant * days / 365 )) 'Somme Cotisation prévue'";
+        $select ="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement' , t.P_PROFESSION 'Profession', count(1) 'Nombre', round(sum(t.montant * days / 365 )) 'Somme Cotisation prÃ©vue'";
         $table="section_flat sf, ".$subtable1." t";
         $where = " sf.s_id = t.DEPARTEMENT";
         if ( $filter > 1 ) $where .= (isset($list)?" and sf.s_id in(".$list.")":"");
         $groupby="sf.s_code, t.P_PROFESSION";
         $orderby="sf.s_code, t.P_PROFESSION";
-        $SommeSur = array("Nombre",'Somme Cotisation prévue');
+        $SommeSur = array("Nombre",'Somme Cotisation prÃ©vue');
         break;
         
 case "cotisationspayees":
-        $select="sf.s_code 'Code Département', DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', count(*) 'Nombre', round(sum(pc.MONTANT),2) 'Somme'";
+        $select="sf.s_code 'Code DÃ©partement', DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', count(*) 'Nombre', round(sum(pc.MONTANT),2) 'Somme'";
         $table="section_flat sf, personnel_cotisation pc, pompier p";
         $where = " p.P_ID = pc.P_ID and sf.NIV=3";
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
@@ -3285,7 +3285,7 @@ case "cotisationspayees":
         
 case "cotisationspayeesparpers":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         s.s_code 'Section',
         pc.montant 'Montant',
         pc.PC_DATE 'Date',
@@ -3301,7 +3301,7 @@ case "cotisationspayeesparpers":
 
 case "1cotisationspayees":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         tm.TM_CODE 'Position',
         s.s_code 'Section',
         pc.MONTANT 'Montant',
@@ -3330,7 +3330,7 @@ case "1cotisationspayees":
 //-------------------
     case "aregulariser":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         tm.TM_CODE 'Position',
         s.s_code 'Section',
         p.montant_regul 'Montant'";
@@ -3345,30 +3345,30 @@ case "1cotisationspayees":
         break;
         
     case "rejets":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         tc.TC_LIBELLE 'Titre',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         tm.TM_CODE 'Position',
-        r.annee 'Année',
-        pe.P_DESCRIPTION 'Période',
-        d.D_DESCRIPTION 'Défaut',
-        r.MONTANT_REJET 'Rejeté',
-        r.MONTANT_REGUL 'Régul.',
-        r.date_REGUL 'Date Régul.',
+        r.annee 'AnnÃ©e',
+        pe.P_DESCRIPTION 'PÃ©riode',
+        d.D_DESCRIPTION 'DÃ©faut',
+        r.MONTANT_REJET 'RejetÃ©',
+        r.MONTANT_REGUL 'RÃ©gul.',
+        r.date_REGUL 'Date RÃ©gul.',
         r.OBSERVATION 'Observation',
         case
         when r.REGULARISE = 1 then 'O'
         else 'N'
         end
-        as 'Régularisé'
+        as 'RÃ©gularisÃ©'
         ";
         $table="pompier p, type_membre tm, rejet r, periode pe, defaut_bancaire d, section_flat sf left join section sp on sp.s_id = sf.s_parent, type_civilite tc";
         $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
@@ -3380,20 +3380,20 @@ case "1cotisationspayees":
         $where .= " and pe.P_CODE = r.PERIODE_CODE";
         $where .= " and tm.TM_SYNDICAT=".$syndicate;
         $orderby="sf.s_code, p.p_nom, p.p_prenom";
-        $SommeSur = array("Rejeté");
+        $SommeSur = array("RejetÃ©");
         break;
         
     case "rejets_non_regularises":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         tm.TM_CODE 'Position',
         s.s_code 'Section',
-        r.annee 'Année',
-        pe.P_DESCRIPTION 'Période',
-        d.D_DESCRIPTION 'Défaut',
-        r.MONTANT_REJET 'Rejeté',
-        r.MONTANT_REGUL 'Régul.',
-        r.DATE_REGUL 'Date Régul.',
+        r.annee 'AnnÃ©e',
+        pe.P_DESCRIPTION 'PÃ©riode',
+        d.D_DESCRIPTION 'DÃ©faut',
+        r.MONTANT_REJET 'RejetÃ©',
+        r.MONTANT_REGUL 'RÃ©gul.',
+        r.DATE_REGUL 'Date RÃ©gul.',
         r.OBSERVATION 'Observation'
         ";
         $table="pompier p, type_membre tm, rejet r, periode pe, defaut_bancaire d, section s";
@@ -3407,30 +3407,30 @@ case "1cotisationspayees":
         $where .= " and pe.P_CODE = r.PERIODE_CODE";
         $orderby="p.p_nom, p.p_prenom, s.s_code";
         $RuptureSur = array("NOM");
-        $SommeSur = array("Rejeté");
+        $SommeSur = array("RejetÃ©");
         break;
 
 case "rejetsencours":
-        $export_name = "FA REVERSEMENT – REJETS EN COURS DE REGULARISATION";
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $export_name = "FA REVERSEMENT â€“ REJETS EN COURS DE REGULARISATION";
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Département',
+        as 'DÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         date_format(r.DATE_REJET, '%d-%m-%Y') 'Date rejet',
-        r.MONTANT_REJET 'Rejeté',
-        p.MONTANT_REGUL 'A représenter',
+        r.MONTANT_REJET 'RejetÃ©',
+        p.MONTANT_REGUL 'A reprÃ©senter',
         case
-            when p.MONTANT_REGUL <> r.MONTANT_REJET then '<b><font color=red>montants différents</font></b>'
-            when p.MONTANT_REGUL = r.MONTANT_REJET  then '<b><font color=green>montants égaux</font></b>'
+            when p.MONTANT_REGUL <> r.MONTANT_REJET then '<b><font color=red>montants diffÃ©rents</font></b>'
+            when p.MONTANT_REGUL = r.MONTANT_REJET  then '<b><font color=green>montants Ã©gaux</font></b>'
         end
-        as 'Vérification',
+        as 'VÃ©rification',
         r.OBSERVATION 'Observation'
         ";        
         $table =" pompier p, type_membre tm, rejet r, periode pe, defaut_bancaire d, section_flat sf left join section sp on sp.s_id = sf.s_parent";
@@ -3442,38 +3442,38 @@ case "rejetsencours":
         $where .= " and pe.P_CODE = r.PERIODE_CODE";
         $where .= " and r.REGULARISE = 0 and r.REPRESENTER = 1";
         $where .= " and tm.TM_SYNDICAT=".$syndicate;
-        $orderby="Département, sf.s_code, p.p_nom, p.p_prenom";
-        $SommeSur = array("Rejeté");
+        $orderby="DÃ©partement, sf.s_code, p.p_nom, p.p_prenom";
+        $SommeSur = array("RejetÃ©");
         break;
         
 case "1rejetsetregul":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Département',
+        as 'DÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         tm.TM_CODE 'Position',
         date_format(p.P_FIN, '%d-%m-%Y') 'Date radiation',
-        r.annee 'Année',
-        pe.P_DESCRIPTION 'Période',
-        d.D_DESCRIPTION 'Défaut',
-        r.MONTANT_REJET 'Rejeté',
+        r.annee 'AnnÃ©e',
+        pe.P_DESCRIPTION 'PÃ©riode',
+        d.D_DESCRIPTION 'DÃ©faut',
+        r.MONTANT_REJET 'RejetÃ©',
         date_format(r.DATE_REJET, '%d-%m-%Y') 'Date rejet',
-        r.MONTANT_REGUL 'Régul.',
-        date_format(r.DATE_REGUL, '%d-%m-%Y') 'Date Régul.',
+        r.MONTANT_REGUL 'RÃ©gul.',
+        date_format(r.DATE_REGUL, '%d-%m-%Y') 'Date RÃ©gul.',
         r.OBSERVATION 'Observation',
         case
         when r.REGULARISE = 1 then 'Oui'
         when r.REGULARISE = 0 and r.REPRESENTER = 1 then 'En cours'
         else 'Non'
         end
-        as 'Régularisé'
+        as 'RÃ©gularisÃ©'
         ";
         $table ="pompier p, type_membre tm, rejet r, periode pe, defaut_bancaire d, section_flat sf left join section sp on sp.s_id = sf.s_parent, ";
         $table .= "( select r1.P_ID, r1.R_ID from rejet r1 where r1.DATE_REJET = (select max(r2.DATE_REJET) from rejet r2 where r2.P_ID = r1.P_ID) group by r1.P_ID) as z";
@@ -3493,16 +3493,16 @@ case "1rejetsetregul":
         $where .= "        and date_format(r.DATE_REGUL, '%Y-%m-%d') <=  '".date("Y-m-d",mktime(0,0,0,$dtfin[1],$dtfin[0],$dtfin[2]))."' ) ";
         $where .= " )";
         //$where .= " and pe.P_DATE is not null";
-        $orderby="Département, sf.s_code, p.p_nom, p.p_prenom ";
-        $RuptureSur = array("Département");
-        $SommeSur = array("Rejeté","Régul.");
+        $orderby="DÃ©partement, sf.s_code, p.p_nom, p.p_prenom ";
+        $RuptureSur = array("DÃ©partement");
+        $SommeSur = array("RejetÃ©","RÃ©gul.");
         break;
 
 case "nbsuspendupardep":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Département',
-                count(*) 'CompteDeNomadhérent',
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'DÃ©partement',
+                count(*) 'CompteDeNomadhÃ©rent',
                 p.p_profession 'Typeprof',
-                'prélèvement' as 'Mode prélèvement'";
+                'prÃ©lÃ¨vement' as 'Mode prÃ©lÃ¨vement'";
         $table="section_flat sf, pompier p";
         $where = " p.P_OLD_MEMBER = 0 and sf.NIV in (1,3)";
         $where .= " and p.SUSPENDU = 1 and p.TP_ID=1";
@@ -3517,12 +3517,12 @@ case "nomssuspendupardep":
             when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
             when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
             end    
-            as 'Nom département',
+            as 'Nom dÃ©partement',
             concat('<a href=\"upd_personnel.php?pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-            CAP_FIRST(p.p_prenom) 'Prénom',
+            CAP_FIRST(p.p_prenom) 'PrÃ©nom',
             p.p_profession 'Typeprof',
             date_format(p.date_suspendu , '%d-%m-%Y') 'Date Suspension',
-            'prélèvement' as 'Mode prélèvement'";
+            'prÃ©lÃ¨vement' as 'Mode prÃ©lÃ¨vement'";
         $table="section_flat sf left join section sp on sp.s_id = sf.s_parent, pompier p";
         $where = " p.P_OLD_MEMBER = 0";
         $where .= " and p.SUSPENDU = 1 and p.TP_ID=1";
@@ -3531,25 +3531,25 @@ case "nomssuspendupardep":
         break;
         
 //-------------------
-// adhérents 
+// adhÃ©rents 
 //-------------------
 case ( $exp == 'adhpayantparcheque' or $exp =='adhpayantparvirement' or $exp =='adhpayantparprelevement' ):
         if ( $exp == 'adhpayantparcheque' ) $tp=4;
         else if ( $exp == 'adhpayantparvirement' ) $tp=2;
         else $tp=1;
-        $select="p.P_ID 'Numéro adhérent',
+        $select="p.P_ID 'NumÃ©ro adhÃ©rent',
         case
             when s.NIV=3 then DEP_DISPLAY (s.S_CODE, s.S_DESCRIPTION)
             when s.NIV=4 then DEP_DISPLAY (sp.S_CODE, sp.S_DESCRIPTION)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (s.s_code) 'Centre',
         p.P_GRADE 'Grade',
         concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         p.SERVICE 'Service',
-        tp.TP_DESCRIPTION 'Mode règlement',
+        tp.TP_DESCRIPTION 'Mode rÃ¨glement',
         case
         when ( s1.IDEM = 0 and sf.NIV=3 ) then round(s1.montant,1)
         when ( s3.IDEM = 0 and sf.NIV=4 ) then round(s3.montant,1)
@@ -3557,10 +3557,10 @@ case ( $exp == 'adhpayantparcheque' or $exp =='adhpayantparvirement' or $exp =='
         end
         as 'Cotisation annuelle',
         p.OBSERVATION 'Observation',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date Adhésion',
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date AdhÃ©sion',
         DATE_FORMAT(pc.PC_DATE,'%d-%m-%Y') 'Dernier paiement',
         pc.MONTANT 'Montant',";
-        if ( $tp==4 ) $select .="pc.NUM_CHEQUE 'Chèque',";
+        if ( $tp==4 ) $select .="pc.NUM_CHEQUE 'ChÃ¨que',";
         $select .="case
             when p.SUSPENDU = 1 then 'oui'
             else ''
@@ -3594,17 +3594,17 @@ case ( $exp == 'adhpayantparcheque' or $exp =='adhpayantparvirement' or $exp =='
         break;
 
 case "adhmodepaiement":
-        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Seuls les adhérents, ou salariés adhérents sont comptabilisés.";
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Seuls les adhÃ©rents, ou salariÃ©s adhÃ©rents sont comptabilisÃ©s.";
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         tp.TP_DESCRIPTION 'Mode paiement'";
         $table="pompier p left join type_paiement tp on p.TP_ID = tp.TP_ID,
@@ -3618,21 +3618,21 @@ case "adhmodepaiement":
         break;
         
 case "1ribmodifie":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         concat (cb.BIC,' - ',cb.IBAN) 'Nouveau Compte (BIC - IBAN)',
         REPLACE(lh.lh_complement,'ancien compte: ','') 'ancien Compte',
         DATE_FORMAT(lh.lh_stamp,'%d-%m-%Y') 'date',
-        concat(upper(p2.p_nom),' ',CAP_FIRST(p2.p_prenom)) 'modifié par'";
+        concat(upper(p2.p_nom),' ',CAP_FIRST(p2.p_prenom)) 'modifiÃ© par'";
         $table="pompier p left join compte_bancaire cb on ( cb.cb_type = 'P' and cb.cb_id = p.p_id), pompier p2, section_flat sf left join section sp on sp.s_id = sf.s_parent, log_history lh";
         $where = " p.p_section = sf.s_id ";
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
@@ -3645,18 +3645,18 @@ case "1ribmodifie":
         break;
         
 case "1verifmontants":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Adhésion',
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'AdhÃ©sion',
         case
         when ( s1.IDEM = 0 and sf.NIV=3 ) then round(s1.montant,1)
         when ( s3.IDEM = 0 and sf.NIV=4 ) then round(s3.montant,1)
@@ -3686,16 +3686,16 @@ case "1verifmontants":
 
 case "impayesN-1":
         $last = date('Y') -1;
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         round(r.TOTAL_REJET,2)  as 'Rejets $last',
         case
@@ -3703,8 +3703,8 @@ case "impayesN-1":
         else 'N'
         end
         as 'Suspendu',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date Adhésion',
-        tp.TP_DESCRIPTION 'Mode réglement'
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date AdhÃ©sion',
+        tp.TP_DESCRIPTION 'Mode rÃ©glement'
         ";
         $table="pompier p join 
                     (    select P_ID, sum(MONTANT_REJET) TOTAL_REJET from rejet 
@@ -3730,12 +3730,12 @@ case "impayesN-1":
 case "2cotisationsPayees":
         $select="
         concat('<a href=\"upd_personnel.php?from=exportcotisation&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         s.s_code 'Section',
         round(pc.MONTANT,2) 'Montant',
         date_format(pc.PC_DATE, '%d-%m-%Y') 'Date',
         tp.TP_DESCRIPTION 'Moyen',
-        pc.NUM_CHEQUE 'Chèque',
+        pc.NUM_CHEQUE 'ChÃ¨que',
         pc.COMMENTAIRE 'Commentaire'";
         $table="pompier p, type_paiement tp, personnel_cotisation pc, section s";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
@@ -3750,9 +3750,9 @@ case "2cotisationsPayees":
 case "2cotisationsimpayees":
         $select="
         concat('<a href=\"upd_personnel.php?from=exportcotisation&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         s.s_code 'Section',
-        date_format(p.P_DATE_ENGAGEMENT,'%d-%m-%Y') 'Entrée'";
+        date_format(p.P_DATE_ENGAGEMENT,'%d-%m-%Y') 'EntrÃ©e'";
         $table="pompier p, section s";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
         $where .= " p.P_OLD_MEMBER = 0 ";
@@ -3765,17 +3765,17 @@ case "2cotisationsimpayees":
         break;
         
 case ($exp == "2attestationsImpots"  or $exp == "2attestationsImpotsRejets" ):
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
-        tc.TC_LIBELLE 'Civilité',
+        tc.TC_LIBELLE 'CivilitÃ©',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',";
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',";
         if ( $exp != "2attestationsImpotsRejets") {
             $select .=" p.P_ADDRESS 'Adresse',
             p.P_ZIP_CODE 'Code postal',
@@ -3803,8 +3803,8 @@ case ($exp == "2attestationsImpots"  or $exp == "2attestationsImpotsRejets" ):
         end
         as 'Suspendu',
         p.OBSERVATION 'Observation',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date Adhésion',
-        tp.TP_DESCRIPTION 'Mode réglement'
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date AdhÃ©sion',
+        tp.TP_DESCRIPTION 'Mode rÃ©glement'
         ";
         if ( $exp == "2attestationsImpotsRejets" ) $left='';
         else $left = 'left';
@@ -3830,10 +3830,10 @@ case ($exp == "2attestationsImpots"  or $exp == "2attestationsImpotsRejets" ):
         break;
         
 case "nombrePrelevementParDep":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', 
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', 
         p.P_PROFESSION 'Profession',
         tp.TP_DESCRIPTION 'Mode paiement',
-        'Non' as 'Radié',
+        'Non' as 'RadiÃ©',
         count(*) 'Nombre'";
         $table="section_flat sf, pompier p, type_paiement tp";
         $where = " p.P_OLD_MEMBER=0 and sf.NIV in (1,3)";
@@ -3842,15 +3842,15 @@ case "nombrePrelevementParDep":
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
         $where .= " and p.P_SECTION in (select S_ID from section where (S_PARENT=sf.S_ID or S_ID=sf.S_ID))";
         $where .= " and ( p.P_STATUT <> 'SAL' or p.TS_CODE not in ('TC','TP','VNP')) and p.P_NOM <>'admin'";
-        $groupby ="sf.s_code,p.P_PROFESSION,tp.TP_DESCRIPTION,Radié";
+        $groupby ="sf.s_code,p.P_PROFESSION,tp.TP_DESCRIPTION,RadiÃ©";
         $SommeSur = array("Nombre");
         break;
         
 case "1nombrePrelevementParDep":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', 
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', 
         p.P_PROFESSION 'Profession',
         tp.TP_DESCRIPTION 'Mode paiement',
-        'Non' as 'Radié',
+        'Non' as 'RadiÃ©',
         count(*) 'Nombre'";
         $table="section_flat sf, pompier p, type_paiement tp, ";
         $table .= " ( select distinct P_ID, TP_ID from personnel_cotisation";
@@ -3863,15 +3863,15 @@ case "1nombrePrelevementParDep":
         $where .= " and tp.TP_ID=cotis.TP_ID";
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
         $where .= " and ( p.P_STATUT <> 'SAL' or p.TS_CODE not in ('TC','TP','VNP')) and p.P_NOM <>'admin'";
-        $groupby ="sf.s_code,p.P_PROFESSION,tp.TP_DESCRIPTION,Radié";
+        $groupby ="sf.s_code,p.P_PROFESSION,tp.TP_DESCRIPTION,RadiÃ©";
         $SommeSur = array("Nombre");
         break;
         
 case "nombrePrelevementParDeptt":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', 
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', 
         p.P_PROFESSION 'Profession',
         tp.TP_DESCRIPTION 'Mode paiement',
-        'Non' as 'Radié',
+        'Non' as 'RadiÃ©',
         count(*) 'Nombre'";
         $table="section_flat sf, pompier p, type_paiement tp";
         $where = " p.P_OLD_MEMBER=0 and sf.NIV in (1,3)";
@@ -3879,23 +3879,23 @@ case "nombrePrelevementParDeptt":
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
         $where .= " and p.P_SECTION in (select S_ID from section where (S_PARENT=sf.S_ID or S_ID=sf.S_ID))";
         $where .= " and ( p.P_STATUT <> 'SAL' or p.TS_CODE not in ('TC','TP','VNP')) and p.P_NOM <>'admin'";
-        $groupby ="sf.s_code,p.P_PROFESSION,tp.TP_DESCRIPTION,Radié";
+        $groupby ="sf.s_code,p.P_PROFESSION,tp.TP_DESCRIPTION,RadiÃ©";
         $SommeSur = array("Nombre");
         break;    
     
         
 case "adhsuspendus":
-        $select="p.P_ID 'Numéro adhérent',
+        $select="p.P_ID 'NumÃ©ro adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         tc.TC_LIBELLE 'Titre',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'Nom',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_ADDRESS 'Adresse',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
@@ -3915,17 +3915,17 @@ case "adhsuspendus":
         
 case "adhretraites":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         tc.TC_LIBELLE 'Titre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'Nom',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_ADDRESS 'Adresse',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
@@ -3943,20 +3943,20 @@ case "adhretraites":
         
 case "adhactifsretraites":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         tc.TC_LIBELLE 'Titre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'Nom',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         floor(datediff(curdate(),p.P_BIRTHDATE) / 365) 'Age',
-        date_format(p.P_DATE_ENGAGEMENT,'%d-%m-%Y') 'Date adhésion',
+        date_format(p.P_DATE_ENGAGEMENT,'%d-%m-%Y') 'Date adhÃ©sion',
         date_format(p.P_FIN,'%d-%m-%Y') 'Date radiation',
         tm.TM_CODE 'Position'
         ";
@@ -3970,16 +3970,16 @@ case "adhactifsretraites":
         
 case "adhdistribution":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.SERVICE 'Service',
         p.P_PROFESSION 'Type de Profession',
         CAP_FIRST(g.G_DESCRIPTION) 'Grade'
@@ -3991,16 +3991,16 @@ case "adhdistribution":
         break;
         
 case "adressesEnvoiColis":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Type de Profession',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
@@ -4018,16 +4018,16 @@ case "adressesEnvoiColis":
         break;
 
 case "adherentsajourcotisation":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.SERVICE 'Service'";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
@@ -4037,20 +4037,20 @@ case "adherentsajourcotisation":
         break;
         
 case ( $exp == "1cotisationCheque" or $exp == "1cotisationVirPrev" ):
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         pc.montant 'Montant',
         date_format(pc.pc_date,'%d-%m-%Y') 'Date',";
-        if ( $exp == "1cotisationCheque" ) $select .= " pc.num_cheque 'Numéro Chèque'";
-        else  $select .= " tp.TP_DESCRIPTION 'Payé par'";
+        if ( $exp == "1cotisationCheque" ) $select .= " pc.num_cheque 'NumÃ©ro ChÃ¨que'";
+        else  $select .= " tp.TP_DESCRIPTION 'PayÃ© par'";
         $table="pompier p, personnel_cotisation pc left join type_paiement tp on tp.TP_ID = pc.TP_ID, section_flat sf left join section sp on sp.s_id = sf.s_parent";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
         $where .= " p.p_section = sf.s_id ";
@@ -4064,17 +4064,17 @@ case ( $exp == "1cotisationCheque" or $exp == "1cotisationVirPrev" ):
         break;
 
 case "SEPAcourrierRUM":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
-        tc.TC_LIBELLE 'Civilité',
+        tc.TC_LIBELLE 'CivilitÃ©',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville'";
@@ -4085,16 +4085,16 @@ case "SEPAcourrierRUM":
         
 case "adhcarte":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         'Non' as 'Radiation'";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
@@ -4106,27 +4106,27 @@ case "adhcarte":
 case "adhtournee":
 
 case ( $exp == 'adhtournee' or $exp =='adhtournee_off' or $exp =='adhtournee_non_off'  or $exp =='adhtournee_pats'  ):
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         p.P_ADDRESS 'Adresse',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
         p.P_EMAIL 'Email',
         ".phone_display_mask('p.P_PHONE')." 'Portable',
-        ".phone_display_mask('p.P_PHONE2')." 'Tél fixe'
+        ".phone_display_mask('p.P_PHONE2')." 'TÃ©l fixe'
         ";
         $table="pompier p left join grade g on p.P_GRADE = g.G_GRADE, section_flat sf left join section sp on sp.s_id = sf.s_parent";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
-        if ( $exp == 'adhtournee_off' ) $where .= " g.G_CATEGORY='SP' and g.G_TYPE in ('officiers','service de santé') and ";
+        if ( $exp == 'adhtournee_off' ) $where .= " g.G_CATEGORY='SP' and g.G_TYPE in ('officiers','service de santÃ©') and ";
         if ( $exp == 'adhtournee_non_off' ) $where .= " g.G_CATEGORY='SP' and g.G_TYPE in ('caporaux et sapeurs','sous-officiers') and ";
         if ( $exp == 'adhtournee_pats' ) $where .= " (g.G_CATEGORY='PATS' or p.P_PROFESSION = 'PATS' ) and ";
         $where .= " p.p_section = sf.s_id ";
@@ -4136,17 +4136,17 @@ case ( $exp == 'adhtournee' or $exp =='adhtournee_off' or $exp =='adhtournee_non
         
 
 case "1majchgtadresse":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         tc.TC_LIBELLE 'Titre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         p.P_ADDRESS 'Adresse actuelle',
         p.P_ZIP_CODE 'Code postal',
@@ -4166,17 +4166,17 @@ case "1majchgtadresse":
         break;
         
 case "1majradiation":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         tc.TC_LIBELLE 'Titre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
         tm.TM_CODE 'Motif Radiation',
         p.P_ADDRESS 'Adresse',
@@ -4198,16 +4198,16 @@ case "1majradiation":
 
 case "1radiations":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case        
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_ADDRESS 'Adresse',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
@@ -4215,7 +4215,7 @@ case "1radiations":
         p.SERVICE 'Service',
         DATE_FORMAT(p.p_fin,'%d-%m-%Y') 'Date radiation',
         tm.TM_CODE 'Statut actuel',
-        p.MOTIF_RADIATION 'Détail'
+        p.MOTIF_RADIATION 'DÃ©tail'
         ";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent, type_membre tm";
         $where = (isset($list)?" p.p_section in(".$list.") and ":"");
@@ -4230,22 +4230,22 @@ case "1radiations":
         
 case "1changementmail":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         
         p.p_profession 'Profession',
         p.P_EMAIL 'Nouvel Email',
         max(date_format(lh.LH_STAMP,'%Y-%m-%d')) 'Date dernier changement',
-        g.GP_DESCRIPTION 'Droit accès',
-        g2.GP_DESCRIPTION 'Droit accès 2'
+        g.GP_DESCRIPTION 'Droit accÃ¨s',
+        g2.GP_DESCRIPTION 'Droit accÃ¨s 2'
         ";
         $table="pompier p
                 left join groupe g on p.GP_ID = g.GP_ID
@@ -4261,19 +4261,19 @@ case "1changementmail":
         break;
         
 case "1changementtel":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_profession 'Profession',
-        ".phone_display_mask('p.P_PHONE')." 'Tél portable',
-        ".phone_display_mask('p.P_PHONE2')." 'Autre numéro',
+        ".phone_display_mask('p.P_PHONE')." 'TÃ©l portable',
+        ".phone_display_mask('p.P_PHONE2')." 'Autre numÃ©ro',
         max(date_format(lh.LH_STAMP,'%Y-%m-%d')) 'Date dernier changement'";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent, log_history lh";
         $where = (isset($list)?" p.p_section in(".$list.") and ":"");
@@ -4286,16 +4286,16 @@ case "1changementtel":
         break;
         
 case "1changementcentre":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_profession 'Profession',
         lh.LH_COMPLEMENT 'Mouvement',
         date_format(lh.LH_STAMP,'%Y-%m-%d') 'Date changement'
@@ -4310,16 +4310,16 @@ case "1changementcentre":
         break;
         
 case "1changementgrade":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_profession 'Profession',
         CAP_FIRST(g.G_DESCRIPTION) 'Grade actuel',
         lh.LH_COMPLEMENT 'Changement Grade',
@@ -4335,20 +4335,20 @@ case "1changementgrade":
         break;
         
 case "1radiationsmotifPres":
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_profession 'Profession',
         DATE_FORMAT(p.p_fin,'%d-%m-%Y') 'Date radiation',
         tm.TM_CODE 'Motif',
-        p.MOTIF_RADIATION 'Détail'";
+        p.MOTIF_RADIATION 'DÃ©tail'";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent, type_membre tm";
         $where = (isset($list)?" p.p_section in(".$list.") and ":"");
         $where .= " p.p_section = sf.s_id ";
@@ -4369,16 +4369,16 @@ case ( $exp == '1demandejournal' or $exp =='1abonnejournal' ):
             $cfpnum = 1;
             $datetxt='Date abonnement';
         }
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
@@ -4396,16 +4396,16 @@ case ( $exp == '1demandejournal' or $exp =='1abonnejournal' ):
         break;
         
 case ( $exp == 'ansa' ):
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>') 'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>') 'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
@@ -4415,13 +4415,13 @@ case ( $exp == 'ansa' ):
         $where .= " p.p_section = sf.s_id ";
         $where .= " AND cfp.p_id = p.p_id AND cfp.cf_id=4 and p.P_OLD_MEMBER = 0";
         $where .= " and cfp.CFP_VALUE is not null and cfp.CFP_VALUE <> ''";
-        $orderby = "NOM, Prénom";
+        $orderby = "NOM, PrÃ©nom";
         break;
         
 case ( $exp == 'code_conducteur' ):
         $cfpnum = 1;
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>') 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         substring(s.s_code,1,2) 'Section',
         cfp.CFP_VALUE 'Code'
         ";
@@ -4430,18 +4430,18 @@ case ( $exp == 'code_conducteur' ):
         $where .= " p.p_section = s.s_id ";
         $where .= " AND cfp.p_id = p.p_id AND cfp.cf_id=".$cfpnum;
         $where .= " and cfp.CFP_VALUE is not null and cfp.CFP_VALUE <> ''";
-        $orderby = "NOM, Prénom";
+        $orderby = "NOM, PrÃ©nom";
         break;
 
 case "1adhradiessuprident":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         s.s_code 'Section',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
         p.p_email 'Email',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Adhésion',
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'AdhÃ©sion',
         DATE_FORMAT(p.p_fin,'%d-%m-%Y') 'Date radiation'
         ";
         $table="pompier p, section s";
@@ -4453,27 +4453,27 @@ case "1adhradiessuprident":
         break;
 
 case "1nouveauxadherents":
-        $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',p.P_ID,'</a>')  'Numéro adhérent',
+        $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',p.P_ID,'</a>')  'NumÃ©ro adhÃ©rent',
         case
             when s.NIV=3 then DEP_DISPLAY(s.s_code, s.s_description)
             when s.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (s.s_code) 'Centre',
-        tc.TC_LIBELLE 'Civilité',
+        tc.TC_LIBELLE 'CivilitÃ©',
         p.P_GRADE 'Grade',
         upper(p.p_nom)  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
         p.P_CODE 'Identifiant',
-        ".phone_display_mask('p.P_PHONE')." 'Tél portable',
+        ".phone_display_mask('p.P_PHONE')." 'TÃ©l portable',
         p.p_email 'Email',
         p.P_PROFESSION 'Profession',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Adhésion',
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'AdhÃ©sion',
         round(sc.montant / 12, 2) 'Montant mensuel',
-        tp.TP_DESCRIPTION 'Moyen réglement'
+        tp.TP_DESCRIPTION 'Moyen rÃ©glement'
         ";
         $table="pompier p, type_paiement tp, section_flat s left join section sp on sp.s_id = s.s_parent, type_civilite tc, section_cotisation sc";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
@@ -4489,25 +4489,25 @@ case "1nouveauxadherents":
         break;
         
 case "1nouveauxadherentsPres":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date Adhésion',
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Date AdhÃ©sion',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
-        ".phone_display_mask('p.P_PHONE')." 'Tél portable',
+        as 'Nom dÃ©partement',
+        ".phone_display_mask('p.P_PHONE')." 'TÃ©l portable',
         p.p_email 'Email'";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
@@ -4520,8 +4520,8 @@ case "1nouveauxadherentsPres":
         break;
         
 case "1nouveauxadherents2":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom Département', count(*) 'Nombre', 
-                 p.p_profession 'Profession', date_format(p.p_date_engagement,'%d-%m-%Y') 'Date adhésion', 'Non' as 'Radiation'";
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom DÃ©partement', count(*) 'Nombre', 
+                 p.p_profession 'Profession', date_format(p.p_date_engagement,'%d-%m-%Y') 'Date adhÃ©sion', 'Non' as 'Radiation'";
         $table="section_flat sf, pompier p";
         $where = " p.P_OLD_MEMBER=0 and sf.NIV in(0,1,3)";
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
@@ -4534,7 +4534,7 @@ case "1nouveauxadherents2":
         break;
 
 case "1adherentsradies2":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom Département', count(*) 'CompteDeNomadhérent',
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom DÃ©partement', count(*) 'CompteDeNomadhÃ©rent',
                  p.p_profession 'Profession', tm.tm_code 'Motif Radiation'";
         $table="section_flat sf, pompier p, type_membre tm";
         $where = " p.P_OLD_MEMBER > 0 and sf.NIV in(0,1,3)";
@@ -4550,42 +4550,42 @@ case "1adherentsradies2":
         break;
         
 case "droitBureauDE":
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Département',
+        as 'DÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_PROFESSION 'Profession',
-        ".phone_display_mask('p.P_PHONE')." 'Tél portable',
+        ".phone_display_mask('p.P_PHONE')." 'TÃ©l portable',
         p.p_email 'Email'";
         $table="pompier p, section_flat sf left join section sp on sp.s_id = sf.s_parent, groupe g";
         $where = (isset($list)?" p.p_section in(".$list.") and":"");
         $where .= " p.p_section = sf.s_id ";
         $where .= " and ( p.GP_ID = g.GP_ID or p.GP_ID2 = g.GP_ID)";
-        $where .= " and g.GP_DESCRIPTION='Bureau Départemental'";
+        $where .= " and g.GP_DESCRIPTION='Bureau DÃ©partemental'";
         $where .= " and p.P_NOM <> 'admin'";
         $where .= " and p.P_OLD_MEMBER=0";
-        $orderby =" Département";
+        $orderby =" DÃ©partement";
         break;
 
 case ( $exp == "adherentsradies3" or $exp == "adherentsradies4" ):
         if ( $exp == "adherentsradies4" ) $DD = date('Y');
         else $DD = date('Y') -1 ;
-        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=8&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
                 case
                 when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
                 when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
                 end
-                as 'Nom département',
+                as 'Nom dÃ©partement',
                 ANTENA_DISPLAY (sf.s_code) 'Centre',
                 p.P_GRADE 'Grade',
                 upper(p.p_nom) 'NOM',
-                CAP_FIRST(p.p_prenom) 'Prénom',
+                CAP_FIRST(p.p_prenom) 'PrÃ©nom',
                 p.p_profession 'Profession',
                 date_format(p.p_fin,'%d-%m-%Y') 'Date Radiation',
                 p.MOTIF_RADIATION 'Motif Radiation'";
@@ -4603,8 +4603,8 @@ case ( $exp == "adherentsradies3" or $exp == "adherentsradies4" ):
         
 case "1adherentsradies06" :
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'Nom',
-                CAP_FIRST(p.p_prenom) 'Prénom',
-                '06' as 'Num département',
+                CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+                '06' as 'Num dÃ©partement',
                 date_format(p.p_fin,'%d-%m-%Y') 'Date Radiation',
                 p.p_profession 'Profession',
                 ANTENA_DISPLAY (sf.s_code) 'Centre',
@@ -4612,7 +4612,7 @@ case "1adherentsradies06" :
                 when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
                 when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)    
                 end
-                as 'Nom département',
+                as 'Nom dÃ©partement',
                 tm.tm_code 'Motif Radiation'";
         $table="section_flat sf left join section sp on sp.s_id = sf.s_parent, pompier p, type_membre tm";
         $where = " p.P_OLD_MEMBER > 0 ";
@@ -4641,7 +4641,7 @@ case "nbadherents":
         break;
 
 case ( $exp == "nbadherentspardep" or $exp =="nbadherentspardepS" ):
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', count(1) 'Nombre'";
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', count(1) 'Nombre'";
         $table="section_flat sf, pompier p";
         $where = " p.P_OLD_MEMBER=0";
         if ( $syndicate == 1 ) $where .= " and sf.NIV in(1,3)";
@@ -4657,7 +4657,7 @@ case ( $exp == "nbadherentspardep" or $exp =="nbadherentspardepS" ):
         break;
    
 case  "0nbadherentspardep":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', count(1) 'Nombre'";
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', count(1) 'Nombre'";
         $table="section_flat sf, pompier p";
         if ( $syndicate == 1 ) $where = "  sf.NIV in(1,3)";
         else $where = "  sf.NIV in(0,1,3)";
@@ -4673,7 +4673,7 @@ case  "0nbadherentspardep":
         break;
         
 case  "0nbadherentspardepparprof":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', p.P_PROFESSION 'Code Profession', count(1) 'Nombre'";
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', p.P_PROFESSION 'Code Profession', count(1) 'Nombre'";
         $table="section_flat sf, pompier p";
         if ( $syndicate == 1 ) $where = "  sf.NIV in(1,3)";
         else $where = "  sf.NIV in(0,1,3)";
@@ -4689,8 +4689,8 @@ case  "0nbadherentspardepparprof":
         break;
         
 case "nbadherentspardep2" :
-        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Les salariés non adhérents sont exclus de ce reporting, seuls les adhérents sont comptabilisés.";
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', p.p_profession 'Profession', count(*) 'Nombre'";
+        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Les salariÃ©s non adhÃ©rents sont exclus de ce reporting, seuls les adhÃ©rents sont comptabilisÃ©s.";
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', p.p_profession 'Profession', count(*) 'Nombre'";
         $table="section_flat sf, pompier p";
         $where = " p.P_OLD_MEMBER=0";
         if ( $syndicate == 1 ) $where .= " and sf.NIV in(1,3)";
@@ -4711,7 +4711,7 @@ case "nbadherentsparcentre":
                 when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
                 when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
                 end
-                as 'Nom département',
+                as 'Nom dÃ©partement',
                 count(1) 'Nombre'";
         $table="section_flat sf left join section sp on sp.s_id = sf.s_parent, pompier p";
         $where = " p.P_OLD_MEMBER=0 and sf.NIV=4";
@@ -4750,7 +4750,7 @@ case "0nbtotaladhparprof":
         break;
 
 case "1nbNouveauxAdherentsParDep":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', count(*) 'Nombre'";
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', count(*) 'Nombre'";
         $table="section_flat sf, pompier p";
         $where = " p.P_OLD_MEMBER=0";
         if ( $syndicate == 1 ) $where .= " and sf.NIV in(1,3)";
@@ -4766,7 +4766,7 @@ case "1nbNouveauxAdherentsParDep":
         break;
         
 case "1nbRadiationsAdherentsParDep":
-        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', tm.TM_CODE 'Motif', count(*) 'Nombre'";
+        $select="DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', tm.TM_CODE 'Motif', count(*) 'Nombre'";
         $table="section_flat sf, pompier p, type_membre tm";
         $where = " p.P_OLD_MEMBER=0";
         if ( $syndicate == 1 ) $where .= " and sf.NIV in(1,3)";
@@ -4785,22 +4785,22 @@ case "1nbRadiationsAdherentsParDep":
 
 case "adhNPAI":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         tc.TC_LIBELLE 'Titre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_ADDRESS 'Adresse',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
         ".phone_display_mask('p.P_PHONE')." 'Portable',
-        ".phone_display_mask('p.P_PHONE2')." 'Autre tél',
+        ".phone_display_mask('p.P_PHONE2')." 'Autre tÃ©l',
         p.P_EMAIL 'email',
         tm.TM_CODE 'position',
         'oui' as 'NPAI',
@@ -4818,21 +4818,21 @@ case "adhNPAI":
 
 case "cordonneesAdherents":
         $select="
-        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
-        tc.TC_LIBELLE 'Civilité',
+        tc.TC_LIBELLE 'CivilitÃ©',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_ADDRESS 'Adress',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
-        ".phone_display_mask('p.P_PHONE')." 'Tél portable',
+        ".phone_display_mask('p.P_PHONE')." 'TÃ©l portable',
         p.P_EMAIL 'email',
         p.SERVICE 'Service',
         p.P_PROFESSION 'Profession'
@@ -4849,21 +4849,21 @@ case "cordonneesAdherents":
         break;
 
 case "cordonneesAdherentsparcentre":
-        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Seuls les adhérents (ou salariés adhérents) sont comptabilisés.";
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $comment = "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='attention'></i> Seuls les adhÃ©rents (ou salariÃ©s adhÃ©rents) sont comptabilisÃ©s.";
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         p.P_GRADE 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
-        ".phone_display_mask('p.P_PHONE2')." 'Tél',
-        ".phone_display_mask('p.P_PHONE')." 'Tél portable',
+        ".phone_display_mask('p.P_PHONE2')." 'TÃ©l',
+        ".phone_display_mask('p.P_PHONE')." 'TÃ©l portable',
         p.P_EMAIL 'Email',
         p.P_PROFESSION 'Profession',
         case when p.SUSPENDU = 1 then 'oui'
@@ -4883,29 +4883,29 @@ case "cordonneesAdherentsparcentre":
 
 
 case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherentsparGTetServicesansNPAI" ):
-        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhérent',
+        $select="concat('<a href=\"upd_personnel.php?tab=1&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>')  'Numero adhÃ©rent',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         ANTENA_DISPLAY (sf.s_code) 'Centre',
         case 
         when p.P_GRADE = '-' then ''
         else g.G_DESCRIPTION
         end as 'Grade',
         upper(p.p_nom) 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.Service 'Service',
         case
         when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
         when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
         end
-        as 'Nom département',
+        as 'Nom dÃ©partement',
         p.P_ADDRESS 'Adresse',
         p.P_ZIP_CODE 'Code postal',
         p.P_CITY 'Ville',
-        ".phone_display_mask('p.P_PHONE')." 'Tél portable',
+        ".phone_display_mask('p.P_PHONE')." 'TÃ©l portable',
         p.P_EMAIL 'Email',
         p.P_CODE 'Identifiant'
         ";
@@ -4925,7 +4925,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
 //------------------- 
     case "1anciens":
         $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         case
         when p.p_email is null then concat('')
         when p.p_email is not null and p.p_hide = 1 and ".$show."=0 then concat('**********')
@@ -4934,7 +4934,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         end
         as 'Email',
         concat(s.s_code,' - ',s.s_description)  'Section',
-        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'Entrée',
+        DATE_FORMAT(p.p_date_engagement,'%d-%m-%Y') 'EntrÃ©e',
         DATE_FORMAT(p.p_fin,'%d-%m-%Y') 'Sortie',
         tm.tm_code 'Raison'";
         $table="pompier p, section s, type_membre tm";
@@ -4952,7 +4952,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
 // vehicules 
 //-------------------
     case "vehicule":
-        $select ="v.TV_CODE  'Code',  v.V_MODELE  'Modèle', v.V_IMMATRICULATION  'Immat.', v.V_ANNEE  'Année' , V_KM  'Km',  V_KM_REVISION  'Révision à', vp.VP_LIBELLE 'statut', concat(s.s_code,' - ',s.s_description)  'Section'";
+        $select ="v.TV_CODE  'Code',  v.V_MODELE  'ModÃ¨le', v.V_IMMATRICULATION  'Immat.', v.V_ANNEE  'AnnÃ©e' , V_KM  'Km',  V_KM_REVISION  'RÃ©vision Ã ', vp.VP_LIBELLE 'statut', concat(s.s_code,' - ',s.s_description)  'Section'";
         $table ="vehicule v, section s, vehicule_position vp";
         $where = " v.s_id = s.s_id ";
         $where .= " and vp.VP_ID=v.VP_ID";
@@ -4963,12 +4963,12 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         break;
         
 //-------------------
-// vehicules à dispo
+// vehicules Ã  dispo
 //-------------------
     case "vehicule_a_dispo":
         $select ="concat('<a href=\"upd_vehicule.php?from=export&vid=',v.v_id,'\" target=_blank>',v.TV_CODE,'</a>')  'Code',
-          v.V_MODELE  'Modèle', v.V_IMMATRICULATION  'Immat.', v.V_ANNEE  'Année' , V_KM  'Km', 
-          vp.VP_LIBELLE 'statut', concat(s.s_code,' - ',s.s_description)  'Section bénéficiaire', V_COMMENT 'Commentaire'";
+          v.V_MODELE  'ModÃ¨le', v.V_IMMATRICULATION  'Immat.', v.V_ANNEE  'AnnÃ©e' , V_KM  'Km', 
+          vp.VP_LIBELLE 'statut', concat(s.s_code,' - ',s.s_description)  'Section bÃ©nÃ©ficiaire', V_COMMENT 'Commentaire'";
         $table ="vehicule v, section s, vehicule_position vp";
         $where = " v.s_id = s.s_id ";
         $where .= " and v.v_externe = 1 ";
@@ -4980,13 +4980,13 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         break;
 
 //-------------------
-// materiel à dispo
+// materiel Ã  dispo
 //-------------------
     case "materiel_a_dispo":
-        $select ="concat('<a href=\"upd_materiel.php?from=export&mid=',m.ma_id,'\" target=_blank>',REPLACE(REPLACE(REPLACE(REPLACE(tm.TM_CODE,'é','e'),'è','e'),'à','a'),'ê','e'),'</a>')  'Type',
-          tm.TM_USAGE 'Catégorie', m.MA_MODELE  'Modèle',  m.MA_ANNEE  'Année' , m.MA_NB 'Pièces' ,
-          m.MA_NUMERO_SERIE 'N°série',m.MA_LIEU_STOCKAGE 'Lieu stockage',
-          concat(s.s_code,' - ',s.s_description)  'Section bénéficiaire', m.MA_COMMENT 'Commentaire'";
+        $select ="concat('<a href=\"upd_materiel.php?from=export&mid=',m.ma_id,'\" target=_blank>',REPLACE(REPLACE(REPLACE(REPLACE(tm.TM_CODE,'Ã©','e'),'Ã¨','e'),'Ã ','a'),'Ãª','e'),'</a>')  'Type',
+          tm.TM_USAGE 'CatÃ©gorie', m.MA_MODELE  'ModÃ¨le',  m.MA_ANNEE  'AnnÃ©e' , m.MA_NB 'PiÃ¨ces' ,
+          m.MA_NUMERO_SERIE 'NÂ°sÃ©rie',m.MA_LIEU_STOCKAGE 'Lieu stockage',
+          concat(s.s_code,' - ',s.s_description)  'Section bÃ©nÃ©ficiaire', m.MA_COMMENT 'Commentaire'";
         $table ="materiel m, section s, type_materiel tm, vehicule_position vp";
         $where = " m.s_id = s.s_id ";
         $where .= " and m.vp_id = vp.vp_id ";
@@ -5003,9 +5003,9 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
 //-------------------
     case "tenues_personnel":
         $select ="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>')  'NOM',
-          CAP_FIRST(p.p_prenom) 'Prénom',    
-          concat('<a href=\"upd_materiel.php?from=export&mid=',m.ma_id,'\" target=_blank>',REPLACE(REPLACE(REPLACE(REPLACE(tm.TM_CODE,'é','e'),'è','e'),'à','a'),'ê','e'),'</a>')  'Type',
-          m.MA_MODELE  'Modèle',  m.MA_ANNEE  'Année' , m.MA_NB 'Pièces',
+          CAP_FIRST(p.p_prenom) 'PrÃ©nom',    
+          concat('<a href=\"upd_materiel.php?from=export&mid=',m.ma_id,'\" target=_blank>',REPLACE(REPLACE(REPLACE(REPLACE(tm.TM_CODE,'Ã©','e'),'Ã¨','e'),'Ã ','a'),'Ãª','e'),'</a>')  'Type',
+          m.MA_MODELE  'ModÃ¨le',  m.MA_ANNEE  'AnnÃ©e' , m.MA_NB 'PiÃ¨ces',
           tv.TV_NAME 'Taille',
           m.MA_COMMENT 'Commentaire'";
         $table ="materiel m left join pompier p on p.P_ID = m.AFFECTED_TO left join taille_vetement tv on m.TV_ID=tv.TV_ID, section s, type_materiel tm, vehicule_position vp";
@@ -5016,12 +5016,12 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         $where .= " and  vp.vp_operationnel >= 0";
         $where .= " and tm.tm_id = m.tm_id ";
         $where .= (isset($list)?" AND m.s_id in(".$list.") ":"");
-        $orderby ="NOM asc, Prénom asc , TM_CODE asc";
+        $orderby ="NOM asc, PrÃ©nom asc , TM_CODE asc";
         $groupby ="";        
         break;
         
 //-------------------
-// Produits consommés entre 2 dates 
+// Produits consommÃ©s entre 2 dates 
 //-------------------
      case "1consommation_produits":
         $select="s.S_CODE 'Section',
@@ -5031,11 +5031,11 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         cc.CC_NAME 'Categorie',
         ec.EC_NOMBRE 'Nombre',
         case
-        when tum.TUM_CODE = 'un' and ec.EC_NOMBRE = 1 then 'unité'
-        when tum.TUM_CODE = 'un' and ec.EC_NOMBRE > 1 then 'unités'
+        when tum.TUM_CODE = 'un' and ec.EC_NOMBRE = 1 then 'unitÃ©'
+        when tum.TUM_CODE = 'un' and ec.EC_NOMBRE > 1 then 'unitÃ©s'
         when ( tco.TCO_CODE = 'PE' and tc.TC_QUANTITE_PAR_UNITE = 1 ) then concat (tum.TUM_DESCRIPTION,'s')
         when tco.TCO_CODE = 'PE' then concat (tc.TC_QUANTITE_PAR_UNITE,' ',tum.TUM_DESCRIPTION,'s')
-        else concat (REPLACE(tco.TCO_DESCRIPTION,'î','i'),' ',tc.TC_QUANTITE_PAR_UNITE,' ',tc.TC_UNITE_MESURE) 
+        else concat (REPLACE(tco.TCO_DESCRIPTION,'Ã®','i'),' ',tc.TC_QUANTITE_PAR_UNITE,' ',tc.TC_UNITE_MESURE) 
         end
         as 'Conditionnement',
         tc.TC_DESCRIPTION 'Type',
@@ -5056,22 +5056,22 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         break;
         
 //-------------------
-// Produits consommés entre 2 dates 
+// Produits consommÃ©s entre 2 dates 
 //-------------------        
     case "stock_consommables":
-        $select="s.S_CODE 'Section', cc.CC_NAME 'Catégorie', 
+        $select="s.S_CODE 'Section', cc.CC_NAME 'CatÃ©gorie', 
         tc.TC_DESCRIPTION 'Type',
         c.C_NOMBRE 'Nombre',
         case
         when ( tco.TCO_CODE = 'PE' and tc.TC_QUANTITE_PAR_UNITE = 1 ) then concat (tum.TUM_DESCRIPTION,'s')
         when tco.TCO_CODE = 'PE' then concat (tc.TC_QUANTITE_PAR_UNITE,' ',tum.TUM_DESCRIPTION) 
-        when tum.TUM_CODE = 'un' and c.C_NOMBRE = 1 then 'unité'
-        when tum.TUM_CODE = 'un' and c.C_NOMBRE > 1 then 'unités'
-        else concat (REPLACE(tco.TCO_DESCRIPTION,'î','i'),' ',tc.TC_QUANTITE_PAR_UNITE,' ',tc.TC_UNITE_MESURE) 
+        when tum.TUM_CODE = 'un' and c.C_NOMBRE = 1 then 'unitÃ©'
+        when tum.TUM_CODE = 'un' and c.C_NOMBRE > 1 then 'unitÃ©s'
+        else concat (REPLACE(tco.TCO_DESCRIPTION,'Ã®','i'),' ',tc.TC_QUANTITE_PAR_UNITE,' ',tc.TC_UNITE_MESURE) 
         end
         as 'Conditionnement',
         c.C_DESCRIPTION 'Description',
-        c.C_DATE_ACHAT 'Date achat',  DATE_FORMAT(c.C_DATE_PEREMPTION, '%d-%m-%Y') as 'Date péremption'";    
+        c.C_DATE_ACHAT 'Date achat',  DATE_FORMAT(c.C_DATE_PEREMPTION, '%d-%m-%Y') as 'Date pÃ©remption'";    
         $table=" consommable c, type_consommable tc,  categorie_consommable cc, type_conditionnement tco, type_unite_mesure tum, section s";
         $where = " c.TC_ID = tc.TC_ID
         and tc.CC_CODE = cc.CC_CODE
@@ -5084,10 +5084,10 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     break;
     
 //-------------------
-// Kilométrage réalisé par véhicule 
+// KilomÃ©trage rÃ©alisÃ© par vÃ©hicule 
 //-------------------
      case "1vehicule_km":
-        $select ="tv.TV_LIBELLE 'Type', v.V_MODELE  'Modèle', v.V_IMMATRICULATION  'Immat.', sum(ev.ev_km)  'Total Km', concat(s.s_code,' - ',s.s_description)  'Section'";
+        $select ="tv.TV_LIBELLE 'Type', v.V_MODELE  'ModÃ¨le', v.V_IMMATRICULATION  'Immat.', sum(ev.ev_km)  'Total Km', concat(s.s_code,' - ',s.s_description)  'Section'";
         $table ="(select ev.e_code, ev.v_id, ev.ev_km, min(ev.eh_id) eh_id
             from vehicule v, evenement_vehicule ev, evenement e, evenement_horaire eh
             where e.e_code = eh.e_code 
@@ -5110,11 +5110,11 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         break;
         
 //-------------------
-// Kilométrage non renseignés 
+// KilomÃ©trage non renseignÃ©s 
 //-------------------
      case "1missing_km":
-        $select ="tv.TV_LIBELLE 'Type', v.V_MODELE  'Modèle', v.V_IMMATRICULATION  'Immat.', concat(s.s_code,' - ',s.s_description)  'Section', e.e_libelle 'Evenemment',
-                 date_format(eh.eh_date_debut,'%d-%m-%Y') 'Date Début.',
+        $select ="tv.TV_LIBELLE 'Type', v.V_MODELE  'ModÃ¨le', v.V_IMMATRICULATION  'Immat.', concat(s.s_code,' - ',s.s_description)  'Section', e.e_libelle 'Evenemment',
+                 date_format(eh.eh_date_debut,'%d-%m-%Y') 'Date DÃ©but.',
                  concat('<a href=\"evenement_display.php?from=export&evenement=',ev.e_code,'\" target=_blank>voir</a>') 'voir'";
         $table ="(select ev.e_code, ev.v_id, min(ev.eh_id) eh_id
             from evenement_vehicule ev, vehicule v, evenement_horaire eh
@@ -5135,10 +5135,10 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         break;
         
 //-------------------
-// Kilométrage réalisé par type d'événement 
+// KilomÃ©trage rÃ©alisÃ© par type d'Ã©vÃ©nement 
 //-------------------
        case "1evenement_km":
-        $select ="te.te_libelle 'Type Evénement', sum(ev.ev_km)  'Total Km'";
+        $select ="te.te_libelle 'Type EvÃ©nement', sum(ev.ev_km)  'Total Km'";
         $table ="(select ev.e_code, ev.v_id, ev.ev_km, min(ev.eh_id) eh_id
             from vehicule v, evenement_vehicule ev, evenement e, evenement_horaire eh
             where e.e_code = eh.e_code 
@@ -5158,7 +5158,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         $SommeSur = array("Total Km");
         break;
 //-------------------
-// Kilométrage réalisé en véhicule perso
+// KilomÃ©trage rÃ©alisÃ© en vÃ©hicule perso
 //-------------------
     case "1perso_km":
         $select ="
@@ -5188,7 +5188,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         $select ="
         concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom)) 'NOM',
         s.S_CODE 'Section',
-        ' du ".str_replace('-','-',$dtdb).(($dtdbq!=$dtfnq)?" au ".str_replace('-','-',$dtfn):"")."' as 'Période',
+        ' du ".str_replace('-','-',$dtdb).(($dtdbq!=$dtfnq)?" au ".str_replace('-','-',$dtfn):"")."' as 'PÃ©riode',
         sum(ep.ep_km) 'Km'";
         $table ="pompier p, evenement e, section s, evenement_horaire eh, evenement_participation ep";
         $where = " p.p_section = s.s_id ";
@@ -5204,17 +5204,17 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         break;
         
 //-------------------
-// Kilométrage réalisé en véhicule association
+// KilomÃ©trage rÃ©alisÃ© en vÃ©hicule association
 //-------------------
     case "1associat_km":
         $select ="
         v.V_IMMATRICULATION 'immatric.',
-        v.TV_CODE 'Véhicule',
+        v.TV_CODE 'VÃ©hicule',
         s.S_CODE 'Section',
         e.TE_CODE 'Even.',
-        e.E_LIBELLE 'Libellé',
+        e.E_LIBELLE 'LibellÃ©',
         e.E_LIEU 'Lieu',
-        date_format(eh.eh_date_debut,'%d-%m-%Y')  'Début',  
+        date_format(eh.eh_date_debut,'%d-%m-%Y')  'DÃ©but',  
         ev.ev_km 'Km',
         concat('<a href=\"evenement_display.php?from=export&evenement=',e.e_code,'\" target=_blank>voir</a>') 'voir'";
         $table ="vehicule v, evenement e, section s, evenement_horaire eh, evenement_vehicule ev";
@@ -5238,11 +5238,11 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     case "1renforts":
     $select = " e.code_parent 'Principal.',
     e.te_code 'Type',
-    e.libelle 'Libellé',
+    e.libelle 'LibellÃ©',
     concat('<a href=''evenement_display.php?from=export&evenement=',e.e_parent,''' class=''noprint'' target=''_blank'' >voir</a>') 'Voir Principal',
     e.e_lieu 'Lieu',
     e.S_CODE 'Renfort de.',
-    date_format(e.eh_date_debut,'%d-%m-%Y')  'Début' ,
+    date_format(e.eh_date_debut,'%d-%m-%Y')  'DÃ©but' ,
     date_format(e.eh_date_fin,'%d-%m-%Y')  'Fin' ,
     e.parties 'Nb parties',
     personnes ' Participants.',
@@ -5277,10 +5277,10 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     break;    
         
 //-------------------
-// Evénements annulés 
+// EvÃ©nements annulÃ©s 
 //-------------------
     case "1evenement_annule":
-        $select ="te.te_libelle  'Type', sum(e.e_canceled) as 'Annulés', count(e.e_code) as 'Evénements', format((sum(e.e_canceled) / count(e.e_code)) * 100,0) as ' % '";
+        $select ="te.te_libelle  'Type', sum(e.e_canceled) as 'AnnulÃ©s', count(e.e_code) as 'EvÃ©nements', format((sum(e.e_canceled) / count(e.e_code)) * 100,0) as ' % '";
         $table =" evenement e, type_evenement te, evenement_horaire eh";
         $where =" $evenemententredeuxdate ";
         $where .= (isset($list)?"  and e.s_id in(".$list.") ":"");
@@ -5289,16 +5289,16 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         $where .= " AND eh.eh_id = 1";
         $orderby ="";
         $groupby ="e.TE_CODE";
-        $SommeSur = array("Annulés","Evénements");
+        $SommeSur = array("AnnulÃ©s","EvÃ©nements");
         $colonneCss = array("","","nbr","nbr");
         break;
 //-------------------
-// Evénements annulés
+// EvÃ©nements annulÃ©s
 //-------------------
     case ( $exp == "1evenement_annule_liste" or $exp == "1evenement_annule_liste2" ):
         $select ="s.s_code 'Section', e.te_code 'Type.', 
-        date_format(eh.eh_date_debut,'%d-%m-%Y') 'Date Début.', 
-        concat(e.e_libelle ,' - ', e.e_lieu) 'Libellé.', 
+        date_format(eh.eh_date_debut,'%d-%m-%Y') 'Date DÃ©but.', 
+        concat(e.e_libelle ,' - ', e.e_lieu) 'LibellÃ©.', 
         e.E_CANCEL_DETAIL 'Raison de l''annulation.' ,";
         if ( $exp == "1evenement_annule_liste2" )
             $select .=" ef.devis_montant 'Montant devis',";
@@ -5383,7 +5383,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
         $sqlLignes .= " AND $evenemententredeuxdate ";
         if ( $liste <> "" ) $sqlLignes .= " WHERE s.s_id in ($liste)";
         $sqlLignes .= " AND eh.eh_id=1  and e.te_code <> 'MC'";
-        $sqlLignes .= " AND e.e_canceled = 0 "; // exclure les évènements annulés
+        $sqlLignes .= " AND e.e_canceled = 0 "; // exclure les Ã©vÃ¨nements annulÃ©s
         $sqlLignes .= " GROUP BY s.s_id ";
         $sqlLignes .= " ORDER BY lig ";
         break;
@@ -5392,15 +5392,15 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
 //-------------------
     case "1heuressections":
     $select = "s.S_CODE  'Section', 
-    te.te_libelle 'Type événement', 
-    sum(eh.eh_duree) 'Heures prévues',
+    te.te_libelle 'Type Ã©vÃ©nement', 
+    sum(eh.eh_duree) 'Heures prÃ©vues',
     sum(
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
     end
     )
-    as 'Heures réalisées'
+    as 'Heures rÃ©alisÃ©es'
     ";
     $table = "evenement e, evenement_participation ep, type_evenement te, section s, evenement_horaire eh ";
     $where = " e.e_code = ep.e_code ";
@@ -5415,7 +5415,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     $orderby  = "s.s_id, s.S_DESCRIPTION ,e.te_code";
     $groupby = "s.s_id,te.te_libelle";
     $RuptureSur = array("Section");
-    $SommeSur = array("Heures prévues","Heures réalisées");
+    $SommeSur = array("Heures prÃ©vues","Heures rÃ©alisÃ©es");
     break;
 //-------------------
 // heures / personne
@@ -5436,7 +5436,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     END ),(
     CASE 
     WHEN e.s_id != p.p_section
-    THEN 'Extérieur '
+    THEN 'ExtÃ©rieur '
     ELSE ''
     END )
     ) as 'R-E',";
@@ -5447,18 +5447,18 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
     end
     as  'Fin',
-    eh.eh_duree as 'Durée',
+    eh.eh_duree as 'DurÃ©e',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
     end
-    as 'Présence'
+    as 'PrÃ©sence'
     ";
     if ( $exp == "1heurespersonneFORFacture" or $exp == "1heurespersonneDPSFacture"  or $exp =="1heurespersonneHorsDPSFacture")
          $select .= ", ef.devis_montant 'Devis'";
@@ -5492,7 +5492,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     $orderby  = "p.p_nom, p.p_prenom ,eh_date_debut";
     $groupby = "";
     $RuptureSur = array("Personnel");
-    $SommeSur = array("Durée","Présence");
+    $SommeSur = array("DurÃ©e","PrÃ©sence");
     break;
     
 //-------------------
@@ -5518,18 +5518,18 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
     end
     as  'Fin',
-    eh.eh_duree as 'Durée',
+    eh.eh_duree as 'DurÃ©e',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
     end
-    as 'Présence' 
+    as 'PrÃ©sence' 
     ";
     $table = "evenement e, evenement_participation ep, pompier p, evenement_horaire eh, poste ps, qualification q";
     $where = " e.e_code = ep.e_code ";
@@ -5548,7 +5548,7 @@ case ( $exp == "cordonneesAdherentsparGTetService" or $exp =="cordonneesAdherent
     $orderby  = "p.p_nom, p.p_prenom, ps.PH_CODE, eh_date_debut";
     $groupby = "";
     $RuptureSur = array("Personnel");
-    $SommeSur = array("Durée","Présence");
+    $SommeSur = array("DurÃ©e","PrÃ©sence");
     break;
 
 //-------------------
@@ -5571,7 +5571,7 @@ case "1heurespersonnetous":
     END ),(
     CASE 
     WHEN e.s_id != p.p_section
-    THEN 'Extérieur '
+    THEN 'ExtÃ©rieur '
     ELSE ''
     END )
     ) as 'R-E',
@@ -5581,18 +5581,18 @@ case "1heurespersonnetous":
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
     end
     as  'Fin',
-    eh.eh_duree as 'Durée',
+    eh.eh_duree as 'DurÃ©e',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
     end
-    as 'Présence'
+    as 'PrÃ©sence'
     ";
     $table = "evenement e, evenement_participation ep, pompier p, evenement_horaire eh ";
     $where = " e.e_code = ep.e_code ";
@@ -5607,7 +5607,7 @@ case "1heurespersonnetous":
     $orderby  = "p.p_nom, p.p_prenom, p.p_statut , eh_date_debut";
     $groupby = "";
     $RuptureSur = array("Personnel");
-    $SommeSur = array("Durée","Présence");    
+    $SommeSur = array("DurÃ©e","PrÃ©sence");    
     break;    
 
 //-------------------
@@ -5630,7 +5630,7 @@ case "1heurespersonneexternes":
     END ),(
     CASE 
     WHEN e.s_id != p.p_section
-    THEN 'Extérieur '
+    THEN 'ExtÃ©rieur '
     ELSE ''
     END )
     ) as 'R-E',
@@ -5640,18 +5640,18 @@ case "1heurespersonneexternes":
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
     end
     as  'Fin',
-    eh.eh_duree as 'Durée',
+    eh.eh_duree as 'DurÃ©e',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
     end
-    as 'Présence'
+    as 'PrÃ©sence'
     ";
     $table = "evenement e, evenement_participation ep, pompier p, evenement_horaire eh ";
     $where = " e.e_code = ep.e_code ";
@@ -5666,7 +5666,7 @@ case "1heurespersonneexternes":
     $orderby  = "p.p_nom, p.p_prenom, p.p_statut , eh_date_debut";
     $groupby = "";
     $RuptureSur = array("Personnel");
-    $SommeSur = array("Durée","Présence");    
+    $SommeSur = array("DurÃ©e","PrÃ©sence");    
     break;
 //------------------------------------------
 // Participations par jour du personnel
@@ -5694,15 +5694,15 @@ case "1participationsparjour":
     case "1absences":
     $select = "concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom)) 'Personnel', 
     e.te_code 'Code', e.e_libelle 'Evenement',
-    date_format(eh.eh_date_debut,'%e-%c-%Y') as 'Début',
-    date_format(eh.eh_debut,'%H:%i') as 'à',
+    date_format(eh.eh_date_debut,'%e-%c-%Y') as 'DÃ©but',
+    date_format(eh.eh_debut,'%H:%i') as 'Ã ',
     date_format(eh.eh_date_fin,'%e-%c-%Y') as 'Fin',
-    date_format(eh.eh_fin,'%H:%i') as  'à',
+    date_format(eh.eh_fin,'%H:%i') as  'Ã ',
     case 
-    when ep.ep_excuse = 1 then ('absence excusée')
+    when ep.ep_excuse = 1 then ('absence excusÃ©e')
     when ep.ep_excuse = 0 then ('non')
     end
-    as 'excusée'
+    as 'excusÃ©e'
     ";
     $table = "evenement e, evenement_participation ep, pompier p, evenement_horaire eh";
     $where = " e.e_code = ep.e_code ";
@@ -5745,7 +5745,7 @@ case "1participationsparjour":
 //-------------------
     case "tempsconnexion":
     $select = "concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a> ')  'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
     count(1) 'Connexions',
     TIME_FORMAT(SEC_TO_TIME(sum(TIMESTAMPDIFF(MINUTE, A_DEBUT, A_FIN)*60)), '%H:%i') 'Temps_en_heures'";
     $table = "pompier p, audit a";
@@ -5758,7 +5758,7 @@ case "1participationsparjour":
     break;
     
     case "tempconnexionparsection":
-    $select = "s.s_code 'Code Département', DEP_DISPLAY(s.s_code, s.s_description) 'Département',
+    $select = "s.s_code 'Code DÃ©partement', DEP_DISPLAY(s.s_code, s.s_description) 'DÃ©partement',
     count(1) 'NombreConnexions',
     count(distinct p.P_ID) 'UtilisateursUniques',
     TIME_FORMAT(SEC_TO_TIME(sum(TIMESTAMPDIFF(MINUTE, A_DEBUT, A_FIN)*60)), '%H') 'HeuresTotalesConnexion'";
@@ -5770,7 +5770,7 @@ case "1participationsparjour":
     $where .= " and a.A_FIN is not null ";
     $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
     $orderby  = "NombreConnexions desc";
-    $groupby = "s.s_code, Département";
+    $groupby = "s.s_code, DÃ©partement";
     break;
     
 //----------------------------------
@@ -5786,8 +5786,8 @@ case "1participationsparjour":
 
     if ( $k == 'C' ) $cat = 'continues';
     else $cat = 'initiales';
-    $export_name = "Nombre formations ".$cat." ".$l." par département en ".$yearreport;
-    $select = "F.S_CODE 'Code Département', DEP_DISPLAY(F.s_code, F.S_DESCRIPTION) 'Département',
+    $export_name = "Nombre formations ".$cat." ".$l." par dÃ©partement en ".$yearreport;
+    $select = "F.S_CODE 'Code DÃ©partement', DEP_DISPLAY(F.s_code, F.S_DESCRIPTION) 'DÃ©partement',
     count(distinct P.E_CODE) 'Nombre formations', 
     case 
         when count(distinct P.E_CODE) = 0 then 0
@@ -5835,7 +5835,7 @@ case "1participationsparjour":
         $row=@mysqli_fetch_array($res);
         $l=$row[0];
     }
-    $select = "s.s_code 'Code Département', DEP_DISPLAY(s.s_code, s.s_description) 'Département',
+    $select = "s.s_code 'Code DÃ©partement', DEP_DISPLAY(s.s_code, s.s_description) 'DÃ©partement',
     count(distinct e.E_CODE) 'Evenements'";
     $table = "evenement_horaire eh, evenement e, section_flat s";
     $where = " e.E_CODE = eh.E_CODE";
@@ -5849,12 +5849,12 @@ case "1participationsparjour":
     $where .= " and e.S_ID in (select S_ID from section where (S_PARENT=s.S_ID or S_ID=s.S_ID)) ";
     $where .= (isset($list)?" and s.S_ID in(".$list.") ":"");
     $orderby  = "Evenements desc";
-    $groupby = "s.s_code, Département";
+    $groupby = "s.s_code, DÃ©partement";
     $SommeSur = array("Evenements");
     break;
     
     case "cotisationspayees":
-        $select="sf.s_code 'Code Département', DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom département', count(*) 'Nombre', round(sum(pc.MONTANT),2) 'Somme'";
+        $select="sf.s_code 'Code DÃ©partement', DEP_DISPLAY(sf.s_code, sf.s_description) 'Nom dÃ©partement', count(*) 'Nombre', round(sum(pc.MONTANT),2) 'Somme'";
         $table="section_flat sf, personnel_cotisation pc, pompier p";
         $where = " p.P_ID = pc.P_ID and sf.NIV=3";
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
@@ -5869,7 +5869,7 @@ case "1participationsparjour":
 //-------------------
     case "1inactif":
     $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a> ')  'NOM',
-        CAP_FIRST(p.p_prenom)    'Prénom',
+        CAP_FIRST(p.p_prenom)    'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')
@@ -5881,7 +5881,7 @@ case "1participationsparjour":
         s.s_code  'Section',
         case
         when q.q_expiration <= '".date("Y-m-d")."' then '<i class=\"fa fa-circle\" style=\"color:red;\" title=\"Cotisation en retard\"></i> <font color=red> en retard</font>'
-        when q.q_expiration > '".date("Y-m-d")."' or q.q_expiration is null then '<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Cotisation à jour\"></i> <font color=green> à jour</font>'
+        when q.q_expiration > '".date("Y-m-d")."' or q.q_expiration is null then '<i class=\"fa fa-circle\" style=\"color:green;\" title=\"Cotisation Ã  jour\"></i> <font color=green> Ã  jour</font>'
         end
         as 'Cotisation'
         ";
@@ -5904,7 +5904,7 @@ case "1participationsparjour":
 //-------------------
     case "1inactif2":
     $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a> ')  'NOM',
-        CAP_FIRST(p.p_prenom)    'Prénom',
+        CAP_FIRST(p.p_prenom)    'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')
@@ -5928,11 +5928,11 @@ case "1participationsparjour":
         break;
 
 //-------------------
-// SST à recycler
+// SST Ã  recycler
 //-------------------
     case "sstexpiration":
     $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a> ')  'NOM',
-        CAP_FIRST(p.p_prenom)    'Prénom',
+        CAP_FIRST(p.p_prenom)    'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')
@@ -5968,11 +5968,11 @@ case "1participationsparjour":
         break;
         
 //-------------------
-// compétences expirées
+// compÃ©tences expirÃ©es
 //-------------------
     case "competence_expire":
     $select="concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a> ')  'NOM',
-        CAP_FIRST(p.p_prenom)    'Prénom',
+        CAP_FIRST(p.p_prenom)    'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')  
@@ -5982,7 +5982,7 @@ case "1participationsparjour":
         end
         as 'Email',
         s.s_code  'Section',
-        po.description  'Compétence',
+        po.description  'CompÃ©tence',
         concat('<font color=red>',DATE_FORMAT(q.Q_EXPIRATION, '%m / %Y'),'</font>') 'Expiration'
         ";
         $table="pompier p, section s, qualification q, poste po";
@@ -6007,7 +6007,7 @@ case "1participationsparjour":
 //-------------------
     case "cotisation":
     $select="concat('<a href=\"upd_personnel.php?from=exportcotisation&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a> ')  'NOM',
-        CAP_FIRST(p.p_prenom)    'Prénom',
+        CAP_FIRST(p.p_prenom)    'PrÃ©nom',
         ".$display_phone.",
         case
         when p.p_email is null then concat('')
@@ -6031,13 +6031,13 @@ case "1participationsparjour":
         break;
         
 //-------------------
-// diplômes
+// diplÃ´mes
 //-------------------
     case "1diplomesPSC1":
-    $select = "pf.PF_DIPLOME ' Diplôme',
+    $select = "pf.PF_DIPLOME ' DiplÃ´me',
     pf.PF_DATE 'Date',
-    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'Délivré à',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'DÃ©livrÃ© Ã ',
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     concat(s.s_code,' - ',s.s_description)  'Section',
     case 
     when o.p_statut = 'EXT' then '<font color=green>externe</font>'
@@ -6060,10 +6060,10 @@ case "1participationsparjour":
     break;
 
     case "diplomesPSC1":
-    $select = "pf.PF_DIPLOME ' Diplôme',
+    $select = "pf.PF_DIPLOME ' DiplÃ´me',
     pf.PF_DATE 'Date',
-    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'Délivré à',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'DÃ©livrÃ© Ã ',
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     concat(s.s_code,' - ',s.s_description) 'Section',
     case 
     when o.p_statut = 'EXT' then '<font color=green>externe</font>'
@@ -6084,10 +6084,10 @@ case "1participationsparjour":
     break;
     
     case "diplomesPSE1":
-    $select = "pf.PF_DIPLOME ' Diplôme',
+    $select = "pf.PF_DIPLOME ' DiplÃ´me',
     pf.PF_DATE 'Date',
-    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'Délivré à',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'DÃ©livrÃ© Ã ',
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     concat(s.s_code,' - ',s.s_description) 'Section',
     case 
     when o.p_statut = 'EXT' then '<font color=green>externe</font>'
@@ -6108,10 +6108,10 @@ case "1participationsparjour":
     break;
     
     case "diplomesPSE2":
-    $select = "pf.PF_DIPLOME ' Diplôme',
+    $select = "pf.PF_DIPLOME ' DiplÃ´me',
     pf.PF_DATE 'Date',
-    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'Délivré à',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'DÃ©livrÃ© Ã ',
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     concat(s.s_code,' - ',s.s_description)  'Section',
     case 
     when o.p_statut = 'EXT' then '<font color=green>externe</font>'
@@ -6136,13 +6136,13 @@ case "1participationsparjour":
 //-------------------
     case "chiens":
     $select = "case 
-    when o.p_sexe  = 'M' then 'Mâle'
+    when o.p_sexe  = 'M' then 'MÃ¢le'
     else 'Femelle'
     end as 'Genre',
     concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),' ',CAP_FIRST(o.p_prenom),'</a>')  'NOM',
     concat(s.s_code,' - ',s.s_description)  'Section',
-    GROUP_CONCAT(p.TYPE order by p.TYPE) 'Compétences',
-    concat('<a href=\"upd_personnel.php?from=export&pompier=',m.p_id,'\" target=_blank>',upper(m.p_nom),' ',CAP_FIRST(m.p_prenom),'</a>')  'Maître'";
+    GROUP_CONCAT(p.TYPE order by p.TYPE) 'CompÃ©tences',
+    concat('<a href=\"upd_personnel.php?from=export&pompier=',m.p_id,'\" target=_blank>',upper(m.p_nom),' ',CAP_FIRST(m.p_prenom),'</a>')  'MaÃ®tre'";
     $table = "pompier o left join pompier m on m.P_ID = o.P_MAITRE
             left join  qualification q on     o.P_ID = q.P_ID,
             section s, poste p";
@@ -6161,11 +6161,11 @@ case "1participationsparjour":
 // secouristes
 //-------------------
     case "secouristesPSE":
-    $select = "p.type 'Compétence Maxi',
+    $select = "p.type 'CompÃ©tence Maxi',
     date_format(q.q_expiration,'%d-%m-%Y') 'Expiration',
-    pf.PF_DIPLOME 'Numéro diplôme',
+    pf.PF_DIPLOME 'NumÃ©ro diplÃ´me',
     concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'NOM',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     date_format(o.p_birthdate,'%d-%m-%Y') 'Date de naissance',
     o.p_birthplace 'Lieu de naissance',
     Z.Section";
@@ -6198,7 +6198,7 @@ case "1participationsparjour":
     case "secouristesPSE1":
     $select = "'PSE1' as 'competence',
     concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'NOM',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     o.P_EMAIL 'email',
     date_format(Z.q_expiration,'%d-%m-%Y') 'Expiration',
     Z.Section";
@@ -6224,16 +6224,16 @@ case "1participationsparjour":
     break;
 
 //-------------------
-// personnel de santé
+// personnel de santÃ©
 //-------------------
     case "personnelsante":
-    $select = "p.description 'Compétence',
+    $select = "p.description 'CompÃ©tence',
     concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'NOM',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     s.s_code 'Section'";
     $table = "qualification q, poste p,  pompier o, section s, equipe e ";    
     $where = " p.ps_id = q.ps_id\n";
-    $where .= " and e.EQ_NOM='Personnels de Santé'\n";
+    $where .= " and e.EQ_NOM='Personnels de SantÃ©'\n";
     $where .= " and e.EQ_ID =p.EQ_ID\n";
     $where .= " and o.p_id = q.p_id\n";
     $where .= " and o.p_old_member = 0\n";
@@ -6274,7 +6274,7 @@ case "1participationsparjour":
         if ( $role > 0 )  $select .= "  or o.P_ID in ( select P_ID from section_role where S_ID in (".$list.") and GP_ID=".$role." ) ";
         $select .=   " )";
     }
-    $select .= " group by 'Compétence', s.s_code";
+    $select .= " group by 'CompÃ©tence', s.s_code";
     $select .= " union all select 'PSE1' as 'Competence',
     s.s_code 'Section',
     count(*) 'Nombre'";
@@ -6292,7 +6292,7 @@ case "1participationsparjour":
         if ( $role > 0 )  $where .= "  or o.P_ID in ( select P_ID from section_role where S_ID in (".$list.") and GP_ID=".$role." ) ";
         $where .=   " )";
     }
-    $where .= " group by 'Compétence', s.s_code";
+    $where .= " group by 'CompÃ©tence', s.s_code";
     $RuptureSur = array("Competence");
     $SommeSur = array("Nombre");
     break;
@@ -6301,9 +6301,9 @@ case "1participationsparjour":
 // moniteurs
 //-------------------
     case "moniteurs":
-    $select = "p.type 'Compétence',
+    $select = "p.type 'CompÃ©tence',
     concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'NOM',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     q.q_expiration 'Expiration',
     s.s_code 'Section'";
     $table = "qualification q, poste p,  pompier o, section s ";
@@ -6327,7 +6327,7 @@ case "1participationsparjour":
     case "moniteursPSC":
     $select = "'PSC' as 'competence',
     concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>')  'NOM',
-    CAP_FIRST(o.p_prenom) 'Prénom', 
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom', 
     o.P_EMAIL 'email',
     date_format(Z.q_expiration,'%d-%m-%Y') 'Expiration',
     Z.Section";
@@ -6359,14 +6359,14 @@ case "1participationsparjour":
         when sf.NIV=3 then sf.s_code
         when sf.NIV=4 then sp.s_code
         end
-    as 'Dép',
+    as 'DÃ©p',
     case
         when sf.NIV=3 then sf.s_description
         when sf.NIV=4 then sp.s_description
         end
-    as 'Département',
+    as 'DÃ©partement',
     sf.s_code 'Section',
-    CAP_FIRST(o.p_prenom) 'Prénom',
+    CAP_FIRST(o.p_prenom) 'PrÃ©nom',
     concat('<a href=\"upd_personnel.php?from=export&pompier=',o.p_id,'\" target=_blank>',upper(o.p_nom),'</a>') 'NOM',
     tc.TC_SHORT 'Civ',
     upper(o.P_NOM_NAISSANCE) 'Nom naissance',
@@ -6374,10 +6374,10 @@ case "1participationsparjour":
     o.P_CITY 'Ville',
     o.P_ZIP_CODE 'Code postal',
     date_format(o.p_birthdate,'%d-%m-%Y') 'Date naissance',
-    y.NAME 'Nationalité',
+    y.NAME 'NationalitÃ©',
     o.P_BIRTHPLACE 'Lieu naissance',
-    o.P_BIRTH_DEP 'Dép naissance',
-    q.qualifs 'Compétences à jour'";
+    o.P_BIRTH_DEP 'DÃ©p naissance',
+    q.qualifs 'CompÃ©tences Ã  jour'";
     $table = " (select q.P_ID, GROUP_CONCAT(c.TYPE SEPARATOR ',' ) qualifs from qualification q, poste c, pompier p, equipe e
                     where q.PS_ID = c.PS_ID
                     and e.EQ_ID = c.EQ_ID
@@ -6404,7 +6404,7 @@ case "1participationsparjour":
 // Nombre de moniteurs
 //-------------------
     case "moniteursparsection":
-    $select = "p.type 'Compétence',
+    $select = "p.type 'CompÃ©tence',
     s.s_code 'Section',
     count(*) 'Nombre'";
     $table = "qualification q, poste p,  pompier o, section s ";
@@ -6424,7 +6424,7 @@ case "1participationsparjour":
     }
     $orderby  = "";
     $groupby = "p.type,s.s_code";
-    $RuptureSur = array("Compétence");
+    $RuptureSur = array("CompÃ©tence");
     $SommeSur = array("Nombre");    
     break;
     
@@ -6433,10 +6433,10 @@ case "1participationsparjour":
 //-----------------------------
     case "adressesext":
         $select="
-        DATE_FORMAT(P_CREATE_DATE,'%d-%m-%Y') 'Ajouté le',
+        DATE_FORMAT(P_CREATE_DATE,'%d-%m-%Y') 'AjoutÃ© le',
         c.c_name 'Entreprise',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>') 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
@@ -6452,15 +6452,15 @@ case "1participationsparjour":
         
     case ( $exp == 'telext' or $exp =='mailext' ):
         $select="
-        DATE_FORMAT(P_CREATE_DATE,'%d-%m-%Y') 'Ajouté le',
+        DATE_FORMAT(P_CREATE_DATE,'%d-%m-%Y') 'AjoutÃ© le',
         c.c_name 'Entreprise',
         concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',upper(p.p_nom),'</a>') 'NOM',
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
-        p.p_phone 'Téléphone',
-        p.p_phone2 'Téléphone 2',
+        p.p_phone 'TÃ©lÃ©phone',
+        p.p_phone2 'TÃ©lÃ©phone 2',
         p.p_email 'Email',
         concat(s.s_code,' - ',s.s_description) 'Section'";
         $table="pompier p, section s, company c";
@@ -6479,7 +6479,7 @@ case "1participationsparjour":
     case 'extmailvalide' :
         $select="distinct
         upper(p.p_nom),
-        CAP_FIRST(p.p_prenom) 'Prénom',
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         lower(p.p_email) 'Email'";
         $table="pompier p, personnel_formation pf";
         $where = "  p.p_old_member = 0 and p.P_STATUT = 'EXT' and pf.P_ID = p.P_ID and p.C_ID =0";
@@ -6492,8 +6492,8 @@ case "1participationsparjour":
     case 'extnomailvalide' :
         $select="distinct
         upper(p.p_nom) 'Nom',
-        CAP_FIRST(p.p_prenom) 'Prénom',
-        p.P_PHONE 'Téléphone'";
+        CAP_FIRST(p.p_prenom) 'PrÃ©nom',
+        p.P_PHONE 'TÃ©lÃ©phone'";
         $table="pompier p, personnel_formation pf";
         $where = "  p.p_old_member = 0 and p.P_STATUT = 'EXT' and pf.P_ID = p.P_ID and p.C_ID =0";
         $where .= (isset($list)?" and p.p_section in(".$list.") ":"");
@@ -6505,7 +6505,7 @@ case "1participationsparjour":
     case "1participations":
     $select = "DISTINCTROW concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>') 'ID', 
     upper(p.p_nom) 'NOM', 
-    CAP_FIRST(p.p_prenom) 'Prénom',
+    CAP_FIRST(p.p_prenom) 'PrÃ©nom',
     st.s_description 'Statut',
     case when  (p.c_id is null or p.c_id = 0 )
        then ''
@@ -6525,13 +6525,13 @@ case "1participationsparjour":
     $where .= " and $evenemententredeuxdate "; 
     $where .= (isset($list)?" and s.s_id in(".$list.") ":"");
     $orderby  = " p.p_statut, p.p_nom, p.p_prenom, p.p_id ";
-    $groupby=" ID, NOM, Prénom";
+    $groupby=" ID, NOM, PrÃ©nom";
     break;
     
     case "1participationsext":
     $select = "DISTINCTROW concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>') 'ID', 
     upper(p.p_nom) 'NOM', 
-    CAP_FIRST(p.p_prenom) 'Prénom',
+    CAP_FIRST(p.p_prenom) 'PrÃ©nom',
     st.s_description 'Statut',
     case when  (p.c_id is null or p.c_id = 0 )
        then ''
@@ -6539,7 +6539,7 @@ case "1participationsparjour":
        c.c_name
     end
     as 'Entreprise',
-    date_format(p.p_create_date,'%d-%m-%Y') 'Ajouté le',
+    date_format(p.p_create_date,'%d-%m-%Y') 'AjoutÃ© le',
     count(*) as 'Participations'";
     $table = " pompier p, evenement e, statut st, evenement_horaire eh, evenement_participation ep , section s, company c";    
     $where = " e.e_code = ep.e_code \n";
@@ -6552,7 +6552,7 @@ case "1participationsparjour":
     $where .= " and $evenemententredeuxdate "; 
     $where .= (isset($list)?" and s.s_id in(".$list.") ":"");
     $orderby  = " p.p_statut, p.p_nom, p.p_prenom, p.p_id ";
-    $groupby=" ID, NOM, Prénom, Entreprise, 'Ajouté le'";    
+    $groupby=" ID, NOM, PrÃ©nom, Entreprise, 'AjoutÃ© le'";    
     break;
     
     case "1participationsformateurs":
@@ -6563,12 +6563,12 @@ case "1participationsparjour":
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_debut is null then date_format(eh.eh_debut,'%H:%i') 
     when ep.ep_debut is not null then date_format(ep.ep_debut,'%H:%i') 
     end
-    as 'à',
+    as 'Ã ',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
@@ -6578,7 +6578,7 @@ case "1participationsparjour":
     when ep.ep_fin is null then date_format(eh.eh_fin,'%H:%i')
     when ep.ep_fin is not null then date_format(ep.ep_fin,'%H:%i')
     end
-    as  'à',
+    as  'Ã ',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
@@ -6603,8 +6603,8 @@ case "1participationsparjour":
     case "1participationssalaries":
     $select = "
     case 
-    when ep.ep_flag1 = 1 then concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom), ' (salarié)')
-    else concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom), ' (bénévole)')
+    when ep.ep_flag1 = 1 then concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom), ' (salariÃ©)')
+    else concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom), ' (bÃ©nÃ©vole)')
     end
     as 'Personnel',
     e.e_libelle 'Evenement',
@@ -6613,12 +6613,12 @@ case "1participationsparjour":
     when ep.ep_date_debut is null then date_format(eh.eh_date_debut,'%e-%c-%Y') 
     when ep.ep_date_debut is not null then date_format(ep.ep_date_debut,'%e-%c-%Y') 
     end
-    as 'Début',
+    as 'DÃ©but',
     case
     when ep.ep_debut is null then date_format(eh.eh_debut,'%H:%i') 
     when ep.ep_debut is not null then date_format(ep.ep_debut,'%H:%i') 
     end
-    as 'à',
+    as 'Ã ',
     case
     when ep.ep_date_fin is null then date_format(eh.eh_date_fin,'%e-%c-%Y')
     when ep.ep_date_fin is not null then date_format(ep.ep_date_fin,'%e-%c-%Y')
@@ -6628,7 +6628,7 @@ case "1participationsparjour":
     when ep.ep_fin is null then date_format(eh.eh_fin,'%H:%i')
     when ep.ep_fin is not null then date_format(ep.ep_fin,'%H:%i')
     end
-    as  'à',
+    as  'Ã ',
     case
     when ep.ep_duree is null then eh.eh_duree
     when ep.ep_duree is not null then ep.ep_duree
@@ -6654,7 +6654,7 @@ case "1participationsparjour":
     case "1participationsadressesext":
     $select = "DISTINCTROW concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>') 'ID', 
     upper(p.p_nom) 'NOM', 
-    CAP_FIRST(p.p_prenom) 'Prénom',
+    CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',
@@ -6674,7 +6674,7 @@ case "1participationsparjour":
     end
     as 'Entreprise',
     concat(s.s_code,' - ',s.s_description)  'Section',
-    date_format(p.p_create_date,'%d-%m-%Y') 'Ajouté le'";
+    date_format(p.p_create_date,'%d-%m-%Y') 'AjoutÃ© le'";
     $table = " pompier p, evenement e, evenement_horaire eh, statut st, evenement_participation ep , section s, company c";    
     $where = " e.e_code = ep.e_code \n";
     $where .= " and p.p_statut = st.s_statut and p.p_statut = 'EXT' and e.te_code <> 'MC'\n";
@@ -6692,7 +6692,7 @@ case "1participationsparjour":
     case "1participationsadresses":
     $select = "DISTINCTROW concat('<a href=\"upd_personnel.php?from=export&pompier=',p.p_id,'\" target=_blank>',p.p_id,'</a>') 'ID',     
     upper(p.p_nom) 'NOM', 
-    CAP_FIRST(p.p_prenom) 'Prénom',
+    CAP_FIRST(p.p_prenom) 'PrÃ©nom',
         p.p_address 'Adresse',
         p.p_zip_code 'Code postal',
         p.p_city 'Ville',    
@@ -6712,7 +6712,7 @@ case "1participationsparjour":
     end
     as 'Entreprise',
     concat(s.s_code,' - ',s.s_description)  'Section',
-    date_format(p.p_create_date,'%d-%m-%Y') 'Ajouté le'";
+    date_format(p.p_create_date,'%d-%m-%Y') 'AjoutÃ© le'";
     $table = " pompier p, evenement e, evenement_horaire eh, statut st, evenement_participation ep , section s, company c";    
     $where = " e.e_code = ep.e_code \n";
     $where .= " and p.p_statut = st.s_statut and p.p_statut <> 'EXT' and e.te_code <> 'MC'\n";
@@ -6740,7 +6740,7 @@ case ( $exp == '1soapcalls' or $exp =='1soaperrors' or $exp =='1soapcallsj' or $
     if ( $exp == '1soapcallsj' or $exp == '1soaperrorsj' )
         $select = "date_format(LS_DATE, '%d-%m-%Y') 'Date', count(1) as 'Nombre'";
     else 
-        $select = " date_format(LS_DATE, '%d-%m-%Y %H:%i:%s') 'Date', LS_SERVICE 'Service', LS_PARAM 'Paramètre',
+        $select = " date_format(LS_DATE, '%d-%m-%Y %H:%i:%s') 'Date', LS_SERVICE 'Service', LS_PARAM 'ParamÃ¨tre',
                 LS_RET 'Retour', LS_MESSAGE 'Message'";
     $table = "log_soap";
     $where = " LS_DATE  <= '$dtfnq'  AND LS_DATE  >= '$dtdbq'";
@@ -6757,7 +6757,7 @@ case ( $exp == '1soapcalls' or $exp =='1soaperrors' or $exp =='1soapcallsj' or $
 case ( $exp == 'horairesavalider' or $exp =='1horaires' ):
     if (! check_rights($id, 13,"$filter")) {
         write_msgbox("Erreur permission", $error_pic, 
-        "Vous n'avez pas la permission de voir ce rapport. Essayez à votre niveau local.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
+        "Vous n'avez pas la permission de voir ce rapport. Essayez Ã  votre niveau local.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
         exit;
     }
     
@@ -6767,7 +6767,7 @@ case ( $exp == 'horairesavalider' or $exp =='1horaires' ):
                 when sf.NIV=3 then DEP_DISPLAY(sf.s_code, sf.s_description)
                 when sf.NIV=4 then DEP_DISPLAY(sp.s_code, sp.s_description)
                 end
-                as 'Nom département', 
+                as 'Nom dÃ©partement', 
                 hv.ANNEE, 
                 concat('<a href=horaires.php?view=week&year=',hv.ANNEE,'&week=',hv.SEMAINE,'&from=export&person=',p.P_ID,' target=_blank>',hv.SEMAINE,'</a>') 'Semaine', 
                 concat('<span class=',hs.HS_CLASS,'>',hs.HS_DESCRIPTION,'</span>') 'statut', 
@@ -6801,11 +6801,11 @@ case ( $exp == 'horairesavalider' or $exp =='1horaires' ):
 //-------------------------------------------
 case ( $prefix == "1note" or $prefix == "1notN" ):
     $suffix=substr($exp,6,20);
-    if ( $suffix == "REMB" and $assoc ) $export_name .=" (ou dons à l'association)";
+    if ( $suffix == "REMB" and $assoc ) $export_name .=" (ou dons Ã  l'association)";
     
     if (! multi_check_rights_notes($id,"$filter") ) {
         write_msgbox("Erreur permission", $error_pic, 
-        "Vous n'avez pas la permission de voir ce rapport. Essayez à votre niveau local.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
+        "Vous n'avez pas la permission de voir ce rapport. Essayez Ã  votre niveau local.<p align=center><a href='javascript:history.back(1)'><input type='submit' class='btn btn-secondary' value='Retour'></a>",10,0);
         exit;
     }
     if ($prefix == "1notN_" and ! multi_check_rights_notes($id,"0")) {
@@ -6815,28 +6815,28 @@ case ( $prefix == "1note" or $prefix == "1notN" ):
     }
     
     $select = " concat('<a href=note_frais_edit.php?from=export&action=update&person=',p.P_ID,'&nfid=',n.NF_ID,' target=_blank>',n.NF_ID,'</a>') 'Note', 
-                concat(n.NF_CODE1,' / ',LPAD(n.NF_CODE2, 2, '0'),' / ',LPAD(n.NF_CODE3, 3, '0')) Numéro,
-                concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom)) 'Bénéficiaire',
+                concat(n.NF_CODE1,' / ',LPAD(n.NF_CODE2, 2, '0'),' / ',LPAD(n.NF_CODE3, 3, '0')) NumÃ©ro,
+                concat(upper(p.p_nom),' ',CAP_FIRST(p.p_prenom)) 'BÃ©nÃ©ficiaire',
                 s.S_CODE 'Section Note',
                 n.TOTAL_AMOUNT 'montant ".$default_money_symbol."',
                 case 
-                when ( n.NF_DON = 1 and fs.FS_CODE='REMB' ) then concat('<span class=',fs.FS_CLASS,'>Don à l''association</span>')
+                when ( n.NF_DON = 1 and fs.FS_CODE='REMB' ) then concat('<span class=',fs.FS_CLASS,'>Don Ã  l''association</span>')
                 else concat('<span class=',fs.FS_CLASS,'>',fs.FS_DESCRIPTION,'</span>')
                 end 
                 as  'statut',
-                date_format(n.NF_CREATE_DATE,'%d-%m-%Y') 'Date création',
+                date_format(n.NF_CREATE_DATE,'%d-%m-%Y') 'Date crÃ©ation',
                 concat(upper(p1.p_nom),' ',CAP_FIRST(p1.p_prenom)) 'Par',
-                date_format(n.NF_STATUT_DATE,'%d-%m-%Y %H:%i') 'Modifié le', 
+                date_format(n.NF_STATUT_DATE,'%d-%m-%Y %H:%i') 'ModifiÃ© le', 
                 concat(upper(p2.p_nom),' ',CAP_FIRST(p2.p_prenom)) 'Par',
-                date_format(n.NF_VALIDATED_DATE,'%d-%m-%Y %H:%i') 'Validé le', 
+                date_format(n.NF_VALIDATED_DATE,'%d-%m-%Y %H:%i') 'ValidÃ© le', 
                 concat(upper(p3.p_nom),' ',CAP_FIRST(p3.p_prenom)) 'Par',
-                date_format(n.NF_VALIDATED2_DATE,'%d-%m-%Y %H:%i') 'Validé 2 le', 
+                date_format(n.NF_VALIDATED2_DATE,'%d-%m-%Y %H:%i') 'ValidÃ© 2 le', 
                 concat(upper(p4.p_nom),' ',CAP_FIRST(p4.p_prenom)) 'Par',
-                date_format(n.NF_REMBOURSE_DATE,'%d-%m-%Y %H:%i') 'Remboursé le', 
+                date_format(n.NF_REMBOURSE_DATE,'%d-%m-%Y %H:%i') 'RemboursÃ© le', 
                 concat(upper(p5.p_nom),' ',CAP_FIRST(p5.p_prenom)) 'Par',
                 case 
                 when n.NF_NATIONAL = 1 then 'National'
-                when n.NF_DEPARTEMENTAL = 1 then 'Départemental'
+                when n.NF_DEPARTEMENTAL = 1 then 'DÃ©partemental'
                 else ''
                 end 
                 as 'Type Note',
@@ -6849,12 +6849,12 @@ case ( $prefix == "1note" or $prefix == "1notN" ):
                 when n.NF_FRAIS_DEP = 1 then 'oui'
                 else ''
                 end
-                as 'Payé par Dép.',
+                as 'PayÃ© par DÃ©p.',
                 case
                 when n.NF_JUSTIF_RECUS = 1 then 'oui'
                 else ''
                 end 
-                as 'Justifs reçus',
+                as 'Justifs reÃ§us',
                 tm.TM_DESCRIPTION 'motif'";
     $table ="    note_de_frais n left join pompier p1 on p1.P_ID = n.NF_CREATE_BY
                                 left join pompier p2 on p2.P_ID = n.NF_STATUT_BY
@@ -6924,11 +6924,11 @@ case ( $exp == "compterendujour" or $exp == "compterenduhier" ):
     
 case "1reports":
     check_all(14);
-    if ( $days_log > 0 ) $comment = "<i class='fas fa-exclamation-triangle' style='color:orange;'></i> ce reporting contient les données des $days_log derniers jours";
+    if ( $days_log > 0 ) $comment = "<i class='fas fa-exclamation-triangle' style='color:orange;'></i> ce reporting contient les donnÃ©es des $days_log derniers jours";
     $select ="date_format(lr.LR_DATE, '%d-%m-%Y %H:%i:%s')  'Date report',
             rl.R_NAME Reporting, 
-            lr.LR_PARAMS Paramètres,
-            concat('<a href=\"upd_section.php?from=export&S_ID=',s.S_ID,'\" target=_blank>',REPLACE(REPLACE(s.S_CODE,'é','e'),'ç','c'),'</a>')Section,
+            lr.LR_PARAMS ParamÃ¨tres,
+            concat('<a href=\"upd_section.php?from=export&S_ID=',s.S_ID,'\" target=_blank>',REPLACE(REPLACE(s.S_CODE,'Ã©','e'),'Ã§','c'),'</a>')Section,
             concat('<a href=\"upd_personnel.php?pompier=',p.P_ID,'\" target=_blank>',CAP_FIRST(p.P_PRENOM),' ',UPPER(p.P_NOM),'</a>') 'Utilisateur',
             lr.LR_ROWS 'lignes extraites',
             lr.LR_TIME 'temps secondes'";
@@ -6944,7 +6944,7 @@ case "1reports":
 
 case "1topreports":
     check_all(14);
-    if ( $days_log > 0 ) $comment = "<i class='fas fa-exclamation-triangle' style='color:orange;'></i> ce reporting contient les données des $days_log derniers jours";
+    if ( $days_log > 0 ) $comment = "<i class='fas fa-exclamation-triangle' style='color:orange;'></i> ce reporting contient les donnÃ©es des $days_log derniers jours";
     $select ="rl.R_NAME Reporting, count(1) 'Nombre'";
     $table = "log_report lr, report_list rl, section s";
     $where = " lr.R_CODE = rl.R_CODE";

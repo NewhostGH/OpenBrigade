@@ -76,7 +76,7 @@ $export_name="Formations suivies par ".ucfirst(get_prenom($pompier))." ".strtoup
 // Add the columns heads
 // ===============================================
 $columns=array('A','B','C','D','E','F','G');
-$columns_title=array("Type","date","Type de formation","N°diplôme","Lieu","Délivré par","Commentaire");
+$columns_title=array("Type","date","Type de formation","NÂ°diplÃ´me","Lieu","DÃ©livrÃ© par","Commentaire");
 foreach ($columns as $c => $letter) {
 	$objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));
 	$objPHPExcel->getActiveSheet()->getColumnDimension($letter)->setAutoSize(true);

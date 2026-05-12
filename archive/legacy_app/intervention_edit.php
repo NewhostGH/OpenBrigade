@@ -100,7 +100,7 @@ if ( $granted_update) {
     $pdf="<a class='btn btn-default noprint' href='pdf_document.php?evenement=".$evenement."&section=".$S_ID."&mode=16&numinter=".$numinter."' target=_blank>
     <i class='far fa-file-pdf fa-1x' title='Version imprimable' ></i></a>";
     $buttons_container .= "<div class='buttons-container' style='margin-left:auto'>".$pdf."</div>";
-    writeBreadCrumb("Intervention","Activité","evenement_display.php?pid=&from=interventions&tab=8&evenement=".$evenement."&autorefresh=0", $buttons_container);
+    writeBreadCrumb("Intervention","ActivitÃ©","evenement_display.php?pid=&from=interventions&tab=8&evenement=".$evenement."&autorefresh=0", $buttons_container);
 }
 
 //============================================================
@@ -120,7 +120,7 @@ if ( isset ($_FILES['userfile'])) {
             list($file_name, $error, $msgstring ) = explode(";", $upload_result);
 
             if ( $error == 0 ) {
-                // upload réussi: insérer les informations relatives au document dans la base
+                // upload rÃ©ussi: insÃ©rer les informations relatives au document dans la base
                 $query="insert into document(D_NAME,EL_ID,TD_CODE,DS_ID,D_CREATED_BY,D_CREATED_DATE)
                        values (\"".$file_name."\",".$numinter.",'AC',\"".$DS_ID."\",".$id.",NOW())";
                 $result=mysqli_query($dbc,$query);
@@ -214,11 +214,11 @@ if ( isset ($_POST["numinter"])  and ($action=='update' or $action=='insert') an
     }
     
     if ( $EL_TITLE == "" or $DATE_DEBUT == "" or $HEURE_DEBUT == "" ) {
-        if ( $EL_TITLE == "" ) $msg="Le titre doit être renseigné ";
-        else if ( $DATE_DEBUT == "" ) $msg="La date de début doit être renseignée ";
-        else $msg= "L'heure de début doit être renseignée ";
+        if ( $EL_TITLE == "" ) $msg="Le titre doit Ãªtre renseignÃ© ";
+        else if ( $DATE_DEBUT == "" ) $msg="La date de dÃ©but doit Ãªtre renseignÃ©e ";
+        else $msg= "L'heure de dÃ©but doit Ãªtre renseignÃ©e ";
         
-        write_msgbox("erreur de paramètres", $error_pic, $msg."<p align=center><a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
+        write_msgbox("erreur de paramÃ¨tres", $error_pic, $msg."<p align=center><a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
         exit;
     }
 
@@ -238,7 +238,7 @@ if ( isset ($_POST["numinter"])  and ($action=='update' or $action=='insert') an
             $query="select e.E_LIBELLE, s.S_CODE from evenement e, section s where e.S_ID = s.S_ID and e.E_CODE=".$E_CODE;
             $result=mysqli_query($dbc,$query);
             custom_fetch_array($result);
-            $message = "<span style='background-color: #ffff0;'><strong>Le message d’information suivant vient d’être enregistré sur la main courante [".$E_LIBELLE."] de ".$S_CODE." par ".$author."</strong></span><p>".$EL_COMMENTAIRE;
+            $message = "<span style='background-color: #ffff0;'><strong>Le message dâ€™information suivant vient dâ€™Ãªtre enregistrÃ© sur la main courante [".$E_LIBELLE."] de ".$S_CODE." par ".$author."</strong></span><p>".$EL_COMMENTAIRE;
             $subject = "[Main courante - ".$E_LIBELLE."] ".$EL_TITLE;
             $query="insert into mailer(MAILDATE, MAILTO, SENDERNAME, SENDERMAIL, SUBJECT, MESSAGE)
                     select NOW(), P_EMAIL, \"".$senderName."\",\"".$_SESSION['SES_EMAIL']."\",
@@ -286,7 +286,7 @@ if ( isset ($_POST["numinter"])  and ($action=='update' or $action=='insert') an
         $numinter=$row[0];
     }
     
-    // les équipes qui étaient déjà engagées avant la modification
+    // les Ã©quipes qui Ã©taient dÃ©jÃ  engagÃ©es avant la modification
     $eq_old=array();
     if ( $geolocalize_enabled ) {
         $query5="select EE_ID from intervention_equipe where E_CODE=".$E_CODE." and EL_ID =  ".$numinter;
@@ -297,7 +297,7 @@ if ( isset ($_POST["numinter"])  and ($action=='update' or $action=='insert') an
         }
     }
         
-    // équipes maintenant engagées sur l'intervention
+    // Ã©quipes maintenant engagÃ©es sur l'intervention
     $query="delete from intervention_equipe where EL_ID=".$numinter;
     $result=mysqli_query($dbc,$query);
     $query="select EE_ID from evenement_equipe where E_CODE=".$E_CODE." order by EE_ORDER ";
@@ -311,14 +311,14 @@ if ( isset ($_POST["numinter"])  and ($action=='update' or $action=='insert') an
                 $result2=mysqli_query($dbc,$query2);
             }
             else if (in_array($eqid, $eq_old)) {
-                // remettre les équipes disponibles si elles ont été désengagées
+                // remettre les Ã©quipes disponibles si elles ont Ã©tÃ© dÃ©sengagÃ©es
                 $query2="update evenement_equipe set IS_ID=1 where E_CODE in (".$evts.") and EE_ID =".$eqid;
                 $result2=mysqli_query($dbc,$query2);
             }
         }
     }
     
-    // mettre à jour statut équipe pour SITAC
+    // mettre Ã  jour statut Ã©quipe pour SITAC
     if ( $geolocalize_enabled ) {
         //$query="select EE_ID from evenement_participation where E_CODE in (".$evts.") and P_ID=".$EL_RESPONSABLE;
         $query="select EE_ID from intervention_equipe where EL_ID=".$numinter." and E_CODE in (".$evts.")";
@@ -346,7 +346,7 @@ if ( isset ($_POST["numinter"])  and ($action=='update' or $action=='insert') an
                         and ( EL_SLL is not null and EL_SLL <> '00:00:00' and EL_SLL < NOW())
                     )";
             $result=mysqli_query($dbc,$query);
-            // intervention terminée
+            // intervention terminÃ©e
             $query="update evenement_equipe set IS_ID=1 where E_CODE in (".$evts.")
                 and EE_ID in(".$equipes.")
                 and exists( select 1 from evenement_log where  EL_ID=".$numinter." and EL_DEBUT < NOW()
@@ -400,15 +400,15 @@ echo "<li class='nav-item'>
     
     <i class='fa fa-info-circle'></i> <span>Informations</span></a></li>";
 
-$t = "Documents attachés à l'intervention";
+$t = "Documents attachÃ©s Ã  l'intervention";
 $t_disabled = "";
 $d_disabled = "";
 $icon="<i class='fa fa-folder-open'></i>";
 if ( $action == 'insert' ) {
     $class='';
     $icon="<i class='fa fa-ban' style='color:#CD5C5C;'></i>";
-    $t='Cet onglet sera disponible lorsque la fiche aura été créée';
-    $t_disabled = "title='Enregistrer la fiche intervention pour pouvoir accéder à cet onglet'";
+    $t='Cet onglet sera disponible lorsque la fiche aura Ã©tÃ© crÃ©Ã©e';
+    $t_disabled = "title='Enregistrer la fiche intervention pour pouvoir accÃ©der Ã  cet onglet'";
     $d_disabled = 'disabled';
 }
 else if ( $modeinter == 'doc' ) $class='active';
@@ -435,9 +435,9 @@ if( $modeinter == 'infos' ) {
     date_format(e.EL_FIN,'%d-%m-%Y') DATE_FIN, date_format(e.EL_FIN,'%H:%i') HEURE_FIN, date_format(e.EL_SLL,'%H:%i') EL_SLL,
     e.EL_TITLE, e.EL_ADDRESS,e.EL_COMMENTAIRE,e.EL_RESPONSABLE, p.P_NOM, p.P_PRENOM,
     e.EL_ORIGINE, e.EL_DESTINATAIRE,  TIMESTAMPDIFF(MINUTE,e.EL_DEBUT,e.EL_DATE_ADD) TIMEDIFF , e.EL_IMPORTANT,  e.EL_IMPRIMER,
-    date_format(e.EL_DATE_ADD,'le %d-%m-%Y à %H:%i') DATE_ADD,
+    date_format(e.EL_DATE_ADD,'le %d-%m-%Y Ã  %H:%i') DATE_ADD,
     e.EL_AUTHOR, p2.P_NOM as 'AUTHOR_NOM', p2.P_PRENOM as 'AUTHOR_PRENOM', te.TE_VICTIMES,
-    date_format(e.EL_DATE_UPDATE,'le %d-%m-%Y à %H:%i') DATE_UPDATE,
+    date_format(e.EL_DATE_UPDATE,'le %d-%m-%Y Ã  %H:%i') DATE_UPDATE,
     e.EL_UPDATED_BY, p3.P_NOM as 'UPDATER_NOM', p3.P_PRENOM as 'UPDATER_PRENOM'
     from evenement_log e left join pompier p on p.P_ID = e.EL_RESPONSABLE
     left join pompier p2 on p2.P_ID = e.EL_AUTHOR
@@ -493,7 +493,7 @@ if( $modeinter == 'infos' ) {
         $UPDATER_PRENOM="";
     }
     else {
-        if ( $action <> 'delete' ) echo "Compte rendu non trouvé";
+        if ( $action <> 'delete' ) echo "Compte rendu non trouvÃ©";
         exit;
     }
 
@@ -512,7 +512,7 @@ if( $modeinter == 'infos' ) {
 
     }
     else {
-        if ( $TE_VICTIMES == 0 )  $t="Elément de compte rendu de réunion";
+        if ( $TE_VICTIMES == 0 )  $t="ElÃ©ment de compte rendu de rÃ©union";
         else $t="Message pour le rapport";
         $img='file-text-o';
         $tit="Titre";
@@ -538,19 +538,19 @@ if( $modeinter == 'infos' ) {
         $cmt_info="Saisissez le texte de compte rendu";
         $cmt_tit="Texte";
         $tit="Titre";
-        $tit_info="Saisissez le titre du compte rendu, 50 caractères maxi";
+        $tit_info="Saisissez le titre du compte rendu, 50 caractÃ¨res maxi";
     }
     else if ( $TEL_CODE == 'I' ) {
         $style="";
         $style2="style='display:none'";
         $style3="";
-        $cmt_info="Saisissez les infos concernant les circonstances de l'intervention, mais pas le bilan de la victime qui doit apparaître sur la fiche victime.";
+        $cmt_info="Saisissez les infos concernant les circonstances de l'intervention, mais pas le bilan de la victime qui doit apparaÃ®tre sur la fiche victime.";
         $cmt_tit="Message de situation";
 
         $url="evenement_modal.php?action=intervention&evenement=".$evenement;
         $tit= write_modal( $url, "type_inter", "Type d'intervention");
 
-        $tit_info="Exemples: malaise, AVP, chute, enfant blessé ... 30 caractères maxi";
+        $tit_info="Exemples: malaise, AVP, chute, enfant blessÃ© ... 30 caractÃ¨res maxi";
     }
     else  {
         $style="style='display:none'";
@@ -559,12 +559,12 @@ if( $modeinter == 'infos' ) {
         $cmt_info="Saisissez le texte du message";
         $cmt_tit="Texte du message";
         $tit="Titre";
-        $tit_info="Saisissez le titre du message, exemples: essai radio, ouverture du PC ..., 30 caractères maxi";
+        $tit_info="Saisissez le titre du message, exemples: essai radio, ouverture du PC ..., 30 caractÃ¨res maxi";
     }
 
     $td=abs($TIMEDIFF);
     if ( ($td > 10 and $TEL_CODE == 'M' and $TE_VICTIMES == 1) or ($td > 120 and $TEL_CODE == 'I'))
-        $warn=" <i class='fa fa-exclamation' style='color:orange' title=\"Attention cette ligne n'a pas été enregistrée en direct, mais ".$DATE_ADD."\" ></i> ";
+        $warn=" <i class='fa fa-exclamation' style='color:orange' title=\"Attention cette ligne n'a pas Ã©tÃ© enregistrÃ©e en direct, mais ".$DATE_ADD."\" ></i> ";
     else $warn='';
 
     $query3="select EE_NAME from evenement_equipe where E_CODE=".$evenement." order by EE_ORDER, EE_NAME";
@@ -628,12 +628,12 @@ if( $modeinter == 'infos' ) {
             <td>
             <input type='text' class='form-control form-control-sm' name='heure_sll' value='".$EL_SLL."' onfocus=\"fillTime(form.heure_sll);\" 
             onchange=\"checkTime(form.heure_sll,'');\" $disabled style='width:60px;' maxlength='5' placeholder='hh:mm'>
-            <font size=1><i>heure d'arrivée sur les lieux des secouristes</i></font></td>";
+            <font size=1><i>heure d'arrivÃ©e sur les lieux des secouristes</i></font></td>";
     if ( $EL_IMPRIMER == 1 ) $checked="checked";
     else $checked="";
-    echo "<td align=center><i class ='fa fa-print fa-lg' title=\"Cocher doit être imprimé dans le rapport\" ></i> </td>
+    echo "<td align=center><i class ='fa fa-print fa-lg' title=\"Cocher doit Ãªtre imprimÃ© dans le rapport\" ></i> </td>
       <td><input type='checkbox' name='imprimer' value='1' $checked $disabled
-        title=\"Cocher doit être imprimé dans le rapport\" ></td>";
+        title=\"Cocher doit Ãªtre imprimÃ© dans le rapport\" ></td>";
     echo "</tr>";
 
     echo "<tr id='rowDateFin' $style>
@@ -652,7 +652,7 @@ if( $modeinter == 'infos' ) {
 
     echo "<tr>
             <td>".$cmt_tit."<br>
-                <input type='text' class='form-control form-control-sm' name='comptage' size='4' value='$textsize' readonly title='nombre de caractères saisis'
+                <input type='text' class='form-control form-control-sm' name='comptage' size='4' value='$textsize' readonly title='nombre de caractÃ¨res saisis'
                    style='FONT-SIZE: 10pt;border:0px;color:$mydarkcolor; font-weight:bold;'>
                 <span class=small>3000 max</td>
             <td colspan=3>
@@ -675,12 +675,12 @@ if( $modeinter == 'infos' ) {
 
     echo "<tr id='rowAddress' $style>
             <td><i>Adresse intervention </i>
-          <i class='fa fa-question-circle fa-lg' title=\"si l'adresse renseignée est correcte, alors l'intervention est marquée sur la carte\"></i></td>
+          <i class='fa fa-question-circle fa-lg' title=\"si l'adresse renseignÃ©e est correcte, alors l'intervention est marquÃ©e sur la carte\"></i></td>
             <td colspan=3><input type='text' name='address' size=40 value=\"".$EL_ADDRESS."\" $disabled> ".$map."</td>";
     echo "</tr>";
 
 //=====================================================================
-// équipes
+// Ã©quipes
 //=====================================================================
     $query2="select ee.EE_ID, ee.EE_NAME, ie.EL_ID, ee.EE_ID_RADIO
 from evenement_equipe ee left join intervention_equipe ie on (ie.E_CODE=ee.E_CODE and ie.EE_ID = ee.EE_ID and ie.EL_ID=".intval($numinter).")
@@ -691,7 +691,7 @@ where ee.E_CODE=".$evenement." order by ee.EE_ORDER ";
 
     if ( $nb_equipes > 0 ) {
         echo "<tr id='rowEquipes' $style>
-        <td><i>Equipes engagées</i></td>";
+        <td><i>Equipes engagÃ©es</i></td>";
         echo "<td colspan=3>";
         $i=0;
         while (custom_fetch_array($result2)) {
@@ -702,7 +702,7 @@ where ee.E_CODE=".$evenement." order by ee.EE_ORDER ";
             else $checked = '';
             if ( $EE_ID_RADIO <> '' ) $radio =  " <span class=small2 style='color:green' title=\"identifiant radio ".$EE_ID_RADIO."\">".$EE_ID_RADIO."</span> ";
             else $radio = "";
-            echo " <input type='checkbox' title=\"cocher si cette équipe ".$EE_NAME." participe à l'intervention\" value='1' id='eq_".$EE_ID."' name='eq_".$EE_ID."' $checked>
+            echo " <input type='checkbox' title=\"cocher si cette Ã©quipe ".$EE_NAME." participe Ã  l'intervention\" value='1' id='eq_".$EE_ID."' name='eq_".$EE_ID."' $checked>
             <label for='eq_".$EE_ID."'>".$EE_NAME." ".$radio."</label>";
 
             $i++;
@@ -723,7 +723,7 @@ where ee.E_CODE=".$evenement." order by ee.EE_ORDER ";
 
 
     echo "<select name='responsable' id='responsable' $disabled style='font-size: 12px;'>";
-    echo "<option value='0' selected>............. Non défini .............</option>";
+    echo "<option value='0' selected>............. Non dÃ©fini .............</option>";
     $query3="select distinct p.P_ID, p.P_NOM, p.P_PRENOM, ee.EE_ID, ee.EE_NAME, tp.TP_LIBELLE
     from pompier p, evenement_participation ep
     left join evenement_equipe ee on (ep.EE_ID = ee.EE_ID and ee.E_CODE = $evenement)
@@ -784,21 +784,21 @@ where ee.E_CODE=".$evenement." order by ee.EE_ORDER ";
             $VI_NOM=strtoupper($VI_NOM);
             $VI_PRENOM=my_ucfirst($VI_PRENOM);
             if ( $age <> '' ) $age.=" ans";
-            if ( $VI_DETRESSE_VITALE == 1 ) $comments .= "<a title='Détresse vitale (Hémorragie, inconscience, ACR)' >détresse</a> ";
+            if ( $VI_DETRESSE_VITALE == 1 ) $comments .= "<a title='DÃ©tresse vitale (HÃ©morragie, inconscience, ACR)' >dÃ©tresse</a> ";
             if ( $VI_TRAUMATISME == 1 ) $comments .= "<a title='Traumatisme' >Traumatisme</a> ";
-            if ( $VI_INFORMATION == 1 ) $comments .= "<a title='La personne a été assistée, ou des renseignements et informations lui ont été donnés' >assistée</a> ";
-            if ( $VI_DECEDE == 1 ) $comments .= "<a title='La victime est décédée' >décédé</a> ";
+            if ( $VI_INFORMATION == 1 ) $comments .= "<a title='La personne a Ã©tÃ© assistÃ©e, ou des renseignements et informations lui ont Ã©tÃ© donnÃ©s' >assistÃ©e</a> ";
+            if ( $VI_DECEDE == 1 ) $comments .= "<a title='La victime est dÃ©cÃ©dÃ©e' >dÃ©cÃ©dÃ©</a> ";
             if ( $VI_MALAISE == 1 ) $comments .= "<a title='La victime eu un malaise avec ou sans perte de connaissance' >malaise</a> ";
-            if ( $VI_SOINS == 1 ) $comments .= "<a title=\"Des soins ont été réalisés par l'équipe de secouristes\" >soins</a> ";
-            if ( $VI_MEDICALISE == 1 ) $comments .= "<a title=\"La victime a été médicalisée\" >médicalisée</a> ";
-            if ( $VI_TRANSPORT == 1 ) $comments .= "<a title=\"La victime a été transportée par ".$T_NAME.", destination: ".$D_NAME."\">transport</a> ";
-            if ( $VI_VETEMENT == 1 ) $comments .= "<a title=\"Des vêtements ou une couverture ont été offerts à la victime\" >vêtements</a> ";
-            if ( $VI_ALIMENTATION == 1 ) $comments .= "<a title=\"Des aliments ou une boisson ont été offerts à la victime\" >alimentation</a> ";
-            if ( $VI_REFUS == 1 ) $comments .= "<a title=\"La victime a refusé d'être prise en charge\" >refus</a> ";
-            if ( $VI_IMPLIQUE == 1 ) $comments .= "<a title=\"La personne est seulement impliquée, indemne\" >impliqué</a> ";
+            if ( $VI_SOINS == 1 ) $comments .= "<a title=\"Des soins ont Ã©tÃ© rÃ©alisÃ©s par l'Ã©quipe de secouristes\" >soins</a> ";
+            if ( $VI_MEDICALISE == 1 ) $comments .= "<a title=\"La victime a Ã©tÃ© mÃ©dicalisÃ©e\" >mÃ©dicalisÃ©e</a> ";
+            if ( $VI_TRANSPORT == 1 ) $comments .= "<a title=\"La victime a Ã©tÃ© transportÃ©e par ".$T_NAME.", destination: ".$D_NAME."\">transport</a> ";
+            if ( $VI_VETEMENT == 1 ) $comments .= "<a title=\"Des vÃªtements ou une couverture ont Ã©tÃ© offerts Ã  la victime\" >vÃªtements</a> ";
+            if ( $VI_ALIMENTATION == 1 ) $comments .= "<a title=\"Des aliments ou une boisson ont Ã©tÃ© offerts Ã  la victime\" >alimentation</a> ";
+            if ( $VI_REFUS == 1 ) $comments .= "<a title=\"La victime a refusÃ© d'Ãªtre prise en charge\" >refus</a> ";
+            if ( $VI_IMPLIQUE == 1 ) $comments .= "<a title=\"La personne est seulement impliquÃ©e, indemne\" >impliquÃ©</a> ";
 
             echo "<tr>
-            <td> n° ".$VI_NUMEROTATION."</td>
+            <td> nÂ° ".$VI_NUMEROTATION."</td>
             <td class=small>".$comments."</td>
             <td class=small width=50>".$VI_SEXE." ".$age."</td>    
             <td><a href='victimes.php?victime=".$VI_ID."&from=intervention' title=\"Cliquer pour voir la fiche de la personne prise en charge\">".$VI_PRENOM." ".$VI_NOM.".</a></td>";
@@ -814,14 +814,14 @@ where ee.E_CODE=".$evenement." order by ee.EE_ORDER ";
     }
     if ( $action == 'update' ) {
         echo "<tr>
-        <td colspan=4 align=left class=small>Ajouté par ".$AUTHOR_PRENOM." ".$AUTHOR_NOM." - ".$DATE_ADD."</td>
+        <td colspan=4 align=left class=small>AjoutÃ© par ".$AUTHOR_PRENOM." ".$AUTHOR_NOM." - ".$DATE_ADD."</td>
     </tr>";
         if ( $UPDATER_NOM <> "")
             echo "<tr>
-        <td colspan=4 align=left class=small>Modifié par ".$UPDATER_PRENOM." ".$UPDATER_NOM." - ".$DATE_UPDATE."</td>
+        <td colspan=4 align=left class=small>ModifiÃ© par ".$UPDATER_PRENOM." ".$UPDATER_NOM." - ".$DATE_UPDATE."</td>
     </tr>";
     }
-    echo "<tr><td> </td></tr></table></div></div>";
+    echo "<tr><td>Â </td></tr></table></div></div>";
 
     echo "<input type=hidden name='type' value='".$TEL_CODE."'>";
     echo "<input type=hidden name='numinter' value='".$numinter."'>";
@@ -833,7 +833,7 @@ where ee.E_CODE=".$evenement." order by ee.EE_ORDER ";
         if ( $numinter > 0 ) echo " <input type='button' class='btn btn-warning' value='Supprimer' onclick=\"deleteIt('".$numinter."','".$TEL_CODE."');\">";
     }
     if ( $from == 'map' )
-        echo " <input type='button' value='Retour' class='btn btn-secondary'  title='Retour à la carte' onclick=\"javascript:history.back(1);\">";
+        echo " <input type='button' value='Retour' class='btn btn-secondary'  title='Retour Ã  la carte' onclick=\"javascript:history.back(1);\">";
     else
         echo " <input type='button' value='Retour' class='btn btn-secondary' onclick=\"redirect('".$evenement."');\">    ";
 
@@ -841,7 +841,7 @@ where ee.E_CODE=".$evenement." order by ee.EE_ORDER ";
 }
 
 //=====================================================================
-// documents attachés
+// documents attachÃ©s
 //=====================================================================
 
 if ( $modeinter == 'doc' ) {
@@ -871,9 +871,9 @@ if ( $modeinter == 'doc' ) {
             <tr class='newTabHeader'>
             <th class='widget-title'><a href='intervention_edit.php?evenement=$evenement&numinter=$numinter&action=$action&type=$type&from=$from&modeinter=doc&order=extension' title='trier par extension'>ext</a></th>
             <th class='widget-title'><a href='intervention_edit.php?evenement=$evenement&numinter=$numinter&action=$action&type=$type&from=$from&modeinter=doc&order=file' title='trier par nom'>Documents de l'intervention</a></th>
-            <th class='widget-title'><a href='intervention_edit.php?evenement=$evenement&numinter=$numinter&action=$action&type=$type&from=$from&modeinter=doc&order=security' title='trier par sécurité'>".$s."</a></th>
+            <th class='widget-title'><a href='intervention_edit.php?evenement=$evenement&numinter=$numinter&action=$action&type=$type&from=$from&modeinter=doc&order=security' title='trier par sÃ©curitÃ©'>".$s."</a></th>
             <th class='widget-title'><a href='intervention_edit.php?evenement=$evenement&numinter=$numinter&action=$action&type=$type&from=$from&modeinter=doc&order=author' title='trier par auteur'>Auteur</a></th>
-            <th class='widget-title'><a href='intervention_edit.php?evenement=$evenement&numinter=$numinter&action=$action&type=$type&from=$from&modeinter=doc&order=date' title='trier par date décroissantes'>Date</a></th>
+            <th class='widget-title'><a href='intervention_edit.php?evenement=$evenement&numinter=$numinter&action=$action&type=$type&from=$from&modeinter=doc&order=date' title='trier par date dÃ©croissantes'>Date</a></th>
             <th class='widget-title'></th>
             </tr>";
 
@@ -996,7 +996,7 @@ if ( $modeinter == 'doc' ) {
             }
         }
         else
-            echo "<small>Le répertoire contenant les fichiers pour cette intervention n'a pas été trouvé sur ce serveur</small>";
+            echo "<small>Le rÃ©pertoire contenant les fichiers pour cette intervention n'a pas Ã©tÃ© trouvÃ© sur ce serveur</small>";
         echo "</table>";
     }
     else
@@ -1007,7 +1007,7 @@ if ( $modeinter == 'doc' ) {
     $dirname=$filesdir."/files_interventions/".$numinter."/";
     $images = glob($dirname."*.{jpg,jpeg,png,gif,JPG,PNG,JPEG,GIF}", GLOB_BRACE);
     foreach($images as $image) {
-        echo "<a href=showfile.php?section=".$S_ID."&intervention=".$numinter."&file=".basename($image)." title=\"Télécharger cette image:\n".basename($image)."\">
+        echo "<a href=showfile.php?section=".$S_ID."&intervention=".$numinter."&file=".basename($image)." title=\"TÃ©lÃ©charger cette image:\n".basename($image)."\">
         <img src='".$image."' width='160' class='img-thumbnail'> ";
     }
 }

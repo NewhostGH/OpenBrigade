@@ -28,7 +28,7 @@ $out = "<table border=0 cellspacing=0 width=700>";
 $out .= "<thead>";
 $out .= "<tr class=TabHeader align=left>";
 $out .= "<td>&nbsp;</td>";
-// Ligne d'entête
+// Ligne d'entÃªte
 mysqli_data_seek($dbCols, 0);
     $col_num = 0;
     $lig_num = 0;
@@ -46,13 +46,13 @@ $out .= "<tbody>";
 $SommeCol = array();
 while($dbrow = mysqli_fetch_array($dbx)){
     $lig_num++;
-    $level=$dbrow[1]; // 2ème valeur de la requete (niveau)
+    $level=$dbrow[1]; // 2Ã¨me valeur de la requete (niveau)
     $mycolor=get_color_level($level);
     $out .= "<tr bgcolor=$mycolor >";
     $col_num = 0;
     foreach($dbrow as $key=>$value){
         switch($col_num){
-            case 0: // libellé section
+            case 0: // libellÃ© section
                 $out .= "<td nowrap align=left>";
                 $out .= $dbrow[$col_num];
                 $out .= "</td>";
@@ -76,7 +76,7 @@ while($dbrow = mysqli_fetch_array($dbx)){
 }
 //total des colonnes (formule excel)
 $out .= "<tr>";
-$out .= "<th class=TabTotal>Total par Activité</th>";
+$out .= "<th class=TabTotal>Total par ActivitÃ©</th>";
     $alpha = 'b';
     $numeric = 2;
     $rows = mysqli_num_rows($dbx)+1;

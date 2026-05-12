@@ -45,7 +45,7 @@ if ( $P_ID == 0 ) {
 if (!  check_rights($id, 53, get_section_of("$P_ID"))) check_all(24);
 $_SESSION['from_cotisation']=1;
 
-// sauver infos infos adhérent
+// sauver infos infos adhÃ©rent
 // post parameters
 
 $type_paiement=(isset($_POST["type_paiement"])?intval($_POST["type_paiement"]):0);
@@ -68,7 +68,7 @@ if ( $bank_accounts == 1 ) {
     
     $OLDBIC=get_BIC('P',$P_ID);
     if ( strlen($bic) > 0 and strlen($bic) <> 11 ) {
-        write_msgbox("erreur", $error_pic, "Code BIC incorrect, 11 caractères requis, BIC non modifié<br><p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+        write_msgbox("erreur", $error_pic, "Code BIC incorrect, 11 caractÃ¨res requis, BIC non modifiÃ©<br><p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
         exit;
     }
     
@@ -77,7 +77,7 @@ if ( $bank_accounts == 1 ) {
      
     $OLDIBAN=get_IBAN('P',$P_ID);
     if ( strlen($iban) > 0 and (strlen($iban) < 16 or strlen($iban) > 32 )) {
-        write_msgbox("erreur", $error_pic, "Code IBAN incorrect, entre 16 et 32 caractères requis, IBAN non modifié<br><p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+        write_msgbox("erreur", $error_pic, "Code IBAN incorrect, entre 16 et 32 caractÃ¨res requis, IBAN non modifiÃ©<br><p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
         exit;
     }
 

@@ -80,7 +80,7 @@ while (custom_fetch_array($resultte)) {
 
 // FIN - Type evenement
 
-$ChxCalendar = (isset($_GET['btGo'])?(isset($_GET['chxCal'])?$_GET['chxCal']:array()):$chxCal);// utilise les données du formulaire ou de la session
+$ChxCalendar = (isset($_GET['btGo'])?(isset($_GET['chxCal'])?$_GET['chxCal']:array()):$chxCal);// utilise les donnÃ©es du formulaire ou de la session
 if (count($ChxCalendar)==0){ $_SESSION['chxCal']=array(); }
 if ($p_calendar == '') $_SESSION['chxCal']=array();
 
@@ -91,8 +91,8 @@ $html = "<div class='container-fluid d-flex justify-content-center ' >
                 <div class='card-title text-center '><strong class='h2' '>Mon Agenda</strong></div>
             </div>
             <div class='card-body graycard'>
-                <div class='text-center mb-3'>Activités où je suis inscrit</div><div class='text-center '><a  href='$calk?&cid=$pkey&perso=1' ><i class='far fa-calendar-alt fa-2x ' title='$calk?cid=$pkey&perso=1'/></i></a></div>
-                <div align='right'>Clé de sécurité : </td><td><input type='text' value='$pkey' size=30></div>
+                <div class='text-center mb-3'>ActivitÃ©s oÃ¹ je suis inscrit</div><div class='text-center '><a  href='$calk?&cid=$pkey&perso=1' ><i class='far fa-calendar-alt fa-2x ' title='$calk?cid=$pkey&perso=1'/></i></a></div>
+                <div align='right'>ClÃ© de sÃ©curitÃ© : </td><td><input type='text' value='$pkey' size=30></div>
             </div>
        </div></div></div>";
 
@@ -105,7 +105,7 @@ $html .= "<div align=center class='table-responsive'><div class='container-fluid
             </div>
             <div class='card-body graycard'>";
 
-//$html.= "<table class='noBorder'><tr><td>Clé de sécurité : </td><td><input type='text' value='$pkey' size=30></td></tr>";
+//$html.= "<table class='noBorder'><tr><td>ClÃ© de sÃ©curitÃ© : </td><td><input type='text' value='$pkey' size=30></td></tr>";
 $html.= "<table class='noBorder'>";
 $html.= "<tr><td>De la section</td><td><a class='btn btn-default btn-action' href='$calk?cid=$pkey'><i class='far fa-calendar-alt fa-lg' title='$calk?cid=$pkey'/></i></a></td></tr>";
 
@@ -116,10 +116,10 @@ if($p_calendar!=""){
     $html.= "<tr><td>De la section et des sous sections favorites</td><td><a class='btn btn-default btn-action' target='_blank' href='$calk?cid=$pkey'><i class='far fa-calendar-alt fa-lg'  title='$calk?cid=$pkey&fav=$p_calendar'/></i></a></td></tr>";
 }
 
-$html.= "<tr><td>Exemple de filtre sur un type d'activité (exemple: FOR)</td><td><a class='btn btn-default btn-action' href='$calk?cid=$pkey&type_evenement=FOR' ><i class='far fa-calendar-alt fa-lg' title='$calk?cid=$pkey&type_evenement=FOR'/></i></a></td></tr>";
-$html.= "<tr><td>Exemple de filtre sur un type d'activité (exemple: DPS)</td><td><a class='btn btn-default btn-action' href='$calk?cid=$pkey&type_evenement=DPS' ><i class='far fa-calendar-alt fa-lg'  title='$calk?cid=$pkey&type_evenement=DPS'/></i></a></td></tr>";
+$html.= "<tr><td>Exemple de filtre sur un type d'activitÃ© (exemple: FOR)</td><td><a class='btn btn-default btn-action' href='$calk?cid=$pkey&type_evenement=FOR' ><i class='far fa-calendar-alt fa-lg' title='$calk?cid=$pkey&type_evenement=FOR'/></i></a></td></tr>";
+$html.= "<tr><td>Exemple de filtre sur un type d'activitÃ© (exemple: DPS)</td><td><a class='btn btn-default btn-action' href='$calk?cid=$pkey&type_evenement=DPS' ><i class='far fa-calendar-alt fa-lg'  title='$calk?cid=$pkey&type_evenement=DPS'/></i></a></td></tr>";
 
-$html.= "<tr><td>Alerte des bénévoles $cisname</td><td><a class='btn btn-default btn-action' href='$calk?cid=$pkey&type_evenement=ALERT_NAT' ><i class='far fa-calendar-alt fa-lg'  title='$calk?cid=$pkey&type_evenement=ALERT_NAT'/></i></a></td></tr>";
+$html.= "<tr><td>Alerte des bÃ©nÃ©voles $cisname</td><td><a class='btn btn-default btn-action' href='$calk?cid=$pkey&type_evenement=ALERT_NAT' ><i class='far fa-calendar-alt fa-lg'  title='$calk?cid=$pkey&type_evenement=ALERT_NAT'/></i></a></td></tr>";
 
 
 //DEB -  Configurateur
@@ -153,7 +153,7 @@ $(document).ready(function(){
         if (CBCalendriers!='') {
             var ListeCal = '&fav='+CBCalendriers;
         }
-        // Liste des événements
+        // Liste des Ã©vÃ©nements
         var ListeEvt=''
         var CBEvt = ( $(\".typeEvt\").map(function(){
             if ($(this).is(':checked')){
@@ -173,7 +173,7 @@ $(document).ready(function(){
 
 $html.="</TABLE></div></div>";
 
-$html.= "<div class='alert alert-warning ml-0 mr-0' style='text-align: left;'><p class='m-0 p-0' >Placez-vous sur l'icône <i class='far fa-calendar-alt fa-lg' ></i> , cliquez avec le bouton droit et choisissez \"Copier l'adresse du lien\". </p><p class='m-0'> Collez ce lien dans votre gestionnaire de calendrier ical: </p><small>Exemple: Google Agenda > Ajouter un Calendrier > Par URL</small></div>";
+$html.= "<div class='alert alert-warning ml-0 mr-0' style='text-align: left;'><p class='m-0 p-0' >Placez-vous sur l'icÃ´ne <i class='far fa-calendar-alt fa-lg' ></i> , cliquez avec le bouton droit et choisissez \"Copier l'adresse du lien\". </p><p class='m-0'> Collez ce lien dans votre gestionnaire de calendrier ical: </p><small>Exemple: Google Agenda > Ajouter un Calendrier > Par URL</small></div>";
 
 $html.="</div>";
 
@@ -202,7 +202,7 @@ if ($p_calendar!=""){
     }
     $html.="<div style='max-width:800px'>Inclure les sections favorites <br />$cbcalendar</div>";
 }
-$html.= "<div style=\"border:1px solid grey;padding:1em;\"><h3>Types d'activités </h3>".$cb_typeevt."</div>";
+$html.= "<div style=\"border:1px solid grey;padding:1em;\"><h3>Types d'activitÃ©s </h3>".$cb_typeevt."</div>";
 $html.="</form>";
 $html.="</td></tr>";
 $html.="</TABLE></div></div></div>";

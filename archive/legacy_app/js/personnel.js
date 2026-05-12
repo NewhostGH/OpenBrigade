@@ -284,7 +284,7 @@ function participation_type_filter(pid){
 
 function delete_personnel(p1,csrf) {
     if ( p1 == 1 ) {
-        swalAlert("Cette fiche personnel ne doit pas être supprimée");
+        swalAlert("Cette fiche personnel ne doit pas Ãªtre supprimÃ©e");
         return true;
     }
     else if ( confirm("Voulez vous vraiment supprimer cette fiche personnel?")) {

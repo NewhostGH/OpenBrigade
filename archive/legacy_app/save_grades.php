@@ -53,7 +53,7 @@ else
     $operation = "update";
 
 //=====================================================================
-// Vérification si grade utilisé
+// VÃ©rification si grade utilisÃ©
 //=====================================================================
 $query = "select count(1)from pompier p
 left join grade g on g.G_GRADE = p.P_GRADE

@@ -54,7 +54,7 @@ if ( $tablerows <> "" ) {
       <tr>";
     echo "<td width=300>liste des destinataires</td>";
     echo "<td width=50>Mail</td>";
-    echo "<td width=50>Téléphone</td>";
+    echo "<td width=50>TÃ©lÃ©phone</td>";
     echo "</tr>";
     echo $tablerows;
     echo "</table></div></div>";

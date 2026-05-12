@@ -26,7 +26,7 @@ else $evenement=intval($_GET["evenement"]);
 
 writehead();
 
-// fonction pour mettre à jour le nombre global requis si necessaire
+// fonction pour mettre Ã  jour le nombre global requis si necessaire
 function update_total_vehicules() {
     global $dbc, $evenement;
     $query="select sum(NB_VEHICULES) from demande_renfort_vehicule where TV_CODE <> '0' and E_CODE=".$evenement;
@@ -74,7 +74,7 @@ $html= "</script>
 </head>";
 
 //=====================================================================
-// recupérer infos evenement
+// recupÃ©rer infos evenement
 //=====================================================================
 $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT, e.S_ID, te.TE_ICON
         from evenement e, type_evenement te
@@ -83,7 +83,7 @@ $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT
 $result=mysqli_query($dbc,$query);
 custom_fetch_array($result);
 
-// bloquer les changements dans le passé
+// bloquer les changements dans le passÃ©
 $ended=get_number_days_after_block($evenement);
 $changeallowed=true;
 if ( $ended > 0 ) {
@@ -94,7 +94,7 @@ if ( ( is_chef_evenement($id, $evenement) or check_rights($id, 15, "$S_ID")) and
 else $update_allowed=false;
 
 //=====================================================================
-// sauver ajout nouveau type de véhicule ou de materiel
+// sauver ajout nouveau type de vÃ©hicule ou de materiel
 //=====================================================================
 if (isset($_GET["new_type_vehicule"])) {
     $query="insert into demande_renfort_vehicule (E_CODE, TV_CODE, NB_VEHICULES)
@@ -195,12 +195,12 @@ else {
             $col = 'col-sm-6';
     }
     
-    // véhicules
+    // vÃ©hicules
     if ( $vehicules == 1 ) {
         $html .= "<div class='$col'>
                 <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
                     <div class='card-header graycard cardtab'>
-                        <div class='card-title'><strong> Véhicule requis </strong></div>
+                        <div class='card-title'><strong> VÃ©hicule requis </strong></div>
                     </div>
                     <div class='card-body graycard'>
                     <table class='noBorder'>";
@@ -216,10 +216,10 @@ else {
         $DEMANDE_SPECIFIQUE=$rowm["DEMANDE_SPECIFIQUE"];
           
         $html .=  "<tr>
-            <td align=left>Véhicules, total requis,dont $asterisk</td>
+            <td align=left>VÃ©hicules, total requis,dont $asterisk</td>
             <td align = center><input type='text' class='form-control form-control-sm' size=1 name='vehicule' value='".intval($NB_VEHICULES)."' class='biginput'
             onchange='checkNumber(rf.vehicule,".intval($NB_VEHICULES).");'
-            title='saisir le nombre de véhicules requis'>
+            title='saisir le nombre de vÃ©hicules requis'>
             </td></tr>";
             
         $querym="select d.TV_CODE, d.NB_VEHICULES, t.TV_LIBELLE
@@ -238,7 +238,7 @@ else {
             
         $html .= "</td></tr></table>";
         $html .=   "<select name='new_type_vehicule' id='new_type_vehicule' onchange=\"addnewtypev('".$evenement."');\" class='form-control select-control' data-container='body' data-style='btn btn-default' data-live-search='true'>";
-        $html .=   "<option value='0'>Ajouter un type de véhicule à engager</option>";
+        $html .=   "<option value='0'>Ajouter un type de vÃ©hicule Ã  engager</option>";
         $querym="select t.TV_CODE, t.TV_LIBELLE, t.TV_USAGE from type_vehicule t
                 where not exists (select 1 from demande_renfort_vehicule r
                                 where r.TV_CODE = t.TV_CODE
@@ -261,12 +261,12 @@ else {
         $html .= "</div></div></div>";
     }    
     
-    // matériel
+    // matÃ©riel
     if ( $materiel == 1 ) {
         $html .= "<div class='$col'>
                 <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
                     <div class='card-header graycard cardtab'>
-                        <div class='card-title'><strong> Matériel requis </strong></div>
+                        <div class='card-title'><strong> MatÃ©riel requis </strong></div>
                     </div>
                     <div class='card-body graycard'>
                         <table class='noBorder'>";
@@ -284,7 +284,7 @@ else {
         }
         $html .= "</table>";
         $html .= "<select name='new_type_materiel' id='new_type_materiel' onchange=\"addnewtypem('".$evenement."');\" class='form-control select-control maxsize' data-container='body' data-style='btn btn-default' data-live-search='true'>";
-        $html .= "<option value='0'>Ajouter un type de matériel à engager</option>";
+        $html .= "<option value='0'>Ajouter un type de matÃ©riel Ã  engager</option>";
         $querym="select t.TM_USAGE, t.TM_CODE, t.TM_ID from type_materiel t
                 where not exists (select 1 from demande_renfort_materiel r
                                 where r.TYPE_MATERIEL = t.TM_ID
@@ -307,7 +307,7 @@ else {
         $html .= "</select>"; 
         
         $html .= "<table class='noBorder'>";
-        $html .= "<tr ><td colspan=2><b>Ou catégorie de matériel demandé</b></td></tr>";
+        $html .= "<tr ><td colspan=2><b>Ou catÃ©gorie de matÃ©riel demandÃ©</b></td></tr>";
         $query2="select cm.TM_USAGE, cm.CM_DESCRIPTION, cm.PICTURE, drm.E_CODE 
                 from categorie_materiel cm left join demande_renfort_materiel drm on ( cm.TM_USAGE = drm.TYPE_MATERIEL and drm.E_CODE = ".$evenement.")
                 where cm.TM_USAGE not in ('Habillement','Promo-Com','ALL','Divers')
@@ -352,9 +352,9 @@ else {
             <td colspan=2><input type='text' class='form-control form-control-sm' size=38 name='point' value=\"".$POINT_REGROUPEMENT."\" title='saisir le point de regroupement'>
             </td></tr>";
         $html .=  "<tr>
-            <td align=left>Demande spécifique</td>
+            <td align=left>Demande spÃ©cifique</td>
             <td colspan=2>
-            <textarea class='form-control form-control-sm' cols='40' rows='3' style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' maxlength=600  name='specifique'  title='saisir demande spécifique'>".$DEMANDE_SPECIFIQUE."</textarea>
+            <textarea class='form-control form-control-sm' cols='40' rows='3' style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' maxlength=600  name='specifique'  title='saisir demande spÃ©cifique'>".$DEMANDE_SPECIFIQUE."</textarea>
             </td></tr>";
     }    
     $html .= "</table></div></div></div></div><p>";

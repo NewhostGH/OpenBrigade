@@ -60,22 +60,22 @@ $astreinte=intval($_POST["astreinte"]);
 writehead();
 if ( $type == "") {
     write_msgbox("Erreur type", $error_pic, 
-    " Le type d'astreinte doit être renseigné.<p align=center>
+    " Le type d'astreinte doit Ãªtre renseignÃ©.<p align=center>
     <a href='javascript:history.back()'><input type='submit' class='btn btn-primary' value='Retour'></a> ",10,0);
 }
 else if ( $person == 0) {
     write_msgbox("Erreur personne", $error_pic, 
-    " Le nom de la personne d'astreine doit être renseigné.<p align=center>
+    " Le nom de la personne d'astreine doit Ãªtre renseignÃ©.<p align=center>
     <a href='javascript:history.back()'><input type='submit' class='btn btn-primary' value='Retour'></a> ",10,0);
 }
 else if ( $dc1 == "") {
     write_msgbox("Erreur date", $error_pic, 
-    " La date de début doit être renseignée.<p align=center>
+    " La date de dÃ©but doit Ãªtre renseignÃ©e.<p align=center>
     <a href='javascript:history.back()'><input type='submit' class='btn btn-primary' value='Retour'></a> ",10,0);
 }
 else if ( $dc2 == "") {
     write_msgbox("Erreur date", $error_pic, 
-    " La date de fin doit être renseignée.<p align=center>
+    " La date de fin doit Ãªtre renseignÃ©e.<p align=center>
     <a href='javascript:history.back()'><input type='submit' class='btn btn-primary' value='Retour'></a> ",10,0);
 }
 else {
@@ -111,7 +111,7 @@ else {
             insert_log('UPDAST', $person, $gp_desc." du ".$day1."-".$month1."-".$year1." au ".$day2."-".$month2."-".$year2);
     }
 
-    // mettre à jour rôle dans organigramme si nécessaire
+    // mettre Ã  jour rÃ´le dans organigramme si nÃ©cessaire
     $curdate=mktime(0,0,0,date('m'),date('d'),date('Y'));
 
     if ( $curdate >= $date1 and $curdate <= $date2 ) {

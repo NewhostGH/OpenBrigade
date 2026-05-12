@@ -3,7 +3,7 @@ function redirect(url) {
 }
 
 function suppress(id) {
-	if ( confirm("Voulez vous vraiment supprimer ce type de consommable?\n tous les articles de ce type seront supprimés")) {
+	if ( confirm("Voulez vous vraiment supprimer ce type de consommable?\n tous les articles de ce type seront supprimÃ©s")) {
 		url="del_type_consommable.php?TC_ID="+id;
 		self.location.href=url;
 	}

@@ -39,7 +39,7 @@ function redirect(evenement) {
 
 function CheckAll(checkValue) {
     var dForm = document.multi;
-    // Parcours des sous sections et mise à jour des cases à cocher
+    // Parcours des sous sections et mise Ã  jour des cases Ã  cocher
     for (i=0;i<dForm.length;i++) {
         var element = dForm[i];
         if (element.type=='checkbox') {
@@ -71,20 +71,20 @@ $result1=mysqli_query($dbc,$query1);
 custom_fetch_array($result1);
 
 if ( $E_PARENT > 0 ) {
-    $msg="On ne peut pas créer de ".$renfort_label."s sur un renfort.";
+    $msg="On ne peut pas crÃ©er de ".$renfort_label."s sur un renfort.";
     $errcode=1;   
 }
 else if ( $E_CANCELED == 1 ) {
-    $msg="On ne peut pas créer de ".$renfort_label."s sur un événement annulé.";
+    $msg="On ne peut pas crÃ©er de ".$renfort_label."s sur un Ã©vÃ©nement annulÃ©.";
     $errcode=1;   
 }
 else if ( $E_ALLOW_REINFORCEMENT == 0 ) {
-    $msg="Pas de ".$renfort_label."s permis sur cet événement.";
+    $msg="Pas de ".$renfort_label."s permis sur cet Ã©vÃ©nement.";
     $errcode=1;   
 }
 
 if ( ! check_rights($id, 15, $SORG) and ! $is_chef ) {
-    $msg="Vous n'avez pas la permission pour créer des ".$renfort_label."s sur cet événement.";
+    $msg="Vous n'avez pas la permission pour crÃ©er des ".$renfort_label."s sur cet Ã©vÃ©nement.";
     $errcode=1;
 }
 
@@ -102,7 +102,7 @@ else  $query .= " and NIV = ".$niv_antenne.")";
 $query .= " order by S_CODE asc";
 $result=mysqli_query($dbc,$query);
 if ( mysqli_num_rows($result) == 0) {
-    $msg="Il n'y a pas de sous section. La création de ".$renfort_label."s est impossible";
+    $msg="Il n'y a pas de sous section. La crÃ©ation de ".$renfort_label."s est impossible";
     $errcode=1;
 }
 
@@ -144,7 +144,7 @@ if ( $confirmed == 1 ) {
             $result2=mysqli_query($dbc,$query2);
         }
     } 
-    write_msgbox("info", $star_pic, "Opération terminée, ".$copied." ".$renfort_label."(s) créé(s)<p align=center><input type='button' class='btn btn-secondary' value='Retour' onclick=\"redirect('".$evenement."');\">", 30, 30);
+    write_msgbox("info", $star_pic, "OpÃ©ration terminÃ©e, ".$copied." ".$renfort_label."(s) crÃ©Ã©(s)<p align=center><input type='button' class='btn btn-secondary' value='Retour' onclick=\"redirect('".$evenement."');\">", 30, 30);
     exit;
 }
 
@@ -164,7 +164,7 @@ else {
             
     $html .= "<table class='noBorder' cellspacing=0 border=0>";
     $html .= " <input type='checkbox' name='yesall' style='margin:8px;' id='yesall' onclick='CheckAll(true)' title=\"tout cocher\"  checked/> <label for=yesall> Tout cocher </label> ";
-    $html .= " <input type='checkbox' name='noall' style='margin:8px;' id='noall' onclick='CheckAll(false)' title=\"tout décocher\" /> <label for=noall> Tout décocher </label> ";
+    $html .= " <input type='checkbox' name='noall' style='margin:8px;' id='noall' onclick='CheckAll(false)' title=\"tout dÃ©cocher\" /> <label for=noall> Tout dÃ©cocher </label> ";
     $html .= "<table class='noBorder'>";
     $html .= "<input type='hidden' name='evenement' value='$evenement'>";
     $html .= "<input type='hidden' name='confirmed' value='1'>";
@@ -174,7 +174,7 @@ else {
         custom_fetch_array($result2);
         if ( $NB > 0 ) {
             $checked='';
-            $w="<i class='fa fa-exclamation-triangle' style='color:orange;' title='Attention il y a déjà $NB ".$renfort_label."(s) pour cette sous section'></i>";
+            $w="<i class='fa fa-exclamation-triangle' style='color:orange;' title='Attention il y a dÃ©jÃ  $NB ".$renfort_label."(s) pour cette sous section'></i>";
         }
         else {
             $checked='checked';

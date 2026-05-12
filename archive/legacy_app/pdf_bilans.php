@@ -20,7 +20,7 @@
 include_once ("config.php");
 check_all(27);
 $id=$_SESSION['id'];
-$printed_by="imprimé par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y à H:i");
+$printed_by="imprimÃ© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y Ã  H:i");
 get_session_parameters();
 if (isset($_GET["type"])) $type=intval($_GET["type"]);
 else $type=1;
@@ -152,8 +152,8 @@ $pdf->SetFont('Helvetica','B',18);
 $pdf->SetXY($GoX ,$y);
 if ( $cisname == 'Protection Civile' and $filter > 0 ) $t="Protection Civile ";
 else $t="";
-if ( $type == 1 ) $k="Généralités, personnels, moyens";
-else if ( $type == 2 ) $k="Activité opérationnelle";
+if ( $type == 1 ) $k="GÃ©nÃ©ralitÃ©s, personnels, moyens";
+else if ( $type == 2 ) $k="ActivitÃ© opÃ©rationnelle";
 else $k="Formations";
 $pdf->MultiCell(150,8,"BILAN ".$year." - ".$t.$S_CODE." \n".$k,"1","C");
 GoDown(5);
@@ -172,7 +172,7 @@ if ( $type == 1 ) {
 
 if ( $type == 1 or $type == 3 ) {
     // ==========================================
-    // compétences
+    // compÃ©tences
     // ==========================================
 
     $queryv="select PS_ID, TYPE from poste";
@@ -253,16 +253,16 @@ if ( $type == 1 or $type == 3 ) {
         italic8();
         if ( $not <> '' ) {
             if ( $not2 <> '' )
-                $pdf->Text($GoX + $alignX + 12,$y,"(sans les compétences ".$not." et ".$not2.")");
+                $pdf->Text($GoX + $alignX + 12,$y,"(sans les compÃ©tences ".$not." et ".$not2.")");
             else
-                $pdf->Text($GoX + $alignX + 12,$y,"(sans la compétence ".$not.")");
+                $pdf->Text($GoX + $alignX + 12,$y,"(sans la compÃ©tence ".$not.")");
         }
     }
 }
 
 if ( $type == 1 ) {
     // ==========================================
-    // matériel
+    // matÃ©riel
     // ==========================================
 
     $queryv="select lower(tm.TM_CODE) TM_CODE, sum(m.MA_NB) as NB 
@@ -362,11 +362,11 @@ if ( $type == 1 ) {
     }
 
     // =========================================================
-    // comptage adhérents
+    // comptage adhÃ©rents
     // =========================================================
     GoDown(2);
     $pdf->SetFont('Helvetica','B',10);
-    $pdf->Text($GoX,$y,"Nombres adhérents ".$application_title." au 31-12-".$year);
+    $pdf->Text($GoX,$y,"Nombres adhÃ©rents ".$application_title." au 31-12-".$year);
 
     $query="select S_DESCRIPTION, TS_LIBELLE, count(1) as NB
             from statut left join pompier p on P_STATUT = S_STATUT
@@ -382,7 +382,7 @@ if ( $type == 1 ) {
     while ($row=@mysqli_fetch_array($result)) {
         GoDown(1);
         bold10();
-        if ( $row["S_DESCRIPTION"] == "Personnel salarié" and $row["TS_LIBELLE"] == "" )  $title = "Personnel salarié normal :";
+        if ( $row["S_DESCRIPTION"] == "Personnel salariÃ©" and $row["TS_LIBELLE"] == "" )  $title = "Personnel salariÃ© normal :";
         else $title = $row["S_DESCRIPTION"]." ".str_replace('non permanent','',$row["TS_LIBELLE"]." :");
         $pdf->Text($GoX,$y,$title);
         simple10();
@@ -396,7 +396,7 @@ if ( $type == 1 ) {
     titre_categorie("A - Effectifs");
     GoDown(1);
     italic8();
-    $pdf->Text($GoX,$y,"Seules les personnes ayant une compétence en cours de validité sont prises en compte.");
+    $pdf->Text($GoX,$y,"Seules les personnes ayant une compÃ©tence en cours de validitÃ© sont prises en compte.");
     
     // Antennes
     if ( $NIV == $nbmaxlevels - 2 ) {
@@ -412,7 +412,7 @@ if ( $type == 1 ) {
         $pdf->Text($GoX + $alignX,$y,$row["NB"]);
     }
     // =========================================================
-    // comptage compétences
+    // comptage compÃ©tences
     // =========================================================
 
     count_competence('PSE1', $not='PSE2');
@@ -423,11 +423,11 @@ if ( $type == 1 ) {
     count_competence('CP');
     count_competence('CODep');
 
-    count_competence('Méd.');
+    count_competence('MÃ©d.');
     count_competence('Med.Urg.');
     count_competence('IDE');
     count_competence('A.Soi');
-    count_competence('Kiné');
+    count_competence('KinÃ©');
     count_competence('Pharm');
     count_competence('Veto');
     count_competence('BNSSA');
@@ -464,14 +464,14 @@ if ( $type == 1 ) {
     count_materiel('D.A.E.');
     count_materiel('brancards');
 
-    titre_categorie("Matériel d'Hébergement");
+    titre_categorie("MatÃ©riel d'HÃ©bergement");
     count_materiel('Tentes>20m2');
     count_materiel('Tentes<20m2');
     count_materiel('Lits Picots');
     count_materiel('Couvertures');
 
-    titre_categorie("Matériel d'aide aux populations sinistrées");
-    count_materiel('Groupes électrogènes');
+    titre_categorie("MatÃ©riel d'aide aux populations sinistrÃ©es");
+    count_materiel('Groupes Ã©lectrogÃ¨nes');
     count_materiel('Lot Eclairage');
     count_materiel('Motos Pompes');
     count_materiel('Lot Pompage');
@@ -482,14 +482,14 @@ if ( $type == 1 ) {
     titre_categorie("Moyens Radios");
     count_materiel('Radios 150 MHz');
     count_materiel('Radios 450 Mhz');
-    count_materiel('Radio 450Mhz Numérique');
-    count_materiel('150 Mhz Analo/Numér.');
+    count_materiel('Radio 450Mhz NumÃ©rique');
+    count_materiel('150 Mhz Analo/NumÃ©r.');
     count_materiel('Valise P.C. 150 MHz');
     count_materiel('Valise P.C. 450 MHz');
     count_materiel('Relais');
 
-    titre_categorie("Véhicules - embarcations - divers");
-    count_vehicules('VPSP', "Pouvant contribuer à l'acheminement des victimes" );
+    titre_categorie("VÃ©hicules - embarcations - divers");
+    count_vehicules('VPSP', "Pouvant contribuer Ã  l'acheminement des victimes" );
     count_vehicules('VL');
     count_vehicules('VTU');
     count_vehicules('VPI');
@@ -506,7 +506,7 @@ if ( $type == 1 ) {
     count_vehicules('MOTO');
     count_vehicules('VELO');
     count_vehicules('QUAD');
-    count_vehicules('REM', "Pour le transport de matériel");
+    count_vehicules('REM', "Pour le transport de matÃ©riel");
     count_vehicules('RPS');
     count_vehicules('MPR');
     count_vehicules('ERS');
@@ -524,14 +524,14 @@ if ( $type == 2 ) {
     // ==========================================
     // Stats DPS
     // ========================================== 
-    titre_categorie("Sec1 - Dispositifs prévisionnels de secours (DPS)");
+    titre_categorie("Sec1 - Dispositifs prÃ©visionnels de secours (DPS)");
     
     $queryv="select TAV_ID, TA_SHORT N, concat (TA_SHORT,' - ',TA_VALEUR) D from type_agrement_valeur order by TA_FLAG asc";
     $resultv=mysqli_query($dbc,$queryv);
     while ($rowv=@mysqli_fetch_array($resultv)) {
         if ( $rowv['N'] == '-' ) {
-            $name_type_dps[$rowv['TAV_ID']] = "\"non défini\"";
-            $description_type_dps[$rowv['TAV_ID']] = "DPS de taille non définie";
+            $name_type_dps[$rowv['TAV_ID']] = "\"non dÃ©fini\"";
+            $description_type_dps[$rowv['TAV_ID']] = "DPS de taille non dÃ©finie";
         }
         else {
             $name_type_dps[$rowv['TAV_ID']] = $rowv['N'];
@@ -687,10 +687,10 @@ if ( $type == 2 ) {
         $pdf->Text($GoX,$y,"Nombre d'intervenants:");
         $pdf->Text($GoX + $alignX,$y,$parti);
         GoDown(1);
-        $pdf->Text($GoX,$y,"Nombre d'heures d'activité:");
+        $pdf->Text($GoX,$y,"Nombre d'heures d'activitÃ©:");
         $pdf->Text($GoX + $alignX,$y,$duree." h");
         GoDown(1);
-        $pdf->Text($GoX,$y,"Globalisation des heures d'activité dans ce domaine :");
+        $pdf->Text($GoX,$y,"Globalisation des heures d'activitÃ© dans ce domaine :");
         $pdf->Text($GoX + $alignX,$y,$heures." h");
         italic8();
         $pdf->Text($GoX + $alignX + 16,$y, "Total des heures de participations");
@@ -725,7 +725,7 @@ if ( $type == 2 ) {
     display_dps(6);
     
     // ==========================================
-    // Autres opérations de secours
+    // Autres opÃ©rations de secours
     // ========================================== 
    
     // participants
@@ -819,10 +819,10 @@ if ( $type == 2 ) {
         $pdf->Text($GoX,$y,"Nombre d'intervenants:");
         $pdf->Text($GoX + $alignX,$y,$parti);
         GoDown(1);
-        $pdf->Text($GoX,$y,"Nombre d'heures d'activité:");
+        $pdf->Text($GoX,$y,"Nombre d'heures d'activitÃ©:");
         $pdf->Text($GoX + $alignX,$y,$duree." h");
         GoDown(1);
-        $pdf->Text($GoX,$y,"Globalisation des heures d'activité dans ce domaine :");
+        $pdf->Text($GoX,$y,"Globalisation des heures d'activitÃ© dans ce domaine :");
         $pdf->Text($GoX + $alignX,$y,$heures." h");
         italic8();
         $pdf->Text($GoX + $alignX + 16,$y, "Total des heures de participations");
@@ -868,8 +868,8 @@ if ( $type == 2 ) {
         GoDown(1);
         $T=$row[0];
         $S = number_format(intval($row[1]),0,',','.');
-        if ($row[0] == 0 ) titre_categorie("Nombres d'heures de bénévolat réalisées");
-        else titre_categorie("Nombres d'heures de participation en tant que salariés");
+        if ($row[0] == 0 ) titre_categorie("Nombres d'heures de bÃ©nÃ©volat rÃ©alisÃ©es");
+        else titre_categorie("Nombres d'heures de participation en tant que salariÃ©s");
         simple10(); 
         GoDown(1);
         $pdf->Text($GoX,$y,"Heures DPS + Missions + Formation + Entretien + Gestion:");        
@@ -962,7 +962,7 @@ if ( $type == 3 ) {
         $nombre_for_all[$rowv['PS_ID']][$rowv['TF_CODE']] = intval(@$nombre_for_all[$rowv['PS_ID']][$rowv['TF_CODE']]) + $rowv['Nombre'];
     }
     
-    // durée formation
+    // durÃ©e formation
     $query = "select 
     e.PS_ID,
     e.TF_CODE,
@@ -1051,7 +1051,7 @@ if ( $type == 3 ) {
     titre_categorie("A - Effectifs");
     GoDown(1);
     italic8();
-    $pdf->Text($GoX,$y,"Seules les personnes ayant une compétence en cours de validité sont prises en compte.");
+    $pdf->Text($GoX,$y,"Seules les personnes ayant une compÃ©tence en cours de validitÃ© sont prises en compte.");
     
     count_competence('FDF PSE');
     count_competence('PAE PSC');
@@ -1062,7 +1062,7 @@ if ( $type == 3 ) {
     count_competence('APS-ASD');
     count_competence('I-GQS');
     
-    titre_categorie("B - Formations réalisées");
+    titre_categorie("B - Formations rÃ©alisÃ©es");
     display_for('PSC1','I','no');
     display_for('PSC1','R','no');
     display_for('PSE1','I','no');
@@ -1099,7 +1099,7 @@ if ( $type == 3 ) {
 // =========================================================
 // FIN
 // =========================================================
-$printed_by="imprimé par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y à H:i");
+$printed_by="imprimÃ© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y Ã  H:i");
 $pdf->SetXY(10,270);
 Arial6();
 $pdf->MultiCell(100,5,$printed_by,"","L");

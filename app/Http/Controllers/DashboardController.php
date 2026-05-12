@@ -17,12 +17,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function index(): RedirectResponse
     {
-        return view('dashboard.index');
+        return redirect()->to('/index.php/index_d.php');
     }
 }

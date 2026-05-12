@@ -63,13 +63,13 @@ echo "<form name='change_pwd' action='save_password.php' method='POST'>";
 print insert_csrf('change_password');
 
 //=====================================================================
-// Message si password expiré
+// Message si password expirÃ©
 //=====================================================================
 
 if ( $DAYS_PWD <= 0 ) {
     if ( $P_NB_CONNECT > 1 )
         echo "<div class='alert alert-warning' role='alert' align='center'><i class ='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i>
-            Vous utilisez un mot de passe temporaire ou expiré, vous devez le changer maintenant.</div>";
+            Vous utilisez un mot de passe temporaire ou expirÃ©, vous devez le changer maintenant.</div>";
     else
         echo "<div class='alert alert-info' role='alert' align='center'>
             Veuillez choisir un mot de passe personnel.</div>";

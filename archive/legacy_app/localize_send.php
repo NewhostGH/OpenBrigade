@@ -30,7 +30,7 @@ $result=mysqli_query($dbc,$query);
 $row=mysqli_fetch_array($result);
 if ( $row[0] == "" ) $key = generateSecretString();
 else $key=$row[0];
-$message="$cisname cherche à vous localiser, cliquez ".$cisurl."/localize_me.php?pid=".$pid."&key=".$key;
+$message="$cisname cherche Ã  vous localiser, cliquez ".$cisurl."/localize_me.php?pid=".$pid."&key=".$key;
 $query="delete from demande
             where P_ID = '".$pid."'
         and D_TYPE = 'gps'";

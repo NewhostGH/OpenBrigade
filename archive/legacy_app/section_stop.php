@@ -120,7 +120,7 @@ function change(control) {
 <?php
 
 //=====================================================================
-// choix type événement et période
+// choix type Ã©vÃ©nement et pÃ©riode
 //=====================================================================
 
 if ( $sseid == 0 ) {
@@ -165,14 +165,14 @@ echo "<div class='table-responsive'>";
 echo "<div class='col-sm-12'>
         <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'>$strong Type d'événement et période à interdire $endstrong</div>
+                <div class='card-title'>$strong Type d'Ã©vÃ©nement et pÃ©riode Ã  interdire $endstrong</div>
             </div>
             <div class='card-body graycard'>";
     
 echo "<table class='noBorder'>";
 echo "<tr align=right width=140 style='background-color: initial !important;'><td>$bold Type $endbold</td>";
 echo "<td align=left width=260><select class='form-control form-control-sm smalldropdown2' data-container='body' data-style='btn btn-default' id='type' name='type'>";
-echo "<option class='type' value='ALL' title=\"Bloquer tous les types d'événements\">Tous les types d'événements</option>\n";
+echo "<option class='type' value='ALL' title=\"Bloquer tous les types d'Ã©vÃ©nements\">Tous les types d'Ã©vÃ©nements</option>\n";
 
 $query="select distinct te.CEV_CODE, ce.CEV_DESCRIPTION, te.TE_CODE _TE_CODE, te.TE_LIBELLE
     from type_evenement te, categorie_evenement ce
@@ -194,7 +194,7 @@ while (custom_fetch_array($result)) {
 }
 echo "</select></td></tr>";
 
-echo "<tr align=right style='background-color: initial !important;'><td>$bold Début $endbold</td>";
+echo "<tr align=right style='background-color: initial !important;'><td>$bold DÃ©but $endbold</td>";
 echo "<td align=left>
         <input type='text' class='datepicker form-control form-control-sm' name='start' id='start' size='13' value='".$START_DATE."'  onchange='change(this)' 
             placeholder='JJ-MM-AAAA' autocomplete='off'

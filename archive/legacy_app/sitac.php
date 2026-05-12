@@ -265,15 +265,15 @@ if (!$table_params) {
     print write_modal( $url, "options_".$evenement, "<i class='fa fa-cog fa-2x' title='Voir ou modifier les options de la carte'></i>");
     echo "</td>";
 
-    $help="Des formes oranges peuvent être dessinées sur la carte (cercle, carré, polygone), par exemple pour montrer des zones particulières sur la carte. 
+    $help="Des formes oranges peuvent Ãªtre dessinÃ©es sur la carte (cercle, carrÃ©, polygone), par exemple pour montrer des zones particuliÃ¨res sur la carte. 
     Pour cela utiliser le petit menu blanc en haut de la carte.
-    ATTENTION: Ces formes ne sont pas conservées lorsque la page est rafraîchie. Aussi il suffit de recharger la page pour supprimer les formes.
-    Et en mode rafraîchissement automatique, le mode dessin de formes n'est pas activé.
+    ATTENTION: Ces formes ne sont pas conservÃ©es lorsque la page est rafraÃ®chie. Aussi il suffit de recharger la page pour supprimer les formes.
+    Et en mode rafraÃ®chissement automatique, le mode dessin de formes n'est pas activÃ©.
     Cliquer sur la main pour quitter le mode dessin.";  
 
     $tiylehelp='Informations menu Dessiner des formes : ';
     echo "<td><div class='noprint'><a href='#'  title= \"".$tiylehelp.$help."\"><i class='fa fa-question-circle fa-2x' title='aide'></i></a></div></td>";
-    echo "<td><div class='noprint'><a href='evenement_display.php?evenement=".$evenement."'  title='retour événement'>Retour</a></div></td>";
+    echo "<td><div class='noprint'><a href='evenement_display.php?evenement=".$evenement."'  title='retour Ã©vÃ©nement'>Retour</a></div></td>";
         
     $query ="select count(1) as NBE from evenement_equipe ee where E_CODE=".$evenement; 
     $result=mysqli_query($dbc,$query);
@@ -288,8 +288,8 @@ if (!$table_params) {
 echo "<div class='container-fluid table-responsive'>";
 if ($nbrow == 0 ) 
     echo "<div align=center >
-                Pour avoir accès à la carte, il faut saisir l'adresse exacte avec code postal sur l'activité.
-                <br>De plus des équipes doivent être configurées sur l'activité, elles pourront alors être positionnées sur la carte.
+                Pour avoir accÃ¨s Ã  la carte, il faut saisir l'adresse exacte avec code postal sur l'activitÃ©.
+                <br>De plus des Ã©quipes doivent Ãªtre configurÃ©es sur l'activitÃ©, elles pourront alors Ãªtre positionnÃ©es sur la carte.
           </div>";
 else {
     echo "<div class='row'>
@@ -347,7 +347,7 @@ if ( $showlist == 1 ) {
         $r2=mysqli_query($dbc,$q2);
         $row2=mysqli_fetch_array($r2);
         $nb2=$row2[0];
-        if ( $nb2 > 0 ) $vehicules=" ".$nb2." <i class='fa fa-car' title='".$nb2." véhicules' ></i>";
+        if ( $nb2 > 0 ) $vehicules=" ".$nb2." <i class='fa fa-car' title='".$nb2." vÃ©hicules' ></i>";
         else $vehicules='';
         
         $inside="<select name='ins".$EE_ID."' id='ins".$EE_ID."' class='noboxshadow selectpicker smalldropdown2'>";
@@ -360,7 +360,7 @@ if ( $showlist == 1 ) {
         }
         $inside .= "</select>";
         
-        // véhicules affectés à l'équipe
+        // vÃ©hicules affectÃ©s Ã  l'Ã©quipe
         $query2="select distinct ev.E_CODE as EC,v.V_ID,v.V_IMMATRICULATION,v.TV_CODE, vp.VP_LIBELLE, v.V_MODELE, v.V_INDICATIF,
         vp.VP_ID, vp.VP_OPERATIONNEL, s.S_DESCRIPTION, s.S_ID, s.S_CODE,
         DATE_FORMAT(v.V_ASS_DATE, '%d-%m-%Y') as V_ASS_DATE,
@@ -381,10 +381,10 @@ if ( $showlist == 1 ) {
         while (custom_fetch_array($result2)) {
             if ( $V_INDICATIF <> '' ) $V_IDENT = $V_INDICATIF;
             else $V_IDENT = $V_IMMATRICULATION;
-            $inside .= "<br><a href=upd_vehicule.php?vid=".$V_ID." title='voir fiche véhicule' class=small2>".$TV_CODE." - ".$V_MODELE." - ".$V_IDENT."</a>";
+            $inside .= "<br><a href=upd_vehicule.php?vid=".$V_ID." title='voir fiche vÃ©hicule' class=small2>".$TV_CODE." - ".$V_MODELE." - ".$V_IDENT."</a>";
         }
         
-        // personnel engagé sur l'équipe
+        // personnel engagÃ© sur l'Ã©quipe
         // trouver tous les participants
         $query2="select distinct tp.TP_NUM, p.P_ID, p.P_NOM, p.P_PHONE, p.P_PRENOM, s.S_ID, 
         p.P_OLD_MEMBER, s.S_CODE, s2.S_CODE,
@@ -411,7 +411,7 @@ if ( $showlist == 1 ) {
                     <div class='panel-heading' role='tab' id='heading".$EE_ID."' style='text-align:left;'>
                     <span class='panel-title' >
                         <a href=\"javascript:selectEquipe('r".$EE_ID."','".$ELAT."','".$ELNG."');\">
-                        <img src='".$EE_ICON."' class='img-max-40' title='cliquer pour centrer la carte sur cette équipe'></a>
+                        <img src='".$EE_ICON."' class='img-max-40' title='cliquer pour centrer la carte sur cette Ã©quipe'></a>
                         <a role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse".$EE_ID."' aria-expanded='false' aria-controls='collapse".$EE_ID."' >
                         <b>".$EE_NAME."</b></a>
                         <img id='color".$EE_ID."' src='images/f_".$IS_COLOR.".gif' title='".$IS_DESCRIPTION."' border=0 class='img-max-20'>
@@ -612,7 +612,7 @@ google.maps.event.addListener(map, 'center_changed', function() {
 
 
 //============================================================
-//   ajouter équipes
+//   ajouter Ã©quipes
 //============================================================
 
 // http://mapicons.nicolasmollet.com/category/markers
@@ -673,7 +673,7 @@ $('#ins".$EE_ID."').change(function() {
   if (newstatus == 3) {
     newimage='images/f_red.gif';
     newlabelclass='labelsred';
-    newtitle='Engagé en intervention';
+    newtitle='EngagÃ© en intervention';
   }
   if (newstatus == 4) {
     newimage='images/f_orange.gif';
@@ -742,7 +742,7 @@ google.maps.event.addListener(myMarker".$EE_ID.", 'dragend', function(evt){
                 address.style.color = 'green';
             }
             else {
-                swalAlert(\"Erreur de géolocalisation de l'équipe\");
+                swalAlert(\"Erreur de gÃ©olocalisation de l'Ã©quipe\");
             }
         }
     });
@@ -773,7 +773,7 @@ while ( $row=@mysqli_fetch_array($result)) {
     $EL_TITLE=$row["EL_TITLE"];
     $EL_DEBUT=$row["EL_DEBUT"];
     $EL_ADDRESS=$row["EL_ADDRESS"];
-    if ( $EL_ADDRESS == '' ) $EL_ADDRESS="Placez l'icône sur la carte";
+    if ( $EL_ADDRESS == '' ) $EL_ADDRESS="Placez l'icÃ´ne sur la carte";
 
     $query2="select VI_ID, VI_NUMEROTATION, VI_SEXE, VI_AGE
              from victime where EL_ID=".$EL_ID." order by VI_NUMEROTATION" ;
@@ -792,7 +792,7 @@ while ( $row=@mysqli_fetch_array($result)) {
 var interventionMarker".$EL_ID." = new google.maps.Marker({
     position: new google.maps.LatLng(".$ELAT.", ".$ELNG."),
     icon: iconInter,
-    title: \"".$victimes.$EL_TITLE." - ".$EL_DEBUT." - ".$EL_ADDRESS." - cliquer pour éditer\" ,";
+    title: \"".$victimes.$EL_TITLE." - ".$EL_DEBUT." - ".$EL_ADDRESS." - cliquer pour Ã©diter\" ,";
 if ( $granted_event    ) echo "draggable: true";
 else echo "draggable: false";
 echo "
@@ -881,7 +881,7 @@ while ( $row=@mysqli_fetch_array($result)) {
         $icon='images/cav_small_closed.png';
         $label='labelsblack';
     }
-    if ( $CAV_ADDRESS == '' ) $CAV_ADDRESS="Placez l'icône sur la carte";
+    if ( $CAV_ADDRESS == '' ) $CAV_ADDRESS="Placez l'icÃ´ne sur la carte";
     
 echo "
 
@@ -897,7 +897,7 @@ var cavicon".$CAV_ID." = new google.maps.MarkerImage(
 var cavMarker".$CAV_ID." = new MarkerWithLabel({
     position: new google.maps.LatLng(".$ELAT.", ".$ELNG."),
     icon: cavicon".$CAV_ID.",
-    title: \"".$CAV_NAME." - ".$nbvt." victime(s) traitées, ".$nbve." présentes en ce moment - ".$CAV_ADDRESS." - cliquer pour éditer\" ,";
+    title: \"".$CAV_NAME." - ".$nbvt." victime(s) traitÃ©es, ".$nbve." prÃ©sentes en ce moment - ".$CAV_ADDRESS." - cliquer pour Ã©diter\" ,";
 
 if ( $granted_event    ) echo "draggable: true,";
 else echo "draggable: false,";
@@ -1221,14 +1221,14 @@ google.maps.event.addListener(customFlag".$pointnumber.", 'click', function() {
 }
 
 // ================================================================
-// Personnel géolocalisé
+// Personnel gÃ©olocalisÃ©
 // ================================================================
 if ( $gps == 1 ) {
     $time = intval($gps_persistence);
 
     $query1="select distinct p.P_ID, p.P_NOM , p.P_PRENOM, p.P_SEXE,
          p.P_SECTION, s.S_CODE, s.S_ID, p.P_EMAIL, p.P_PHOTO, g.LAT, g.LNG,
-         date_format(g.DATE_LOC, '%d-%m à %H:%i') DATE_LOC";    
+         date_format(g.DATE_LOC, '%d-%m Ã  %H:%i') DATE_LOC";    
     $queryadd =" from pompier p, section s, gps g, evenement_participation ep
          where g.P_ID= p.P_ID
          and ep.P_ID = p.P_ID

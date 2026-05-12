@@ -101,7 +101,7 @@ else $nb_stats=0;
 //=====================================================================
 
 if ( $TE_CODE == '' ) {
-    write_msgbox("erreur", $error_pic, "Le code pour le type d'événement choisi doit être renseigné.<br> Et il doit être unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TE_CODE."');\">",10,0);
+    write_msgbox("erreur", $error_pic, "Le code pour le type d'Ã©vÃ©nement choisi doit Ãªtre renseignÃ©.<br> Et il doit Ãªtre unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TE_CODE."');\">",10,0);
     exit;
 }
 
@@ -110,7 +110,7 @@ if ( $TE_CODE <> $OLD_TE_CODE ) {
     $result=mysqli_query($dbc,$query);
     $row=mysqli_fetch_array($result);
     if ( $row[0] > 0 ) {
-        write_msgbox("erreur", $error_pic, "Le type d'événement choisi ( ".$TE_CODE." ) existe déjà dans la base de données.<br> Il doit être unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TE_CODE."');\">",10,0);
+        write_msgbox("erreur", $error_pic, "Le type d'Ã©vÃ©nement choisi ( ".$TE_CODE." ) existe dÃ©jÃ  dans la base de donnÃ©es.<br> Il doit Ãªtre unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TE_CODE."');\">",10,0);
         exit;
     }
 }

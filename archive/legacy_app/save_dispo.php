@@ -45,7 +45,7 @@ if ( $id <> $person ) {
 
 
 //=====================================================================
-// purger les disponibilités de la personne pour le mois en cours
+// purger les disponibilitÃ©s de la personne pour le mois en cours
 //=====================================================================
 
 $query="delete from disponibilite 
@@ -66,7 +66,7 @@ if ( $gardes )
 $result=mysqli_query($dbc,$query);
 
 //=====================================================================
-// enregistrer les disponibilités saisies
+// enregistrer les disponibilitÃ©s saisies
 //=====================================================================
 //echo "<pre>";
 //print_r($_POST);
@@ -106,7 +106,7 @@ while ( $row=@mysqli_fetch_array($result)) {
 }
 
 if ( $dispo_periodes == 1 ) {
-    $detail = $dispos[1]." périodes de 24h";
+    $detail = $dispos[1]." pÃ©riodes de 24h";
     // recopier dispo periode 1 sur 2, 3 et 4
     $query="insert into disponibilite (P_ID, D_DATE, PERIOD_ID) 
             select d.P_ID, d.D_DATE, 2
@@ -165,7 +165,7 @@ else if ( $dispo_periodes == 2 ) {
     $result=mysqli_query($dbc,$query);
 }
 else if ( $dispo_periodes == 3 ) {
-    $detail = $dispos[1]." matins, ".$dispos[2]." après-midis et ".$dispos[4]." nuits";
+    $detail = $dispos[1]." matins, ".$dispos[2]." aprÃ¨s-midis et ".$dispos[4]." nuits";
     // recopier dispo periode 4 sur 3
     $query="insert into disponibilite (P_ID, D_DATE, PERIOD_ID) 
             select d.P_ID, d.D_DATE, 3
@@ -179,19 +179,19 @@ else if ( $dispo_periodes == 3 ) {
     $result=mysqli_query($dbc,$query);
 }
 else {
-    $detail = $dispos[1]." matins, ".$dispos[2]." après-midis, ".$dispos[3]." soirs et ".$dispos[4]." nuits";
+    $detail = $dispos[1]." matins, ".$dispos[2]." aprÃ¨s-midis, ".$dispos[3]." soirs et ".$dispos[4]." nuits";
 }
 
 $moislettres=moislettres($month);
 $cmt="";
 if ( $id == $person ) {
-    if ( $gardes ) $cmt="<br>Attention: les disponibilités ne peuvent pas être supprimées pour les jours où vous êtes inscrit sur une garde.";
-    write_msgbox("OK", $star_pic, "Merci <b>".$prenom."</B> tes disponibilités pour <b>".$moislettres."</b> ont été enregistrées (".$detail.")".$cmt."
+    if ( $gardes ) $cmt="<br>Attention: les disponibilitÃ©s ne peuvent pas Ãªtre supprimÃ©es pour les jours oÃ¹ vous Ãªtes inscrit sur une garde.";
+    write_msgbox("OK", $star_pic, "Merci <b>".$prenom."</B> tes disponibilitÃ©s pour <b>".$moislettres."</b> ont Ã©tÃ© enregistrÃ©es (".$detail.")".$cmt."
                 <p align=center><a href=index_d.php ><input type='button' class='btn btn-secondary' value='Retour'></a>",30,0);
 }
 else {
-    if ( $gardes ) $cmt="<br>Attention: les disponibilités ne peuvent pas être supprimées pour les jours où des activités de type garde ont été prévues pour la personne.";
-    write_msgbox("OK", $star_pic, "Les disponibilités de ".$prenom." ".$nom." pour <b>".$moislettres."</b> ont été enregistrées (".$detail.")".$cmt."
+    if ( $gardes ) $cmt="<br>Attention: les disponibilitÃ©s ne peuvent pas Ãªtre supprimÃ©es pour les jours oÃ¹ des activitÃ©s de type garde ont Ã©tÃ© prÃ©vues pour la personne.";
+    write_msgbox("OK", $star_pic, "Les disponibilitÃ©s de ".$prenom." ".$nom." pour <b>".$moislettres."</b> ont Ã©tÃ© enregistrÃ©es (".$detail.")".$cmt."
                 <p align=center><a href=personnel.php ><input type='button' class='btn btn-secondary' value='Retour'></a>",30,0);
 }
 insert_log('UPDDISPO', $person, $moislettres." ".$year.": ".$detail);
@@ -213,8 +213,8 @@ else $comment = '';
 
 $message  = "Bonjour,\n";
 $subject = "Disponibilites enregistrees pour ".$moislettres." ".$year;
-$message = "Les disponibilités de ".$prenom." ".$nom."\n";
-$message .= "ont bien été enregistrées pour le mois de ".$moislettres." ".$year."\n";
+$message = "Les disponibilitÃ©s de ".$prenom." ".$nom."\n";
+$message .= "ont bien Ã©tÃ© enregistrÃ©es pour le mois de ".$moislettres." ".$year."\n";
 $message .= $comment."\n";
 $message .= $detail."\n";
 $destid = $person.",".get_granted(57, $hissection, $level = 'parent', $avoidspam = 'yes');

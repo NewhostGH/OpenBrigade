@@ -146,7 +146,7 @@ if (!$addAction) {
                 else {
                     if (this.files.length > 1){
                         title_file = title_file + "- " + f.name + '<br>';
-                        V.value = this.files.length + " fichiers sélectionnés";
+                        V.value = this.files.length + " fichiers sÃ©lectionnÃ©s";
                         TableListOfFiles = 1;
                     }
                     else
@@ -177,7 +177,7 @@ if ( $evenement == 0 and $pompier == 0 and $vehicule == 0 and $note == 0 and $ma
     <div class='container-fluid'><table class='noBorder'>";
 
     if (!$addAction && !$subPage && !$addnew)
-        writeBreadCrumb("Ajouter un document","Bibliothèque","./documents.php");
+        writeBreadCrumb("Ajouter un document","BibliothÃ¨que","./documents.php");
     echo"</table>";
     echo "<form action='save_documents.php' method='post' enctype='multipart/form-data'>";
     echo "<input type='hidden' name='operation' value='update'>";
@@ -208,8 +208,8 @@ else if ( $victime > 0 ) {
     $title="Victime V$numero";
       
     echo "<div class='alert alert-warning' role='alert' align='center'><i class ='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i>
-           Attention les documents médicaux (Eléctro Cardiogramme, Radios, Analyses de sang...) ne doivent pas être importés sur $application_title
-           Car il y a un risque de divulgation de secret médical.</div>";
+           Attention les documents mÃ©dicaux (ElÃ©ctro Cardiogramme, Radios, Analyses de sang...) ne doivent pas Ãªtre importÃ©s sur $application_title
+           Car il y a un risque de divulgation de secret mÃ©dical.</div>";
     echo "<form action='victimes.php' method='post' enctype='multipart/form-data'>";
     echo "<input type='hidden' name='operation' value='document'>";
     echo "<input type='hidden' name='section' value='$S_ID'>";
@@ -227,8 +227,8 @@ else if ( $numinter > 0 ) {
     $title="Intervention $nominter";
 
     echo "<div class='alert alert-warning' role='alert' align='center'><i class ='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i>
-           Attention les documents médicaux (Eléctro Cardiogramme, Radios, Analyses de sang...) ne doivent pas être importés sur $application_title
-           Car il y a un risque de divulgation de secret médical.</div>";
+           Attention les documents mÃ©dicaux (ElÃ©ctro Cardiogramme, Radios, Analyses de sang...) ne doivent pas Ãªtre importÃ©s sur $application_title
+           Car il y a un risque de divulgation de secret mÃ©dical.</div>";
     echo "<form action='intervention_edit.php' method='post' enctype='multipart/form-data'>";
     echo "<input type='hidden' name='evenement' value='$evenement'>";
     echo "<input type='hidden' name='numinter' value='$numinter'>";
@@ -239,7 +239,7 @@ else if ( $numinter > 0 ) {
 else if ( $vehicule > 0 ) {
     // vehicule
     if (!$subPage and !$addnew)
-        writeBreadCrumb("Ajouter un document","Véhicule","./documents.php");
+        writeBreadCrumb("Ajouter un document","VÃ©hicule","./documents.php");
     $query="select TV_CODE, V_IMMATRICULATION from vehicule where V_ID=".$vehicule;
     $result=mysqli_query($dbc,$query);
     $row=@mysqli_fetch_array($result);
@@ -255,7 +255,7 @@ else if ( $vehicule > 0 ) {
 else if ( $materiel > 0 ) {
     // materiel
     if (!$subPage and !$addnew)
-        writeBreadCrumb("Ajouter un document","Matériel","./documents.php");
+        writeBreadCrumb("Ajouter un document","MatÃ©riel","./documents.php");
     $query="select m.TM_ID, tm.TM_CODE, tm.TM_DESCRIPTION, m.MA_MODELE from materiel m, type_materiel tm where m.TM_ID = tm.TM_ID and m.MA_ID=".$materiel;
     $result=mysqli_query($dbc,$query);
     $row=@mysqli_fetch_array($result);
@@ -288,7 +288,7 @@ else {
     // evenement
 
     if (!$addAction && !$subPage and !$addnew)
-        writeBreadCrumb("Documents pour l'événement","Evénement", "aa");
+        writeBreadCrumb("Documents pour l'Ã©vÃ©nement","EvÃ©nement", "aa");
     $query="select TE_CODE, E_LIBELLE from evenement where E_CODE=".$evenement;
     $result=mysqli_query($dbc,$query);
     $row=@mysqli_fetch_array($result);
@@ -308,9 +308,9 @@ echo "<div class='table-responsive'>";
 
 if ( $pompier > 0 ) {
  echo "<div class='col-sm-12' align='center'><div class='alert alert-blue'><i class='far fa-lightbulb fa-2x' title='Ajouter une signature'></i><small>
-    Il est possible d'ajouter une signature personnelle, qui sera automatiquement ajoutée sur certains documents PDF générés (notes de frais). 
-    <br>Pour cela un fichier <b>signature.png</b> ou <b>signature.jpg</b> doit être ajouté. Pour un bon résultat, la taille de l'image doit être de environ 4cm de haut sur 8cm de large.
-    <br>Et l'accès à ce fichier doit idéalement être protégé.</small></div></div>";
+    Il est possible d'ajouter une signature personnelle, qui sera automatiquement ajoutÃ©e sur certains documents PDF gÃ©nÃ©rÃ©s (notes de frais). 
+    <br>Pour cela un fichier <b>signature.png</b> ou <b>signature.jpg</b> doit Ãªtre ajoutÃ©. Pour un bon rÃ©sultat, la taille de l'image doit Ãªtre de environ 4cm de haut sur 8cm de large.
+    <br>Et l'accÃ¨s Ã  ce fichier doit idÃ©alement Ãªtre protÃ©gÃ©.</small></div></div>";
     
 }
 
@@ -353,7 +353,7 @@ else if ( isset($_SESSION['dossier']) and $_SESSION['dossier'] > 0 and $evenemen
     
     echo "<input type='hidden' name='dossier' value='".$_SESSION['dossier']."'>";
     echo "<input type='hidden' name='type' value='".$_SESSION['td']."'>";
-    // dossier supérieur
+    // dossier supÃ©rieur
     $parent="<b>".get_folder_name($_SESSION['dossier'])."</b>";
     $query="select td.TD_CODE, td.TD_LIBELLE from type_document td, document_folder df 
             where df.TD_CODE = td.TD_CODE
@@ -372,7 +372,7 @@ else if ( isset($_SESSION['dossier']) and $_SESSION['dossier'] > 0 and $evenemen
 if ( $note == 0 and $document_security == 1) {
     $query="select DS_ID, DS_LIBELLE,F_ID from document_security";
     if ( $evenement == 0 ) $query .=" where F_ID <> 120";
-    echo "<tr><td>Sécurité </td>
+    echo "<tr><td>SÃ©curitÃ© </td>
         <td width=280>
         <select id='security' name='security' class='form-control form-control-sm' data-container='body' data-style='btn btn-default'>\n";
     $result=mysqli_query($dbc,$query);

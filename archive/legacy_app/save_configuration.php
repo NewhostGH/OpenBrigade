@@ -41,7 +41,7 @@ function redirect(tab, res) {
 function save_config($confid, $value) {
     global $dbc, $error_pic, $tab;
     $value= str_replace("\"","",$value);
-    // tester si les configurations sont supportées
+    // tester si les configurations sont supportÃ©es
     if ( $confid == 13 and  $value == 1 ) {
             $query="select count(1) as NB from pompier";
             $result=mysqli_query($dbc,$query);
@@ -49,8 +49,8 @@ function save_config($confid, $value) {
             $NB=$row["NB"];
             $max=1000;
             if ( $NB > $max ) {
-                $msg="Il y a plus de $max utilisateurs dans votre base de données.
-                <br>La sauvegarde automatique n'est plus supportée.
+                $msg="Il y a plus de $max utilisateurs dans votre base de donnÃ©es.
+                <br>La sauvegarde automatique n'est plus supportÃ©e.
                 <br>Vous devez mettre en place une sauvegarde avec mysqldump dans une crontab.
                 <p align=center>
                 <input type='button' class='btn btn-secondary' value='Retour' onclick='javascript:self.location.href=\"configuration.php?tab=".$tab."\";'>";
@@ -61,12 +61,12 @@ function save_config($confid, $value) {
 
     if ( $confid == 35 and  $value == 1 ) {
         if(! ini_get('allow_url_fopen') ) {
-            $msg="L'activation de la géolocalisation nécessite une certaine configuration dans php.ini
+            $msg="L'activation de la gÃ©olocalisation nÃ©cessite une certaine configuration dans php.ini
             <font face='courrier'>
             <p>allow_url_fopen = On
             <br>allow_url_include = On</font>
-            <p>Sur les hébergements mutualisés, on n’a pas accès à la config PHP, mais on peut au moins la compléter localement
-            <br>En ajoutant un fichier php.ini avec les 2 lignes à la racine du site.
+            <p>Sur les hÃ©bergements mutualisÃ©s, on nâ€™a pas accÃ¨s Ã  la config PHP, mais on peut au moins la complÃ©ter localement
+            <br>En ajoutant un fichier php.ini avec les 2 lignes Ã  la racine du site.
             <p align=center>
             <input type='button' class='btn btn-secondary' value='Retour' onclick='javascript:self.location.href=\"configuration.php?tab=".$tab."\";'>";
             write_msgbox("erreur configuration PHP",$error_pic,$msg,30,30);
@@ -76,7 +76,7 @@ function save_config($confid, $value) {
 
     if ( $confid == 44 and  $value == 'pbkdf2' ) {
         if (! function_exists('mcrypt_create_iv')) {
-            $msg="L'utilisation de l'encryption PBKDF2 nécessite d'avoir l'extension mcrypt activée dans PHP.
+            $msg="L'utilisation de l'encryption PBKDF2 nÃ©cessite d'avoir l'extension mcrypt activÃ©e dans PHP.
             <br>Ce n'est pas le cas, seule MD5 est utilisable.
             <p align=center>
             <input type='button' class='btn btn-secondary' value='Retour' onclick='javascript:self.location.href=\"configuration.php?tab=".$tab."\";'>";
@@ -86,7 +86,7 @@ function save_config($confid, $value) {
     }
     if ( $confid == 44 and  $value == 'bcrypt' ) {
         if (! function_exists('password_hash')) {
-            $msg="L'utilisation de l'encryption BCRYPT nécessite d'avoir la fonction password_hash activée dans PHP. Donc une version >= 5.5.
+            $msg="L'utilisation de l'encryption BCRYPT nÃ©cessite d'avoir la fonction password_hash activÃ©e dans PHP. Donc une version >= 5.5.
             <br>Ce n'est pas le cas, seule MD5 est utilisable.
             <p align=center>
             <input type='button' class='btn btn-secondary' value='Retour' onclick='javascript:self.location.href=\"configuration.php?tab=".$tab."\";'>";
@@ -109,7 +109,7 @@ function save_config($confid, $value) {
     else
         save_configuration($confid,$value);
     
-    # désactivation du feedback pour améliorations
+    # dÃ©sactivation du feedback pour amÃ©liorations
     if ( $confid == 80 and $value == '0' ) {
         push_monitoring_info($force=true);
     }
@@ -150,7 +150,7 @@ function save_config($confid, $value) {
         $result=mysqli_query($dbc,$query);
     }
 
-    // si assoc activé, active le bilan annuel, désactive pour les autres
+    // si assoc activÃ©, active le bilan annuel, dÃ©sactive pour les autres
     if ($confid == 79 and $value==1) {
         $query = "update configuration set VALUE='1' where ID=83";
         $result=mysqli_query($dbc,$query);
@@ -160,14 +160,14 @@ function save_config($confid, $value) {
         $result=mysqli_query($dbc,$query);
     }
 
-    //active par défaut maincourante pour tout le monde
-    //TODO = syndicate par défaut 0 pour les mains courantes, mais pas encore dispo dans les choix de config
+    //active par dÃ©faut maincourante pour tout le monde
+    //TODO = syndicate par dÃ©faut 0 pour les mains courantes, mais pas encore dispo dans les choix de config
     if ($confid == 79 and $value!=NULL) {
         $query = "update configuration set VALUE='1' where ID=82";
         $result=mysqli_query($dbc,$query);
     }
 
-    //active par défaut les client pour les assoc, desactive pour les autres
+    //active par dÃ©faut les client pour les assoc, desactive pour les autres
     if ($confid == 79 and $value==1) {
             $query = "update configuration set VALUE='1' where ID=85";
             $result=mysqli_query($dbc,$query);
@@ -177,7 +177,7 @@ function save_config($confid, $value) {
         $result=mysqli_query($dbc,$query);
     }
 
-    //active par défaut le repos pour les pompiers
+    //active par dÃ©faut le repos pour les pompiers
     if ($confid == 79 and $value==3) {
          $query = "update configuration set VALUE='1' where ID=86";
          $result=mysqli_query($dbc,$query);
@@ -197,7 +197,7 @@ function save_config($confid, $value) {
         $result=mysqli_query($dbc,$query);
     }
 
-    # Animaux présents dans la base
+    # Animaux prÃ©sents dans la base
     if ($confid==81) {
         $query = "Select count(*) nbAnimaux from POMPIER where P_CIVILITE > 3;";
         $request = mysqli_query($dbc,$query);
@@ -205,7 +205,7 @@ function save_config($confid, $value) {
         $nbAnimaux=$answer['nbAnimaux'];
 
         if ($nbAnimaux>0 and $value==0) {
-         $msg="Il y a des animaux dans la base, vous ne pouvez pas désactiver le paramètre Animaux.
+         $msg="Il y a des animaux dans la base, vous ne pouvez pas dÃ©sactiver le paramÃ¨tre Animaux.
             <input type='button' class='btn bbtn-secondary' value='Retour' onclick='javascript:self.location.href=\"configuration.php?tab=".$tab."\";'>";
             write_msgbox("Erreur animaux",$error_pic,$msg,30,30);
             $query="Update configuration set value=1 where name='Animaux';";

@@ -91,7 +91,7 @@ function del_option(evenement,option){
 <?php
 
 //=====================================================================
-// recupérer infos evenement
+// recupÃ©rer infos evenement
 //=====================================================================
 $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT, e.S_ID, te.TE_ICON
         from evenement e, type_evenement te
@@ -112,9 +112,9 @@ $row1=@mysqli_fetch_array($result1);
 $n1=$row1["NB"];
 
 //=====================================================================
-// contrôle des permissions
+// contrÃ´le des permissions
 //=====================================================================
-// bloquer les changements dans le passé
+// bloquer les changements dans le passÃ©
 $ended=get_number_days_after_block($evenement);
 $changeallowed=true;
 if ( $ended > 0 ) {
@@ -134,7 +134,7 @@ if ( in_array($action, $action_requiring_permissions ) and ! $update_allowed ) {
     check_all(15);
     if ( ! check_rights($id, 15, "$S_ID")) check_all(24);
     if ( ! $changeallowed ) 
-        write_msgbox("WARNING", $warning_pic, "Attention Vous ne pouvez plus modifier les options de cet événement.<p><a href=evenement_options.php?evenement=".$evenement." ><input type='submit' class='btn btn-default' value='Retour'></a></p>",30,0);
+        write_msgbox("WARNING", $warning_pic, "Attention Vous ne pouvez plus modifier les options de cet Ã©vÃ©nement.<p><a href=evenement_options.php?evenement=".$evenement." ><input type='submit' class='btn btn-default' value='Retour'></a></p>",30,0);
 }
 
 write_debugbox("<pre>".print_r($_POST,true)."</pre>");
@@ -250,7 +250,7 @@ if ( $update_allowed ) {
             </div>";
 }
 else if ( $renfort <> $evenement ) 
-        echo " <p style='color:orange;'><i class='fa fa-exclamation-triangle fa-lg' ></i> <b>Modifications possibles seulement sur l'événement principal</b><p>";
+        echo " <p style='color:orange;'><i class='fa fa-exclamation-triangle fa-lg' ></i> <b>Modifications possibles seulement sur l'Ã©vÃ©nement principal</b><p>";
 
 echo "<div align=center><table class='noBorder'>
       <tr><td></td></tr>
@@ -343,20 +343,20 @@ if ( $action == 'update') {
         echo " <tr><td>Type d'option</td>
                     <td><select class='form-control select-control' name=EO_TYPE $disabled title=\"choisir le type d'option\">";
         if ( $EO_TYPE == 'checkbox' ) $selected='selected'; else $selected='';
-        echo " <option value='checkbox' $selected>Case à cocher</option>";
+        echo " <option value='checkbox' $selected>Case Ã  cocher</option>";
         if ( $EO_TYPE == 'text' ) $selected='selected'; else $selected='';
         echo " <option value='text' $selected>Texte libre</option>";
         if ( $EO_TYPE == 'textnum' ) $selected='selected'; else $selected='';
-        echo " <option value='textnum' $selected>Valeur Numérique</option>";
+        echo " <option value='textnum' $selected>Valeur NumÃ©rique</option>";
         if ( $EO_TYPE == 'dropdown' ) $selected='selected'; else $selected='';
-        echo " <option value='dropdown' $selected>Liste déroulante</option>";
+        echo " <option value='dropdown' $selected>Liste dÃ©roulante</option>";
         if ( $EO_TYPE == 'date' ) $selected='selected'; else $selected='';
         echo " <option value='date' $selected>Date JJ-MM-AAAA</option>";
         if ( $EO_TYPE == 'hour' ) $selected='selected'; else $selected='';
         echo " <option value='hour' $selected>Heure HH:mm</option>";
         echo " </select></td></tr>";
         
-        // choix de la liste déroulante
+        // choix de la liste dÃ©roulante
         $nbmaxchoix=10;
         if ( $EO_TYPE == 'dropdown' ) $style='';
         else $style='display:none;';
@@ -382,18 +382,18 @@ if ( $action == 'update') {
             echo "</select></td>";
             echo  "<td><a class='btn btn-default btn-action' href='#' onclick=\"javascript:del_choice('".$evenement."','".$option."','".$EOD_ID."');\" title='supprimer ce choix de la liste'>
                         <i class='fas fa-trash-alt' style='color:red;'></i></a>
-                    <span class='badge' style='background-color:grey' title='$nb inscrits ont sélectionné cette option'>".$nb."</span></td>";
+                    <span class='badge' style='background-color:grey' title='$nb inscrits ont sÃ©lectionnÃ© cette option'>".$nb."</span></td>";
             echo "</tr>";
         }
         // nouveau choix
         echo "<tr>";
-        echo "<td><input type='texte' value='' id='newtexte' name='newtexte' title='saisir le texte de ce choix dans la liste déroulante'></td>";
+        echo "<td><input type='texte' value='' id='newtexte' name='newtexte' title='saisir le texte de ce choix dans la liste dÃ©roulante'></td>";
         echo "<td><select class='form-control select-control' id='newvalue' name='newvalue' title=\"Ordre d'affichage de l'option dans la liste\">";
         for ( $i=1; $i <= $nbmaxchoix; $i++ ) {
             echo "<option value='".$i."' >$i</option>";
         } 
         echo "</select></td>";
-        echo "<td><a class='btn btn-default btn-action' href='#' onclick=\"javascript:add_choice('".$evenement."','".$option."');\" title='Ajouter ce nouveau choix dans la liste déroulante'>
+        echo "<td><a class='btn btn-default btn-action' href='#' onclick=\"javascript:add_choice('".$evenement."','".$option."');\" title='Ajouter ce nouveau choix dans la liste dÃ©roulante'>
                         <i class='fa fa-plus-circle fa-lg' style='color:green'></i></a></td>";
         echo "</tr></table>";
         
@@ -408,7 +408,7 @@ if ( $action == 'update') {
     if ( $update_allowed ) echo " <input type=submit class='btn btn-success' name='OK' value='Sauvegarder' $disabled>";
     
     echo " <input type=button class='btn btn-secondary' value='Retour' onclick=\"redirect_options('".$evenement."');\">
-            <input type=button class='btn btn-secondary' value='Retour événement' onclick=\"redirect_evenement('".$evenement."');\">";
+            <input type=button class='btn btn-secondary' value='Retour Ã©vÃ©nement' onclick=\"redirect_evenement('".$evenement."');\">";
     echo "</div>";
     if ( $update_allowed ) echo " </form>";
 }
@@ -468,10 +468,10 @@ else if ( $action == 'insert') {
         echo "</select></td>";
         echo " <tr><td>Type d'option</td>
                     <td><select class='form-control select-control' name=EO_TYPE $disabled title=\"choisir le type d'option\">";
-        echo " <option value='checkbox'>Case à cocher</option>";
+        echo " <option value='checkbox'>Case Ã  cocher</option>";
         echo " <option value='text'>Texte libre</option>";
-        echo " <option value='textnum'>Valeur Numérique</option>";
-        echo " <option value='dropdown'>Liste déroulante</option>";
+        echo " <option value='textnum'>Valeur NumÃ©rique</option>";
+        echo " <option value='dropdown'>Liste dÃ©roulante</option>";
         echo " <option value='date'>Date JJ-MM-AAAA</option>";
         echo " <option value='hour'>Heure HH:mm</option>";
         echo " </select></td></tr>";
@@ -486,7 +486,7 @@ else if ( $action == 'insert') {
     echo "<a class='btn btn-secondary dropdown-toggle'  href='#' role='button' id='dropdownMenuLink2' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Retour </a>
             <div class='dropdown-menu' style='margin-left:-50px' aria-labelledby='dropdownMenuLink'>
                 <a class='dropdown-item' onclick=\"redirect_options('$evenement');\">Option d'inscription</a>
-                <a class='dropdown-item' onclick=\"redirect_evenement('$evenement');\">Activité</a>
+                <a class='dropdown-item' onclick=\"redirect_evenement('$evenement');\">ActivitÃ©</a>
             </div>";
     echo "</div>";
     if ( $update_allowed ) echo " </form>";
@@ -504,12 +504,12 @@ else if ( $action == 'display') {
     $resultm=mysqli_query($dbc,$querym);
     $num=mysqli_num_rows($resultm);
     
-    if ( $num == 0 ) echo "<span class=small>Aucune option n'a été créée</span><p>";
+    if ( $num == 0 ) echo "<span class=small>Aucune option n'a Ã©tÃ© crÃ©Ã©e</span><p>";
     else {
         echo  "<div class='col-sm-6'>
               <table class='newTableAll' cellspacing=0 border=0>
                 <tr>
-                <td> </td>
+                <td>Â </td>
                 <td>Nom option</td>
                 <td align=center> Choix</td>
                 <td>Description</td>
@@ -524,9 +524,9 @@ else if ( $action == 'display') {
             else $complement= " and P_ID in (select P_ID from evenement_participation where E_CODE=".$renfort.")";
 
             if ( $EO_TYPE == 'checkbox' ) {
-                $type='Case à cocher';
+                $type='Case Ã  cocher';
                 $nb=count_entities("evenement_option_choix", "EO_ID=".$EO_ID." and EOC_VALUE=1 ".$complement);
-                $title= $nb." inscrits ont coché cette option";
+                $title= $nb." inscrits ont cochÃ© cette option";
             }
             else if  ( $EO_TYPE == 'text' or $EO_TYPE == 'date' or $EO_TYPE == 'hour' ) {
                 if (  $EO_TYPE == 'text' ) $type='Texte libre';
@@ -535,10 +535,10 @@ else if ( $action == 'display') {
                 $query2="select count(1) as nb from evenement_option_choix where EO_ID=".$EO_ID." and EOC_VALUE <> ''";
                 $result2=mysqli_query($dbc,$query2);
                 custom_fetch_array($result2);
-                $title= $nb." inscrits ont renseigné cette option";
+                $title= $nb." inscrits ont renseignÃ© cette option";
             }
             else if  ( $EO_TYPE == 'textnum' ) {
-                $type='Valeur Numérique';
+                $type='Valeur NumÃ©rique';
                 $query2="select sum(EOC_VALUE) as nb from evenement_option_choix where EO_ID=".$EO_ID.$complement;
                 $result2=mysqli_query($dbc,$query2);
                 custom_fetch_array($result2);
@@ -546,11 +546,11 @@ else if ( $action == 'display') {
                 $nb='total '.intval($nb);
             }
             else if  ( $EO_TYPE == 'dropdown' ) {
-                $type='Liste déroulante';
+                $type='Liste dÃ©roulante';
                 $query2="select count(1) as nb from evenement_option_choix where EO_ID=".$EO_ID." and EOC_VALUE > 0 ";
                 $result2=mysqli_query($dbc,$query2);
                 custom_fetch_array($result2);
-                $title= $nb." inscrits ont renseigné cette option. Les choix possibles sont les suivants:";
+                $title= $nb." inscrits ont renseignÃ© cette option. Les choix possibles sont les suivants:";
                 
                 $query2="select EOD_TEXTE from evenement_option_dropdown where EO_ID=".$EO_ID." order by EOD_ORDER";
                 $result2=mysqli_query($dbc,$query2);
@@ -612,7 +612,7 @@ if ( $action == 'display') {
    
     if ( $num > 0 ) {
         $url="evenement_option_choix.php?evenement=".$evenement."&inscription=1&apercu=1";
-        print write_modal( $url, "formulaire_".$evenement, "<input type='submit' class='btn btn-secondary' id='apercu' value='Aperçu' title=\"voir un aperçu du formulaire proposé à celui qui s'inscrit\">");
+        print write_modal( $url, "formulaire_".$evenement, "<input type='submit' class='btn btn-secondary' id='apercu' value='AperÃ§u' title=\"voir un aperÃ§u du formulaire proposÃ© Ã  celui qui s'inscrit\">");
     }
     echo "</div>";
 }

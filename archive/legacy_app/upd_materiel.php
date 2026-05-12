@@ -70,7 +70,7 @@ if ( ! check_rights($id,40)) {
     }
 }
 //=====================================================================
-// affiche la fiche matériel
+// affiche la fiche matÃ©riel
 //=====================================================================
 
 $query="select distinct m.TM_ID,tm.TM_CODE,tm.TM_DESCRIPTION,
@@ -115,8 +115,8 @@ if ( $AFFECTED_TO <> '' ) {
 else $warning="";
 if ( $VP_OPERATIONNEL  < 0 ) $mylightcolor=$mygreycolor;
 
-// permettre les modifications si je suis habilité sur la fonctionnalité 70 au bon niveau
-// ou je suis habilité sur la fonctionnalité 24 )
+// permettre les modifications si je suis habilitÃ© sur la fonctionnalitÃ© 70 au bon niveau
+// ou je suis habilitÃ© sur la fonctionnalitÃ© 24 )
 if (check_rights($id, 70,"$S_ID")) $responsable_materiel=true;
 else $responsable_materiel=false;
 
@@ -129,7 +129,7 @@ if ( $MA_EXTERNE == '1' ) {
 }
 
 //=====================================================================
-// sauver changements sur lot de matériel
+// sauver changements sur lot de matÃ©riel
 //=====================================================================
 if ( $disabled == '' ) {
     if ( isset($_GET["del"])) {
@@ -170,7 +170,7 @@ $query1="select count(*) as NB1 from document where M_ID=".$MA_ID;
 $result1=mysqli_query($dbc,$query1);
 custom_fetch_array($result1);
 
-writeBreadCrumb($TM_CODE." ".$TM_DESCRIPTION." ".$MA_MODELE,"Matériel","materiel.php");
+writeBreadCrumb($TM_CODE." ".$TM_DESCRIPTION." ".$MA_MODELE,"MatÃ©riel","materiel.php");
 
 echo "\n<div style='background:white;' class='table-responsive table-nav table-tabs'>";
 echo "\n<ul class='nav nav-tabs noprint' id='myTab' role='tablist'>";
@@ -190,7 +190,7 @@ else {
     $badge='badge inactive-badge';
 }
 echo "\n<li class='nav-item'>
-<a class='nav-link $class' href='upd_materiel.php?mid=".$MA_ID."&tab=2' title='Documents attachés' role='tab' aria-controls='tab2' href='#tab2'>
+<a class='nav-link $class' href='upd_materiel.php?mid=".$MA_ID."&tab=2' title='Documents attachÃ©s' role='tab' aria-controls='tab2' href='#tab2'>
 <i class='hide_desktop2 far fa-folder-open'></i><span> Documents <span class='$badge'>$NB1</span></span> </a></li>";
 
 if ( $TM_LOT == 1 ) {
@@ -238,8 +238,8 @@ if ( $TM_LOT == 1 ) {
         $badge='badge inactive-badge';
     }
     echo "<li class='nav-item'>
-    <a class='nav-link $class' href='upd_materiel.php?mid=".$MA_ID."&tab=3' title='Eléments de matériel embarqué dans le lot' role='tab' aria-controls='tab3' href='#tab3'>
-    <i class='hide_desktop2 fas fa-cog'></i><span> Eléments <span class='$badge'>$NB2</span></span></a></li>";
+    <a class='nav-link $class' href='upd_materiel.php?mid=".$MA_ID."&tab=3' title='ElÃ©ments de matÃ©riel embarquÃ© dans le lot' role='tab' aria-controls='tab3' href='#tab3'>
+    <i class='hide_desktop2 fas fa-cog'></i><span> ElÃ©ments <span class='$badge'>$NB2</span></span></a></li>";
 }
 echo "\n</ul>";
 echo "\n</div>";
@@ -247,7 +247,7 @@ echo "\n</div>";
 // fin tabs
 echo "<div id='export' style='' align='center' >";
 //=====================================================================
-// afficher fiche matériel
+// afficher fiche matÃ©riel
 //=====================================================================
 
 if ( $tab == 1 ) {
@@ -275,7 +275,7 @@ if ( $tab == 1 ) {
     echo "<table class='noBorder' cellspacing=0 border=0>";
 
     //=====================================================================
-    // ligne type de matériel
+    // ligne type de matÃ©riel
     //=====================================================================
 
     $query2="select distinct TM_ID, TM_USAGE, TM_CODE, TM_DESCRIPTION, TM_LOT from type_materiel
@@ -308,11 +308,11 @@ if ( $tab == 1 ) {
           </tr>";
 
     //=====================================================================
-    // ligne modèle
+    // ligne modÃ¨le
     //=====================================================================
 
     echo "<tr>
-                <td>Marque/modèle $asterisk</td>
+                <td>Marque/modÃ¨le $asterisk</td>
                 <td align=left height=25><input type='text' name='MA_MODELE' size='25' class='form-control form-control-sm' maxlength='40' value=\"$MA_MODELE\" $disabled required>";
     echo "</td>
           </tr>";
@@ -361,7 +361,7 @@ if ( $tab == 1 ) {
     //=====================================================================
           
     echo "<tr>
-                <td>Nombre de pièces $asterisk</td>
+                <td>Nombre de piÃ¨ces $asterisk</td>
                 <td align=left height=25>
                 <input type='text' name='quantity' size='6' class='form-control form-control-sm' value='$MA_NB' onchange='checkNumber2(this,$MA_NB)' $disabled></td>";
     echo "</tr>";
@@ -387,7 +387,7 @@ if ( $tab == 1 ) {
 
 
     echo "<tr id='taille_vetement' $style>
-                <td>Taille vêtement</td>
+                <td>Taille vÃªtement</td>
                 <td align=left>";
         echo "<div id='taille_selector'>".$selector."</div>";
     echo "</td></tr>";
@@ -433,12 +433,12 @@ if ( $tab == 1 ) {
     if ( $VP_OPERATIONNEL < 0 ) {
         if ( $MA_UPDATE_DATE <> "" )
             echo "<tr> 
-                  <td align=right><i>Modifié le: </i></td> 
+                  <td align=right><i>ModifiÃ© le: </i></td> 
                   <td align=left> ".$MA_UPDATE_DATE."</td> 
                   </tr>"; 
            if ( $MA_UPDATE_BY <> "") 
            echo "<tr> 
-                  <td align=right><i>Modifié par: </i></td> 
+                  <td align=right><i>ModifiÃ© par: </i></td> 
                   <td align=left> 
                                 <a href=upd_personnel.php?pompier=$MA_UPDATE_BY > 
                                 ".ucfirst(get_prenom($MA_UPDATE_BY))." ".strtoupper(get_nom($MA_UPDATE_BY))."</a></td> 
@@ -446,24 +446,24 @@ if ( $tab == 1 ) {
     }
 
     //=====================================================================
-    // ligne numéro de série
+    // ligne numÃ©ro de sÃ©rie
     //=====================================================================
 
     echo "<p><tr>
-                <td>Numéro de série</td>
+                <td>NumÃ©ro de sÃ©rie</td>
                 <td align=left height=25><input type='text' name='MA_NUMERO_SERIE' class='form-control form-control-sm' size='20' value=\"$MA_NUMERO_SERIE\" $disabled>";
     echo " </td>
           </tr>";
 
     //=====================================================================
-    // ligne année
+    // ligne annÃ©e
     //=====================================================================
 
     $curyear=date("Y");
     $year=$curyear - 30; 
     $found=false;
     echo "<tr>
-                <td>Année</td>
+                <td>AnnÃ©e</td>
                 <td align=left>
                 <select class='form-control select-control' name='MA_ANNEE' class='form-control form-control-sm' data-style='btn-default' $disabled>";
     if ( $MA_ANNEE == '' ) $selected = 'selected';
@@ -493,7 +493,7 @@ if ( $tab == 1 ) {
           </tr>";
 
     //=====================================================================
-    // affecté à 
+    // affectÃ© Ã  
     //=====================================================================
 
     $query2="select p.P_ID, p.P_PRENOM, p.P_NOM , s.S_CODE
@@ -506,7 +506,7 @@ if ( $tab == 1 ) {
     $result2=mysqli_query($dbc,$query2);
 
     echo "<tr>
-                <td>Affecté à ".$warning."</td>
+                <td>AffectÃ© Ã  ".$warning."</td>
                 <td align=left>";
     echo "<select id='affected_to' name='affected_to' $disabled class='form-control select-control' data-style='btn-default'>
                <option value='0' selected >--personne--</option>\n";
@@ -524,14 +524,14 @@ if ( $tab == 1 ) {
     echo "</td></tr>";
 
     //=====================================================================
-    // dans un véhicule / dans un lot de matériel
+    // dans un vÃ©hicule / dans un lot de matÃ©riel
     //=====================================================================
 
     echo "<tr>
-                <td>Dans un véhicule / lot matériel</td>
+                <td>Dans un vÃ©hicule / lot matÃ©riel</td>
                 <td align=left>";
        echo "<select id='vid' name='vid' $disabled class='select-control form-control' data-style='btn-default'
-             title=\"Attention un lot de matériel ne peut pas être rattaché à un autre lot de matériel\">
+             title=\"Attention un lot de matÃ©riel ne peut pas Ãªtre rattachÃ© Ã  un autre lot de matÃ©riel\">
                <option value='0' selected >--non--</option>\n";
 
         $query2="select v.V_ID, v.TV_CODE, v.V_MODELE, v.V_INDICATIF, v.V_IMMATRICULATION, s.S_CODE
@@ -544,7 +544,7 @@ if ( $tab == 1 ) {
         $result2=mysqli_query($dbc,$query2);
             
         
-        echo "<OPTGROUP class='categorie' label='Dans un véhicule'>";
+        echo "<OPTGROUP class='categorie' label='Dans un vÃ©hicule'>";
         while ($row2=@mysqli_fetch_array($result2)) {
             $_V_ID=$row2["V_ID"];
             $TV_CODE=$row2["TV_CODE"];
@@ -558,7 +558,7 @@ if ( $tab == 1 ) {
             echo "<option class='type' value='V".$_V_ID."' $selected>".$TV_CODE." ".$V_MODELE." ".$V_INDICATIF.$cmt."</option>\n";
         }
        
-        // choix lot matériel (parent)
+        // choix lot matÃ©riel (parent)
         $query3="select m.MA_ID, m.MA_MODELE, tm.TM_CODE, m.MA_NUMERO_SERIE, s.S_CODE
              from materiel m, type_materiel tm, section s
                 where s.S_ID= m.S_ID
@@ -572,7 +572,7 @@ if ( $tab == 1 ) {
         $result3=mysqli_query($dbc,$query3);
        
         if ( $TM_LOT == 0 ) {
-            echo "<OPTGROUP class='categorie' label='Dans un lot de matériel'>";
+            echo "<OPTGROUP class='categorie' label='Dans un lot de matÃ©riel'>";
             while ($row3=@mysqli_fetch_array($result3)) {
                 $_MA_ID=$row3["MA_ID"];
                 $_TM_CODE=$row3["TM_CODE"];
@@ -593,7 +593,7 @@ if ( $tab == 1 ) {
     //=====================================================================
 
     echo "<tr>
-                <td>N°d'inventaire</td>
+                <td>NÂ°d'inventaire</td>
                 <td align=left><input type='text' name='MA_INVENTAIRE' size='25' class='form-control form-control-sm' value='$MA_INVENTAIRE' onchange='checkNumber2(this,$MA_INVENTAIRE)' $disabled>";
     echo " </td>
           </tr>";
@@ -609,7 +609,7 @@ if ( $tab == 1 ) {
           </tr>";
           
     //=====================================================================
-    // dates de prochaine révision ou péremption
+    // dates de prochaine rÃ©vision ou pÃ©remption
     //=====================================================================
 
     echo "<input type='hidden' name='dc0' value='".getnow()."'>";
@@ -618,7 +618,7 @@ if ( $tab == 1 ) {
     if ( my_date_diff(getnow(),$MA_REV_DATE) < 0 ) $revision=$orange;
 
     if ( $TM_USAGE == 'Habillement' ) $t2="Date limite";
-    else $t2="Prochaine révision ou péremption";
+    else $t2="Prochaine rÃ©vision ou pÃ©remption";
     
     // date
     echo "<tr>
@@ -643,7 +643,7 @@ if ( $tab == 1 ) {
         echo "<tr>
                 <td><label for='MA_EXTERNE'>$cisname</label></td>
                 <td align=left>
-                <label for='MA_EXTERNE'>Mis à disposition</label>
+                <label for='MA_EXTERNE'>Mis Ã  disposition</label>
                 <label class='switch'>
                     <input type='checkbox' name='MA_EXTERNE' id='MA_EXTERNE' value='1' $checked $disabled2>
                     <span class='slider round'></span>               
@@ -654,7 +654,7 @@ if ( $tab == 1 ) {
     echo "</table></div></div>";
     echo "<p>";
     if ( check_rights($id, 19, "$S_ID") or ($MA_ADDED <> '' and $MA_HOURS < 24) ) {
-        if ( $MA_ADDED <> '' and $MA_HOURS < 24 ) $t="Matériel ajouté il y moins de 24 heures, peut être supprimé";
+        if ( $MA_ADDED <> '' and $MA_HOURS < 24 ) $t="MatÃ©riel ajoutÃ© il y moins de 24 heures, peut Ãªtre supprimÃ©";
         else $t='';
         echo "<input type='hidden' name='TM_CODE' value='$TM_CODE'>";
         echo "<input type='hidden' name='groupe' value='$S_ID'>";
@@ -665,7 +665,7 @@ if ( $tab == 1 ) {
     if ( $disabled == "") {
         echo " <button type='submit' class='btn btn-success' name='operation' value='update'>Sauvegarder</button>";
         
-        echo " <input type=button class='btn btn-primary' value='Dupliquer' title='Dupliquer ce matériel'
+        echo " <input type=button class='btn btn-primary' value='Dupliquer' title='Dupliquer ce matÃ©riel'
         onclick='bouton_redirect(\"ins_materiel.php?from=".$from."&like=".$MA_ID."\");'> ";
     }
     
@@ -690,7 +690,7 @@ if ( $tab == 1 ) {
 }
 
 //=====================================================================
-// documents attachés
+// documents attachÃ©s
 //=====================================================================
 
 if ( $tab == 2 ) {
@@ -716,9 +716,9 @@ if ( $tab == 2 ) {
             echo "<div class='table-responsive'><div class='col-sm-12'><table class='newTableAll' cellspacing=0 border=0 >
             <tr class='pad1'>
             <td align=left><a href='upd_materiel.php?tab=2&mid=".$MA_ID."&order=extension' title='trier par extension'>ext</a></td>
-            <td align=left><a href='upd_materiel.php?tab=2&mid=".$MA_ID."&order=file' title='trier par nom'>Documents du matériel</a></td>
+            <td align=left><a href='upd_materiel.php?tab=2&mid=".$MA_ID."&order=file' title='trier par nom'>Documents du matÃ©riel</a></td>
             <td align=center><a href='upd_materiel.php?tab=2&mid=".$MA_ID."&order=author' title='trier par auteur'>Auteur</a></td>
-            <td align=center><a href='upd_materiel.php?tab=2&mid=".$MA_ID."&order=date' title='trier par date décroissantes'>Date</a></td>
+            <td align=center><a href='upd_materiel.php?tab=2&mid=".$MA_ID."&order=date' title='trier par date dÃ©croissantes'>Date</a></td>
             <td colspan=2 style='width:1%'></td>
             </tr>";
             
@@ -844,15 +844,15 @@ if ( $tab == 2 ) {
             }
         }
         else
-            echo "<small>Le répertoire contenant les fichiers pour ce matériel n'est pas trouvé sur ce serveur</small>";
+            echo "<small>Le rÃ©pertoire contenant les fichiers pour ce matÃ©riel n'est pas trouvÃ© sur ce serveur</small>";
         echo "</table></div></div>";
     }
     else 
-        echo "<p><small><i>Aucun document pour ce matériel</i></small>";
+        echo "<p><small><i>Aucun document pour ce matÃ©riel</i></small>";
 }
 
 //=====================================================================
-// matériel inclus
+// matÃ©riel inclus
 //=====================================================================
 
 if ( $TM_LOT==1 and $tab == 3 ) {
@@ -861,7 +861,7 @@ if ( $TM_LOT==1 and $tab == 3 ) {
         exit;
     }
     echo "<div class='dropdown-right' align=right>";
-    echo " <button class='btn btn-default' title='Exporter la liste du matériel inclus dans un fichier Excel' 
+    echo " <button class='btn btn-default' title='Exporter la liste du matÃ©riel inclus dans un fichier Excel' 
         onclick=\"window.open('materiel_xls.php?mid=".$MA_ID."')\"  style='color:green;'>
         <i class='far fa-file-excel fa-lg' id='StartExcel' style='color:green;'></i>
     </button>";
@@ -874,7 +874,7 @@ if ( $TM_LOT==1 and $tab == 3 ) {
         
         echo " <a class='dropdown-item' href='#' 
                 onclick=\"self.location.href='$url&what=materiel';\">
-                Matériel</a>";   
+                MatÃ©riel</a>";   
         if ( $consommables )
             echo " <a class='dropdown-item' href='#'
                 onclick=\"self.location.href='$url&what=consommable';\">
@@ -891,7 +891,7 @@ if ( $TM_LOT==1 and $tab == 3 ) {
         echo "<table class='newTableAll' cellspacing=0 border=0>";
         if ( $disabled == "" ) $colspan=3;
         else $colspan=2;
-        echo "<tr><td colspan=".$colspan.">Matériel ou Consommables inclus dans ce lot </td></tr>";
+        echo "<tr><td colspan=".$colspan.">MatÃ©riel ou Consommables inclus dans ce lot </td></tr>";
         while ($row2=@mysqli_fetch_array($result2)) {
             $_TM_CODE=$row2["TM_CODE"];
             $_TM_USAGE=$row2["TM_USAGE"];
@@ -914,7 +914,7 @@ if ( $TM_LOT==1 and $tab == 3 ) {
             else if ( $_VP_OPERATIONNEL == 1) $mytxtcolor=$red;
             else if ( $_NB_DAYS < 0 ) {
                   $mytxtcolor=$orange;
-                  $_VP_LIBELLE = "date dépassée";
+                  $_VP_LIBELLE = "date dÃ©passÃ©e";
             }
             else if ( $_VP_OPERATIONNEL == 2) {
                 $mytxtcolor=$orange;
@@ -933,7 +933,7 @@ if ( $TM_LOT==1 and $tab == 3 ) {
                 <span color=".$mytxtcolor.">".$_VP_LIBELLE."</span></td>"; //<i class='fa fa-".$_PICTURE." fa-lg' title='".$_TM_USAGE."' ></i>
             if ($disabled == "" ) {
                 echo " <td width=10><a class='btn btn-default btn-action' href=upd_materiel.php?mid=".$MA_ID."&del=".$_MA_ID.">
-                        <i class='far fa-trash-alt' title='Enlever ce matériel du lot'></i></a></td>";
+                        <i class='far fa-trash-alt' title='Enlever ce matÃ©riel du lot'></i></a></td>";
             }
             echo " </tr>";
         }
@@ -945,7 +945,7 @@ if ( $TM_LOT==1 and $tab == 3 ) {
                 if ( my_date_diff(getnow(),$C_DATE_PEREMPTION) < 0 ) $class='red12';
                 else if ( my_date_diff(getnow(),$C_DATE_PEREMPTION) < 30 ) $class='orange12';
                 else $class='green12';
-                $C_DATE_PEREMPTION = "périmé le ".$C_DATE_PEREMPTION;
+                $C_DATE_PEREMPTION = "pÃ©rimÃ© le ".$C_DATE_PEREMPTION;
             }
             if ( $TCO_CODE == 'PE' ) $conditionnement =  $TUM_DESCRIPTION."s";
             else if ( $TUM_CODE <> 'un' or  $TC_QUANTITE_PAR_UNITE <> 1 ) $conditionnement = $TCO_DESCRIPTION." ".$TC_QUANTITE_PAR_UNITE." ".$TUM_DESCRIPTION;
@@ -971,7 +971,7 @@ if ( $TM_LOT==1 and $tab == 3 ) {
         echo "</table><p>";
     }
     else 
-        echo "<p><small><i>Aucun élément intégré dans ce lot</i></small><p>";
+        echo "<p><small><i>Aucun Ã©lÃ©ment intÃ©grÃ© dans ce lot</i></small><p>";
 }
 echo "</div>";
 writefoot();

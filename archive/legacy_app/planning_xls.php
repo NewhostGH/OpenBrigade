@@ -59,7 +59,7 @@ $nbjoursdumois=nbjoursdumois($month, $year);
 
 // Add the columns heads
 $columns=array('A','B','C');
-$columns_title=array("Nom","Prénom");
+$columns_title=array("Nom","PrÃ©nom");
 $last='C';
 if ( $grades ) {
     array_push($columns_title, 'Grade');

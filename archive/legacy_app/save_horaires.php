@@ -183,7 +183,7 @@ $nom=strtoupper($row["P_NOM"]);
 if ( $from <> 'export' ) $from='save';
 
 write_msgbox("OK", $star_pic, "Les horaires de ".$prenom." ".$nom." <br>pour la semaine ".$week." de ".$year." 
-            ont été enregistrées <b>".convert_hours_minutes($duree_totale)."</b>
+            ont Ã©tÃ© enregistrÃ©es <b>".convert_hours_minutes($duree_totale)."</b>
             <p align=center><input type='button' class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'>",30,0);
 
 ?>

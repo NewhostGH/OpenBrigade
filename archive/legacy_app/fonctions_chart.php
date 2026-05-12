@@ -25,7 +25,7 @@
 $html_colors1 = array('#F7D4DC','#E4C2AF','#E0D4A3','#DBE2A7','#BCE2A7','#A3E0C1','#A3D9E0','#A3CBE0','#A3B0E0','#D3A3E0','#E0A3C3','#D279A0','#bb99ff','#ffffcc','#80aaff','#00ccff','#70dbdb','#33ffd6','#66ff66','#ff8080','#ecb3ff','#e0e0d1','#c6c6ec','#99ffff');
 $html_colors2 = array('#EA8AA0','#cc8b66','#ccb866','#b0bf40','#8acc66','#53c68c','#40b0bf','#4093bf','#536cc6','#a440bf','#c6538e','#ac396b','#661aff','#e6e600','#3377ff','#00a3cc','#2eb8b8','#00cca3','#00cc00','#ff3333','#d24dff','#adad85','#6666cc','#00e6e6');
 $colors = array_merge($html_colors2, $html_colors1);
-$months = array("Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre","Octobre", "Novembre", "Décembre");
+$months = array("Janvier", "FÃ©vrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "AoÃ»t", "Septembre","Octobre", "Novembre", "DÃ©cembre");
 $snow=0;
 
 function implode_array($array,$quotes=false) {
@@ -266,7 +266,7 @@ function repo_connexion_heure_journee($section,$subsections) {
         $labels[] = $row[0]."h";
         $data[] = $row[1];
     }
-    $title="Connexions par heure de la journée (sur ".$days_audit." jours)";
+    $title="Connexions par heure de la journÃ©e (sur ".$days_audit." jours)";
     print_graphic($data,$labels,'bar',$title,$maxwidth=75,$one_color_only=1);
 }
 
@@ -334,7 +334,7 @@ function repo_connexion_du_jour($section,$subsections,$type='connexion') {
         $labels[] = $row[0].'h';
         $data[] = $row[1];
     }
-    $title= ucfirst("connexions de la journée du ".date('d-m-Y'));
+    $title= ucfirst("connexions de la journÃ©e du ".date('d-m-Y'));
     print_graphic($data,$labels,'bar',$title,$maxwidth=75,$one_color_only=1);
 }
 //=====================================================================
@@ -363,7 +363,7 @@ function repo_browser($section,$subsections,$mode) {
         order by count(1) desc";
     }
     else {
-        $title="Systèmes d'exploitation";
+        $title="SystÃ¨mes d'exploitation";
         $query="SELECT SUBSTRING_INDEX( A_OS, ' ', 1), count(1) 
         from audit, pompier
         where pompier.P_ID = audit.P_ID
@@ -424,7 +424,7 @@ function repo_connexions($section) {
 }
 
 //=====================================================================
-// nombre d'événements
+// nombre d'Ã©vÃ©nements
 //=====================================================================
 
 function repo_nb_events($section,$dtdb,$dtfn,$category) {
@@ -446,8 +446,8 @@ function repo_nb_events($section,$dtdb,$dtfn,$category) {
     else {
         $condition2 = " and te.CEV_CODE = '".$category."'";
         $col2="te.TE_LIBELLE";
-        if ( $category == 'C_SEC' ) $title="Opérations secours";
-        else $title="Autres activités opé.";
+        if ( $category == 'C_SEC' ) $title="OpÃ©rations secours";
+        else $title="Autres activitÃ©s opÃ©.";
     }
 
     // section
@@ -528,13 +528,13 @@ function repo_participations_par_jour($section,$subsections,$dtdb,$dtfn,$type='A
         $dt = $row[0];
         $data[$dt] = $row[1];
     }
-    $title="Participations des bénévoles ".get_label_type_evenement($type);
+    $title="Participations des bÃ©nÃ©voles ".get_label_type_evenement($type);
     $label="Participations";
     print_line_chart($data,$title,$label);
 }
 
 //=====================================================================
-// événements par jour
+// Ã©vÃ©nements par jour
 //=====================================================================
 
 function repo_evenements_par_jour($section,$subsections,$dtdb,$dtfn,$type='ALL') {
@@ -547,7 +547,7 @@ function repo_evenements_par_jour($section,$subsections,$dtdb,$dtfn,$type='ALL')
     $tmp=explode ( "-",$dtdb); $month1=$tmp[1]; $day1=$tmp[0]; $year1=$tmp[2]; 
     $tmp=explode ( "-",$dtfn); $month2=$tmp[1]; $day2=$tmp[0]; $year2=$tmp[2];
 
-    $query = "select eh.eh_date_debut Date, count(1) 'Nombre événements'
+    $query = "select eh.eh_date_debut Date, count(1) 'Nombre Ã©vÃ©nements'
         from evenement e, evenement_horaire eh 
         where e.e_code = eh.e_code 
         and eh.EH_DATE_DEBUT <= '$year2-$month2-$day2' 
@@ -575,13 +575,13 @@ function repo_evenements_par_jour($section,$subsections,$dtdb,$dtfn,$type='ALL')
         $dt = $row[0];
         $data[$dt] = $row[1];
     }
-    $title="Nombre événements ".get_label_type_evenement($type);
-    $label="Evénements";
+    $title="Nombre Ã©vÃ©nements ".get_label_type_evenement($type);
+    $label="EvÃ©nements";
     print_line_chart($data,$title,$label);
 }
 
 //=====================================================================
-// stats d'événements
+// stats d'Ã©vÃ©nements
 //=====================================================================
 
 function repo_stats($section,$dtdb,$dtfn,$category) {
@@ -599,8 +599,8 @@ function repo_stats($section,$dtdb,$dtfn,$category) {
     }
     else {
         $type_evenement="select TE_CODE from type_evenement where CEV_CODE = '".$category."'";
-        if ( $category == 'C_SEC' ) $title="Opérations secours";
-        else $title="Autres activités opé.";
+        if ( $category == 'C_SEC' ) $title="OpÃ©rations secours";
+        else $title="Autres activitÃ©s opÃ©.";
     }
 
     if ( $section == 0 ) $condition = "";
@@ -671,7 +671,7 @@ function repo_stats($section,$dtdb,$dtfn,$category) {
 }
 
 //=====================================================================
-// événements par type
+// Ã©vÃ©nements par type
 //=====================================================================
 
 function repo_events_type($section,$subsections,$type,$year) {
@@ -699,14 +699,14 @@ function repo_events_type($section,$subsections,$type,$year) {
         $labels[] = $row[0]." - ".$row[1];
         $data[] = $row[2];
     }
-    $title="Evénements par type en $year";
+    $title="EvÃ©nements par type en $year";
     print_graphic($data,$labels,'pie',$title);
 }
 
 
 
 //=====================================================================
-// événements par section
+// Ã©vÃ©nements par section
 //=====================================================================
 
 function repo_events_section($section,$type,$year,$day,$competence) {
@@ -734,7 +734,7 @@ function repo_events_section($section,$type,$year,$day,$competence) {
         $title = $row1[1];
     }
     if ( $competence <> 'ALL' ) $title = "Formations ".$competence;
-    else $title = 'Evénements';
+    else $title = 'EvÃ©nements';
 
     // section
     $query ="select S_DESCRIPTION, S_ID from section where S_ID=".$section;
@@ -795,7 +795,7 @@ function repo_events_section($section,$type,$year,$day,$competence) {
 
 
 //=====================================================================
-// événements par section
+// Ã©vÃ©nements par section
 //=====================================================================
 
 function repo_events_by_month($section,$subsections,$type,$year,$canceled) {
@@ -852,8 +852,8 @@ function repo_events_by_month($section,$subsections,$type,$year,$canceled) {
     $labels = $months;
 
     # Set the y axis title
-    if ($canceled == 1 ) $title = "Nombre d'événements annulés";
-    else $title ="Nombre d'événements (non annulés)";
+    if ($canceled == 1 ) $title = "Nombre d'Ã©vÃ©nements annulÃ©s";
+    else $title ="Nombre d'Ã©vÃ©nements (non annulÃ©s)";
     
     print_stacked_bar($labels,$datasets,$title);
 }
@@ -914,7 +914,7 @@ function repo_specific_event($section,$subsections,$search='attentat',$renfort=1
         $data2[$i]= mysqli_num_rows($result);
     }
     $dataset0="{
-                label: \"Nombre d'événements créés pour ".$search." (renforts compris)\",
+                label: \"Nombre d'Ã©vÃ©nements crÃ©Ã©s pour ".$search." (renforts compris)\",
                 backgroundColor: '".$html_colors1[5]."',
                 borderColor: '".$html_colors2[5]."',
                 stack: 'Stack 0',
@@ -928,7 +928,7 @@ function repo_specific_event($section,$subsections,$search='attentat',$renfort=1
                 data: ".implode_array($data1)."
             }";
     $dataset2="{
-                label: \"Nombre de départements différents engagés pour ".$search."\",
+                label: \"Nombre de dÃ©partements diffÃ©rents engagÃ©s pour ".$search."\",
                 backgroundColor: '".$html_colors1[15]."',
                 borderColor: '".$html_colors2[15]."',
                 stack: 'Stack 2',
@@ -961,7 +961,7 @@ function repo_cancelled($section,$subsections,$year,$type) {
     if ( $type <> 'ALL' ) $query .= " and TE_CODE='".$type."'";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_array($result);
-    $labels[] = "Annulés";
+    $labels[] = "AnnulÃ©s";
     $data[] = $row[0];
 
     $query=" select count(1) as NB 
@@ -973,10 +973,10 @@ function repo_cancelled($section,$subsections,$year,$type) {
     if ( $type <> 'ALL' ) $query .= " and TE_CODE='".$type."'";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_array($result);
-    $labels[] = "Réalisés ou planifiés";
+    $labels[] = "RÃ©alisÃ©s ou planifiÃ©s";
     $data[] = $row[0];
 
-    if ( $type == 'ALL' ) $title="Evénements";
+    if ( $type == 'ALL' ) $title="EvÃ©nements";
     else {
         $query="select TE_LIBELLE from type_evenement where TE_CODE='".$type."'";
         $result=mysqli_query($dbc,$query);
@@ -997,9 +997,9 @@ function repo_sexe($section,$subsections) {
     if ( $subsections == 1 ) $list = get_family("$section");
     else $list = $section;
 
-    if ( $syndicate == 1 ) $t='des adhérents';
+    if ( $syndicate == 1 ) $t='des adhÃ©rents';
     else $t ='du personnel';
-    $title = "Répartition ".$t." par sexe";
+    $title = "RÃ©partition ".$t." par sexe";
     $query=" select count(1) as NB 
              from pompier p
              where p.P_OLD_MEMBER = 0
@@ -1039,12 +1039,12 @@ function repo_grade($section,$subsections) {
     else $list = $section;
 
     if ( $syndicate == 1 ) 
-        $t='des adhérents';
+        $t='des adhÃ©rents';
     else
         $t ='du personnel';
 
     $maxwidth=75;
-    $title = "Répartition ".$t." par grade";
+    $title = "RÃ©partition ".$t." par grade";
     $query="select g.G_DESCRIPTION, count(1) as NB 
             from pompier p, grade g
             where p.P_OLD_MEMBER = 0
@@ -1141,7 +1141,7 @@ function repo_formations($section,$subsections,$year,$type,$competence='ALL',$tf
         $row1 = mysqli_fetch_array($result1);
         $title=ucfirst($row1[0]);
     }
-    $title .= "pour l'année ".$year;
+    $title .= "pour l'annÃ©e ".$year;
 
     if ($competence <> 'ALL') $title .= " ".$competence;
     
@@ -1215,9 +1215,9 @@ function repo_flux_members($section,$subsections,$year,$period='month',$cat_pers
     if ( $subsections == 1 ) $list = get_family("$section");
     else $list = $section;
     
-    if ( $cat_personnel == 'interne' and $syndicate == 1 ) $title = "Evolution du nombre d'adhérents";
+    if ( $cat_personnel == 'interne' and $syndicate == 1 ) $title = "Evolution du nombre d'adhÃ©rents";
     else if ( $cat_personnel == 'interne' ) $title = 'Flux de personnel';
-    else $title = 'Personnel externe ajouté';
+    else $title = 'Personnel externe ajoutÃ©';
 
     if ( $period == 'year' ) $title .= " (annuel)";
     else $title .=" (par mois) en ".$year;
@@ -1266,7 +1266,7 @@ function repo_flux_members($section,$subsections,$year,$period='month',$cat_pers
             }
         }
         if ( $syndicate == 0 ) $name = 'Nouveaux';
-        else $name = 'Adhésions';
+        else $name = 'AdhÃ©sions';
         $datasets ="{
             label: \"".$name."\",
             backgroundColor: '".$html_colors1[5]."',
@@ -1369,7 +1369,7 @@ function repo_nombre_personnes_par_mois ($section,$subsections,$year) {
     if ( $subsections == 1 ) $list = get_family("$section");
     else $list = $section;
     
-    if ( $syndicate ) $label="adhérents";
+    if ( $syndicate ) $label="adhÃ©rents";
     else $label="personnes";
     
     $title = "Nombre total ".$label." actifs (le 1er jour du mois ) en ".$year;
@@ -1390,7 +1390,7 @@ function repo_nombre_personnes_par_mois ($section,$subsections,$year) {
 }
 
 //=====================================================================
-// personnel par année
+// personnel par annÃ©e
 //=====================================================================
 
 function repo_members_year($section,$subsections,$cat_personnel='INT') {
@@ -1418,51 +1418,51 @@ function repo_members_year($section,$subsections,$cat_personnel='INT') {
         $data[] = $row[0];
     }
 
-    if ( $cat_personnel=='SAL') $t="Nombre de salariés";
+    if ( $cat_personnel=='SAL') $t="Nombre de salariÃ©s";
     else if ( $cat_personnel=='EXT')  $t="Nombre d'externes";
-    else if ( $syndicate == 1) $t="Nombre d'adhérents";
-    else if ( $assoc == 1 ) $t="Nombre de bénévoles";
+    else if ( $syndicate == 1) $t="Nombre d'adhÃ©rents";
+    else if ( $assoc == 1 ) $t="Nombre de bÃ©nÃ©voles";
     else if ( $army == 1 ) $t="Nombre de personnels";
     else $t="Nombre de Sapeurs pompiers";
-    $title = $t." au 31 décembre";
+    $title = $t." au 31 dÃ©cembre";
     
     print_graphic($data,$labels,'bar',$title);
 }
 
 //=====================================================================
-// ancienneté du personnel
+// anciennetÃ© du personnel
 //=====================================================================
 
 function repo_anciennete($section,$subsections) {
     global $dbc, $colors;
     if ( $subsections == 1 ) $list = get_family("$section");
     else $list = $section;
-    $query=" select YEAR(NOW()) - YEAR(P_DATE_ENGAGEMENT) as Ancienneté, count(1) as NB from pompier
+    $query=" select YEAR(NOW()) - YEAR(P_DATE_ENGAGEMENT) as AnciennetÃ©, count(1) as NB from pompier
             where P_DATE_ENGAGEMENT is not null and P_FIN is null
             and P_SECTION in (".$list.")
             and P_STATUT <> 'EXT'
             and P_OLD_MEMBER = 0
             and ( YEAR(NOW()) - YEAR(P_DATE_ENGAGEMENT) <= 30)
-            group by Ancienneté
-            order by Ancienneté";
+            group by AnciennetÃ©
+            order by AnciennetÃ©";
     $result = mysqli_query($dbc,$query);
     $data=array();
     $labels=array();
     while ($row = mysqli_fetch_array($result)) {
-        $years = intval($row["Ancienneté"]);
+        $years = intval($row["AnciennetÃ©"]);
         if ( $years == 0 ) $label = "moins de 1 an";
         else if ( $years == 1 )  $label = "un an";
         else $label = $years. " ans";
         $labels[] = $label;
         $data[] = $row["NB"];
     }
-    $title ="Ancienneté";
+    $title ="AnciennetÃ©";
     print_graphic($data,$labels,'horizontalBar',$title);
 
 }
 
 //=====================================================================
-// durée moyenne d'engagement
+// durÃ©e moyenne d'engagement
 //=====================================================================
 
 function repo_duree_engagement($section,$subsections) {
@@ -1487,7 +1487,7 @@ function repo_duree_engagement($section,$subsections) {
     $data[] = round($row[0],1);
     $labels[] = "Anciens (".$row[1].")";
     
-    $title ="Durée moyenne engagement (années)";
+    $title ="DurÃ©e moyenne engagement (annÃ©es)";
     
     print_graphic($data,$labels,'bar',$title);
 }
@@ -1539,7 +1539,7 @@ function repo_duree_engagement_par_age($section,$subsections) {
         $labels[] = $lower[$i]."-".$upper[$i]." ans";
     }
     
-    $title ="Durée moyenne engagement par tranche d'âge (années d'engagement)";
+    $title ="DurÃ©e moyenne engagement par tranche d'Ã¢ge (annÃ©es d'engagement)";
     print_graphic($data,$labels,'bar',$title);
 }
 
@@ -1566,12 +1566,12 @@ function repo_dps_type($section,$subsections,$year) {
              order by NB desc";
     $result = mysqli_query($dbc,$query);
     while ($row = mysqli_fetch_array($result)) {
-         if ( $row[0] == '-' ) $labels[] = "Non défini";
+         if ( $row[0] == '-' ) $labels[] = "Non dÃ©fini";
          else $labels[] = $row[0];
          $data[] = $row[1];
     }
 
-    print_graphic($data,$labels,'pie',"DPS par catégorie en ".$year);
+    print_graphic($data,$labels,'pie',"DPS par catÃ©gorie en ".$year);
 }
 
 
@@ -1685,7 +1685,7 @@ function repo_age_vehicules($section,$subsections) {
         $data[$i] = $row[0];
     }
 
-    $title = "Nombre de véhicules par age";
+    $title = "Nombre de vÃ©hicules par age";
     print_graphic($data,$labels,'bar',$title);
 }
 
@@ -1780,7 +1780,7 @@ function repo_competences($section,$subsections,$equipe=1) {
         }
     }
 
-    $title = "Nombre de personnes qualifiées par compétence";
+    $title = "Nombre de personnes qualifiÃ©es par compÃ©tence";
     print_graphic($data,$labels,'bar',$title);
 }
 
@@ -1872,7 +1872,7 @@ function repo_dps_type_month($section,$subsections,$year) {
     $i=0; $datasets='';
     while ($row1 = mysqli_fetch_array($result1)) {
         $type = $row1[0];
-        if ( $type == 1 ) $name="Non défini";
+        if ( $type == 1 ) $name="Non dÃ©fini";
         else $name = $row1[1];
         $number=array();
         // month loop
@@ -1908,7 +1908,7 @@ function repo_dps_type_month($section,$subsections,$year) {
 
 
 //=====================================================================
-// Personnel par catégorie
+// Personnel par catÃ©gorie
 //=====================================================================
 
 function repo_type_members($section,$subsections) {
@@ -1936,11 +1936,11 @@ function repo_type_members($section,$subsections) {
              and P_SECTION in (".$list.")";
     $result = mysqli_query($dbc,$query);
     $row = mysqli_fetch_array($result);
-    if ( $syndicate == 1 ) $labels[] = "Radiés";
+    if ( $syndicate == 1 ) $labels[] = "RadiÃ©s";
     else $labels[] = "Anciens membres";
     $data[] = $row[0];
 
-    $title = "Personnel par catégorie";
+    $title = "Personnel par catÃ©gorie";
     print_graphic($data,$labels,'bar',$title);
 }
 
@@ -1965,7 +1965,7 @@ function repo_perso_dps($section,$subsections,$year) {
     $nbev = $row[0];
 
     if ( $nbsub > 0 ) {
-        // cas département ou plus gros
+        // cas dÃ©partement ou plus gros
         $query="select S_ID, S_CODE
             from section 
             where S_PARENT='".$section."'
@@ -2033,7 +2033,7 @@ function repo_perso_dps($section,$subsections,$year) {
         $data[] = $row2[0];
     }
     
-    $title = "Origine des participants aux DPS (".$nbev." organisé(s) par ".get_section_name("$section")." en ".$year.")";
+    $title = "Origine des participants aux DPS (".$nbev." organisÃ©(s) par ".get_section_name("$section")." en ".$year.")";
     print_graphic($data,$labels,'pie',$title);
 }
 
@@ -2050,7 +2050,7 @@ function repo_taux_participation($section,$type,$year) {
         $result1 = mysqli_query($dbc,$query1);
         $row1 = mysqli_fetch_array($result1);
         $type = $row1[0];
-        $name=" aux événements de type \"".$row1[1]."\"";
+        $name=" aux Ã©vÃ©nements de type \"".$row1[1]."\"";
     }
     else $name='';
 
@@ -2243,7 +2243,7 @@ function repo_formation_par_public($section,$subsections) {
                 data: ".implode_array($number2)."
             },";
     $datasets .="{
-                label: \"Ecoles, Collèges, Lycées\",
+                label: \"Ecoles, CollÃ¨ges, LycÃ©es\",
                 backgroundColor: '".$html_colors1[15]."',
                 borderColor: '".$html_colors2[15]."',
                 stack: 'Stack 3',
@@ -2340,7 +2340,7 @@ function repo_personnel_formation($section,$subsections,$year,$type='FOR') {
 
 
 //=====================================================================
-// Diplomes de secourisme délivrés par an
+// Diplomes de secourisme dÃ©livrÃ©s par an
 //=====================================================================
 
 function repo_diplomes($section,$subsections) {
@@ -2452,7 +2452,7 @@ function repo_diplomes($section,$subsections) {
         data: ".implode_array($number)."
     },";
 
-    $title = "Diplômes de secourisme délivrés par an";
+    $title = "DiplÃ´mes de secourisme dÃ©livrÃ©s par an";
     print_stacked_bar($labels,$datasets,$title);
 }
 
@@ -2551,8 +2551,8 @@ function repo_age_stagiaires($section,$subsections,$year,$competence) {
     $total = intval($cntF) + intval($cntM);
     $tf = $cntF." Femmes ( moyenne ".$avgF." ans )";
     $th = $cntM." Hommes ( moyenne ".$avgM." ans )";
-    $to = "Nombre de stagiaires comptabilisés: ".$total;
-    $title = "Pyramide des âges des stagiaires";
+    $to = "Nombre de stagiaires comptabilisÃ©s: ".$total;
+    $title = "Pyramide des Ã¢ges des stagiaires";
     
     $datasets ="{
                 label: 'Femmes',
@@ -2639,8 +2639,8 @@ function repo_pyramide_ages($section,$subsections) {
     $total = intval($cntF) + intval($cntM);
     $tf = $cntF." Femmes ( moyenne ".$avgF." ans )";
     $th = $cntM." Hommes ( moyenne ".$avgM." ans )";
-    $to = "Nombre de personnes comptabilisés: ".$total;
-    $title = "Pyramide des âges du personnel";
+    $to = "Nombre de personnes comptabilisÃ©s: ".$total;
+    $title = "Pyramide des Ã¢ges du personnel";
     
     $datasets ="{
                 label: 'Femmes',
@@ -2744,7 +2744,7 @@ function repo_dispo_view($section,$year,$month) {
 }
 
 //=====================================================================
-// Disponibilités par personne
+// DisponibilitÃ©s par personne
 //=====================================================================
 
 function repo_dispo_homme($section,$year,$month) {
@@ -2765,7 +2765,7 @@ function repo_dispo_homme($section,$year,$month) {
     $nb=mysqli_num_rows($result);
     
     if ( $nb == 0 ) {
-        print "<p><b>Aucune personnel trouvé</b>";
+        print "<p><b>Aucune personnel trouvÃ©</b>";
         return 0;
     }
     $T=array();
@@ -2805,7 +2805,7 @@ function repo_dispo_homme($section,$year,$month) {
     }
     
     if ( count($T) == 0 ) {
-        print "<p><b>Aucune disponibilité trouvée</b>";
+        print "<p><b>Aucune disponibilitÃ© trouvÃ©e</b>";
         return 0;
     }
     
@@ -2841,10 +2841,10 @@ function repo_dispo_homme($section,$year,$month) {
         data: ".implode_array($data2)."}";
     
     $moislettres=moislettres($month);
-    $title="Disponibilités par personne ".$moislettres." ".$year;
+    $title="DisponibilitÃ©s par personne ".$moislettres." ".$year;
     global $labelX, $height;
     $height = count($P_NOM) * 20 + 120; 
-    $labelX="Nombre de disponibilités de 12h";
+    $labelX="Nombre de disponibilitÃ©s de 12h";
     
     print "<p><b>Total jours <span class='badge' style='background-color:#ffd480;color:".$mydarkcolor.";'>$allJ</span> nuits <span class='badge' style='background-color:#66a3ff;color:".$mydarkcolor.";'>$allN</span></b>";
      

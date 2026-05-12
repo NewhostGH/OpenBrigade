@@ -83,7 +83,7 @@ $query2="select CC_CODE, CC_NAME from categorie_consommable order by CC_CODE asc
 $result2=mysqli_query($dbc,$query2);
 if ( $catconso == 'ALL' ) $selected="selected ";
 else $selected ="";
-echo "<option value='ALL' $selected>Toutes les catégories</option>\n";
+echo "<option value='ALL' $selected>Toutes les catÃ©gories</option>\n";
 while ($row=@mysqli_fetch_array($result2)) {
     $CC_CODE=$row["CC_CODE"];
     $CC_NAME=$row["CC_NAME"];
@@ -113,7 +113,7 @@ if ( $number > 0 ) {
     // ===============================================
 
     echo "<tr>
-        <td width=130 ><a href=parametrage.php?tab=3&child=4&order=CC_CODE >Catégorie</a></td>
+        <td width=130 ><a href=parametrage.php?tab=3&child=4&order=CC_CODE >CatÃ©gorie</a></td>
         <td width=300 align=center><a href=parametrage.php?tab=3&child=4&order=TC_DESCRIPTION >Description</a></td>
         <td width=200 align=center><a href=parametrage.php?tab=3&child=4&order=TCO_DESCRIPTION >Conditionnement</a></td>
         <td width=200 align=center><a href=parametrage.php?tab=3&child=4&order=TC_QUANTITE_PAR_UNITE >Contenance</a></td>

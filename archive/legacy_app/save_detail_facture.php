@@ -37,7 +37,7 @@ if ( $debug ) {
     echo "</pre><p>";
 }
 
-// le chef, le cadre de l'événement ont toujours accès à cette fonctionnalité, les autres doivent avoir 29 et/ou 24
+// le chef, le cadre de l'Ã©vÃ©nement ont toujours accÃ¨s Ã  cette fonctionnalitÃ©, les autres doivent avoir 29 et/ou 24
 if ( ! check_rights($id, 29, get_section_organisatrice($evenement)) and ! is_chef_evenement($id, $evenement)) {
     check_all(29);
     check_all(24);
@@ -58,7 +58,7 @@ function redirect(evenement,type) {
 
 
 //=====================================================================
-// Sauver détail
+// Sauver dÃ©tail
 //=====================================================================
 
 

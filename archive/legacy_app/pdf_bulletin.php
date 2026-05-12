@@ -32,7 +32,7 @@ if (isset($_GET["date2"])) $date2 = $_GET["date2"];
 //else $date2 = date('d-m-Y', strtotime($date . ' +1 day'));
 else $date2 = $date;
 
-$printed_by="imprimÈ par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y ‡ H:i");
+$printed_by="imprim√© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y √† H:i");
 $title="Bulletin de Renseignement";
 
 require_once("lib/fpdf/fpdf.php");
@@ -71,7 +71,7 @@ function GoDown($returns=1, $ymax = 240) {
 
 $pdf->SetFont('Arial','B',14);
 $pdf->SetTextColor(13,53,148);
-if ( $cisname == 'Protection Civile' ) $t = "FÈdÈration Nationale de la Protection Civile";
+if ( $cisname == 'Protection Civile' ) $t = "F√©d√©ration Nationale de la Protection Civile";
 else $t = $organisation_name;
 $pdf->Text(60,20,$t);
 
@@ -81,7 +81,7 @@ $pdf->Text(60,26,"Bulletin de Renseignement ".$sname);
 
 $pdf->SetFont('Arial','B',10);
 $pdf->SetTextColor(0,0,0);
-if ( $date2 <> $date ) $pdf->Text(60,32,"Pour la pÈriode du ".$date." au ".$date2);
+if ( $date2 <> $date ) $pdf->Text(60,32,"Pour la p√©riode du ".$date." au ".$date2);
 else  $pdf->Text(60,32,"Pour le ".$date);
 
 GoDown(4);
@@ -133,11 +133,11 @@ if ( $date == $curdate and $date2 == $curdate ) {
 }
 
 //========================================================
-// ActivitÈs
+// Activit√©s
 //========================================================
 $HAVE_DPS=false;
 
-// identifier les types d'ÈvÈnements sur lesquels on peut saissir des victimes
+// identifier les types d'√©v√©nements sur lesquels on peut saissir des victimes
 $query = "select TE_CODE from type_evenement where TE_VICTIMES=1";
 $result=mysqli_query($dbc,$query);
 $A="";
@@ -151,7 +151,7 @@ $pdf->SetDrawColor(0,0,0);
 $pdf->SetFillColor(40,80,180);
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial','B',11);
-$pdf->MultiCell($largeur,$hauteur,"ActivitÈs OpÈrationnelles pour ".$sname,1,"C",true);
+$pdf->MultiCell($largeur,$hauteur,"Activit√©s Op√©rationnelles pour ".$sname,1,"C",true);
 GoDown(1);
 $pdf->SetTextColor(0,0,0);
 $pdf->SetFillColor(255);
@@ -246,7 +246,7 @@ if ( $num > 0 ) {
     $pdf->SetTextColor(0,0,0);
     $pdf->SetFillColor(255);
     $pdf->SetXY($marge_left,$y);
-    $pdf->Text($marge_left+20,$y,"Nombre de personnels engagÈs");
+    $pdf->Text($marge_left+20,$y,"Nombre de personnels engag√©s");
     $pdf->SetXY($marge_left+120 , $y - 4);
     $pdf->MultiCell(20,$hauteur,$nb_participants,1,"C",true);
     
@@ -263,7 +263,7 @@ $pdf->SetDrawColor(0,0,0);
 $pdf->SetFillColor(40,80,180);
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial','B',11);
-$pdf->MultiCell($largeur,$hauteur,"Statistiques OpÈrationnelles pour ".$sname,1,"C",true);
+$pdf->MultiCell($largeur,$hauteur,"Statistiques Op√©rationnelles pour ".$sname,1,"C",true);
 GoDown(1);
 $pdf->SetTextColor(0,0,0);
 $pdf->SetFillColor(255);
@@ -319,7 +319,7 @@ if ( $z == 0 ) {
     GoDown(1);
     $pdf->SetXY($marge_left,$y);
     $pdf->SetFont('Arial','I',10);
-    $pdf->Text($marge_left+20,$y,"Pas de statistiques enregistrÈes pour cette pÈriode. ".$z);
+    $pdf->Text($marge_left+20,$y,"Pas de statistiques enregistr√©es pour cette p√©riode. ".$z);
 }    
 else {
     for ($x=0 ; $x < $z ; $x++) {
@@ -369,7 +369,7 @@ if ( $num > 0 ) {
     $pdf->SetXY($marge_left,$y);
     $pdf->MultiCell(30,$hauteur,"Date et heure",1,"C",true);
     $pdf->SetXY($marge_left + 30,$y);
-    $pdf->MultiCell(30,$hauteur,"DÈpartement",1,"C",true);
+    $pdf->MultiCell(30,$hauteur,"D√©partement",1,"C",true);
     $pdf->SetXY($marge_left + 60,$y);
     $pdf->MultiCell(50,$hauteur,"Lieu",1,"C",true);
     $pdf->SetXY($marge_left + 110,$y);
@@ -393,7 +393,7 @@ if ( $num > 0 ) {
         $_decede = $row2["VI_DECEDE"];
         $_detresse = $row2["VI_DETRESSE_VITALE"];
         if ( $_decede == 1 ) $_nature = substr("DCD - ".$_nature,0,45);
-        else if ( $_detresse == 1 ) $_nature = substr("DÈtresse Vitale - ".$_nature,0,45);
+        else if ( $_detresse == 1 ) $_nature = substr("D√©tresse Vitale - ".$_nature,0,45);
         
         $pdf->MultiCell(30,$hauteur,$_date_heure,1,"C",true);
         $pdf->SetXY($marge_left + 30,$y);
@@ -437,13 +437,13 @@ if ( $num > 0 ) {
     $pdf->SetFillColor(40,80,180);
     $pdf->SetTextColor(255);
     $pdf->SetFont('Arial','B',11);
-    $pdf->MultiCell($largeur,$hauteur,"OpÈrations de secours importantes, ".$X." victimes ou plus.",1,"C",true);
+    $pdf->MultiCell($largeur,$hauteur,"Op√©rations de secours importantes, ".$X." victimes ou plus.",1,"C",true);
     GoDown(1);
     $pdf->SetFont('Arial','',8);
     $pdf->SetXY($marge_left,$y);
     $pdf->MultiCell(30,$hauteur,"Date et heure",1,"C",true);
     $pdf->SetXY($marge_left + 30,$y);
-    $pdf->MultiCell(30,$hauteur,"DÈpartement",1,"C",true);
+    $pdf->MultiCell(30,$hauteur,"D√©partement",1,"C",true);
     $pdf->SetXY($marge_left + 60,$y);
     $pdf->MultiCell(85,$hauteur,"Titre",1,"C",true);
     $pdf->SetXY($marge_left + 145,$y);
@@ -483,7 +483,7 @@ if ( $HAVE_DPS > 0 ) {
     $pdf->SetFillColor(40,80,180);
     $pdf->SetTextColor(255);
     $pdf->SetFont('Arial','B',11);
-    $pdf->MultiCell(180,$hauteur,"Nombre de DPS par catÈgorie.",1,"C",true);
+    $pdf->MultiCell(180,$hauteur,"Nombre de DPS par cat√©gorie.",1,"C",true);
     GoDown(1);
     $pdf->SetFont('Arial','',8);
     $n=0;$z=36;
@@ -493,7 +493,7 @@ if ( $HAVE_DPS > 0 ) {
     while ( $row2 = mysqli_fetch_array($result2)) {
         $tavid=$row2["TAV_ID"];
         $tavcode=$row2["TA_SHORT"];
-        if ( $tavcode == '-' ) $tavcode = "non dÈfini";
+        if ( $tavcode == '-' ) $tavcode = "non d√©fini";
         $pdf->SetXY($marge_left + $n * $z, $y );
         $pdf->MultiCell($z,$hauteur,$tavcode,1,"C",true);
         $query= "select count(1) as NB

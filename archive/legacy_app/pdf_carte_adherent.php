@@ -21,7 +21,7 @@ include_once ("config.php");
 check_all(0);
 $id=$_SESSION['id'];
 
-$printed_by="imprimé par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y à H:i");
+$printed_by="imprimÃ© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y Ã  H:i");
 
 if ( isset($_GET["P_ID"])) $pid=intval($_GET["P_ID"]);
 else $pid=0;
@@ -44,7 +44,7 @@ $pdf->AliasNbPages();
 $pdf->SetCreator($cisname);
 $pdf->SetAuthor($cisname);
 $pdf->SetDisplayMode('fullpage','single');
-$pdf->SetTitle('carte_adhérent');
+$pdf->SetTitle('carte_adhÃ©rent');
 $pdf->SetAutoPageBreak(40);
 $pdf->AddPage();
 

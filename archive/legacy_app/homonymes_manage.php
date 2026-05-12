@@ -78,20 +78,20 @@ custom_fetch_array($result);
 if ( $P_PRENOM2 == "none" ) $P_PRENOM2="";
 $born = "";$nom1="";
 if ( $P_BIRTHDATE <> "" ) {
-    if ( $P_SEXE == 'M' ) $born = "<br>né le ".$P_BIRTHDATE;
-    else $born = "<br>née le ".$P_BIRTHDATE;
-    if ( $P_BIRTHPLACE <> '' ) $born .= " à ".$P_BIRTHPLACE;
+    if ( $P_SEXE == 'M' ) $born = "<br>nÃ© le ".$P_BIRTHDATE;
+    else $born = "<br>nÃ©e le ".$P_BIRTHDATE;
+    if ( $P_BIRTHPLACE <> '' ) $born .= " Ã  ".$P_BIRTHPLACE;
 }
 if ( $P_NOM_NAISSANCE <> '' ) {
-    if ( $P_SEXE == 'M' ) $nom1 = "<br>né ".$P_NOM_NAISSANCE;
-    else $nom1 = "<br>née ".$P_NOM_NAISSANCE;
+    if ( $P_SEXE == 'M' ) $nom1 = "<br>nÃ© ".$P_NOM_NAISSANCE;
+    else $nom1 = "<br>nÃ©e ".$P_NOM_NAISSANCE;
 }
 if ( $P_CREATE_DATE <> "" ) 
-    $created= "<br>fichée créée le ".$P_CREATE_DATE;
+    $created= "<br>fichÃ©e crÃ©Ã©e le ".$P_CREATE_DATE;
 else 
     $created="";
 
-$out = "<div align=center><h5>Homonyme de ".my_ucfirst($P_PRENOM0)." ".my_ucfirst($P_PRENOM2)." ".strtoupper($P_NOM0)." N°".$pid."</h5></font>".$nom1.$born.$created."</div>";
+$out = "<div align=center><h5>Homonyme de ".my_ucfirst($P_PRENOM0)." ".my_ucfirst($P_PRENOM2)." ".strtoupper($P_NOM0)." NÂ°".$pid."</h5></font>".$nom1.$born.$created."</div>";
 
 $query=" select p.P_ID, p.P_NOM, p.P_NOM_NAISSANCE, p.P_PRENOM, p.P_PRENOM2, p.P_SEXE, p.P_SECTION,
             date_format(p.P_BIRTHDATE, '%d-%m-%Y') P_BIRTHDATE1, p.P_BIRTHPLACE P_BIRTHPLACE1,
@@ -114,13 +114,13 @@ if ( $P_PRENOM2 == "none" ) $P_PRENOM2="";
 
 $born = "";$nom1="";
 if ( $P_BIRTHDATE1 <> "" ) {
-    if ( $P_SEXE == 'M' ) $born = "né le ".$P_BIRTHDATE1;
-    else $born = "née le ".$P_BIRTHDATE1;
-    if ( $P_BIRTHPLACE1 <> '' ) $born .= " à ".$P_BIRTHPLACE1;
+    if ( $P_SEXE == 'M' ) $born = "nÃ© le ".$P_BIRTHDATE1;
+    else $born = "nÃ©e le ".$P_BIRTHDATE1;
+    if ( $P_BIRTHPLACE1 <> '' ) $born .= " Ã  ".$P_BIRTHPLACE1;
 }
 if ( $P_NOM_NAISSANCE <> '' ) {
-    if ( $P_SEXE == 'M' ) $nom1 = " né ".$P_NOM_NAISSANCE;
-    else $nom1 = " née ".$P_NOM_NAISSANCE;
+    if ( $P_SEXE == 'M' ) $nom1 = " nÃ© ".$P_NOM_NAISSANCE;
+    else $nom1 = " nÃ©e ".$P_NOM_NAISSANCE;
 }
 
 if ( check_rights($id,3,"$P_SECTION") 
@@ -130,7 +130,7 @@ else
     $delete_possible = false;
 
 if ( fixcharset(rtrim($P_NOM0)) <> fixcharset(rtrim($P_NOM)) or fixcharset(rtrim($P_PRENOM0)) <> fixcharset(rtrim($P_PRENOM)) ) {
-    write_msgbox("Fusion impossible",$error_pic,"Les 2 fiches ont des noms et prénoms différents, fusion interdite<p>
+    write_msgbox("Fusion impossible",$error_pic,"Les 2 fiches ont des noms et prÃ©noms diffÃ©rents, fusion interdite<p>
     <input type='button' class='btn btn-default' value='Annuler' onclick=\"bouton_redirect('upd_personnel.php?pompier=".$pid."');\">",30,30);
     exit;
 }
@@ -183,15 +183,15 @@ if (isset($_POST["pid"])) {
 //====================================================================
 
 if ( $P_BIRTHDATE1 == $P_BIRTHDATE and $P_BIRTHDATE <> '') 
-    $alert = "<div class='alert alert-success' role='alert'> Les 2 fiches homonymes ont la même date de naissance, il s'agit certainement de doublons.</div>";
+    $alert = "<div class='alert alert-success' role='alert'> Les 2 fiches homonymes ont la mÃªme date de naissance, il s'agit certainement de doublons.</div>";
 else if ( $P_BIRTHDATE <> '' and $P_BIRTHDATE1 <> '' ) 
-    $alert = "<div class='alert alert-danger' role='alert'> Les 2 fiches ont des dates de naissance différentes, ce sont des homonymes pas des doublons.</div>";
+    $alert = "<div class='alert alert-danger' role='alert'> Les 2 fiches ont des dates de naissance diffÃ©rentes, ce sont des homonymes pas des doublons.</div>";
 else 
-    $alert="<div class='alert alert-warning' role='alert'> Attention, les dates de naissance ne sont pas renseignées pour les 2 fiches, on ne peut pas confirmer que ce sont des doublons.</div>";
+    $alert="<div class='alert alert-warning' role='alert'> Attention, les dates de naissance ne sont pas renseignÃ©es pour les 2 fiches, on ne peut pas confirmer que ce sont des doublons.</div>";
 
 $title="ouvrir cette fiche - ".my_ucfirst($P_PRENOM)." ".$P_PRENOM2." ".strtoupper($P_NOM);
 if ( ! $update_doublon_allowed ) $alert2 = "<div class='alert alert-warning' role='alert'> Vous n'avez pas les permissions de modifier la fiche 
-<a href=upd_personnel.php?pompier=".$doublon_id."  title=\"".$title."\">".$doublon_id."</a>. Demandez à un responsable national de faire la fusion des fiches pour vous.</div>";
+<a href=upd_personnel.php?pompier=".$doublon_id."  title=\"".$title."\">".$doublon_id."</a>. Demandez Ã  un responsable national de faire la fusion des fiches pour vous.</div>";
 else $alert2="";
     
 $NB1=count_entities("qualification", "P_ID=".$doublon_id);
@@ -212,37 +212,37 @@ $out .=  "<div class='col-sm-5' align=center>
             <div class='card-body graycard'>";
 
 $out .= "<table class='noBorder cellspacing=0'>";
-$out .= "<tr><td><b>N° membre</b></td>";
+$out .= "<tr><td><b>NÂ° membre</b></td>";
 $out .= "<td ><a href=upd_personnel.php?pompier=".$doublon_id."  title=\"".$title."\">".$doublon_id."</a></td></tr>";
 $out .= "<tr><td width=120><b>Nom</b></td><td><strong>".my_ucfirst($P_PRENOM)." ".my_ucfirst($P_PRENOM2)." ".strtoupper($P_NOM).$nom1."</strong></td></tr>";
 $out .= "<tr><td><b>Naissance</b></td><td>".$born."</td></tr>";
 $out .= "<tr><td><b>Statut</b></td><td>".$STATUT."</td></tr>";
 $out .= "<tr><td><b>Section</b></td><td>".$S_CODE." - ".$S_DESCRIPTION."</td></tr>";
-$out .= "<tr><td><b>Fiche créée le</b></td><td>".$P_CREATE_DATE."</td></tr>";
+$out .= "<tr><td><b>Fiche crÃ©Ã©e le</b></td><td>".$P_CREATE_DATE."</td></tr>";
 
 if ( $licences ) {
-    $out .= "<tr><td><b>Licence numéro</b></td><td>".$P_LICENCE."</td></tr>";
+    $out .= "<tr><td><b>Licence numÃ©ro</b></td><td>".$P_LICENCE."</td></tr>";
     $out .= "<tr><td><b>Licence date</b></td><td>".$P_LICENCE_DATE."</td></tr>";
     $out .= "<tr><td><b>Licence expiration</b></td><td>".$P_LICENCE_EXPIRY."</td></tr>";
     $out .= "<tr><td><b>ID API</b></td><td>".$ID_API."</td></tr>";
 }
 
-if ( $NB1 > 0 and $update_possible) $move=" <label for='competences'>déplacer vers N°$pid</label> <input type='checkbox' id='competences' name='competences' checked value=1
-title='cocher pour déplacer les compétences sur la fiche principale' > ";
+if ( $NB1 > 0 and $update_possible) $move=" <label for='competences'>dÃ©placer vers NÂ°$pid</label> <input type='checkbox' id='competences' name='competences' checked value=1
+title='cocher pour dÃ©placer les compÃ©tences sur la fiche principale' > ";
 else $move ="";
-$out .= "<tr><td><b>Compétences</b></td>
-<td><a href=upd_personnel.php?pompier=".$doublon_id."&tab=2 title=\"".$title."\"><span class='badge' title='Voir les compétences'>".$NB1."</span></a>$move</td>
+$out .= "<tr><td><b>CompÃ©tences</b></td>
+<td><a href=upd_personnel.php?pompier=".$doublon_id."&tab=2 title=\"".$title."\"><span class='badge' title='Voir les compÃ©tences'>".$NB1."</span></a>$move</td>
 </tr>";
 
-if ( $NB2 > 0 and $update_possible) $move=" <label for='formations'>déplacer vers N°$pid</label> <input type='checkbox' id='formations' name='formations' checked value=1
-title='cocher pour déplacer les formations sur la fiche principale'> ";
+if ( $NB2 > 0 and $update_possible) $move=" <label for='formations'>dÃ©placer vers NÂ°$pid</label> <input type='checkbox' id='formations' name='formations' checked value=1
+title='cocher pour dÃ©placer les formations sur la fiche principale'> ";
 else $move ="";
 $out .= "<tr><td><b>Formations</b></td>
 <td><a href=upd_personnel.php?pompier=".$doublon_id."&tab=3 title=\"".$title."\"><span class='badge' title='Voir les formations'>".$NB2."</span></a>$move</td>
 </tr>";
 
-if ( $NB3 > 0 and $update_possible) $move=" <label for='participations'>déplacer vers N°$pid</label> <input type='checkbox' id='participations' name='participations' checked value=1
-title='cocher pour déplacer les participations sur la fiche principale'> ";
+if ( $NB3 > 0 and $update_possible) $move=" <label for='participations'>dÃ©placer vers NÂ°$pid</label> <input type='checkbox' id='participations' name='participations' checked value=1
+title='cocher pour dÃ©placer les participations sur la fiche principale'> ";
 else $move ="";
 $out .= "<tr><td><b>Participations</b></td>
 <td><a href=upd_personnel.php?pompier=".$doublon_id."&tab=4 title=\"".$title."\"><span class='badge' title='Voir les participations'>".$NB3."</span></a>
@@ -251,12 +251,12 @@ $move</td>
 
 if ( $update_possible )
 $out .= "<tr><td><b>Changer le statut </b></td>
-<td><label for='radier'>radier cette fiche N°$doublon_id</label> <input type='checkbox' id='radier' name='radier' checked value=1 title='cocher pour mettre la fiche à ancien membre'> </td>
+<td><label for='radier'>radier cette fiche NÂ°$doublon_id</label> <input type='checkbox' id='radier' name='radier' checked value=1 title='cocher pour mettre la fiche Ã  ancien membre'> </td>
 </tr>";
 
 if ( $delete_possible)
 $out .= "<tr><td><b>Supprimer</b></td>
-<td><label for='supprimer'>supprimer cette fiche N°$doublon_id</label> <input type='checkbox' id='supprimer' name='supprimer' value=1 checked title='cocher pour mettre la fiche à ancien membre'></td></tr>";
+<td><label for='supprimer'>supprimer cette fiche NÂ°$doublon_id</label> <input type='checkbox' id='supprimer' name='supprimer' value=1 checked title='cocher pour mettre la fiche Ã  ancien membre'></td></tr>";
 
 $out .= "</table>";
 

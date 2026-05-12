@@ -41,7 +41,7 @@ writehead();
 <?php
 
 //=====================================================================
-// préparation formulaire type ajout ou modification
+// prÃ©paration formulaire type ajout ou modification
 //=====================================================================
 
 if ( $operation == 'insert' ) {
@@ -77,8 +77,8 @@ else {
         $typeclass = 'inactive-badge';
         $s = "";
     }
-    if ($NB_grade_actif == 0)$badge="<span class='badge $typeclass $class' style='float:right'>$NB_grade_actif personne$s associée$s</span>";
-    else $badge="<span class='badge $typeclass $class' style='float:right'><a href='personnel.php?position=actif&category=INT&P_GRADE=$G_GRADE'>$NB_grade_actif personne$s associée$s </a> </span>";
+    if ($NB_grade_actif == 0)$badge="<span class='badge $typeclass $class' style='float:right'>$NB_grade_actif personne$s associÃ©e$s</span>";
+    else $badge="<span class='badge $typeclass $class' style='float:right'><a href='personnel.php?position=actif&category=INT&P_GRADE=$G_GRADE'>$NB_grade_actif personne$s associÃ©e$s </a> </span>";
     $checked = $G_FLAG == 1 ? "checked" : "";
     $activ = " <div style='float:right'><label class='mr-3'>Actif</label><label class='switch' ><input type=checkbox id='etatgrade' name='etatgrade' value='".$G_FLAG."'  onchange=\"activGrade('".$G_GRADE."')\" $checked ><span class='slider round'></span></label></div>";
     $title = 'Modification';
@@ -87,7 +87,7 @@ else {
 
 
 //=====================================================================
-// affiche entête de formulaire
+// affiche entÃªte de formulaire
 //=====================================================================
 echo "<div class='container-fluid'>";
 echo "<div class='col-md-6'>
@@ -101,11 +101,11 @@ echo "<table class='noBorder' cellspacing=0 border=0>";
 
 
 //=====================================================================
-// ligne select catégorie pour insert
+// ligne select catÃ©gorie pour insert
 //=====================================================================
 if ( $operation == 'insert' ) {
     echo"<tr>
-    <td>Catégorie$asterisk</td>
+    <td>CatÃ©gorie$asterisk</td>
     <td colspan = 3 align=left>";
     echo"<select id='usage' name='usage' class=' selectpicker' data-live-search='true' data-style='btn-default' data-container='body'  >";
     $query2="select CG_CODE,CG_DESCRIPTION from categorie_grade";
@@ -123,7 +123,7 @@ if ( $operation == 'insert' ) {
 
 if ($operation == "update"){
     echo "<tr>
-            <td title='Code unique de maximum 5 caractères.'>Catégorie $asterisk</td>
+            <td title='Code unique de maximum 5 caractÃ¨res.'>CatÃ©gorie $asterisk</td>
             <td colspan=3 align=left '  ><input  type='hidden' name='categorie' id='categorie' value='$G_CATEGORY'>";
 echo "<div class='dropdown '>";
 echo "<button type='button' class='btn btn-default dropdown-toggle form-control overflow-hidden ml-0 '  data-toggle='dropdown' style='font-size: 0.875rem; text-align: left'   >";
@@ -150,28 +150,28 @@ if ($CG_CODE != "ALL")
 // corps du formulaire
 //=====================================================================
 echo "<tr>
-            <td title='Code unique de 5 caractères maximum.'>Code $asterisk</td>
+            <td title='Code unique de 5 caractÃ¨res maximum.'>Code $asterisk</td>
             <td colspan=3 align=left><input type='text' id='grade' class='form-control form-control-sm ' autocomplete='off' name='G_GRADE' maxlength='5' size='12' value=\"$G_GRADE\">";
 echo " </td>
       </tr>";
 echo "<tr>
-            <td title='Libéllé du grade.'>Description $asterisk</td>
+            <td title='LibÃ©llÃ© du grade.'>Description $asterisk</td>
             <td align=left colspan=3><input type='text' class='form-control form-control-sm' name='G_DESCRIPTION' size='50' value=\"$G_DESCRIPTION\">";
 echo " </td>
       </tr>";
 echo "<tr>
-            <td title='Saisir un chiffre pour hiérarchiser le grade.'>Niveau hiérarchique $asterisk</td>
-            <td align=left colspan=3><input type='text' class='form-control form-control-sm' name='G_LEVEL' onchange='checkNumber3(this,0, 1000)' value=\"$G_LEVEL\" title='Valeur numérique de 1 (grade le plus faible) à 1000 (le plus élevé) '>";
+            <td title='Saisir un chiffre pour hiÃ©rarchiser le grade.'>Niveau hiÃ©rarchique $asterisk</td>
+            <td align=left colspan=3><input type='text' class='form-control form-control-sm' name='G_LEVEL' onchange='checkNumber3(this,0, 1000)' value=\"$G_LEVEL\" title='Valeur numÃ©rique de 1 (grade le plus faible) Ã  1000 (le plus Ã©levÃ©) '>";
 echo " </td>
       </tr>";
 echo "<tr>
-            <td title='Type, corps du grade.'>Catégorie Hiérarchique</td>
+            <td title='Type, corps du grade.'>CatÃ©gorie HiÃ©rarchique</td>
             <td align=left colspan=3><input type='text' class='form-control form-control-sm' name='G_TYPE' size='50' value=\"$G_TYPE\">";
 echo " </td>
       </tr>";
 echo "</form>";
 echo "<tr>
-            <td>Icône</td>";
+            <td>IcÃ´ne</td>";
             if (isset($newG_ICON) ){
                 $G_ICON = $newG_ICON;
             }
@@ -186,7 +186,7 @@ echo "<tr>
             if ($G_ICON != $defaultPicture ) {
                 echo "<form name='deleteicone' id='deleteicone'  enctype='multipart/form-data' method='POST' style=''>";
                 echo "<label class='btn btn-default' id ='buttonsuppr' >
-                                    <i class='far fa-trash-alt fa-lg' title='Supprimer icône sélectionné.'></i>
+                                    <i class='far fa-trash-alt fa-lg' title='Supprimer icÃ´ne sÃ©lectionnÃ©.'></i>
                                     <button id='suppressionIcone' hidden type='button'></button>
                                     </label></form>";
             }
@@ -249,8 +249,8 @@ echo "<tr>
 
                            if (response == -1 && operation == "insert") errorIconeGradeExist("insert");
                            if (response == -1 && operation == "update") errorIconeGradeExist("update", old);
-                           if (response == -2) errorExtIcone("Votre fichier image ne dispose pas d'une extension autorisée. Utilisez une extension: " + ext, "update", old);
-                           if (response == -3) errorExtIcone("Votre fichier image ne dispose pas d'une extension autorisée. Utilisez une extension: " + ext, "insert", old);
+                           if (response == -2) errorExtIcone("Votre fichier image ne dispose pas d'une extension autorisÃ©e. Utilisez une extension: " + ext, "update", old);
+                           if (response == -3) errorExtIcone("Votre fichier image ne dispose pas d'une extension autorisÃ©e. Utilisez une extension: " + ext, "insert", old);
                            if (response == -4) errorUploadIcone(maxSize, "update" , old);
                            if (response == -5) errorUploadIcone(maxSize, "insert" , old);
                         }else{
@@ -259,7 +259,7 @@ echo "<tr>
                     },
                 });
             }else{
-                swal("Séléctionner un fichier");
+                swal("SÃ©lÃ©ctionner un fichier");
             }
         });
     });
@@ -279,7 +279,7 @@ if($operation == 'update'){
 }
 else
     echo "<button class='btn btn-success' name='operation' value='Ajouter' onclick='submit()'>Sauvegarder</button> ";
-  if ($NB_grade_actif > 0) echo "<button class='btn btn-danger'  title='Suppression impossible: Grade associé' disabled>Supprimer</button>";
+  if ($NB_grade_actif > 0) echo "<button class='btn btn-danger'  title='Suppression impossible: Grade associÃ©' disabled>Supprimer</button>";
  elseif($operation == 'update')  echo "<input type='button' class='btn btn-danger' value='Supprimer' onclick=\"suppress('".$G_GRADE."');\"> ";
 echo "<input type='button' class='btn btn-secondary ml-3' value='Retour' name='annuler' onclick=\"redirect('parametrage.php?tab=5&child=14');\"> ";
 echo "</form>";

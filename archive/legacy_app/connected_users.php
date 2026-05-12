@@ -51,7 +51,7 @@ if ( get_children("$filter") <> '' ) {
     if ($subsections == 1 ) $checked='checked';
     else $checked='';
 	  
-	echo "<label for='sub2'>Sous-section </label>
+	echo "<label for='sub2'>Sous-sectionÂ </label>
 			<label class='switch'>
 				<input type='checkbox' name='sub' id='sub2' class='ml-3' $checked
 				onClick=\"orderfilter2('history.php',document.getElementById('filter').value, this)\"/>
@@ -72,7 +72,7 @@ $result=mysqli_query($dbc,$query);
 echo "<div class='table-responsive'>";
 echo "<div class='col-sm-12'>";
 echo "<table class='newTableAll'>";
-echo "<tr><td colspan=20>Utilisateurs connectés</td></tr>";
+echo "<tr><td colspan=20>Utilisateurs connectÃ©s</td></tr>";
 // ===============================================
 // le corps du tableau
 // ===============================================
@@ -127,7 +127,7 @@ while (custom_fetch_array($result)) {
             </td>";
     echo "  <td align=center width=15><i class='".$icon."' style='color:".$color.";' title ='".$A_OS."' ></i><td>
             <td align=center width=15><i class='".$icon2."' style='color:".$color2.";' title ='".$A_BROWSER."' ></i><td>
-            <td align=left style='min-width:100px;'><span title='Heures de début de la connexion et de la dernière action'>".$A_DEBUT." - ".$A_FIN."</span>
+            <td align=left style='min-width:100px;'><span title='Heures de dÃ©but de la connexion et de la derniÃ¨re action'>".$A_DEBUT." - ".$A_FIN."</span>
             </td>
             <td align=left>".$A_IP."</td>
       </tr>"; 

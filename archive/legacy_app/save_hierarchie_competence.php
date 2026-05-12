@@ -56,7 +56,7 @@ if ( $operation == 'update' or $operation == 'insert') {
 //=====================================================================
 
 if ( $PH_CODE == "" ) {
-    write_msgbox("erreur", $error_pic, "Le code hiérarchie doit être renseigné<p align=center><input type=submit class='btn btn-default' value='Retour' onclick='redirect();'> ",10,0);
+    write_msgbox("erreur", $error_pic, "Le code hiÃ©rarchie doit Ãªtre renseignÃ©<p align=center><input type=submit class='btn btn-default' value='Retour' onclick='redirect();'> ",10,0);
     exit;
 }
 if ( $operation == 'update' ) {

@@ -27,7 +27,7 @@ $tab = (!isset($_GET['tab'])) ? 1 : $_GET['tab'];
 
 if (!$table_params) {
 writehead();
-writeBreadCrumb("Facturation de l'activité","Activité","zz");
+writeBreadCrumb("Facturation de l'activitÃ©","ActivitÃ©","zz");
 }
 ?>
 <script type='text/javascript' src='js/checkForm.js'></script>
@@ -37,7 +37,7 @@ writeBreadCrumb("Facturation de l'activité","Activité","zz");
 $msgerr ="";
 $evenement=(isset($_POST['evenement'])?intval($_POST['evenement']):(isset($_GET['evenement'])?intval($_GET['evenement']):0));
 
-// le chef, le cadre de l'événement ont toujours accès à cette fonctionnalité, les autres doivent avoir 29 et/ou 24
+// le chef, le cadre de l'Ã©vÃ©nement ont toujours accÃ¨s Ã  cette fonctionnalitÃ©, les autres doivent avoir 29 et/ou 24
 if ( ! check_rights($id, 29, get_section_organisatrice($evenement)) and ! is_chef_evenement($id, $evenement)) {
     check_all(29);
     check_all(24);
@@ -86,7 +86,7 @@ if($resevt){
             $evtLieu = $rowevt['E_LIEU'];
             $evtNB = $rowevt['E_NB'];
             $evtSection = $rowevt['S_ID'];//." Section");
-            $evtClosed = $rowevt['E_CLOSED'];//." Cloturé ");
+            $evtClosed = $rowevt['E_CLOSED'];//." CloturÃ© ");
             $evtCompany=$rowevt['C_ID'];
         }
         $evtDateDebut = $rowevt['dtdb'];
@@ -97,9 +97,9 @@ if($resevt){
         $evtDureeTotale= $rowevt['E_NB'] * $rowevt['EH_DUREE'] + $evtDureeTotale;
         
         if ($evtDateDebut!=$evtDateFin) 
-            $defaultDateHeure .= "du ".datesql2txt($evtDateDebut)." à ".$evt_hdtdb." au ".datesql2txt($evtDateFin)." à ".$evt_hdtfn.",\n";
+            $defaultDateHeure .= "du ".datesql2txt($evtDateDebut)." Ã  ".$evt_hdtdb." au ".datesql2txt($evtDateFin)." Ã  ".$evt_hdtfn.",\n";
         else 
-            $defaultDateHeure .= "le ".datesql2txt($evtDateDebut)." de ".$evt_hdtdb." à ".$evt_hdtfn.",\n";
+            $defaultDateHeure .= "le ".datesql2txt($evtDateDebut)." de ".$evt_hdtdb." Ã  ".$evt_hdtfn.",\n";
 
     }
     $evtDuree .= " Heures / intervenant";
@@ -186,7 +186,7 @@ if ( $paiementDate <> '' && $paiementDate <> '00-00-0000') {
     $paiementDate=$year.'-'.$month.'-'.$day;
 }
 $paiementCom=(isset($_POST['paiementCom'])?secure_input($dbc,STR_replace("\"","",$_POST['paiementCom'])):"");
-$frmaction="Créer";
+$frmaction="CrÃ©er";
 // echo "<pre>";
 // print_r($_POST);
 // echo "</pre>"; 
@@ -257,14 +257,14 @@ $row2=mysqli_fetch_array($res2);
 $prev_montant=$row2[0];
 
 if ( $prev_montant <> $devisMontant and intval($devisMontant) > 0 ) {
-    // notifier, le devis est créé, ensuite le montant
+    // notifier, le devis est crÃ©Ã©, ensuite le montant
     
     $destid=get_granted(35,"$evtSection",'parent','yes');            
-    $subject  = "Devis émis pour ".$evtTitre;
+    $subject  = "Devis Ã©mis pour ".$evtTitre;
     $message  = "Bonjour,\n";
-    $message .= "Un devis a été émis pour l'événement: ".$evtTitre."\n";
+    $message .= "Un devis a Ã©tÃ© Ã©mis pour l'Ã©vÃ©nement: ".$evtTitre."\n";
     $message .= "pour un montant total de : ".$devisMontant." ".$default_money_symbol."\n";
-    $message .= "organisé par: ".get_section_code($evtSection)."\n";
+    $message .= "organisÃ© par: ".get_section_code($evtSection)."\n";
     $message .= "lieu: ".$devisLieu."\n";
     $message .= "dates et heures: ".$devisDateHeure."\n";
         
@@ -273,7 +273,7 @@ if ( $prev_montant <> $devisMontant and intval($devisMontant) > 0 ) {
 }
 
     break;
-    case 'Créer':
+    case 'CrÃ©er':
         $sql = "INSERT into evenement_facturation(e_id,devis_lieu,devis_date_heure,
 devis_Date,devis_numero,devis_Montant,devis_acompte,devis_comment,devis_Orga,devis_Civilite,devis_Contact,devis_Adresse,devis_CP,devis_Ville,devis_Tel1,devis_Tel2,devis_Fax,devis_Email,devis_URL,devis_accepte,
 facture_lieu,facture_date_heure,facture_Date,facture_numero,facture_Montant,facture_acompte,facture_comment,facture_Orga,facture_Civilite,facture_Contact,facture_Adresse,facture_CP,facture_Ville,facture_Tel1,facture_Tel2,facture_Fax,facture_Email,
@@ -302,7 +302,7 @@ where e_id = '$evenement'
 and ef_type='devis'
 )";
         $res = mysqli_query($dbc,$sqldetail);
-        // calcul le montant à facturer selon dle détail
+        // calcul le montant Ã  facturer selon dle dÃ©tail
         $sqlcalc="select * from evenement_facturation_detail 
 where e_id = '$evenement'
 and ef_type='facture'";
@@ -383,7 +383,7 @@ if($resfact){
             $tmp=explode ( "-",$factDate); $year=$tmp[0]; $month=$tmp[1]; $day=$tmp[2];
             $factDate=$day.'-'.$month.'-'.$year;
             if(checkdate($month,$day,$year)){
-                $factureStatut = "Facture émise le $factDate";
+                $factureStatut = "Facture Ã©mise le $factDate";
                 $styleEvt="background-color:orange;color:black;";
             }else{
                 $factDate="";
@@ -430,7 +430,7 @@ if($resfact){
             $tmp=explode ( "-",$paiementDate); $year=$tmp[0]; $month=$tmp[1]; $day=$tmp[2];
             $paiementDate=$day.'-'.$month.'-'.$year;
             if(checkdate($month,$day,$year)){
-                $factureStatut = "Paiement enregistré...";
+                $factureStatut = "Paiement enregistrÃ©...";
                 $styleEvt="background-color:white;color:grey;";
             }else{
                 $paiementDate="";
@@ -540,14 +540,14 @@ margin-left:200px;
 </style>
 <?php
 
-// fonction pour afficher les boutons sauver, retour, imprimer, détail
+// fonction pour afficher les boutons sauver, retour, imprimer, dÃ©tail
 function Buttons($tabn = 'null'){
     global $evtIcon,$devisDate,$factDate,$relanceDate,$paiementDate,$evenement;
     echo "<p><table class='noBorder'><tr class='bigFont'>
           <td><input type='submit' class='btn btn-success' id='btaction".$tabn."' value=Sauvegarder></td> ";
     echo " <td>";
     $url="evenement_modal.php?action=facturation&evenement=".$evenement;
-    print write_modal( $url, "facturation_".$evenement, "<input type='submit' class='btn btn-secondary' id='btaction".$tabn."' value='Détail' title=\"voir le détail de l'activité\">");
+    print write_modal( $url, "facturation_".$evenement, "<input type='submit' class='btn btn-secondary' id='btaction".$tabn."' value='DÃ©tail' title=\"voir le dÃ©tail de l'activitÃ©\">");
     echo "</td>";
     
     if( $tabn == 'relance' && $relanceDate <>""){
@@ -611,7 +611,7 @@ if ( $child == 1 ) {
 }else{
     $class='';
 }
-if ( $devisAccepte == 1 ) $cmt = "Devis du ".$devisDate." (accepté)";
+if ( $devisAccepte == 1 ) $cmt = "Devis du ".$devisDate." (acceptÃ©)";
 else if ( $devisDate <> '' ) $cmt = "Devis du ".$devisDate;
 else $cmt="Devis";
 
@@ -628,7 +628,7 @@ if ( $child == 2 ) {
 }else{
     $class='';
 }
-if ( $factDate <> '' ) $cmt = "Facture émise le ".$factDate;
+if ( $factDate <> '' ) $cmt = "Facture Ã©mise le ".$factDate;
 else $cmt="Facture";
 
 echo "<li class='nav-item'>
@@ -648,7 +648,7 @@ if ( $relanceDate <> '' ) $cmt = "Relance le ".$relanceDate;
 else $cmt="Relance";
 
 echo "<li class='nav-item'>
-    <a class='nav-link $class' href='".$page."evenement=".$evenement."&child=3&tab=$tab' title='Relance impayé' role='tab' aria-controls='tab3' href='#tab3' >
+    <a class='nav-link $class' href='".$page."evenement=".$evenement."&child=3&tab=$tab' title='Relance impayÃ©' role='tab' aria-controls='tab3' href='#tab3' >
             <i class='fa fa-business-time'></i>
             <span>".$cmt."</span></a>
         </li>";
@@ -676,7 +676,7 @@ echo "</div>";
 // DEVIS
 //================================================
 if ( $child == 1 ) {
-    // <tr ><td><label for='devisAccepte'>Devis accepté</label></td><td>
+    // <tr ><td><label for='devisAccepte'>Devis acceptÃ©</label></td><td>
             // <select name='devisAccepte' id='devisAccepte'>
             // <option value='0' ".($devisAccepte==0?' selected':'').">Non</option>
             // <option value='1' ".($devisAccepte==1?' selected':'').">Oui</option>
@@ -685,7 +685,7 @@ if ( $child == 1 ) {
         
     $checked = $devisAccepte == 1 ? 'checked' : '';
     echo "<div class='div-decal-left' style='float:left; display:inline-flex'>
-            <label>Devis accepté</label>
+            <label>Devis acceptÃ©</label>
             <label class='switch'>
             <input type='checkbox' name='devisAccepte' id='devisAccepte' value='1' $checked onclick='submit()'>
             <span class='slider round'></span>               
@@ -726,13 +726,13 @@ if ( $child == 1 ) {
         echo "<tr ><td><label for='devisMontant'>Montant</label></td><td>
              <input type='hidden' name='devisMontant' id='devisMontant' value=\"".$devisMontant."\">
              <input type='text' class='form-control form-control-sm flex' name='devisMontant' id='devisMontant' value=\"".round($devisMontant,2)."\" style='width: 81%;' $disabled>";
-        echo " <a href='evenement_display.php?evenement=".$evenement."&type=devis&tab=57'>Détail</a></td></tr>";
-        echo "<tr ><td><label for='devisAcompte'>Acompte demandé</label></td><td>
+        echo " <a href='evenement_display.php?evenement=".$evenement."&type=devis&tab=57'>DÃ©tail</a></td></tr>";
+        echo "<tr ><td><label for='devisAcompte'>Acompte demandÃ©</label></td><td>
           <input type='text' class='form-control form-control-sm' name='devisAcompte' id='devisAcompte' value=\"".round($devisAcompte,2)."\" 
-          title=\"Si un acompte doit être versé à l'acceptation du devis, saisir le montant ici\"></td></tr>";
+          title=\"Si un acompte doit Ãªtre versÃ© Ã  l'acceptation du devis, saisir le montant ici\"></td></tr>";
     }
     echo "
-          <tr ><td><label for='devisNumero'>Devis Numéro</label></td><td>
+          <tr ><td><label for='devisNumero'>Devis NumÃ©ro</label></td><td>
              <input type='text' class='form-control form-control-sm' name='devisNumero' id='devisNumero' value=\"".$devisNumero."\"></td></tr>
           <tr ><td><label for='devisCom'>Commentaire</label></td><td>
              <textarea class='form-control form-control-sm' name='devisCom' id='devisCom' cols='40' rows='3'
@@ -754,7 +754,7 @@ if ( $child == 1 ) {
         echo "
           <tr ><td><label for='devisOrga'>Organisme demandeur</label></td><td class='maxsize'>
              <input type='text' class='form-control form-control-sm' name='devisOrga' id='devisOrga'  size='35' value=\"".$devisOrga."\"></td></tr>
-          <tr ><td><label for='devisContact'>Civilité</label></td><td>
+          <tr ><td><label for='devisContact'>CivilitÃ©</label></td><td>
              <input type='text' class='form-control form-control-sm' name='devisCivilite' id='devisCivilite' value=\"".$devisCivilite."\"></td></tr>
           <tr ><td><label for='devisContact'>Contact</label></td><td>
              <input type='text' class='form-control form-control-sm' name='devisContact' size='35' id='devisContact' value=\"".$devisContact."\"></td></tr>
@@ -765,9 +765,9 @@ if ( $child == 1 ) {
              <input type='text' class='form-control form-control-sm' name='devisCP' id='devisCP' value=\"".$devisCP."\"></td></tr>
           <tr ><td><label for='devisVille'>Ville</label></td><td>
              <input type='text' class='form-control form-control-sm' name='devisVille' id='devisVille' value=\"".$devisVille."\"></td></tr>
-          <tr ><td><label for='devisTel1'>Tél mobile</label></td><td>
+          <tr ><td><label for='devisTel1'>TÃ©l mobile</label></td><td>
              <input type='text' class='form-control form-control-sm' name='devisTel1' id='devisTel1' value=\"".$devisTel1."\"></td></tr>
-          <tr ><td><label for='devisTel2'>Tél fixe</label></td><td>
+          <tr ><td><label for='devisTel2'>TÃ©l fixe</label></td><td>
              <input type='text' class='form-control form-control-sm' name='devisTel2' id='devisTel2' value=\"".$devisTel2."\"></td></tr>
           <tr ><td><label for='devisFax'>Fax</label></td><td>
              <input type='text' class='form-control form-control-sm' name='devisFax' id='devisFax' value=\"".$devisFax."\"></td></tr>
@@ -788,7 +788,7 @@ if ( $child == 2 ) {
     
     echo "<div id='facture'>";
     if ($evtClosed==0) 
-        echo  " <i class='fa fa-exclamation-triangle' style='color:orange;'></i> Attention, cet événement n'est pas clôturé !!! Il faut fermer les inscriptions";
+        echo  " <i class='fa fa-exclamation-triangle' style='color:orange;'></i> Attention, cet Ã©vÃ©nement n'est pas clÃ´turÃ© !!! Il faut fermer les inscriptions";
     echo "<div class='container-fluid'>";
     echo "<div class='row'>";
     echo "<div class='col-sm-6'>
@@ -818,19 +818,19 @@ if ( $child == 2 ) {
     echo "<tr ><td><input type='hidden' name='factMontant' id='factMontant' value=\"".$factMontant."\">
              <label for='factMontant'>Montant prestation</label></td><td>
              <input type='text' class='form-control form-control-sm flex eightcent' name='factMontant' id='factMontant' value=\"".round($factMontant,2)."\" $disabled> ";
-        echo " <a href='evenement_facturation_detail.php?evenement=".$evenement."&type=facture'>Détail</a> </td></tr>";
+        echo " <a href='evenement_facturation_detail.php?evenement=".$evenement."&type=facture'>DÃ©tail</a> </td></tr>";
         if($factMontant=="0" && $devisMontant<>"0"){ 
             echo "<tr ><td><label for='CopieDevis'><i>Copier le montant du devis</i></label></td><td>
              <input type='checkbox' name='CopieDevis' id='CopieDevis' onclick='CopierDevis();'></td></tr>";
         }
-        echo "<tr ><td><label for='factAcompte'>Acompte déjà versé</label></td><td>
-          <input type='text' class='form-control form-control-sm' name='factAcompte' id='factAcompte' value=\"".round($factAcompte,2)."\"  title=\"Si un acompte a déjà été versé, saisir le montant ici\"></td></tr>";
+        echo "<tr ><td><label for='factAcompte'>Acompte dÃ©jÃ  versÃ©</label></td><td>
+          <input type='text' class='form-control form-control-sm' name='factAcompte' id='factAcompte' value=\"".round($factAcompte,2)."\"  title=\"Si un acompte a dÃ©jÃ  Ã©tÃ© versÃ©, saisir le montant ici\"></td></tr>";
           
         if ( ("$factContact"=="$devisContact") and ("$factOrga" == "$devisOrga") and ("$factAdresse" == "$devisAdresse") ) 
             $checked ='checked';
         else 
             $checked='';
-        echo "<tr ><td><label for='factNumero'>Facture Numéro</label></td><td>
+        echo "<tr ><td><label for='factNumero'>Facture NumÃ©ro</label></td><td>
              <input type='text' class='form-control form-control-sm' name='factNumero' id='factNumero' value=\"".$factNumero."\"><div id='infoNum'></div></td></tr>
           <tr ><td><label for='factCom'>Commentaire</label></td><td>
              <textarea class='form-control form-control-sm' name='factCom' id='factCom' cols='40' rows='3'
@@ -858,7 +858,7 @@ if ( $child == 2 ) {
         echo "<table cellspacing=0 class='noBorder'>";
         echo "
              
-          <tr ><td><label for='factContact'>Civilité</label></td><td class='maxsize'>
+          <tr ><td><label for='factContact'>CivilitÃ©</label></td><td class='maxsize'>
              <input type='text' class='form-control form-control-sm' name='factCivilite' id='factCivilite' value=\"".$factCivilite."\" ></td></tr>
           <tr ><td><label for='factContact' size='35'>Contact</label></td><td>
              <input type='text' class='form-control form-control-sm' name='factContact' id='factContact' value=\"".$factContact."\" ></td></tr>
@@ -869,9 +869,9 @@ if ( $child == 2 ) {
              <input type='text' class='form-control form-control-sm' name='factCP' id='factCP' value=\"".$factCP."\"></td></tr>
           <tr ><td><label for='factVille'>Ville</label></td><td>
              <input type='text' class='form-control form-control-sm' name='factVille' id='factVille' value=\"".$factVille."\"></td></tr>
-          <tr ><td><label for='factTel1'>Tél mobile</label></td><td>
+          <tr ><td><label for='factTel1'>TÃ©l mobile</label></td><td>
              <input type='text' class='form-control form-control-sm' name='factTel1' id='factTel1' value=\"".$factTel1."\"></td></tr>
-          <tr ><td><label for='factTel2'>Tél fixe</label></td><td>
+          <tr ><td><label for='factTel2'>TÃ©l fixe</label></td><td>
              <input type='text' class='form-control form-control-sm' name='factTel2' id='factTel2' value=\"".$factTel2."\"></td></tr>
           <tr ><td><label for='factFax'>Fax</label></td><td>
              <input type='text' class='form-control form-control-sm' name='factFax' id='factFax' value=\"".$factFax."\"></td></tr>
@@ -929,7 +929,7 @@ if ( $child == 3 ) {
 // PAIEMENT
 //================================================
 if ( $child == 4 ) {
-     echo "<div class='dropdown-right' align='right'><a class ='btn btn-default' href='pdf.php?id=".$evenement."&pdf=facturepayee' target='_blank'><i class='fa fa-print fa-1x noprint' style='color:#A6A6A6' title='Imprimer la facture acquitée au format pdf'></i></a></div>";
+     echo "<div class='dropdown-right' align='right'><a class ='btn btn-default' href='pdf.php?id=".$evenement."&pdf=facturepayee' target='_blank'><i class='fa fa-print fa-1x noprint' style='color:#A6A6A6' title='Imprimer la facture acquitÃ©e au format pdf'></i></a></div>";
     if ( $paiementDate == '' ) $warn=" <i class='fa fa-exclamation-triangle' style='color:orange; padding-left:5px;' title='saisissez la date et sauvez'></i>";
     else $warn="";
     echo "<div id='paiement'>";

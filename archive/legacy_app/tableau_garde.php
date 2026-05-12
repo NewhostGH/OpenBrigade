@@ -49,11 +49,11 @@ if (isset($_GET["person"])) $person=$_GET["person"];
 else $person=$id;
 
 //=====================================================================
-// le tableau est il terminé ? sinon seuls certains peuvent le voir
+// le tableau est il terminÃ© ? sinon seuls certains peuvent le voir
 //=====================================================================
 $nbtypesgardes=count_entities("type_garde", "S_ID=".$filter);
 
-// si besoin choisir la garde à afficher
+// si besoin choisir la garde Ã  afficher
 $nb1=count_entities("type_garde", "S_ID=".$filter." and EQ_ID=".$equipe);
 if ( $nb1 == 0 and $nbtypesgardes > 0) {
     $query="select EQ_ID from type_garde where S_ID=".$filter." order by EQ_ORDER";
@@ -82,7 +82,7 @@ $EQ_NOM='de Garde';
 $EQ_ICON='images/gardes/GAR.png';
 if ( $nbtypesgardes == 0 ) {
     if ( $nbsections <> 0 ) {
-        write_msgbox("ERREUR", $error_pic, "Pas de type de garde paramétrés.<p align=center><input type='button' class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'>",10,0);
+        write_msgbox("ERREUR", $error_pic, "Pas de type de garde paramÃ©trÃ©s.<p align=center><input type='button' class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'>",10,0);
     }
 }
 else {
@@ -101,7 +101,7 @@ if ($ready or check_rights($id, 6, "$filter")) {
         onclick=\"window.open('tableau_garde_xls.php?filter=$filter&year=$year&month=$month&week=$week&equipe=$equipe&tableau_garde_display_mode=$tableau_garde_display_mode');\" /></i></a>";
 }
 if (check_rights($id, 5, "$filter"))
-    $buttons_container .= " <a class='btn btn-primary noprint' name='parametrage' href='parametrage.php?tab=5&child=10'><i class='fa fa-cog fa-1x noprint' style='color:white'></i><span class='hide_mobile'> Paramétrage</span></a>";
+    $buttons_container .= " <a class='btn btn-primary noprint' name='parametrage' href='parametrage.php?tab=5&child=10'><i class='fa fa-cog fa-1x noprint' style='color:white'></i><span class='hide_mobile'> ParamÃ©trage</span></a>";
 
 $buttons_container .= "</div>";
 
@@ -143,7 +143,7 @@ if (check_rights($_SESSION['id'], 27))
 echo "<li class = 'nav-item'>
     <a class = 'nav-link $class' href = 'tableau_garde.php?tab=3&mode_garde=1' role = 'tab'>
             <i class='fa fa-calendar-alt'></i>
-            <span>Répartition</span></a>
+            <span>RÃ©partition</span></a>
 </li>";
 echo "</ul>";
 echo "</div>";
@@ -219,7 +219,7 @@ if ( $nbtypesgardes > 0 ) {
                     onclick=\"bouton_redirect('tableau_garde_create.php?month=$month&year=$year&equipe=$equipe&filter=$filter','create', '".$EQ_NOM."')\"><i class='fas fa-plus-circle'></i><span class='hide_mobile'> Tableau de garde</span>
                     </a></div>";
             else
-                echo "<i>Le tableau de garde du mois n'est pas encore créé. <br>Basculez en mode d'affichage 'par mois' pour pouvoir le créer.</i>";
+                echo "<i>Le tableau de garde du mois n'est pas encore crÃ©Ã©. <br>Basculez en mode d'affichage 'par mois' pour pouvoir le crÃ©er.</i>";
         }
     }
 }
@@ -235,7 +235,7 @@ if ( $created and $tableau_garde_display_mode == 'month' and $equipe > 0) {
                 $operation = 'montrer';
             }
             
-            echo "<div style='float:left; padding-top:5px;'><label for='sub2' >Tableau masqué</label>
+            echo "<div style='float:left; padding-top:5px;'><label for='sub2' >Tableau masquÃ©</label>
                 <label class='switch' >
                 <input type='checkbox' name='chk-masque' id='chk-masque' class='ml-3 div-decal-left' $checked 
                 onclick=\"bouton_redirect('tableau_garde_status.php?month=$month&year=$year&filter=$filter&equipe=$equipe&action=$operation','$operation', '".$EQ_NOM."')\">
@@ -259,7 +259,7 @@ if ( $created and $tableau_garde_display_mode == 'month' and $equipe > 0 ) {
      echo "</div>";
 }
 
-// entête
+// entÃªte
 if ( $nbtypesgardes > 0 ) {
     if ( $nbsections == 0 ) $S_DESCRIPTION=get_section_name(@$S_ID)." - ";
     else $S_DESCRIPTION="";
@@ -279,7 +279,7 @@ if ( $nbsections == 0 ) {
 
 //choix type de garde
 if ( $nbtypesgardes == 0 ) {
-    echo  "<div id='alert-container'><div id='msgInfo' class='alert alert-info left10' role='alert'><strong>Attention</strong> Aucune garde paramétrée ici.<br>Choisissez un autre niveau de l'organigramme.</div></td></tr></div>";
+    echo  "<div id='alert-container'><div id='msgInfo' class='alert alert-info left10' role='alert'><strong>Attention</strong> Aucune garde paramÃ©trÃ©e ici.<br>Choisissez un autre niveau de l'organigramme.</div></td></tr></div>";
    // echo "</table>";
     $show_table = false;
 }
@@ -337,7 +337,7 @@ else {
         echo  "</select>";
     }
     
-    // année
+    // annÃ©e
     echo " <select name='year' id='year' class='selectpicker bootstrap-select-small' data-style='btn-default' data-container='body'
         onchange=\"redirect('".$month."',document.getElementById('year').value,'".$filter."','".$equipe."', '".$tableau_garde_display_mode."', '".$week."', '".$person."')\">";
     if ($year == $yearminus5) echo "<option value='$yearminus5' selected>".$yearminus5."</option>";
@@ -435,7 +435,7 @@ if ( $created and $show_table) {
             echo "<th style='width:10%; text-align:center' class='widget-title '>S.</th>";
         echo "<th style='width:10%' class='widget-title noprint'></th>";
         for ( $i=1; $i <= $nbcol; $i++) {
-            echo "<th class='widget-title '>Poste n°$i</th>";
+            echo "<th class='widget-title '>Poste nÂ°$i</th>";
         }
         echo "</tr>";
 
@@ -480,7 +480,7 @@ if ( $created and $show_table) {
             }
             if ( $E_ANOMALIE == 1 ) {
                 $daycolor="#FF6699";
-                $rowtitle="ATTENTION garde en anomalie, cliquer pour vérifier le personnel et décocher la case 'Garde en anomalie'";
+                $rowtitle="ATTENTION garde en anomalie, cliquer pour vÃ©rifier le personnel et dÃ©cocher la case 'Garde en anomalie'";
             }
             else $rowtitle='garde du '.date_fran($month, $day, $year);
     
@@ -498,7 +498,7 @@ if ( $created and $show_table) {
             }
         
             if ( $E_CODE > 0 ) {
-                // Trouver le nb de participant par période
+                // Trouver le nb de participant par pÃ©riode
                 $get_ev = get_inscrits_garde($E_CODE,1);
                 if (empty($get_ev))
                     $jour=0;
@@ -554,7 +554,7 @@ if ( $created and $show_table) {
                         $HORAIRE_DISPLAY = '';
                     $FORMATED_NAME = $RAW_NAME.$FONCTION_DISPLAY.$HORAIRE_DISPLAY;
                     if ( $EP_ASTREINTE == 1 ) {
-                        $P_NOM_ASTREINTE = $RAW_NAME ." <i class='fa fa-exclamation-triangle' style='color:orange;' title='astreinte (garde non rémunérée) pour au moins une partie de la garde'></i>";
+                        $P_NOM_ASTREINTE = $RAW_NAME ." <i class='fa fa-exclamation-triangle' style='color:orange;' title='astreinte (garde non rÃ©munÃ©rÃ©e) pour au moins une partie de la garde'></i>";
                         if (isset ($noms[$P_ID])) {
                             $noms[$P_ID] = str_replace ( $RAW_NAME, $P_NOM_ASTREINTE, $noms[$P_ID]);
                         }
@@ -579,7 +579,7 @@ if ( $created and $show_table) {
                         if (! in_array($P_ID, $day2_id) ) {
                             $day1_id[$d] = $P_ID;
                             if ( $FIN < $EH_FIN ) {
-                                // ne fait pas garde complète, chercher remplaçant
+                                // ne fait pas garde complÃ¨te, chercher remplaÃ§ant
                                 $query2="select p.P_ID, p.P_GRADE, p.P_NOM, g.G_DESCRIPTION
                                     from pompier p, grade g,
                                     evenement_participation ep

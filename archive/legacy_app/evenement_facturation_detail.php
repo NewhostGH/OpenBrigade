@@ -44,7 +44,7 @@ if ( isset($_SESSION['evenement_facture'])) unset($_SESSION['evenement_facture']
 
 $organisateur = get_section_organisatrice($evenement);
 
-// le chef, le cadre de l'événement ont toujours accès à cette fonctionnalité, les autres doivent avoir 29 et/ou 24
+// le chef, le cadre de l'Ã©vÃ©nement ont toujours accÃ¨s Ã  cette fonctionnalitÃ©, les autres doivent avoir 29 et/ou 24
 if ( ! check_rights($id, 29, $organisateur) and ! is_chef_evenement($id, $evenement)) {
     check_all(29);
     check_all(24);
@@ -73,7 +73,7 @@ echo "<body>";
 echo "<div align=center>";
 if ( check_rights($id, 29))
     echo "<div class='dropdown-right' align=right>
-        <input type='button' class='btn btn-primary' value='Paramètre' name='annuler' onclick=\"bouton_redirect('parametrage.php?tab=4&child=12&evenement_facture=".$evenement."');\" title='Configurer les éléments facturables'>
+        <input type='button' class='btn btn-primary' value='ParamÃ¨tre' name='annuler' onclick=\"bouton_redirect('parametrage.php?tab=4&child=12&evenement_facture=".$evenement."');\" title='Configurer les Ã©lÃ©ments facturables'>
         </div>";
 echo "<form name=facture_detail_form action='save_detail_facture.php' method='POST'>";
 echo "<input type='hidden' name='evenement' id='evenement' value='".$evenement."'>";
@@ -97,7 +97,7 @@ echo "    <button class='btn btn-default ajouter' id='ajouter' ><i class='fas fa
 echo "</td>
     <td width=160 align=left>Type</td>
     <td width=200>Description</td>
-    <td width=40>Quantité</td>
+    <td width=40>QuantitÃ©</td>
     <td width=80>PU ".$default_money_symbol."</td>
     <td width=80>Remise %</td>
     <td width=80>Total ligne</td>
@@ -138,13 +138,13 @@ while ($row=@mysqli_fetch_array($result)) {
             <td></td>
             <td>".$typefield."</td>
             <td><input type='text' class='commentaire form-control form-control-sm' name='commentaire".$i."' id='commentaire".$i."' size='60' maxlength='66' value=\"".$ef_txt."\" 
-                title='Saisissez le descriptif lié à cette ligne' ></td>
+                title='Saisissez le descriptif liÃ© Ã  cette ligne' ></td>
             <td><input type='text' class='quantite form-control form-control-sm' name='quantite".$i."' id='quantite".$i."' size='3' value='".$ef_qte."'
                 onchange=\"checkNumberNullAllowed(this,'');\" ></td>
             <td><input type='text' class='pu form-control form-control-sm' name='pu".$i."' id='pu".$i."' size='5' value='".$ef_pu."' 
                 onchange=\"checkFloat(this,'');\" ></td>
             <td><input type='text' class='remise form-control form-control-sm' name='remise".$i."' id='remise".$i."' size='5' value=\"".$ef_rem."\" 
-                title='Remise accordée sur cette ligne en %' ></td>
+                title='Remise accordÃ©e sur cette ligne en %' ></td>
             <td><input type='text' class='subtotal form-control form-control-sm' name='subtotal".$i."' id='subtotal".$i."' size='5' value=".$subtotal." readonly disabled
                 title='Sous total' ></td>
             <td><i class='delete fa fa-trash-alt' title='Supprimer cette ligne'></i></td>
@@ -165,13 +165,13 @@ if ( $i == 1 ) {
             <td></td>
             <td>".$typefield."</td>
             <td><input type='text' class='commentaire form-control form-control-sm' name='commentaire".$i."' id='commentaire".$i."' size='60' maxlength='66' value=\"\" 
-                title='Saisissez le descriptif lié à cette ligne' ></td>
+                title='Saisissez le descriptif liÃ© Ã  cette ligne' ></td>
             <td><input type='text' class='quantite form-control form-control-sm' name='quantite".$i."' id='quantite".$i."' size='3' value=''
                 onchange=\"checkNumberNullAllowed(this,'');\" ></td>
             <td><input type='text' class='pu form-control form-control-sm' name='pu".$i."' id='pu".$i."' size='5' value='' 
                 onchange=\"checkFloat(this,'');\" ></td>
             <td><input type='text' class='remise form-control form-control-sm' name='remise".$i."' id='remise".$i."' size='5' value=\"\" 
-                title='Lieu où les frais ont été engagés' ></td>
+                title='Lieu oÃ¹ les frais ont Ã©tÃ© engagÃ©s' ></td>
             <td><input type='text' class='subtotal form-control form-control-sm' name='subtotal".$i."' id='subtotal".$i."' size='5' value='0' readonly disabled
                 title='Sous total' ></td>
             <td><i class='delete fa fa-trash-alt' title='Supprimer cette ligne'></i></td>

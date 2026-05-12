@@ -14,6 +14,10 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+    # Normalize legacy path-info links like /index.php/personnel.php to /personnel.php.
+    # Some Apache setups reject PATH_INFO on index.php and return "File not found".
+    RewriteRule ^index\.php/(.+)$ /$1 [L,R=302]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f

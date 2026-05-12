@@ -34,7 +34,7 @@ if (isset ($_GET["from"])) $from=$_GET["from"];
 else $from=0;
 
 //=====================================================================
-// affiche la fiche type de matériel
+// affiche la fiche type de matÃ©riel
 //=====================================================================
 
 $query="select tm.TM_CODE,tm.TM_DESCRIPTION,tm.TM_USAGE, cm.CM_DESCRIPTION,cm.PICTURE, tm.TM_LOT, tt.TT_CODE, tt.TT_NAME
@@ -74,14 +74,14 @@ echo "<div class='table-responsive'>";
 echo "<div class='col-sm-5'>
         <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'><strong> Modifier type de matériel</span><span class='badge' style='float:right'>$nombre article(s)</span></strong></div>
+                <div class='card-title'><strong> Modifier type de matÃ©riel</span><span class='badge' style='float:right'>$nombre article(s)</span></strong></div>
             </div>
             <div class='card-body graycard'>";
 
 echo "<table class='noBorder' cellspacing=0 border=0>";
 
 //=====================================================================
-// ligne catégorie
+// ligne catÃ©gorie
 //=====================================================================
 
 $query="select TM_USAGE, CM_DESCRIPTION from categorie_materiel
@@ -89,7 +89,7 @@ $query="select TM_USAGE, CM_DESCRIPTION from categorie_materiel
 $result=mysqli_query($dbc,$query);
 
 echo "<tr>
-            <td>Catégorie $asterisk</td>
+            <td>CatÃ©gorie $asterisk</td>
             <td align=left>
           <select class='form-control select-sm' name='TM_USAGE' id='TM_USAGE' onchange='change_type();'>";
                while ($row=@mysqli_fetch_array($result)) {
@@ -144,17 +144,17 @@ echo "<tr id=row_tt $style>
       
       
 //=====================================================================
-// lot de matériel
+// lot de matÃ©riel
 //=====================================================================
 if ( $TM_LOT == 1 ) $checked='checked';
 else $checked='';
 
 echo "<tr>
-            <td>Lot de matériel</td>
+            <td>Lot de matÃ©riel</td>
             <td align=left>
             <label class='switch'><input type='checkbox' name='TM_LOT' value='1' $checked
-            title=\"Cochez la case si ce type définit un lot de matériel\"><span class='slider round'></span></label>
-            <font size=1><i>des pièces de matériel peuvent être intégrées dans un lot<i></font>";        
+            title=\"Cochez la case si ce type dÃ©finit un lot de matÃ©riel\"><span class='slider round'></span></label>
+            <font size=1><i>des piÃ¨ces de matÃ©riel peuvent Ãªtre intÃ©grÃ©es dans un lot<i></font>";        
 echo " </td>
       </tr>";    
 

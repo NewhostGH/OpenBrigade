@@ -52,7 +52,7 @@ if (( $GP_ID <> 4) and ($GP_ID <> 0)) {
     $result=mysqli_query($dbc,$query);
     
     if ( $gp_astreinte == 0 ) {
-        // enlever les astreintes saisies sur ce rôle
+        // enlever les astreintes saisies sur ce rÃ´le
         $query="delete from astreinte where GP_ID=".$GP_ID;
         $result=mysqli_query($dbc,$query);
     }

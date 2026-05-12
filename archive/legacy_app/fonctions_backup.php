@@ -172,7 +172,7 @@ SET sql_mode = '';
     //------------------------------------------------------------
 
     $nbjourmois=date("t");
-    // comptage des fichiers sql : archives récentes
+    // comptage des fichiers sql : archives rÃ©centes
     $f_arr = array(); $f = 0;
     $backupdir = opendir($path);
     $nb=0;

@@ -55,8 +55,8 @@ if(isset($table) && isset($select) && isset($_GET['show'])){
     $result = mysqli_query($dbc,$sql);
     if ( ! $result ) {
         if( strpos( mysqli_error($dbc), "Incorrect key file for table '/tmp" ) !== false ) $errmsg ="Veuillez re-essayer avec une plage de dates plus petite.";
-        else $errmsg = "L'erreur suivante est apparue: <p><span style='color:red;font-family:Courier;'>".strip_tags(mysqli_error($dbc))."</span><p> Veuillez transmettre ce message à votre administrateur.";
-        write_msgbox("Erreur",$error_pic,"Impossible d'extraire les données du reporting:<p><b>$export_name</b><p>".$errmsg."
+        else $errmsg = "L'erreur suivante est apparue: <p><span style='color:red;font-family:Courier;'>".strip_tags(mysqli_error($dbc))."</span><p> Veuillez transmettre ce message Ã  votre administrateur.";
+        write_msgbox("Erreur",$error_pic,"Impossible d'extraire les donnÃ©es du reporting:<p><b>$export_name</b><p>".$errmsg."
                     <p><input type='button' class='btn btn-default' value='Retour' name='annuler' onclick=\"javascript:history.back(1);\">",30,30); 
         write_debugbox($sql);
         die();
@@ -69,7 +69,7 @@ if(isset($table) && isset($select) && isset($_GET['show'])){
         $currentfield = mysqli_field_tell($result) - 1;
         $tab[0][$currentfield] = $finfo->name;
     }
-    // Données
+    // DonnÃ©es
     $nolig=1;
     while ( $row = mysqli_fetch_array($result)) {
         for($col = 0;$col<$numcol;$col++){
@@ -147,7 +147,7 @@ if ( $affichage == 'ecran' ) {
     if ( $exp == '' )
         echo "<div class='rounded m-2 p-5 card-mobile reporting-bg'>
         <div class='font-weight-bolder h5'>Reporting</a></div>
-        <p class='reporting-text'>Créez votre reporting en choisissant vos paramètres dans les listes déroulantes ci dessus.<br>Vous pourrez alors consultez ou exporter les données.</p>
+        <p class='reporting-text'>CrÃ©ez votre reporting en choisissant vos paramÃ¨tres dans les listes dÃ©roulantes ci dessus.<br>Vous pourrez alors consultez ou exporter les donnÃ©es.</p>
         </div>";
     if ( $exp == '' ) $second_char='N';
     else $second_char=substr($exp,1,1);
@@ -157,9 +157,9 @@ if ( $affichage == 'ecran' ) {
     //------------------------------
     if ( $second_char == 'T' ) {
         echo "<div style='display: inline-block'>";
-        echo " <select id='type_event' name='type_event' class='selectpicker' data-live-search='true'  data-style='btn-default' title='Choix type événement' data-container='body'
+        echo " <select id='type_event' name='type_event' class='selectpicker' data-live-search='true'  data-style='btn-default' title='Choix type Ã©vÃ©nement' data-container='body'
         onchange=\"orderfilter(document.getElementById('filter').value,'".$subsections."','".$exp."','".$dtdb."','".$dtfn."','".$yearreport."',document.getElementById('type_event').value,'".$competence."')\">";
-        echo "<option value='ALL' selected class='option-ebrigade'>Toutes activités</option>";
+        echo "<option value='ALL' selected class='option-ebrigade'>Toutes activitÃ©s</option>";
         $query="select distinct te.CEV_CODE, ce.CEV_DESCRIPTION, te.TE_CODE, te.TE_LIBELLE
                 from type_evenement te, categorie_evenement ce
                 where te.CEV_CODE=ce.CEV_CODE
@@ -180,11 +180,11 @@ if ( $affichage == 'ecran' ) {
         echo "</select></div>";
     }
     //------------------------------
-    // compétence pour certains
+    // compÃ©tence pour certains
     //------------------------------
     if ( $second_char == 'C' ) {
         echo "<div style='display: inline-block'>";
-        echo " <select id='competence' name='competence' class='selectpicker' data-live-search='true' data-style='btn-default' title='Choix compétence' data-container='body'
+        echo " <select id='competence' name='competence' class='selectpicker' data-live-search='true' data-style='btn-default' title='Choix compÃ©tence' data-container='body'
         onchange=\"orderfilter(document.getElementById('filter').value,'".$subsections."','".$exp."','".$dtdb."','".$dtfn."','".$yearreport."','".$type_event."',document.getElementById('competence').value)\">";
         $query="select distinct PS_ID, TYPE, DESCRIPTION from poste 
                 where PS_FORMATION=1 and PS_DIPLOMA=1";
@@ -222,7 +222,7 @@ if ( $affichage == 'ecran' ) {
     if ( $first_char == '1' ) {
         $style1= "style='display: inline-block'";
         $style2= "style='display: inline-block; margin-right:5px;'";
-        $t = "Début";
+        $t = "DÃ©but";
     }
     else if ( $first_char == '0' ) {
         $style1= "style='display: inline-block'";
@@ -246,7 +246,7 @@ if ( $affichage == 'ecran' ) {
     echo "</div>";
     
     //--------------------------------
-    // année pour certains reports
+    // annÃ©e pour certains reports
     //--------------------------------
     if ( $first_char == '2' ) {
         echo "<div style='display: inline-block'>";
@@ -290,7 +290,7 @@ if ( $affichage == 'ecran' ) {
         $endtime=get_time();
         $exectime = intval(round(($endtime - $starttime),2));
         if (substr($exp,0,1)==1 ) $param = "du ".$dtdb." au ".$dtfn;
-        else if (substr($exp,0,1)==2 ) $param = "année ".$yearreport;
+        else if (substr($exp,0,1)==2 ) $param = "annÃ©e ".$yearreport;
         else $param="";
         $query="insert into log_report (R_CODE,LR_DATE,P_ID,S_ID,LR_ROWS,LR_PARAMS,LR_TIME)
                 values (\"".$exp."\",NOW(),".$id.",".$filter.",".$nb.",'".$param."',".$exectime.")";

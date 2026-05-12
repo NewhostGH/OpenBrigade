@@ -23,9 +23,9 @@ $id=$_SESSION['id'];
 $OptionsExport = "";
 $OptionsExport .= "\n"."<option value=''".(($exp=="")?" selected":"").">Choisissez un rapport</option>";
 
-// check if veille opérationnelle
+// check if veille opÃ©rationnelle
 $query="select count(*) as NB from groupe
-        where GP_DESCRIPTION='Veille opérationnelle'";
+        where GP_DESCRIPTION='Veille opÃ©rationnelle'";
 $result=mysqli_query($dbc,$query);
 $row=mysqli_fetch_array($result);
 if ( $row["NB"] <> 0 ) $veille=true;
@@ -33,7 +33,7 @@ else $veille=false;
 
 // check if personnel sante
 $query="select count(*) as NB from equipe
-        where EQ_NOM='Personnels de Santé'";
+        where EQ_NOM='Personnels de SantÃ©'";
 $result=mysqli_query($dbc,$query);
 $row=mysqli_fetch_array($result);
 if ( $row["NB"] <> 0 ) $personnelsante=true;
@@ -85,8 +85,8 @@ function add_group($code) {
 }
 
 if ( $syndicate == 1 ) {
-// adhérents
-add_group("FA adhérents");
+// adhÃ©rents
+add_group("FA adhÃ©rents");
 add_opt('adhmodepaiement');
 add_opt('adhpayantparcheque');
 add_opt('adhpayantparvirement');
@@ -155,7 +155,7 @@ add_opt('1nouveauxadherentsPres');
 add_opt('1nbRadiationsAdherentsParDep');
 add_opt('1radiationsmotifPres');
 
-add_group("DIVERS adhérents");
+add_group("DIVERS adhÃ©rents");
 add_opt('1verifmontants');
 add_opt('2attestationsImpots');
 add_opt('2attestationsImpotsRejets');
@@ -174,7 +174,7 @@ add_opt('droitBureauDE');
 
 if ( $cotisations ) {
 // cotisations
-add_group("COTISATIONS adhérents");
+add_group("COTISATIONS adhÃ©rents");
 add_opt('2sommecotisations');
 add_opt('2sommecotisationsprevues');
 add_opt('montantactuel');
@@ -206,7 +206,7 @@ add_opt('1notN_toutes');
 }
 
 if (check_rights($id,13)) {
-add_group("HORAIRES réalisés du personnel salarié");
+add_group("HORAIRES rÃ©alisÃ©s du personnel salariÃ©");
 add_opt('salarie');
 add_opt('horairesavalider');
 add_opt('1horaires');
@@ -223,7 +223,7 @@ add_group("personnel");
 add_opt('effectif');
 add_opt('adresses');
 add_opt('typeemail');
-add_group("événements");
+add_group("Ã©vÃ©nements");
 add_opt('1activite');
 add_opt('1nbparticipants');
 add_group("participations du personnel");
@@ -242,8 +242,8 @@ else {
 // =======================================
 // ASSOCIATION
 // =======================================
-// événements
-add_group("activités");
+// Ã©vÃ©nements
+add_group("activitÃ©s");
 add_opt('1nbparticipants');
 add_opt('1evenement_annule_liste');
 add_opt('1evenement_annule');
@@ -288,7 +288,7 @@ add_opt('1formationsCE');
 add_opt('sstexpiration');
 add_opt('2Cforpardep');
 
-if(check_rights($id, 29)){ // autoriser seulement au personnes avec la compétence 29 : comptabilité
+if(check_rights($id, 29)){ // autoriser seulement au personnes avec la compÃ©tence 29 : comptabilitÃ©
 add_group("facturation");
 add_opt('1facturation');
 add_opt('1facturationRecap');
@@ -304,8 +304,8 @@ add_opt('1facturepayeedps');
 add_opt('1facturepayeefor');
 add_opt('1evenement_annule_liste2');
 }
-// véhicules / matériel 
-add_group("véhicules / matériel");
+// vÃ©hicules / matÃ©riel 
+add_group("vÃ©hicules / matÃ©riel");
 if ( $code_conducteur_active ) 
 add_opt('code_conducteur');
 add_opt('1perso_km');
@@ -399,7 +399,7 @@ add_opt('1heurespersonneHorsDPSFacture');
 
 
 // personnel externe
-if(check_rights($id, 37) and $externes == 1){ // autoriser seulement au personnes avec la compétence 37, gestion des externes
+if(check_rights($id, 37) and $externes == 1){ // autoriser seulement au personnes avec la compÃ©tence 37, gestion des externes
 add_group("personnel externe");
 add_opt('adressesext');
 add_opt('telext');
@@ -429,8 +429,8 @@ if ($personnelsante)
 add_opt('personnelsante');
 add_opt('competence_expire');
 
-// diplômes 
-add_group("diplômes");
+// diplÃ´mes 
+add_group("diplÃ´mes");
 add_opt('diplomesPSC1');
 add_opt('1diplomesPSC1');
 add_opt('diplomesPSE1');
@@ -470,7 +470,7 @@ add_opt('1heuresparticipationspartype');
 
 if ( $cotisations and (check_rights($id, 53)) ) {
 // cotisations
-add_group("cotisations adhérents");
+add_group("cotisations adhÃ©rents");
 add_opt('2cotisationsPayees');
 add_opt('montantactuel');
 add_opt('cotisationspayees');
@@ -496,8 +496,8 @@ add_opt('1listevictimeCAV');
 
 }
 
-// veille opérationnelle
-add_group("veille opérationnelle");
+// veille opÃ©rationnelle
+add_group("veille opÃ©rationnelle");
 add_opt('pointdujour');
 add_opt('1activite');
 add_opt('maincourantejour');
@@ -534,20 +534,20 @@ add_opt('1notN_REMB');
 add_opt('1notN_toutes');
 }
 if (check_rights($id,13)) {
-add_group("horaires réalisés du personnel salarié");
+add_group("horaires rÃ©alisÃ©s du personnel salariÃ©");
 add_opt('salarie');
 add_opt('horairesavalider');
 add_opt('1horaires');
 }
 
 // COMPETENCES
-add_group("Compétences du personnel");
+add_group("CompÃ©tences du personnel");
 add_opt('competencesope');
 add_opt('competencesfor');
 add_opt('1ajoutscompetences');
 
 if ( $webservice_key <> '' and check_rights($id,9)) {
-add_group("Accès Webservice");
+add_group("AccÃ¨s Webservice");
 add_opt('1soapcallsj');
 add_opt('1soaperrorsj');
 add_opt('1soapcalls');

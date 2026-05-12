@@ -71,11 +71,11 @@ if (isset($_GET["data"])) {
         }
 
         if ($P_OLD_MEMBER > 0) {
-            $etat = "Archivé";
+            $etat = "ArchivÃ©";
             $label_etat = "label-archive";
         }
         else if ($GP_ID == -1) {
-            $etat = "Bloqué";
+            $etat = "BloquÃ©";
             $label_etat = "label-bloqued";
         }
         else {

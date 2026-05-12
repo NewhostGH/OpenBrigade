@@ -27,7 +27,7 @@ verify_csrf('qualif2');
 $competence = intval($_POST['competence']);
 
 if ( $competence == 0 ) {
-    write_msgbox("erreur", $error_pic, "CompÈtence introuvable.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+    write_msgbox("erreur", $error_pic, "Comp√©tence introuvable.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
     exit;
 }
 $query="select PS_ID, F_ID, TYPE, DESCRIPTION, PS_AUDIT from poste where PS_ID=".$competence;
@@ -132,16 +132,16 @@ foreach ($_POST as $key => $value) {
                             if ( $P_STATUT == 'EXT' ) {
                                 $message .= $n." personnel externe";
                                 if ( $C_ID > 0 ) $message .=" de ".$C_NAME.",";
-                                $message .= "\nrattachÈ ‡ la section ".get_section_code($P_SECTION)."\n";
+                                $message .= "\nrattach√© √† la section ".get_section_code($P_SECTION)."\n";
                             }
                             else
                                 $message .= $n." de la section ".get_section_code($P_SECTION)."\n";
-                            $message .= "est maintenant qualifiÈ(e) pour la compÈtence ".$DESCRIPTION."\n";
-                            $message .= "‡ partir du ".date("d-m-Y")." ‡ ".date("H:i")."\n";
+                            $message .= "est maintenant qualifi√©(e) pour la comp√©tence ".$DESCRIPTION."\n";
+                            $message .= "√† partir du ".date("d-m-Y")." √† ".date("H:i")."\n";
                             if ($month <> '')
                                 $message .= "jusqu'au ".$day."-".$month."-".$year."\n";
                             else 
-                                $message .= "sans limitation de durÈe.\n";
+                                $message .= "sans limitation de dur√©e.\n";
             
                             $nb = mysendmail("$destid" , $_SESSION['id'] , "$subject" , "$message" );
                               
@@ -196,7 +196,7 @@ foreach ($_POST as $key => $value) {
                                     if ( $year <> '' ) $cmt .= " exp ".$day."-".$month."-".$year;
                                     insert_log("UPDQ",$P_ID, $cmt);
                                 }
-                                // changer date expiration sur les compÈtences infÈrieures de la hiÈrarchie
+                                // changer date expiration sur les comp√©tences inf√©rieures de la hi√©rarchie
                                 if ( $PH_UPDATE_LOWER_EXPIRY == 1 ) {
                                     $query2="update qualification
                                             set Q_EXPIRATION = '".$expdate."'
@@ -208,7 +208,7 @@ foreach ($_POST as $key => $value) {
                                                           and PH_LEVEL <= ".$PH_LEVEL." )";
                                     $result2=mysqli_query($dbc,$query2);
                                     
-                                    // cas particulier mettre ‡ jour une compÈtence d'une autre hiÈrarchie
+                                    // cas particulier mettre √† jour une comp√©tence d'une autre hi√©rarchie
                                     if ( $TYPE == 'FDF PSE') {
                                         $query2="update qualification
                                             set Q_EXPIRATION = '".$expdate."'
@@ -231,16 +231,16 @@ foreach ($_POST as $key => $value) {
                                 if ( $P_STATUT == 'EXT' ) {
                                           $message .= $n." personnel externe";
                                           if ( $C_ID > 0 ) $message .=" de ".$C_NAME.",";
-                                        $message .= "\nrattachÈ ‡ la section ".get_section_code($S_ID)."\n";
+                                        $message .= "\nrattach√© √† la section ".get_section_code($S_ID)."\n";
                                 }
                                 else
                                     $message .= $n." de la section ".get_section_code($S_ID)."\n";
-                                $message .= "Ètait dÈj‡ qualifiÈ(e) pour la compÈtence ".$DESCRIPTION.".\n";
-                                $message .= "La date d'expiration de cette qualification a ÈtÈ modifiÈe.\n";
+                                $message .= "√©tait d√©j√† qualifi√©(e) pour la comp√©tence ".$DESCRIPTION.".\n";
+                                $message .= "La date d'expiration de cette qualification a √©t√© modifi√©e.\n";
                                 if ($month <> '')
                                     $message .= "La nouvelle date d'expiration est le ".$day."-".$month."-".$year.".\n"; 
                                 else
-                                    $message .= "Il n'y a plus de limitation de durÈe.\n";
+                                    $message .= "Il n'y a plus de limitation de dur√©e.\n";
                     
                                 $nb = mysendmail("$destid" , $_SESSION['id'] , "$subject" , "$message" );
                                                 
@@ -259,7 +259,7 @@ foreach ($_POST as $key => $value) {
                     }
                     $result=mysqli_query($dbc,$query);
                     if ( mysqli_affected_rows($dbc) > 0 ) {
-                        insert_log("DELQ",$P_ID, "compÈtence ".$TYPE." - ".$DESCRIPTION." supprimÈe");
+                        insert_log("DELQ",$P_ID, "comp√©tence ".$TYPE." - ".$DESCRIPTION." supprim√©e");
                     }
                 }
             }

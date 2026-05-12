@@ -41,7 +41,7 @@ $disabled="";
 if ( $GP_ID == 107 ) {
      $disabled='disabled';
     // cas particulier type cadre de permanence, modifiable par le cadre de permanence actuel ou par 
-    // une personne habilitée 26
+    // une personne habilitÃ©e 26
     // ce responsable peut etre membre d'une sous-section
     if ( check_rights($id, 26, "$S_ID")) $disabled="";
 }
@@ -101,7 +101,7 @@ if ( $P_ID >= 0 ) {
                 notify_on_role_change("", $P_ID, "$S_ID", '107');
             }
             
-            // notification nationale si changement élu départemental
+            // notification nationale si changement Ã©lu dÃ©partemental
             notification_elu_departemental($GP_DESCRIPTION, "$S_ID", $P_ID);
         }
         echo "<body onload=\"self.location.href='upd_section.php?S_ID=$S_ID&status=".$status."';\" >";
@@ -119,7 +119,7 @@ echo "<body ><div align=center class='table-responsive'><table class='noBorder'>
       </table><p>
       <table class='noBorder'>";
 
-// rôles actuels
+// rÃ´les actuels
 $query = "select p.P_ID, p.P_PRENOM, p.P_NOM, s.S_CODE PS_CODE, p.P_SECTION, p.P_PHOTO, p.P_SEXE
         from pompier p, section_role sr, section s
         where sr.S_ID=".$S_ID." 
@@ -140,7 +140,7 @@ while (custom_fetch_array($result)) {
     
     echo "<tr><td><img src='".$img."' class='img-max-50 rounded'></td>
         <td><span class='left10'><b>".$name."</b> (".$PS_CODE.")</span></td>
-        <td align=center><a href='#'><i class='fa fa-trash fa-lg' title=\"supprimer ce rôle ou permission '".$GP_DESCRIPTION."' pour ".$name."\" onclick=\"delresponsable(".$S_ID.",".$GP_ID.",".$P_ID.");\"></i></a></td>
+        <td align=center><a href='#'><i class='fa fa-trash fa-lg' title=\"supprimer ce rÃ´le ou permission '".$GP_DESCRIPTION."' pour ".$name."\" onclick=\"delresponsable(".$S_ID.",".$GP_ID.",".$P_ID.");\"></i></a></td>
     </tr>";
 }
 

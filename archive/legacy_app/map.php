@@ -55,7 +55,7 @@ $address=preg_replace('/\r\n/', ' ', trim($row["ADDRESS"]));
 
 
 if ( $lat == '' or $lng == '') {
-    write_msgbox("erreur géolocalisation",$error_pic, "Pas d'adresse enregistrée ou données de géolocalisation incorrectes",0,0);
+    write_msgbox("erreur gÃ©olocalisation",$error_pic, "Pas d'adresse enregistrÃ©e ou donnÃ©es de gÃ©olocalisation incorrectes",0,0);
     exit;
 }
 

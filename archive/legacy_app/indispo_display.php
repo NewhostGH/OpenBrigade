@@ -99,7 +99,7 @@ echo "<div class='table-responsive'>";
 echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'><strong> DÈtails de l'absence </strong></div>
+                <div class='card-title'><strong> D√©tails de l'absence </strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0 style='min-width: 320px;font-weight: 100;'>";
@@ -119,7 +119,7 @@ if ( $I_JOUR_COMPLET == 0 ) {
     }
     else $abs .= ' jour(s)';
     $cmtdeb="de ".$IH_DEBUT;
-    $cmtfin=" ‡ ".$IH_FIN;
+    $cmtfin=" √† ".$IH_FIN;
 }
 else if ( $I_JOUR_COMPLET == 2 ) {
     $abs = '0,5 jour';
@@ -152,11 +152,11 @@ echo "<tr ><td><font style='font-weight:600'>Commentaire</font></td>
 // soit nb jours d'absence
 //=====================================================================
 
-echo "<tr ><td><font style='font-weight:600'>DurÈe d'absence</font></td>
+echo "<tr ><td><font style='font-weight:600'>Dur√©e d'absence</font></td>
         <td> ".$abs."</td></tr>"; 
 
 if ( $TI_FLAG == 1 ) {
-    //compteur de jours de CP utilisÈs
+    //compteur de jours de CP utilis√©s
     $nbcp=countNonFreeDaysBetweenTwoDates($date1,$date2);
     if ( $nbcp == 1 and $I_JOUR_COMPLET == 2 ) $d = "0,5 jour ";
     else $d = $nbcp." jour";
@@ -166,9 +166,9 @@ if ( $TI_FLAG == 1 ) {
         <td><font style='font-weight:600'>".$d."</font></td></tr>"; 
 }
 //=====================================================================
-// absences dÈj‡ enregistrÈes
+// absences d√©j√† enregistr√©es
 //=====================================================================
-//On affiche uniquement les personnels de la meme Èquipe
+//On affiche uniquement les personnels de la meme √©quipe
 if ( $P_STATUT == "SPP" ) {
    $query="select distinct p.P_ID, p.P_NOM, p.P_PRENOM, p.P_GRADE,p.P_SECTION, i.I_DEBUT, i.I_FIN, ti.TI_LIBELLE
         from pompier p, indisponibilite i, type_indisponibilite ti
@@ -184,13 +184,13 @@ if ( $P_STATUT == "SPP" ) {
    $result=mysqli_query($dbc,$query);
    $num=mysqli_num_rows($result);
    if ( $num > 0 ) {
-        echo "<tr ><td colspan=2 align=left><i class='fa fa-exclamation-triangle' style='color:orange;'></i><font style='font-weight:600'>Attention: </font>dÈj‡ ".$num." SPP absent(s)</td>";
+        echo "<tr ><td colspan=2 align=left><i class='fa fa-exclamation-triangle' style='color:orange;'></i><font style='font-weight:600'>Attention: </font>d√©j√† ".$num." SPP absent(s)</td>";
         while (custom_fetch_array($result)) {
             echo "<tr ><td>".strtoupper($P_NOM)." ".ucfirst($P_PRENOM)."</td><td>".$TI_LIBELLE." du ".$I_DEBUT." au ".$I_FIN."</td></tr>";
      }
   }
   else {
-      echo "<tr ><td colspan=2>Aucun pros absent sur la pÈriode</td></tr>";
+      echo "<tr ><td colspan=2>Aucun pros absent sur la p√©riode</td></tr>";
   }
 }
 
@@ -199,14 +199,14 @@ if ( $P_STATUT == "SPP" ) {
 //=====================================================================
 
 if ( $TI_FLAG == 1 ) $label="<font style='font-weight:600'><font color=$mytxtcolor>".$I_STATUS_LIBELLE."</font></font>";
-else $label="<span class=small title='voir dÈtail'>".$I_STATUS_LIBELLE."</span>";
+else $label="<span class=small title='voir d√©tail'>".$I_STATUS_LIBELLE."</span>";
 echo "<tr ><td><font style='font-weight:600'>Statut demande </font></td>
         <td>".$label."</td></tr>";
 
 if ( $I_STATUS_BY <> "" ) {
-    if ( $I_STATUS == 'VAL' ) $txt='ValidÈ par';
-    else if ( $I_STATUS == 'REF' ) $txt='RefusÈ par';
-    else $txt="ModifiÈ par";
+    if ( $I_STATUS == 'VAL' ) $txt='Valid√© par';
+    else if ( $I_STATUS == 'REF' ) $txt='Refus√© par';
+    else $txt="Modifi√© par";
     echo "<tr ><td>".$txt." </td>
         <td class=small>".$nom_status_by."</td></tr>";
     if ( $I_STATUS == 'VAL' )
@@ -223,7 +223,7 @@ echo "</table></div></div><p>";
 // boutons
 //=====================================================================
 
-// on ne peut pas valider ses propres congÈs
+// on ne peut pas valider ses propres cong√©s
 if ( $TI_FLAG == 1 )  {
    if ( $I_STATUS == 'ATT' ) {
         if ((check_rights($id, 13, $section)) and ($id <> $P_ID or check_rights($id, 14))) {
@@ -232,7 +232,7 @@ if ( $TI_FLAG == 1 )  {
             echo " <input type=submit class='btn btn-danger' value='Refuser' 
             onclick=\"bouton_redirect('indispo_status.php?code=$code&action=refuser','refuser');\">";
         }
-        // on peut supprimer sa demande de CP si pas encore validÈe
+        // on peut supprimer sa demande de CP si pas encore valid√©e
         if (check_rights($id, 13, $section) or $id == $P_ID)
             echo " <input type=submit class='btn btn-danger' value='Supprimer' 
             onclick=\"bouton_redirect('indispo_status.php?code=$code&action=supprimer','supprimer');\">";

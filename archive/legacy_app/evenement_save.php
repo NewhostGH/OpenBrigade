@@ -150,13 +150,13 @@ if ( $evenement == 0 ) $evenement = generate_evenement_number();
 
 if ($canceled == 1 ) {
    if (strlen($cancel_detail) < 6 ) {
-         write_msgbox("ERREUR", $error_pic, "La raison de l'annulation n'a pas été bien précisée<br>Cette information est obligatoire (avec au moins 6 caractères). Veuillez recommencer.<p align=center><a href='javascript:history.back(1);'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
+         write_msgbox("ERREUR", $error_pic, "La raison de l'annulation n'a pas Ã©tÃ© bien prÃ©cisÃ©e<br>Cette information est obligatoire (avec au moins 6 caractÃ¨res). Veuillez recommencer.<p align=center><a href='javascript:history.back(1);'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
          exit;
      }
 }
 
 if (( $action <> 'delete' and $action <> 'document') and ( $_POST["type"] == '' )) {
-     write_msgbox("ERREUR", $error_pic, "Le type d'événement n'a pas été bien précisée<br>Cette information est obligatoire. Veuillez recommencer.<p align=center><a href='javascript:history.back(1);'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
+     write_msgbox("ERREUR", $error_pic, "Le type d'Ã©vÃ©nement n'a pas Ã©tÃ© bien prÃ©cisÃ©e<br>Cette information est obligatoire. Veuillez recommencer.<p align=center><a href='javascript:history.back(1);'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
      exit;
 }
 
@@ -166,7 +166,7 @@ $row=mysqli_fetch_array($result);
 $statut_section=intval($row["S_INACTIVE"]);
 
 if ( $action <> 'delete' and $statut_section == 1 ) {
-      write_msgbox("ERREUR", $error_pic, "La section organisatrice choisie est inactive. L'événement ne peut pas être enregistré.<p align=center><a href='javascript:history.back(1);'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
+      write_msgbox("ERREUR", $error_pic, "La section organisatrice choisie est inactive. L'Ã©vÃ©nement ne peut pas Ãªtre enregistrÃ©.<p align=center><a href='javascript:history.back(1);'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
      exit;
 }
 
@@ -193,7 +193,7 @@ function redirect3(evenement) {
 function attention_evenement_interdit($section,$type) {
     global $dbc,$dc1,$dc2,$nbmaxsessionsparevenement,$error_pic;
     // recherche d'interdictions en cours 
-    // dates de début et fin événement 
+    // dates de dÃ©but et fin Ã©vÃ©nement 
     $dt1="";$dt2="";
     for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
         if ( $dc1[$k] <> "" ) {
@@ -209,7 +209,7 @@ function attention_evenement_interdit($section,$type) {
     }
     $list = get_family_up(intval($section));
     if ( $list == '' ) $list = intval($section);
-    // recherche d'interdictions sur la période pour la section ou le niveau supérieur
+    // recherche d'interdictions sur la pÃ©riode pour la section ou le niveau supÃ©rieur
     $query="select sc.S_CODE, sc.S_DESCRIPTION, s.SSE_ID, s.TE_CODE, te.TE_LIBELLE, te.TE_ICON, 
             date_format(s.START_DATE, '%d-%m-%Y') START_DATE,
             date_format(s.END_DATE, '%d-%m-%Y') END_DATE,
@@ -240,7 +240,7 @@ function attention_evenement_interdit($section,$type) {
        else $demande = '';
        if ( $TE_CODE == 'ALL' ) $cmt = 'de tous types';
        else $cmt = "\"".$TE_LIBELLE."\"";
-       write_msgbox("erreur", $error_pic, "La création d'événements ".$cmt." est interdite pour ".$S_CODE." - ".$S_DESCRIPTION."<br>du ".$START_DATE." au ".$END_DATE." 
+       write_msgbox("erreur", $error_pic, "La crÃ©ation d'Ã©vÃ©nements ".$cmt." est interdite pour ".$S_CODE." - ".$S_DESCRIPTION."<br>du ".$START_DATE." au ".$END_DATE." 
                     <br>".$SSE_COMMENT."
                     <br>".$demande."
                     <p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
@@ -248,7 +248,7 @@ function attention_evenement_interdit($section,$type) {
     }
 }
 
-// insertion / mise à jour de indisponibilité
+// insertion / mise Ã  jour de indisponibilitÃ©
 if ( $action == "delete" ) {
    check_all(19);
    if (! check_rights($id, 19, get_section_organisatrice($evenement))) check_all(24);
@@ -279,7 +279,7 @@ if ( $action == "document") {
                 exit;
             }
             else if ( $file_name <> '' ) {
-               // upload réussi: insérer les informations relatives au document dans la base
+               // upload rÃ©ussi: insÃ©rer les informations relatives au document dans la base
                    $query="insert into document(S_ID,D_NAME,E_CODE,TD_CODE,DS_ID,D_CREATED_BY,D_CREATED_DATE)
                        values (".$section.",\"".$file_name."\",\"".$evenement."\",'DIV',\"".$security."\",".$id.",NOW())";
                    $result=mysqli_query($dbc,$query);
@@ -377,17 +377,17 @@ if ( $action <> "delete" and  $action <> "document") {
                 $val1 = $year1.$month1.$day1.str_pad(str_replace(':','',$debut[$k]),4,0,STR_PAD_LEFT);
                 if( $prevdate <> '' ) {
                     if ( $val1 < $prevdate ) {
-                        write_msgbox("erreur", $error_pic, "Dates des parties incohérentes.<br>Elles doivent être dans l'ordre chronologique.<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+                        write_msgbox("erreur", $error_pic, "Dates des parties incohÃ©rentes.<br>Elles doivent Ãªtre dans l'ordre chronologique.<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
                         exit;
                     }
                 }
                 $prevdate = $val1;
-                // vérifier la cohérence des dates
+                // vÃ©rifier la cohÃ©rence des dates
                 $datetime1 = new DateTime($year1."-".$month1."-".$day1." ".$debut[$k]);
                 $tmp=explode ("-",$dc2[$k]); $month2=$tmp[1]; $day2=$tmp[0]; $year2=$tmp[2];
                 $datetime2 = new DateTime($year2."-".$month2."-".$day2." ".$fin[$k]);
                 if ( $datetime1 > $datetime2 ) {
-                    write_msgbox("erreur", $error_pic, "Dates/heures incohérentes.<br>La fin doit être après le début.<br><p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+                    write_msgbox("erreur", $error_pic, "Dates/heures incohÃ©rentes.<br>La fin doit Ãªtre aprÃ¨s le dÃ©but.<br><p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
                     exit;
                 }
             }
@@ -409,26 +409,26 @@ if ( $action <> "delete" and  $action <> "document") {
     }
 
     if ( $libelle == "" ) {
-        write_msgbox("erreur", $error_pic, "Le libelle doit être renseigné<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+        write_msgbox("erreur", $error_pic, "Le libelle doit Ãªtre renseignÃ©<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
         echo "";
         exit;
     }
 
     if ( $lieu == "" and $type <> "GAR" ) {
-        write_msgbox("erreur", $error_pic, "Le lieu doit être renseigné<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+        write_msgbox("erreur", $error_pic, "Le lieu doit Ãªtre renseignÃ©<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
         echo "";
         exit;
     }
 
     if ( $dc1[1] == "" ) {
-        write_msgbox("erreur", $error_pic, "La date de début est incorrecte<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+        write_msgbox("erreur", $error_pic, "La date de dÃ©but est incorrecte<br><p align=center><input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
         echo "";
         exit;
     }
     
     
     if ( $action =='update') {
-         // mise à jour 
+         // mise Ã  jour 
       
         if ( $evenement == 0 ) {
             param_error_msg();
@@ -442,7 +442,7 @@ if ( $action <> "delete" and  $action <> "document") {
         $current_type=$row["TE_CODE"];
         $current_address=$row["E_ADDRESS"];
 
-        // mettre à jour l'événement principal
+        // mettre Ã  jour l'Ã©vÃ©nement principal
         $query="update evenement set
             TE_CODE='".$type."',
             S_ID=".$section.",
@@ -531,7 +531,7 @@ if ( $action <> "delete" and  $action <> "document") {
                 ".$nb_vpsp.",".$nb_autres_vehicules.",\"".$moyens."\",\"".$clauses."\",\"".$clauses2."\",'".$open_to_ext."','".$allow_reinforcement."',".$parent.", ".$id.", 
                 NOW(),".$company.",\"".$contact_name."\",\"".$contact_tel."\",\"".$address."\",'".$visible_outside."','".$tarif."','".$stagiaires."', ".$exterieur.",\"".$url."\",'".$colonne."',
                 ".$ps.",'".$tf."',\"".$e_tel."\" ,\"".$whatsapp_group."\",\"".$webex_url."\",\"".$webex_pin."\",".$webex_start.",".$autoclose.",".$type_garde.")";
-        $result=mysqli_query($dbc,$query) or die ("Erreur création événement");
+        $result=mysqli_query($dbc,$query) or die ("Erreur crÃ©ation Ã©vÃ©nement");
         insert_log("INSEVT", $evenement, $complement="", $code="");
         $current_address="";
     }
@@ -567,7 +567,7 @@ if ( $action <> "delete" and  $action <> "document") {
             $tmp=explode ("-",$dc2[$k]); $month2=$tmp[1]; $day2=$tmp[0]; $year2=$tmp[2];
             $date2=mktime(0,0,0,$month2,$day2,$year2);
             
-            // mettre à jour les dates / heures des renforts
+            // mettre Ã  jour les dates / heures des renforts
             $query="select date_format(EH_DATE_DEBUT, '%Y-%m-%d') as EH_DATE_DEBUT, 
                    date_format(EH_DATE_FIN, '%Y-%m-%d') as EH_DATE_FIN, 
                    EH_DEBUT, EH_FIN , EH_DUREE
@@ -586,7 +586,7 @@ if ( $action <> "delete" and  $action <> "document") {
             attention_evenement_interdit($section,$type);
     
             if ( ! empty($evts)) {
-                // changer dates / heures des renforts qui ont les mêmes horaires
+                // changer dates / heures des renforts qui ont les mÃªmes horaires
                 $query="update evenement_horaire set
                     EH_DATE_DEBUT='".$year1."-".$month1."-".$day1."',
                     EH_DATE_FIN='".$year2."-".$month2."-".$day2."',
@@ -615,7 +615,7 @@ if ( $action <> "delete" and  $action <> "document") {
             }
         
            
-            // supprimer puis réinsérer sur l'événement principal
+            // supprimer puis rÃ©insÃ©rer sur l'Ã©vÃ©nement principal
             $query="delete from evenement_horaire where E_CODE=".$evenement." and EH_ID=".$k;
             $result=mysqli_query($dbc,$query);
     
@@ -642,7 +642,7 @@ if ( $action <> "delete" and  $action <> "document") {
             $result=mysqli_query($dbc,$query);
         }
     }
-    // mettre à jour nombre de parties
+    // mettre Ã  jour nombre de parties
     $query="update evenement set E_PARTIES = (select count(1) from evenement_horaire where evenement_horaire.E_CODE = ".$evenement.")
             where E_CODE = $evenement";
     $result=mysqli_query($dbc,$query);
@@ -661,7 +661,7 @@ if ( $action <> "delete" and  $action <> "document") {
         }
     }
        
-    // cas DPS ; mettre à jour le type de DPS
+    // cas DPS ; mettre Ã  jour le type de DPS
     if ( $type =='DPS' ) {
         if ( $nombre == '' ) $TAV_ID = 1;
         else if ( $nombre == 0 ) $TAV_ID = 1;
@@ -821,7 +821,7 @@ if ( $action <> "delete" and  $action <> "document") {
                                 E_MAIL1, E_MAIL2, E_MAIL3, E_CONVENTION, E_OPEN_TO_EXT, E_ALLOW_REINFORCEMENT, ".$evenement.", $id, 
                                 NOW(), C_ID, E_CONTACT_LOCAL, E_CONTACT_TEL, E_ADDRESS, E_VISIBLE_OUTSIDE, E_PARTIES, E_TARIF, E_EXTERIEUR, E_URL, PS_ID, TF_CODE
                              from evenement where E_CODE = ".$oldr;
-                        $resultk=mysqli_query($dbc,$queryk) or die ("Erreur création événement ".$renfort_label);
+                        $resultk=mysqli_query($dbc,$queryk) or die ("Erreur crÃ©ation Ã©vÃ©nement ".$renfort_label);
                         
                         $queryk="insert into evenement_horaire (E_CODE,EH_ID, EH_DATE_DEBUT,EH_DATE_FIN,EH_DEBUT, EH_FIN, EH_DUREE, EH_DESCRIPTION)
                                 select ".$newr.",EH_ID, EH_DATE_DEBUT,EH_DATE_FIN,EH_DEBUT, EH_FIN, EH_DUREE, EH_DESCRIPTION
@@ -875,7 +875,7 @@ else if  ( $action == 'delete' ) {
     if(is_dir($mypath)) {
         full_rmdir($mypath);
     }
-    write_msgbox("événement supprimé", $star_pic, " L'événement a été supprimé du calendrier<br>
+    write_msgbox("Ã©vÃ©nement supprimÃ©", $star_pic, " L'Ã©vÃ©nement a Ã©tÃ© supprimÃ© du calendrier<br>
           <p align=center><a href='evenement_choice.php' target='_self'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
 }
 

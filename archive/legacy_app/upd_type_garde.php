@@ -33,7 +33,7 @@ check_feature("gardes");
 <script type='text/javascript' src='js/equipe.js'></script>
 <script type='text/javascript' src='js/ddslick.js'></script>
 <?php
-// choix d'icÙnes pour la garde
+// choix d'ic√¥nes pour la garde
 $query="select EQ_ICON from type_garde where EQ_ID=".$eqid;
 $result=mysqli_query($dbc,$query);
 $row=@mysqli_fetch_array($result);
@@ -143,16 +143,16 @@ if ( $nbsections == 0 ) {
     custom_fetch_array($result);
     if ( $NB > 0 ) {
         $section_disabled='disabled';
-        $cmt="Il y a dÈj‡ $NB gardes crÈes pour ce type.";
+        $cmt="Il y a d√©j√† $NB gardes cr√©es pour ce type.";
         echo "<input class='form-control form-control-sm' type='hidden' id='groupe' name='groupe' value='".$S_ID."'>";
     }
     else {
         $section_disabled='';
-        $cmt="Aucune garde crÈÈe pour ce type.";
+        $cmt="Aucune garde cr√©√©e pour ce type.";
     }
     
-    // permettre les modifications si je suis habilitÈ sur la fonctionnalitÈ 5 au bon niveau
-    // ou je suis habilitÈ sur la fonctionnalitÈ 24 )
+    // permettre les modifications si je suis habilit√© sur la fonctionnalit√© 5 au bon niveau
+    // ou je suis habilit√© sur la fonctionnalit√© 24 )
     if (check_rights($id, 5,"$S_ID")) $responsable_gardes=true;
     else $responsable_gardes=false;
 
@@ -207,7 +207,7 @@ echo "<tr>
 echo "</tr>";
       
 // select icon
-echo "<tr><td>IcÙne</td>
+echo "<tr><td>Ic√¥ne</td>
 <td><div id='iconSelector'></div><input type=hidden name='icon' id='icon' value=\"".$EQ_ICON."\" $disabled>";
     
 ?>
@@ -217,7 +217,7 @@ $('#iconSelector').ddslick({
     data:ddData,
     width:300,
     height:400,
-    selectText: "Choisir une icÙne pour ce type de garde",
+    selectText: "Choisir une ic√¥ne pour ce type de garde",
     imagePosition:"left",
     onSelected: function(data){
         document.getElementById("icon").value = data.selectedData.imageSrc;
@@ -243,7 +243,7 @@ if ( $pompiers ) {
     $H .= "<option value='0' $selected>Autre cas</option>";
     $H .= "</select>";
     echo "<tr>
-          <td>RÈgime de travail $asterisk</td>
+          <td>R√©gime de travail $asterisk</td>
           <td align=left>".$H."</td>";
     echo "</tr>";
 }
@@ -268,9 +268,9 @@ echo "</tr>";
 echo "<tr>
       <td>Adresse garde</td>
       <td align=left>
-        <input type='text' name='EQ_ADDRESS' id='EQ_ADDRESS' size='35' value=\"".$EQ_ADDRESS."\" title=\"saisir l'adresse exacte du lieu o˘ se situe la garde (exemple: adresse de la caserne)\" $disabled>";
+        <input type='text' name='EQ_ADDRESS' id='EQ_ADDRESS' size='35' value=\"".$EQ_ADDRESS."\" title=\"saisir l'adresse exacte du lieu o√π se situe la garde (exemple: adresse de la caserne)\" $disabled>";
 if ( $geolocalize_enabled == 1)
-    echo "$map<br><small> UtilisÈe pour la gÈolocalisation</small2>";
+    echo "$map<br><small> Utilis√©e pour la g√©olocalisation</small2>";
 echo "</tr>";
 
 // garde
@@ -294,8 +294,8 @@ echo "<tr>
         <input type='checkbox' name='EQ_JOUR' id='EQ_JOUR' value='1' $checked onchange=\"garde_JN();\" title='cocher si la garde est active le jour' $disabled>";
 echo "</tr>";
 
-echo "<tr id='row_debut1' $style><td align=right><font style='font-weight:100'>Heure de dÈbut</font></td>
-    <td><select class='form-control form-control-sm' id='debut1' name='debut1' title=\"Heure de dÈbut de la garde\" $disabled
+echo "<tr id='row_debut1' $style><td align=right><font style='font-weight:100'>Heure de d√©but</font></td>
+    <td><select class='form-control form-control-sm' id='debut1' name='debut1' title=\"Heure de d√©but de la garde\" $disabled
     onchange=\"EvtCalcDuree(date1,date1,debut1,fin1,duree1);\">";
 for ( $i=0; $i <= 24; $i++ ) {
     if ( $i.":00" == $EQ_DEBUT1 ) $selected="selected";
@@ -309,7 +309,7 @@ for ( $i=0; $i <= 24; $i++ ) {
 echo "</select></td></tr>";
 
 echo  "<tr id='row_fin1' $style><td align=right><font style='font-weight:100'>Heure de fin</font></td>
-    <td><select class='form-control form-control-sm' id='fin1' name='fin1' title=\"Heure de fin de journÈe\" $disabled
+    <td><select class='form-control form-control-sm' id='fin1' name='fin1' title=\"Heure de fin de journ√©e\" $disabled
     onchange=\"EvtCalcDuree(date1,date1,debut1,fin1,duree1);\">";
 for ( $i=0; $i <= 24; $i++ ) {
     if ( $i.":00" == $EQ_FIN1 ) $selected="selected";
@@ -323,9 +323,9 @@ for ( $i=0; $i <= 24; $i++ ) {
 echo "</select></td></tr>";
 
 echo "<tr id='row_duree1' $style>
-      <td align=right><font style='font-weight:100'>DurÈe</font></td>
+      <td align=right><font style='font-weight:100'>Dur√©e</font></td>
       <td align=left>";
-echo "<select class='form-control form-control-sm' id='duree1' name='duree1' title='duree en heures de prÈsence pour le jour' $disabled>";
+echo "<select class='form-control form-control-sm' id='duree1' name='duree1' title='duree en heures de pr√©sence pour le jour' $disabled>";
 for ( $i=0; $i <= 24; $i++ ) {
     if ( $i == $EQ_DUREE1 ) $selected="selected";
     else $selected="";
@@ -345,7 +345,7 @@ if ( $pompiers ) {
     if ( $EQ_ID == 0 ) $section_today=0;
     else $section_today=get_section_pro_jour($EQ_ID,date("Y"), date("n"), date("d"),'J');
     echo "<tr id='row_eq1' $style>
-        <td align=right><font style='font-weight:100'>AssurÈe aujourd'hui par </font></td>
+        <td align=right><font style='font-weight:100'>Assur√©e aujourd'hui par </font></td>
         <td align=left>";
 
     echo "<select id='section_jour' name='section_jour' $disabled>";
@@ -376,12 +376,12 @@ echo "</tr>";
 
 if ( $eqid > 0  and $competences ) {
     echo " <tr id='row_comp1' $style>
-            <td align=right><font style='font-weight:100'>CompÈtences </font></td>
+            <td align=right><font style='font-weight:100'>Comp√©tences </font></td>
             <td>";
 
     print show_competences($eqid, "1");
     if ($responsable_gardes)
-        echo " <a href='evenement_competences.php?garde=".$eqid."&partie=1'><i class='fa fa-edit fa-lg' title='Modifier les compÈtences demandÈes' 
+        echo " <a href='evenement_competences.php?garde=".$eqid."&partie=1'><i class='fa fa-edit fa-lg' title='Modifier les comp√©tences demand√©es' 
                 onclick=\"modifier_competences('".$eqid."','1')\"></i></a>";
     echo " </td></tr>";
 }
@@ -405,8 +405,8 @@ echo "<tr>
         <input type='checkbox' name='EQ_NUIT' id='EQ_NUIT' value='1' $checked onchange=\"garde_JN();\" title='cocher si la garde est active la nuit' >";
 echo "</tr>";
 
-echo "<tr id='row_debut2' $style><td align=right><font style='font-weight:100'>Heure de dÈbut</font></td>
-    <td><select class='form-control form-control-sm' id='debut2' name='debut2' title=\"Heure de dÈbut de la garde\" $disabled
+echo "<tr id='row_debut2' $style><td align=right><font style='font-weight:100'>Heure de d√©but</font></td>
+    <td><select class='form-control form-control-sm' id='debut2' name='debut2' title=\"Heure de d√©but de la garde\" $disabled
     onchange=\"EvtCalcDuree(date1,date2,debut2,fin2,duree2);\">";
 for ( $i=0; $i <= 24; $i++ ) {
     if ( $i.":00" == $EQ_DEBUT2 ) $selected="selected";
@@ -420,7 +420,7 @@ for ( $i=0; $i <= 24; $i++ ) {
 echo "</select> </td></tr>";
 
 echo  "<tr id='row_fin2' $style><td align=right><font style='font-weight:100'>Heure de fin </font></td>
-    <td><select id='fin2' name='fin2' title=\"Heure de fin de journÈe\" $disabled
+    <td><select id='fin2' name='fin2' title=\"Heure de fin de journ√©e\" $disabled
     onchange=\"EvtCalcDuree(date1,date2,debut2,fin2,duree2);\">";
 for ( $i=0; $i <= 24; $i++ ) {
     if ( $i.":00" == $EQ_FIN2 ) $selected="selected";
@@ -434,9 +434,9 @@ for ( $i=0; $i <= 24; $i++ ) {
 echo "</select></td></tr>";
 
 echo "<tr id='row_duree2' $style>
-      <td align=right><font style='font-weight:100'>DurÈe</font></td>
+      <td align=right><font style='font-weight:100'>Dur√©e</font></td>
       <td align=left>";
-echo "<select id='dure2' name='duree2' title='duree en heures de prÈsence pour la nuit' $disabled>";
+echo "<select id='dure2' name='duree2' title='duree en heures de pr√©sence pour la nuit' $disabled>";
 for ( $i=0; $i <= 24; $i++ ) {
     if ( $i == $EQ_DUREE2 ) $selected="selected";
     else $selected="";
@@ -457,7 +457,7 @@ if ( $pompiers ) {
     else $section_today=get_section_pro_jour($EQ_ID, date("Y"), date("n"), date("d"), 'N');
 
     echo "<tr id='row_eq2' $style>
-        <td align=right><font style='font-weight:100'>AssurÈe aujourd'hui par </font></td>
+        <td align=right><font style='font-weight:100'>Assur√©e aujourd'hui par </font></td>
         <td align=left>";
 
     echo "<select id='section_nuit' name='section_nuit' $disabled>";
@@ -489,11 +489,11 @@ echo "</tr>";
 
 if ( $eqid > 0 and $competences ) {
     echo " <tr id='row_comp2' $style>
-            <td align=right><font style='font-weight:100'>CompÈtences </font></td>
+            <td align=right><font style='font-weight:100'>Comp√©tences </font></td>
             <td>";
     print show_competences($eqid, "2");
     if ($responsable_gardes)
-        echo " <a href='evenement_competences.php?garde=".$eqid."&partie=2'><i class='fa fa-edit fa-lg' title='Modifier les compÈtences demandÈes'
+        echo " <a href='evenement_competences.php?garde=".$eqid."&partie=2'><i class='fa fa-edit fa-lg' title='Modifier les comp√©tences demand√©es'
                 onclick=\"modifier_competences('".$eqid."','2')\"></font></a>";
     echo "</td></tr>";
 }
@@ -507,9 +507,9 @@ if ( $vehicules ) {
     else $checked="";
 
     echo "<tr>
-        <td>VÈhicules</td>
+        <td>V√©hicules</td>
         <td>
-        <input type='checkbox' name='EQ_VEHICULES'  value='1' $checked  title = \"Les vÈhicules sont par dÈfaut automatiquement affichÈs\" $disabled>";
+        <input type='checkbox' name='EQ_VEHICULES'  value='1' $checked  title = \"Les v√©hicules sont par d√©faut automatiquement affich√©s\" $disabled>";
     echo "</tr>";
 }
 
@@ -522,12 +522,12 @@ if ( $pompiers ) {
         echo "<tr> 
           <td>SPP</td>
           <td align=left>
-            <input type='checkbox' name='EQ_SPP'  value='1' $checked title = \"Les sapeurs pompiers professionnels sont par dÈfaut automatiquement engagÈs sur ce type de garde\" $disabled>";
+            <input type='checkbox' name='EQ_SPP'  value='1' $checked title = \"Les sapeurs pompiers professionnels sont par d√©faut automatiquement engag√©s sur ce type de garde\" $disabled>";
         echo "</tr>";
     }
 }
 
-// type de garde par dÈfaut
+// type de garde par d√©faut
 if($EQ_DEFAULT == 1) $checked="checked";
 else $checked="";
 $query_defaut="select EQ_ID,EQ_NOM,EQ_ORDER from type_garde where S_ID=$sec and EQ_DEFAULT=1";
@@ -536,10 +536,10 @@ $nbDefaut = mysqli_num_rows($result_defaut);
 $row = mysqli_fetch_array($result_defaut);
 
 echo "<tr>
-    <td>Type de garde par dÈfaut</td>
+    <td>Type de garde par d√©faut</td>
     <td align=left>";
-    if($nbDefaut > 0 && $EQ_ID != $row["EQ_ID"]) echo "<i class='fas fa-lock' title='".$row['EQ_NOM']." est dÈj‡ dÈfini par dÈfaut pour cette section'></i>";
-    else echo "<input type='checkbox' name='EQ_DEFAULT' value='1' $checked  title = \"DÈfinir ce type de garde par dÈfaut. Il sera prÈsÈlectionnÈ ‡ l'ouverture de l'application \" $disabled>";
+    if($nbDefaut > 0 && $EQ_ID != $row["EQ_ID"]) echo "<i class='fas fa-lock' title='".$row['EQ_NOM']." est d√©j√† d√©fini par d√©faut pour cette section'></i>";
+    else echo "<input type='checkbox' name='EQ_DEFAULT' value='1' $checked  title = \"D√©finir ce type de garde par d√©faut. Il sera pr√©s√©lectionn√© √† l'ouverture de l'application \" $disabled>";
 echo "</tr>";
 
 //Ordre du type de garde

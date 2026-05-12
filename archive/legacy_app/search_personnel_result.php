@@ -52,14 +52,14 @@ if ($envoisEmail) {
     $frmEmailDeb .= "<div class='btn-group'>
                         <button class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>Message</button>
                         <div class='dropdown-menu' style='position:relative'>
-                            <a class='dropdown-item' onclick=\"SendMailTo('frmPersonnel','SendMail','Vous devez sélectionner au moins un destinataire !');\" 
-                                title='envoyer un message à partir de cette application'>Envoyer</a>";
+                            <a class='dropdown-item' onclick=\"SendMailTo('frmPersonnel','SendMail','Vous devez sÃ©lectionner au moins un destinataire !');\" 
+                                title='envoyer un message Ã  partir de cette application'>Envoyer</a>";
 
     if ( check_rights($id, 2)) {
-        $frmEmailDeb .= " <a class='dropdown-item' onclick=\"DirectMailTo('frmPersonnel','SendMail','Vous devez sélectionner au moins un destinataire !','mail');\"
+        $frmEmailDeb .= " <a class='dropdown-item' onclick=\"DirectMailTo('frmPersonnel','SendMail','Vous devez sÃ©lectionner au moins un destinataire !','mail');\"
                             title='envoyer un message avec votre logiciel de messagerie'>Mail</a>
-                          <a class='dropdown-item' onclick=\"SendMailTo('frmPersonnel','SendMail','Vous devez sélectionner au moins un destinataire !','listemails');\"
-                            title='Récupérer la liste des adresses email'>Liste TXT</a>";
+                          <a class='dropdown-item' onclick=\"SendMailTo('frmPersonnel','SendMail','Vous devez sÃ©lectionner au moins un destinataire !','listemails');\"
+                            title='RÃ©cupÃ©rer la liste des adresses email'>Liste TXT</a>";
     }
     $frmEmailDeb .= "</div></div>";
     $frmEmailDeb .= "<input type='hidden' name='SelectionMail' id='SelectionMail'>";
@@ -442,9 +442,9 @@ if($ok && $query!=""){
 if ($result){
 $number=mysqli_num_rows($result);
 if ( $number == $maxnumrows ) 
-      echo "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i> Affinez votre recherche, seules les $maxnumrows premières lignes sont affichées";
+      echo "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i> Affinez votre recherche, seules les $maxnumrows premiÃ¨res lignes sont affichÃ©es";
 else if ($number > 1)
-      echo "<p><span class='badge'>".$number."</span> personne".(($number>1)?"s":"")." trouvée".(($number>1)?"s":"");
+      echo "<p><span class='badge'>".$number."</span> personne".(($number>1)?"s":"")." trouvÃ©e".(($number>1)?"s":"");
 $i=0;
 $prevPID=0;
 
@@ -458,7 +458,7 @@ if ( $number > 0 ) {
             $P_PRENOM=(isset($row['prenom'])?fixcharset($row["prenom"]):"");
             $P_NOM=(isset($row['NOM'])?fixcharset($row["NOM"]):"");
             $P_NOM_NAISSANCE=(isset($row['P_NOM_NAISSANCE'])?fixcharset($row["P_NOM_NAISSANCE"]):"");
-            if ( $P_NOM_NAISSANCE <> '' ) $P_NOM = $P_NOM." né(e) ".$P_NOM_NAISSANCE;
+            if ( $P_NOM_NAISSANCE <> '' ) $P_NOM = $P_NOM." nÃ©(e) ".$P_NOM_NAISSANCE;
             $S_CODE=(isset($row['section'])?fixcharset($row["section"]):"");
             $ID_API=(isset($row['ID_API'])?$row["ID_API"]:"");
             $prevPID=$P_ID;
@@ -467,9 +467,9 @@ if ( $number > 0 ) {
         else {
             if (isset ($_POST['qualif'])) $qualif=$_POST['qualif'];
             else $qualif="";
-            // exception 1 pour montrer seulement PSE2 si possède PSE2 et PSE1
+            // exception 1 pour montrer seulement PSE2 si possÃ¨de PSE2 et PSE1
             if ( $critere == 'ou' and $qualif== "7,6" and $assoc == 1) continue;
-            // exception 2 pour montrer seulement PAE PS si possède PAE PS et PAE PSC
+            // exception 2 pour montrer seulement PAE PS si possÃ¨de PAE PS et PAE PSC
             else if ( $critere == 'ou' and $qualif== "11,10" and $assoc == 1) continue;
             $new=false;
             $P_PRENOM="";
@@ -496,8 +496,8 @@ if ( $number > 0 ) {
         $Mode_Paiement=(isset($row['Mode_Paiement'])?$row['Mode_Paiement']:"0");
         
         if ( $critere == 'habilitation' ) {
-             if ( $groupe1 ==  'Président (e)' ) {
-              // vrai président ou responsable d'antenne
+             if ( $groupe1 ==  'PrÃ©sident (e)' ) {
+              // vrai prÃ©sident ou responsable d'antenne
                   if ( $row['niv'] == 4 ) $groupe1 =  "Responsable d'antenne";
              }
         }
@@ -524,7 +524,7 @@ if ( $number > 0 ) {
             else
                 $hint .="<td></td>";
         }
-        if ( $Rejet > 0 ) $img_rejet=" <i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='ATTENTION: il y a un ou des rejets non régularisés pour cette personne'></i>";
+        if ( $Rejet > 0 ) $img_rejet=" <i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='ATTENTION: il y a un ou des rejets non rÃ©gularisÃ©s pour cette personne'></i>";
         else if ( $Mode_Paiement == 4 and $syndicate == 1) {
                 $query2="select date_format(PC_DATE,'%d-%m-%Y'), MONTANT, ANNEE, PERIODE_CODE 
                         from personnel_cotisation 
@@ -537,11 +537,11 @@ if ( $number > 0 ) {
                 $montant=intval($row2[1]);
                 $annee=intval($row2[2]);
                 $periode=$row2[3];
-                if ( $periode == 'A' ) $periode='année complète'; 
+                if ( $periode == 'A' ) $periode='annÃ©e complÃ¨te'; 
                 $comment="dernier paiement le ".$date_paiement.", montant ".$montant." ".$default_money_symbol." pour ".$annee." (".$periode.")";
-                if ( $montant == 0) $img_rejet=" <i class='fa fa-exclamation-circle' style='color:red;' title=\"ATTENTION: Adhérent payant par chèque mais aucun paiement enregistré\" ></i>";
-                else if ( $annee < date('Y')) $img_rejet=" <i class='fa fa-exclamation-triangle' style='color:orange;' title=\"ATTENTION: Adhérent payant par chèque mais aucun paiement enregistré pour ".date('Y')."\" ></i>";
-                else $img_rejet=" <i class='fa fa-check-square' style='color:green;' title=\"Adhérent payant par chèque, ".$comment."\" ></i>";
+                if ( $montant == 0) $img_rejet=" <i class='fa fa-exclamation-circle' style='color:red;' title=\"ATTENTION: AdhÃ©rent payant par chÃ¨que mais aucun paiement enregistrÃ©\" ></i>";
+                else if ( $annee < date('Y')) $img_rejet=" <i class='fa fa-exclamation-triangle' style='color:orange;' title=\"ATTENTION: AdhÃ©rent payant par chÃ¨que mais aucun paiement enregistrÃ© pour ".date('Y')."\" ></i>";
+                else $img_rejet=" <i class='fa fa-check-square' style='color:green;' title=\"AdhÃ©rent payant par chÃ¨que, ".$comment."\" ></i>";
         }
         else $img_rejet="";
 
@@ -578,18 +578,18 @@ if ( $number > 0 ) {
     $response .= "<table id=\"exportTable\" class=\"newTable\" cellspacing=\"0\" cellpadding=\"1\" border=\"0\">
     <thead>
     <tr class='newTabHeader' >"
-    .(($envoisEmail)?"<th><i class='fa fa-envelope' title='cocher les cases des personnes à qui vous souhaitez envoyer un message'></i></th>":"")
-    ."<th width=260 style='padding: 12px 5px 12px 5px'>NOM Prénom</th>"
+    .(($envoisEmail)?"<th><i class='fa fa-envelope' title='cocher les cases des personnes Ã  qui vous souhaitez envoyer un message'></i></th>":"")
+    ."<th width=260 style='padding: 12px 5px 12px 5px'>NOM PrÃ©nom</th>"
     .(($identifiant!='0')?"<th align=left>Identifiant</th>":"")."
       <th width=300 align=left>Section</th>"
     .(($p_statut !='0')?"<th class='hide_mobile'>Statut </th>":"")
     .(($show_address)?"<th class='hide_mobile'>Code Postal </th>":"")
     .(($show_address)?"<th>Ville </th>":"")
-    .(($show_num)?"<th class='hide_mobile'>Numéro</th>":"")
+    .(($show_num)?"<th class='hide_mobile'>NumÃ©ro</th>":"")
     .(($show_mail)?"<th>Email</th>":"")
     .(($groupe1!='')?"<th>Principal</th>":"")
     .(($groupe2!='')?"<th class='hide_mobile'>Secondaire</th>":"")
-    .(($poste!='')?"<th>Compétence</th>":"")
+    .(($poste!='')?"<th>CompÃ©tence</th>":"")
     .(($bic!='0')?"<th class='hide_mobile'>BIC</th>":"")
     .(($iban!='0')?"<th class='hide_mobile'>IBAN</th>":"")
     .(($expire!='')?"<th class='hide_mobile'>Expiration</th>":"")

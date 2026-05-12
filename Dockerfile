@@ -105,8 +105,12 @@ COPY --from=frontend /app/public/build ./public/build
 RUN mkdir -p /opt/bootstrap/public-build \
     && cp -a ./public/build/. /opt/bootstrap/public-build/
 
-# Permissions
-RUN mkdir -p storage bootstrap/cache \
+# Permissions (image-level defaults; runtime volumes are reinforced in start.sh)
+RUN mkdir -p \
+        storage/logs \
+        storage/framework \
+        storage/app/public/uploads \
+        bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 

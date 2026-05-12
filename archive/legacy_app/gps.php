@@ -45,7 +45,7 @@ $(document).ready(function() {
         block.style.top = "160px";
         block.style.position = "absolute";
         block.innerHTML = "<div class='col-sm-12' align='center'>";
-        block.innerHTML += "Pas de données de personnel à afficher</div>";
+        block.innerHTML += "Pas de donnÃ©es de personnel Ã  afficher</div>";
         $("#map_canvas").append(block);
     }
 });
@@ -56,7 +56,7 @@ echo "<meta http-equiv='Refresh' content='".$autorefresh_period."'>";
 // personnel
 $query1="select distinct p.P_ID, p.P_NOM , p.P_PRENOM, p.P_SEXE, p.P_HIDE,
          p.P_SECTION, s.S_CODE, s.S_ID, p.P_PHOTO, g.LAT, g.LNG, ADDRESS,
-         date_format(g.DATE_LOC, '%d-%m à %H:%i') DATE_LOC";
+         date_format(g.DATE_LOC, '%d-%m Ã  %H:%i') DATE_LOC";
         
 $query1 .=" from pompier p, section s, gps g";
 if ( $competences and intval($competence) > 0 ) 
@@ -75,10 +75,10 @@ if ( $subsections == 1 ) {
 else {
       $query1 .= " and p.P_SECTION =".$filter;
 }
-// ajout numéros de téléphones
+// ajout numÃ©ros de tÃ©lÃ©phones
 $query1 .=" union select distinct P_ID, null as P_NOM, null as P_PRENOM, 'Z' as P_SEXE, 0 as P_HIDE,
             null as P_SECTION, null as S_CODE, null as S_ID, null as P_PHOTO, LAT, LNG, ADDRESS,
-            date_format(DATE_LOC, '%d-%m à %H:%i') DATE_LOC
+            date_format(DATE_LOC, '%d-%m Ã  %H:%i') DATE_LOC
             from gps 
             where P_ID > 1000000
             and TIMESTAMPDIFF(MINUTE,DATE_LOC,NOW()) < ".$time;
@@ -182,7 +182,7 @@ google.maps.event.addListener(pers".$P_ID.", 'click', function() {
 
 ";
     }
-    // point de centrage par défaut sur la dernière personne trouvée
+    // point de centrage par dÃ©faut sur la derniÃ¨re personne trouvÃ©e
     if ( $centerlat == 0 ) {
         $centerlat=$L_LAT;
         $centerlng=$L_LNG;
@@ -368,7 +368,7 @@ echo "</div>";
 $SMS=false;
 if ( check_rights($id, 23) and $SMS_CONFIG[1] <> 0) {
     $credits = get_sms_credits($mysection);
-    if ( intval($credits) > 0  or $credits == "Solde illimité" or $credits == "OK" ) $SMS=true;
+    if ( intval($credits) > 0  or $credits == "Solde illimitÃ©" or $credits == "OK" ) $SMS=true;
 }
 
 $num_sections_query = "select COUNT(1) from section_flat";
@@ -413,7 +413,7 @@ if ($num_sub_sections[0] > 1 and $num_sections[0] > 1 ) {
         $prevEQ_ID=0;
         echo "<option value=0";
         if ($competence == 0 ) echo " selected ";
-        echo ">Pas de filtre sur les compétences</option>";
+        echo ">Pas de filtre sur les compÃ©tences</option>";
         while ($row=@mysqli_fetch_array($result2)) {
             $PS_ID=$row["PS_ID"];
             $EQ_ID=$row["EQ_ID"];
@@ -436,7 +436,7 @@ if ($num_sub_sections[0] > 1 and $num_sections[0] > 1 ) {
     echo "</div>";
 }
 
-// les personnes et numéros de téléphone que je recherches sont-ils localisés?
+// les personnes et numÃ©ros de tÃ©lÃ©phone que je recherches sont-ils localisÃ©s?
 $query="select d.P_ID, P_NOM, P_PRENOM 
         from demande d left join pompier p on d.P_ID = p.P_ID
         where d.D_BY=".$id." 
@@ -453,7 +453,7 @@ while ($row=mysqli_fetch_array($result)) {
     }
 }
 if ( $msg <> "" ) {
-   echo "<div class='alert alert-success' role='alert'> Votre demande de géolocalisation a abouti pour ".rtrim($msg,",").".</div>";
+   echo "<div class='alert alert-success' role='alert'> Votre demande de gÃ©olocalisation a abouti pour ".rtrim($msg,",").".</div>";
 }
 
 echo "<div id='map_canvas'></div>";

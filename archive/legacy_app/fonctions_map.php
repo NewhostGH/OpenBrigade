@@ -28,10 +28,10 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
     //2B    Haute-Corse
     //2A    Corse-du-Sud
     //YT    Mayotte
-    //GF    Guyane française
+    //GF    Guyane franÃ§aise
     //GP    Guadeloupe
     //WF    Wallis et Futuna
-    //PF    Polynésie Francaise
+    //PF    PolynÃ©sie Francaise
     //SP    Saint Pierre et Miquelon
     
     $name = 'personne';
@@ -69,9 +69,9 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
                 from section";
     
     if ( in_array($mode, array(1,2,3)) ) {
-        // opérations de secours
+        // opÃ©rations de secours
         if ( $mode == 1 ) $t='C_SEC';
-        // autres opérations
+        // autres opÃ©rations
         if ( $mode == 2 ) $t='C_OPE';
         // formations
         if ( $mode == 3 ) $t='C_FOR';
@@ -111,31 +111,31 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
            and sr.GP_ID = g.GP_ID
            and g.GP_ID=107
            group by ZIP";
-        $name = 'Cadres de veille opérationnelle';
+        $name = 'Cadres de veille opÃ©rationnelle';
     }
     else if ($mode == 10) {
-        // véhicules
+        // vÃ©hicules
         $query="select ZIP, count(1)
         from  (".$subquery2." ) as s, vehicule v
         where v.S_ID = s.S_ID
         and v.VP_ID in (select VP_ID from vehicule_position where VP_OPERATIONNEL >= 0)
         group by ZIP";
-        $name = "Véhicule";
+        $name = "VÃ©hicule";
     }
     else if ($mode == 9) {
-        // matériel national
+        // matÃ©riel national
         $query="select ZIP, count(1)
         from  (".$subquery2." ) as s, materiel m  join type_materiel tm on tm.TM_ID = m.TM_ID
         where m.S_ID = s.S_ID
         and m.MA_EXTERNE = 1
         and m.VP_ID in (select VP_ID from vehicule_position where VP_OPERATIONNEL >= 0)
         group by ZIP";
-        $name = "Matériel";
+        $name = "MatÃ©riel";
     }
     else if ($mode == 11 or $mode == 12) {
-        // matériel de pompage
+        // matÃ©riel de pompage
         if ( $mode == 11 ) $list = "'Motos Pompes','Vides Caves'";
-        //hébergement
+        //hÃ©bergement
         if ( $mode == 12 ) $list = "'Lits Picots','Tentes','Couvertures'";
         $query="select ZIP, count(1)
         from  (".$subquery2." ) as s, materiel m  join type_materiel tm on tm.TM_ID = m.TM_ID
@@ -143,10 +143,10 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
         and tm.TM_CODE in (".$list.")
         and m.VP_ID in (select VP_ID from vehicule_position where VP_OPERATIONNEL >= 0)
         group by ZIP";
-        $name = "Matériel";
+        $name = "MatÃ©riel";
     }
     else if ($mode == 14) {
-        // compétences
+        // compÃ©tences
         $query =  "select s.ZIP, count(1)
            from (".$subquery2." ) as s, pompier p, qualification q
            where q.P_ID=p.P_ID
@@ -154,10 +154,10 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
            and ( q.Q_EXPIRATION is null or q.Q_EXPIRATION >= NOW())
            and q.PS_ID=".$param."
            group by s.ZIP";
-        $name = "Compétence";
+        $name = "CompÃ©tence";
     }
     else if ($mode == 16) {
-        // événements
+        // Ã©vÃ©nements
         $tmp=explode ( "-",$dtdb); $month1=$tmp[1]; $day1=$tmp[0]; $year1=$tmp[2];
         $tmp=explode ( "-",$dtfn); $month2=$tmp[1]; $day2=$tmp[0]; $year2=$tmp[2];
         
@@ -171,7 +171,7 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
         if ( $param == 'ALL' ) $query .= " and e.TE_CODE <> 'MC'";
         else $query .= " and e.TE_CODE = '".$param."'";
         $query .= " group by ZIP";
-        $name = "Evénement";
+        $name = "EvÃ©nement";
     }
     else  if ($mode == 7) { 
         // personnel $mode == 7 or default
@@ -180,8 +180,8 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
             where P_OLD_MEMBER=0 and P_STATUT <> 'EXT'
             and p.P_SECTION = s.S_ID
             group by s.ZIP";
-        if ( $syndicate ) $name = 'adhérent';
-        else if ( $assoc ) $name = 'bénévole';
+        if ( $syndicate ) $name = 'adhÃ©rent';
+        else if ( $assoc ) $name = 'bÃ©nÃ©vole';
         else $name="personne";
     }
     
@@ -199,8 +199,8 @@ function get_map_data($mode,$param,$dtdb,$dtfn) {
         $query="select ZIP, count(1)
             from (".$subquery1." ) as p
             group by ZIP";
-        if ( $syndicate ) $name = 'adhérent';
-        else if ( $assoc ) $name = 'bénévole';
+        if ( $syndicate ) $name = 'adhÃ©rent';
+        else if ( $assoc ) $name = 'bÃ©nÃ©vole';
     }
     $result=mysqli_query($dbc,$query);
     while ( $row=@mysqli_fetch_array($result)){

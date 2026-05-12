@@ -96,11 +96,11 @@ while ( custom_fetch_array($result2)) {
     $TP[$TP_ID] = $TP_DESCRIPTION;
 }
 
-echo "<div align=center class='table-responsive'><div class='noprint'><span class='ebrigade-h4'>Cotisations par département</span></div>";
+echo "<div align=center class='table-responsive'><div class='noprint'><span class='ebrigade-h4'>Cotisations par dÃ©partement</span></div>";
 echo "<form name='frmExport' action='' >";
 echo "<table class='noBorder'>";
 //------------------------------
-// Choix section et année
+// Choix section et annÃ©e
 //------------------------------ 
 
 echo "<tr><td><span class='span-date'>Filtre</span></td>
@@ -110,7 +110,7 @@ echo "<tr><td><span class='span-date'>Filtre</span></td>
 echo "</select>
 </td></tr>";
 
-echo "<tr><td><span class='span-date'>Début</span></td><td>
+echo "<tr><td><span class='span-date'>DÃ©but</span></td><td>
         <input type='text' size='10' name='dtdb' id='dtdb' value=\"".$dtdb."\" class='datepicker datepicker2' data-provide='datepicker'
             placeholder='JJ-MM-AAAA'
             onchange=checkDate2(document.frmExport.dtdb)'>";
@@ -157,15 +157,15 @@ $TOTAL["GENERAL"]=0;
 echo "<div align =center>
     <table style='border-collapse: collapse;'>";
 echo "<thead><tr class='TabHeader'>
-    <td>Département</td>
-    <td colspan=2><span title='Nombre total adhérents au 1er janvier'>Nombre</span></td>
+    <td>DÃ©partement</td>
+    <td colspan=2><span title='Nombre total adhÃ©rents au 1er janvier'>Nombre</span></td>
     <td>Profession</td>";
 foreach ( $TP as $TP_ID => $TP_DESCRIPTION) {
-    echo " <td><span title=\"Cotisation et régularisations par $TP_DESCRIPTION en $yearreport\">".$TP_DESCRIPTION."</span></td>";
+    echo " <td><span title=\"Cotisation et rÃ©gularisations par $TP_DESCRIPTION en $yearreport\">".$TP_DESCRIPTION."</span></td>";
     $TOTAL[$TP_ID]=0;
 }
 echo "<td><span title=\"Rejets de paiements en $yearreport\">Rejets</span></td>
-      <td><span title=\"Total cotisations et régularisations - rejets\">Total</span></td>
+      <td><span title=\"Total cotisations et rÃ©gularisations - rejets\">Total</span></td>
 </tr></thead>";
 
 $PREVIOUS=-1;
@@ -206,16 +206,16 @@ while ( custom_fetch_array($result)) {
 
 echo "<tfoot><tr class='TabHeader'>
     <td>TOTAL</td>
-    <td colspan=2><span title='Nombre total adhérents au 1er janvier $yearreport'>".intval($TOTAL["ADH"])."</span></td>
+    <td colspan=2><span title='Nombre total adhÃ©rents au 1er janvier $yearreport'>".intval($TOTAL["ADH"])."</span></td>
     <td></td>";
 $GT=0;
 foreach ( $TP as $TP_ID => $TP_DESCRIPTION) {
-    echo " <td><span title=\"Montant total cotisation et régularisations par $TP_DESCRIPTION en $yearreport\">".intval($TOTAL[$TP_ID])."</span></td>";
+    echo " <td><span title=\"Montant total cotisation et rÃ©gularisations par $TP_DESCRIPTION en $yearreport\">".intval($TOTAL[$TP_ID])."</span></td>";
     $GT += $TOTAL[$TP_ID];
 }
 $GT -= $TOTAL["REJETS"];
-echo "<td><span title=\"Montant total général paiements rejetés en $yearreport\" style='color:red;'>".intval($TOTAL["REJETS"])."</span></td>
-<td><span title=\"Total général cotisations $yearreport\">".intval($GT)."</span></td>
+echo "<td><span title=\"Montant total gÃ©nÃ©ral paiements rejetÃ©s en $yearreport\" style='color:red;'>".intval($TOTAL["REJETS"])."</span></td>
+<td><span title=\"Total gÃ©nÃ©ral cotisations $yearreport\">".intval($GT)."</span></td>
 </tr></tfoot>
 </table><div style='height:400px;'></div>";
 

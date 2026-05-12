@@ -74,7 +74,7 @@ else $tab = 1;
 if ( intval($tab) == 0 ) $tab = 1;
 
 //=====================================================================
-// récupérer infos véhicule
+// rÃ©cupÃ©rer infos vÃ©hicule
 //=====================================================================
 
 $query="select v.V_ID, v.VP_ID, v. TV_CODE, v.V_IMMATRICULATION, v.V_COMMENT , v.V_EXTERNE, 
@@ -114,8 +114,8 @@ else $warning="";
 
 if ( $VP_OPERATIONNEL  < 0 ) $mylightcolor=$mygreycolor;
 
-// permettre les modifications si je suis habilité sur la fonctionnalité 17 au bon niveau
-// ou je suis habilité sur la fonctionnalité 24 )
+// permettre les modifications si je suis habilitÃ© sur la fonctionnalitÃ© 17 au bon niveau
+// ou je suis habilitÃ© sur la fonctionnalitÃ© 24 )
 if (check_rights($id, 17,"$S_ID")) $responsable_vehicule=true;
 else $responsable_vehicule=false;
 
@@ -128,7 +128,7 @@ if ( $V_EXTERNE == '1' ) {
 }
 
 //=====================================================================
-// sauver changements sur  matériel embarqué
+// sauver changements sur  matÃ©riel embarquÃ©
 //=====================================================================
 if ( $disabled == '' ) {
     if ( isset($_GET["del"])) {
@@ -150,14 +150,14 @@ if ( $disabled == '' ) {
 //=====================================================================
 
 echo "<div align=center >";
-writeBreadCrumb("$img $TV_CODE $V_IMMATRICULATION","Véhicules","vehicule.php");
+writeBreadCrumb("$img $TV_CODE $V_IMMATRICULATION","VÃ©hicules","vehicule.php");
 
 // compter documents
 $query1="select count(*) as NB1 from document where V_ID=".$V_ID;
 $result1=mysqli_query($dbc,$query1);
 custom_fetch_array($result1);
 
-// matériel embarqué
+// matÃ©riel embarquÃ©
 $query2="select m.TM_ID, tm.TM_CODE, tm.TM_USAGE,
      m.VP_ID, vp.VP_OPERATIONNEL,vp.VP_LIBELLE,
      m.MA_ID, m.MA_NUMERO_SERIE, m.MA_COMMENT, m.MA_MODELE, cm.PICTURE,
@@ -196,7 +196,7 @@ else {
     $badge='badge inactive-badge';
 }
 echo "<li class='nav-item'>
-<a class='nav-link $class' href='upd_vehicule.php?vid=".$V_ID."&tab=2' title='Documents attachés' role='tab' aria-controls='tab2' href='#tab2' >
+<a class='nav-link $class' href='upd_vehicule.php?vid=".$V_ID."&tab=2' title='Documents attachÃ©s' role='tab' aria-controls='tab2' href='#tab2' >
         <i class='hide_desktop2 far fa-folder-open'></i><span> Documents <span class='$badge'>$NB1</span></span>
     </a>
 </li>";
@@ -211,9 +211,9 @@ if ( $materiel == 1 ) {
         $badge='badge inactive-badge';
     }
     echo "<li class='nav-item'>
-    <a class='nav-link $class' href='upd_vehicule.php?vid=".$V_ID."&tab=3' title='Matériel embarqué dans le véhicule' role='tab' aria-controls='tab3' href='#tab3' >
+    <a class='nav-link $class' href='upd_vehicule.php?vid=".$V_ID."&tab=3' title='MatÃ©riel embarquÃ© dans le vÃ©hicule' role='tab' aria-controls='tab3' href='#tab3' >
         <i class='hide_desktop2 fa fa-cog'></i>
-        <span> Matériels <span class='$badge'>$NB2</span></span>
+        <span> MatÃ©riels <span class='$badge'>$NB2</span></span>
     </a>
 </li>";
 }
@@ -224,7 +224,7 @@ echo "</div>";
 echo "<br><div id='export' style='' align=center >";
 
 //=====================================================================
-// affiche la fiche véhicule
+// affiche la fiche vÃ©hicule
 //=====================================================================
 
 if ( $tab == 1 ) {
@@ -255,7 +255,7 @@ if ( $tab == 1 ) {
     echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault' style='margin-bottom: 5px;'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Généralités </strong></div>
+                <div class='card-title'><strong> GÃ©nÃ©ralitÃ©s </strong></div>
             </div>
             <div class='card-body graycard'>";
 
@@ -290,11 +290,11 @@ if ( $tab == 1 ) {
          
          
     //=====================================================================
-    // ligne modèle
+    // ligne modÃ¨le
     //=====================================================================
 
     echo "<tr  class='pad1'>
-                <td>Marque / modèle</td>
+                <td>Marque / modÃ¨le</td>
                 <td align=left><input type='text' class='form-control form-control-sm' name='V_MODELE' size='22' maxlength='20' value=\"$V_MODELE\" $disabled>";        
     echo "</td>
           </tr>";
@@ -306,7 +306,7 @@ if ( $tab == 1 ) {
     echo "<tr class='pad1'>
                 <td>Section $asterisk</td>
                 <td  align=left>";
-    echo "<select id='groupe' name='groupe' $disabled class='form-control select-control maxsize' data-style='btn btn-default' title=\"ce champ désigne la section, centre ou niveau hiérarchique auquel le véhicule est affecté\">"; 
+    echo "<select id='groupe' name='groupe' $disabled class='form-control select-control maxsize' data-style='btn btn-default' title=\"ce champ dÃ©signe la section, centre ou niveau hiÃ©rarchique auquel le vÃ©hicule est affectÃ©\">"; 
 
     if ( $responsable_vehicule ) {
         $mysection=get_highest_section_where_granted($_SESSION['id'],17);
@@ -345,12 +345,12 @@ if ( $tab == 1 ) {
     echo "<tr class='pad1'>
                 <td>Immatriculation</td>
                 <td  align=left>
-                <input type='text' class='form-control form-control-sm' name='V_IMMATRICULATION' size='16' maxlength='15' value=\"$V_IMMATRICULATION\" $disabled  title=\"ce champ désigne l'immatriculation ou le macaron\">";
+                <input type='text' class='form-control form-control-sm' name='V_IMMATRICULATION' size='16' maxlength='15' value=\"$V_IMMATRICULATION\" $disabled  title=\"ce champ dÃ©signe l'immatriculation ou le macaron\">";
     echo " </td>
           </tr>";
           
     //=====================================================================
-    // numéro d'indicatif
+    // numÃ©ro d'indicatif
     //=====================================================================
 
     echo "<tr class='pad1'>
@@ -360,14 +360,14 @@ if ( $tab == 1 ) {
           </tr>";
 
     //=====================================================================
-    // ligne année
+    // ligne annÃ©e
     //=====================================================================
 
     $curyear=date("Y");
     $year=$curyear - 30; 
     $found=false;
     echo "<tr class='pad1'>
-                <td>Année</td>
+                <td>AnnÃ©e</td>
                 <td  align=left>
                 <select name='V_ANNEE' class='form-control select-control smalldropdown3-nofont' data-style='btn btn-default' $disabled>";
     while ( $year <= $curyear + 1 ) {
@@ -397,7 +397,7 @@ if ( $tab == 1 ) {
         echo "<tr>
               <td>Usage principal</td>
               <td  align=left>
-            <select name='EQ_ID' class='form-control select-control' data-style='btn btn-default' data-container='body' $disabled  title=\"ce champ désigne le type de garde sur lequel ce véhicule peut être automatiquement engagé à la création du tableau de garde\">";
+            <select name='EQ_ID' class='form-control select-control' data-style='btn btn-default' data-container='body' $disabled  title=\"ce champ dÃ©signe le type de garde sur lequel ce vÃ©hicule peut Ãªtre automatiquement engagÃ© Ã  la crÃ©ation du tableau de garde\">";
         if ( intval($EQ_ID) == 0 ) $selected='selected';
         else $selected='';
         echo "<option value='0' $selected>Aucun</option>";
@@ -411,7 +411,7 @@ if ( $tab == 1 ) {
     }
     
     //=====================================================================
-    // affecté à 
+    // affectÃ© Ã  
     //=====================================================================
 
     $query2="select p.P_ID, p.P_PRENOM, p.P_NOM , s.S_CODE
@@ -425,9 +425,9 @@ if ( $tab == 1 ) {
     $result2=mysqli_query($dbc,$query2);
 
     echo "<tr>
-                <td>Affecté à ".$warning."</td>
+                <td>AffectÃ© Ã  ".$warning."</td>
                 <td  align=left>";
-       echo "<select id='affected_to' name='affected_to' $disabled class='form-control select-control' data-style='btn btn-default' data-container='body' data-live-search='true' title=\"ce champ désigne la personne à qui ce véhicule est affecté\">
+       echo "<select id='affected_to' name='affected_to' $disabled class='form-control select-control' data-style='btn btn-default' data-container='body' data-live-search='true' title=\"ce champ dÃ©signe la personne Ã  qui ce vÃ©hicule est affectÃ©\">
                <option value='0' selected class=smallcontrol>--Personne--</option>\n";
     while (custom_fetch_array($result2)) {
         if ( $P_ID == $AFFECTED_TO ) $selected='selected';
@@ -456,7 +456,7 @@ if ( $tab == 1 ) {
                     <input type='checkbox' name='V_EXTERNE' id='V_EXTERNE' value='1' $checked $disabled2>
                     <span class='slider round'></span>
                 </label>
-                <small>mis à disposition (utilisable, non modifiable)</small>";
+                <small>mis Ã  disposition (utilisable, non modifiable)</small>";
         echo " </td>
           </tr>";
     }
@@ -511,24 +511,24 @@ if ( $tab == 1 ) {
     // ligne kilometrage
     //=====================================================================
     echo "<tr>
-                <td>Kilométrage</td>
+                <td>KilomÃ©trage</td>
                 <td  align=left>
                 <input type='text' class='form-control form-control-sm' name='V_KM' size='6' value='$V_KM' onchange='checkNumber2(this,$V_KM)' $disabled 
-                title=\"ce champ désigne le kilométrage actuel\"> ";
+                title=\"ce champ dÃ©signe le kilomÃ©trage actuel\"> ";
     echo "</td>
           </tr>";
           
     echo "<tr>
-                <td>Révision</td>
+                <td>RÃ©vision</td>
                 <td  align=left>
                 <input type='text' class='form-control form-control-sm' name='V_KM_REVISION' size='6' value='$V_KM_REVISION' onchange='checkNumber2(this,$V_KM_REVISION)' $disabled 
-                title=\"ce champ désigne le kilométrage auquel la prochaine révision devra être faite\">";
+                title=\"ce champ dÃ©signe le kilomÃ©trage auquel la prochaine rÃ©vision devra Ãªtre faite\">";
     echo "</td>
           </tr>";
           
 
     //=====================================================================
-    // dates d'assurance de contrôle technique et de révision
+    // dates d'assurance de contrÃ´le technique et de rÃ©vision
     //=====================================================================
 
     echo "<input type='hidden' name='dc0' value='".getnow()."'>";
@@ -553,38 +553,38 @@ if ( $tab == 1 ) {
                 <td><font color=$assurance>Fin assurance</font></td>
                 <td  align=left>
                 <input type='text' class='datepicker datepicker2 datesize form-control form-control-sm' size='10' name='dc1' value=\"".$V_ASS_DATE."\" $disabled data-provide='datepicker'
-                title=\"ce champ désigne la date de fin d'assurance\"
+                title=\"ce champ dÃ©signe la date de fin d'assurance\"
                 placeholder='JJ-MM-AAAA' autocomplete='off'
                 onchange=checkDate2(this.form.dc1)
                 ></td></tr>";
 
 
-    // contrôle technique
+    // contrÃ´le technique
     echo "<tr>
-                <td><font color=$controle>Contrôle technique</font></td>
+                <td><font color=$controle>ContrÃ´le technique</font></td>
                 <td  align=left>
                 <input type='text' class='datepicker datepicker2 datesize form-control form-control-sm' size='10' name='dc2' value=\"".$V_CT_DATE."\" $disabled data-provide='datepicker'
-                title=\"ce champ désigne la date de validité du contrrôle technique\"
+                title=\"ce champ dÃ©signe la date de validitÃ© du contrrÃ´le technique\"
                 placeholder='JJ-MM-AAAA' autocomplete='off'
                 onchange=checkDate2(this.form.dc2)
                 ></td></tr>";
 
-    // révision
+    // rÃ©vision
     echo "<tr>
-                <td><font color=$revision>Prochaine révision</font></td>
+                <td><font color=$revision>Prochaine rÃ©vision</font></td>
                 <td   align=left>
                 <input type='text' class='datepicker datepicker2 datesize form-control form-control-sm' size='10' name='dc3' value=\"".$V_REV_DATE."\" $disabled data-provide='datepicker'
-                title=\"ce champ désigne la date recommandée de révision dde ce véhicule\"
+                title=\"ce champ dÃ©signe la date recommandÃ©e de rÃ©vision dde ce vÃ©hicule\"
                 placeholder='JJ-MM-AAAA' autocomplete='off'
                 onchange=checkDate2(this.form.dc3)
                 ></td></tr>";
                 
-    // titre d'accès
+    // titre d'accÃ¨s
     echo "<tr>
-                <td><font color=$titre>Exp Titre d'accès</font></td>
+                <td><font color=$titre>Exp Titre d'accÃ¨s</font></td>
                 <td   align=left>
                 <input type='text' class='datepicker datepicker2 datesize form-control form-control-sm' size='10' name='dc4' value=\"".$V_TITRE_DATE."\" $disabled data-provide='datepicker'
-                title=\"ce champ désigne la date d'expiration du titre d'accès\"
+                title=\"ce champ dÃ©signe la date d'expiration du titre d'accÃ¨s\"
                 placeholder='JJ-MM-AAAA' autocomplete='off'
                 onchange=checkDate2(this.form.dc4)
                 ></td></tr>";
@@ -592,12 +592,12 @@ if ( $tab == 1 ) {
     if ( $VP_OPERATIONNEL < 0 ) {
         if ( $V_UPDATE_DATE <> "" )
         echo "<tr>
-                <td  align=right><i>Modifié le </i></td>
+                <td  align=right><i>ModifiÃ© le </i></td>
                 <td  align=left> ".$V_UPDATE_DATE."</td>
                 </tr>";
         if ( $V_UPDATE_BY <> "")
         echo "<tr>
-                <td  align=right><i>Modifié par </i></td>
+                <td  align=right><i>ModifiÃ© par </i></td>
                 <td  align=left> 
                 <a href=upd_personnel.php?pompier=$V_UPDATE_BY >
                 ".ucfirst(get_prenom($V_UPDATE_BY))." ".strtoupper(get_nom($V_UPDATE_BY))."</a></td>
@@ -606,11 +606,11 @@ if ( $tab == 1 ) {
 
 
     //=====================================================================
-    // numéro d'inventaire
+    // numÃ©ro d'inventaire
     //=====================================================================
 
     echo "<tr>
-                <td>N°d'inventaire</td>
+                <td>NÂ°d'inventaire</td>
                 <td align=left><input type='text' class='form-control form-control-sm' name='V_INVENTAIRE' size='30' value=\"$V_INVENTAIRE\" onchange='checkNumber2(this,$V_INVENTAIRE)' $disabled>";
     echo " </td>
           </tr>";
@@ -631,7 +631,7 @@ if ( $tab == 1 ) {
     echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Équipement </strong></div>
+                <div class='card-title'><strong> Ã‰quipement </strong></div>
             </div>
             <div class='card-body graycard'>";
     echo "<table class='noBorder '>";
@@ -647,7 +647,7 @@ if ( $tab == 1 ) {
                 <td align=left>
                 <label class='switch'>
                     <input type='checkbox' name='V_FLAG1' id='V_FLAG1'value='1' $checked $disabled
-                        title='Cocher la case si le véhicule est équipé pour rouler sur la neige'>
+                        title='Cocher la case si le vÃ©hicule est Ã©quipÃ© pour rouler sur la neige'>
                     <span class='slider round'></span>
                 </label>";
     echo " </td>
@@ -660,7 +660,7 @@ if ( $tab == 1 ) {
                 <td align=left>
                 <label class='switch'>
                     <input type='checkbox' name='V_FLAG2' id='V_FLAG2' value='1' $checked $disabled
-                    title='Cocher la case si le véhicule est équipé de climatisation'>
+                    title='Cocher la case si le vÃ©hicule est Ã©quipÃ© de climatisation'>
                     <span class='slider round'></span>
                 </label>";
     echo " </td>
@@ -674,7 +674,7 @@ if ( $tab == 1 ) {
                 <td align=left>
                 <label class='switch'>
                     <input type='checkbox' name='V_FLAG3' id='V_FLAG3'value='1' $checked $disabled
-                        title='Cocher la case si le véhicule est équipé public address (diffusion sonore de message au micro)'>
+                        title='Cocher la case si le vÃ©hicule est Ã©quipÃ© public address (diffusion sonore de message au micro)'>
                     <span class='slider round'></span>
                 </label>";
     echo " </td>
@@ -688,7 +688,7 @@ if ( $tab == 1 ) {
                 <td align=left>
                 <label class='switch'>
                     <input type='checkbox' name='V_FLAG4' id='V_FLAG4'value='1' $checked $disabled
-                        title=\"Cocher la case si le véhicule est équipé d'un crochet d'attelage (indiquant la possibilité d'utiliser une remorque)\">
+                        title=\"Cocher la case si le vÃ©hicule est Ã©quipÃ© d'un crochet d'attelage (indiquant la possibilitÃ© d'utiliser une remorque)\">
                     <span class='slider round'></span>
                 </label>";
     echo " </td>
@@ -726,7 +726,7 @@ if ( $tab == 1 ) {
 }
 
 //=====================================================================
-// documents attachés
+// documents attachÃ©s
 //=====================================================================
 
 if ( $tab == 2 ) {
@@ -752,7 +752,7 @@ if ( $tab == 2 ) {
             echo "<table class='newTableAll' cellspacing=0 border=0 >
             <tr class='pad1'>
             <td align=left><a href='upd_vehicule.php?tab=2&vid=".$V_ID."&order=extension'>ext</a></td>
-            <td align=left><a href='upd_vehicule.php?tab=2&vid=".$V_ID."&order=file'>Documents du véhicule</a></td>
+            <td align=left><a href='upd_vehicule.php?tab=2&vid=".$V_ID."&order=file'>Documents du vÃ©hicule</a></td>
             <td align=center><a href='upd_vehicule.php?tab=2&vid=".$V_ID."&order=author'>Auteur</a></td>
             <td align=center><a href='upd_vehicule.php?tab=2&vid=".$V_ID."&order=date'>Date</a></td>
             <td colspan=2 style='width:1%'></td>
@@ -880,16 +880,16 @@ if ( $tab == 2 ) {
             }
         }
         else
-            echo "<small>Le répertoire contenant les fichiers pour ce véhicule n'est pas trouvé sur ce serveur</small>";
+            echo "<small>Le rÃ©pertoire contenant les fichiers pour ce vÃ©hicule n'est pas trouvÃ© sur ce serveur</small>";
         echo "</table>";
     }
     else 
-        echo "<small><i>Aucun document pour ce véhicule</i></small>";
+        echo "<small><i>Aucun document pour ce vÃ©hicule</i></small>";
 }
 
 
 //=====================================================================
-// matériel embarqué
+// matÃ©riel embarquÃ©
 //=====================================================================
 
 if ( $tab == 3 and $materiel == 1 ) {
@@ -900,7 +900,7 @@ if ( $tab == 3 and $materiel == 1 ) {
     if ( $disabled=='') {
         echo "<div align='right' class='table-responsive tab-buttons-container'>";
         echo "<a class='btn btn-success noprint' value='Document' onclick=\"self.location.href='upd_vehicule.php?vid=$V_ID&tab=3&addnew=1&KID=$V_ID&S_ID=$S_ID';\">
-                <i class='fas fa-plus-circle'></i><span class='hide_mobile'> Matériel</span></a>";    
+                <i class='fas fa-plus-circle'></i><span class='hide_mobile'> MatÃ©riel</span></a>";    
         echo "</div>"; 
         }
     if ($NB2 > 0 ) {
@@ -908,7 +908,7 @@ if ( $tab == 3 and $materiel == 1 ) {
         echo "<div class='col-sm-12'>";
         echo "<table class='newTableAll' cellspacing=0 border=0 >";
         echo "<tr class='pad1'>
-                <td colspan=3>Matériel embarqué</td>
+                <td colspan=3>MatÃ©riel embarquÃ©</td>
           </tr>";
         
         while (custom_fetch_array($result2)) {
@@ -922,7 +922,7 @@ if ( $tab == 3 and $materiel == 1 ) {
               else if ( $VP_OPERATIONNEL == 1) $mytxtcolor=$red;
               else if ( my_date_diff(getnow(),$MA_REV_DATE) < 0 ) {
                   $mytxtcolor=$orange;
-                  $VP_LIBELLE = "date dépassée";
+                  $VP_LIBELLE = "date dÃ©passÃ©e";
               }
               else if ( $VP_OPERATIONNEL == 2) {
                   $mytxtcolor=$orange;
@@ -941,7 +941,7 @@ if ( $tab == 3 and $materiel == 1 ) {
                 
             if ($disabled == "") {
                 echo "<td style='width:1%'><span><a class='btn btn-default btn-action' href=upd_vehicule.php?vid=".$V_ID."&del=".$MA_ID.">
-                        <i class='fa fa-trash-alt'  title='Enlever ce matériel du lot'></i></a></span></td>";
+                        <i class='fa fa-trash-alt'  title='Enlever ce matÃ©riel du lot'></i></a></span></td>";
             }
             else
                 echo "<td></td>";
@@ -950,7 +950,7 @@ if ( $tab == 3 and $materiel == 1 ) {
         echo "</table>";
     }
     else 
-        echo "<small><i>Aucun matériel embarqué dans ce véhicule</i></small>";
+        echo "<small><i>Aucun matÃ©riel embarquÃ© dans ce vÃ©hicule</i></small>";
 }
 
 echo "</div>";

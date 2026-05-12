@@ -32,11 +32,11 @@ if (isset($_GET["errno"])) $errno = intval($_GET["errno"]);
 else $errno="404";
 
 if ( $errno == "403" ) {
-    $msg="Erreur, accès interdit.";
+    $msg="Erreur, accÃ¨s interdit.";
 }
 else {
     $errno="404";
-    $msg="Erreur, la page demandée n'existe pas.";
+    $msg="Erreur, la page demandÃ©e n'existe pas.";
 }    
       
 $msg .="<p align=center><input type='button'  class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'>";

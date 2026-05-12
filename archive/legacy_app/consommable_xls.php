@@ -50,7 +50,7 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 
 // Add the columns heads
 $columns=array('A','B','C','D','E','F','G','H','I');
-$columns_title=array("Catégorie","Type", "Stock", "Min.","Conditionnement","Section",
+$columns_title=array("CatÃ©gorie","Type", "Stock", "Min.","Conditionnement","Section",
                     "Description","Date limite.","Lieu stockage");
 
 foreach ($columns as $c => $letter) {

@@ -64,13 +64,13 @@ if ( $action =='update' or $action == 'duplicate') {
     $TEF_CODE = $row["TEF_CODE"];
     $TEF_NAME = $row["TEF_NAME"];
     $EF_NAME = $row["EF_NAME"];
-    $title = "Modification élément facturable";
+    $title = "Modification Ã©lÃ©ment facturable";
     $EF_PRICE = $row["EF_PRICE"];
     $S_CODE = $row["S_CODE"];
     if ( $action == 'duplicate' ) {
         $EF_ID = 0;
         $action='insert';
-        $title = "Nouvel élément facturable";
+        $title = "Nouvel Ã©lÃ©ment facturable";
     }
 }
 else {
@@ -79,12 +79,12 @@ else {
     $TEF_CODE = "";
     $TEF_NAME = "";
     $EF_NAME = "";
-    $title = "Nouvel élément facturable";
+    $title = "Nouvel Ã©lÃ©ment facturable";
     $EF_PRICE = 0;
 }
 
-// permettre les modifications si je suis habilité sur la fonctionnalité 29 au bon niveau
-// ou je suis habilité sur la fonctionnalité 24 )
+// permettre les modifications si je suis habilitÃ© sur la fonctionnalitÃ© 29 au bon niveau
+// ou je suis habilitÃ© sur la fonctionnalitÃ© 24 )
 if (check_rights($_SESSION['id'], 29,"$S_ID")) $comptable=true;
 else $comptable=false;
 
@@ -141,7 +141,7 @@ else {
 echo "</select></td></tr>";  
 
 //=====================================================================
-// ligne type élément
+// ligne type Ã©lÃ©ment
 //=====================================================================
 
 echo "<tr >

@@ -51,8 +51,8 @@ if ( $TP_ID > 0 ) {
     </div><br>";
     echo "<input type='hidden' name='operation' value='update'>";
     echo "<input type='hidden' name='TP_ID' value=".$TP_ID.">";
-    $img="<img src='images/evenements/".$TE_ICON."' height=30 id='show' title=\"utilisable pour les événements de ce type\">";
-    $detail=" n° ".$TP_ID;
+    $img="<img src='images/evenements/".$TE_ICON."' height=30 id='show' title=\"utilisable pour les Ã©vÃ©nements de ce type\">";
+    $detail=" nÂ° ".$TP_ID;
 }
 else {
     $TE_CODE=$type_evenement;
@@ -66,8 +66,8 @@ else {
     $result=mysqli_query($dbc,$query);
     $row=mysqli_fetch_array($result);
 
-    $img="<img src='images/evenements/".@$row[0]."' height=30 id='show' title=\"utilisable pour les événements de ce type\">";
-    if ( ! is_file ($img) ) $img="<a href=# title=\"utilisable pour les événements d'un type choisi\"><i class='fa fa-question-circle' ></i></a>";
+    $img="<img src='images/evenements/".@$row[0]."' height=30 id='show' title=\"utilisable pour les Ã©vÃ©nements de ce type\">";
+    if ( ! is_file ($img) ) $img="<a href=# title=\"utilisable pour les Ã©vÃ©nements d'un type choisi\"><i class='fa fa-question-circle' ></i></a>";
 
     echo "<input type='hidden' name='operation' value='insert'>";
     echo "<input type='hidden' name='TP_ID' value='0'>";
@@ -99,11 +99,11 @@ if ( $TP_ID > 0 )
 $query2="select TE_CODE, TE_LIBELLE from type_evenement";
 
 echo "<tr>
-          <td width=170><b>Type d'activité</b> $asterisk</td>
+          <td width=170><b>Type d'activitÃ©</b> $asterisk</td>
           <td align=left>
         <select id ='TE_CODE' name='TE_CODE' onchange=\"change(this)\" class='form-control form-control-sm' data-container='body' data-style='btn btn-default'
-        title=\"Choisir ici le type d'activité pour lequel la fonction pourra s'appliquer\">";
-echo "<option value='ALL'>Choisissez un type d'activité</option>";
+        title=\"Choisir ici le type d'activitÃ© pour lequel la fonction pourra s'appliquer\">";
+echo "<option value='ALL'>Choisissez un type d'activitÃ©</option>";
 $result2=mysqli_query($dbc,$query2);
 while ($row2=@mysqli_fetch_array($result2)) {
     $NEWTE_CODE=$row2["TE_CODE"];
@@ -151,7 +151,7 @@ echo "<tr>
             <td><b>Ordre dans la liste </b> $asterisk</td>
             <td align=left>
           <select name='TP_NUM' class='form-control form-control-sm' data-container='body' data-style='btn btn-default'
-          title=\"Choisir l'ordre de la fonction dans la liste déroulante listant les fonctions applicables au type d'activité\">";
+          title=\"Choisir l'ordre de la fonction dans la liste dÃ©roulante listant les fonctions applicables au type d'activitÃ©\">";
           for ($i=1 ; $i<=10 ; $i++) {
             if ($TP_NUM == $i) $selected="selected";
             else $selected="";
@@ -167,10 +167,10 @@ echo "</tr>";
 
 echo "<tr>
             <td>
-            <b>Libellé</b> $asterisk</td>
+            <b>LibellÃ©</b> $asterisk</td>
             <td align=left>
             <input type='text' name='TP_LIBELLE' size='35' class='form-control form-control-sm' value=\"".$TP_LIBELLE."\"
-            title=\"Choisir le libellé de la fonction, maximum 40 caractères\" >";
+            title=\"Choisir le libellÃ© de la fonction, maximum 40 caractÃ¨res\" >";
 echo "</tr>";
 
 //=====================================================================
@@ -191,7 +191,7 @@ echo "<tr  id='row_instructeur'>
 echo "</tr>";
 
 //=====================================================================
-// compétence requise
+// compÃ©tence requise
 //=====================================================================
 
 if ( $competences == 1 ) {
@@ -201,11 +201,11 @@ if ( $competences == 1 ) {
             order by p.EQ_ID, p.TYPE";
     echo "<tr>
               <td>
-                <b>Compétence requise </b></td>
+                <b>CompÃ©tence requise </b></td>
               <td align=left>";
 
     echo "<select id='PS_ID' name='PS_ID' class='form-control form-control-sm' data-container='body' data-style='btn btn-default'>";
-    echo "<option value='0'>Aucune compétence requise</option>";
+    echo "<option value='0'>Aucune compÃ©tence requise</option>";
     $result2=mysqli_query($dbc,$query2);
     $prevEQ_ID=-1;
     while ($row2=@mysqli_fetch_array($result2)) {
@@ -229,8 +229,8 @@ if ( $competences == 1 ) {
               <td>
                 <b>Ou </b></font></td>
               <td align=left>";
-    echo "<select id ='PS_ID2' name='PS_ID2' class='form-control form-control-sm' data-container='body' data-style='btn btn-default' title='Une autre compétence peut être requise pour pouvoir exercer la fonction, définir laquelle'>";
-    echo "<option value='0'>Aucune compétence requise</option>";
+    echo "<select id ='PS_ID2' name='PS_ID2' class='form-control form-control-sm' data-container='body' data-style='btn btn-default' title='Une autre compÃ©tence peut Ãªtre requise pour pouvoir exercer la fonction, dÃ©finir laquelle'>";
+    echo "<option value='0'>Aucune compÃ©tence requise</option>";
     $result2=mysqli_query($dbc,$query2);
     $prevEQ_ID=-1;
     while ($row2=@mysqli_fetch_array($result2)) {

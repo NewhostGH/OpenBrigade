@@ -65,9 +65,9 @@ writeBreadCrumb(NULL, NULL, NULL, $buttons_container);
 if ( isset($_GET['saved']) ) {
     $errcode=$_GET['saved'];
     $html .= "<div id='fadediv' align=center>";
-    if ( $errcode == 'nothing' ) $html .= "<div class='alert alert-info' role='alert'> Aucun changement à sauver.</div></div><p>";
-    else if ( $errcode == 0 ) $html .= "<div class='alert alert-success' role='alert'> Paramètres de configuration sauvés.</div></div><p>";
-    else $html .= "<div class='alert alert-danger' role='alert'> Erreur lors de la sauvegarde des paramètres de configuration.</div></div><p>";
+    if ( $errcode == 'nothing' ) $html .= "<div class='alert alert-info' role='alert'> Aucun changement Ã  sauver.</div></div><p>";
+    else if ( $errcode == 0 ) $html .= "<div class='alert alert-success' role='alert'> ParamÃ¨tres de configuration sauvÃ©s.</div></div><p>";
+    else $html .= "<div class='alert alert-danger' role='alert'> Erreur lors de la sauvegarde des paramÃ¨tres de configuration.</div></div><p>";
 }
 
 global $dbc, $basedir;
@@ -115,7 +115,7 @@ foreach ($globalArray as $ID => $VALUE) {
             if ($VALUE['VALUE'] == 0)
                 $display_none = "display: none;";
 
-            $option_button = "<a id='a$ID' class='btn btn-secondary' style='$display_none position:relative;margin: 10px 0 0 0; padding-right: 35px;'>Paramètres 
+            $option_button = "<a id='a$ID' class='btn btn-secondary' style='$display_none position:relative;margin: 10px 0 0 0; padding-right: 35px;'>ParamÃ¨tres 
                                 <span class='isValid-after $state'>
                                     <i class='fa'></i>
                                 </span>
@@ -188,10 +188,10 @@ $api_key_form .= "  </form>";
 <script>
     $(document).ready(function(){
         $('a#a35').on('click', function(){
-            swal( "<?= $provider_form ?>", {addButton : 1, html: "<button type='submit' name='gps_provider' class='btn-success font-weight-bold btn-swal' form='provider_from'>Sauvegarder</button>"}, {class: "title", disableButton: 0, text: "Paramètre de géolocalisation"});
+            swal( "<?= $provider_form ?>", {addButton : 1, html: "<button type='submit' name='gps_provider' class='btn-success font-weight-bold btn-swal' form='provider_from'>Sauvegarder</button>"}, {class: "title", disableButton: 0, text: "ParamÃ¨tre de gÃ©olocalisation"});
         })
         $('a#a87').on('click', function(){
-            swal( "<?= $api_key_form ?>", {addButton : 1, html: "<button type='submit' name='api_key' class='btn-success font-weight-bold btn-swal' form='api_key_form'>Sauvegarder</button>"}, {class: "title", disableButton: 0, text: "Paramètre de carte"});
+            swal( "<?= $api_key_form ?>", {addButton : 1, html: "<button type='submit' name='api_key' class='btn-success font-weight-bold btn-swal' form='api_key_form'>Sauvegarder</button>"}, {class: "title", disableButton: 0, text: "ParamÃ¨tre de carte"});
         })
     })
     $('input[type=checkbox]').on('change', function() {

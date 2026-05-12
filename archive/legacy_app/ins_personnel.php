@@ -37,7 +37,7 @@ else if (isset ($_GET["statut"])) $statut=$_GET["statut"];
 else $statut='';
 
 if ( $block_personnel and $statut <> 'EXT' ) {
-    write_msgbox("ERREUR", $error_pic, "La création de fiches personnel est bloquée.<br><p align=center>
+    write_msgbox("ERREUR", $error_pic, "La crÃ©ation de fiches personnel est bloquÃ©e.<br><p align=center>
                     <a onclick=\"javascript:history.back(1);\"><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
     exit;
 }
@@ -84,7 +84,7 @@ echo "
 </head>";
 echo "<body onload='changedTypeIns();'>";
 
-// en cas d'erreur d'insertion, remettre les données dans le formulaire
+// en cas d'erreur d'insertion, remettre les donnÃ©es dans le formulaire
 if (isset ($_GET["prenom"])) $prenom=$_GET["prenom"];
 else $prenom="";
 if (isset ($_GET["prenom2"])) $prenom2=$_GET["prenom2"];
@@ -289,15 +289,15 @@ if ( $full ) {
     echo "</select></tr>";
 
 
-    // particularités des SPP
+    // particularitÃ©s des SPP
     if ( $statut == 'SPP') $style="";
     else  $style="style='display:none'";
     echo "<tr id='tsppRow' $style class='pad0 trcolor'>
-          <td><b>Régime travail</b> $asterisk</td>
+          <td><b>RÃ©gime travail</b> $asterisk</td>
           <td align=left>";
           
     echo " <select name='regime_travail' id='regime_travail'
-                title='Choisir le régime de travail'>";
+                title='Choisir le rÃ©gime de travail'>";
     $query2="select TRT_CODE, TRT_DESC from type_regime_travail order by TRT_ORDER asc";
     $result2=mysqli_query($dbc,$query2);
     while (custom_fetch_array($result2)) {
@@ -307,17 +307,17 @@ if ( $full ) {
     }
     echo "</select>";
     
-    // particularités des salariés
+    // particularitÃ©s des salariÃ©s
     $query2="select TS_CODE, TS_LIBELLE from type_salarie order by TS_LIBELLE asc";
     $result2=mysqli_query($dbc,$query2);
 
     if ( $nbsections == 0 ) {
         echo "<tr id='tsRow'>
-              <td><b>Salarié</b> $asterisk</td>
+              <td><b>SalariÃ©</b> $asterisk</td>
               <td align=left>";
         echo " <select name='type_salarie' id='type_salarie'
                     onchange=\"javascript:changedSalarie();\"
-                    title='A préciser pour le personnel salarié ou fonctionnaire seulement'>";
+                    title='A prÃ©ciser pour le personnel salariÃ© ou fonctionnaire seulement'>";
         echo "<option value='0'>---choisir---</option>";
         while ($row2=@mysqli_fetch_array($result2)) {
             $TS_CODE=$row2["TS_CODE"];
@@ -341,10 +341,10 @@ else
     echo "<input type='hidden' name='statut' value='EXT'>";
 
 //=====================================================================
-// ligne civilité
+// ligne civilitÃ©
 //=====================================================================
 if ( $is_chien ) $t = "Sexe";
-else $t = "Civilité";
+else $t = "CivilitÃ©";
 
 echo "<tr class='pad0 trcolor'>
             <td><b>".$t."</b></font> $asterisk</td>
@@ -374,12 +374,12 @@ echo "<tr>
 echo "</tr>";
 
 //=====================================================================
-// ligne prénom
+// ligne prÃ©nom
 //=====================================================================
 echo "<tr>
-            <td><b>Prénom</b> $asterisk</td>
+            <td><b>PrÃ©nom</b> $asterisk</td>
             <td align=left>
-            <input type='text' name='prenom' size='20' class='form-control form-control-sm' value=\"".$prenom."\" $disabled onchange='isValid3(form.prenom,'prénom');' maxlength='25'></td>";
+            <input type='text' name='prenom' size='20' class='form-control form-control-sm' value=\"".$prenom."\" $disabled onchange='isValid3(form.prenom,'prÃ©nom');' maxlength='25'></td>";
 echo "</tr>";
 
 //=====================================================================
@@ -392,7 +392,7 @@ if ( $full ) {
     echo "<tr id=iRow>";
     echo "<td><b>".$i."</b> $asterisk </td>
           <td align=left>
-                <input type='text' name='matricule' size='10' class='form-control form-control-sm' title ='Doit être unique dans la base' value=\"$matricule\" $disabled onchange='isValid(form.matricule);' ></td>";
+                <input type='text' name='matricule' size='10' class='form-control form-control-sm' title ='Doit Ãªtre unique dans la base' value=\"$matricule\" $disabled onchange='isValid(form.matricule);' ></td>";
     echo "</tr>";
 }
 else 
@@ -402,7 +402,7 @@ else
 // section
 //=====================================================================
 if ( $full ) {
-    if ( $syndicate == 1 ) $a = "Numéro de département";
+    if ( $syndicate == 1 ) $a = "NumÃ©ro de dÃ©partement";
     else if ( $nbsections == 0 ) $a = "Affectation";
     else $a = "Section";
         
@@ -489,7 +489,7 @@ if ( $full ) {
     else $disabled2="disabled";
 
     echo "<tr id=gRow>
-              <td style='min-width:130px'><b>Droit d’accès </b> $asterisk
+              <td style='min-width:130px'><b>Droit dâ€™accÃ¨s </b> $asterisk
               <a href=habilitations.php>".$miniquestion_pic."</a></td>
               <td align=left>
             
@@ -517,7 +517,7 @@ else
 // ligne date engagement
 //=====================================================================
 
-if ( $syndicate == 1 ) $t='Date adhésion';
+if ( $syndicate == 1 ) $t='Date adhÃ©sion';
 else if ( $statut == 'EXT' )  $t='Date inscription';
 else $t='Date engagement';
 
@@ -562,21 +562,21 @@ if ( $syndicate == 0 ) {
     echo "</tr>";
     
     echo "<tr>
-            <td><b>Département</b></td>
+            <td><b>DÃ©partement</b></td>
             <td align=left>
           <input type='text' name='birthdep' size='3' maxlength='3' class='form-control form-control-sm' value=\"$birthdep\" $disabled onchange=\"checkNumberNullAllowed(form.birthdep,'');\" autocomplete='off'></td>";
     echo "</tr>";
 }
 
 //=====================================================================
-// nationalité
+// nationalitÃ©
 //=====================================================================
 if ( $syndicate == 0 ) {
-    echo "<tr><td><b>Nationalité</b>";
+    echo "<tr><td><b>NationalitÃ©</b>";
     $query2="select ID, NAME from pays order by ID asc";
     $result2=mysqli_query($dbc,$query2);
-    echo " <td align=left><select name='pays' class='form-control form-control-sm' id='pays' $disabled title=\"Choisissez le pays correspondant à la nationalité de la personne\">";
-    echo " <option value='0' selected>Non renseignée</option>";
+    echo " <td align=left><select name='pays' class='form-control form-control-sm' id='pays' $disabled title=\"Choisissez le pays correspondant Ã  la nationalitÃ© de la personne\">";
+    echo " <option value='0' selected>Non renseignÃ©e</option>";
     while ($row2=@mysqli_fetch_array($result2)) {
         $_ID=$row2["ID"];
         $_NAME=$row2["NAME"];
@@ -612,13 +612,13 @@ if ( ! $is_chien){
                 
     if ( $syndicate == 0 and $full)
         echo "<tr>
-         <td><b>Numéro abrégé</b></td>
+         <td><b>NumÃ©ro abrÃ©gÃ©</b></td>
          <td><input type='text' name='abbrege' size='5' class='form-control form-control-sm' value='' $disabled autocomplete='off'></td>
          </tr>";
 
     if ( $full ) {
         echo "<tr>
-                  <td><b>Autre Téléphone</b></td>
+                  <td><b>Autre TÃ©lÃ©phone</b></td>
                   <td align=left>
                     <input type='text' name='phone2' size='12' class='form-control form-control-sm' value='$phone2' $disabled onchange='checkPhone(form.phone2,\"\",\"".$min_numbers_in_phone."\")' autocomplete='off'>";
         echo "</tr>";
@@ -665,7 +665,7 @@ if ( $full ) {
     echo "<tr id=cRow2>
             <td><b>Infos de contact</b></td>
             <td align=right>
-            <input type='checkbox' name='hide' value='1' $checked title='Si cette case est cochée, seules certaines personnes habilitées pourront voir mes informations personnelles'>
+            <input type='checkbox' name='hide' value='1' $checked title='Si cette case est cochÃ©e, seules certaines personnes habilitÃ©es pourront voir mes informations personnelles'>
             Masquer au public</td>";
     echo "</tr>";
 }
@@ -691,7 +691,7 @@ if ( $licences ) {
     echo "<table cellspacing='0' border='0' class='noBorder fullWidth separate'>";
 
     echo "<tr>
-                <td width=130><b>Numéro Licence</b></td>
+                <td width=130><b>NumÃ©ro Licence</b></td>
                 <td align=left>
                 <input type='text' name='licnum' size='13' class='form-control form-control-sm' value='' autocomplete='off' >
                 </td>";
@@ -752,7 +752,7 @@ if ( $bank_accounts == 1 and $statut <> 'EXT' ) {
 if ( $syndicate == 0 and $full ) {
     echo "<div class='card hide card-default graycarddefault' align=center>";
     echo "<div class='card-header graycard'>
-                <div class='card-title'><strong> Personne à prévenir en cas d'urgence </strong></div>
+                <div class='card-title'><strong> Personne Ã  prÃ©venir en cas d'urgence </strong></div>
             </div>";
     echo "<div class='card-body graycard'>";
     echo "<table cellspacing='0' border='0' class='noBorder fullWidth separate'>";
@@ -761,11 +761,11 @@ if ( $syndicate == 0 and $full ) {
             <td align=left><input type='text' name='relation_nom' class='form-control form-control-sm' size='20' value='' autocomplete='off'></td>";
     echo "</tr>";
     echo "<tr id=uRow3>
-            <td><b>Prénom</b></td>
+            <td><b>PrÃ©nom</b></td>
             <td align=left><input type='text' name='relation_prenom' class='form-control form-control-sm' size='20' value='' autocomplete='off'></td>";
     echo "</tr>";
     echo "<tr id=uRow4>
-            <td><b>Téléphone</b></td>
+            <td><b>TÃ©lÃ©phone</b></td>
             <td align=left><input type='text' name='relation_phone' class='form-control form-control-sm' size='12'  autocomplete='off'
             value='' onchange='checkPhone(form.relation_phone,\"\",\"".$min_numbers_in_phone."\")'></td>";
     echo "</tr>";

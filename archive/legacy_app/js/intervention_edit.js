@@ -26,7 +26,7 @@ function deleteIt(numinter,type){
        else return;
     }
     if ( type == 'I' ) {
-        if ( confirm ("Vous allez supprimer cette intervention\nLes fiches victimes associées seront supprimées.\nVoulez vous continuer ?" ))
+        if ( confirm ("Vous allez supprimer cette intervention\nLes fiches victimes associÃ©es seront supprimÃ©es.\nVoulez vous continuer ?" ))
           confirmed=1;
        else return;
     }
@@ -35,7 +35,7 @@ function deleteIt(numinter,type){
 }
 
 function deleteCav(numcav){
-    if ( confirm ("Vous allez supprimer ce centre d'accueil des victmes\nLes fiches victimes associées seront supprimées.\nVoulez vous continuer ?" ))
+    if ( confirm ("Vous allez supprimer ce centre d'accueil des victmes\nLes fiches victimes associÃ©es seront supprimÃ©es.\nVoulez vous continuer ?" ))
         confirmed=1;
     else return;
     url="cav_edit.php?numcav="+numcav+"&action=delete";

@@ -78,7 +78,7 @@ if ($error == 'exist' && $operation == "insert"){
 
 echo "<div class='div-decal-left' align=left>";
 //=====================================================================
-//filtre catégorie de grades
+//filtre catÃ©gorie de grades
 //=====================================================================
 $order = 'CG_CODE';
 echo "<div class='div-decal-left' style='float:left'><select id='usage' name='usage' class='selectpicker' data-live-search='true' data-style='btn-default' data-container='body'
@@ -91,7 +91,7 @@ while ($row=@mysqli_fetch_array($result2)) {
     $selected = $CG_CODE == $catGrade ? 'selected' : '';
 
     if($CG_CODE == 'ALL')
-        echo "<option value='" . $CG_CODE . "' class='option-ebrigade' $selected>Toutes les catégories</option>\n";
+        echo "<option value='" . $CG_CODE . "' class='option-ebrigade' $selected>Toutes les catÃ©gories</option>\n";
     else
         echo "<option value='" . $CG_CODE . "' class='option-ebrigade' $selected>" . $CG_DESCRIPTION . "</option>\n";
 }
@@ -99,7 +99,7 @@ echo "</select></div>";
 
 
 //=====================================================================
-//filtre catégories avec grades actifs
+//filtre catÃ©gories avec grades actifs
 //=====================================================================
 echo "<div class='div-decal-left' style='float:left'><select id='activ' name='activ' class='selectpicker'  data-style='btn-default' data-container='body'
     onchange=\"orderfilterActiv(document.getElementById('activ').value)\">";
@@ -114,9 +114,9 @@ if ( check_rights($_SESSION['id'], 18)) {
     //=====================================================================
     // Boutons
     //=====================================================================
-    if ($catGrade == "ALL") echo "<div class='dropdown-right' style='float:right' align=right > <a class='btn btn-secondary disabled' value='Modifier' name='modifierCategorie' ><i class=\"fas fa-edit \"></i> Catégorie</a></div>";
-    else echo "<div class='dropdown-right' style='float:right' align=right> <a class='btn btn-primary' value='Modifier' name='modifierCategorie' onclick=\"bouton_redirect('parametrage.php?tab=5&child=14&ope=edit_cat&updCat=1');\"><i class=\"fas fa-edit \"></i> Catégorie</a></div>";
-    echo "<div class='dropdown-right' style='float:right' align=right> <a class='btn btn-success' value='Ajouter' name='ajouterCategorie' onclick=\"bouton_redirect('parametrage.php?tab=5&child=14&ope=edit_cat&insertCat=1');\"><i class=\"fas fa-plus-circle\"></i> Catégorie</a></div>";
+    if ($catGrade == "ALL") echo "<div class='dropdown-right' style='float:right' align=right > <a class='btn btn-secondary disabled' value='Modifier' name='modifierCategorie' ><i class=\"fas fa-edit \"></i> CatÃ©gorie</a></div>";
+    else echo "<div class='dropdown-right' style='float:right' align=right> <a class='btn btn-primary' value='Modifier' name='modifierCategorie' onclick=\"bouton_redirect('parametrage.php?tab=5&child=14&ope=edit_cat&updCat=1');\"><i class=\"fas fa-edit \"></i> CatÃ©gorie</a></div>";
+    echo "<div class='dropdown-right' style='float:right' align=right> <a class='btn btn-success' value='Ajouter' name='ajouterCategorie' onclick=\"bouton_redirect('parametrage.php?tab=5&child=14&ope=edit_cat&insertCat=1');\"><i class=\"fas fa-plus-circle\"></i> CatÃ©gorie</a></div>";
     echo "<div class='dropdown-right ' style='float:right' align=right> <a class='btn btn-success' value='Ajouter' name='ajouterGrade' title='' onclick=\"bouton_redirect('parametrage.php?tab=5&child=14&operation=insert&upd=1');\"><i class=\"fas fa-plus-circle\" style='color:white'></i> Grade</a></div>";
 
 }
@@ -158,7 +158,7 @@ $_SESSION['query'] = $query;
     echo "<thead>";
     echo "<tr class='widget-title'>";
     echo "<th data-field='grade' data-sortable='true'>Grade</th>";
-    echo "<th  data-field='categorie' data-sortable='true'>Catégorie</th>";
+    echo "<th  data-field='categorie' data-sortable='true'>CatÃ©gorie</th>";
     echo "<th  data-field='description' data-sortable='true'>Description</th>";
     echo "<th  data-field='code' data-sortable='true' class='hide_mobile'>Code</th>";
     echo "<th data-field='niveau' data-sortable='true' class='hide_mobile'>Niveau</th>";

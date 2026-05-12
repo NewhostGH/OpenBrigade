@@ -155,7 +155,7 @@ $results=mysqli_query($dbc,$querys);
 if ( $vid > 0 ) {
     $out =  "<div align=center ><p>
         <table class='noBorder'>";
-    $out .= "<tr><td align=right style='background-color:white;'><i>Sécurité</i></td>
+    $out .= "<tr><td align=right style='background-color:white;'><i>SÃ©curitÃ©</i></td>
             <td align=left style='background-color:white;'><select name='security' class='form-control form-control-sm' id='security' title='choisir qui peut voir ce fichier' 
             onchange=\"javascript:updatedoc('".$V_ID."','".$D_NAME."',this.value, '".$D_ID."');\">";
 
@@ -170,7 +170,7 @@ if ( $vid > 0 ) {
 else if ( $mid > 0 ) {
     $out =  "<div align=center ><p>
         <table class='noBorder'>";
-    $out .= "<tr><td align=right style='background-color:white;'><i>Sécurité</i></td>
+    $out .= "<tr><td align=right style='background-color:white;'><i>SÃ©curitÃ©</i></td>
             <td align=left style='background-color:white;'><select name='security' class='form-control form-control-sm' id='security' title='choisir qui peut voir ce fichier' 
             onchange=\"javascript:updatedoc('".$M_ID."','".$D_NAME."',this.value, '".$D_ID."');\">";
 
@@ -185,7 +185,7 @@ else if ( $mid > 0 ) {
 else if ( $victime > 0 ) {
     $out =  "<div align=center ><p>
         <table class='noBorder'>";
-    $out .= "<tr><td align=right style='background-color:white;'><i>Sécurité</i></td>
+    $out .= "<tr><td align=right style='background-color:white;'><i>SÃ©curitÃ©</i></td>
             <td align=left style='background-color:white;'><select name='security' id='security' title='choisir qui peut voir ce fichier' 
             onchange=\"javascript:updatedoc('".$victime."','".$D_NAME."',this.value, '".$D_ID."');\">";
 
@@ -200,7 +200,7 @@ else if ( $victime > 0 ) {
 else if ( $intervention > 0 ) {
     $out =  "<div align=center ><p>
         <table class='noBorder'>";
-    $out .= "<tr><td align=right style='background-color:white;'><i>Sécurité</i></td>
+    $out .= "<tr><td align=right style='background-color:white;'><i>SÃ©curitÃ©</i></td>
             <td align=left style='background-color:white;'><select name='security' id='security' title='choisir qui peut voir ce fichier' 
             onchange=\"javascript:updatedoc('".$intervention."','".$D_NAME."',this.value, '".$D_ID."', '".$evenement."');\">";
 
@@ -215,7 +215,7 @@ else if ( $intervention > 0 ) {
 else if ( $pid > 0 ) {
     $out =  "<div align=center ><p>
         <table class='noBorder'>";
-    $out .= "<tr ><td align=right style='background-color:white;'><i>Sécurité</i></td>
+    $out .= "<tr ><td align=right style='background-color:white;'><i>SÃ©curitÃ©</i></td>
         <td align=left style='background-color:white;'>
         <form name='formdoc".$D_ID."' action='save_personnel.php' method=POST>
         <input type='hidden' name='operation' value='document'>
@@ -234,7 +234,7 @@ else if ( $pid > 0 ) {
 else if ( $evenement > 0 ) {
     $out =  "<div align=center ><p>
         <table class='noBorder'>";
-    $out .= "<tr><td align=right style='background-color:white;'><i>Sécurité</i></td>
+    $out .= "<tr><td align=right style='background-color:white;'><i>SÃ©curitÃ©</i></td>
         <td align=left style='background-color:white;'>
         <form name='formdoc".$D_ID."' action='evenement_save.php' method=POST>
         <input type='hidden' name='action' value='document'>
@@ -277,9 +277,9 @@ else if ( isset($_GET["sid"]) ) {
                 <input type='hidden' name='docid' value='".$docid."'>
                 <input type='hidden' name='isfolder' value='".$isfolder."'>
                 <table class='noBorder' cellspacing=0>
-                <tr><td colspan=2><b>Informations liées au document ou dossier</b></td></tr>";
+                <tr><td colspan=2><b>Informations liÃ©es au document ou dossier</b></td></tr>";
 
-    // possibilité de renommer un dossier
+    // possibilitÃ© de renommer un dossier
     if ( $isfolder ) {
         $myimg="<i class='far fa-folder-open fa-lg' title='Ouvrir ce dossier' style='padding-left:2px;'></i>";
         $out .= "<tr><td align=right width=100><i>".$myimg." Nom </i></td>
@@ -288,7 +288,7 @@ else if ( isset($_GET["sid"]) ) {
     
     $P=get_parent_folder($docid, $isfolder);
     if ( $P == 0 ) {
-        // on ne peut choisir le type que à la racine, sinon c'est le type du dossier qui s'applique
+        // on ne peut choisir le type que Ã  la racine, sinon c'est le type du dossier qui s'applique
         $out .= "<tr><td align=right><i>Type </i></td>
                     <td align=left><select name='type' id='type'>";
         $resultt=mysqli_query($dbc,$queryt);
@@ -300,13 +300,13 @@ else if ( isset($_GET["sid"]) ) {
             }
         }
         $out .= "</select>";
-        if ( $isfolder )  $out .= "<br><span class=small>Attention: un changement de type pour un dossier entraine le même changement pour tout ce qu'il contient</span>";
+        if ( $isfolder )  $out .= "<br><span class=small>Attention: un changement de type pour un dossier entraine le mÃªme changement pour tout ce qu'il contient</span>";
         $out .= "</td></tr>";
     }
     else $out .= "<input type='hidden' name='type' value='".$typedoc."'>";
     
     // choix du dossier
-    $out .= "<tr><td align=right width=100><i>Classé dans </i></td>
+    $out .= "<tr><td align=right width=100><i>ClassÃ© dans </i></td>
             <td align=left><select name='parentfolder' id='parentfolder' class='smalldropdown'>";
     if ( $folderid == 0 ) $selected='selected';
     else $selected='';
@@ -326,11 +326,11 @@ else if ( isset($_GET["sid"]) ) {
     }
     $out .= "</select>";
 
-    $out .= " <i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title=\"Attention: en changeant le dossier, le type sera automatiquement modifié pour prendre la même valeur que le nouveau dossier.\"></i>";
+    $out .= " <i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title=\"Attention: en changeant le dossier, le type sera automatiquement modifiÃ© pour prendre la mÃªme valeur que le nouveau dossier.\"></i>";
     $out .= "</td></tr>";
     
     if ( $document_security and ! $isfolder ) {
-        $out .= "<tr><td align=right><i>Sécurité</i></td>
+        $out .= "<tr><td align=right><i>SÃ©curitÃ©</i></td>
                 <td align=left><select name='security' id='security' class='smalldropdown'>";
         while (custom_fetch_array($results)) {
             if ( $DS_ID == $securityid) $selected='selected';

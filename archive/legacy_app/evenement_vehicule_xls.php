@@ -52,7 +52,7 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 
 // Add the columns heads
 $columns=array('A','B','C','D','E','F','G','H','I','J');
-$columns_title=array("Type", "Evenement","Vehicule","Modèle","Immatriculation","Section",
+$columns_title=array("Type", "Evenement","Vehicule","ModÃ¨le","Immatriculation","Section",
 				     "Statut","Debut engagement","Fin engagement","Km");
 					 
 foreach ($columns as $c => $letter) {
@@ -140,19 +140,19 @@ while ($row=@mysqli_fetch_array($result)) {
     $V_REV_DATE=$row["V_REV_DATE"];
     $S_DESCRIPTION=$row["S_DESCRIPTION"];
 	if ( $EH_DATE_FIN == '') $EH_DATE_FIN = $EH_DATE_DEBUT;
-	if ( $E_CANCELED == 1 ) $myimg="événement annulé";
-	elseif ( $E_CLOSED == 1 ) $myimg="inscriptions fermées";
+	if ( $E_CANCELED == 1 ) $myimg="Ã©vÃ©nement annulÃ©";
+	elseif ( $E_CLOSED == 1 ) $myimg="inscriptions fermÃ©es";
 	else $myimg="inscriptions ouvertes";
 
 	if ( $VP_OPERATIONNEL == 0) {    
         if ( my_date_diff(getnow(),$V_ASS_DATE) < 0 ) {
-            $VP_LIBELLE = "assurance périmée";
+            $VP_LIBELLE = "assurance pÃ©rimÃ©e";
         }
         else if ( my_date_diff(getnow(),$V_CT_DATE) < 0 ) {
-            $VP_LIBELLE = "CT périmé";	  
+            $VP_LIBELLE = "CT pÃ©rimÃ©";	  
         }
         else if ( my_date_diff(getnow(),$V_REV_DATE) < 0 and  $VP_OPERATIONNEL <> 1) {
-            $VP_LIBELLE = "révision à faire";
+            $VP_LIBELLE = "rÃ©vision Ã  faire";
         }  
     }
      

@@ -40,7 +40,7 @@ if ( $hierarchie <> "" ) {
          where PH_CODE='".$hierarchie."'";
     $result=mysqli_query($dbc,$query);
     custom_fetch_array($result);
-    $title="Hiérarchie de Compétence - $PH_CODE";
+    $title="HiÃ©rarchie de CompÃ©tence - $PH_CODE";
     $operation='update';
 }
 else {
@@ -49,7 +49,7 @@ else {
     $PH_HIDE_LOWER=1;
     $PH_UPDATE_LOWER_EXPIRY=1;
     $PH_UPDATE_MANDATORY=1;
-    $title="Ajout nouvelle Hiérarchie de Compétence";
+    $title="Ajout nouvelle HiÃ©rarchie de CompÃ©tence";
     $operation='insert';
 }
 
@@ -84,26 +84,26 @@ echo "<tr>
 echo "</tr>";
 
 
-$t1="\"Montrer seulement la compétence la plus haute de la hiérarchie pour une personne sur les événements, masquer les autres\"";
-$t2="\"En cas de mise à jour de la date d'expiration sur une compétence de la hiérarchie, la mise à jour automatique des dates des compétences inférieures est possible.\"";
-$t3="\"Rendre obligatoire la validation des compétences inférieures, si non cochée elle reste facultative sur les événements formations.\"";
+$t1="\"Montrer seulement la compÃ©tence la plus haute de la hiÃ©rarchie pour une personne sur les Ã©vÃ©nements, masquer les autres\"";
+$t2="\"En cas de mise Ã  jour de la date d'expiration sur une compÃ©tence de la hiÃ©rarchie, la mise Ã  jour automatique des dates des compÃ©tences infÃ©rieures est possible.\"";
+$t3="\"Rendre obligatoire la validation des compÃ©tences infÃ©rieures, si non cochÃ©e elle reste facultative sur les Ã©vÃ©nements formations.\"";
 
 if ( $PH_HIDE_LOWER == 1 ) $checked='checked';
 else $checked='';
 echo "<tr>
-            <td><b>Masquer les compétences inférieures</b></td>
+            <td><b>Masquer les compÃ©tences infÃ©rieures</b></td>
             <td align=left>
             <input type='checkbox' name='PH_HIDE_LOWER' value='1' $checked title=".$t1.">
-            <span class=small2> sur les activités</span>";
+            <span class=small2> sur les activitÃ©s</span>";
 echo "</tr>";
 
 if ( $PH_UPDATE_LOWER_EXPIRY == 1 ) $checked='checked';
 else $checked='';
 echo "<tr>
-            <td><b>Prolonger les compétences inférieures</b></td>
+            <td><b>Prolonger les compÃ©tences infÃ©rieures</b></td>
             <td align=left>
             <input type='checkbox' name='PH_UPDATE_LOWER_EXPIRY' id='PH_UPDATE_LOWER_EXPIRY' value='1' $checked title=".$t2." onchange='checkProlonge();'>
-            <span class=small2>les compétences inférieures peuvent être prolongées</span>";
+            <span class=small2>les compÃ©tences infÃ©rieures peuvent Ãªtre prolongÃ©es</span>";
 echo "</tr>";
 
 if ( $PH_UPDATE_LOWER_EXPIRY == 1 ) $disabled='';
@@ -114,10 +114,10 @@ echo "<tr>
             <td align=right ><i>Obligatoire</i></td>
             <td align=left>
             <input type='checkbox' name='PH_UPDATE_MANDATORY' id='PH_UPDATE_MANDATORY' value='1' $disabled $checked title=".$t3.">
-            <span class=small2>les compétences inférieures sont obligatoirement prolongées</span>";
+            <span class=small2>les compÃ©tences infÃ©rieures sont obligatoirement prolongÃ©es</span>";
 echo "</tr>";
  
-// afficher les compétences de cette hiérarchie
+// afficher les compÃ©tences de cette hiÃ©rarchie
 $queryp="select PS_ID, TYPE, DESCRIPTION, PH_LEVEL
         from  poste p
         where PH_CODE='".$PH_CODE."'
@@ -127,7 +127,7 @@ $resultp=mysqli_query($dbc,$queryp);
 if ( @mysqli_num_rows($resultp) > 0 ) {
     echo "<tr>
             <td colspan=2><strong>
-            Compétences faisant partie de cette hiérarchie</strong></td>
+            CompÃ©tences faisant partie de cette hiÃ©rarchie</strong></td>
         </tr>";
         
     while (custom_fetch_array($resultp)) {

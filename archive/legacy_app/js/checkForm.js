@@ -36,14 +36,14 @@ function isValid2(form, defaultvalue) {
 function countLetters(str) {
   var count=0,len=str.length;
   for(var i=0;i<len;i++) {
-    if(/[a-zéèêçïëàüA-Z]/.test(str.charAt(i))) count++;
+    if(/[a-zÃ©Ã¨ÃªÃ§Ã¯Ã«Ã Ã¼A-Z]/.test(str.charAt(i))) count++;
   }
   return count;
 }
 
 function isValid3(form, defaultvalue) {
     var s = form.value;
-    var re = /^([\'\ a-zôéèêçïëàüA-Z0-9_-]*)$/;
+    var re = /^([\'\ a-zÃ´Ã©Ã¨ÃªÃ§Ã¯Ã«Ã Ã¼A-Z0-9_-]*)$/;
     if (! re.test(s)) {
         swalAlert ("Attention seuls des lettres et des numeros sont autorises: '"+ s + "' ne convient pas.");
         form.value = defaultvalue;
@@ -107,7 +107,7 @@ function isValid5(form, defaultvalue, numchars) {
         return false;
     }
     if ( s.length != numchars && s.length > 0) {
-        swalAlert ("Saisissez un nombre à " + numchars + " caracteres: '"+ s + "' ne convient pas.");
+        swalAlert ("Saisissez un nombre Ã  " + numchars + " caracteres: '"+ s + "' ne convient pas.");
         form.value = defaultvalue;
         return false;
     }
@@ -164,7 +164,7 @@ function isValidUrl(form, defaultvalue) {
     if (s.length == 0 ) return true;
     var re =/^https:\/\/.*\..*$/;
     if (! re.test(s) ) {
-        swalAlert ("Une adresse URL commençant par https://, suivie par un nom de domaine est requise '"+ s + "' ne convient pas.");
+        swalAlert ("Une adresse URL commenÃ§ant par https://, suivie par un nom de domaine est requise '"+ s + "' ne convient pas.");
         form.value = defaultvalue;
         return false;
     }
@@ -177,7 +177,7 @@ function isValidUrl2(form, defaultvalue) {
     var re =/^https:\/\/.*.*$/;
     var re2 =/^http:\/\/.*$/;
     if (! re.test(s) && ! re2.test(s)) {
-        swalAlert ("Une adresse URL commençant par https:// ou http://  est requise '"+ s + "' ne convient pas.");
+        swalAlert ("Une adresse URL commenÃ§ant par https:// ou http://  est requise '"+ s + "' ne convient pas.");
         form.value = defaultvalue;
         return false;
     }
@@ -210,7 +210,7 @@ function checkNumber3(form, defaultvalue , max) {
     var re = /^([0-9]+)$/;
 
     if (! re.test(s) || s >= max ) {
-        swalAlert("Saisissez un numériqe inférieur à "+ max + ".");
+        swalAlert("Saisissez un numÃ©riqe infÃ©rieur Ã  "+ max + ".");
         form.value = defaultvalue;
         return false;
     }
@@ -237,7 +237,7 @@ function checkNumberOrNothing(form,expectedlength,defaultvalue) {
         return false;
     }
     if ( s.length != expectedlength && s.length > 0 ) {
-        swalAlert ("Saisissez un nombre à " + expectedlength + " chiffres: '"+ s + "' ne convient pas.");
+        swalAlert ("Saisissez un nombre Ã  " + expectedlength + " chiffres: '"+ s + "' ne convient pas.");
         form.value = defaultvalue;
         return false;
     }

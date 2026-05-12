@@ -81,7 +81,7 @@ echo "<div class='row'>";
 echo "<div class='col-sm-6'>
     <div class='card hide card-default graycarddefault' align=center style='margin-bottom: 5px;'>
         <div class='card-header graycard'>
-            <div class='card-title'><strong>Généralités</strong></div>
+            <div class='card-title'><strong>GÃ©nÃ©ralitÃ©s</strong></div>
         </div>
         <div class='card-body graycard'>";
 
@@ -114,11 +114,11 @@ echo "</td>
 
 echo "<tr>
             <td>Immatriculation</td>
-            <td  align=left><input type='text' name='V_IMMATRICULATION' size='20' class='form-control form-control-sm' title=\"ce champ désigne l'immatriculation ou le macaron\">";
+            <td  align=left><input type='text' name='V_IMMATRICULATION' size='20' class='form-control form-control-sm' title=\"ce champ dÃ©signe l'immatriculation ou le macaron\">";
 echo "</tr>";
 
 //=====================================================================
-// numéro d'indicatif
+// numÃ©ro d'indicatif
 //=====================================================================
 
 echo "<tr>
@@ -127,13 +127,13 @@ echo "<tr>
 echo " </td>
       </tr>";
 //=====================================================================
-// ligne année
+// ligne annÃ©e
 //=====================================================================
 
 $curyear=date("Y");
 $year=$curyear - 30; 
 echo "<tr>
-            <td>Année</td>
+            <td>AnnÃ©e</td>
             <td  align=left>
             <select class='form-control form-control-sm smalldropdown3-nofont' name='V_ANNEE' data-style='btn btn-default'>";
 while ( $year <= $curyear + 1 ) {
@@ -150,26 +150,26 @@ echo "</select></tr>";
 //=====================================================================
 
 echo "<tr>
-            <td>Kilométrage</td>
+            <td>KilomÃ©trage</td>
             <td  align=left>
             <input type='text' name='V_KM' size='5' class='form-control form-control-sm' value='0' onchange='checkNumber2(this,0)'
-            title=\"ce champ désigne le kilométrage actuel\">";
+            title=\"ce champ dÃ©signe le kilomÃ©trage actuel\">";
 echo "</tr>";
 
 
 echo "<tr>
-            <td>Prochaine révision</td>
+            <td>Prochaine rÃ©vision</td>
             <td  align=left>
             <input type='text' name='V_KM_REVISION' size='5' class='form-control form-control-sm' value='0' onchange='checkNumber2(this,0)'
-            title=\"ce champ désigne le kilométrage auquel la prochaine révision devra être faite\">";
+            title=\"ce champ dÃ©signe le kilomÃ©trage auquel la prochaine rÃ©vision devra Ãªtre faite\">";
 echo "</tr>";
 
 //=====================================================================
-// ligne modèle
+// ligne modÃ¨le
 //=====================================================================
 
 echo "<tr>
-            <td>Modèle</td>
+            <td>ModÃ¨le</td>
             <td  align=left><input type='text' name='V_MODELE' class='form-control form-control-sm' size='25'>";
 echo "</tr>";
 
@@ -181,7 +181,7 @@ if (  $nbsections == 0 ) {
     echo "<tr>
             <td>Section $asterisk</td>
             <td  align=left>";
-    echo "<select id='groupe' name='groupe' class=' form-control form-control-sm' title=\"ce champ désigne la section, centre ou niveau hiérarchique auquel le véhicule est affecté\" data-style='btn btn-default'>";
+    echo "<select id='groupe' name='groupe' class=' form-control form-control-sm' title=\"ce champ dÃ©signe la section, centre ou niveau hiÃ©rarchique auquel le vÃ©hicule est affectÃ©\" data-style='btn btn-default'>";
      
     $level=get_level($section);
     $mycolor=get_color_level($level);
@@ -236,18 +236,18 @@ if ( $gardes == 1 ) {
 
 if (check_rights($_SESSION['id'], 24) and ($nbsections ==  0 )) {
     echo "<tr>
-                <td>Véhicule $cisname</td>
+                <td>VÃ©hicule $cisname</td>
                 <td  align=left>
                 <label class='switch'>
                     <input type='checkbox' name='V_EXTERNE' value='1'>
                     <span class='slider round'></span>               
                 </label>            
-                <font size=1><i>mis à disposition (utilisable, non modifiable)<i></font>";
+                <font size=1><i>mis Ã  disposition (utilisable, non modifiable)<i></font>";
     echo " </td></tr>";
 }          
 
 //=====================================================================
-// dates d'assurance de contrôle technique et de révision
+// dates d'assurance de contrÃ´le technique et de rÃ©vision
 //=====================================================================
 
 echo "<input type='hidden' name='dc0' value='".getnow()."'>";
@@ -257,7 +257,7 @@ echo "</table></div></div></div>";
     echo "<div class='col-sm-6'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Équipement </strong></div>
+                <div class='card-title'><strong> Ã‰quipement </strong></div>
             </div>
             <div class='card-body graycard'>";
     echo "<table class='noBorder maxsize'>";
@@ -267,44 +267,44 @@ echo "<tr>
             <td>Fin assurance</td>
             <td  align=left>
             <input type='text' size='10' name='dc1' class='form-control form-control-sm datepicker datepicker2 datesize' data-provide='datepicker'
-            title=\"ce champ désigne la date de fin d'assurance\"
+            title=\"ce champ dÃ©signe la date de fin d'assurance\"
             placeholder='JJ-MM-AAAA' autocomplete='off'>
             </td></tr>";
 
 
-// contrôle technique
+// contrÃ´le technique
 echo "<tr>
-            <td>Contrôle technique</td>
+            <td>ContrÃ´le technique</td>
             <td  align=left>
             <input type='text' size='10' name='dc2' class='form-control form-control-sm datepicker datepicker2 datesize' data-provide='datepicker'
-            title=\"ce champ désigne la date de validité du contrrôle technique\"
+            title=\"ce champ dÃ©signe la date de validitÃ© du contrrÃ´le technique\"
             placeholder='JJ-MM-AAAA' autocomplete='off'
             ></td></tr>";
 
-// révision
+// rÃ©vision
 echo "<tr>
-            <td>Prochaine révision</td>
+            <td>Prochaine rÃ©vision</td>
             <td  align=left>
             <input type='text' size='10' name='dc3' class='form-control form-control-sm datepicker datepicker2 datesize' data-provide='datepicker'
-            title=\"ce champ désigne la date recommandée de révision dde ce véhicule\"
+            title=\"ce champ dÃ©signe la date recommandÃ©e de rÃ©vision dde ce vÃ©hicule\"
             placeholder='JJ-MM-AAAA' autocomplete='off'
             ></td></tr>";
             
-// titre d'accès
+// titre d'accÃ¨s
 echo "<tr>
-            <td>Exp Titre d'accès</td>
+            <td>Exp Titre d'accÃ¨s</td>
             <td  align=left>
             <input type='text' size='10' name='dc4' class='form-control form-control-sm datepicker datepicker2 datesize' data-provide='datepicker'
-            title=\"ce champ désigne la date d'expiration du titre d'accès\"
+            title=\"ce champ dÃ©signe la date d'expiration du titre d'accÃ¨s\"
             placeholder='JJ-MM-AAAA' autocomplete='off'
             ></td></tr>";
 
 //=====================================================================
-// numéro d'inventaire
+// numÃ©ro d'inventaire
 //=====================================================================
 
 echo "<tr>
-            <td>N°d'inventaire</td>
+            <td>NÂ°d'inventaire</td>
             <td  align=left><input type='text' name='V_INVENTAIRE' class='form-control form-control-sm' size='30'>";
 echo " </td>
       </tr>";

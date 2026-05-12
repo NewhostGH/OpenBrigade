@@ -60,7 +60,7 @@ if (!$onlyTable) {
     echo "<li class = 'nav-item'>
             <a class = 'nav-link $class' href = 'calendar.php?tab=1' role = 'tab'>
                 <i class='fa fa-calendar-alt'></i>
-                <span>Calendrier des activités </span>
+                <span>Calendrier des activitÃ©s </span>
             </a>
         </li>";
     if ($tab == 2) {
@@ -173,8 +173,8 @@ if($onlyTable) {
         }
         $desc = "";
         if ($E_LIEU != "" && $E_LIEU != "?") $desc.= "lieu : ".$E_LIEU." - ";
-        $desc.= "de ".substr($EH_DEBUT,0,5)." à ".substr($EH_FIN,0,5);
-        if ( $nbsections == 0 ) $desc .= " organisé par ".$S_DESCRIPTION;
+        $desc.= "de ".substr($EH_DEBUT,0,5)." Ã  ".substr($EH_FIN,0,5);
+        if ( $nbsections == 0 ) $desc .= " organisÃ© par ".$S_DESCRIPTION;
 
         $title=$theinfo." ".$E_LIBELLE;
         $title=fixcharset($title);
@@ -237,7 +237,7 @@ if($onlyTable) {
     }
 
     //============================================================
-    // les heures travaillées 
+    // les heures travaillÃ©es 
     //============================================================
 
     $block4="";
@@ -258,7 +258,7 @@ if($onlyTable) {
         if ( $H_FIN2 <> '' ) 
             $block4 .= "
             {
-                title: 'Pointage après-midi',
+                title: 'Pointage aprÃ¨s-midi',
                 start: '".$H_DATE."T".$H_DEBUT2."',
                 end: '".$H_DATE."T".$H_FIN2."',
                 url: 'horaires.php?from=calendar&person=".$pompier."&view=list',
@@ -267,7 +267,7 @@ if($onlyTable) {
     }
 
     //============================================================
-    // les jours fériés années N et N+1
+    // les jours fÃ©riÃ©s annÃ©es N et N+1
     //============================================================
     $block5="";
     $date= mktime(0,0,0,1,1, date("Y"));
@@ -276,7 +276,7 @@ if($onlyTable) {
         if (dateCheckPublicholiday($date)) {
             $block5 .= "
             {
-                title: 'jour férié',
+                title: 'jour fÃ©riÃ©',
                 start: '".date("Y-m-d", $date)."',
                 color: 'orange',
                 rendering: 'background'
@@ -288,7 +288,7 @@ if($onlyTable) {
 }
 
 //============================================================
-// calendrier des activités d'une section
+// calendrier des activitÃ©s d'une section
 //============================================================
 
 else {
@@ -340,8 +340,8 @@ else {
         }
         $desc = "";
         if ($E_LIEU != "" && $E_LIEU != "?") $desc.= "lieu : ".$E_LIEU." - ";
-        $desc.= "de ".substr($EH_DEBUT,0,5)." à ".substr($EH_FIN,0,5);
-        if ( $nbsections == 0 ) $desc .= " organisé par ".$S_DESCRIPTION;
+        $desc.= "de ".substr($EH_DEBUT,0,5)." Ã  ".substr($EH_FIN,0,5);
+        if ( $nbsections == 0 ) $desc .= " organisÃ© par ".$S_DESCRIPTION;
 
         $title=$theinfo." ".$E_LIBELLE;
         $title=fixcharset($title);
@@ -374,7 +374,7 @@ else $diff = "-7";
     .fc-toolbar-title::first-letter {
         text-transform: capitalize;
     }
-    /*Correction bug caractère spéciaux en vue mois et jour*/
+    /*Correction bug caractÃ¨re spÃ©ciaux en vue mois et jour*/
     .fc-dayGridWeek-view .fc-daygrid-day-number,.fc-dayGridWeek-view .fc-daygrid-week-number, .fc-dayGridDay-view .fc-daygrid-day-number, .fc-dayGridDay-view .fc-daygrid-week-number {
         display: none;
     }

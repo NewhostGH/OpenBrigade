@@ -95,7 +95,7 @@ while ($row=@mysqli_fetch_array($result)) {
         },";
 }
 
-// plus choix d'icônes
+// plus choix d'icÃ´nes
 $f = 0;
 $file_arr = array();
 $name_arr = array();
@@ -140,7 +140,7 @@ echo "</head>";
 echo "<body>";
 
 //=====================================================================
-// recupérer infos evenement
+// recupÃ©rer infos evenement
 //=====================================================================
 $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT, e.S_ID, te.TE_ICON
         from evenement e, type_evenement te
@@ -148,7 +148,7 @@ $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT
         and e.E_CODE=".$evenement;
 $result=mysqli_query($dbc,$query);
 $row=custom_fetch_array($result);
-// bloquer les changements dans le passé
+// bloquer les changements dans le passÃ©
 $ended=get_number_days_after_block($evenement);
 $changeallowed=true;
 if ( $ended > 0 ) {
@@ -230,7 +230,7 @@ if ( $update_allowed ) {
     }
 }
 //=====================================================================
-// afficher une ou toutes les équipes
+// afficher une ou toutes les Ã©quipes
 //=====================================================================
 
 echo "<form action='evenement_display.php?evenement=".$evenement."&tab=55' method='POST'>";
@@ -242,7 +242,7 @@ if ( $action == 'update') {
     echo "<div class='col-sm-8 col-md-8 col-xl-5'>
           <div class='card hide card-default graycarddefault cardtab' style='margin-bottom: 5px;'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Généralités </strong></div>
+                <div class='card-title'><strong> GÃ©nÃ©ralitÃ©s </strong></div>
             </div>
             <div class='card-body graycard'>";
 
@@ -254,7 +254,7 @@ if ( $action == 'update') {
     custom_fetch_array($resultm);
       echo "<input type=hidden name='evenement' value='".$evenement."'>
             <input type=hidden name='equipe' value='".$equipe."'>
-            <tr><td >Nom équipe</td>
+            <tr><td >Nom Ã©quipe</td>
             <td ><input name=EE_NAME type='text' class='form-control form-control-sm' maxlength='20' value=\"".$EE_NAME."\" $disabled></td>
           </tr>
           <tr><td>Ordre affichage</td>
@@ -268,7 +268,7 @@ if ( $action == 'update') {
     echo "</select></td></tr>";
     
     // select icon
-    echo "<tr><td>Icône</td>
+    echo "<tr><td>IcÃ´ne</td>
     <td><div id='iconSelector'></div><input type=hidden name='icon' id='icon' value=\"".$EE_ICON."\">";
     
 ?>
@@ -278,7 +278,7 @@ $('#iconSelector').ddslick({
     data:ddData,
     width:300,
     height:400,
-    selectText: "Choisir une icône pour cette équipe",
+    selectText: "Choisir une icÃ´ne pour cette Ã©quipe",
     imagePosition:"left",
     onSelected: function(data){
         document.getElementById("icon").value = data.selectedData.imageSrc;
@@ -302,7 +302,7 @@ $('#iconSelector').ddslick({
     echo "<tr><td>Description<br>Mission</td><td>
           <textarea cols=35 rows=3 name=EE_DESCRIPTION style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' $disabled>".$EE_DESCRIPTION."</textarea></td>";
           
-    // personnel engagé sur l'équipe
+    // personnel engagÃ© sur l'Ã©quipe
     // trouver tous les participants
     $evts=get_event_and_renforts($evenement,false);
     $query="select distinct p.P_ID, p.P_NOM, p.P_PHONE, p.P_PRENOM, s.S_ID, 
@@ -327,7 +327,7 @@ $('#iconSelector').ddslick({
         " <a href=upd_personnel.php?pompier=".$P_ID." title='voir fiche personnel'>".strtoupper($P_NOM)." ".my_ucfirst($P_PRENOM)."</a><span class=small2>".$cmt." ".$TP_LIBELLE."</span></td></tr>";
     }
     
-    // véhicules affectés à l'équipe
+    // vÃ©hicules affectÃ©s Ã  l'Ã©quipe
     $query="select distinct ev.E_CODE as EC,v.V_ID,v.V_IMMATRICULATION,v.TV_CODE, vp.VP_LIBELLE, v.V_MODELE, v.V_INDICATIF,
         vp.VP_ID, vp.VP_OPERATIONNEL, s.S_DESCRIPTION, s.S_ID, s.S_CODE,
         DATE_FORMAT(v.V_ASS_DATE, '%d-%m-%Y') as V_ASS_DATE,
@@ -352,29 +352,29 @@ $('#iconSelector').ddslick({
         else if ( $VP_OPERATIONNEL == 1) $mytxtcolor=$red;
         else if ( my_date_diff(getnow(),$V_ASS_DATE) < 0 ) {
               $mytxtcolor=$red;
-              $VP_LIBELLE = "assurance périmée";
+              $VP_LIBELLE = "assurance pÃ©rimÃ©e";
         }
         else if ( my_date_diff(getnow(),$V_CT_DATE) < 0 ) {
               $mytxtcolor=$red;
-              $VP_LIBELLE = "CT périmé";
+              $VP_LIBELLE = "CT pÃ©rimÃ©";
         }
         else if ( $VP_OPERATIONNEL == 2) {
           $mytxtcolor=$orange;
         }
         else if (( my_date_diff(getnow(),$V_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
             $mytxtcolor=$orange;
-            $VP_LIBELLE = "révision à faire";
+            $VP_LIBELLE = "rÃ©vision Ã  faire";
         }  
         else $mytxtcolor=$green;
         
         echo "<tr><td align=right><i class='fa fa-car fa-lg'></i></td><td align=left>".
-        " <a href=upd_vehicule.php?vid=".$V_ID." title='voir fiche véhicule'>".$TV_CODE." - ".$V_MODELE." - ".$V_IDENT."</a> <span color=$mytxtcolor>".$VP_LIBELLE."</span></td></tr>";
+        " <a href=upd_vehicule.php?vid=".$V_ID." title='voir fiche vÃ©hicule'>".$TV_CODE." - ".$V_MODELE." - ".$V_IDENT."</a> <span color=$mytxtcolor>".$VP_LIBELLE."</span></td></tr>";
     }
     
     echo "</table></div></div></div></div>";
     if ( $update_allowed ) echo " <input type=submit class='btn btn-success' name='OK' value='Sauvegarder' $disabled>";
     
-    echo " <a href='evenement_display.php?tab=55&evenement=".$evenement."' type=button class='btn btn-secondary' value='Retour équipes' onclick=\"redirect_equipes('".$evenement."');\">Retour équipes</a>
+    echo " <a href='evenement_display.php?tab=55&evenement=".$evenement."' type=button class='btn btn-secondary' value='Retour Ã©quipes' onclick=\"redirect_equipes('".$evenement."');\">Retour Ã©quipes</a>
             <input type=button class='btn btn-secondary' value='Retour' onclick=\"redirect_evenement('".$evenement."');\"></td>";
 }
 // ajouter
@@ -390,7 +390,7 @@ else if ( $action == 'insert') {
                 <div class='card-body graycard'>";
      echo "<input type=hidden name='evenement' value='".$evenement."'>
         <table class='noBorder' cellspacing=0 border=0>
-            <tr><td width=100>Nom équipe</td><td width=200><input name=EE_NAME type='text' class='form-control form-control-sm' size=20 value='' $disabled></td>
+            <tr><td width=100>Nom Ã©quipe</td><td width=200><input name=EE_NAME type='text' class='form-control form-control-sm' size=20 value='' $disabled></td>
           <tr><td>Ordre affichage</td><td>
           <select class='selectpicker smalldropdown3' data-container='body' data-style='btn btn-default' name=EE_ORDER $disabled>";
     for ( $i=1; $i <= 50; $i++ ) {
@@ -399,7 +399,7 @@ else if ( $action == 'insert') {
     echo "</select></td>";
     
     // select icon
-    echo "<tr><td>Icône</td>
+    echo "<tr><td>IcÃ´ne</td>
     <td><div id='iconSelector'></div><input type=hidden name='icon' id='icon'>";
     
 ?>
@@ -409,7 +409,7 @@ $('#iconSelector').ddslick({
     data:ddData,
     width:300,
     height:400,
-    selectText: "Choisir une icône pour cette équipe",
+    selectText: "Choisir une icÃ´ne pour cette Ã©quipe",
     imagePosition:"left",
     onSelected: function(data){
         document.getElementById("icon").value = data.selectedData.imageSrc;
@@ -449,8 +449,8 @@ $('#iconSelector').ddslick({
     echo " <div class='btn-group'>
               <button class='btn btn-secondary dropdown-toggle' data-toggle='dropdown'>Retour</button>
                   <div class='dropdown-menu' style ='position:relative'>
-                    <a class='dropdown-item' onclick=\"redirect_equipes('$evenement');\">Équipe</a>
-                    <a class='dropdown-item' onclick=\"redirect_evenement('$evenement');\">Activité</a>
+                    <a class='dropdown-item' onclick=\"redirect_equipes('$evenement');\">Ã‰quipe</a>
+                    <a class='dropdown-item' onclick=\"redirect_evenement('$evenement');\">ActivitÃ©</a>
                   </div>
                  </button>
             </div>";
@@ -467,17 +467,17 @@ else if ( $action == 'display') {
     $resultm=mysqli_query($dbc,$querym);
     $num=mysqli_num_rows($resultm);
     
-    if ( $num == 0 ) echo "<span class=small>Aucune équipe n'a été créée</span><p>";
+    if ( $num == 0 ) echo "<span class=small>Aucune Ã©quipe n'a Ã©tÃ© crÃ©Ã©e</span><p>";
     else {
         echo "<div class='table-responsive'>";
         echo "<div class='col-sm-12'>";
         echo "<table class='newTableAll' cellspacing=0 border=0>
             <tr>
-            <td align=center style='width:5%'> Icône </td>
-            <td>Nom équipe</td>
+            <td align=center style='width:5%'> IcÃ´ne </td>
+            <td>Nom Ã©quipe</td>
             <td align=left>Description</td>
-            <td align=center><i class='fa fa-user fa-lg' title=\"Nombre de personnes engagées sur l'équipe\"></i></td>
-            <td align=center><i class='fa fa-car fa-lg' title=\"Nombre de véhicules affectés à l'équipe\"></i></td>
+            <td align=center><i class='fa fa-user fa-lg' title=\"Nombre de personnes engagÃ©es sur l'Ã©quipe\"></i></td>
+            <td align=center><i class='fa fa-car fa-lg' title=\"Nombre de vÃ©hicules affectÃ©s Ã  l'Ã©quipe\"></i></td>
             <td align=left>ID Radio</td>";
         if ( $assoc ) 
             echo "<td width=60>Signature</td>";
@@ -502,7 +502,7 @@ else if ( $action == 'display') {
             $row2=mysqli_fetch_array($r2);
             $nb2=$row2[0];
             
-            if ($EE_SIGNATURE == 1 ) $img="<i class='fa fa-check-square fa-lg' style='color:green;'  title='Une signature est proposée sur le document Excel'></i>";
+            if ($EE_SIGNATURE == 1 ) $img="<i class='fa fa-check-square fa-lg' style='color:green;'  title='Une signature est proposÃ©e sur le document Excel'></i>";
             else $img="";
             
             echo "<tr>
@@ -519,9 +519,9 @@ else if ( $action == 'display') {
             
             if (  $update_allowed )
                 echo "<td><a class='btn btn-default btn-action' href=evenement_equipes.php?evenement=".$evenement."&equipe=".$EE_ID."&action=update>
-                    <i class='fa fa-edit ' title=\"modifier cette équipe\"></i></a></td>
+                    <i class='fa fa-edit ' title=\"modifier cette Ã©quipe\"></i></a></td>
                 <td><a class='btn btn-default btn-action' href=evenement_equipes.php?evenement=".$evenement."&equipe=".$EE_ID."&action=delete>
-                    <i class='fa fa-trash-alt' title=\"supprimer cette équipe\"></i></a></td>";
+                    <i class='fa fa-trash-alt' title=\"supprimer cette Ã©quipe\"></i></a></td>";
             else echo "<td></td><td></td>";
         }
         echo "</table><p>";

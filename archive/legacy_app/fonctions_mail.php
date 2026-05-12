@@ -22,7 +22,7 @@
 //=====================================================================
 
 // fonction d'envoi de mails multiples
-// liste les identifiants destinataires dans la chaîne ids (separateur virgules)
+// liste les identifiants destinataires dans la chaÃ®ne ids (separateur virgules)
 function mysendmail($ids,$fromid,$Subject,$Mailcontent,$Attachment="None"){
     global $dbc;
     global $cisname, $cisurl, $mail_allowed, $donotreply;
@@ -72,9 +72,9 @@ function mysendmail($ids,$fromid,$Subject,$Mailcontent,$Attachment="None"){
 
     $countDestinataire = count($T);
     if ( $countDestinataire > 1 ) 
-        $Mailcontent .= "<br><i>Cet email a été envoyé à ".$countDestinataire." destinataire[s].</i>";
+        $Mailcontent .= "<br><i>Cet email a Ã©tÃ© envoyÃ© Ã  ".$countDestinataire." destinataire[s].</i>";
     if ( $donotreply == 1 )
-        $Mailcontent .= "<br><i>Attention, ne pas répondre sur cette adresse mail.</i>";
+        $Mailcontent .= "<br><i>Attention, ne pas rÃ©pondre sur cette adresse mail.</i>";
     if ( $countDestinataire > 0 ) {
         require_once('lib/PHPMailer/class.phpmailer.php');
         $mail = new PHPMailer();
@@ -151,9 +151,9 @@ function mysendmail2($MailTo,$Subject,$Mailcontent,$SenderName,$SenderMail,$Atta
 // fonction cleanup data
 function clean_mail_data($string) {
     $s=str_replace("\"","'",$string);
-    $s=str_replace("«","",$s);
-    $s=str_replace("«","",$s);
-    $s=str_replace("’","'",$s);
+    $s=str_replace("Â«","",$s);
+    $s=str_replace("Â«","",$s);
+    $s=str_replace("â€™","'",$s);
     $s=str_replace("`","'",$s);
     $s=str_replace("%u2019","'",$s);
     $s=str_replace("%u20AC","euros",$s);

@@ -45,7 +45,7 @@ if ( $id <> $person ) {
 writehead();
 
 //=====================================================================
-// purger les disponibilités de la personne pour le mois en cours
+// purger les disponibilitÃ©s de la personne pour le mois en cours
 //=====================================================================
 
 $query="delete from indisponibilite
@@ -62,7 +62,7 @@ $result=mysqli_query($dbc,$query);
     and eh.EH_DATE_DEBUT<='".$year."-".$month."-".$nbjours."')";
   $result2 = mysqli_query($dbc,$query2);
 //=====================================================================
-// enregistrer les disponibilités saisies
+// enregistrer les disponibilitÃ©s saisies
 //=====================================================================
 
 $query="select P_NOM,P_PRENOM, P_EMAIL from pompier where P_ID=".$person;
@@ -111,10 +111,10 @@ $detail="Type absence:".$type;
 $moislettres=moislettres($month);
 
 if ( $id == $person ) {
-   write_msgbox("OK", $star_pic, "Merci <b>".$prenom."</B> tes repos pour <b>".$moislettres."</b> ont été enregistrés <p align=center><a href=repos_saisie.php?person=$id&section=".$hissection."><input type='submit' class='btn btn-default' value='Retour accueil'></a>",30,0);
+   write_msgbox("OK", $star_pic, "Merci <b>".$prenom."</B> tes repos pour <b>".$moislettres."</b> ont Ã©tÃ© enregistrÃ©s <p align=center><a href=repos_saisie.php?person=$id&section=".$hissection."><input type='submit' class='btn btn-default' value='Retour accueil'></a>",30,0);
 }
 else {
-   write_msgbox("OK", $star_pic, "Les repos de ".$prenom." ".$nom." pour <b>".$moislettres."</b> ont été enregistrés <p align=center><a href=repos_saisie.php?person=$person&section=".$hissection." ><input type='submit' class='btn btn-default' value='Retour'></a>",30,0);
+   write_msgbox("OK", $star_pic, "Les repos de ".$prenom." ".$nom." pour <b>".$moislettres."</b> ont Ã©tÃ© enregistrÃ©s <p align=center><a href=repos_saisie.php?person=$person&section=".$hissection." ><input type='submit' class='btn btn-default' value='Retour'></a>",30,0);
 }
 
 insert_log('INSABS', $person, $moislettres." ".$year.": ".$detail);

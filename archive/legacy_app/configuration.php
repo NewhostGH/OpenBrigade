@@ -43,9 +43,9 @@ writeBreadCrumb();
 if ( isset($_GET['saved']) ) {
     $errcode=$_GET['saved'];
     $html .= "<div id='fadediv' align=center>";
-    if ( $errcode == 'nothing' ) $html .= "<div class='alert alert-info' role='alert'> Aucun changement à sauver.</div></div><p>";
-    else if ( $errcode == 0 ) $html .= "<div class='alert alert-success' role='alert'> Paramètres de configuration sauvés.</div></div><p>";
-    else $html .= "<div class='alert alert-danger' role='alert'> Erreur lors de la sauvegarde des paramètres de configuration.</div></div><p>";
+    if ( $errcode == 'nothing' ) $html .= "<div class='alert alert-info' role='alert'> Aucun changement Ã  sauver.</div></div><p>";
+    else if ( $errcode == 0 ) $html .= "<div class='alert alert-success' role='alert'> ParamÃ¨tres de configuration sauvÃ©s.</div></div><p>";
+    else $html .= "<div class='alert alert-danger' role='alert'> Erreur lors de la sauvegarde des paramÃ¨tres de configuration.</div></div><p>";
 }
 
 $html .= "<div style='background:white;' class='table-responsive table-nav table-tabs'>";
@@ -65,20 +65,20 @@ else $class='';
 $html .= "<li class='nav-item'>
     <a class='nav-link $class' href='configuration.php?tab=conf1' title='Configuration de base' role='tab' aria-controls='conf1' href='#conf1' >
     <i class='fa fa-cog'></i>
-    <span>Fonctionnalités</span></a></li>";
+    <span>FonctionnalitÃ©s</span></a></li>";
 
 
 if ( $tab == 'conf3' ) $class='active';
 else $class='';
 $html .= "<li class='nav-item'>
-    <a class='nav-link $class' href='configuration.php?tab=conf3' title='Configuration de la sécurité' role='tab' aria-controls='conf3' href='#conf3' >
+    <a class='nav-link $class' href='configuration.php?tab=conf3' title='Configuration de la sÃ©curitÃ©' role='tab' aria-controls='conf3' href='#conf3' >
     <i class='fa fa-shield-alt'></i>
-    <span>Sécurité</span></a></li>";
+    <span>SÃ©curitÃ©</span></a></li>";
     
 if ( $tab == 'conf5' ) {
     $class='active';
 
-    // Liste des pays (pour pays par défaut des victimes & de géolocalisation)
+    // Liste des pays (pour pays par dÃ©faut des victimes & de gÃ©olocalisation)
     $query2="select ID, NAME from pays order by ID asc";
     $result2=mysqli_query($dbc,$query2);
     $listePays = [];
@@ -86,9 +86,9 @@ if ( $tab == 'conf5' ) {
 }
 else $class='';
 $html .= "<li class='nav-item'>
-    <a class='nav-link $class' href='configuration.php?tab=conf5' title='Paramètres locaux' role='tab' aria-controls='conf5' href='#conf5' >
+    <a class='nav-link $class' href='configuration.php?tab=conf5' title='ParamÃ¨tres locaux' role='tab' aria-controls='conf5' href='#conf5' >
     <i class='fa fa-wrench'></i>
-    <span>Paramètres locaux</span></a></li>";
+    <span>ParamÃ¨tres locaux</span></a></li>";
 
 if ( $tab == 'conf7' ) $class='active';
 else $class='';
@@ -154,7 +154,7 @@ function fillTableau($query){
         if ( ($current_sms == 1 or $current_sms == 2) and $ID == 12 ) {$style ="style='display:none'";$i++; }
         if ( ($current_sms == 3 or $current_sms == 4) and $ID == 4 ) {$style ="style='display:none'";$i++; }
 
-        // on cache certains paramètres sauf si on est en mode debug
+        // on cache certains paramÃ¨tres sauf si on est en mode debug
         if (!  $debug  ) {
             if ( $NAME == 'defaultsectionorder' ) continue;
             if ( $NAME == 'lock_mailer' ) continue;
@@ -164,7 +164,7 @@ function fillTableau($query){
           
         if ( $HIDDEN == 0 ) {
             $H .= "\n<tr id='row".$ID."' $style>
-              <td title='paramètre n°".$ID."' >$DISPLAY";
+              <td title='paramÃ¨tre nÂ°".$ID."' >$DISPLAY";
                 if ($ID == 9) $H .= " <a href='".$wikiurl."/SMS' target=_blank><i class='fa fa-question-circle fa-lg' title='Information sur la configuration des comptes SMS'></a></td>";
                 else $H .= "</td>";
             $H .= "<td align=left valign=middle>";
@@ -207,16 +207,16 @@ function fillTableau($query){
                 if ( $ID == 71 )
                     $H .= write_modal( "configuration_theme.php?image=".$NAME, "logo", "<span title=\"cliquer pour remplacer le logo actuel\"><img src=".$logo." class='img-max-35'></span>");
                 if ( $ID == 72 ) 
-                    $H .= write_modal( "configuration_theme.php?image=".$NAME, "banner", "<span title=\"cliquer pour remplacer la bannière actuelle\"><img src=".$banner." class='img-max-35'></span>");
+                    $H .= write_modal( "configuration_theme.php?image=".$NAME, "banner", "<span title=\"cliquer pour remplacer la banniÃ¨re actuelle\"><img src=".$banner." class='img-max-35'></span>");
                 if ( $ID == 73 ) 
-                    $H .= write_modal( "configuration_theme.php?image=".$NAME, "icon", "<span title=\"cliquer pour remplacer l'icône des favoris actuelle\"><img src=".$icon." class='img-max-35'></span>");
+                    $H .= write_modal( "configuration_theme.php?image=".$NAME, "icon", "<span title=\"cliquer pour remplacer l'icÃ´ne des favoris actuelle\"><img src=".$icon." class='img-max-35'></span>");
                 if ( $ID == 74 ) 
-                    $H .= write_modal( "configuration_theme.php?image=".$NAME, "apple_icon", "<span title=\"cliquer pour remplacer l'icône pour iOS\"><img src=".$apple." class='img-max-35'></span>");
+                    $H .= write_modal( "configuration_theme.php?image=".$NAME, "apple_icon", "<span title=\"cliquer pour remplacer l'icÃ´ne pour iOS\"><img src=".$apple." class='img-max-35'></span>");
                 if ( $ID == 75 ) {
                     if ( $splash == '' ) 
-                        $H .= write_modal( "configuration_theme.php?image=".$NAME, "splash", "<span title=\"cliquer pour choisir un fonds d'écran de login\"><i>choisir</i></span>");
+                        $H .= write_modal( "configuration_theme.php?image=".$NAME, "splash", "<span title=\"cliquer pour choisir un fonds d'Ã©cran de login\"><i>choisir</i></span>");
                     else 
-                        $H .= write_modal( "configuration_theme.php?image=".$NAME, "splash", "<span title=\"cliquer pour remplacer le fonds d'écran de login actuel\"><img src=".$splash." class='img-max-35'></span>");
+                        $H .= write_modal( "configuration_theme.php?image=".$NAME, "splash", "<span title=\"cliquer pour remplacer le fonds d'Ã©cran de login actuel\"><img src=".$splash." class='img-max-35'></span>");
                 }
             }
             else if ($YESNO == 1){
@@ -259,7 +259,7 @@ function fillTableau($query){
                 $H .= "<select class='form-control form-control-sm' id='f9' name='f$ID' onchange='modify(config.f".$ID.",\"".$ID."\", this.value, \"".$VALUE."\")'>";
                 if ( $VALUE == '0' ) $selected="selected"; 
                 else $selected="";
-                $H .= "<option value='0' $selected>SMS désactivés</option>";
+                $H .= "<option value='0' $selected>SMS dÃ©sactivÃ©s</option>";
                 if ( $VALUE == '1' ) $selected="selected";
                 else $selected="";
                 $H .= "<option value='1' $selected>envoyersmspro.com</option>";
@@ -306,23 +306,23 @@ function fillTableau($query){
                 $H .= "<option value='1' $selected>chiffres et lettres</option>";
                     if ( $VALUE == '2' ) $selected="selected";
                 else $selected="";
-                $H .= "<option value='2' $selected>chiffres,lettres et caractères spéciaux</option>";
+                $H .= "<option value='2' $selected>chiffres,lettres et caractÃ¨res spÃ©ciaux</option>";
                 $H .= "</select>";
             }
             elseif ( $ID == 47 ) {
                 $H .= "<select class='form-control form-control-sm' id='f47' name='f$ID' onchange='modify(config.f".$ID.",\"".$ID."\", this.value, \"".$VALUE."\")'>";
                 if ( $VALUE == '1' ) $selected="selected"; 
                 else $selected="";
-                $H .= "<option value='1' $selected>1 période de 24h</option>";
+                $H .= "<option value='1' $selected>1 pÃ©riode de 24h</option>";
                 if ( $VALUE == '2' ) $selected="selected";
                 else $selected="";
-                $H .= "<option value='2' $selected>2 périodes de 12h (Jour/Nuit)</option>";
+                $H .= "<option value='2' $selected>2 pÃ©riodes de 12h (Jour/Nuit)</option>";
                 if ( $VALUE == '3' ) $selected="selected";
                 else $selected="";
-                $H .= "<option value='3' $selected>3 périodes de 8h (Matin/A-M/Nuit)</option>";
+                $H .= "<option value='3' $selected>3 pÃ©riodes de 8h (Matin/A-M/Nuit)</option>";
                 if ( $VALUE == '4' ) $selected="selected";
                 else $selected="";
-                $H .= "<option value='4' $selected>4 périodes de 6h (Matin/A-M/Soir/Nuit)</option>";
+                $H .= "<option value='4' $selected>4 pÃ©riodes de 6h (Matin/A-M/Soir/Nuit)</option>";
                 $H .= "</select>";
             }
             elseif ( $ID == 16 ) {
@@ -345,7 +345,7 @@ function fillTableau($query){
                 for ( $k=3 ; $k<=10 ; $k++) {
                     if ( $VALUE == $k ) $selected="selected";
                     else $selected='';
-                    $H .= "<option value='$k' $selected>$k échecs</option>";
+                    $H .= "<option value='$k' $selected>$k Ã©checs</option>";
                 }
                 $H .= "</select>";
             }
@@ -384,7 +384,7 @@ function fillTableau($query){
                 for ( $k=0 ; $k <=1000 ; $k = $k + 10) {
                     if ( $VALUE == $k ) $selected="selected";
                     else $selected='';
-                    if ( $k ==0 ) $jour='illimité';
+                    if ( $k ==0 ) $jour='illimitÃ©';
                     else $jour=$k.' jours';
                     $H .= "<option value='$k' $selected>$jour</option>";
                 }
@@ -394,20 +394,20 @@ function fillTableau($query){
                 $H .= "<select class='form-control form-control-sm' id='f43' name='f$ID' onchange='modify(config.f".$ID.",\"".$ID."\", this.value, \"".$VALUE."\")'>";
                 if ( $VALUE == 'hierarchique' ) $selected="selected"; 
                 else $selected="";
-                $H .= "<option value='hierarchique' $selected>Ordre hiérarchique</option>";
+                $H .= "<option value='hierarchique' $selected>Ordre hiÃ©rarchique</option>";
                 if ( $VALUE == 'alphabetique' ) $selected="selected"; 
                 else $selected="";
-                $H .= "<option value='alphabetique' $selected>Ordre alphabétique</option>";
+                $H .= "<option value='alphabetique' $selected>Ordre alphabÃ©tique</option>";
                 $H .= "</select>";
             }
             elseif ( $ID == 44 ) {
                 $H .= "<select class='form-control form-control-sm' id='f44' name='f$ID' onchange='modify(config.f".$ID.",\"".$ID."\", this.value, \"".$VALUE."\")'>";
                 if ( $VALUE == 'md5' ) $selected="selected"; 
                 else $selected="";
-                $H .= "<option value='md5' $selected>MD5 (défaut)</option>";
+                $H .= "<option value='md5' $selected>MD5 (dÃ©faut)</option>";
                 if ( $VALUE == 'bcrypt' ) $selected="selected"; 
                 else $selected="";
-                $H .= "<option value='bcrypt' $selected>BCRYPT (recommandée)</option>";
+                $H .= "<option value='bcrypt' $selected>BCRYPT (recommandÃ©e)</option>";
                 if ( $VALUE == 'pbkdf2' ) $selected="selected"; 
                 else $selected="";
                 $H .= "<option value='pbkdf2' $selected>PBKDF2 (obsolete)</option>";
@@ -418,21 +418,21 @@ function fillTableau($query){
                 if ( $VALUE == '0' ) $selected="selected";  else $selected="";
                 $H .= "<option value='0' $selected>Pas d'expiration</option>";
                 if ( $VALUE == '1' ) $selected="selected"; else $selected="";
-                $H .= "<option value='1' $selected>1 minute d'inactivité</option>";
+                $H .= "<option value='1' $selected>1 minute d'inactivitÃ©</option>";
                 if ( $VALUE == '5' ) $selected="selected"; else $selected="";
-                $H .= "<option value='5' $selected>5 minutes d'inactivité</option>";
+                $H .= "<option value='5' $selected>5 minutes d'inactivitÃ©</option>";
                 if ( $VALUE == '10' ) $selected="selected"; else $selected="";
-                $H .= "<option value='10' $selected>10 minutes d'inactivité</option>";
+                $H .= "<option value='10' $selected>10 minutes d'inactivitÃ©</option>";
                 if ( $VALUE == '15' ) $selected="selected"; else $selected="";
-                $H .= "<option value='15' $selected>15 minutes d'inactivité</option>";
+                $H .= "<option value='15' $selected>15 minutes d'inactivitÃ©</option>";
                 if ( $VALUE == '30' ) $selected="selected"; else $selected="";
-                $H .= "<option value='30' $selected>30 minutes d'inactivité</option>";
+                $H .= "<option value='30' $selected>30 minutes d'inactivitÃ©</option>";
                 if ( $VALUE == '60' ) $selected="selected"; else $selected="";
-                $H .= "<option value='60' $selected>60 minutes d'inactivité</option>";
+                $H .= "<option value='60' $selected>60 minutes d'inactivitÃ©</option>";
                 if ( $VALUE == '120' ) $selected="selected"; else $selected="";
-                $H .= "<option value='120' $selected>2 heures d'inactivité</option>";
+                $H .= "<option value='120' $selected>2 heures d'inactivitÃ©</option>";
                 if ( $VALUE == '240' ) $selected="selected"; else $selected="";
-                $H .= "<option value='240' $selected>4 heures d'inactivité</option>";
+                $H .= "<option value='240' $selected>4 heures d'inactivitÃ©</option>";
                 $H .= "</select>";
             }
             elseif ( $ID == 60 ) {
@@ -534,11 +534,11 @@ function display_configuration_group($group_id) {
         $H .= "<div align=right class='dropdown-right'>";
         $H .= "<button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Action</button>";
         $H .= "<div class='dropdown-menu'>";
-        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"phpinfo.php\";'  title='exécuter phpinfo()'>Voir infos PHP</a>";
-        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"buildsql.php\";' title='recharger les fonctions SQL dans la base de données'>Recharger les fonctions</a>";
+        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"phpinfo.php\";'  title='exÃ©cuter phpinfo()'>Voir infos PHP</a>";
+        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"buildsql.php\";' title='recharger les fonctions SQL dans la base de donnÃ©es'>Recharger les fonctions</a>";
         $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"buildzipcode.php\";' title='importer les codespostaux du fichier sql/zipcode.sql'>Recharger les codes postaux</a>";
-        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"rebuild_section_flat.php\";' title='mettre à jour la table section_flat'>Régénérer l'organigramme</a>";
-        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"push_monitor.php\";' title='partager les informations techniques avec les dévelopeurs eBrigade'>Envoyer feedback</a>";
+        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"rebuild_section_flat.php\";' title='mettre Ã  jour la table section_flat'>RÃ©gÃ©nÃ©rer l'organigramme</a>";
+        $H .= "<a class='dropdown-item' onclick='javascript:self.location.href=\"push_monitor.php\";' title='partager les informations techniques avec les dÃ©velopeurs eBrigade'>Envoyer feedback</a>";
         $H .= "</div>";
         $H .= "</div>";
     }
@@ -546,7 +546,7 @@ function display_configuration_group($group_id) {
     $H .= "<div class='container-fluid'>";
     $H .= "<div class='row'>";
     
-    $h1 = 'Paramètre';
+    $h1 = 'ParamÃ¨tre';
     $h2 = 'Action';
 
     $query="select ID, NAME, DISPLAY_NAME, CARD_NAME, VALUE, DESCRIPTION, HIDDEN, TAB, YESNO, IS_FILE from configuration where ID > 1 and ID <> 53";
@@ -579,13 +579,13 @@ function display_configuration_group($group_id) {
 
         if($group_id == 'conf5') {
             $h1 = "Niveau";
-            $h2 = "Dénomination";
+            $h2 = "DÃ©nomination";
         }
 
         $H .= createTab($query2, 6, $h1, $h2);
     }
     else
-        $H .= createTab($query, 12, 'Paramètre', 'Valeur');
+        $H .= createTab($query, 12, 'ParamÃ¨tre', 'Valeur');
     $H .= "</div><input type='submit' class='btn btn-success' value='Sauvegarder'>";
     
     $H .= "</form>";
@@ -597,7 +597,7 @@ if ($tab == 'conf7') {
     // $version = version majeure courante = 5.3
     // $patch_version = version courante patch (3 digits) = 5.3.0
     // $dbversion = database version courante = 5.3
-    // $data["latest"] = nouvelle version ebrigade complète
+    // $data["latest"] = nouvelle version ebrigade complÃ¨te
     // $data["database"] = nouvelle version de la database
     // exemple {"latest":"5.4.0","date":"2021-02-20","package":"ebrigade_5.4.0.zip","database":"5.4","md5sum":"da3aaf33f5d2b9bc25368787a200cd7e"}
     
@@ -615,7 +615,7 @@ if ($tab == 'conf7') {
                 <div class='card-title'><strong>Version de l'application</strong></div>
             </div>
             <div class='card-body graycard'>";
-    $html .= "  <i class='fa fa-check' style='color:green;' ></i> Vous utilisez la version <strong>".$patch_version."</strong> de eBrigade.<p>";
+    $html .= "  <i class='fa fa-check' style='color:green;' ></i> VousÂ utilisezÂ laÂ versionÂ <strong>".$patch_version."</strong> de eBrigade.<p>";
 
     if ( isset($data["package"]) and   version_compare($patch_version, $data["latest"], '<') ) {
         $new_db_version = $data['database'];
@@ -633,8 +633,8 @@ if ($tab == 'conf7') {
         $html .=  "<script type='text/javascript' src='js/update_app.js'></script>";
         
         $html .= "<i class='fa fa-sync-alt'></i>
-                  Une mise à jour est disponible, version <strong>".$data['latest']."</strong>
-                  <input type = 'submit' value = 'Mettre à jour' class = 'btn btn-primary' id='update_button'
+                  Une mise Ã  jour est disponible, version <strong>".$data['latest']."</strong>
+                  <input type = 'submit' value = 'Mettre Ã  jour' class = 'btn btn-primary' id='update_button'
                   onclick = confirm_maj()>";
     }
     $html .= "<div id='upgrade_report' class='upgrade_report'></div>";
@@ -647,7 +647,7 @@ if ($tab == 'conf7') {
             </div>
             <div class='card-body graycard'>
             <table class='noBorder'>
-            <tr><td style='min-width:80px;'>Version</td><td>Installé le</td><td>Installé par</td></tr>";
+            <tr><td style='min-width:80px;'>Version</td><td>InstallÃ© le</td><td>InstallÃ© par</td></tr>";
             
     $query="select vh.VH_ID,vh.PATCH_VERSION,vh.VH_DATE,vh.VH_BY, p.P_NOM, p.P_PRENOM
             from version_history vh left join pompier p on p.P_ID = vh.VH_BY order by vh.VH_DATE asc";

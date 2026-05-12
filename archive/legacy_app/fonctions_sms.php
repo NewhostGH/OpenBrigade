@@ -201,7 +201,7 @@ function show_sms_account_balance($section, $credits) {
         else 
             echo " Il vous reste <b><a href=".$SMS_CONFIG[5]." target=_blank title='voir mon compte sms'>".intval($credits)."</a></b> SMS.";
         echo " <a href='".$wikiurl."/sms' target=_blank>
-                 <i class='fa fa-info-circle fa-lg' title='Voir la notice de paramétrage du compte SMS'></i></a>";
+                 <i class='fa fa-info-circle fa-lg' title='Voir la notice de paramÃ©trage du compte SMS'></i></a>";
     }
 }
 
@@ -215,7 +215,7 @@ function sendSMS_1 (array $numbers, $message, $from, $user, $password){
     define('ENVOYERSMSPRO_HOST',"www.envoyersmspro.com");
     define('ENVOYERSMSPRO_PROTOCOL',"https");
      
-    //Appel à la méthode sendMessage
+    //Appel Ã  la mÃ©thode sendMessage
     //text, recipients, sender name
     $resultXML=sendMessageEnvoyerSMSPro(
                         $message,
@@ -232,10 +232,10 @@ function sendMessageEnvoyerSMSPro($text, array $recipients, $senderName)
     $recipients=implode(",", $recipients);
     $recipients=trim($recipients,",");
      
-    //les paramètres à passer au serveur en POST
+    //les paramÃ¨tres Ã  passer au serveur en POST
     $postParameters="text=".urlencode($text)."&recipients=".$recipients."&sendername=".cleanSpecialCharacters($senderName);
      
-    //Configuration de la requête
+    //Configuration de la requÃªte
     $requestConfig = array( 'http' => array(
                             'method' => 'POST',
                             'header'=>"Authorization: Basic ".base64_encode(ENVOYERSMSPRO_LOGIN.":".ENVOYERSMSPRO_PASSWORD)."\r\n"
@@ -250,7 +250,7 @@ function sendMessageEnvoyerSMSPro($text, array $recipients, $senderName)
         throw new Exception("Problem reading data from $url");
     }
      
-    //Création d'un Objet XML depuis le retour du serveur
+    //CrÃ©ation d'un Objet XML depuis le retour du serveur
     $responseXML = simplexml_load_string($response);
      
     if ($responseXML === null) {
@@ -412,7 +412,7 @@ function sendSMS_4($to, $message, $password, $url){
 function getSMSCredit_4($url){
     if (! test_with_curl($url)) return  'ERREUR1';
     $buffer = @file_get_contents("http://".$url); 
-    if ( strpos($buffer,"Welcome to") !== false ) return "Solde illimité";
+    if ( strpos($buffer,"Welcome to") !== false ) return "Solde illimitÃ©";
     else return  'ERREUR2';
 }
 
@@ -435,7 +435,7 @@ function test_with_curl($url) {
 function getSMSCredit_8($url){
     if (! test_with_curl($url)) return  'ERREUR1';
     $buffer = @file_get_contents("http://".$url);
-    if ( strpos($buffer,"SMSEagle") !== false ) return "Solde illimité";
+    if ( strpos($buffer,"SMSEagle") !== false ) return "Solde illimitÃ©";
     else return  'ERREUR2';
 }
 
@@ -477,7 +477,7 @@ function getSMSCredit_7($token, $deviceID) {
     $result = $smsGateway->getDevice($deviceID);
     if (isset ($result["status"])) {
         $status = intval($result["status"]);
-        if ( $status == 200 ) return "Solde illimité";
+        if ( $status == 200 ) return "Solde illimitÃ©";
     }
     return  'ERREUR';
 }
@@ -495,7 +495,7 @@ function sendSMS_5($to, $message, $from, $user, $password){
     $request .= "&numero=".$to;
     $request .= "&emetteur=".rawurlencode($from);
     $buffer = file_get_contents($path.$request);
-    //$buffer="0 | Accepté | SIlEzLzeADJE";
+    //$buffer="0 | AcceptÃ© | SIlEzLzeADJE";
     $ret = explode(" | ",$buffer);
     return intval($ret[0]);
 } 
@@ -505,7 +505,7 @@ function getSMSCredit_5($user, $password){
     $request = "?pseudo=".urlencode($user)."&pass=".urlencode($password);
     $buffer = rtrim(file_get_contents($path.$request));
     if ( $buffer < 0 ) 
-        return "Solde illimité";
+        return "Solde illimitÃ©";
     else if ( intval($buffer) > 0 and $buffer <> 0 ) 
         return $buffer;
     if ( $buffer == '0' )
@@ -517,8 +517,8 @@ function getSMSCredit_5($user, $password){
 //===================================================================
 // Envoi des SMS
 //===================================================================
-// param1 = $id (P_ID de l'expéditeur)
-// param2 = $dest (liste des P_ID ou numeros de telephone, séparés par virgules)
+// param1 = $id (P_ID de l'expÃ©diteur)
+// param2 = $dest (liste des P_ID ou numeros de telephone, sÃ©parÃ©s par virgules)
 // param3 = message
 // param4 = section qui paye les SMS
 // param5 = page qui a cree les SMS
@@ -543,14 +543,14 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
         $credits = getSMSCredit_1($SMS_CONFIG[2],$SMS_CONFIG[3]);
         if ( $credits === 0 ) {
              write_msgbox("ERREUR", $error_pic, 
-            "Vous n'avez plus de crédits chez ".$SMS_CONFIG[6]."<br>
+            "Vous n'avez plus de crÃ©dits chez ".$SMS_CONFIG[6]."<br>
             <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
          
         }
         else if ($credits == 'ERREUR' ) {
              write_msgbox("ERREUR", $error_pic, 
             "Impossible de se connecter chez ".$SMS_CONFIG[6]."<br>
-            Vérifiez identifiant et mot de passe dans la configuration
+            VÃ©rifiez identifiant et mot de passe dans la configuration
             <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else {
@@ -563,14 +563,14 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
         
             if ( $sent  > 0) {
                 write_msgbox("OK", $star_pic, 
-                "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+                "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
                 <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
-                <p>Il vous reste:<b> ".$messageObect->sms_remaining."</b> crédits chez ".$SMS_CONFIG[6]."</b>
+                <p>Il vous reste:<b> ".$messageObect->sms_remaining."</b> crÃ©dits chez ".$SMS_CONFIG[6]."</b>
                 <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
             }
             else {
                 write_msgbox("ERREUR", $error_pic, 
-                "Aucun SMS sur ".$nb." n'a été envoyé.<br>
+                "Aucun SMS sur ".$nb." n'a Ã©tÃ© envoyÃ©.<br>
                 Une erreur est survenue lors de l'envoi du SMS via ".$SMS_CONFIG[6].":<br>".$resultXML->status."<br>".$resultXML->error->error_message."
                 <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
             }
@@ -581,25 +581,25 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
     // EnvoyerSMS.org 
     //---------------------------
     if ( $provider == 2 ) {
-        /* Messages correspondants aux différents retours possibles de l'API */ 
-        $description = array('OK' => 'Message envoyé avec succès',
+        /* Messages correspondants aux diffÃ©rents retours possibles de l'API */ 
+        $description = array('OK' => 'Message envoyÃ© avec succÃ¨s',
                          'ERR_01' => 'Login ou mot de passe incorrect', 
-                         'ERR_02' => 'Manque de paramètres', 
-                         'ERR_03' => 'Crédit insuffisant', 
-                         'ERR_04' => 'Le numéro du destinataire est invalide', 
+                         'ERR_02' => 'Manque de paramÃ¨tres', 
+                         'ERR_03' => 'CrÃ©dit insuffisant', 
+                         'ERR_04' => 'Le numÃ©ro du destinataire est invalide', 
                          'ERR_05' => 'Message vide ou trop long (160 caracteres)'); 
         
         $credits = getSMSCredit_2($SMS_CONFIG[2],$SMS_CONFIG[3]);
         if ( $credits == 0 ) {
              write_msgbox("ERREUR", $error_pic, 
-            "Vous n'avez plus de crédits chez ".$SMS_CONFIG[6]."<br>
+            "Vous n'avez plus de crÃ©dits chez ".$SMS_CONFIG[6]."<br>
             <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
          
         }
         else if ($credits == 'ERREUR' ) {
              write_msgbox("ERREUR", $error_pic, 
             "Impossible de se connecter chez ".$SMS_CONFIG[6]."<br>
-            Vérifiez identifiant et mot de passe dans la configuration
+            VÃ©rifiez identifiant et mot de passe dans la configuration
             <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else { // on peut envoyer
@@ -611,14 +611,14 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
             }
             if ( $sent  > 0) {
                 write_msgbox("OK", $star_pic, 
-                "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+                "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
                 <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
-                <p>Il vous reste:<b> ".getSMSCredit_2($SMS_CONFIG[2],$SMS_CONFIG[3])."</b> crédits chez ".$SMS_CONFIG[6]."</b>
+                <p>Il vous reste:<b> ".getSMSCredit_2($SMS_CONFIG[2],$SMS_CONFIG[3])."</b> crÃ©dits chez ".$SMS_CONFIG[6]."</b>
                 <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
             }
             else {
                  write_msgbox("ERREUR", $error_pic, 
-                "Aucun SMS sur ".$nb." n'a été envoyé.<br>
+                "Aucun SMS sur ".$nb." n'a Ã©tÃ© envoyÃ©.<br>
                 Une erreur est survenue lors de l'envoi du SMS via ".$SMS_CONFIG[6].":<br>".$reponse."<br>
                 <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
             }
@@ -628,25 +628,25 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
     // SMSMode.com
     //---------------------------
     if ( $provider == 5 ) {
-        /* Messages correspondants aux différents retours possibles de l'API */ 
-        $description = array('0' => 'Accepté - le message a été accepté par le système et est en cours de traitement',
+        /* Messages correspondants aux diffÃ©rents retours possibles de l'API */ 
+        $description = array('0' => 'AcceptÃ© - le message a Ã©tÃ© acceptÃ© par le systÃ¨me et est en cours de traitement',
                          '31' => 'Erreur interne', 
-                         '32' => 'Erreur d’authentification', 
-                         '33' => 'Crédit insuffisant', 
-                         '35' => 'Paramètre obligatoire manquant', 
+                         '32' => 'Erreur dâ€™authentification', 
+                         '33' => 'CrÃ©dit insuffisant', 
+                         '35' => 'ParamÃ¨tre obligatoire manquant', 
                          '50' => 'Temporairement inaccessible'); 
         
         $credits = getSMSCredit_5($SMS_CONFIG[2],$SMS_CONFIG[3]);
-        if ( $credits == 0 and $credits <> "Solde illimité" ) {
+        if ( $credits == 0 and $credits <> "Solde illimitÃ©" ) {
              write_msgbox("ERREUR", $error_pic, 
-            "Vous n'avez plus de crédits chez ".$SMS_CONFIG[6]."<br>
+            "Vous n'avez plus de crÃ©dits chez ".$SMS_CONFIG[6]."<br>
             <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
          
         }
         else if ($credits == 'ERREUR' ) {
              write_msgbox("ERREUR", $error_pic, 
             "Impossible de se connecter chez ".$SMS_CONFIG[6]."<br>
-            Vérifiez identifiant et mot de passe dans la configuration
+            VÃ©rifiez identifiant et mot de passe dans la configuration
             <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else { // on peut envoyer
@@ -658,14 +658,14 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
             }
             if ( $sent  > 0) {
                 write_msgbox("OK", $star_pic, 
-                "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+                "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
                 <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
                 <p>Il vous reste:<b> ".getSMSCredit_5($SMS_CONFIG[2],$SMS_CONFIG[3])."</b> chez ".$SMS_CONFIG[6]."</b>
                 <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
             }
             else {
                  write_msgbox("ERREUR", $error_pic, 
-                "Aucun SMS sur ".$nb." n'a été envoyé.<br>
+                "Aucun SMS sur ".$nb." n'a Ã©tÃ© envoyÃ©.<br>
                 Une erreur est survenue lors de l'envoi du SMS via ".$SMS_CONFIG[6].":<br>".$reponse."<br>
                 <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
             }
@@ -678,7 +678,7 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
         $conn = preg_split("/:/",connectSMS_3($SMS_CONFIG[2],$SMS_CONFIG[3],$SMS_CONFIG[4]));
         if ( $conn[0] == 'KO' ) {
                  write_msgbox("ERREUR", $error_pic, 
-                "Une erreur est survenue lors de la connexion à ".$SMS_CONFIG[6].":<br>".$conn[1]." ".$conn[2]."<br>
+                "Une erreur est survenue lors de la connexion Ã  ".$SMS_CONFIG[6].":<br>".$conn[1]." ".$conn[2]."<br>
                 <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else { // on peut envoyer
@@ -691,9 +691,9 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
             }
             if ( $sent  <> 0) {
                  write_msgbox("OK", $star_pic, 
-                "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+                "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
                 <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
-                <p>Il vous reste:<b> ".getSMSCredit_3($conn[1])."</b> crédits</b>
+                <p>Il vous reste:<b> ".getSMSCredit_3($conn[1])."</b> crÃ©dits</b>
                 <p>en utilisant votre api ".$SMS_CONFIG[4]." de ".$SMS_CONFIG[6]."</b>
                 <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
             }
@@ -716,14 +716,14 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
         }
         if ( $sent  > 0) {
             write_msgbox("OK", $star_pic, 
-            "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+            "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
             <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
-            <p>Il vous reste:<b> ".getSMSCredit_6($SMS_CONFIG[3])."</b> crédits chez ".$SMS_CONFIG[6]."</b>
+            <p>Il vous reste:<b> ".getSMSCredit_6($SMS_CONFIG[3])."</b> crÃ©dits chez ".$SMS_CONFIG[6]."</b>
             <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else {
             write_msgbox("ERREUR", $error_pic, 
-            "Aucun SMS sur ".$nb." n'a été envoyé.<br>
+            "Aucun SMS sur ".$nb." n'a Ã©tÃ© envoyÃ©.<br>
             Une erreur est survenue lors de l'envoi du SMS via ".$SMS_CONFIG[6].":<br>
             <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
@@ -739,13 +739,13 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
         }
         if ( $sent  > 0) {
             write_msgbox("OK", $star_pic, 
-                "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+                "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
                 <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
                 <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else {
              write_msgbox("ERREUR", $error_pic, 
-                "Aucun SMS sur ".$nb." n'a été envoyé.<br>
+                "Aucun SMS sur ".$nb." n'a Ã©tÃ© envoyÃ©.<br>
                 Une erreur est survenue lors de l'envoi du SMS 
                 <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
@@ -761,13 +761,13 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
         }
         if ( $sent  > 0) {
             write_msgbox("OK", $star_pic, 
-                "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+                "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
                 <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
                 <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else {
              write_msgbox("ERREUR", $error_pic, 
-                "Aucun SMS sur ".$nb." n'a été envoyé.<br>
+                "Aucun SMS sur ".$nb." n'a Ã©tÃ© envoyÃ©.<br>
                 Une erreur est survenue lors de l'envoi du SMS 
                 <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
@@ -790,13 +790,13 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
         
         if ( $sent  > 0) {
             write_msgbox("OK", $star_pic, 
-                "Le sms a bien été envoyé à <b>".$sent."</b> numéros de téléphone sur ".$nb."<br>
+                "Le sms a bien Ã©tÃ© envoyÃ© Ã  <b>".$sent."</b> numÃ©ros de tÃ©lÃ©phone sur ".$nb."<br>
                 <p><font face=courrier-new size=1>Le texte du SMS:<br> ".nl2br($message)."</font>
                 <p align=center><a href='index.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
         else {
              write_msgbox("ERREUR", $error_pic, 
-                "Aucun SMS sur ".$nb." n'a été envoyé.<br>
+                "Aucun SMS sur ".$nb." n'a Ã©tÃ© envoyÃ©.<br>
                 Une erreur est survenue lors de l'envoi du SMS 
                 <p align=center><a href=".$create_page."><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
         }
@@ -805,7 +805,7 @@ function send_sms ( $id, $dest, $message, $section, $create_page ) {
     // save history
     //---------------------------
     if ( $sent > 0 ) {
-        // insérer dans la table smslog
+        // insÃ©rer dans la table smslog
         $query="insert into smslog (P_ID, S_DATE, S_NB, S_TEXTE, S_ID, S_PROVIDER)
          select ".$id.", NOW(),'".$sent."',\"".$message."\", ".$SMS_CONFIG[0].",\"".$SMS_CONFIG[6]."\"";
         $result=mysqli_query($dbc,$query);

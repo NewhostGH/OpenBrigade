@@ -106,7 +106,7 @@ else {
 }
 echo "<table class='noBorder'><tr>
     <td width=100 align=center><input type='radio' value='expand' ".$checked_e." 
-    name='displaytype' id='expand' onclick=\"bouton_redirect('section.php?expand=true')\"> <label for='expand'>Tout déplier</label></td>";
+    name='displaytype' id='expand' onclick=\"bouton_redirect('section.php?expand=true')\"> <label for='expand'>Tout dÃ©plier</label></td>";
 
 echo "<td width=100 align=center><input type='radio' value='collapse' ".$checked_c." 
     name='displaytype' id='collapse' onclick=\"bouton_redirect('section.php?expand=false')\"> <label for='collapse'>Tout replier</label></td>";

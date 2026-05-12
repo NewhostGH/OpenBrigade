@@ -30,14 +30,14 @@ if (isset($_GET["piquet"])) $piquet = intval($_GET["piquet"]);
 if (isset($_GET["pid"])) $pid = intval($_GET["pid"]);
 else $pid = 0;
 
-if ($evenement > 0 and $periode > 0 and $vehicule > 0 and $piquet > 0) {//un code ‡ exÈcuter dans le cas de la suppression d'un pompier
+if ($evenement > 0 and $periode > 0 and $vehicule > 0 and $piquet > 0) {//un code √† ex√©cuter dans le cas de la suppression d'un pompier
     $section = get_section_organisatrice($evenement);
     if (check_rights($id, 6, $section)) {
        $query = "delete from evenement_piquets_feu where 
                  E_CODE =" . $evenement . " and V_ID = " . $vehicule . " and ROLE_ID = " . $piquet . " and EH_ID = " . $periode . " and P_ID =" . $pid;
        $result = mysqli_query($dbc, $query);
     }
-}else if($evenement > 0){//un code ‡ exÈcuter dans le cas de la suppression de toutes les affectations
+}else if($evenement > 0){//un code √† ex√©cuter dans le cas de la suppression de toutes les affectations
     $query = "delete from evenement_piquets_feu where 
                  E_CODE =" . $evenement;
     $result = mysqli_query($dbc, $query);

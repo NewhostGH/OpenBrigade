@@ -21,7 +21,7 @@ include_once ("config.php");
 check_all(0);
 $id=$_SESSION['id'];
 
-$printed_by="imprimé par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y à H:i");
+$printed_by="imprimÃ© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y Ã  H:i");
 
 if ( isset($_GET["P_ID"])) $pid=intval($_GET["P_ID"]);
 else $pid=0;
@@ -130,7 +130,7 @@ $pdf->MultiCell(80,6,$city." le ".$P_DATE_ENGAGEMENT,"0","R");
 
 $pdf->SetXY(53,80);
 $pdf->SetFont('arial','B',12);
-$pdf->MultiCell(80,6,"Objet: Adhésion","0","L");
+$pdf->MultiCell(80,6,"Objet: AdhÃ©sion","0","L");
 
 $pdf->SetXY(53,100);
 $pdf->SetFont('arial','',11);
@@ -147,7 +147,7 @@ $pdf->MultiCell(140,6,$nouvel_adherent2,"0","J");
 
 $pdf->SetXY(53,100);
 
-// cotisation par prélèvement
+// cotisation par prÃ©lÃ¨vement
 if ( $TP_ID == 1 ) {
     $pdf->MultiCell(140,6,$nouvel_adherent3,"0","J");
     $pdf->SetXY(53,154);
@@ -157,7 +157,7 @@ $pdf->MultiCell(140,6,$nouvel_adherent4,"0","J");
 if ( $TP_ID == 1 ) $y=230;
 else $y=190;
 
-// NOM et signature président
+// NOM et signature prÃ©sident
 $query1="select p.P_ID, p.P_PRENOM, p.P_NOM, p.P_SEXE
         from pompier p, groupe g, section_role sr
         where sr.GP_ID = g.GP_ID
@@ -168,8 +168,8 @@ $query1="select p.P_ID, p.P_PRENOM, p.P_NOM, p.P_SEXE
 $res1 = mysqli_query($dbc,$query1);
 $row1 = mysqli_fetch_array($res1);
 if ( $row1[2] <> "" ) {
-    if ( $row1[3] == 'M' ) $NOM="Le Président Fédéral, ";
-    else $NOM="La Présidente Fédérale, ";
+    if ( $row1[3] == 'M' ) $NOM="Le PrÃ©sident FÃ©dÃ©ral, ";
+    else $NOM="La PrÃ©sidente FÃ©dÃ©rale, ";
     $NOM .= my_ucfirst($row1[1])." ".strtoupper($row1[2]);
     $pdf->SetXY(100,$y);
     $pdf->SetFont('times','B','11');

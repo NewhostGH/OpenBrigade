@@ -48,8 +48,8 @@ function load_reference_schema(){
             values(1,'".$patch_version."',NOW(),1)";
     mysqli_query($dbc,$query);
     
-    write_msgbox("initialisation rÈussie", $star_pic, 
-            "<p><font face=arial>SchÈma de base de donnÈes importÈ avec succËs.
+    write_msgbox("initialisation r√©ussie", $star_pic, 
+            "<p><font face=arial>Sch√©ma de base de donn√©es import√© avec succ√®s.
              Vous pouvez maintenant choisir le mot de passe pour le compte <b>admin</b>.<br>
             <p align=center><a href=index.php target=_top><input type='submit' class='btn btn-primary' value='Choix mot de passe pour admin'>",10,0);
     echo "<p></div>";
@@ -74,8 +74,8 @@ function load_specific_data ($organisation) {
     if ( $organisation == 6 ) load_sql_file("sql/specific/sslia.sql");
     if ( $organisation == 7 ) load_sql_file("sql/specific/hospital.sql");
     
-    write_msgbox("initialisation rÈussie", $star_pic, 
-            "<p><font face=arial>Installation rÈussie \"<b>".$types_org[$organisation]."</b>\".
+    write_msgbox("initialisation r√©ussie", $star_pic, 
+            "<p><font face=arial>Installation r√©ussie \"<b>".$types_org[$organisation]."</b>\".
             <br>Vous pouvez maintenant utiliser l'application avec le compte <b>admin</b>.<br>
             Vous pourrez personnaliser encore plus l'application en utilisant le menu <b>configuration</b>
             <p align=center><a href=index.php target=_top><input type='submit' class='btn btn-primary' value='Utiliser'>",10,0);
@@ -122,8 +122,8 @@ function load_zipcodes($verbose=false){
     load_sql_file("sql/zipcode.sql");
     echo "<div align=center><p>";
     if ( $verbose ) 
-        write_msgbox("import terminÈ", $star_pic, 
-            "<p><font face=arial>Les code postaux ont ÈtÈ importÈs.
+        write_msgbox("import termin√©", $star_pic, 
+            "<p><font face=arial>Les code postaux ont √©t√© import√©s.
             <p align=center><a href='configuration.php?tab=conf3'><input type='submit' class='btn btn-secondary' value='Retour'>",10,0);
     echo "<p></div>";
     writefoot();
@@ -298,7 +298,7 @@ function upgrade_database($version1,$version2, $write_box = 1){
                 $upgerr=1;
             }
             else if ( mysqli_affected_rows($dbc) <> 0 )
-                fwrite($fh,"--> Lignes modifiÈes : ".mysqli_affected_rows($dbc)."\r\n");
+                fwrite($fh,"--> Lignes modifi√©es : ".mysqli_affected_rows($dbc)."\r\n");
         }
         migrate_data($version1, $version2, $fh);
         fwrite($fh, "END :".date("D M j G:i:s T Y")."\r\n"); 
@@ -308,12 +308,12 @@ function upgrade_database($version1,$version2, $write_box = 1){
 
         if ( $upgerr == 0 ) {
             if ($write_box == 1)
-                write_msgbox("upgrade rÈussi", $star_pic, 
-                "<p><font face=arial>La base de donnÈes ‡ ÈtÈ upgradÈe<br> 
+                write_msgbox("upgrade r√©ussi", $star_pic, 
+                "<p><font face=arial>La base de donn√©es √† √©t√© upgrad√©e<br> 
                 de la version <b>$version1</b><br>
-                ‡ la version <b>$version2</b><br>
+                √† la version <b>$version2</b><br>
                 sans erreurs. <a href=$logname target=_blank>voir le log d'upgrade</a><br>
-                <b>Pensez ‡ purger le cache du navigateur (CTRL + F5)</b>
+                <b>Pensez √† purger le cache du navigateur (CTRL + F5)</b>
                 <p align=center><a href=index.php target=_top><input type='submit' class='btn btn-primary' value='Se connecter'>",10,0);
             push_monitoring_info();
             return 0;
@@ -321,14 +321,14 @@ function upgrade_database($version1,$version2, $write_box = 1){
         else {
             if ($write_box == 1)
                 write_msgbox("erreur sql", $error_pic, 
-                "<p><font face=arial>L'upgrade de la base de donnÈes <br> 
+                "<p><font face=arial>L'upgrade de la base de donn√©es <br> 
                 de la version <b>$version1</b><br>
-                ‡ la version <b>$version2</b><br>
-                ‡ gÈnÈrÈ des erreurs. 
+                √† la version <b>$version2</b><br>
+                √† g√©n√©r√© des erreurs. 
                 <a href=$logname target=_blank>voir le log d'upgrade</a><br>
-                Corrigez les erreurs rencontrÈes dans la base de donnÈes
+                Corrigez les erreurs rencontr√©es dans la base de donn√©es
                 avant de vous connecter.<br>
-                <b>Pensez aussi ‡ purger le cache du navigateur (CTRL + F5)</b>
+                <b>Pensez aussi √† purger le cache du navigateur (CTRL + F5)</b>
                 <p align=center><a href=index.php target=_top><input type='submit' class='btn btn-primary' value='Se connecter'>",10,0);
             return 1;
         }
@@ -336,10 +336,10 @@ function upgrade_database($version1,$version2, $write_box = 1){
     else {
         if ($write_box == 1)
             write_msgbox("version des composants incompatible", $error_pic, 
-            "<p><font face=arial>La base de donnÈes est incompatible avec le code de l'application web<br> 
-             version de la base de donnÈes:<b>$version1</b><br>
+            "<p><font face=arial>La base de donn√©es est incompatible avec le code de l'application web<br> 
+             version de la base de donn√©es:<b>$version1</b><br>
              version de l'application web:<b>$version2</b><br>
-             Vous devez manuellement exÈcuter les fichiers d'upgrade sur la base(voir rÈpertoire sql)<br>
+             Vous devez manuellement ex√©cuter les fichiers d'upgrade sur la base(voir r√©pertoire sql)<br>
             <p align=center><a href=index.php target=_top><input type='submit' class='btn btn-primary' value='Se connecter'>",10,0);
         return 2;
     }

@@ -28,7 +28,7 @@ $array = explode('.', $file);
 $extension = end($array);
 
 if (strpos($file, '..') !== false or ( $extension <> 'sql' and $extension <> 'save')) {
-    write_msgbox("Erreur", $error_pic, "Les paramètres fournis sont incorrects.<p><a href='restore.php'><input type='submit' class='btn btn-default' value='Retour'></a>", 10,0);
+    write_msgbox("Erreur", $error_pic, "Les paramÃ¨tres fournis sont incorrects.<p><a href='restore.php'><input type='submit' class='btn btn-default' value='Retour'></a>", 10,0);
     exit;
 }
 

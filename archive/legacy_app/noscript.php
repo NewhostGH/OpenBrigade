@@ -19,7 +19,7 @@
   
 include_once ("config.php");
 
-write_msgbox("erreur javascript", $error_pic, "Le javascripts ne sont pas activés. Veuillez activer l'option du navigateur et recommencer
+write_msgbox("erreur javascript", $error_pic, "Le javascripts ne sont pas activÃ©s. Veuillez activer l'option du navigateur et recommencer
 <br><p align=center><input type=button class='btn btn-default' value='nouvel essai' onclick='javascript:history.back(1);'> ",10,0);
 
 ?>

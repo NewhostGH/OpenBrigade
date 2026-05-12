@@ -57,7 +57,7 @@ echo "<input type='hidden' name='DAYS_WARNING' value='10'>";
 echo "<div class='col-sm-8  mx-auto' >
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Nouvelle Compétence </strong></div>
+                <div class='card-title'><strong> Nouvelle CompÃ©tence </strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0>";
@@ -124,11 +124,11 @@ if ( $MYEQ_ID > 0 ) {
     $query2="select distinct ph.PH_CODE, ph.PH_NAME from poste_hierarchie ph order by ph.PH_CODE ";
     $result2=mysqli_query($dbc,$query2);
     echo "<tr>
-        <td><b>Hiérarchie </b>$asterisk</td>
+        <td><b>HiÃ©rarchie </b>$asterisk</td>
         <td>
         <select name='PH_CODE' id='PH_CODE' class='form-control form-control-sm' data-container='body' data-style='btn btn-default'
-                title=\"Si cette compétence fait partie d'une hiérarchie\" onchange=\"changedType();\">";
-        echo "<option value=''>Ne fait pas partie d'une hiérarchie</option>";
+                title=\"Si cette compÃ©tence fait partie d'une hiÃ©rarchie\" onchange=\"changedType();\">";
+        echo "<option value=''>Ne fait pas partie d'une hiÃ©rarchie</option>";
         while ($row2=@mysqli_fetch_array($result2)) {
             $string = "";
             $query3="select TYPE from poste where PH_CODE='".$row2[0]."' order by PH_LEVEL asc";
@@ -145,9 +145,9 @@ if ( $MYEQ_ID > 0 ) {
     $style="style='display:none'";
 
     echo "<tr id='rowOrder' $style>
-        <td align=right><i>Ordre dans la hiérarchie </i>$asterisk</td>
+        <td align=right><i>Ordre dans la hiÃ©rarchie </i>$asterisk</td>
         <td>
-        <select name='PH_LEVEL' class='selectpicker smalldropdown3' data-container='body' data-style='btn btn-default' title=\"Ordre dans la hiérarchie\">";
+        <select name='PH_LEVEL' class='selectpicker smalldropdown3' data-container='body' data-style='btn btn-default' title=\"Ordre dans la hiÃ©rarchie\">";
         for ( $i=0; $i < 10; $i++ ) {
             echo "<option value='".$i."' >".$i."</option>";
         }
@@ -165,7 +165,7 @@ if ( $MYEQ_ID > 0 ) {
     echo "<tr>
             <td><b>Habilitation </b>$asterisk</td>
             <td>
-            <select name='F_ID' class='form-control form-control-sm' data-container='body' data-style='btn btn-default' title='Choisir la permission requise pour pouvoir modifier cette compétence' class='smalldropdown'>";
+            <select name='F_ID' class='form-control form-control-sm' data-container='body' data-style='btn btn-default' title='Choisir la permission requise pour pouvoir modifier cette compÃ©tence' class='smalldropdown'>";
             while ($row2=@mysqli_fetch_array($result2)) {
                 if ( $row2[0] == 4 ) $selected='selected';
                 else $selected='';
@@ -183,7 +183,7 @@ if ( $MYEQ_ID > 0 ) {
               <td>
                     <label for='PS_SECOURISME'>
                     <input type='checkbox' name='PS_SECOURISME' id='PS_SECOURISME' value='1'>
-                    Compétence officielle de secourisme</label>
+                    CompÃ©tence officielle de secourisme</label>
                     </td>";
     echo "</tr>";
     //=====================================================================
@@ -195,7 +195,7 @@ if ( $MYEQ_ID > 0 ) {
               <td>
                     <label for='PS_FORMATION'>
                     <input type='checkbox' name='PS_FORMATION' id='PS_FORMATION'  value='1' onchange='changedDiplome();'>
-                    On peut organiser des formations pour cette compétence</label>
+                    On peut organiser des formations pour cette compÃ©tence</label>
                     </td>";
     echo "</tr>";
     
@@ -208,7 +208,7 @@ if ( $MYEQ_ID > 0 ) {
               <td>
                     <label for='PS_RECYCLE'>
                     <input type='checkbox' name='PS_RECYCLE' id='PS_RECYCLE' value='1' disabled>
-                    Une formation continue régulière est nécessaire</label>
+                    Une formation continue rÃ©guliÃ¨re est nÃ©cessaire</label>
                     </td>";
     echo "</tr>";
 
@@ -221,7 +221,7 @@ if ( $MYEQ_ID > 0 ) {
               <td>
                     <label for='PS_EXPIRABLE'>
                     <input type='checkbox' name='PS_EXPIRABLE' id='PS_EXPIRABLE' value='1' onchange='changedExpirable();'>
-                    On peut définir une date d'expiration sur cette compétence</label>
+                    On peut dÃ©finir une date d'expiration sur cette compÃ©tence</label>
                     </td>";
     echo "</tr>";
     
@@ -234,7 +234,7 @@ if ( $MYEQ_ID > 0 ) {
     echo "<tr id='rowWarning' $style>
             <td align=right><i>Warning</i></td>
             <td>
-            <select name='DAYS_WARNING' id='DAYS_WARNING' title='Warning plusieurs jours ou mois avant expiration, la compétence apparaît en orange'>";
+            <select name='DAYS_WARNING' id='DAYS_WARNING' title='Warning plusieurs jours ou mois avant expiration, la compÃ©tence apparaÃ®t en orange'>";
             echo "<option value='0'>Pas de warning</option>";
             echo "<option value='1'>1 jours avant expiration</option>";
             echo "<option value='3'>3 jours avant expiration</option>";
@@ -255,40 +255,40 @@ if ( $MYEQ_ID > 0 ) {
     //=====================================================================
     echo "<tr>
               <td>
-                    <b>Diplôme délivré</b></td>
+                    <b>DiplÃ´me dÃ©livrÃ©</b></td>
               <td>
                     <label for='PS_DIPLOMA'>
                     <input type='checkbox' name='PS_DIPLOMA' id='PS_DIPLOMA'  value='1' onchange='changedDiplome();'>
-                    Un diplôme ou document officiel est délivré</label>
+                    Un diplÃ´me ou document officiel est dÃ©livrÃ©</label>
                     </td>";
     echo "</tr>";
     
     echo "<tr>
               <td>
-                    <b>Diplôme numéroté</b></td>
+                    <b>DiplÃ´me numÃ©rotÃ©</b></td>
               <td>
                     <label for='PS_NUMERO'>
                     <input type='checkbox' name='PS_NUMERO' id='PS_NUMERO'  value='1' disabled>
-                    Chaque diplôme a un numéro unique</label>
+                    Chaque diplÃ´me a un numÃ©ro unique</label>
                     </td>";
     echo "</tr>";
 
     echo "<tr>
               <td>
-                    <b>Diplôme national</b></td>
+                    <b>DiplÃ´me national</b></td>
               <td>
                     <label for='PS_NATIONAL'>
                     <input type='checkbox' name='PS_NATIONAL' id='PS_NATIONAL' value='1' disabled>
-                    Diplôme délivré au niveau national seulement</label>
+                    DiplÃ´me dÃ©livrÃ© au niveau national seulement</label>
                     </td>";
     echo "</tr>";
     echo "<tr>
               <td>
-                    <b>Diplôme imprimable</b></td>
+                    <b>DiplÃ´me imprimable</b></td>
               <td>
                     <label for='PS_PRINTABLE'>
                     <input type='checkbox' name='PS_PRINTABLE' id='PS_PRINTABLE' value='1' onchange='changedDiplome();' disabled>
-                    Possibilité d'imprimer un diplôme</label>
+                    PossibilitÃ© d'imprimer un diplÃ´me</label>
                     </td>";
     echo "</tr>";
     echo "<tr>
@@ -297,7 +297,7 @@ if ( $MYEQ_ID > 0 ) {
               <td>
                     <label for='PS_PRINT_IMAGE'>
                     <input type='checkbox' name='PS_PRINT_IMAGE' id='PS_PRINT_IMAGE' value='1' disabled>
-                    L'image est obligatoirement imprimée</label>
+                    L'image est obligatoirement imprimÃ©e</label>
                     </td>";
     echo "</tr>";
 
@@ -323,7 +323,7 @@ if ( $MYEQ_ID > 0 ) {
               <td>
                     <label for='PS_AUDIT' nowrap>
                     <input type='checkbox' name='PS_AUDIT' id='PS_AUDIT' value='1'>
-                    Un mail est envoyé au secrétariat en cas de modification</label>
+                    Un mail est envoyÃ© au secrÃ©tariat en cas de modification</label>
                     </td>";
     echo "</tr>";
 }

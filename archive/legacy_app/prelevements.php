@@ -34,7 +34,7 @@ if ( ! isset($_GET["periode"]) and $periode =='A' ) {
     else $periode='A';
 }
 
-// vérifier qu'on a les droits d'afficher pour cette section
+// vÃ©rifier qu'on a les droits d'afficher pour cette section
 $list = preg_split('/,/' , get_family("$highestsection"));
 if (! in_array($filter,$list) and ! check_rights($id, 24)) $filter=$highestsection;
 
@@ -42,7 +42,7 @@ writehead();
 $curdate=date('d-m-Y');
 
 if ( $bank_accounts == 0 ) {
-    echo "Fonction non supportée par votre configuration (bank_accounts désactivé)";
+    echo "Fonction non supportÃ©e par votre configuration (bank_accounts dÃ©sactivÃ©)";
     exit;
 }
 ?>
@@ -73,8 +73,8 @@ if ($save) {
 }
 
 
-if ( $syndicate == 1 ) $title='Cotisations par prélèvement des adhérents';
-else $title='Cotisations par prélèvement du personnel';
+if ( $syndicate == 1 ) $title='Cotisations par prÃ©lÃ¨vement des adhÃ©rents';
+else $title='Cotisations par prÃ©lÃ¨vement du personnel';
 
 echo "<body>";
 
@@ -110,10 +110,10 @@ echo "<select id='filter' name='filter' class='selectpicker' ".datalive_search()
       display_children2(-1, 0, $filter, $nbmaxlevels, $sectionorder);
 echo "</select>";
 
-// période
+// pÃ©riode
 $query3="select P_CODE, P_DESCRIPTION from periode order by P_ORDER";
 $result3=mysqli_query($dbc,$query3);
-echo "<select id='periode' name='periode' title='Choisir la période de cotisation' class='selectpicker bootstrap-select-medium' data-style='btn-default' data-container='body'
+echo "<select id='periode' name='periode' title='Choisir la pÃ©riode de cotisation' class='selectpicker bootstrap-select-medium' data-style='btn-default' data-container='body'
         onchange=\"orderfilter2('".$filter."',document.getElementById('sub'),document.getElementById('periode').value,'".$year."')\">";
 while ($row3=@mysqli_fetch_array($result3)) {
     if ( $row3[0] == $periode ) $selected="selected";
@@ -124,7 +124,7 @@ echo "</select>";
 $curyear=date('Y');
 $minyear=$curyear - 2;
 
-echo "<select id='year' name='year' title='année de cotisation' class='selectpicker bootstrap-select-small' data-style='btn-default' data-container='body'
+echo "<select id='year' name='year' title='annÃ©e de cotisation' class='selectpicker bootstrap-select-small' data-style='btn-default' data-container='body'
         onchange=\"orderfilter2('".$filter."',document.getElementById('sub'),'".$periode."',document.getElementById('year').value)\">";
 
 for ( $i=0; $i < 6; $i++) {
@@ -141,17 +141,17 @@ echo "<div class='container-fluid'>";
 echo "<div class='col-sm-5' style='margin:auto'>
         <div class='card hide card-default graycarddefault'style=''>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Enregistrer les cotisations par prélèvement </strong></div>
+                <div class='card-title'><strong> Enregistrer les cotisations par prÃ©lÃ¨vement </strong></div>
             </div>
             <div class='card-body graycard'>";
 
 echo "<table class='noBorder' align=center>";
 
 // type de paiement
-echo "<tr><td>Mode de paiement: <b>Prélèvement</b></td></tr>";
+echo "<tr><td>Mode de paiement: <b>PrÃ©lÃ¨vement</b></td></tr>";
 
 // type de paiement
-echo "<tr><td>Personnel concerné: <b>Actifs (radiés et suspendus exclus)</b></td></tr>";
+echo "<tr><td>Personnel concernÃ©: <b>Actifs (radiÃ©s et suspendus exclus)</b></td></tr>";
 echo "</table></div>";
 
 // ===============================================
@@ -179,10 +179,10 @@ while ($row=@mysqli_fetch_array($result1)) {
 }
 
 echo "<p><form name='form' method='post' action='cotisations.php?tab=2&save=1'><table class='noBorder'>
- <tr><td><i class='fa fa-circle'></i></td><td><b>".$number1."</b> cotisations doivent encore être enregistrées</td></tr>
+ <tr><td><i class='fa fa-circle'></i></td><td><b>".$number1."</b> cotisations doivent encore Ãªtre enregistrÃ©es</td></tr>
  <tr height=20><td><i class='fa fa-circle'></i></td><td>montant total <b>".$total." ".$default_money_symbol."</b> </td></tr>
- <tr height=20><td><i class='fa fa-circle'></i></td><td><b>dont ".$reguls." ".$default_money_symbol."</b> de régularisations</td></tr>
- <tr height=20><td><i class='fa fa-circle'></i></td><td>Date du prélèvement
+ <tr height=20><td><i class='fa fa-circle'></i></td><td><b>dont ".$reguls." ".$default_money_symbol."</b> de rÃ©gularisations</td></tr>
+ <tr height=20><td><i class='fa fa-circle'></i></td><td>Date du prÃ©lÃ¨vement
 
   <input type='text' size='10' name='date_prelev' id='date_prelev' value=\"".$default_date."\" class='datepicker datepicker2' data-provide='datepicker'
     placeholder='JJ-MM-AAAA'

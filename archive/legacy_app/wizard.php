@@ -115,27 +115,27 @@ foreach ($types_org as $key => $name) {
 }
 echo "</select>
 <span style='margin-left:5px;'><i class='fa fa-info-circle fa-lg hide_mobile' 
-title=\"sélectionnez un type d'organisation, ce type ne sera plus modifiable ensuite.\"></i></span></td>
+title=\"sÃ©lectionnez un type d'organisation, ce type ne sera plus modifiable ensuite.\"></i></span></td>
 </tr>";
 echo  "<tr><td>Nom court de votre organisation $asterisk</td></tr>
 <tr><td><input type='text' id='cisname' name='cisname' maxlength='25' value='' autocomplete='no'
 onchange=\"isValid3(this, '');change_data();\"
 placeholder='Mon organisation' class='medium-input' >
-<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom court de votre organisation, maximum 25 caractères, modification ultérieure possible.\"></i>
+<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom court de votre organisation, maximum 25 caractÃ¨res, modification ultÃ©rieure possible.\"></i>
 </td></tr>";
 
 echo  "<tr><td>Nom long de votre organisation $asterisk</td></tr>
 <tr><td><input type='text' id='organisation_name' name='organisation_name' maxlength='60' value='' autocomplete='no'
 onchange=\"isValid3(this, '');change_data();\"
 placeholder='Nom long de mon organisation' class='medium-input'>
-<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom long de votre organisation, maximum 60 caractères, modification ultérieure possible.\"></i>
+<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom long de votre organisation, maximum 60 caractÃ¨res, modification ultÃ©rieure possible.\"></i>
 </td></tr>";
 
 echo  "<tr><td>Adresse Web $asterisk</td></tr>
 <tr><td><input type='text' id='cisurl' name='cisurl'  maxlength='60' autocomplete='no'
 onchange=\"isValidUrl2(this, '');change_data();\"
 value='http://".$_SERVER['HTTP_HOST']."' class='medium-input' onchange='change_data();' >
-<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici l'adresse du site web de votre organisation commençant par http:// ou https://, maximum 60 caractères, modification ultérieure possible.\"></i>
+<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici l'adresse du site web de votre organisation commenÃ§ant par http:// ou https://, maximum 60 caractÃ¨res, modification ultÃ©rieure possible.\"></i>
 </td>
 </tr>";
 
@@ -143,14 +143,14 @@ echo  "<tr><td>Votre adresse email $asterisk</td></tr>
 <tr><td><input type='text' id='admin_email' name='admin_email' maxlength='60' value='' autocomplete='no'
 onchange=\"mailCheck(this, '');change_data();\"
 placeholder='admin@".strtolower($t).".org' class='medium-input' onchange='change_data();' >
-<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici l'adresse mail valide de l'administrateur de cette application, maximum 60 caractères, modification ultérieure possible.\"></i>
+<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici l'adresse mail valide de l'administrateur de cette application, maximum 60 caractÃ¨res, modification ultÃ©rieure possible.\"></i>
 </td></tr>";
 
-echo "<tr><td>Nom personnalisé de l'application $asterisk</td></tr>
+echo "<tr><td>Nom personnalisÃ© de l'application $asterisk</td></tr>
 <tr><td><input type='text' id='application_title' name='application_title' maxlength='25' autocomplete='no'
 onchange=\"isValid3(this, '');change_data();\"
 value='".$t."' class='medium-input' onchange='change_data();' >
-<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom personnalisé pour cette cette application, vous pouvez bien sûr laisser ".$t.". Maximum 25 caractères, modification ultérieure possible.\"></i>
+<i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom personnalisÃ© pour cette cette application, vous pouvez bien sÃ»r laisser ".$t.". Maximum 25 caractÃ¨res, modification ultÃ©rieure possible.\"></i>
 </td></tr>";
 
 echo  "</table></div></div></div>

@@ -76,11 +76,11 @@ if (isset($_GET["data"])) {
         if ( $C_DATE_PEREMPTION <> '' ) {
             if ( my_date_diff(getnow(),$C_DATE_PEREMPTION) < 0 ) {
                 $style2=$widget_all_red;
-                $title2='Attention produit périmé';
+                $title2='Attention produit pÃ©rimÃ©';
             }
             else if ( my_date_diff(getnow(),$C_DATE_PEREMPTION) <= 30 ) {
                 $style2=$widget_all_orange;
-                $title2='Attention produit bientôt périmé, dans moins de 30 jours';
+                $title2='Attention produit bientÃ´t pÃ©rimÃ©, dans moins de 30 jours';
             }
             else {
                 $style2=$widget_all_green;

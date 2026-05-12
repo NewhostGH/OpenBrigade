@@ -56,9 +56,9 @@ else {
     $TR_CONFIG=$tab;
 }
 
-if ( $TR_CONFIG == 2 ) $tt = "Rôle de l'organigramme";
+if ( $TR_CONFIG == 2 ) $tt = "RÃ´le de l'organigramme";
 else if ( $TR_CONFIG == 3 ) $tt = "Permission de l'organigramme";
-else $tt = "Droit d'accès";
+else $tt = "Droit d'accÃ¨s";
 
 echo "<div align=center>";
 writeBreadCrumb("Ajout ".$tt);
@@ -97,7 +97,7 @@ echo "</tr>";
 $help = write_help_habilitations();
 
 if ( $tab == 1 ) {
-    // attribuable à certaines catégories de personnel seulement
+    // attribuable Ã  certaines catÃ©gories de personnel seulement
     echo "<tr>
             <td align=left colspan=1><b>Utilisable pour le personnel</b></td>
             <td align=left colspan=2>
@@ -118,7 +118,7 @@ else {
     echo "<tr>
             <td align=left ><b>Membre d'une sous-section possible</b></td>
             <td align=left colspan=2>
-            <input type='checkbox' name='sub_possible' $checked value='1'  title=\"Si cette case est cochée, alors un membre d'une sous-section peut avoir le rôle\">
+            <input type='checkbox' name='sub_possible' $checked value='1'  title=\"Si cette case est cochÃ©e, alors un membre d'une sous-section peut avoir le rÃ´le\">
           </td>";
     echo "</tr>";
     if ( $TR_ALL_POSSIBLE == 1 ) $checked="checked";
@@ -126,28 +126,28 @@ else {
     echo "<tr>
             <td><b>Membre de n'importe quelle section</b></td>
             <td align=left colspan=2>
-            <input type='checkbox' name='all_possible'  value='1' $checked title=\"Si cette case est cochée, alors un membre de n'importe quelle section peut avoir le rôle\">
+            <input type='checkbox' name='all_possible'  value='1' $checked title=\"Si cette case est cochÃ©e, alors un membre de n'importe quelle section peut avoir le rÃ´le\">
           </td>";
     echo "</tr>";
     if ( $cron_allowed == 1 ) {
         if ( $GP_ASTREINTE == 1 ) $checked="checked";
         else $checked="";
         echo "<tr>
-            <td><b>Peut être attribué pour des astreintes</b></td>
+            <td><b>Peut Ãªtre attribuÃ© pour des astreintes</b></td>
             <td  align=left colspan=2>
             <input type='checkbox' name='gp_astreinte'  value='1' $checked 
-            title=\"Si cette case est cochée, alors ce rôle peut être attribué \nde façon temporaire pour des astreintes.\nATTENTION: Si décoché, les astreintes correspondantes seront supprimées.\">
+            title=\"Si cette case est cochÃ©e, alors ce rÃ´le peut Ãªtre attribuÃ© \nde faÃ§on temporaire pour des astreintes.\nATTENTION: Si dÃ©cochÃ©, les astreintes correspondantes seront supprimÃ©es.\">
           </td>";
         echo "</tr>";
     }
     
-    // type rôle ou permission
+    // type rÃ´le ou permission
     echo "<tr>
-            <td><b>Catégorie (rôle ou permission)</b></td>
+            <td><b>CatÃ©gorie (rÃ´le ou permission)</b></td>
             <td align=left colspan=2>
             <select name='category' class='form-control form-control-sm' data-container='body' data-style='btn btn-default'>";
     if ( $TR_CONFIG == 2) $selected ='selected'; else $selected='';
-    echo     "<option value='2' $selected>Rôle dans l'organigramme</option>";
+    echo     "<option value='2' $selected>RÃ´le dans l'organigramme</option>";
     if ( $TR_CONFIG == 3) $selected ='selected'; else $selected='';
     echo    "<option value='3' $selected>Permission dans l'organigramme</option>";
     echo " </select> 
@@ -189,7 +189,7 @@ while ($row2=@mysqli_fetch_array($result2)) {
 }
 
 echo "<tr>
-            <td colspan=1><b>Numéro (identifiant unique)</b></td>
+            <td colspan=1><b>NumÃ©ro (identifiant unique)</b></td>
             <td align=left colspan=2>
           <select name='GP_ID' class='form-control form-control-sm' data-container='body' data-style='btn btn-default'>";
              for ($i=$k+1 ; $i<=$nbmaxgroupes+$k ; $i++) {
@@ -208,8 +208,8 @@ echo "</div><div class='col-sm-6'>";
 echo "<table class='newTableAll'>";
 
 echo "<tr>
-          <td>Fonctionnalité</td>
-        <td>Catégorie</td>
+          <td>FonctionnalitÃ©</td>
+        <td>CatÃ©gorie</td>
           <td style='width:1%'>Permissions</td>
       </tr>";
 
@@ -260,6 +260,6 @@ echo "</table></div></div>";
 echo "<input type='submit' class='btn btn-success' value='Sauvegarder'></form>";
 echo "<input type='button' class='btn btn-secondary' value='Retour' name='annuler' onclick=\"javascript:history.back(1);\">";
 if ( $nbsections == 0 ) 
-    echo "<p><small>$asterisk<i> ces fonctionnalités ne sont pas accessibles aux personnes habilitées seulement au niveau antenne</i></small>";
+    echo "<p><small>$asterisk<i> ces fonctionnalitÃ©s ne sont pas accessibles aux personnes habilitÃ©es seulement au niveau antenne</i></small>";
 writefoot();
 ?>

@@ -64,7 +64,7 @@ if (isset($_FILES['icone'])) {
 if (!isset($defaultPic)) $defaultPic="";
 closedir($dir);
 
-// choix d'icônes pour le type d'activité
+// choix d'icÃ´nes pour le type d'activitÃ©
 $query="select TE_ICON from type_evenement where TE_CODE='".$TE_CODE."'";
 $result=mysqli_query($dbc,$query);
 $row=@mysqli_fetch_array($result);
@@ -125,7 +125,7 @@ if (isset($_FILES['icone'])) {
 echo "<body><div class='table-responsive'>";
 
 //=====================================================================
-// affiche la fiche type activité
+// affiche la fiche type activitÃ©
 //=====================================================================
 $TE_DOCUMENT=0;
 $query="select te.TE_CODE, te.TE_LIBELLE, te.CEV_CODE, cev.CEV_DESCRIPTION,
@@ -143,7 +143,7 @@ if ( $operation == 'addstat' ) {
     $cnt=count_entities("type_bilan", "TE_CODE='".$TE_CODE."'");
     $newnum=intval($cnt) + 1;
     $query="insert into type_bilan (TE_CODE,TB_NUM,TB_LIBELLE)
-            values('".$TE_CODE."',".$newnum.",'Statistique n°".$newnum."')";
+            values('".$TE_CODE."',".$newnum.",'Statistique nÂ°".$newnum."')";
     $result=mysqli_query($dbc,$query);
     
     $query="update type_evenement set TE_MAIN_COURANTE=1 where TE_CODE='".$TE_CODE."'";
@@ -189,7 +189,7 @@ echo "<input type='hidden' name='CEV_CODE' value='$CEV_CODE'>";
 
 if ( $TE_CODE == "" ) {
     $img="";
-    $txt="Nouveau type d'activité";
+    $txt="Nouveau type d'activitÃ©";
     $nbtxt="";
     echo "<input type='hidden' name='operation' value='insert'>";
     $NB=0;
@@ -202,7 +202,7 @@ else {
     $result2=mysqli_query($dbc,$query2);
     $row2=mysqli_fetch_array($result2);
     $NB=$row2[0];
-    $nbtxt="<span class='badge'>".$NB."</span> activités de ce type";
+    $nbtxt="<span class='badge'>".$NB."</span> activitÃ©s de ce type";
 }
 
 echo "<div align=center>";
@@ -217,7 +217,7 @@ echo "<div class='row'>";
 echo "<div class='col-sm-5'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Informations type d'activité </strong></div>
+                <div class='card-title'><strong> Informations type d'activitÃ© </strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0>";
@@ -235,7 +235,7 @@ else $disabled_code='';
 echo "<tr>
           <td>Code $asterisk</td>
           <td align=left><input type='text' class='form-control form-control-sm' name='TE_CODE' value='".$TE_CODE."' $disabled_code
-                title='code activité, 5 caractères maximum,  lettres majuscules et chiffres' maxlength='5'
+                title='code activitÃ©, 5 caractÃ¨res maximum,  lettres majuscules et chiffres' maxlength='5'
                 onchange=\"isValid6(evenement.TE_CODE,'".$TE_CODE."');\">";
 echo " </td>
       </tr>";
@@ -252,7 +252,7 @@ echo " </td>
 // ligne icone
 //=====================================================================
     
-echo "<tr><td>Icône</td>
+echo "<tr><td>IcÃ´ne</td>
     <td colspan=4><div id='iconSelector'></div><input type=hidden name='icon' id='icon' value=\"".$TE_ICON."\">";
 if (isset($_GET['suppr'])) $suppr = $_GET['suppr'];
 else $suppr="";
@@ -261,7 +261,7 @@ echo "<input type='hidden' name='tab' value='2'>";
 echo "<input type='hidden' name='child' value='5'>";
 echo "<input type='hidden' name='ope' value='edit'>";
 echo "<input type='hidden' name='operation' value='insert'>";
-echo "<label class='btn btn-success btn-file' title='Choisir un icône personnalisé'>
+echo "<label class='btn btn-success btn-file' title='Choisir un icÃ´ne personnalisÃ©'>
     <i class='fa fa-camera fa'></i>
     <input type='file' id='iconeUpload' name='icone' style='display: none;'>
     </label></form>";
@@ -274,7 +274,7 @@ if ($TE_CODE!="") echo "<input type='hidden' name='TE_CODE' value='".$TE_CODE."'
 else echo "<input type='hidden' name='operation' value='insert'>";
 echo "<input type='hidden' name='suppr' value='yes'>";
 echo "<input type='hidden' id = 'iconsuppr' name='iconsuppr' value=''>";
-echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' style='display:none'>
+echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icÃ´ne' style='display:none'>
     <i class='fa fa-trash fa'></i>
 <button id='supprIcone' hidden type='button'></button>
 </label></form>";
@@ -287,7 +287,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
       data:ddData,
       width:300,
       height:400,
-      selectText: "Choisir une icône pour ce type de véhicule",
+      selectText: "Choisir une icÃ´ne pour ce type de vÃ©hicule",
       imagePosition:"left",
       onSelected: function(data){
           document.getElementById("icon").value = data.selectedData.imageSrc;
@@ -330,7 +330,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
     var fileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
 
     if (fileExt!="png") {
-      swal("Seulement les fichiers au format .png sont acceptés.");
+      swal("Seulement les fichiers au format .png sont acceptÃ©s.");
       return false;
     }
 
@@ -359,7 +359,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
 
     }
     img.onerror = function() {
-      swal('Le contenu du fichier ne semble pas correspondre à son extension');
+      swal('Le contenu du fichier ne semble pas correspondre Ã  son extension');
       this.value='';
       return false;
     }
@@ -371,7 +371,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
     echo "</td></tr>";
       
 //=====================================================================
-// ligne catégorie
+// ligne catÃ©gorie
 //=====================================================================
 
 $query="select CEV_CODE, CEV_DESCRIPTION from categorie_evenement
@@ -379,7 +379,7 @@ $query="select CEV_CODE, CEV_DESCRIPTION from categorie_evenement
 $result=mysqli_query($dbc,$query);
 
 echo "<tr>
-          <td>Catégorie $asterisk</td>
+          <td>CatÃ©gorie $asterisk</td>
           <td align=left>
           <select name='CEV_CODE' id='CEV_CODE' onchange='change_type();' class='form-control form-control-sm'>";
              while ($row=@mysqli_fetch_array($result)) {
@@ -393,14 +393,14 @@ echo "<tr>
 
       
 //=====================================================================
-// propriétés
+// propriÃ©tÃ©s
 //=====================================================================
 
 echo "</table></div></div></div>";
 echo "<div class='col-sm-3'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Propriétés </strong></div>
+                <div class='card-title'><strong> PropriÃ©tÃ©s </strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0>";
@@ -420,15 +420,15 @@ if ( $TE_VEHICULES == 1 ) $checked='checked';
 else $checked='';
 if ($vehicules==0) {
     $disabled="disabled";
-    $title="Cette option n'est disponible que si la gestion des véhicules est activée";
+    $title="Cette option n'est disponible que si la gestion des vÃ©hicules est activÃ©e";
 }
 else {
     $disabled="";
-    $title="Il est possible d'engager des véhicules";
+    $title="Il est possible d'engager des vÃ©hicules";
 }
 
 echo "<tr>
-      <td>Onglet Véhicules</td>
+      <td>Onglet VÃ©hicules</td>
       <td align=left><label class='switch'><input type='checkbox' name='TE_VEHICULES' value='1' $checked $disabled >
       <span class='slider round' title=\"$title\"></span>
         </label>";
@@ -439,15 +439,15 @@ if ( $TE_MATERIEL == 1 ) $checked='checked';
 else $checked='';
 if ($materiel==0) {
     $disabled="disabled";
-    $title="Cette option n'est disponible que si la gestion du matériel est activée";
+    $title="Cette option n'est disponible que si la gestion du matÃ©riel est activÃ©e";
 }
 else {
     $disabled="";
-    $title="Il est possible d'engager du matériel";
+    $title="Il est possible d'engager du matÃ©riel";
 }
 
 echo "<tr>
-      <td>Onglet Matériel</td>
+      <td>Onglet MatÃ©riel</td>
       <td align=left><label class='switch'><input type='checkbox' name='TE_MATERIEL' value='1' $checked $disabled >
       <span class='slider round' title=\"$title\"></span>
         </label>";
@@ -458,7 +458,7 @@ if ( $TE_CONSOMMABLES == 1 ) $checked='checked';
 else $checked='';
 if ($consommables==0) {
     $disabled="disabled";
-    $title="Cette option n'est disponible que si la gestion des consommables est activée";
+    $title="Cette option n'est disponible que si la gestion des consommables est activÃ©e";
 }
 else {
     $disabled="";
@@ -493,7 +493,7 @@ if ( $geolocalize_enabled ) {
               <td>Onglet Carte</td>
               <td align=left><label class='switch'>
             <input type='checkbox' name='TE_MAP' value='1' $checked >
-        <span class='slider round' title=\"Activer la carte Google maps. Attention, seules les personnes ayant la permission n°76 pourront la voir.\"></span>
+        <span class='slider round' title=\"Activer la carte Google maps. Attention, seules les personnes ayant la permission nÂ°76 pourront la voir.\"></span>
         </label>";
     echo " </td>
           </tr>";
@@ -502,7 +502,7 @@ if ( $geolocalize_enabled ) {
 if ($client == 1) {
     if ( $CLIENT == 1 ) $checked='checked';
     else $checked='';
-    $title="Activer l'onglet client, pour permettre la facturation de l'activité. Attention il fut la permission comptabilité n°29 pour voir cet onglet.";
+    $title="Activer l'onglet client, pour permettre la facturation de l'activitÃ©. Attention il fut la permission comptabilitÃ© nÂ°29 pour voir cet onglet.";
     echo "<tr>
               <td>Onglet Client</td>
               <td align=left><label class='switch'><input type='checkbox' name='CLIENT' value='1' $checked $disabled >
@@ -518,7 +518,7 @@ else $checked='';
 echo "<tr>
           <td>Onglet Rapport/Stats</td>
           <td align=left><label class='switch'><input type='checkbox' name='TE_MAIN_COURANTE' id='TE_MAIN_COURANTE' value='1' $checked onchange=\"javascript:changedRapport();\" >
-          <span class='slider round' title=\"Un rapport ou main courante peut être créée sur ce type d'activité \"></span>
+          <span class='slider round' title=\"Un rapport ou main courante peut Ãªtre crÃ©Ã©e sur ce type d'activitÃ© \"></span>
         </label>";
 echo " </td>
       </tr>";
@@ -532,7 +532,7 @@ else $disabled = "disabled";
 echo "<tr>
           <td>Victimes</td>
           <td align=left><label class='switch'><input type='checkbox' name='TE_VICTIMES'  value='1' id='TE_VICTIMES' $checked $disabled >
-        <span class='slider round' title=\"Des victimes peuvent être enregistrées. Cette propriété ne peut être activée que si la case 'Rapport et Statistiques est cochée\"></span>
+        <span class='slider round' title=\"Des victimes peuvent Ãªtre enregistrÃ©es. Cette propriÃ©tÃ© ne peut Ãªtre activÃ©e que si la case 'Rapport et Statistiques est cochÃ©e\"></span>
         </label>";
 echo " </td>
       </tr>";
@@ -555,7 +555,7 @@ if ( $syndicate == 0 ) {
     echo "<tr>
               <td>Colonne de ".$renfort_label." possible</td>
               <td align=left><label class='switch'><input type='checkbox' name='COLONNE_RENFORT' value='1' $checked >
-        <span class='slider round' title=\"La propriété colonne de ".$renfort_label." peut être activée.\"></span>
+        <span class='slider round' title=\"La propriÃ©tÃ© colonne de ".$renfort_label." peut Ãªtre activÃ©e.\"></span>
         </label>";
     echo " </td>
           </tr>";
@@ -564,9 +564,9 @@ if ( $ACCES_RESTREINT == 1 ) $checked='checked';
 else $checked='';
 
 echo "<tr>
-          <td>Accès restreint</td>
+          <td>AccÃ¨s restreint</td>
           <td align=left><label class='switch'><input type='checkbox' name='ACCES_RESTREINT' value='1' $checked >
-        <span class='slider round' title=\"Seuls les inscrits ou ceux qui ont la permission 26 peuvent voir cette activité.\"></span>
+        <span class='slider round' title=\"Seuls les inscrits ou ceux qui ont la permission 26 peuvent voir cette activitÃ©.\"></span>
         </label>";
 echo " </td>
       </tr>";
@@ -578,7 +578,7 @@ if ( $bilan == 1 ) {
     echo "<tr>
               <td>Bilans</td>
               <td align=left><label class='switch'><input type='checkbox' name='TE_BILAN' id='TE_BILAN' value='1' $checked onchange=\"javascript:changedRapport();\" >
-        <span class='slider round' title=\"Afficher ce type sur les PDFs bilans d'opérations de secours\"></span>
+        <span class='slider round' title=\"Afficher ce type sur les PDFs bilans d'opÃ©rations de secours\"></span>
         </label>";
     echo " </td>
           </tr>";
@@ -602,7 +602,7 @@ else $checked='';
 echo "<tr>
           <td>Affectation</td>
           <td align=left><label class='switch'><input type='checkbox' name='PIQUET' value='1' $checked >
-        <span class='slider round' title=\"Activer les piquets, affectation du personnel sur les véhicules.\"></span>
+        <span class='slider round' title=\"Activer les piquets, affectation du personnel sur les vÃ©hicules.\"></span>
         </label>";
 echo " </td>
       </tr>";
@@ -613,7 +613,7 @@ else $checked='';
 echo "<tr>
           <td>Dimensionnement DPS</td>
           <td align=left><label class='switch'><input type='checkbox' name='TE_DPS' value='1' $checked >
-        <span class='slider round' title=\"Dimensionnement d'un dispositif prévisionnel de secours\"></span>
+        <span class='slider round' title=\"Dimensionnement d'un dispositif prÃ©visionnel de secours\"></span>
         </label>";
 echo " </td>
       </tr>";
@@ -627,7 +627,7 @@ echo "</table></div></div></div>";
 echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Documents générés </strong></div>
+                <div class='card-title'><strong> Documents gÃ©nÃ©rÃ©s </strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0>";
@@ -638,27 +638,27 @@ else $disabled="";
 if ( $EVAL_PAR_STAGIAIRES == 1 ) $checked='checked';
 else $checked='';
 echo "<tr>
-          <td>Fiche évaluation par stagiaires</td>
+          <td>Fiche Ã©valuation par stagiaires</td>
           <td align=left><label class='switch'><input type='checkbox' name='EVAL_PAR_STAGIAIRES' id='EVAL_PAR_STAGIAIRES' value='1' $disabled $checked >
-        <span class='slider round' title=\"Une fiche d'évaluation de la formation est disponible\"></span>
+        <span class='slider round' title=\"Une fiche d'Ã©valuation de la formation est disponible\"></span>
         </label>
     </td></tr>";
       
 if ( $PROCES_VERBAL == 1 ) $checked='checked';
 else $checked='';
 echo "<tr>
-          <td>Procès verbal</td>
+          <td>ProcÃ¨s verbal</td>
           <td align=left><label class='switch'><input type='checkbox' name='PROCES_VERBAL' id='PROCES_VERBAL' value='1' $disabled $checked >
-        <span class='slider round' title=\"Un procès verbal de résultats de la formation est disponible \"></span>
+        <span class='slider round' title=\"Un procÃ¨s verbal de rÃ©sultats de la formation est disponible \"></span>
         </label>
     </td></tr>";
     
 if ( $FICHE_PRESENCE == 1 ) $checked='checked';
 else $checked='';
 echo "<tr>
-          <td>Fiche de présence </td>
+          <td>Fiche de prÃ©sence </td>
           <td align=left><label class='switch'><input type='checkbox' name='FICHE_PRESENCE' id='FICHE_PRESENCE' value='1' $disabled $checked >
-        <span class='slider round' title=\"Une fiche de présence est créée, après clôture des inscriptions\"></span>
+        <span class='slider round' title=\"Une fiche de prÃ©sence est crÃ©Ã©e, aprÃ¨s clÃ´ture des inscriptions\"></span>
         </label>
     </td></tr>";
 
@@ -667,7 +667,7 @@ else $checked='';
 echo "<tr>
           <td>Ordre de mission </td>
           <td align=left><label class='switch'><input type='checkbox' name='ORDRE_MISSION' id='ORDRE_MISSION'  value='1' $disabled $checked >
-        <span class='slider round' title=\"Un ordre de mission est créé, après clôture des inscriptions\"></span>
+        <span class='slider round' title=\"Un ordre de mission est crÃ©Ã©, aprÃ¨s clÃ´ture des inscriptions\"></span>
         </label>
     </td></tr>";
       
@@ -676,16 +676,16 @@ else $checked='';
 echo "<tr>
           <td>Convention </td>
           <td align=left><label class='switch'><input type='checkbox' name='CONVENTION' id='CONVENTION' value='1' $disabled $checked >
-        <span class='slider round' title=\"Une convention est créée\"></span>
+        <span class='slider round' title=\"Une convention est crÃ©Ã©e\"></span>
         </label>
     </td></tr>";
     
 if ( $EVAL_RISQUE == 1 ) $checked='checked';
 else $checked='';
 echo "<tr>
-          <td>Grille évaluation risques </td>
+          <td>Grille Ã©valuation risques </td>
           <td align=left><label class='switch'><input type='checkbox' name='EVAL_RISQUE' id='EVAL_RISQUE' value='1' $disabled $checked >
-        <span class='slider round' title=\"Une Grille d'évaluation des risques peut être créée\"></span>
+        <span class='slider round' title=\"Une Grille d'Ã©valuation des risques peut Ãªtre crÃ©Ã©e\"></span>
         </label>
     </td></tr>";
     
@@ -694,7 +694,7 @@ else $checked='';
 echo "<tr>
           <td>Convocations </td>
           <td align=left><label class='switch'><input type='checkbox' name='CONVOCATIONS' id='CONVOCATIONS'  value='1' $disabled $checked >
-        <span class='slider round' title=\"Des convocations sont créées, après clôture des inscriptions\"></span>
+        <span class='slider round' title=\"Des convocations sont crÃ©Ã©es, aprÃ¨s clÃ´ture des inscriptions\"></span>
         </label>
     </td></tr>";
     
@@ -703,7 +703,7 @@ else $checked='';
 echo "<tr>
           <td>Factures individuelles </td>
           <td align=left><label class='switch'><input type='checkbox' name='FACTURE_INDIV' id='FACTURE_INDIV'  value='1' $disabled $checked >
-        <span class='slider round' title=\"Des factures individuelles sont créées, si le montant est renseigné \"></span>
+        <span class='slider round' title=\"Des factures individuelles sont crÃ©Ã©es, si le montant est renseignÃ© \"></span>
         </label>
     </td></tr>";
       
@@ -718,7 +718,7 @@ else  $style="style='display:none'";
 echo "<table class='noBorder'>
       <tr class='statRow' $style>
        <td colspan=2><strong>Statistiques</strong></td>
-       <td><strong><span title='incrémentation statistique selon rapport / fiche bilan'>Incrémentation</span></strong></td>
+       <td><strong><span title='incrÃ©mentation statistique selon rapport / fiche bilan'>IncrÃ©mentation</span></strong></td>
       </tr>";
 
 $list=array('','VICTIMES','INTERVENTIONS','VI_INFORMATION','VI_REFUS','VI_IMPLIQUE','VI_MALAISE','VI_SOINS','VI_MEDICALISE',
@@ -758,11 +758,11 @@ while ( custom_fetch_array($result)) {
     $NB1 = intval(@$figures[$i]);
     if ( $NB1 == 0 ) $color = 'orange';
     else $color = 'green';
-    $NB1= "<i class='fa fa-check-circle' style='color:$color;' title='Cette statistique a été renseignée sur $NB1 activités'></i>";
+    $NB1= "<i class='fa fa-check-circle' style='color:$color;' title='Cette statistique a Ã©tÃ© renseignÃ©e sur $NB1 activitÃ©s'></i>";
     
-    $help = "La statistique n°$i est automatiquement incrémentée si une intervention\nou une fiche victime est enregistrée avec une propriété particulière";
+    $help = "La statistique nÂ°$i est automatiquement incrÃ©mentÃ©e si une intervention\nou une fiche victime est enregistrÃ©e avec une propriÃ©tÃ© particuliÃ¨re";
     echo "<tr class='statRow' $style>
-          <td> <span class='badge' title='statistique n°$i'>".$i."</span></td>
+          <td> <span class='badge' title='statistique nÂ°$i'>".$i."</span></td>
           <td><input type = 'text' name='tb_".$i."' value=\"".$TB_LIBELLE."\" size='16' maxlength=40></td>
           <td>
           <select name='victime1_".$i."' title=\"".$help."\" class='smalldropdown' style='margin-bottom:5px;'>";
@@ -771,7 +771,7 @@ while ( custom_fetch_array($result)) {
         else $selected='';
         $lib=str_replace("vi_","",strtolower($value));
         $lib=str_replace("_"," ",ucfirst($lib));
-        if ( $lib == '' ) $lib="non défini";
+        if ( $lib == '' ) $lib="non dÃ©fini";
         echo "<option value='".$value."' $selected>".$lib."</option>";
     }
     echo "<optgroup label='Transport victime (par)'>";
@@ -789,7 +789,7 @@ while ( custom_fetch_array($result)) {
         else $selected='';
         $lib=str_replace("vi_","",strtolower($value));
         $lib=str_replace("_"," ",ucfirst($lib));
-        if ( $lib == '' ) $lib="non défini";
+        if ( $lib == '' ) $lib="non dÃ©fini";
         echo "<option value='".$value."' $selected>".$lib."</option>";
     }
     echo "<optgroup label='Transport victime (par)'>";
@@ -812,7 +812,7 @@ $next = $i + 1;
 echo "<tr class='statRow' $style>";
 echo "<td align=center colspan=3 align=left>
     <a href='upd_type_evenement.php?TE_CODE=".$TE_CODE."&operation=addstat'>
-    <i class='fa fa-plus-circle fa-lg' style='color:green;' title=\"Ajouter une nouvelle statistique à ce type d'activité\"></i></a>
+    <i class='fa fa-plus-circle fa-lg' style='color:green;' title=\"Ajouter une nouvelle statistique Ã  ce type d'activitÃ©\"></i></a>
     Ajouter une statistique</td>";
 echo "</tr>";
 
@@ -820,7 +820,7 @@ echo "</table></div></div></div></div>";
 
 if ( $NB > 0 ) {
     $disabled='disabled';
-    $t="Suppression impossible de ce type car il y a $NB activités dans la base";
+    $t="Suppression impossible de ce type car il y a $NB activitÃ©s dans la base";
 }
 else {
     $disabled="";

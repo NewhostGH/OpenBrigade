@@ -69,7 +69,7 @@ if ($error == 'exist' && $operation == "upd"){
 }
 
 //=====================================================================
-// Vérification si catégorie utilisée
+// VÃ©rification si catÃ©gorie utilisÃ©e
 //=====================================================================
 $query = "select count(1)from grade g
 left join categorie_grade cg on g.G_CATEGORY = cg.CG_CODE
@@ -78,16 +78,16 @@ $numrows = $dbc->query($query)->fetch_row()[0];
 
 
 //=====================================================================
-// Insertion ou modification de catégorie
+// Insertion ou modification de catÃ©gorie
 //=====================================================================
 if ($insertCat == 1){
-    $titre =  "<div class='card-title'><strong> Créer une catégorie de grades </strong></div>";
+    $titre =  "<div class='card-title'><strong> CrÃ©er une catÃ©gorie de grades </strong></div>";
 
-    $lines = "<td title='Code limite de  5 caractères.'>Code de la catégorie $asterisk</td>
+    $lines = "<td title='Code limite de  5 caractÃ¨res.'>Code de la catÃ©gorie $asterisk</td>
             <td  align = left><input type = 'text' class='form-control form-control-sm' name = 'code_cat' value = '' size = 30 maxlength='5'></td>
             <td align = right></tr>";
     $lines .= "<tr>
-            <td title='Libéllé de la catégorie.'>Description  $asterisk</td>
+            <td title='LibÃ©llÃ© de la catÃ©gorie.'>Description  $asterisk</td>
             <td  align = left><input type = 'text' class='form-control form-control-sm' name = 'description_cat' value = '' size = 30></td>
             <td  align = right></tr>";
 
@@ -98,13 +98,13 @@ if ($insertCat == 1){
     $CG_CODE = $row[0];
     $CG_DESCRIPTION = $row[1];
 
-    $titre = " <div class='card-title'><strong> Modification de la catégorie \"$CG_DESCRIPTION\"</strong></div>";
+    $titre = " <div class='card-title'><strong> Modification de la catÃ©gorie \"$CG_DESCRIPTION\"</strong></div>";
 
-    $lines = " <td title='Code limite de  5 caractères.'>Code de la catégorie</td>
+    $lines = " <td title='Code limite de  5 caractÃ¨res.'>Code de la catÃ©gorie</td>
                 <td  align = left><input type = 'text' class='form-control form-control-sm' name = 'code_cat' value = '".$catGrade."' size = 30 maxlength='5' disabled></td>
                 <td align = right></tr>";
     $lines .= "<tr>
-                <td title='Libéllé de la catégorie.'>Description  $asterisk</td>
+                <td title='LibÃ©llÃ© de la catÃ©gorie.'>Description  $asterisk</td>
                 <td  align = left><input type = 'text' class='form-control form-control-sm' name = 'description_cat' value = '".htmlspecialchars($CG_DESCRIPTION, ENT_QUOTES)."' size = 30></td>
                 <td  align = right></tr>";
 }
@@ -133,7 +133,7 @@ if ($updCat == 1){
     echo "<input type = 'submit' class = 'btn btn-success' name='operation' value = 'Modifier'></form> ";
     if ($numrows == 0)
     echo "<input type='button' class='btn btn-danger' value='Supprimer' onclick=\"suppressCat('".$catGrade."');\"> ";
-    else echo "<input type='button' class='btn btn-danger' value='Supprimer' disabled title='Des grades sont associés à cette catégorie : Catégorie système'> ";
+    else echo "<input type='button' class='btn btn-danger' value='Supprimer' disabled title='Des grades sont associÃ©s Ã  cette catÃ©gorie : CatÃ©gorie systÃ¨me'> ";
 }else echo "<input type = 'submit' class = 'btn btn-success' name='operation' value = 'Sauvegarder'></form> ";
 
 echo "<input type = 'submit' class = 'btn btn-secondary' value = 'Retour' onclick = redirect('parametrage.php?tab=5&child=14&catGrade=ALL');>";

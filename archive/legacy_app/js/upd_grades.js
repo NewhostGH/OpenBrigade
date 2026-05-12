@@ -62,7 +62,7 @@ function errorUploadIcone(erreur,operation, oldGrade){
 }
 
 function errorCatExist(operation){
-    swal("Le code de catégorie choisi existe déjà dans la base de données. Il doit être unique.",
+    swal("Le code de catÃ©gorie choisi existe dÃ©jÃ  dans la base de donnÃ©es. Il doit Ãªtre unique.",
         {addButton: 0},
         {class: 'icon swal2-info', style: 'flex', disableButton: 0});
     $('.swal2-confirm').on('click', function() {
@@ -74,7 +74,7 @@ function errorCatExist(operation){
 }
 
 function errorGradeExist(operation, oldGrade){
-    swal("Le code de grade choisi existe déjà dans la base de données. Il doit être unique.",
+    swal("Le code de grade choisi existe dÃ©jÃ  dans la base de donnÃ©es. Il doit Ãªtre unique.",
         {addButton: 0},
         {class: 'icon swal2-info', style: 'flex', disableButton: 0});
     $('.swal2-confirm').on('click', function() {
@@ -86,7 +86,7 @@ function errorGradeExist(operation, oldGrade){
 }
 
 function errorIconeGradeExist(operation, old){
-    swal("Le nom du fichier choisi existe déjà dans la base de données. Il doit être unique.",
+    swal("Le nom du fichier choisi existe dÃ©jÃ  dans la base de donnÃ©es. Il doit Ãªtre unique.",
         {addButton: 0},
         {class: 'icon swal2-info', style: 'flex', disableButton: 0});
     $('.swal2-confirm').on('click', function() {
@@ -110,7 +110,7 @@ function suppress(code) {
 }
 
 function suppressCat(code) {
-    swal("Voulez vous vraiment supprimer cette catégorie?",
+    swal("Voulez vous vraiment supprimer cette catÃ©gorie?",
         {addButton: 1, classButton: "btn-primary confirm", textButton: "Oui"},
         {class: 'icon swal2-info', style: 'flex', disableButton: 0});
     $('.confirm').on('click', function() {
@@ -122,7 +122,7 @@ function suppressCat(code) {
 }
 
 function suppressWithUser(code) {
-    if ( confirm("Voulez vous vraiment supprimer ce grade malgré qu'il soit associé à au moins une personne?") ) {
+    if ( confirm("Voulez vous vraiment supprimer ce grade malgrÃ© qu'il soit associÃ© Ã  au moins une personne?") ) {
         url="del_grade.php?G_GRADE="+code+"&user=on";
         self.location.href=url;
     }
@@ -157,7 +157,7 @@ function activGrade(code) {
 
         error : function(resultat, statut, erreur){
             console.log(erreur);
-            swal("La modification n'a pas été prise en compte. Veuillez réessayer plus tard.");
+            swal("La modification n'a pas Ã©tÃ© prise en compte. Veuillez rÃ©essayer plus tard.");
         }
 
     });

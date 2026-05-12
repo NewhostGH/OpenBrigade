@@ -42,7 +42,7 @@ function redirect(url) {
 verify_csrf('change_password');
 
 if ($new1 =="" ) {
-    write_msgbox("erreur mot de passe",$error_pic,"le nouveau mot de passe doit être renseigné <br><p align=center><input type='button' class='btn btn-secondary' value='Retour' onclick=\"redirect('".$url."');\">",30,30);
+    write_msgbox("erreur mot de passe",$error_pic,"le nouveau mot de passe doit Ãªtre renseignÃ© <br><p align=center><input type='button' class='btn btn-secondary' value='Retour' onclick=\"redirect('".$url."');\">",30,30);
     exit;
 }
 
@@ -68,7 +68,7 @@ if ( isset($_POST["current"]) ) {
 //======================
 
 elseif ($new1 <> $new2) {
-    write_msgbox("erreur mot de passe",$error_pic,"les 2 valeurs saisies pour le nouveau mot de passe sont différentes<br><p align=center><input type='button' class='btn btn-secondary' value='Retour' 
+    write_msgbox("erreur mot de passe",$error_pic,"les 2 valeurs saisies pour le nouveau mot de passe sont diffÃ©rentes<br><p align=center><input type='button' class='btn btn-secondary' value='Retour' 
     onclick=\"redirect('".$url."');\">",30,30);
     exit;
 }
@@ -79,7 +79,7 @@ elseif ($new1 <> $new2) {
 $pos = strpos($new1, $matricule);
 
 if (($pos == true ) or ( substr($new1,0,2) == substr($matricule,0,2)))  { 
-    write_msgbox("erreur mot de passe",$error_pic,"le mot de passe ne doit pas être basé sur votre identifiant.<br><p align=center><input type='button' class='btn btn-secondary' value='Retour' 
+    write_msgbox("erreur mot de passe",$error_pic,"le mot de passe ne doit pas Ãªtre basÃ© sur votre identifiant.<br><p align=center><input type='button' class='btn btn-secondary' value='Retour' 
     onclick=\"redirect('".$url."');\">",30,30);
     exit;
 }
@@ -96,8 +96,8 @@ if ( $password_quality > 0 ){
         exit;
   }
   if ($password_quality > 1 and ! preg_match("/\W/","$new1" )){
-        write_msgbox("erreur mot de passe",$error_pic,"le mot de passe doit aussi contenir au moins un caractère spécial, <br>parmi ceux-ci par
-        exemple:<p><b>!,@,#,$,%,^,&,*,?,_,~,£,µ,§,=,<br>é,è,ç,à,ù,>,<,€,\.,\;,\,+,-,¤,|</b><br><p align=center>
+        write_msgbox("erreur mot de passe",$error_pic,"le mot de passe doit aussi contenir au moins un caractÃ¨re spÃ©cial, <br>parmi ceux-ci par
+        exemple:<p><b>!,@,#,$,%,^,&,*,?,_,~,Â£,Âµ,Â§,=,<br>Ã©,Ã¨,Ã§,Ã ,Ã¹,>,<,â‚¬,\.,\;,\,+,-,Â¤,|</b><br><p align=center>
         <input type='button' class='btn btn-secondary' value='Retour' 
         onclick=\"redirect('".$url."');\">",30,30);
         exit;
@@ -116,7 +116,7 @@ if ( preg_match("/\"|\'/","$new1" )){
 
 if ( $password_length > 0 ){
     if (strlen("$new1") < $password_length ) {
-        write_msgbox("erreur mot de passe",$error_pic,"le mot de passe est trop court. Il doit avoir au moins $password_length caractères.<br><p align=center><input type='button' class='btn btn-secondary' 
+        write_msgbox("erreur mot de passe",$error_pic,"le mot de passe est trop court. Il doit avoir au moins $password_length caractÃ¨res.<br><p align=center><input type='button' class='btn btn-secondary' 
         value='Retour' onclick=\"redirect('".$url."');\">",30,30);
         exit;
     }
@@ -136,9 +136,9 @@ if ( $password_expiry_days > 0 ) {
 insert_log('UPDMDP', $id);
 echo "<p>";
 
-// lorsque admin vient de choisir son mot de passe la première fois, ouvrir la page configuration
+// lorsque admin vient de choisir son mot de passe la premiÃ¨re fois, ouvrir la page configuration
 if ( $already_configured == 0 and check_rights($id,14) and $id == 1 )
-    write_msgbox("changement réussi",$star_pic,"le mot de passe a été configuré avec succès<br><p align=center><input type='button' class='btn btn-primary' value='Continuer' 
+    write_msgbox("changement rÃ©ussi",$star_pic,"le mot de passe a Ã©tÃ© configurÃ© avec succÃ¨s<br><p align=center><input type='button' class='btn btn-primary' value='Continuer' 
             onclick=\"redirect('wizard.php');\">",30,30);
 else {
     $target = "upd_personnel.php?pompier=".$id;
@@ -148,7 +148,7 @@ else {
         $row=mysqli_fetch_array($result);
         if ( $row["P_ACCEPT_DATE"] == '' ) $target="charte.php";
     }
-    write_msgbox("changement réussi",$star_pic,"le mot de passe a été modifié avec succès<br><p align=center><input type='button' class='btn btn-secondary' value='Retour' 
+    write_msgbox("changement rÃ©ussi",$star_pic,"le mot de passe a Ã©tÃ© modifiÃ© avec succÃ¨s<br><p align=center><input type='button' class='btn btn-secondary' value='Retour' 
             onclick=\"redirect('".$target."');\">",30,30);
 }
 writefoot();

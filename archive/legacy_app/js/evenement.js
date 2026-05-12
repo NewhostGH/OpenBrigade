@@ -1,17 +1,17 @@
 
 function bouton_redirect(cible, action) {
     if ( action == 'delete' ) {
-        if ( confirm ("Attention : vous allez supprimer cet événement du calendrier. Voulez vous continuer ?" ))
+        if ( confirm ("Attention : vous allez supprimer cet Ã©vÃ©nement du calendrier. Voulez vous continuer ?" ))
             confirmed=1;
         else return;
     }
     if ( action == 'copy_old' ) {
-        if ( confirm ("Attention : vous allez dupliquer cet événement du calendrier.\nVous pourrez modifier les paramètres (date, heure, lieu ...).\nVoulez vous continuer ?" ))
+        if ( confirm ("Attention : vous allez dupliquer cet Ã©vÃ©nement du calendrier.\nVous pourrez modifier les paramÃ¨tres (date, heure, lieu ...).\nVoulez vous continuer ?" ))
             confirmed=1;
         else return;
     }
     if ( action == 'renfort' ) {
-        if ( confirm ("Attention : vous allez créer un renfort pour cet événement.\nVous pourrez modifier les paramètres (section organisatrice, personnel requis ...).\nVoulez vous continuer ?" ))
+        if ( confirm ("Attention : vous allez crÃ©er un renfort pour cet Ã©vÃ©nement.\nVous pourrez modifier les paramÃ¨tres (section organisatrice, personnel requis ...).\nVoulez vous continuer ?" ))
             confirmed=1;
         else return;
     }
@@ -112,7 +112,7 @@ function savenbmat(evenement, ec, mid, htmldiv, textfield) {
         nbValue = 0;
     }
     $('#modal_nombre_'+mid).modal('hide');
-    htmldiv.innerHTML = nbValue + ' unités';
+    htmldiv.innerHTML = nbValue + ' unitÃ©s';
     blink(htmldiv,nbValue);
     $.post('evenement_materiel_add.php',{evenement: evenement, MA_ID: mid, action: 'nb', EC: ec, nb: nbValue });
     return true;
@@ -124,7 +124,7 @@ function savenbconso(evenement, cid, ecid, htmldiv, textfield) {
         nbValue = 0;
     }
     $('#modal_nombre_'+ecid).modal('hide');
-    htmldiv.innerHTML = nbValue + ' unités';
+    htmldiv.innerHTML = nbValue + ' unitÃ©s';
     blink(htmldiv,nbValue);
     $.post('evenement_consommable_add.php',{evenement: evenement, C_ID: cid, EC_ID: ecid, action: 'nb', nb: nbValue });
     return true;
@@ -138,7 +138,7 @@ function saveSP(evenement, pid, button, htmldiv) {
     setTimeout(function(){
         if ( NewState == 0 ) {
             htmldiv.style.color = '#dc3545'; //red
-            htmldiv.title = 'Engagé';
+            htmldiv.title = 'EngagÃ©';
         }
         if ( NewState == 1 ) {
             htmldiv.style.color = '#28a745'; //green
@@ -192,7 +192,7 @@ function saveequipe(evenement, selector, id, type, htmldiv) {
 }
 
 function cancel_renfort(evenement,renfort) {
-    if ( confirm("Vous allez détacher un renfort de cet événement\nLe renfort devra être annulé manuellement si nécessaire\nContinuer?"))
+    if ( confirm("Vous allez dÃ©tacher un renfort de cet Ã©vÃ©nement\nLe renfort devra Ãªtre annulÃ© manuellement si nÃ©cessaire\nContinuer?"))
                 confirmed = 1;
     else return;
     cible="evenement_inscription.php?evenement="+evenement+"&renfort="+renfort+"&action=cancel";
@@ -206,7 +206,7 @@ function updatenumber(element,evenement,number,value,defaultvalue) {
     for (i = 0; i < value.length; i++) {
         var c = value.charAt(i);
         if (((c < "0") || (c > "9"))) {
-            swalAlert ("Seul des numéros sont attendus: "+ value + " ne convient pas.");
+            swalAlert ("Seul des numÃ©ros sont attendus: "+ value + " ne convient pas.");
             obj.value = defaultvalue;
             return false;
         }
@@ -346,7 +346,7 @@ function savepiquet(evenement, folder, selector, htmldiv, popup) {
         var currentQualified = currentValue[0];
         var currentPid = currentValue[1];
         if ( currentQualified == 0 ) {
-            Pname = Pname + "<i class='fa fa-warning' style='color:orange; title = 'Attention : personne non qualifiée pour ce rôle'></i>"
+            Pname = Pname + "<i class='fa fa-warning' style='color:orange; title = 'Attention : personne non qualifiÃ©e pour ce rÃ´le'></i>"
         }
     }
     var res = selector.name.split("_");

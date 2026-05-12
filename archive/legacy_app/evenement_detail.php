@@ -62,7 +62,7 @@ else $top = 'top15';
 echo "<body class='".$top."'>";
 
 //=====================================================================
-// recupÈrer infos evenement
+// recup√©rer infos evenement
 //=====================================================================
 
 $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT, e.S_ID, te.TE_ICON, e.E_EQUIPE, e.E_PARENT
@@ -136,7 +136,7 @@ if ( $what == 'personnel' or $what == 'personnelexterne') {
             <div class='card-body graycard'>";
     echo "<table class='noBorder'>";
           
-    // filtre 1 : personnel sous ma responsabilitÈ
+    // filtre 1 : personnel sous ma responsabilit√©
     if (check_rights($id, 24)) {
         $allowed1="";
         $highestlevel=0;
@@ -153,7 +153,7 @@ if ( $what == 'personnel' or $what == 'personnelexterne') {
         if ( substr($allowed1,0,1) == ",") $allowed1=substr($allowed1,1);
     }
 
-    // filtre 2 : personnel habilitÈ
+    // filtre 2 : personnel habilit√©
     if ( $E_OPEN_TO_EXT == 1 and $what <> 'personnelexterne' ) {
         $allowed2="";
     }
@@ -223,7 +223,7 @@ if ( $what == 'personnel' or $what == 'personnelexterne') {
         // personnel externe: filtre company
         echo "<tr><td>
             <select id='company' name='company' style='max-width:350px;font-size:10pt;' class='selectpicker' data-style='btn btn-default' data-live-search='true' data-container='body'
-            onchange=\"filtercompany('$evenement',this.value);\" title='seules les entreprises ayant du personnel enregistrÈ apparaissent ici'>";
+            onchange=\"filtercompany('$evenement',this.value);\" title='seules les entreprises ayant du personnel enregistr√© apparaissent ici'>";
 
         if ( $company == -1 ) $selected ='selected'; else $selected='';
         echo "<option value='-1' $selected class='option-ebrigade'>... Pas de filtre par entreprise ...</option>";
@@ -234,7 +234,7 @@ if ( $what == 'personnel' or $what == 'personnelexterne') {
         echo "</tr>";
     }
 
-    // dÈj‡ inscrits
+    // d√©j√† inscrits
     $inscrits="0,";
     $query="select ep.P_ID from evenement_participation ep, evenement e
             where e.E_CODE=$evenement
@@ -339,7 +339,7 @@ if ( $what == 'personnel' or $what == 'personnelexterne') {
           </td>
           </tr>";
     if ( $limit > 0 and $num == $limit )
-            echo "<tr><td><i class= 'fa fa-exclamation-triangle fa-lg' style='color:orange'></i><small> Seules les $limit premiers noms sont affichÈs, choisissez des filtres pour restreindre la liste</small></td></tr>";
+            echo "<tr><td><i class= 'fa fa-exclamation-triangle fa-lg' style='color:orange'></i><small> Seules les $limit premiers noms sont affich√©s, choisissez des filtres pour restreindre la liste</small></td></tr>";
     echo "</table>";
     echo "</div>";
     write_debugbox($allowed1);
@@ -390,7 +390,7 @@ if ( $what == 'responsable' ) {
              and P_STATUT <> 'EXT'
              and S_ID in (".get_family("$organisateur").")";
              
-    // si antenne locale, ajouter les cadres du dÈpartement
+    // si antenne locale, ajouter les cadres du d√©partement
     if ( get_level("$organisateur") >= $nbmaxlevels -1 ) {
         $query .=" union select P_ID, P_PRENOM, P_NOM, S_CODE
              from pompier, section
@@ -413,7 +413,7 @@ if ( $what == 'responsable' ) {
              and section.S_ID in (".get_family("$organisateur").")";
     }
 
-    // si ÈvÈnement ouvert au personnel externe, permettre de sÈlectionner tous
+    // si √©v√©nement ouvert au personnel externe, permettre de s√©lectionner tous
     if ( $E_OPEN_TO_EXT == 1 ) {
         $query="select P_ID, P_PRENOM, P_NOM, S_CODE
              from pompier, section
@@ -423,7 +423,7 @@ if ( $what == 'responsable' ) {
              and P_STATUT <> 'EXT'";
     }
 
-    // ajouter les inscrits, qui doivent toujours pouvoir etre dÈsignÈs comme responsables
+    // ajouter les inscrits, qui doivent toujours pouvoir etre d√©sign√©s comme responsables
         $query .= " union select distinct p.P_ID, p.P_PRENOM, p.P_NOM, s.S_CODE
              from pompier p, evenement_participation ep , section s
              where s.S_ID = p.P_SECTION 
@@ -455,7 +455,7 @@ if ( $what == 'responsable' ) {
     echo "</div>";
 } 
 //=====================================================================
-// inscrire vÈhicules
+// inscrire v√©hicules
 //=====================================================================
 
 else if ( $what == 'vehicule'  and  $granted_vehicule ) {
@@ -507,10 +507,10 @@ else if ( $what == 'vehicule'  and  $granted_vehicule ) {
 
     echo "<div align=center>";
     echo "<table class='noBorder'>";
-    echo "<tr><td><span class='left10'><b>Engager VÈhicule</b></span></td></tr><tr></td>";
+    echo "<tr><td><span class='left10'><b>Engager V√©hicule</b></span></td></tr><tr></td>";
     echo "<td><select id='addvehicule' name='addvehicule' class='selectpicker' data-live-search='true' data-container='body' data-style='btn btn-default'
         onchange=\"inscrireV('".$evenement."','demande',document.getElementById('addvehicule').value)\">
-        <option value='0' selected class='option-ebrigade'>choix du vÈhicule</option>\n";
+        <option value='0' selected class='option-ebrigade'>choix du v√©hicule</option>\n";
         
     $prevS_ID=-1;
     while (custom_fetch_array($result)) {
@@ -529,7 +529,7 @@ else if ( $what == 'vehicule'  and  $granted_vehicule ) {
     echo "</div>";
 }    
 //=====================================================================
-// inscrire matÈriel
+// inscrire mat√©riel
 //=====================================================================
 else if ( $what == 'materiel' and  $granted_vehicule ) {
     $sectionfilter=true;
@@ -593,7 +593,7 @@ else if ( $what == 'materiel' and  $granted_vehicule ) {
             onchange=\"filtermateriel('$evenement','typemateriel',this.value);\">";
     if ( $type == 'ALL' ) $selected='selected';
     else $selected='';
-    echo "<option value='ALL' $selected class='option-ebrigade'>Tous types de matÈriel</option>";
+    echo "<option value='ALL' $selected class='option-ebrigade'>Tous types de mat√©riel</option>";
     $query2="select TM_ID, TM_CODE,TM_USAGE,TM_DESCRIPTION 
             from type_materiel 
             where TM_USAGE <> 'Habillement'
@@ -636,10 +636,10 @@ else if ( $what == 'materiel' and  $granted_vehicule ) {
     else $query .= " order by tm.TM_USAGE, tm.TM_CODE, m.MA_MODELE";
     $result=mysqli_query($dbc,$query);
 
-    echo "<tr><td><span class='left10'>MatÈriel ‡ engager</span></td></tr>";
+    echo "<tr><td><span class='left10'>Mat√©riel √† engager</span></td></tr>";
     echo "<tr><td><select id='addmateriel' name='addmateriel' class='selectpicker' data-container='body' data-style='btn btn-default' data-live-search='true' data-container='body'
           onchange=\"inscrireM('".$evenement."','demande',document.getElementById('addmateriel').value)\">
-        <option value='0' selected class='option-ebrigade'>Choix du matÈriel</option>\n";
+        <option value='0' selected class='option-ebrigade'>Choix du mat√©riel</option>\n";
     
     $prevS_ID=-1; $prevTM_USAGE="";
     while (custom_fetch_array($result)) {
@@ -656,7 +656,7 @@ else if ( $what == 'materiel' and  $granted_vehicule ) {
         $prevTM_USAGE=$TM_USAGE;
         if ( $MA_NB > 1 ) $add=" (".$MA_NB.")";
         else $add="";
-        if ( $elements >= 0 ) $add2=" (".$elements." ÈlÈments dans ce lot)";
+        if ( $elements >= 0 ) $add2=" (".$elements." √©l√©ments dans ce lot)";
         else $add2="";
         if ( $MA_NUMERO_SERIE <> "" ) $add.=" ".$MA_NUMERO_SERIE;
         echo "<option value='".$MA_ID."' class='materiel option-ebrigade'>".$TM_CODE." - ".$MA_MODELE.$add.$add2.". ".$MA_LIEU_STOCKAGE."</option>\n";
@@ -753,12 +753,12 @@ else if ( $what == 'consommables'  and  $granted_vehicule ) {
                 if ( $prevS_ID <> $S_ID  and  $nbsections == 0 ) echo "<OPTGROUP LABEL='".$S_CODE." - ".$S_DESCRIPTION."' class='categorie'>";
                 $prevS_ID=$S_ID;
                 $label .= " (stock ".$C_NOMBRE;
-                if ( $C_DATE_PEREMPTION <> "" ) $label .= " - pÈremption ".$C_DATE_PEREMPTION.")";
+                if ( $C_DATE_PEREMPTION <> "" ) $label .= " - p√©remption ".$C_DATE_PEREMPTION.")";
                 else $label .= " )";
                 echo "<option value='".$C_ID."' class='materiel' style='font-size:12px;'>".$label."</option>\n";
             }
             else {
-                // affiche catÈgorie
+                // affiche cat√©gorie
                 if ( $CC_NAME <> $prevCC_NAME) {
                     echo "<OPTGROUP LABEL=\"".$CC_NAME."\" class='categorie'>";
                 }
@@ -768,7 +768,7 @@ else if ( $what == 'consommables'  and  $granted_vehicule ) {
         }
         echo "</select>";
     }
-    else echo "<span class='left10'>Aucun produit trouvÈ</span>";
+    else echo "<span class='left10'>Aucun produit trouv√©</span>";
     echo "</td>";
     echo "</tr>";
     echo "</table>";

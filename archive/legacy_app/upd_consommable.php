@@ -120,8 +120,8 @@ else {
     $MA_PARENT=0;
 }
 
-// permettre les modifications si je suis habilité sur la fonctionnalité 71 au bon niveau
-// ou je suis habilité sur la fonctionnalité 24 )
+// permettre les modifications si je suis habilitÃ© sur la fonctionnalitÃ© 71 au bon niveau
+// ou je suis habilitÃ© sur la fonctionnalitÃ© 24 )
 if (check_rights($id, 71,"$S_ID")) $responsable_consommable=true;
 else $responsable_consommable=false;
 
@@ -226,7 +226,7 @@ if ( $C_NOMBRE < $C_MINIMUM ) $class="class=red12";
 else $class="class=green12";
 
 echo "<tr>
-            <td $class><b>Quantité</b> $asterisk</td>
+            <td $class><b>QuantitÃ©</b> $asterisk</td>
             <td align=left>
             <input type='text' name='quantity' id='quantity' maxlength='7' size='6' class='form-control form-control-sm' value='$C_NOMBRE' onchange='checkNumber(form.quantity,\"$C_NOMBRE\")' $disabled></td>";
 echo "</tr>";
@@ -234,7 +234,7 @@ echo "</tr>";
 //=====================================================================
 // stock minimum
 //=====================================================================
-$helpicon=" <a  href='#' title=\"Commander si le stock est inférieur à ce stock minimum\" >
+$helpicon=" <a  href='#' title=\"Commander si le stock est infÃ©rieur Ã  ce stock minimum\" >
         <i class='fa fa-question-circle fa-lg' ></i></a>";
 echo "<tr>
             <td><b>Stock minimum</b>".$helpicon."</td>
@@ -318,7 +318,7 @@ echo "<tr>
     </tr>";
 
 //=====================================================================
-// dates de péremption
+// dates de pÃ©remption
 //=====================================================================
 if ( $TC_PEREMPTION == 1 ) {
     $class='blue12';
@@ -328,7 +328,7 @@ if ( $TC_PEREMPTION == 1 ) {
         else $class='green12';
     }
     echo "<tr>
-            <td class=$class>Date de péremption</td>
+            <td class=$class>Date de pÃ©remption</td>
             <td align=left>
             <input type='text' name='C_DATE_PEREMPTION' id='C_DATE_PEREMPTION' maxlength='10' size='10' placeholder='JJ-MM-AAAA' value='".$C_DATE_PEREMPTION."' $disabled 
             class='datepicker datepicker2' data-provide='datepicker' onchange='checkDate2(this.form.C_DATE_PEREMPTION)' autocomplete='off'>
@@ -347,17 +347,17 @@ echo "</td>
       </tr>";
 
 //=====================================================================
-// dans  un lot de matériel
+// dans  un lot de matÃ©riel
 //=====================================================================
 if ( $action == 'update' ) {
     echo "<tr>
-                <td><b>Dans lot matériel</b></td>
+                <td><b>Dans lot matÃ©riel</b></td>
                 <td  align=left>";
     echo "<select id='numlot' name='numlot' $disabled class='selectpicker smalldropdown2' data-style='btn-default' data-container='body'>
                <option value='0' selected >--non--</option>\n";
 
 
-    // choix lot matériel (parent)
+    // choix lot matÃ©riel (parent)
     $query3="select m.MA_ID, m.MA_MODELE, tm.TM_CODE, m.MA_NUMERO_SERIE, s.S_CODE
          from materiel m, type_materiel tm, section s
             where s.S_ID= m.S_ID
@@ -369,7 +369,7 @@ if ( $action == 'update' ) {
          order by tm.TM_CODE, m.MA_MODELE";
     $result3=mysqli_query($dbc,$query3);
 
-    echo "<OPTGROUP class='categorie' label='Dans un lot de matériel'>";
+    echo "<OPTGROUP class='categorie' label='Dans un lot de matÃ©riel'>";
     while ($row3=@mysqli_fetch_array($result3)) {
         $_MA_ID=$row3["MA_ID"];
         $_TM_CODE=$row3["TM_CODE"];
@@ -413,7 +413,7 @@ if ( $C_ID > 0 ) {
         if ( $NB == 1 ) $t="1 utilisation";
         else $t=$NB." utilisations";
         echo "<td>
-        <input type='button' class='btn btn-default' value='$NB utilisation(s)' title='Voir toutes les utilisations qui ont été enregistrées pour ce produit'
+        <input type='button' class='btn btn-default' value='$NB utilisation(s)' title='Voir toutes les utilisations qui ont Ã©tÃ© enregistrÃ©es pour ce produit'
         onclick=\"redirect('evenement_consommable.php?cid=".$C_ID."');\" >
         </td>";
     }

@@ -26,12 +26,12 @@ $type=isset($_GET['filter2']) ? $_GET['filter2'] : '';
 $btContainer = "<div class='buttons-container'>";
 
 if ( check_rights($_SESSION['id'],2,$filter))
-$btContainer .= "<a href='#' class='btn btn-default btn-export' align=right><i style='color:#A6A6A6' class='far fa-file-excel fa-1x excel-hover' id='StartExcel' border='0' title='Exporter la liste des vÈhicules dans un fichier Excel' 
+$btContainer .= "<a href='#' class='btn btn-default btn-export' align=right><i style='color:#A6A6A6' class='far fa-file-excel fa-1x excel-hover' id='StartExcel' border='0' title='Exporter la liste des v√©hicules dans un fichier Excel' 
 onclick=\"window.open('vehicule_xls.php?filter=$filter&type=$type&subsections=$subsections&order=$order&old=$old&mad=$mad')\" /></i></a>";
 
 if ( check_rights($_SESSION['id'], 17)) {
     $btContainer .= "<span class='dropdown-right-mobile'><a class='btn btn-success' name='ajouter' onclick=\"bouton_redirect('ins_vehicule.php');\">
-                     <i class='fas fa-plus-circle' style='color:white'></i><span class='hide_mobile'> VÈhicule</span></a></span>";
+                     <i class='fas fa-plus-circle' style='color:white'></i><span class='hide_mobile'> V√©hicule</span></a></span>";
 }
 $btContainer.='</div>';
 writeBreadCrumb(null, null, null, $btContainer);
@@ -267,13 +267,13 @@ if ($tab == 1) {
     }
     echo "</select>";
 
-    // filtre seulement mis ‡ disposition
+    // filtre seulement mis √† disposition
     if ( $assoc ) {
         echo "";
         if ( $old == 1 ) $checked='checked';
         else $checked='';
         
-        echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>RÈformÈ</label>
+        echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>R√©form√©</label>
                 <label class='switch'>
                     <input type='checkbox' name='mad' id='mad' $checked class='ml-3'
                     onClick=\"orderfilter3('".$order."','".$filter."','".$filter2."', '".$subsections."',this)\"/>
@@ -319,24 +319,24 @@ if ($tab == 1) {
                 <th title='' data-field="immatriculation" data-sortable="true">Immat.</th>
                 <th title='' data-field="indicatif" data-sortable="true" class="hide_mobile">Indicatif</th>
                 <th title='' data-field="section" data-sortable="true" class="hide_mobile">Section</th>
-                <th title='' data-field="modele" data-sortable="true">ModËle</th>
+                <th title='' data-field="modele" data-sortable="true">Mod√®le</th>
                 <th title='' data-field="statut" data-sortable="true" class="hide_mobile">Statut</th>
-                <th title='' data-field="annee" data-sortable="true" class="hide_mobile">AnnÈe</th>
+                <th title='' data-field="annee" data-sortable="true" class="hide_mobile">Ann√©e</th>
                 <th title='' data-field="finassurance" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">Fin assur.</th>
                 <th title='' data-field="ct" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">Prochain CT</th>
-                <th title='' data-field="revision" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">RÈvision</th>
-                <th title="Date d'expiration du titre d'accËs" data-field="acces" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">AccËs</th>
-                <th title='KilomÈtrage actuel du vÈhicule/kilomÈtrage de la prochaine rÈvision' data-field="kmrevision" data-sortable="true" class="hide_mobile">km/rÈvis.</th>
-                <th title='VÈhicule ÈquipÈ pour rouler sur la neige' data-field="neige" data-sortable="true" class="hide_mobile tick-col" data-visible="false">Neige</th>
-                <th title='VÈhicule ÈquipÈ de climatisation' data-field="clim" data-sortable="true" class="hide_mobile tick-col" data-visible="false">Clim</th>
-                <th title='VÈhicule ÈquipÈ public address (diffusion sonore de message au micro)' data-field="pa" data-sortable="true" class="hide_mobile tick-col" data-visible="false">PA</th>
-                <th title="VÈhicule ÈquipÈ ÈquipÈ d'un crochet d'attelage (indiquant la possibilitÈ d'utiliser une remorque)" data-field="att" data-sortable="true" class="hide_mobile tick-col" data-visible="false">Att</th>
-                <th title='' data-field="affecte" data-sortable="true" class="hide_mobile">AffectÈ ‡</th>
+                <th title='' data-field="revision" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">R√©vision</th>
+                <th title="Date d'expiration du titre d'acc√®s" data-field="acces" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">Acc√®s</th>
+                <th title='Kilom√©trage actuel du v√©hicule/kilom√©trage de la prochaine r√©vision' data-field="kmrevision" data-sortable="true" class="hide_mobile">km/r√©vis.</th>
+                <th title='V√©hicule √©quip√© pour rouler sur la neige' data-field="neige" data-sortable="true" class="hide_mobile tick-col" data-visible="false">Neige</th>
+                <th title='V√©hicule √©quip√© de climatisation' data-field="clim" data-sortable="true" class="hide_mobile tick-col" data-visible="false">Clim</th>
+                <th title='V√©hicule √©quip√© public address (diffusion sonore de message au micro)' data-field="pa" data-sortable="true" class="hide_mobile tick-col" data-visible="false">PA</th>
+                <th title="V√©hicule √©quip√© √©quip√© d'un crochet d'attelage (indiquant la possibilit√© d'utiliser une remorque)" data-field="att" data-sortable="true" class="hide_mobile tick-col" data-visible="false">Att</th>
+                <th title='' data-field="affecte" data-sortable="true" class="hide_mobile">Affect√© √†</th>
                 <?php if ( $materiel == 1 ): ?>
                 <th title='' data-field="mat" data-sortable="true" class="hide_mobile tick-col">Mat.</th>
                 <?php endif ?>
                 <?php if ( $nbsections == 0 ): ?>
-                <th title="Mis ‡ disposition par <?php echo $cisname ?>" data-field="mad" data-sortable="true" class="hide_mobile tick-col" data-visible="false">M‡D</th>
+                <th title="Mis √† disposition par <?php echo $cisname ?>" data-field="mad" data-sortable="true" class="hide_mobile tick-col" data-visible="false">M√†D</th>
                 <?php endif ?>
             </tr>
         </thead>
@@ -347,7 +347,7 @@ if ($tab == 1) {
     $result3=mysqli_query($dbc,$query3);
     custom_fetch_array($result3);
 
-    echo "<span style='height: 36px;line-height: 30px;color: #333;margin-right: 1.6em;float: right;' title=\"Il y a ".$number." vÈhicules dans ".$section_name."\" >".$number." lignes</span>";
+    echo "<span style='height: 36px;line-height: 30px;color: #333;margin-right: 1.6em;float: right;' title=\"Il y a ".$number." v√©hicules dans ".$section_name."\" >".$number." lignes</span>";
     echo "</div>"
     ?>
 
@@ -449,7 +449,7 @@ if ($tab == 1) {
     <?php
     } // if $number > 0
     else {
-        echo "<span class=small>Aucun vÈhicule</span>";
+        echo "<span class=small>Aucun v√©hicule</span>";
     }
 }
 
@@ -518,7 +518,7 @@ if ($tab == 2) {
                     </div>";
         $responsive_padding = "responsive-padding";
     }
-    echo "<div align=right class='dropdown-right'><a href='#' class='btn btn-default' align=right><i class='far fa-file-excel fa-1x excel-hover' style='color:#A6A6A6' id='StartExcel' border='0' title='Exporter la liste du matÈriel dans un fichier Excel' 
+    echo "<div align=right class='dropdown-right'><a href='#' class='btn btn-default' align=right><i class='far fa-file-excel fa-1x excel-hover' style='color:#A6A6A6' id='StartExcel' border='0' title='Exporter la liste du mat√©riel dans un fichier Excel' 
           onclick=\"window.open('evenement_vehicule_xls.php?vehicule=".$vehicule."&filter=".$filter."subsections=".$subsections."&dtdb=".$dtdb."&dtfn=".$dtfn."')\" /></i></a></div></div></tr>";
 
     echo "<select id='filter' name='filter' class='selectpicker' ".datalive_search()." data-style='btn-default' data-container='body'
@@ -531,7 +531,7 @@ if ($tab == 2) {
    
     echo "<select id='vehicule' name='vehicule' class='selectpicker smalldropdown' data-style='btn-default' data-container='body'
         onchange=\"redirect( this.value ,'$filter', '$dtdb', '$dtfn', '$order', '$subsections', '$tab')\">";
-    echo "<option value='0' selected>Tous les vÈhicules</option>\n";
+    echo "<option value='0' selected>Tous les v√©hicules</option>\n";
     $query2="select distinct v.V_ID, v.TV_CODE, v.V_MODELE, v.V_IMMATRICULATION, s.S_DESCRIPTION, s.S_ID, s.S_CODE
         from vehicule v, section s
         where s.S_ID = v.S_ID";
@@ -595,10 +595,10 @@ if ($tab == 2) {
         echo "<tr>
             
             <td align=center>
-                <a href=vehicule.php?tab=2&order=evenement>EvÈnement ".spawn_chevron('evenement')."</a>
+                <a href=vehicule.php?tab=2&order=evenement>Ev√©nement ".spawn_chevron('evenement')."</a>
             </td>
             <td style='min-width: 68px;'>
-                <a href=vehicule.php?tab=2&order=vehicule>VÈhicule ".spawn_chevron('vehicule')."</a>
+                <a href=vehicule.php?tab=2&order=vehicule>V√©hicule ".spawn_chevron('vehicule')."</a>
             </td>
             <td class='hide_mobile'>
                 <a href=vehicule.php?tab=2&order=statut>Statut ".spawn_chevron('statut')."</a>
@@ -615,8 +615,8 @@ if ($tab == 2) {
         while (custom_fetch_array($result)) {
             if ( $EH_ID <> 1 and $EV_KM <> "") $EV_KM="-";
             if ( $EH_DATE_FIN == '') $EH_DATE_FIN = $EH_DATE_DEBUT;
-            if ( $E_CANCELED == 1 ) $label="<span class='badge' style='color:$widget_fgred; background-color:$widget_bgred; margin-left: -4px;'>ActivitÈ annulÈe</span>";
-            elseif ( $E_CLOSED == 1 ) $label="<span class='badge' style='color:$widget_fgorange; background-color:$widget_bgorange; margin-left: -4px;'>Inscriptions fermÈes</span>";
+            if ( $E_CANCELED == 1 ) $label="<span class='badge' style='color:$widget_fgred; background-color:$widget_bgred; margin-left: -4px;'>Activit√© annul√©e</span>";
+            elseif ( $E_CLOSED == 1 ) $label="<span class='badge' style='color:$widget_fgorange; background-color:$widget_bgorange; margin-left: -4px;'>Inscriptions ferm√©es</span>";
             else $label="<span class='badge' style='color:$widget_fggreen; background-color:$widget_bggreen; margin-left: -4px;'>Inscriptions ouvertes</span>";
       
             $tmp=explode ( "-",$EH_DATE_DEBUT); $day1=$tmp[0]; $month1=$tmp[1]; $year1=$tmp[2];
@@ -636,7 +636,7 @@ if ($tab == 2) {
             $removelink="";
             if (( check_rights($_SESSION['id'], 15)) and ( is_children($S_ID,$mysection))) {
                 $removelink="<a class='btn btn-default btn-action' href=evenement_vehicule_add.php?evenement=".$E_CODE."&action=remove&V_ID=".$V_ID."&from=vehicule&dtdb=$dtdb&dtfn=$dtfn&order=$order&vehicule=$vehicule>
-                        <i class='fa fa-trash-alt' title='DÈsengager ce vÈhicule' ></i></a>";
+                        <i class='fa fa-trash-alt' title='D√©sengager ce v√©hicule' ></i></a>";
             }
             echo"<tr onclick=\"bouton_redirect('evenement_display.php?evenement=$E_CODE&from=vehicule');\">";
             $sectioninfo="(".$S_DESCRIPTION.")";
@@ -664,11 +664,11 @@ if ($tab == 2) {
                 $fgcolor=$widget_fgred;
                 $bgcolor=$widget_bgred;
                 if($assur_perim and $ct_perim)
-                    $VP_LIBELLE = "Assurance et contrÙle technique pÈrimÈ";
+                    $VP_LIBELLE = "Assurance et contr√¥le technique p√©rim√©";
                 elseif($assur_perim)
-                    $VP_LIBELLE = "Assurance pÈrimÈe";
+                    $VP_LIBELLE = "Assurance p√©rim√©e";
                 else
-                    $VP_LIBELLE = "ContrÙle technique pÈrimÈ";
+                    $VP_LIBELLE = "Contr√¥le technique p√©rim√©";
             }
             else if ( $VP_OPERATIONNEL == 2) {
                 $fgcolor=$widget_fgorange;
@@ -677,7 +677,7 @@ if ($tab == 2) {
             else if (( my_date_diff(getnow(),$V_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
                 $fgcolor=$widget_fgorange;
                 $bgcolor=$widget_bgorange;
-                $VP_LIBELLE = "RÈvision ‡ faire";
+                $VP_LIBELLE = "R√©vision √† faire";
             }  
             else {
                 $fgcolor=$widget_fggreen;
@@ -688,9 +688,9 @@ if ($tab == 2) {
             $nb = get_nb_engagements('V', $V_ID, $year1, $month1, $day1, $year2, $month2, $day2, $E_CODE);
             //$nb=1;
             if ( $nb > 1 ) 
-                $myimg="<i class='fa fa-circle' style='color:red;' title='attention ce vÈhicule est parallËlement engagÈ sur $nb autres ÈvÈnements'></i>";
+                $myimg="<i class='fa fa-circle' style='color:red;' title='attention ce v√©hicule est parall√®lement engag√© sur $nb autres √©v√©nements'></i>";
             else if ( $nb == 1 )
-                $myimg="<i class='fa fa-circle' style='color:orange;' title='attention ce vÈhicule est parallËlement engagÈ sur 1 autre ÈvÈnement'></i>";
+                $myimg="<i class='fa fa-circle' style='color:orange;' title='attention ce v√©hicule est parall√®lement engag√© sur 1 autre √©v√©nement'></i>";
             else $myimg="";
      
             echo "<td><a href='upd_vehicule.php?vid=$V_ID' style='color: inherit'>
@@ -707,7 +707,7 @@ if ($tab == 2) {
         echo "</table></div>";
         echo "<div style='margin-left: 50%; transform:translateX(-50%)'>".@$later."</div>";
     } else {
-        echo "<p><b>Aucun engagement ne correspond aux critËres choisis</b>";
+        echo "<p><b>Aucun engagement ne correspond aux crit√®res choisis</b>";
     }
 }
 writefoot();

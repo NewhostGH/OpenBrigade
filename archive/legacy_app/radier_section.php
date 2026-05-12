@@ -51,7 +51,7 @@ $query="update section set S_INACTIVE=1 where S_ID=".$S_ID ;
 $result=mysqli_query($dbc,$query);
 
 //=====================================================================
-// mise à jour personnel
+// mise Ã  jour personnel
 //=====================================================================
 
 $query="select P_ID from pompier where P_SECTION =".$S_ID." and P_OLD_MEMBER=0 and P_STATUT <> 'EXT'" ;

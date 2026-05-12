@@ -46,24 +46,24 @@ $out="<div align=center><table class='noBorder'>";
 if (  $NBE > 0 ) {
     $out .= "<tr><td>";
     if ( $showlist == 1 )
-        $out .= "<i class='fa fa-minus-square' style='color:red;'  title='Masquer la liste des équipes' ></i></td>
-        <td><a href='sitac.php?evenement=".$evenement."&showlist=0&gps=".$gps."&autorefresh=".$autorefresh."'>Masquer liste des équipes</a>";
+        $out .= "<i class='fa fa-minus-square' style='color:red;'  title='Masquer la liste des Ã©quipes' ></i></td>
+        <td><a href='sitac.php?evenement=".$evenement."&showlist=0&gps=".$gps."&autorefresh=".$autorefresh."'>Masquer liste des Ã©quipes</a>";
     else
-        $out .= "<i class='fa fa-plus-square' style='color:green;'  title='Afficher la liste des équipes à droite' ></i></td>
-        <td><a href='sitac.php?evenement=".$evenement."&showlist=1&gps=".$gps."&autorefresh=".$autorefresh."'>Afficher liste des équipes</a>";
+        $out .= "<i class='fa fa-plus-square' style='color:green;'  title='Afficher la liste des Ã©quipes Ã  droite' ></i></td>
+        <td><a href='sitac.php?evenement=".$evenement."&showlist=1&gps=".$gps."&autorefresh=".$autorefresh."'>Afficher liste des Ã©quipes</a>";
     $out .= "</td></tr>";
 }
 if ( $gps == 1 ) 
-    $out .= "<tr><td><i class='fa fa-minus-square' style='color:red;'  title='Masquer le personnel géolocalisé par GPS' ></i></td>
-    <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=0&autorefresh=".$autorefresh."'>Masquer personnel géolocalisé GPS</a></td></tr>";
+    $out .= "<tr><td><i class='fa fa-minus-square' style='color:red;'  title='Masquer le personnel gÃ©olocalisÃ© par GPS' ></i></td>
+    <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=0&autorefresh=".$autorefresh."'>Masquer personnel gÃ©olocalisÃ© GPS</a></td></tr>";
 else
-    $out .= "<tr><td><i class='fa fa-plus-square' style='color:green;' title='Afficher le personnel géolocalisé par GPS'></i></td>
-    <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=1&autorefresh=".$autorefresh."'>Afficher personnel géolocalisé GPS</a></td></tr>";
+    $out .= "<tr><td><i class='fa fa-plus-square' style='color:green;' title='Afficher le personnel gÃ©olocalisÃ© par GPS'></i></td>
+    <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=1&autorefresh=".$autorefresh."'>Afficher personnel gÃ©olocalisÃ© GPS</a></td></tr>";
 
-$out .= "<tr><td><i class='fa fa-redo fa-lg' title='Rafraîchissement automatique.'></i></td>
-     <td><select name='autorefresh_select' onchange=\"redirect_to('sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."',this.value);\" title='Paramètres du Rafraîchissement automatique.'>";
+$out .= "<tr><td><i class='fa fa-redo fa-lg' title='RafraÃ®chissement automatique.'></i></td>
+     <td><select name='autorefresh_select' onchange=\"redirect_to('sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."',this.value);\" title='ParamÃ¨tres du RafraÃ®chissement automatique.'>";
 if ( $autorefresh == 0 ) $selected='selected'; else $selected='';
-$out .= "\n<option value='0' $selected>Pas de rafraîchissement automatique</option>";
+$out .= "\n<option value='0' $selected>Pas de rafraÃ®chissement automatique</option>";
 if ( $autorefresh == 10 ) $selected='selected'; else $selected='';
 $out .= "\n<option value='10' $selected>Toutes les 10 secondes</option>";
 if ( $autorefresh == 20 ) $selected='selected'; else $selected='';
@@ -86,17 +86,17 @@ $out .= "\n</select></td></tr>";
 
 if ( $granted_event  and $autorefresh == 0 )
     $out .= "<tr><td><img src='images/red.png' border=0></a></td>
-        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=1' title='ajouter un point de tracé' >
-        Ajouter un point sur le tracé rouge</a></td></tr>
+        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=1' title='ajouter un point de tracÃ©' >
+        Ajouter un point sur le tracÃ© rouge</a></td></tr>
         <tr><td><img src='images/blue.png' border=0></a></td>
-        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=2' title='ajouter un point de tracé' >
-        Ajouter un point sur le tracé bleu</a></td></tr>
+        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=2' title='ajouter un point de tracÃ©' >
+        Ajouter un point sur le tracÃ© bleu</a></td></tr>
         <tr><td><img src='images/green.png' border=0></a></td>
-        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=3' title='ajouter un point de tracé' >
-        Ajouter un point sur le tracé vert</a></td></tr>
+        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=3' title='ajouter un point de tracÃ©' >
+        Ajouter un point sur le tracÃ© vert</a></td></tr>
         <tr><td><img src='images/yellow.png' border=0></a></td>
-        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=4' title='ajouter un point de tracé' >
-        Ajouter un point sur le tracé jaune</a></td></tr>
+        <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addmarker=4' title='ajouter un point de tracÃ©' >
+        Ajouter un point sur le tracÃ© jaune</a></td></tr>
         <tr><td><img src='images/marker.png' class='img-max-20' border=0></a></td>
         <td><a href='sitac.php?evenement=".$evenement."&showlist=".$showlist."&gps=".$gps."&addflag=1' title='ajouter un point particulier' >
         Ajouter un point particulier</a></td></tr>";

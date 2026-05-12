@@ -136,7 +136,7 @@ while ($row=@mysqli_fetch_array($result1)) {
         });
         ";
     }
-    // point de centrage par défaut sur la dernière personne trouvée
+    // point de centrage par dÃ©faut sur la derniÃ¨re personne trouvÃ©e
     $center_lat=$L_LAT;
     $center_lng=$L_LNG;
 }
@@ -236,7 +236,7 @@ else {
     // personnel
     $query1="select distinct p.P_ID, p.P_NOM , p.P_PRENOM, p.P_SEXE, p.P_HIDE,
              p.P_SECTION, s.S_CODE, s.S_ID, p.P_PHOTO, g.LAT, g.LNG, ADDRESS,
-             date_format(g.DATE_LOC, '%d-%m à %H:%i') DATE_LOC";
+             date_format(g.DATE_LOC, '%d-%m Ã  %H:%i') DATE_LOC";
             
     $query1 .=" from pompier p, section s, gps g";
     if ( $competences and intval($competence) > 0 ) 
@@ -255,10 +255,10 @@ else {
     else {
           $query1 .= " and p.P_SECTION =".$filter;
     }
-    // ajout numéros de téléphones
+    // ajout numÃ©ros de tÃ©lÃ©phones
     $query1 .=" union select distinct P_ID, null as P_NOM, null as P_PRENOM, 'Z' as P_SEXE, 0 as P_HIDE,
                 null as P_SECTION, null as S_CODE, null as S_ID, null as P_PHOTO, LAT, LNG, ADDRESS,
-                date_format(DATE_LOC, '%d-%m à %H:%i') DATE_LOC
+                date_format(DATE_LOC, '%d-%m Ã  %H:%i') DATE_LOC
                 from gps 
                 where P_ID > 1000000
                 and TIMESTAMPDIFF(MINUTE,DATE_LOC,NOW()) < ".$time;
@@ -329,7 +329,7 @@ if ($num_sections[0] > 1) {
         $prevEQ_ID=0;
         echo "<option value=0";
         if ($competence == 0 ) echo " selected ";
-        echo ">Pas de filtre sur les compétences</option>";
+        echo ">Pas de filtre sur les compÃ©tences</option>";
         while ($row=@mysqli_fetch_array($result2)) {
             $PS_ID=$row["PS_ID"];
             $EQ_ID=$row["EQ_ID"];
@@ -351,7 +351,7 @@ if ( $center_lat != 0 ) {
 }
 else {
     echo "<div class='table-responsive'><div class='col-sm-12' align='center'><div class='alert alert-blue' style='margin-top: 60px;'>
-        Pas de données de personnel à afficher</div></div>";
+        Pas de donnÃ©es de personnel Ã  afficher</div></div>";
 }
 echo "</div>";
 writefoot();

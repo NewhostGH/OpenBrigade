@@ -50,7 +50,7 @@ if ( $nbsections == 0 ) {
     display_children2(-1, 0, $filter, $maxL, $sectionorder);
     echo "</select></div>";
 }
-// si caserne simple alors affichage par défaut section=0 + les sous sections
+// si caserne simple alors affichage par dÃ©faut section=0 + les sous sections
 else $filter=0;
 
 $mySections = get_family("$filter");
@@ -58,7 +58,7 @@ $mySections = get_family("$filter");
 if ( $evenement == 0 and $gardes == 1) $evenement=get_garde_jour($filter,0,0);
 if ( $evenement == 0 ) {
     echo "<p>";
-    write_msgbox("Garde du jour non trouvée", $warning_pic, "Le tableau de garde n'a pas été créé pour le mois en cours ou n'est pas disponible.",10,0);
+    write_msgbox("Garde du jour non trouvÃ©e", $warning_pic, "Le tableau de garde n'a pas Ã©tÃ© crÃ©Ã© pour le mois en cours ou n'est pas disponible.",10,0);
 }
 
 //=====================================================================
@@ -225,7 +225,7 @@ function get_personnel_garde($col) {
         if ( $num == $col ) {
             if ($col <> 1 ) $n++;
             if ( $col <> 2 ) $j++;
-            if ( $astreinte > 0 ) $detail="<i class='fa fa-exclamation-triangle' style='color:orange;' title='Astreinte (garde non rémunérée)'></i>";
+            if ( $astreinte > 0 ) $detail="<i class='fa fa-exclamation-triangle' style='color:orange;' title='Astreinte (garde non rÃ©munÃ©rÃ©e)'></i>";
             else $detail="";
             if ( $status == 0 and  $statut == 'SPP' ) $detail .=" <span class=smallblue title='Garde avec le statut SPV'> SPV</span>";
             elseif ($num == 3 and $status == 1  and $statut =='SPP') $detail .=" <span class=smallblue title='Garde avec le statut SPV pour une partie de la garde'> SPP/SPV</span>";
@@ -234,7 +234,7 @@ function get_personnel_garde($col) {
             if ( $statut == 'SPP' ) $class = 'red12';
             else $class = 'blue12';
             if ( $num == 3 ) {
-                // cas spécial horaires partiels sur 24h
+                // cas spÃ©cial horaires partiels sur 24h
                 if ( $fin == @$EH_FIN["1"] ) $fin = @$EH_FIN["2"];
             }
             if ( $debut <> "" ) $detail .= " <span class=smallblack style='background:lightgrey;'>".$debut."-".$fin."</span>";
@@ -359,7 +359,7 @@ if ( intval($evenement) > 0 ) {
     $tmp=explode ( "-",$date_deb); $year1=$tmp[0]; $month1=$tmp[1]; $day1=$tmp[2];
     $date_garde = date_fran($month1, $day1 ,$year1)." ".moislettres($month1)." ".$year1;
 
-    // entête
+    // entÃªte
     $logo=get_logo();
     $maxheight=70;
     $body = "<div></div>";
@@ -369,7 +369,7 @@ if ( intval($evenement) > 0 ) {
     $garde_veille=get_garde_jour($filter, $E_EQUIPE, $date_veille);
     if ( $garde_veille  > 0 )
         $body .=  " <label class='btn btn-default' class='noprint' onclick='javascript:self.location.href=\"feuille_garde.php?evenement=$garde_veille&filter=$filter&from=gardes\";'>
-                        <i class='fa fa-chevron-left fa-lg noprint' title='Garde précédente , ".date('d-m-Y', strtotime($date_veille))."'></i>
+                        <i class='fa fa-chevron-left fa-lg noprint' title='Garde prÃ©cÃ©dente , ".date('d-m-Y', strtotime($date_veille))."'></i>
                         </label>";
                         
     $body  .= " <strong>".date('d-m-Y', strtotime($date_deb))."</strong> ";

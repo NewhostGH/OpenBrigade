@@ -36,8 +36,8 @@ $buttons_container .= " <a class='btn btn-default' href='#'><i class='far fa-fil
         onclick=\"window.open('qualifications_xls.php?filter=$filter&typequalif=$typequalif&subsections=$subsections&competence=$competence')\" ></i></a>";
 
 if (check_rights($id, 18))
-    $buttons_container .= " <span class='dropdown-right-mobile'><a class='btn btn-success ' value='Ajouter' title='Ajouter une compétence'
-        onclick=\"self.location.href=('parametrage.php?tab=1&child=7&ope=add');\"><i class=\"fas fa-plus-circle\" style='color:white'></i><span class='hide_mobile'> Compétence</span></a></span>";
+    $buttons_container .= " <span class='dropdown-right-mobile'><a class='btn btn-success ' value='Ajouter' title='Ajouter une compÃ©tence'
+        onclick=\"self.location.href=('parametrage.php?tab=1&child=7&ope=add');\"><i class=\"fas fa-plus-circle\" style='color:white'></i><span class='hide_mobile'> CompÃ©tence</span></a></span>";
     
 $buttons_container .= "</div>";
 
@@ -71,10 +71,10 @@ $MYP_ID=intval($pompier);
 if (is_iphone()) $small_device=true;
 else $small_device=false;
 
-$title="Compétences";
+$title="CompÃ©tences";
 
 // ===============================================
-// listes déroulantes de choix
+// listes dÃ©roulantes de choix
 // ===============================================
 if ( $MYP_ID == 0 ) {
     $query2="select p.PS_ID, p.TYPE, p.PS_EXPIRABLE, p.DAYS_WARNING, p.DESCRIPTION as COMMENT
@@ -173,10 +173,10 @@ if ( $MYP_ID == 0 ) {
         $action_comp = 'default';
     
     if ( $action_comp == 'update' and intval($competence) > 0) {
-        echo "<br><center><b>Modification des compétences ".$TYPE." - ".$DESCRIPTION." </b></center>";
+        echo "<br><center><b>Modification des compÃ©tences ".$TYPE." - ".$DESCRIPTION." </b></center>";
     }
     else {
-        // choix type de compétence
+        // choix type de compÃ©tence
         echo "<select id='typequalif' name='typequalif' class='selectpicker smalldropdown2 ' data-style='btn-default' data-container='body'
             onchange=\"displaymanager('0','".$order."','".$filter."',document.getElementById('typequalif').value,'".$subsections."','".$from."','0', '".$loadURL."')\">";
         $query3="select EQ_ID, EQ_NOM from equipe";
@@ -189,10 +189,10 @@ if ( $MYP_ID == 0 ) {
         }
         echo "</select>";
         
-        // filtre compétence
+        // filtre compÃ©tence
         echo "
           <select id='competence' name='competence' class='selectpicker smalldropdown2 ' data-live-search='true' data-style='btn-default' data-container='body'
-            title='Choisir une compétence pour montrer seulement le personnel qualifié pour cette compétence'
+            title='Choisir une compÃ©tence pour montrer seulement le personnel qualifiÃ© pour cette compÃ©tence'
             onchange=\"displaymanager('0','".$order."','".$filter."','".$typequalif."','".$subsections."','".$from."',document.getElementById('competence').value, '".$loadURL."')\">";
         $query3="select PS_ID, TYPE, DESCRIPTION, PS_EXPIRABLE, DAYS_WARNING from poste ";
         if ( $typequalif > 0 ) $query3 .=" where EQ_ID=".$typequalif;
@@ -231,20 +231,20 @@ if ( $MYP_ID == 0 ) {
 // ===============================================
 if ( $MYP_ID == 0 ) {
     if ($typequalif == 0 ) {
-        write_msgbox("Erreur", $warning_pic, "Le nombre de compétences est trop élevé. Seul la page excel peut être affichée.<br>Ou choisissez un type de compétences.",10,0);
+        write_msgbox("Erreur", $warning_pic, "Le nombre de compÃ©tences est trop Ã©levÃ©. Seul la page excel peut Ãªtre affichÃ©e.<br>Ou choisissez un type de compÃ©tences.",10,0);
     }
     else {
-        echo "<div class='container' align=center><strong>Compétence</strong> 
-            Principale <i class='fa fa-circle' style='color:$widget_fggreen;' title='Compétence principale valide'></i>
-            Secondaire <i class='fa fa-circle' style='color:$widget_fgblue;' title='Compétence secondaire valide'></i>
-            Expirée <i class='fa fa-circle' style='color:$widget_fgred;' title='Compétence expirée'></i>
-            Bientôt expirée <i class='fa fa-circle' style='color:$widget_fgorange;' title='Compétence bientôt expirée'></i>
+        echo "<div class='container' align=center><strong>CompÃ©tence</strong> 
+            Principale <i class='fa fa-circle' style='color:$widget_fggreen;' title='CompÃ©tence principale valide'></i>
+            Secondaire <i class='fa fa-circle' style='color:$widget_fgblue;' title='CompÃ©tence secondaire valide'></i>
+            ExpirÃ©e <i class='fa fa-circle' style='color:$widget_fgred;' title='CompÃ©tence expirÃ©e'></i>
+            BientÃ´t expirÃ©e <i class='fa fa-circle' style='color:$widget_fgorange;' title='CompÃ©tence bientÃ´t expirÃ©e'></i>
             </div>";
         
          echo "</table><div class='container-fluid'>";
          echo "<div class='col-sm-12'>";
         // ===============================================
-        // tout le personnel - modification une compétence 
+        // tout le personnel - modification une compÃ©tence 
         // ===============================================
         if ( $competence > 0 and $action_comp == 'update' ) {
             echo "<form name = 'chqualif2' id='chqualif2' action='save_qualif2.php' method='POST'>";
@@ -272,11 +272,11 @@ if ( $MYP_ID == 0 ) {
                 echo "<tr id='row_".$P_ID."'>";
                 if ($Q_VAL == 1 ) {
                     $checked1='checked';
-                    $myimg="<i class='fa fa-circle' style='color:$widget_fggreen;'  title='compétence principale'></i>";
+                    $myimg="<i class='fa fa-circle' style='color:$widget_fggreen;'  title='compÃ©tence principale'></i>";
                 }
                 else if ($Q_VAL == 2 ) {
                     $checked2='checked';
-                    $myimg="<i class='fa fa-circle' style='color:$widget_fgblue;'  title='compétence secondaire'></i>";
+                    $myimg="<i class='fa fa-circle' style='color:$widget_fgblue;'  title='compÃ©tence secondaire'></i>";
                 }
                 else {
                     $checked0='checked';
@@ -285,7 +285,7 @@ if ( $MYP_ID == 0 ) {
                 
                 if ( $Q_EXPIRATION == '00-00-0000' ) $Q_EXPIRATION='';
                 if ( $Q_EXPIRATION <> '') {
-                    if ($NB <= 0) $myimg="<i class='fa fa-circle' style='color:$widget_fgred;' title='date expiration dépassée' ></i>";
+                    if ($NB <= 0) $myimg="<i class='fa fa-circle' style='color:$widget_fgred;' title='date expiration dÃ©passÃ©e' ></i>";
                     else if ($NB < $DAYS_WARNING ) $myimg="<i class='fa fa-circle' style='color:$widget_fgorange;' title='expiration dans $NB jours'></i>";
                 }
                 
@@ -335,9 +335,9 @@ if ( $MYP_ID == 0 ) {
             $later='';
             echo "<div align=center>
                     <input type='submit' class='btn btn-success' value='Sauvegarder' 
-                    title=\"Sauver les qualifications saisies pour cette compétence ".":\n".$TYPE." - ".$DESCRIPTION."\">
+                    title=\"Sauver les qualifications saisies pour cette compÃ©tence ".":\n".$TYPE." - ".$DESCRIPTION."\">
                     <input type='button' class='btn btn-secondary' value='Retour' 
-                        title=\"Annuler et retour à la page précédente \" onclick=\"redirect3();\"></div>";
+                        title=\"Annuler et retour Ã  la page prÃ©cÃ©dente \" onclick=\"redirect3();\"></div>";
         }
 
         // ===============================================
@@ -351,7 +351,7 @@ if ( $MYP_ID == 0 ) {
             $query_k .= " group by e.EQ_ID, e.EQ_NOM order by p.PS_ORDER";
             $result_k=mysqli_query($dbc,$query_k);
             if ( $number == 0 ) {
-                echo "<small><i>Aucune personne trouvée</i></small>";
+                echo "<small><i>Aucune personne trouvÃ©e</i></small>";
             }
             else {
                 echo "</div>";
@@ -416,19 +416,19 @@ if ( $MYP_ID == 0 ) {
                         if (mysqli_num_rows($result3) > 0) {
                             custom_fetch_array($result3);
                             if ( $Q_VAL == 1 ) {
-                                $mypic="<i class='fa fa-circle' style='color:$widget_fggreen;' title='compétence principale'></i>";
+                                $mypic="<i class='fa fa-circle' style='color:$widget_fggreen;' title='compÃ©tence principale'></i>";
                                 $selected1="selected";
                                 $selected2="";
                             }
                             if ( $Q_VAL == 2 ) {
-                                $mypic="<i class='fa fa-circle' style='color:$widget_fgblue;' title='compétence secondaire'></i>";
+                                $mypic="<i class='fa fa-circle' style='color:$widget_fgblue;' title='compÃ©tence secondaire'></i>";
                                 $selected1="";
                                 $selected2="selected";
                             }
                             $selected0="";
                             if ( $Q_EXPIRATION <> '') {
                                 if ($NB < $DAYS_WARNING) $mypic="<i class='fa fa-circle' style='color:$widget_fgorange;' title='expiration dans $NB jours'></i>";
-                                if ($NB <= 0) $mypic="<i class='fa fa-circle' style='color:$widget_fgred;' title='date expiration dépassée' ></i>";
+                                if ($NB <= 0) $mypic="<i class='fa fa-circle' style='color:$widget_fgred;' title='date expiration dÃ©passÃ©e' ></i>";
                             }
                         }
                         else {
@@ -487,7 +487,7 @@ if ( $MYP_ID == 0 ) {
 
 else { // mode update one
     $THE_SECTION=get_section_of("$MYP_ID");
-    // permission de modifier les compétences?
+    // permission de modifier les compÃ©tences?
     $competence_allowed=false;
     $query="select distinct F_ID from poste order by F_ID";
     $result=mysqli_query($dbc,$query);
@@ -502,7 +502,7 @@ else { // mode update one
 
     echo "<form name = 'chqualif' id='chqualif' action='save_qualif.php' method='POST'>";
     print insert_csrf('qualif');
-    // choix type compétence
+    // choix type compÃ©tence
     echo "<p><div class='div-decal-left' align=left><select id='filter_one' name='filter_one' class='selectpicker' data-style='btn-default' data-container='body'
             onchange=\"displaymanager3('".$MYP_ID."', document.getElementById('filter_one').value,'".$from."', '".$loadURL."')\">";
     $query3="select EQ_ID, EQ_NOM from equipe";
@@ -515,7 +515,7 @@ else { // mode update one
         echo "<option value='".$EQ_ID."' $selected>".$EQ_NOM."</option>\n";
     }
     echo "</select></div>";
-    if ( $disabled_base == 'disabled' ) echo "<i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgorange;'></i> <font size=1><i>Attention seules les compétences que vous avez le droit de modifier apparaissent</i></font><p>";
+    if ( $disabled_base == 'disabled' ) echo "<i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgorange;'></i> <font size=1><i>Attention seules les compÃ©tences que vous avez le droit de modifier apparaissent</i></font><p>";
     echo "<input name='typequalif' type='hidden' value=".$typequalif.">";
     echo "<input name='pompier' type='hidden' value=".$MYP_ID.">";
     echo "<input name='order' type='hidden' value=".$order.">";
@@ -552,11 +552,11 @@ else { // mode update one
             $Q_VAL=intval($Q_VAL);
             if ($Q_VAL == 1 ) {
                 $checked1='checked';
-                $myimg="<i class='fa fa-circle' style='color:$widget_fggreen;'  title='compétence principale'></i>";
+                $myimg="<i class='fa fa-circle' style='color:$widget_fggreen;'  title='compÃ©tence principale'></i>";
             }
             else if ($Q_VAL == 2 ) {
                 $checked2='checked';
-                $myimg="<i class='fa fa-circle' style='color:$widget_fgblue;'  title='compétence secondaire'></i>";
+                $myimg="<i class='fa fa-circle' style='color:$widget_fgblue;'  title='compÃ©tence secondaire'></i>";
             }
             else {
                 $checked0='checked';
@@ -565,7 +565,7 @@ else { // mode update one
             if ( $Q_EXPIRATION == '00-00-0000' ) $Q_EXPIRATION='';
             if ( $Q_EXPIRATION <> '') {
                 if ($NB < $DAYS_WARNING ) $myimg="<i class='fa fa-circle' style='color:$widget_fgorange;'  title='expiration dans $NB jours'></i>";
-                if ($NB <= 0) $myimg="<i class='fa fa-circle' style='color:$widget_fgred;' title='date expiration dépassée' ></i>";
+                if ($NB <= 0) $myimg="<i class='fa fa-circle' style='color:$widget_fgred;' title='date expiration dÃ©passÃ©e' ></i>";
             }
             if ( $EQ_NOM <> $OLDEQ_NOM) {
                 $OLDEQ_NOM =  $EQ_NOM;
@@ -579,10 +579,10 @@ else { // mode update one
                     $for_who = "pour ".my_ucfirst(get_prenom($MYP_ID))." ".strtoupper(get_nom($MYP_ID));
 
                 echo "<table cellspacing=0 border=0 class='newTableAll' style='margin-bottom:10px;'";
-                echo "<tr><td colspan=2 >Compétence ($EQ_NOM) $for_who</td>
+                echo "<tr><td colspan=2 >CompÃ©tence ($EQ_NOM) $for_who</td>
                            <td class='hide_mobile'></td>
-                           <td align=center style='width:2%'><span>1ère</span></td>
-                           <td align=center style='width:2%'><span>2ème</span></td>
+                           <td align=center style='width:2%'><span>1Ã¨re</span></td>
+                           <td align=center style='width:2%'><span>2Ã¨me</span></td>
                            <td align=center style='width:2%'><span>Non</span></td>
                            <td align=center style='width:10%'><span>Expiration</span></td>";
             }

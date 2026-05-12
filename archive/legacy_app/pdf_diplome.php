@@ -28,7 +28,7 @@ $mode=intval($_GET["mode"]);
 if ( isset($_GET["P_ID"])) $pid=intval($_GET["P_ID"]);
 else $pid=0;
 
-// dates et infos événement
+// dates et infos Ã©vÃ©nement
 $query = "SELECT e.PS_ID, DATE_FORMAT(eh.EH_DATE_DEBUT, '%d-%m-%Y') as EH_DATE_DEBUT,
           DATE_FORMAT(eh.EH_DATE_FIN, '%d-%m-%Y') as EH_DATE_FIN, e.E_LIEU,
           s.S_DESCRIPTION, s.S_ID, s.S_CODE, s.S_CITY, p.TYPE, p.PS_NATIONAL, p.PS_SECOURISME,
@@ -59,12 +59,12 @@ while ($row = mysqli_fetch_array($result)) {
 
 if ( $mode == 3 and  ! $printfulldiplome and ! $print_image ) $mode=4;
 
-// verification si paramétrage existe
+// verification si paramÃ©trage existe
 $query="select count(1) as NB from diplome_param where PS_ID=".$psid;
 $result = mysqli_query($dbc,$query); 
 $row = mysqli_fetch_array($result);
 if ( $row["NB"] == 0 ) {
-    write_msgbox("paramétrage incomplet", $error_pic, "Le paramétrage de l'impression des diplômes n'est pas fait pour cette compétence.",10,0);
+    write_msgbox("paramÃ©trage incomplet", $error_pic, "Le paramÃ©trage de l'impression des diplÃ´mes n'est pas fait pour cette compÃ©tence.",10,0);
     exit;
 }
 
@@ -81,7 +81,7 @@ if ( $id == $pid and $mode == 4)
 //sinon permission 48 requise
 else {
     check_all(48);
-    // vérifier les permissions pour cette section ou national
+    // vÃ©rifier les permissions pour cette section ou national
     if ( $national == 1 ) {
         if (! check_rights($id, 48, "0" )) check_all(24);
     }
@@ -105,7 +105,7 @@ $taille_org=array(8,9,10,11,12,14,16,18);
 $style_org=array("","B","I","BI");    
 $police_org=array("Courier","Arial","Times");
 
-// paramétrage global ou local?
+// paramÃ©trage global ou local?
 if ( get_level("$S_ID") + 1 == $nbmaxlevels ) $section_diplome=get_section_parent($S_ID);
 else $section_diplome=$S_ID;
 $query="select count(1) as NB from diplome_param where PS_ID=".$psid." and S_ID=".$section_diplome;
@@ -114,7 +114,7 @@ $row = mysqli_fetch_array($result);
 if ( $row["NB"] > 0 ) $sid=$section_diplome;
 else $sid=0;
 
-// paramétrage impression
+// paramÃ©trage impression
 $query="select FIELD,ACTIF,AFFICHAGE,TAILLE,STYLE,
                POLICE,POS_X,POS_Y,ANNEXE 
                from diplome_param where PS_ID=".$psid." and S_ID=".$sid;
@@ -193,7 +193,7 @@ while($data = mysqli_fetch_array($result)) {
         $pdf->SetDrawColor(237,242,247);
         $pdf->SetFillColor(255,255,255);
 
-        if ( $affichage[$j]=='12' and  $actif[$j] == 1 ) { // importer une image de la signature du Président
+        if ( $affichage[$j]=='12' and  $actif[$j] == 1 ) { // importer une image de la signature du PrÃ©sident
             $query2="select S_IMAGE_SIGNATURE from section where S_ID=0";
             $result2 = mysqli_query($dbc,$query2); 
             $row2 = mysqli_fetch_array($result2);
@@ -225,7 +225,7 @@ while($data = mysqli_fetch_array($result)) {
             else if ($affichage[$j]=='16') $aff=$lieu;
             else if ($affichage[$j]=='17') if ( $mode > 1 ) $aff=$data["ANNEE"]." ".$data['PF_DIPLOME']; else $aff="";
             else if ($affichage[$j]=='18') $aff=$evenement;
-            else if ($affichage[$j]=='19' and  $actif[$j] == 1 ) { // Nom du Président national
+            else if ($affichage[$j]=='19' and  $actif[$j] == 1 ) { // Nom du PrÃ©sident national
                 $query2="select p.P_PRENOM, p.P_NOM from pompier p , section_role sr
                         where p.P_ID = sr.P_ID
                         and sr.GP_ID = 102
@@ -237,7 +237,7 @@ while($data = mysqli_fetch_array($result)) {
             $pdf->SetXY($pos_x[$j],$pos_y[$j]);
             $taille=$edi_taille[$j];
             if ($affichage[$j]<='2' or $affichage[$j] == 5 or $affichage[$j] == '16') {
-            // diminution de la taille de la Police si le nom et prénom sont trop grand
+            // diminution de la taille de la Police si le nom et prÃ©nom sont trop grand
                 if (strlen($aff)>=36) $taille=$taille -3 ;
                 else if (strlen($aff)>=24) $taille=$taille -2 ;
             };

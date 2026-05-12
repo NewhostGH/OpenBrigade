@@ -49,7 +49,7 @@ echo "</head>";
 echo "<body class='top50'>";
       
 //=====================================================================
-// recupérer infos evenement
+// recupÃ©rer infos evenement
 //=====================================================================
 
 $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT, e.S_ID, te.TE_ICON, e.E_EQUIPE, e.E_PARENT

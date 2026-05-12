@@ -37,10 +37,10 @@ if ($ope == 'edit') {
 $query1="select PH_CODE, PH_NAME, PH_HIDE_LOWER, PH_UPDATE_LOWER_EXPIRY, PH_UPDATE_MANDATORY from poste_hierarchie order by PH_CODE asc";
 $result1=mysqli_query($dbc,$query1);
 $number=mysqli_num_rows($result1);
-$title="Hiérarchies de Compétences";
+$title="HiÃ©rarchies de CompÃ©tences";
 echo "<div class='dropdown-right' align=right>";
-echo "<a class='btn btn-success' value='Ajouter' name='ajouter' title='Ajouter une hiérarchie' 
-        onclick=\"bouton_redirect('parametrage.php?tab=1&child=9&ope=edit');\"><i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> Hiérarchie</span></a></div>";
+echo "<a class='btn btn-success' value='Ajouter' name='ajouter' title='Ajouter une hiÃ©rarchie' 
+        onclick=\"bouton_redirect('parametrage.php?tab=1&child=9&ope=edit');\"><i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> HiÃ©rarchie</span></a></div>";
 
 
 if ( $number > 0 ) {
@@ -51,9 +51,9 @@ if ( $number > 0 ) {
     // premiere ligne du tableau
     // ===============================================
 
-    $t1="\"Montrer seulement la compétence la plus haute de la hiérarchie pour une personne sur les événements, masquer les autres\"";
-    $t2="\"En cas de mise à jour de la date d'expiration sur une compétence de la hiérarchie, la mise à jour automatique des dates des compétences inférieures est possible.\"";
-    $t3="\"La validation des compétences inférieures est obligatoire, si non cochée elle reste facultative sur les événements formations.\"";
+    $t1="\"Montrer seulement la compÃ©tence la plus haute de la hiÃ©rarchie pour une personne sur les Ã©vÃ©nements, masquer les autres\"";
+    $t2="\"En cas de mise Ã  jour de la date d'expiration sur une compÃ©tence de la hiÃ©rarchie, la mise Ã  jour automatique des dates des compÃ©tences infÃ©rieures est possible.\"";
+    $t3="\"La validation des compÃ©tences infÃ©rieures est obligatoire, si non cochÃ©e elle reste facultative sur les Ã©vÃ©nements formations.\"";
 
     echo "<tr>";
     echo "<td>Code</td>";
@@ -61,7 +61,7 @@ if ( $number > 0 ) {
     echo "<td width=60 align=center title=$t1 class='hide_mobile'>Masquer</td>";
     echo "<td width=60 align=center title=$t2 class='hide_mobile'>Date</td>";
     echo "<td width=60 align=center title=$t3 class='hide_mobile'>Obligatoire</td>";
-    echo "<td>Compétences de la hiérarchie (niveau croissant)</td>";
+    echo "<td>CompÃ©tences de la hiÃ©rarchie (niveau croissant)</td>";
     echo "</tr>";
 
     // ===============================================
@@ -94,7 +94,7 @@ if ( $number > 0 ) {
         echo "<td align=center class='hide_mobile'>$update</td>";
         echo "<td align=center class='hide_mobile'>$mandatory</td>";
         
-        // compétences
+        // compÃ©tences
         $query2="select PS_ID, TYPE, PH_LEVEL from poste where PH_CODE='".$PH_CODE."' order by PH_LEVEL asc";
         $result2=mysqli_query($dbc,$query2);
         $string = "";

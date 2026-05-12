@@ -16,7 +16,7 @@
   # You should have received a copy of the GNU General Public License
   # along with this program; if not, write to the Free Software
   # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-@header('Content-Type: text/html; charset=windows-1252');//une ligne à ajouter pour résoudre le problème d'encodage avec Ajax
+@header('Content-Type: text/html; charset=windows-1252');//une ligne Ã  ajouter pour rÃ©soudre le problÃ¨me d'encodage avec Ajax
 //=====================================================================
 // effectuer un remplacement sur tableau de garde
 //=====================================================================
@@ -35,13 +35,13 @@ function replace_personnel($evenement,$eh_id,$replaced,$substitute){
             where E_CODE=".$E." and P_ID=".$R.$queryadd;
     $result=mysqli_query($dbc,$query);
     
-    $query="update evenement_participation set EP_COMMENT = \"A été remplacé ".$cmt."\"
+    $query="update evenement_participation set EP_COMMENT = \"A Ã©tÃ© remplacÃ© ".$cmt."\"
             where E_CODE=".$E." and P_ID=".$R;
     $result=mysqli_query($dbc,$query);
     
-    // ajouter le remplaçant
+    // ajouter le remplaÃ§ant
     $query="insert into evenement_participation(E_CODE, EH_ID, P_ID, EP_COMMENT, EP_DATE, EP_DATE_DEBUT, EP_DATE_FIN, EP_DEBUT, EP_FIN, EP_BY, EP_DUREE)
-    select ".$E.",EH_ID, ".$S.",\"Ajouté pour faire un remplacement ".$cmt.".\", NOW(), EP_DATE_DEBUT, EP_DATE_FIN, EP_DEBUT, EP_FIN,".$_SESSION['id'].", EP_DUREE
+    select ".$E.",EH_ID, ".$S.",\"AjoutÃ© pour faire un remplacement ".$cmt.".\", NOW(), EP_DATE_DEBUT, EP_DATE_FIN, EP_DEBUT, EP_FIN,".$_SESSION['id'].", EP_DUREE
     from evenement_participation
     where E_CODE=".$E.$queryadd."
     and P_ID=".$R;
@@ -95,36 +95,36 @@ function replace_notify($evenement,$eh_id,$status,$replaced,$substitute) {
     
     if ( $status == 'requested' ) {
         $subject="Nouvelle demande de remplacement ".$te." du ".$date." pour ".$replaced_name;
-        $message="Bonjour,\nUne demande de remplacement a été enregistrée pour ".$replaced_name.", sur ".$te." du ".$date.$period.".";
-        if ( intval($substitute) > 0 ) $message .="\nLe remplaçant proposé est ".$substitute_name.".";
-        $message .="\nCette demande a été enregistrée par ".$by_name.".\n";
+        $message="Bonjour,\nUne demande de remplacement a Ã©tÃ© enregistrÃ©e pour ".$replaced_name.", sur ".$te." du ".$date.$period.".";
+        if ( intval($substitute) > 0 ) $message .="\nLe remplaÃ§ant proposÃ© est ".$substitute_name.".";
+        $message .="\nCette demande a Ã©tÃ© enregistrÃ©e par ".$by_name.".\n";
     }
     else if ( $status == 'accepted' ) {
-        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." acceptée par le remplaçant";
+        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." acceptÃ©e par le remplaÃ§ant";
         $message="Bonjour,\nConcernant la demande de remplacement de ".$replaced_name.", sur ".$te." du ".$date.$period.".";
-        if ( intval($substitute) > 0 ) $message .="\nLe remplaçant proposé ".$substitute_name." a accepté.";
+        if ( intval($substitute) > 0 ) $message .="\nLe remplaÃ§ant proposÃ© ".$substitute_name." a acceptÃ©.";
     }
     else if ( $status == 'refused' ) {
-        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." refusée par le remplaçant";
+        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." refusÃ©e par le remplaÃ§ant";
         $message="Bonjour,\nConcernant la demande de remplacement de ".$replaced_name.", sur ".$te." du ".$date.$period.".";
-        if ( intval($substitute) > 0 ) $message .="\nLe remplaçant proposé ".$substitute_name." a refusé.";
+        if ( intval($substitute) > 0 ) $message .="\nLe remplaÃ§ant proposÃ© ".$substitute_name." a refusÃ©.";
     }
     else if ( $status == 'approved' ) {
-        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." approuvée";
-        $message="Bonjour,\nLe remplacement de ".$replaced_name.", sur ".$te." du ".$date.$period." est approuvé.";
-        if ( intval($substitute) > 0 ) $message .="\nLe remplaçant est ".$substitute_name;
-        $message .="\nEnregistré par ".$by_name.".\n";
+        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." approuvÃ©e";
+        $message="Bonjour,\nLe remplacement de ".$replaced_name.", sur ".$te." du ".$date.$period." est approuvÃ©.";
+        if ( intval($substitute) > 0 ) $message .="\nLe remplaÃ§ant est ".$substitute_name;
+        $message .="\nEnregistrÃ© par ".$by_name.".\n";
     }
     else if ( $status == 'rejected' ) {
-        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." rejetée";
-        $message="Bonjour,\nLe remplacement de ".$replaced_name.", sur ".$te." du ".$date.$period." est rejeté.";
-        if ( intval($substitute) > 0 ) $message .="\nLe remplaçant est ".$substitute_name.".";
-        $message .="\nEnregistrée par ".$by_name.".\n";
+        $subject="Demande de remplacement ".$te." du ".$date." pour ".$replaced_name." rejetÃ©e";
+        $message="Bonjour,\nLe remplacement de ".$replaced_name.", sur ".$te." du ".$date.$period." est rejetÃ©.";
+        if ( intval($substitute) > 0 ) $message .="\nLe remplaÃ§ant est ".$substitute_name.".";
+        $message .="\nEnregistrÃ©e par ".$by_name.".\n";
     }
     
     $url=get_plain_url($cisurl);
     $siteurl = "http://".$url."/index.php?evenement=".$evenement;
-    $message  .= "\n<a href=".$siteurl." title='cliquer pour voir le détail'>".$te." : ".$libelle."</a>.\n\n";
+    $message  .= "\n<a href=".$siteurl." title='cliquer pour voir le dÃ©tail'>".$te." : ".$libelle."</a>.\n\n";
     if ( $assoc or $army ) $perm=21;
     else $perm=60;
     
@@ -141,12 +141,12 @@ function replace_notify($evenement,$eh_id,$status,$replaced,$substitute) {
 }
   
 //=====================================================================
-// est ce qu'un pompier donné est absent un jour donné ?
+// est ce qu'un pompier donnÃ© est absent un jour donnÃ© ?
 //=====================================================================
 
 function is_out($P_ID, $year, $month, $day) {
     global $dbc;
-    // absence enregistrée ?
+    // absence enregistrÃ©e ?
     $query="select count(1) as NB from indisponibilite where P_ID =".$P_ID."
                  and I_DEBUT <= '".$year."-".$month."-".$day."'
          and I_FIN >= '".$year."-".$month."-".$day."'
@@ -220,11 +220,11 @@ function table_remplacements($evenement, $status, $date1, $date2 , $replaced = 0
             if ( $gardes ) $H .= "<th width=20></th>";
             $H .= "<th style='padding: 12px 5px 12px 5px'>Date</th>";
             if ( $assoc or $army ) 
-                $H .= "<th class='hide_mobile'>Activité</th>";
+                $H .= "<th class='hide_mobile'>ActivitÃ©</th>";
         }
         $H .= "<th >A remplacer</th>
-                <th class='hide_mobile'>Remplaçant proposé</th>";
-        if ( $gardes ) $H.= "<th width=100>Période</th>";
+                <th class='hide_mobile'>RemplaÃ§ant proposÃ©</th>";
+        if ( $gardes ) $H.= "<th width=100>PÃ©riode</th>";
         $H.= "<th class='hide_mobile'>Date Demande</th>
                 <th>Statut</th>
                 <th class='hide_mobile'>Date statut</th>
@@ -273,40 +273,40 @@ function table_remplacements($evenement, $status, $date1, $date2 , $replaced = 0
             $widget_bgorange = '#fff4de';
 
             if ( $approved == 1 ) {
-                $status='Approuvé';
+                $status='ApprouvÃ©';
                 $fgcolor=$widget_fggreen;
                 $bgcolor=$widget_bggreen;
-                $t='Approuvé par '.$approved_by;
+                $t='ApprouvÃ© par '.$approved_by;
                 $status_date=$date_approve;
             }
             else if ( $rejected == 1 ) {
-                $status='Rejeté';
+                $status='RejetÃ©';
                 $fgcolor=$widget_fgred;
                 $bgcolor=$widget_bgred;
-                $t='Demande de remplacement rejetée';
+                $t='Demande de remplacement rejetÃ©e';
                 $status_date=$date_reject;
             }
             else if ( $accepted == 1 ) {
-                $status='Accepté par le rempaçant';
+                $status='AcceptÃ© par le rempaÃ§ant';
                 $fgcolor=$widget_fgblue;
                 $bgcolor=$widget_bgblue;
-                $t="Accepté par le rempaçant, mais le remplacement n'est pas encore approuvé";
+                $t="AcceptÃ© par le rempaÃ§ant, mais le remplacement n'est pas encore approuvÃ©";
                 $status_date=$date_accept;
             }
             else {
-                $status='Demandé';
+                $status='DemandÃ©';
                 $fgcolor=$widget_fgorange;
                 $bgcolor=$widget_bgorange;
-                $t='Le remplacement a été demandé';
+                $t='Le remplacement a Ã©tÃ© demandÃ©';
                 $status_date="";
             }
             $link = "evenement_display.php?tab=56&evenement=$evt&rid=$rid";
             $H .= "<tr class='newTable-tr' onclick='self.location.href=\"$link\"'>";
             if ( $evenement == 0 ) {
                 if ( $gardes ) $H .= "<td>".$img."</td>";
-                $H .= "<td class=''><a href=evenement_display.php?tab=2&evenement=".$evt." title='voir événement'>".$date_garde."</a></td>";
+                $H .= "<td class=''><a href=evenement_display.php?tab=2&evenement=".$evt." title='voir Ã©vÃ©nement'>".$date_garde."</a></td>";
                 if ($assoc or $army )
-                    $H .= "<td class='widget-text hide_mobile'><a href=evenement_display.php?tab=2&evenement=".$evt." title=\"voir cet événement ".$te_code."\" class='small2'>".$libelle."</a></td>";
+                    $H .= "<td class='widget-text hide_mobile'><a href=evenement_display.php?tab=2&evenement=".$evt." title=\"voir cet Ã©vÃ©nement ".$te_code."\" class='small2'>".$libelle."</a></td>";
             }
             $H .= "<td class='widget-text'>".$grade_replaced." <a href='upd_personnel.php?pompier=".$row["REPLACED"]."'>".$replaced."</a></td>
             <td class='widget-text hide_mobile'>".$grade_substitute." <a href='upd_personnel.php?pompier=".$row["SUBSTITUTE"]."'>".$substitute."</a></td>";
@@ -333,8 +333,8 @@ function table_remplacements($evenement, $status, $date1, $date2 , $replaced = 0
         }
     }
     else {
-        if ( $assoc or $army ) $t="l'activité concernée";
-        else $t="la garde concernée";
+        if ( $assoc or $army ) $t="l'activitÃ© concernÃ©e";
+        else $t="la garde concernÃ©e";
         $H .= "<span class=small>Pour ajouter une demande de remplacement ouvrir $t, onglet remplacements </span>";
     }
     return $H;
@@ -371,7 +371,7 @@ function get_garde_jour($section=0, $eqid=0, $date=0) {
 }
 
 //=====================================================================
-// quelle est la section de garde pour un jour donné ?
+// quelle est la section de garde pour un jour donnÃ© ?
 //=====================================================================
 
 function get_section_pro_jour($eqid, $year, $month, $day, $period='J') {
@@ -413,7 +413,7 @@ function get_section_pro_jour($eqid, $year, $month, $day, $period='J') {
 }
 
 //=====================================================================
-// compte le personnel SPP pour la période J, N 
+// compte le personnel SPP pour la pÃ©riode J, N 
 //=====================================================================
 function count_personnel_spp_jour($year, $month, $day, $type, $section) {
     global $dbc;
@@ -436,7 +436,7 @@ function count_personnel_spp_jour($year, $month, $day, $type, $section) {
 }    
 
 //=====================================================================
-// compétences requises pour la garde
+// compÃ©tences requises pour la garde
 //=====================================================================
 function show_competences($garde, $partie) {
     global $dbc,$red,$green;
@@ -536,10 +536,10 @@ function display_subgroup($status, $T, $year, $month, $day, $evenement, $section
     else if ( $T == 'I' and $disponibilites ) $comment='indisponible';
     else $comment = '';
     // $status=SPP ou SPV ou BEN 
-    // couleur pour lignes sélectionnées
+    // couleur pour lignes sÃ©lectionnÃ©es
     $mycolor2='#00FF00';
     
-    // déjà inscrits
+    // dÃ©jÃ  inscrits
     $inscritsJ=explode(",",get_inscrits_garde($evenement,1,$status));
     $inscritsN=explode(",",get_inscrits_garde($evenement,2,$status));
     $nb_parties=get_nb_sessions($evenement);
@@ -554,7 +554,7 @@ function display_subgroup($status, $T, $year, $month, $day, $evenement, $section
         $family=get_family("$centre");
         $limit_cis_sp=" and p.P_SECTION in (".$family.")";
     }
-    // trouver les autres gardes du jour, pour éviter d'engager sur gardes caserne et FDF le même jour
+    // trouver les autres gardes du jour, pour Ã©viter d'engager sur gardes caserne et FDF le mÃªme jour
     $query1="select distinct e.E_CODE from evenement e, evenement_horaire eh 
            where e.E_CODE=eh.E_CODE and e.TE_CODE='GAR'
            and eh.EH_DATE_DEBUT='".$year."-".$month."-".$day."'
@@ -566,7 +566,7 @@ function display_subgroup($status, $T, $year, $month, $day, $evenement, $section
     }
     $other_gardes=rtrim($other_gardes,',');
     
-    // gardes de hier, qui était déjà de garde?
+    // gardes de hier, qui Ã©tait dÃ©jÃ  de garde?
     $from_unix_time = mktime(0, 0, 0, $month, $day, $year);
     $day_before = strtotime("yesterday", $from_unix_time);
     $formatted = date('Y-m-d', $day_before);
@@ -699,7 +699,7 @@ function display_subgroup($status, $T, $year, $month, $day, $evenement, $section
         if ( $P_STATUT == 'SPP' and $status == 'SPV') $class='SPPV';
         else $class=$P_STATUT;
         
-        if ( $P_STATUT == 'SPP' and $status <> 'SPV' ) $regime="<span class=small title='Régime de travail $P_REGIME'>(".$P_REGIME.")</span>";
+        if ( $P_STATUT == 'SPP' and $status <> 'SPV' ) $regime="<span class=small title='RÃ©gime de travail $P_REGIME'>(".$P_REGIME.")</span>";
         else $regime="";
 
         $g="";
@@ -714,16 +714,16 @@ function display_subgroup($status, $T, $year, $month, $day, $evenement, $section
         $widget_fgorange = '#ffa800';
         
         if (is_out($P_ID, $year, $month, $day)) {
-            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgred' title='ATTENTION Absence enregistrée ce jour'></i>";
+            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgred' title='ATTENTION Absence enregistrÃ©e ce jour'></i>";
         }
         if (in_array($P_ID, $inscrits_hier)) {
-            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgorange' title='ATTENTION Déjà de garde la nuit précédente'></i>";
+            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgorange' title='ATTENTION DÃ©jÃ  de garde la nuit prÃ©cÃ©dente'></i>";
         }
         if (in_array($P_ID, $inscrits_demain)) {
-            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgblue' title='ATTENTION Déjà prévu de garde jour demain '></i>";
+            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgblue' title='ATTENTION DÃ©jÃ  prÃ©vu de garde jour demain '></i>";
         }
         if ($OTHER_GARDE > 0) {
-            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgred' title='ATTENTION Déjà engagé sur autre garde'></i>";
+            $comment .=" <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgred' title='ATTENTION DÃ©jÃ  engagÃ© sur autre garde'></i>";
             $mycolor='lightgrey';
         }
         
@@ -744,7 +744,7 @@ function display_subgroup($status, $T, $year, $month, $day, $evenement, $section
         
         $nb_heures=get_heures_gardes($P_ID,$year,$month);
         if ( $nb_heures == 0 ) $nb_heures='';
-        else $nb_heures="<span class=badge title=\"Nombre d'heures de gardes attribuées ce mois\">".$nb_heures."</span>";
+        else $nb_heures="<span class=badge title=\"Nombre d'heures de gardes attribuÃ©es ce mois\">".$nb_heures."</span>";
         if ( $DISPO == 30 ) {
             $check24=1; 
         }
@@ -775,7 +775,7 @@ function desinscrire_garde($evenement, $old_inscrits, $new_inscrits, $partie, $y
             if (! in_array($pid, $new_inscrits)) {
                 $nb=0;
                 $pid_statut=get_statut($pid);
-                // Attention si les indisponibles sont masqués, on ne les désinscrit pas
+                // Attention si les indisponibles sont masquÃ©s, on ne les dÃ©sinscrit pas
                 if ( $pid_statut == 'SPP' and $show_spp == 1 ) $nb = 1;
                 else if ( $pid_statut <> 'SPP' and $show_indispos == 1) $nb = 1;
                 else if (  $pid_statut <> 'SPP' ) {
@@ -798,7 +798,7 @@ function desinscrire_garde($evenement, $old_inscrits, $new_inscrits, $partie, $y
 }
 
 //=====================================================================
-// Nombre d'heures de gardes attribuées ce mois
+// Nombre d'heures de gardes attribuÃ©es ce mois
 //=====================================================================
 function get_heures_gardes($pid,$year,$month) {
     global $dbc;
@@ -834,19 +834,19 @@ function dispo_label($DISPO) {
     else if ( $DISPO == 25 ) $label = " - disponible 12h nuit";
     else if ( $DISPO == 5 ) $label = " - disponible 12h jour";
     else if ( $DISPO == 10 ) $label = " - disponible matin et soir";
-    else if ( $DISPO == 13 ) $label = " - disponible après-midi et soir";
+    else if ( $DISPO == 13 ) $label = " - disponible aprÃ¨s-midi et soir";
     else if ( $DISPO == 17 ) $label = " - disponible matin et nuit";
-    else if ( $DISPO == 20 ) $label = " - disponible après-midi et nuit";
+    else if ( $DISPO == 20 ) $label = " - disponible aprÃ¨s-midi et nuit";
     // 6h
     else if ( $DISPO == 1 ) $label = " - disponible matin seulement";
-    else if ( $DISPO == 4 ) $label = " - disponible après-midi seulement";
+    else if ( $DISPO == 4 ) $label = " - disponible aprÃ¨s-midi seulement";
     else if ( $DISPO == 9 ) $label = " - disponible soir seulement";
     else if ( $DISPO == 16 ) $label = " - disponible nuit seulement";
     // 18h
-    else if ( $DISPO == 14 ) $label = " - disponible matin, après-midi et soir";
-    else if ( $DISPO == 21 ) $label = " - disponible matin, après-midi et nuit";
+    else if ( $DISPO == 14 ) $label = " - disponible matin, aprÃ¨s-midi et soir";
+    else if ( $DISPO == 21 ) $label = " - disponible matin, aprÃ¨s-midi et nuit";
     else if ( $DISPO == 26 ) $label = " - disponible matin, soir et nuit";
-    else if ( $DISPO == 29 ) $label = " - disponible après-midi, soir et nuit";
+    else if ( $DISPO == 29 ) $label = " - disponible aprÃ¨s-midi, soir et nuit";
     else $label="";
     
     return $label;
@@ -1020,7 +1020,7 @@ function get_reminder ($P_ID, $F_ID){
 // =======================================================================================
 function display_postes ($evenement, $vehicule, $showjour=true, $shownuit=true, $print_mode=false) {
     global $dbc, $mylightcolor, $grades, $grades_imgdir;
-    //Session utilisée pour que le fonctionnement de l'ajax se fait convenablement vu que le contenu des variables globales n'est pas visible dans l'appel ajax
+    //Session utilisÃ©e pour que le fonctionnement de l'ajax se fait convenablement vu que le contenu des variables globales n'est pas visible dans l'appel ajax
     if ( isset($_SESSION['comps'])) $comps=$_SESSION['comps'];
     else $comps=array();
     if ( isset($_SESSION['personnel'])) $personnel=$_SESSION['personnel'];
@@ -1068,8 +1068,8 @@ function display_postes ($evenement, $vehicule, $showjour=true, $shownuit=true, 
         $alert="";
 
         if ( $PS_ID > 0 )
-            $cmt = "<i class ='fa fa-exclamation-triangle' title=\"compétence requise ".$COMPETENCE." - ".$DESCRIPTION."\"></i> 
-                    <span class=small title=\"compétence requise ".$COMPETENCE." - ".$DESCRIPTION."\">".$COMPETENCE."</span>";
+            $cmt = "<i class ='fa fa-exclamation-triangle' title=\"compÃ©tence requise ".$COMPETENCE." - ".$DESCRIPTION."\"></i> 
+                    <span class=small title=\"compÃ©tence requise ".$COMPETENCE." - ".$DESCRIPTION."\">".$COMPETENCE."</span>";
         else $cmt="";
         if ( $grades ) $grade = "<img src=".$grades_imgdir."/".$P_GRADE.".png title='".$P_GRADE."' class='img-max-18'>";
         else $grade = "";
@@ -1082,13 +1082,13 @@ function display_postes ($evenement, $vehicule, $showjour=true, $shownuit=true, 
                 if ( ! isset( $comps[$P_ID][$PS_ID] )) {
                     $alert = " <a href=upd_personnel.php?tab=2&pompier=".$P_ID.">
                             <i class='fa fa-exclamation-triangle' style='color:orange;' 
-                            title=\"Cette personne n'a pas la compétence ".$COMPETENCE." - ".$DESCRIPTION." valide. Cliquer pour voir ses compétences.\">
+                            title=\"Cette personne n'a pas la compÃ©tence ".$COMPETENCE." - ".$DESCRIPTION." valide. Cliquer pour voir ses compÃ©tences.\">
                             </i></a>";
                 }
             }
             if(Gard24($P_ID)==true) {
                $periodeId=12;
-               $font="<span class='hide_mobile'><i style='float:right' class='fas fa-moon'></i><i style='float:right' class='fas fa-sun'></i></span>";//icône periode
+               $font="<span class='hide_mobile'><i style='float:right' class='fas fa-moon'></i><i style='float:right' class='fas fa-sun'></i></span>";//icÃ´ne periode
             }
             else  {
                if($EH_ID==1) {$periodeId=1;$font="<span class='hide_mobile'><i style='float:right'class='fas fa-sun'></i></span>";}
@@ -1125,7 +1125,7 @@ function display_postes ($evenement, $vehicule, $showjour=true, $shownuit=true, 
 // =======================================================================================
 function displayJourNuit($list,$personnel){
     global  $personnel, $list;
-    $tabList = explode(",", $list);//créer un tableau de la liste des employés
+    $tabList = explode(",", $list);//crÃ©er un tableau de la liste des employÃ©s
     $occtab = array_count_values($tabList);//compte le nombre d'occurances de chaque element dans le tableau $tabList
     $body="";
     foreach($occtab as $pid=>$occ) {
@@ -1161,7 +1161,7 @@ function Gard24($id){
     global $list;
     $occtab=array();
     $garde24=false;
-    $tabList = explode(",", $list);//créer un tableau de la liste des employés
+    $tabList = explode(",", $list);//crÃ©er un tableau de la liste des employÃ©s
     $occtab = array_count_values($tabList);//compte le nombre d'occurances de chaque element dans le tableau $tabList
     if (isset($occtab[$id])) {
         if($occtab[$id]==2) {
@@ -1175,12 +1175,12 @@ function Gard24($id){
 // =======================================================================================
 function searchPompier($periode,$piquet,$evenement,$vehicule,$personnel,$PS_ID,$comps,$pompierVehicules,$TV_ID_vehicule) {
     global $dbc, $list;
-    static $pompierVeh=array();//statique pour incrémenter son contenu à chaque appel
+    static $pompierVeh=array();//statique pour incrÃ©menter son contenu Ã  chaque appel
     static $tabOccAffect;//tableau nombres d'affectation pour chaque pompier
-    $listPiquet = array();//les pompiers déja affectés dans le même vehicule et la même periode
-    $tabList = explode(",", $list);//créer un tableau de la liste des employés disponibles
+    $listPiquet = array();//les pompiers dÃ©ja affectÃ©s dans le mÃªme vehicule et la mÃªme periode
+    $tabList = explode(",", $list);//crÃ©er un tableau de la liste des employÃ©s disponibles
     array_pop($tabList);//enlever le dernier element de la liste qui est 0
-    $pompierVeh=$pompierVeh+$pompierVehicules;//concaténantion des 2 tableaux. utiles au cas où il ya déja des pompiers affectés
+    $pompierVeh=$pompierVeh+$pompierVehicules;//concatÃ©nantion des 2 tableaux. utiles au cas oÃ¹ il ya dÃ©ja des pompiers affectÃ©s
 
     $query = "select P_ID from evenement_piquets_feu where 
               E_CODE =" . $evenement . " and V_ID = " . $vehicule . " and ROLE_ID<> " . $piquet . " and EH_ID = " . $periode;
@@ -1189,8 +1189,8 @@ function searchPompier($periode,$piquet,$evenement,$vehicule,$personnel,$PS_ID,$
         $P_ID = intval($row["P_ID"]);
         array_push($listPiquet, $P_ID);
     }
-    asort($tabOccAffect);//Tri du tableau du pompier du moins affecté vers le plus affecté
-    $resultMix=mixEgalPoste($tabOccAffect);//mélanger les postes égaux en nombres d'affectation
+    asort($tabOccAffect);//Tri du tableau du pompier du moins affectÃ© vers le plus affectÃ©
+    $resultMix=mixEgalPoste($tabOccAffect);//mÃ©langer les postes Ã©gaux en nombres d'affectation
     $possiblePomp = array_diff($tabList, $listPiquet);//le reste de la liste des pompiers qu'on peut affecter
     $possiblePompTri = array();//Trier la liste des pompiers possibles selon le nombre d'affectation
 
@@ -1213,40 +1213,40 @@ function searchPompier($periode,$piquet,$evenement,$vehicule,$personnel,$PS_ID,$
         }
     }
 
-    $possiblePompTri=array_filter($possiblePompTri);//supprimer les cases vides dont les valeurs ont été mises à la fin du tableau
+    $possiblePompTri=array_filter($possiblePompTri);//supprimer les cases vides dont les valeurs ont Ã©tÃ© mises Ã  la fin du tableau
 
     if (count($possiblePompTri) != 0) {
         foreach ($possiblePompTri as $rang => $id) {//il a le nombre d'affectaion minimal
-            if (isset ($personnel[$periode][$id])) {//il a la même periode que le poste vacant
-                if ($periode == 1) $periodeCom = 2; else $periodeCom = 1;//préparation pour l'affectation de la periode complémentaire si le pompier est de garde 24h
-                if (($PS_ID > 0) && (isset($comps[$id][$PS_ID])) || ($PS_ID == 0)) {//il a la compétence du poste vacant
+            if (isset ($personnel[$periode][$id])) {//il a la mÃªme periode que le poste vacant
+                if ($periode == 1) $periodeCom = 2; else $periodeCom = 1;//prÃ©paration pour l'affectation de la periode complÃ©mentaire si le pompier est de garde 24h
+                if (($PS_ID > 0) && (isset($comps[$id][$PS_ID])) || ($PS_ID == 0)) {//il a la compÃ©tence du poste vacant
                     $query = "insert into evenement_piquets_feu (E_CODE, EH_ID, V_ID, ROLE_ID, P_ID)
                               values (" . $evenement . "," . $periode . "," . $vehicule . "," . $piquet . "," . $id . ")";
                     $result = mysqli_query($dbc, $query);
                     if (!isset($tabOccAffect[$id]))
                         $tabOccAffect[$id] = 0;
-                    $tabOccAffect[$id]++;//incrémenter le nombre d'affectation du pompier qui vient d'être ajouté
+                    $tabOccAffect[$id]++;//incrÃ©menter le nombre d'affectation du pompier qui vient d'Ãªtre ajoutÃ©
                     if(!findVehicule($pompierVehicules,$value,$TV_ID_vehicule))
-                    {$pompierVeh[$id]=$TV_ID_vehicule;}//mettre à jours les informations concernant les vehicules auxquels le personnel est déja affecté
-                    if (isset($personnel[$periodeCom][$id])) {//affectation de la même personne si 24h et qui n'est pas déja affecté
+                    {$pompierVeh[$id]=$TV_ID_vehicule;}//mettre Ã  jours les informations concernant les vehicules auxquels le personnel est dÃ©ja affectÃ©
+                    if (isset($personnel[$periodeCom][$id])) {//affectation de la mÃªme personne si 24h et qui n'est pas dÃ©ja affectÃ©
                         $query = "select * from evenement_piquets_feu where
                         E_CODE =" . $evenement . " and V_ID = " . $vehicule . " and ROLE_ID<> " . $piquet . " and EH_ID = " . $periodeCom . " and P_ID=" . $id;
                         $result = mysqli_query($dbc, $query);
-                        if ($result->num_rows == 0) {//si le pompier n'a pas été affecté manuellement à un autre poste
+                        if ($result->num_rows == 0) {//si le pompier n'a pas Ã©tÃ© affectÃ© manuellement Ã  un autre poste
                             $query = "insert into evenement_piquets_feu (E_CODE, EH_ID, V_ID, ROLE_ID, P_ID)
                             values (" . $evenement . "," . $periodeCom . "," . $vehicule . "," . $piquet . "," . $id . ")";
                             $result = mysqli_query($dbc, $query);
                             $tabOccAffect[$id]++;
                         }
                     }
-                    break;//Sortie de la boucle aprés affectation
+                    break;//Sortie de la boucle aprÃ©s affectation
                 }
             }
         }
     }
 }
 // =======================================================================================
-// chercher couple clé valeur dans un tableau
+// chercher couple clÃ© valeur dans un tableau
 // =======================================================================================
 function findVehicule($pompierVehicules,$P_ID,$TV_ID_Vehicule)
 {
@@ -1260,7 +1260,7 @@ function findVehicule($pompierVehicules,$P_ID,$TV_ID_Vehicule)
     return $found;
 }
 // =======================================================================================
-// mélanger les postes aléatoirement en cas d'un nombre d'affection égal
+// mÃ©langer les postes alÃ©atoirement en cas d'un nombre d'affection Ã©gal
 // =======================================================================================
 function mixEgalPoste($tabOccAffect)
 {
@@ -1299,7 +1299,7 @@ function mixEgalPoste($tabOccAffect)
     return $result;
 }
 // =======================================================================================
-// affectation automatique indépendante
+// affectation automatique indÃ©pendante
 // =======================================================================================
 function automaticAffect($evenement){
     global $dbc;
@@ -1315,13 +1315,13 @@ function automaticAffect($evenement){
             AND v.TV_CODE = tv.TV_CODE
             AND ev.V_ID = v.V_ID
             order by v.TV_CODE, v.V_INDICATIF";
-    $result=mysqli_query($dbc,$query);//chercher les véhicules affectés à l'évenement
+    $result=mysqli_query($dbc,$query);//chercher les vÃ©hicules affectÃ©s Ã  l'Ã©venement
     write_debugbox($query);
 
     while ($row = mysqli_fetch_array($result)) {
         $V_ID = $row["V_ID"];
         $TV_CODE=$row["TV_CODE"];
-        array_push($tabVehicules,$V_ID);//mettre les vehicules dans un tableau à parcourir un par un
+        array_push($tabVehicules,$V_ID);//mettre les vehicules dans un tableau Ã  parcourir un par un
         $typeVehicules[$V_ID]=$TV_CODE;
     }
 
@@ -1337,12 +1337,12 @@ function automaticAffect($evenement){
     while ($row = mysqli_fetch_array($result)) {
         $TV_CODE = $row["TV_CODE"];
         $P_ID=$row["P_ID"];
-        $pompierVehicules[$P_ID]=$TV_CODE;//les modèles des vehicules auxquels le pompier a déja été affecté
+        $pompierVehicules[$P_ID]=$TV_CODE;//les modÃ¨les des vehicules auxquels le pompier a dÃ©ja Ã©tÃ© affectÃ©
     }
 
 
     foreach ( $tabVehicules as $item=>$value) {
-        $TV_ID_vehicule=$typeVehicules[$value];//le type du véhicule courant
+        $TV_ID_vehicule=$typeVehicules[$value];//le type du vÃ©hicule courant
         $query = "SELECT tev.TV_CODE, tev.ROLE_ID, tev.ROLE_NAME, tev.EH_ID, epf.P_ID, epf.P_NOM, epf.P_PRENOM, epf.P_GRADE, tev.COMPETENCE, tev.PS_ID, tev.DESCRIPTION
                             from 
                             ( select ev.E_CODE, v.V_ID, v.TV_CODE, tvr.ROLE_ID, tvr.ROLE_NAME, ev.EH_ID, tvr.PS_ID, ps.TYPE COMPETENCE, ps.DESCRIPTION
@@ -1384,8 +1384,8 @@ function mail_garde($nom, $prenom, $email, $heures) {
     $SenderName=$_SESSION['SES_PRENOM']." ".$_SESSION['SES_NOM'];
     $Mailcontent="Bonjour ".my_ucfirst($prenom).",
 Le tableau ".$EQ_NOM." est disponible pour ".moislettres($month)." ".$year."
-Au total ". $heures." heures de garde vous ont été attribuées.
-Vous pouvez voir le détail sur ".$cisname;
+Au total ". $heures." heures de garde vous ont Ã©tÃ© attribuÃ©es.
+Vous pouvez voir le dÃ©tail sur ".$cisname;
     if ( @$_SERVER["HTTP_HOST"] <> '127.0.0.1' ) mysendmail2($email,$Subject,$Mailcontent,$SenderName,$_SESSION['SES_EMAIL'],$Attachment="None");
 }
 

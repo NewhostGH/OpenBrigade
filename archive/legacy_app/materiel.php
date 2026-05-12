@@ -54,12 +54,12 @@ else {
 $btContainer = "<div class='buttons-container'>";
 
 if ( check_rights($_SESSION['id'],2,$filter))
-$btContainer .= "<a href='#' class='btn btn-default btn-export' align=right><i style='color:#A6A6A6' class='far fa-file-excel fa-1x excel-hover' id='StartExcel' border='0' title='Exporter la liste du matériel dans un fichier Excel' 
+$btContainer .= "<a href='#' class='btn btn-default btn-export' align=right><i style='color:#A6A6A6' class='far fa-file-excel fa-1x excel-hover' id='StartExcel' border='0' title='Exporter la liste du matÃ©riel dans un fichier Excel' 
 onclick=\"window.open('materiel_xls.php?filter=$filter&type=$type_materiel&subsections=$subsections&order=$order&old=$old&mad=$mad')\" /></i></a>";
 
 if ( check_rights($_SESSION['id'], 70)) {
     $btContainer .= "<span class='dropdown-right-mobile'><a class='btn btn-success' name='ajouter' onclick=\"bouton_redirect('ins_materiel.php?usage=$usage&type=$type_materiel');\">
-                     <i class='fas fa-plus-circle' style='color:white'></i><span class='hide_mobile'> Matériel</span></a></span>";
+                     <i class='fas fa-plus-circle' style='color:white'></i><span class='hide_mobile'> MatÃ©riel</span></a></span>";
 }
 $btContainer.='</div>';
 writeBreadCrumb(null, null, null, $btContainer);
@@ -132,7 +132,7 @@ if (check_rights($id, 42)) {
     if ( $old == 1 ) {
          $query .="\nand vp.VP_OPERATIONNEL <0";
          $mylightcolor=$mygreycolor;
-         $statusinfo = " réformés";
+         $statusinfo = " rÃ©formÃ©s";
     }
     else {
         $query .="\nand vp.VP_OPERATIONNEL >=0";
@@ -240,7 +240,7 @@ if ($tab == 1) {
     if ( $old == 1 ) {
          $queryadd .="\nand vp.VP_OPERATIONNEL <0";
          $mylightcolor=$mygreycolor;
-         $statusinfo = " réformés";
+         $statusinfo = " rÃ©formÃ©s";
     }
     else {
         $queryadd .="\nand vp.VP_OPERATIONNEL >=0";
@@ -314,7 +314,7 @@ if ($tab == 1) {
 
     if ( $type_materiel == 'ALL' ) $selected='selected';
     else $selected='';
-    echo "<option value='ALL' $selected>Tous les types de matériel</option>";
+    echo "<option value='ALL' $selected>Tous les types de matÃ©riel</option>";
     $query2="select TM_ID, TM_CODE,TM_USAGE,TM_DESCRIPTION from type_materiel order by TM_USAGE, TM_CODE";
     $result2=mysqli_query($dbc,$query2);
     $prevUsage='';
@@ -338,20 +338,20 @@ if ($tab == 1) {
     if ($old == 1 ) $checked='checked';
     else $checked='';
     
-    echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>Réformé</label>
+    echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>RÃ©formÃ©</label>
                 <label class='switch'>
                     <input type='checkbox' name='old' id='old' $checked class='ml-3 div-decal-left'
                     onClick=\"orderfilter3('".$order."','".$filter."','".$type_materiel."', '".$subsections."',this)\"/>
                     <span class='slider round'></span>
                 </label></div>";
     
-    // filtre seulement mis à disposition
+    // filtre seulement mis Ã  disposition
     if ( $assoc ) {
         echo "";
         if ( $mad == 1 ) $checked='checked';
         else $checked='';
         
-        echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>Mis à disposition par $cisname</label>
+        echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>Mis Ã  disposition par $cisname</label>
                 <label class='switch'>
                     <input type='checkbox' name='mad' id='mad' $checked class='ml-3'
                     onClick=\"orderfilter3('".$order."','".$filter."','".$type_materiel."', '".$subsections."','".$old."')\"/>
@@ -402,19 +402,19 @@ if ($tab == 1) {
             <?php endif ?>
             <th title='' data-field="nb" data-sortable="true" class="hide_mobile">Nb</th>
             <th title='' data-field="section" data-sortable="true" data-align="left">Section</th>
-            <th title='' data-field="modele" data-sortable="true" class="hide_mobile">Modèle</th>
-            <th title='' data-field="serie" data-sortable="true" class="hide_mobile"><?php if ($habillement): ?>Taille<?php else:?>N°Série<?php endif ?></th>
+            <th title='' data-field="modele" data-sortable="true" class="hide_mobile">ModÃ¨le</th>
+            <th title='' data-field="serie" data-sortable="true" class="hide_mobile"><?php if ($habillement): ?>Taille<?php else:?>NÂ°SÃ©rie<?php endif ?></th>
             <th title='' data-field="statut" data-sortable="true" class="hide_mobile">Statut</th>
             <?php if ( !$habillement ): ?>
-            <th title='Prochaine révision ou péremption' data-field="date" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">Date Limite</th>
-            <th title='' data-field="nbinventaire" data-sortable="true" class="hide_mobile">N°inventaire</th>
+            <th title='Prochaine rÃ©vision ou pÃ©remption' data-field="date" data-sortable="true" class="hide_mobile" data-sorter="dateSorter">Date Limite</th>
+            <th title='' data-field="nbinventaire" data-sortable="true" class="hide_mobile">NÂ°inventaire</th>
             <?php endif ?>
             <th title='' data-field="stockage" data-sortable="true" class="hide_mobile">Lieu stockage</th>
-            <th title='' data-field="affectation" data-sortable="true" class="hide_mobile">Affecté à</th>
-            <th title='' data-field="vehicule" data-sortable="true" class="hide_mobile">Véhicule / Lot</th>
-            <th title='' data-field="annee" data-sortable="true" class="hide_mobile">Année</th>
+            <th title='' data-field="affectation" data-sortable="true" class="hide_mobile">AffectÃ© Ã </th>
+            <th title='' data-field="vehicule" data-sortable="true" class="hide_mobile">VÃ©hicule / Lot</th>
+            <th title='' data-field="annee" data-sortable="true" class="hide_mobile">AnnÃ©e</th>
             <?php if ( !$habillement ): ?>
-            <th title="Mis à disposition par <?php echo $cisname ?>" data-field="mad" data-sortable="true" class="hide_mobile tick-col">MàD</th>
+            <th title="Mis Ã  disposition par <?php echo $cisname ?>" data-field="mad" data-sortable="true" class="hide_mobile tick-col">MÃ D</th>
             <?php endif ?>
         </tr>
     </thead>
@@ -425,7 +425,7 @@ if ($tab == 1) {
     $result3=mysqli_query($dbc,$query3);
     custom_fetch_array($result3);
 
-    echo "<span style='height: 36px;line-height: 30px;color: #333;margin-right: 1.6em;float: right;' title=\"Il y a ".$number." matériels dans ".$section_name."\" >".$number." lignes</span>";
+    echo "<span style='height: 36px;line-height: 30px;color: #333;margin-right: 1.6em;float: right;' title=\"Il y a ".$number." matÃ©riels dans ".$section_name."\" >".$number." lignes</span>";
     echo "</div>"
     ?>
 
@@ -519,7 +519,7 @@ if ($tab == 1) {
     <?php
     } // if $number > 0
     else {
-        echo "<span class=small>Pas de matériel.</span>";
+        echo "<span class=small>Pas de matÃ©riel.</span>";
     }
 }
 
@@ -602,7 +602,7 @@ if ($tab == 2) {
     echo "<form name='forme' id='forme' method=post>"; //<div align=center class='table-responsive'>
     echo "<select id='menu1' name='menu1' class='selectpicker smalldropdown2' data-live-search='true' data-style='btn-default' data-container='body'
             onchange=\"redirect(this.value, '$filter', '$dtdb', '$dtfn', '$order', '$subsections')\">";
-    echo "<option value='ALL' selected>Tout le matériel</option>\n";
+    echo "<option value='ALL' selected>Tout le matÃ©riel</option>\n";
     $query2="select distinct tm.TM_USAGE, m.MA_ID, m.TM_ID, tm.TM_CODE, m.MA_NUMERO_SERIE,
         m.MA_MODELE, m.MA_NB, s.S_DESCRIPTION, s.S_ID, s.S_CODE,tm.TM_USAGE
         from materiel m, section s, type_materiel tm
@@ -633,7 +633,7 @@ if ($tab == 2) {
         if ( $mad == 1 ) $checked='checked';
         else $checked=''; //
             
-        echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>Mis à disposition par $cisname</label>
+        echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>Mis Ã  disposition par $cisname</label>
                     <label class='switch'>
                         <input type='checkbox' name='mad' id='mad' $checked class='ml-3'
                         onClick=\"redirect('0', '$filter','$dtdb', '$dtfn', '$order', '$subsections')\"/>
@@ -668,23 +668,23 @@ if ($tab == 2) {
         echo "<div class='col-sm-12'>";
         echo "<table class='newTableAll'>";
         echo "<tr>
-            <td><span style='margin-left:10px;'><a href=materiel.php?tab=2&order=evenement>Activité ".spawn_chevron('evenement')."</a></span></td>
-            <td style='min-width: 67px;'><a href=materiel.php?tab=2&order=matos>Matériel ".spawn_chevron('matos')."</a></td>
+            <td><span style='margin-left:10px;'><a href=materiel.php?tab=2&order=evenement>ActivitÃ© ".spawn_chevron('evenement')."</a></span></td>
+            <td style='min-width: 67px;'><a href=materiel.php?tab=2&order=matos>MatÃ©riel ".spawn_chevron('matos')."</a></td>
             <td><a href=materiel.php?tab=2&order=statut>Statut ".spawn_chevron('statut')."</a></td>
             <td class='hide_mobile'></td>
             <td><a href=materiel.php?tab=2&order=dtdb>Date ".spawn_chevron('dtdb')."</a></td>
             <td class='hide_mobile' >Horaire</td>
             <td>Nombre</td>";
         if ( $assoc == 1 )
-            echo "<td class='hide_mobile'>MàD</td>";
+            echo "<td class='hide_mobile'>MÃ D</td>";
         echo "<td class='hide_mobile' style='width: 1%'></td></tr>";
 
         $i=0;
         $k=0;
         while (custom_fetch_array($result)) {
             if ( $EH_DATE_FIN == '') $EH_DATE_FIN = $EH_DATE_DEBUT;
-            if ( $E_CANCELED == 1 ) $label="<span class='badge' style='color:$widget_fgred; background-color:$widget_bgred; margin-left: -4px;'>Activité annulée</span>";
-            elseif ( $E_CLOSED == 1 ) $label="<span class='badge' style='color:$widget_fgorange; background-color:$widget_bgorange; margin-left: -4px;'>Inscriptions fermées</span>";
+            if ( $E_CANCELED == 1 ) $label="<span class='badge' style='color:$widget_fgred; background-color:$widget_bgred; margin-left: -4px;'>ActivitÃ© annulÃ©e</span>";
+            elseif ( $E_CLOSED == 1 ) $label="<span class='badge' style='color:$widget_fgorange; background-color:$widget_bgorange; margin-left: -4px;'>Inscriptions fermÃ©es</span>";
             else $label="<span class='badge' style='color:$widget_fggreen; background-color:$widget_bggreen; margin-left: -4px;'>Inscriptions ouvertes</span>";
       
             $tmp=explode ( "-",$EH_DATE_DEBUT); $day1=$tmp[0]; $month1=$tmp[1]; $year1=$tmp[2];
@@ -705,7 +705,7 @@ if ($tab == 2) {
             $removelink="";
             if (( check_rights($_SESSION['id'], 15)) and ( is_children($S_ID,$mysection))) {
                 $removelink="<a class='btn btn-default btn-action' href=evenement_materiel_add.php?evenement=".$E_CODE."&action=remove&MA_ID=".$MA_ID."&from=materiel&dtdb=$dtdb&order=$order&filtermateriel=$matos>
-                        <i class='fa fa-trash-alt' title='désengager ce matériel' ></i></a>";
+                        <i class='fa fa-trash-alt' title='dÃ©sengager ce matÃ©riel' ></i></a>";
             }
             if ( $nbsections == 0 ) $sectioninfo="(".$S_DESCRIPTION.")";
             else $sectioninfo="";
@@ -736,9 +736,9 @@ if ($tab == 2) {
             }
             $nb = get_nb_engagements('M', $MA_ID, $year1, $month1, $day1, $year2, $month2, $day2, $E_CODE) ;
             if ( $nb > $MA_NB ) 
-                   $myimg="<i class='fa fa-circle' style='color:orange;' title='attention ce matériel est parallèlement engagé sur 1 autre événement'></i>";
+                   $myimg="<i class='fa fa-circle' style='color:orange;' title='attention ce matÃ©riel est parallÃ¨lement engagÃ© sur 1 autre Ã©vÃ©nement'></i>";
             else $myimg="";
-            if ( $MA_EXTERNE == 1 ) $img3="<i class='fa fa-check' title=\"matériel mis à disposition par $cisname\"></i>";
+            if ( $MA_EXTERNE == 1 ) $img3="<i class='fa fa-check' title=\"matÃ©riel mis Ã  disposition par $cisname\"></i>";
             else $img3=''; 
             
             echo "<td><a href=upd_materiel.php?mid=".$MA_ID.">
@@ -754,7 +754,7 @@ if ($tab == 2) {
             echo "</tr>";
         }
     } else {
-        echo "<p><b>Aucun engagement ne correspond aux critères choisis</b>";
+        echo "<p><b>Aucun engagement ne correspond aux critÃ¨res choisis</b>";
     }
 
     echo "</table>$later</div>";

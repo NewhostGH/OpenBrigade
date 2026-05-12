@@ -194,7 +194,7 @@ else {
     else $NF_NATIONAL=0;
     $COMMENT="";
     $NF_CODE1=date('Y');$NF_CODE2=date('m');$NF_CODE3=get_new_nfcode();
-    $FS_DESCRIPTION="En cours de création";
+    $FS_DESCRIPTION="En cours de crÃ©ation";
 }
 
 $FS_COLOR=str_replace('12','',$FS_CLASS);
@@ -281,7 +281,7 @@ echo "<input type='hidden' name='from' id='from' value='".$from."'>";
 //=====================================================================
 
 echo "<tr>
-            <td>Bénéficiaire </td>
+            <td>BÃ©nÃ©ficiaire </td>
             <td colspan=2 align=left>";
 
 echo "<input type=hidden id='person' name='person' value=".$person.">";
@@ -289,10 +289,10 @@ echo "<a href=upd_personnel.php?pompier=".$person.">".strtoupper($P_NOM)." ".ucf
 
 if ( $NF_DON == 1 ) $checked='checked';
 else $checked="";
-echo " </td><td colspan=4 align=right><label for='don'>Le bénéficiaire accepte de faire don du remboursement</label>
+echo " </td><td colspan=4 align=right><label for='don'>Le bÃ©nÃ©ficiaire accepte de faire don du remboursement</label>
         <label class='switch'>
         <input type='checkbox' id='don' name='don' value='1' $checked $disabled3 
-            title=\"cliquer pour un remboursement sous forme de don à l'organisation\" onchange='updateButtons();'>
+            title=\"cliquer pour un remboursement sous forme de don Ã  l'organisation\" onchange='updateButtons();'>
         <span class='slider round'></span>
     </label>
     </td>
@@ -314,7 +314,7 @@ if ( $S_ID <> $P_SECTION ) {
     echo "<option value='".$P_SECTION."'>".$S_CODE." - ".$S_DESCRIPTION."</option>";
 }
 
-// proposer aussi les sections où il y a un rôle
+// proposer aussi les sections oÃ¹ il y a un rÃ´le
 $query="select distinct s.S_ID '_SID', s.S_CODE, s.S_DESCRIPTION 
         from section_role sr, section s
         where sr.S_ID not in ( ".$P_SECTION.",".$S_ID.", ".$departement.")
@@ -328,7 +328,7 @@ while (custom_fetch_array($result)) {
     echo "<option value='".$_SID."' $selected>".$S_CODE." - ".$S_DESCRIPTION."</option>";
 }
 
-// cas très particulier proposer autre section
+// cas trÃ¨s particulier proposer autre section
 print get_specific_section_option ($person, $P_SECTION, $S_ID);
 
 echo "</select></td></tr>";
@@ -339,29 +339,29 @@ if ( $disabled3 == 'disabled' )
     echo " <input type='hidden' id='frais_dep' name='frais_dep' value='$NF_FRAIS_DEP'>";
 
 echo  "<tr><td colspan=7>
-       <div style='float:right;margin-top:5px;'><label for='frais_dep'>Frais engagés par le département</label> 
+       <div style='float:right;margin-top:5px;'><label for='frais_dep'>Frais engagÃ©s par le dÃ©partement</label> 
             <label class='switch'>
                 <input type='checkbox' id='frais_dep' name='frais_dep' value='1' $checked $disabled3 
-                title='cliquer si les frais on été engagés par le département, et non par le bénéficiaire' onchange='updateButtons();'> 
+                title='cliquer si les frais on Ã©tÃ© engagÃ©s par le dÃ©partement, et non par le bÃ©nÃ©ficiaire' onchange='updateButtons();'> 
             <span class='slider round'></span>
         </label>
     </div></td>";
 echo "</tr>";
 
 //=====================================================================
-// numéro
+// numÃ©ro
 //=====================================================================
 if (  $nfid > 0 or $granted_validation ) {
-    echo "<tr><td>N° Comptable</td>
+    echo "<tr><td>NÂ° Comptable</td>
     <td colspan=3>";
     if ( $granted_validation ){
         $style='min-width:50px; margin-right:5px';
         echo "<div class='d-flex justify-content-between'><input type='text' class='form-control form-control-sm' name='nfcode1' value='".$NF_CODE1."' size=4 style='$style' maxlength=4 onchange=\"checkNumber(nfcode1,'');updateButtons();\"
-                      title='Année du numéro comptable'  > 
+                      title='AnnÃ©e du numÃ©ro comptable'  > 
                    <input type='text' class='form-control form-control-sm' name='nfcode2' value=".str_pad($NF_CODE2, 2, '0', STR_PAD_LEFT)." size=2 style='$style' maxlength=2 onchange=\"checkNumber(nfcode2,'');updateButtons();\"
-                      title='Mois du numéro comptable'  > 
+                      title='Mois du numÃ©ro comptable'  > 
                   <input type='text' class='form-control form-control-sm' name='nfcode3' value='".str_pad($NF_CODE3,3, '0' , STR_PAD_LEFT)."' size=5 style='$style' onchange=\"checkNumber(nfcode3,'');updateButtons();\" 
-                    title='Ce numéro est automatiquement incrémenté lorsque la note est enregistrée'></div>";
+                    title='Ce numÃ©ro est automatiquement incrÃ©mentÃ© lorsque la note est enregistrÃ©e'></div>";
     }
     else {
         echo "".$NF_CODE1." / ".str_pad($NF_CODE2, 2, '0', STR_PAD_LEFT)." / ".str_pad($NF_CODE3,3, '0' , STR_PAD_LEFT)."";
@@ -373,7 +373,7 @@ if (  $nfid > 0 or $granted_validation ) {
 }
 
 //=====================================================================
-// Lien événement
+// Lien Ã©vÃ©nement
 //=====================================================================
 if ( $action =='update' ) {
     $query1="select n.TM_CODE, n.E_CODE, e.TE_CODE from note_de_frais n left join evenement e on e.E_CODE=n.E_CODE
@@ -418,10 +418,10 @@ $query1="select e.E_CODE, te.TE_LIBELLE, e.TE_CODE, e.E_LIBELLE, e.E_LIEU, eh.EH
         and e.TE_CODE = te.TE_CODE
         and eh.EH_ID = 1";
         
-$title_select = "Seuls les événements des ".$nbdays." derniers jours, où la personne était inscrite sont listés";
+$title_select = "Seuls les Ã©vÃ©nements des ".$nbdays." derniers jours, oÃ¹ la personne Ã©tait inscrite sont listÃ©s";
 
 if ( $syndicate and $granted_validation ) {
-    // pour le responsable syndical, afficher aussi les événements ou la personne n'est pas inscrite.
+    // pour le responsable syndical, afficher aussi les Ã©vÃ©nements ou la personne n'est pas inscrite.
     $query1 .= " UNION
             select e.E_CODE, concat('Non inscrit - ',te.TE_LIBELLE) TE_LIBELLE, e.TE_CODE, concat(e.E_LIBELLE, ' - ', s.S_CODE) E_LIBELLE, e.E_LIEU, eh.EH_DATE_DEBUT, eh.EH_DATE_FIN, e.E_PARENT,
             TIME_FORMAT(eh.EH_DEBUT, '%k:%i') EH_DEBUT, TIME_FORMAT(eh.EH_FIN, '%k:%i') EH_FIN,
@@ -435,7 +435,7 @@ if ( $syndicate and $granted_validation ) {
             and e.S_ID in (".get_family_up($P_SECTION).")
             and not exists (select 1 from evenement_participation ep where ep.P_ID = ".$person." and ep.E_CODE = e.E_CODE)
             and eh.EH_ID = 1";
-    $title_select .= ". Et aussi ceux des 3 derniers mois, même si la personne n'était pas inscrite";
+    $title_select .= ". Et aussi ceux des 3 derniers mois, mÃªme si la personne n'Ã©tait pas inscrite";
 }
 $query1 .= " order by INSCRIT desc, EH_DATE_DEBUT, EH_DEBUT, E_CODE";
 
@@ -443,12 +443,12 @@ if ( $granted_validation ) $disabled_evt = '';
 else $disabled_evt=$disabled2;
 
 echo "<tr>
-    <td>Activité </td>
+    <td>ActivitÃ© </td>
     <td colspan=8 align=left class=small>
         <select name='evenement' id='evenement' class='form-control select-control' data-container='body' data-style='btn btn-default' $disabled_evt title=\"".$title_select."\" style='height:30px;'>";
-echo "<option value='0' >Choisissez un événement dans la liste</option>";
+echo "<option value='0' >Choisissez un Ã©vÃ©nement dans la liste</option>";
 if ( $evenement == -1 ) $selected='selected'; else $selected='';
-echo "<option value='-1' $selected >La note n'est pas liée à un événement, précisez dans la case commentaire</option>";
+echo "<option value='-1' $selected >La note n'est pas liÃ©e Ã  un Ã©vÃ©nement, prÃ©cisez dans la case commentaire</option>";
 
 $result1=mysqli_query($dbc,$query1);
 while ( custom_fetch_array($result1)) {
@@ -517,8 +517,8 @@ $result1=mysqli_query($dbc,$query1);
 while ($row1=@mysqli_fetch_array($result1)) {
     $MOTIF_LEVEL=$row1["MOTIF_LEVEL"];
     if ( $MOTIF_LEVEL <> $PREV_MOTIF ){
-        if ( $MOTIF_LEVEL == 'N' ) $mlname='Niveau Fédéral seulement';
-        else if ( $MOTIF_LEVEL == 'D' ) $mlname='Niveau Départemental seulement';
+        if ( $MOTIF_LEVEL == 'N' ) $mlname='Niveau FÃ©dÃ©ral seulement';
+        else if ( $MOTIF_LEVEL == 'D' ) $mlname='Niveau DÃ©partemental seulement';
         else $mlname='Pour tous les niveaux';
         $selectForm .= "<optgroup label=\" ".$mlname."\" />";
         $PREV_MOTIF=$MOTIF_LEVEL;
@@ -544,22 +544,22 @@ else $checked2='';
 
 echo "<tr><td> Motif frais </td><td colspan=8 align=left>".$selectForm."</td></tr>";
 
-$helptitle="Niveau National/Départemental : ";
-$help="Une note de frais nationale sera validée par traitée (validée et remboursée) par les responsables nationaux, alors qu'une note de frais départementale sera traitée par les responsables du département.";
+$helptitle="Niveau National/DÃ©partemental : ";
+$help="Une note de frais nationale sera validÃ©e par traitÃ©e (validÃ©e et remboursÃ©e) par les responsables nationaux, alors qu'une note de frais dÃ©partementale sera traitÃ©e par les responsables du dÃ©partement.";
 
 
 echo "<tr><td colspan=9 align=left>
     <label for='national'>Note de frais Nationale</label>
     <label class='switch'>
         <input type='checkbox' id='national' name='national' value='1' $checked $disabled $disabled_national
-            title=\"Cocher la case si la validation et le remboursement doivent être faits au niveau National $cisname\" onchange='updateButtons();'>
+            title=\"Cocher la case si la validation et le remboursement doivent Ãªtre faits au niveau National $cisname\" onchange='updateButtons();'>
         <span class='slider round'></span>
     </label>
     
-    <label for='departemental'>Note de frais Départementale</label>
+    <label for='departemental'>Note de frais DÃ©partementale</label>
     <label class='switch'>
         <input type='checkbox' id='departemental' name='departemental' value='1' $checked2 $disabled $disabled_departemental
-            title=\"Cocher la case si la validation et le remboursement doivent être faits au niveau Départemental\" onchange='updateButtons();'>
+            title=\"Cocher la case si la validation et le remboursement doivent Ãªtre faits au niveau DÃ©partemental\" onchange='updateButtons();'>
         <span class='slider round'></span>
     </label>
     <a href='#' title=\"$helptitle$help\">
@@ -581,31 +581,31 @@ if ( $disabled_departemental == 'disabled' )
 if ( $nfid > 0 ) {
     if ( intval($NF_CREATE_BY) == 0 ) $nom1="";
     else $nom1="par ".my_ucfirst($P_PRENOM1)." ".strtoupper($P_NOM1);
-    $cmt = "créée le $NF_CREATE_DATE $nom1";
+    $cmt = "crÃ©Ã©e le $NF_CREATE_DATE $nom1";
     if ( $NF_STATUT_DATE <> '' and $FS_CODE == 'REJ') {
         if ( intval($NF_STATUT_BY) == 0 ) $nom2="";
         else $nom2="par ".my_ucfirst($P_PRENOM2)." ".strtoupper($P_NOM2);
-        $cmt .= " , rejetée le $NF_STATUT_DATE $nom2";
+        $cmt .= " , rejetÃ©e le $NF_STATUT_DATE $nom2";
     }
     else if ( $NF_STATUT_DATE <> '' and $FS_CODE == 'ATTV') {
         if ( intval($NF_STATUT_BY) == 0 ) $nom2="";
         else $nom2="par ".my_ucfirst($P_PRENOM2)." ".strtoupper($P_NOM2);
-        $cmt .= " , envoyé pour validation le $NF_STATUT_DATE $nom2";
+        $cmt .= " , envoyÃ© pour validation le $NF_STATUT_DATE $nom2";
     }
     if ( $NF_VALIDATED_DATE <> '' ) {
         if ( intval($NF_VALIDATED_BY) == 0 ) $nom4="";
         else $nom4="par ".my_ucfirst($P_PRENOM4)." ".strtoupper($P_NOM4);
-        $cmt .= " , validée le $NF_VALIDATED_DATE $nom4";
+        $cmt .= " , validÃ©e le $NF_VALIDATED_DATE $nom4";
     }
     if ( $NF_VALIDATED2_DATE <> '' ) {
         if ( intval($NF_VALIDATED2_BY) == 0 ) $nom5="";
         else $nom5="par ".my_ucfirst($P_PRENOM5)." ".strtoupper($P_NOM5);
-        $cmt .= " , validée le $NF_VALIDATED2_DATE $nom5";
+        $cmt .= " , validÃ©e le $NF_VALIDATED2_DATE $nom5";
     }
     if ( $NF_REMBOURSE_DATE <> '' ) {
         if ( intval($NF_REMBOURSE_BY) == 0 ) $nom3="";
         else $nom3="par ".my_ucfirst($P_PRENOM3)." ".strtoupper($P_NOM3);
-        $cmt .= " , remboursée le $NF_REMBOURSE_DATE $nom3";
+        $cmt .= " , remboursÃ©e le $NF_REMBOURSE_DATE $nom3";
     }
     
     echo "<tr 0>
@@ -623,11 +623,11 @@ if ( $nfid > 0 ) {
         $statut_note= "<select class='theme' id='statut' name='statut' onchange='updateButtons();' style='$allcolor;height:30px;'>";
         $result1=mysqli_query($dbc,$query1);
         while (custom_fetch_array($result1)) {
-            if ( $FC == 'VAL' and $syndicate == 1 ) $FD = 'Validée trésorier';
-            if ( $FC == 'VAL1'and $syndicate == 1 ) $FD = 'Validée président';
-            if ( $FC == 'VAL'and $syndicate == 0 ) $FD = 'Validée';
-            if ( $FC == 'VAL1'and $syndicate == 0 ) $FD = 'Validée autre';
-            if ( $NF_DON == 1 and $FC == 'REMB' and $assoc ) $FD = "Don à l'association";
+            if ( $FC == 'VAL' and $syndicate == 1 ) $FD = 'ValidÃ©e trÃ©sorier';
+            if ( $FC == 'VAL1'and $syndicate == 1 ) $FD = 'ValidÃ©e prÃ©sident';
+            if ( $FC == 'VAL'and $syndicate == 0 ) $FD = 'ValidÃ©e';
+            if ( $FC == 'VAL1'and $syndicate == 0 ) $FD = 'ValidÃ©e autre';
+            if ( $NF_DON == 1 and $FC == 'REMB' and $assoc ) $FD = "Don Ã  l'association";
             if ( $FC == $FS_CODE ) $selected='selected';
             else $selected='';
             
@@ -647,7 +647,7 @@ if ( $nfid > 0 ) {
     echo "<td align=left colspan=8>".$statut_note."</td></tr>";
     
     
-    // note vérifiée?
+    // note vÃ©rifiÃ©e?
     if ( $syndicate ) {
         if ( ($id <> $person and check_rights($id, 75)) or $administrateur ) $disabled_verified='';
         else {
@@ -664,10 +664,10 @@ if ( $nfid > 0 ) {
             $checked_verified='';
         }
         echo "<tr>
-                <td>Vérification</td>
+                <td>VÃ©rification</td>
                 <td colspan=8 align=left><input type='checkbox' id='verified' name='verified' value='1' $checked_verified $disabled_verified
-                title=\"Cocher la case si la note a été vérifiée par la comptabilité avant validation.\" onchange='updateButtons();'>
-                <label for='verified' class='thinlabel'>Vérifiée par la comptabilité</label><small> $nom6 </small>
+                title=\"Cocher la case si la note a Ã©tÃ© vÃ©rifiÃ©e par la comptabilitÃ© avant validation.\" onchange='updateButtons();'>
+                <label for='verified' class='thinlabel'>VÃ©rifiÃ©e par la comptabilitÃ©</label><small> $nom6 </small>
                 </td></tr>";
     }
     echo "<tr><td align=left colspan=9>
@@ -675,13 +675,13 @@ if ( $nfid > 0 ) {
 }
 
 //=====================================================================
-// justificatifs attachés
+// justificatifs attachÃ©s
 //=====================================================================
 if ( $action =='update' and $nfid > 0 ) {
     $nbjustif=count_entities("document", "NF_ID=".$nfid);
 
     if ( $nbjustif > 0 or $granted_update ) {
-        echo "<tr class='TabHeader nocolor'><td colspan=9>Justificatifs attachés</td></tr>";
+        echo "<tr class='TabHeader nocolor'><td colspan=9>Justificatifs attachÃ©s</td></tr>";
 
         $mypath=$filesdir."/files_note/".$nfid;
         if (is_dir($mypath)) {
@@ -728,10 +728,10 @@ if ( $action =='update' and $nfid > 0 ) {
             if ( $NF_JUSTIF_RECUS == 1 ) $checked='checked';
             else $checked="";
             echo "<td colspan=2 align=right>
-                <label for='justif_recus'>Justificatifs originaux reçus</label>
+                <label for='justif_recus'>Justificatifs originaux reÃ§us</label>
                 <label class='switch'>
                     <input type='checkbox' id='justif_recus' name='justif_recus' value='1' $checked $disabled3
-                    title='cliquer si les justificatifs originaux ont été reçus' onchange='updateButtons();'> 
+                    title='cliquer si les justificatifs originaux ont Ã©tÃ© reÃ§us' onchange='updateButtons();'> 
                     <span class='slider round'></span>
                 </label>";
             if ( $disabled3 == 'disabled' ) 
@@ -744,7 +744,7 @@ echo "</table></div></div></div>";
 echo "<div class='col-sm-12 col-md-12 col-lg-12 col-xl-6 no-col-padding'>
         <div class='card hide card-default graycarddefault' align=center style='width:fit-content'>
         <div class='card-header graycard'>
-           <div class='card-title'><strong> Détails </strong></div>
+           <div class='card-title'><strong> DÃ©tails </strong></div>
         </div>
         <div class='card-body graycard'>";
  
@@ -759,15 +759,15 @@ echo "<table id='NoteFraisTableDetail' class='noBorder' cellspacing=0 >";
 // Header
 //=====================================================================
 
-$info1="Dans le cas de frais kilométriques, si on renseigne ici le nombre de kilomètres, alors le montant en $default_money_symbol se calcule sur la ligne. 
-Sinon, ce champ est facultatif mais peut être renseigné à titre indicatif.
+$info1="Dans le cas de frais kilomÃ©triques, si on renseigne ici le nombre de kilomÃ¨tres, alors le montant en $default_money_symbol se calcule sur la ligne. 
+Sinon, ce champ est facultatif mais peut Ãªtre renseignÃ© Ã  titre indicatif.
 Par exemple: sur une note de frais de restaurant dont on paye l'addition, on peut indiquer le nombre de personnes au repas.";
 
 echo "<tr>";
 echo "<td>Date frais</td>
     <td>Type frais</td>
     <td></td>
-    <td>Qté <i class='fa fa-info-circle fa-lg' title=\"".$info1."\"></i></td>
+    <td>QtÃ© <i class='fa fa-info-circle fa-lg' title=\"".$info1."\"></i></td>
     <td>Total ".$default_money_symbol."</td>
     <td>Lieu</td>
     <td>Commentaire</td>
@@ -786,8 +786,8 @@ if ( $action =='insert' ) {
             <td><input type='text' class='quantite form-control form-control-sm' name='quantite".$i."' id='quantite".$i."' size='3' maxlength='5' value='".$KM."' 
                 onchange=\"checkNumberwithMax(this,'');\"> </td>
             <td><input type='text' class='montant form-control form-control-sm' name='montant".$i."' id='montant".$i."' size='5' value='' onchange=\"checkNumberwithMax(this,'');\"></td>
-            <td><input type='text' class='lieu form-control form-control-sm' name='lieu".$i."' id='lieu".$i."' size='25' value='".$SUGGESTED_LIEU."' title='Lieu où les frais ont été engagés' style='max-width:120px'></td>
-            <td><input type='text' class='commentaire form-control form-control-sm' name='commentaire".$i."' id='commentaire".$i."' size='30' value='' title='Saisissez le commentaire lié à cette ligne' style='max-width:120px'></td>
+            <td><input type='text' class='lieu form-control form-control-sm' name='lieu".$i."' id='lieu".$i."' size='25' value='".$SUGGESTED_LIEU."' title='Lieu oÃ¹ les frais ont Ã©tÃ© engagÃ©s' style='max-width:120px'></td>
+            <td><input type='text' class='commentaire form-control form-control-sm' name='commentaire".$i."' id='commentaire".$i."' size='30' value='' title='Saisissez le commentaire liÃ© Ã  cette ligne' style='max-width:120px'></td>
             <td><i class='far fa-trash-alt fa-lg delete'></i></td>
         </tr></tbody>";
 }
@@ -828,9 +828,9 @@ else {
             <td><input type='text' class='montant form-control form-control-sm' name='montant".$i."' id='montant".$i."' size='5' value='".my_number_format($AMOUNT)."' 
                 onchange=\"checkNumberwithMax(this,'');updateButtons();\" $disabled2 style='min-width:50px'></td>
             <td><input type='text' class='lieu form-control form-control-sm' name='lieu".$i."' id='lieu".$i."' size='25' value=\"".$LIEU."\" 
-                title='Lieu où les frais ont été engagés' $disabled2 onchange='updateButtons();' style='min-width:50px;max-width:120px'></td>
+                title='Lieu oÃ¹ les frais ont Ã©tÃ© engagÃ©s' $disabled2 onchange='updateButtons();' style='min-width:50px;max-width:120px'></td>
             <td><input type='text' class='commentaire form-control form-control-sm' name='commentaire".$i."' id='commentaire".$i."' size='30' value=\"".$NFD_DESCRIPTION."\" 
-                title='Saisissez le commentaire lié à cette ligne' $disabled2 onchange='updateButtons();' style='min-width:50px;max-width:120px'></td>";
+                title='Saisissez le commentaire liÃ© Ã  cette ligne' $disabled2 onchange='updateButtons();' style='min-width:50px;max-width:120px'></td>";
 
         if ( $granted_update and $disabled2 == '')
             echo "<td><i class='far fa-trash-alt fa-lg delete'></i></td>";
@@ -862,14 +862,14 @@ if ( $granted_update ) {
     // bouton envoyer
     if ( $nfid > 0 and ($FS_CODE == 'CRE' or $FS_CODE == 'REJ'))
         echo " <input type=button class='btn btn-primary' id='envoyer'
-        title='lorsque la note est prête, envoyer pour validation, vous ne pourrez plus la modifier' value='Envoyer' 
+        title='lorsque la note est prÃªte, envoyer pour validation, vous ne pourrez plus la modifier' value='Envoyer' 
         onclick=\"change_statut('".$nfid."','submit','".$csrf."');\">";
 
     if ($id <> $person or $all_status_changes_allowed) {
         if ( $not_validated_by_me ) {
             // bouton valider A
             if ( in_array($FS_CODE,array('ATTV','VAL1')) and check_rights($id, 73,"$S_ID")) {
-                if ( $syndicate == 1 ) $va='Valider trésorier';
+                if ( $syndicate == 1 ) $va='Valider trÃ©sorier';
                 else if ( $FS_CODE == 'VAL1' ) $va='Valider 2';
                 else $va='Valider';
                 echo " <input type=button class='btn btn-primary' id='valider1' value='$va' title='valider' 
@@ -878,7 +878,7 @@ if ( $granted_update ) {
             }
             // bouton valider B
             if ( in_array($FS_CODE,array('ATTV','VAL')) and check_rights($id, 74,"$S_ID") ) {
-                if ( $syndicate == 1 ) $vb='Valider président';
+                if ( $syndicate == 1 ) $vb='Valider prÃ©sident';
                 else if ( $FS_CODE == 'VAL' ) $vb='Valider 2';
                 else $vb='Valider';
                 if ( $syndicate == 1 or $no_button_validate_displayed )

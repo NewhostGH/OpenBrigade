@@ -108,7 +108,7 @@ echo "</script>
 </head>
 ";
 //=====================================================================
-// affiche la fiche type de véhicule
+// affiche la fiche type de vÃ©hicule
 //=====================================================================
 
 if ( $operation == 'insert' ) {
@@ -145,7 +145,7 @@ else {
     echo "<input type='hidden' name='operation' value='update'>";
     echo "<input type='hidden' name='OLD_TV_CODE' value='$TV_CODE'>";
     
-    $badge="<span class='badge' style='float:right'>$nombre véhicule(s)</span>";
+    $badge="<span class='badge' style='float:right'>$nombre vÃ©hicule(s)</span>";
     $title = 'Modification';
 }
 
@@ -157,21 +157,21 @@ echo "<div class='row'>";
 echo "<div class='col-sm-6'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> $title type de véhicule $badge</strong></div>
+                <div class='card-title'><strong> $title type de vÃ©hicule $badge</strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0>";
 
 
 //=====================================================================
-// ligne catégorie
+// ligne catÃ©gorie
 //=====================================================================
 
 $categories = array('SECOURS','FEU','LOGISTIQUE','DIVERS');
 $count = count($categories);
 
 echo "<tr>
-            <td>Catégorie $asterisk</td>
+            <td>CatÃ©gorie $asterisk</td>
             <td align=left colspan=4>
           <select name='TV_USAGE' class='form-control form-control-sm'>";
                for ($i = 0; $i < $count; $i++) {
@@ -207,7 +207,7 @@ echo " </td>
 //=====================================================================
 // icone
 //=====================================================================     
-echo "<tr><td>Icône</td>
+echo "<tr><td>IcÃ´ne</td>
     <td colspan=4><div id='iconSelector'></div><input type=hidden name='icon' id='icon' value=\"".$TV_ICON."\">";
 if (!isset($_FILES['icone'])) {
   foreach ($file_arr as $i=>$unFile) {
@@ -236,7 +236,7 @@ echo "<input type='hidden' name='tab' value='3'>";
 echo "<input type='hidden' name='child' value='1'>";
 echo "<input type='hidden' name='operation' value='insert'>";
 echo "<input type='hidden' name='upd' value='1'>";
-echo "<label class='btn btn-success btn-file' title='Choisir un icône personnalisé'>
+echo "<label class='btn btn-success btn-file' title='Choisir un icÃ´ne personnalisÃ©'>
     <i class='fa fa-camera fa'></i>
     <input type='file' id='iconeUpload' name='icone' style='display: none;'>
     </label></form>";
@@ -248,7 +248,7 @@ else echo "<input type='hidden' name='operation' value='insert'>";
 echo "<input type='hidden' name='upd' value='1'>";
 echo "<input type='hidden' name='suppr' value='yes'>";
 echo "<input type='hidden' id = 'iconsuppr' name='iconsuppr' value=''>";
-echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' style='display:none'>
+echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icÃ´ne' style='display:none'>
     <i class='fa fa-trash fa'></i>
 <button id='supprIcone' hidden type='button'></button>
 </label></form>";
@@ -261,7 +261,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
       data:ddData,
       width:434,
       height:400,
-      selectText: "Choisir une icône pour ce type de véhicule",
+      selectText: "Choisir une icÃ´ne pour ce type de vÃ©hicule",
       imagePosition:"left",
       onSelected: function(data){
           document.getElementById("icon").value = data.selectedData.imageSrc;
@@ -304,7 +304,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
     var fileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
 
     if (fileExt!="png") {
-      swal("Seulement les fichiers au format .png sont acceptés.");
+      swal("Seulement les fichiers au format .png sont acceptÃ©s.");
       return false;
     }
 
@@ -333,7 +333,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
 
     }
     img.onerror = function() {
-      swal('Le contenu du fichier ne semble pas correspondre à son extension');
+      swal('Le contenu du fichier ne semble pas correspondre Ã  son extension');
       this.value='';
       return false;
     }
@@ -342,7 +342,7 @@ echo "<label class='btn btn-default' id ='buttonsuppr' title='Supprimer icône' s
 <?php
 
 //=====================================================================
-// ligne nombre équipage
+// ligne nombre Ã©quipage
 //=====================================================================
 
 echo "<tr>
@@ -357,19 +357,19 @@ if ( $TV_NB > $MAX ) {
     echo "<option value='".$TV_NB."' selected>".$TV_NB."</option>\n";
 }
 echo "</select>";
-echo " <span class = small> nombre de personnes dans le véhicule</span></td>
+echo " <span class = small> nombre de personnes dans le vÃ©hicule</span></td>
       </tr>";
 
 echo "</table></div></div></div>";
 
 //=====================================================================
-// rôles
+// rÃ´les
 //=====================================================================      
 echo "<div class='col-sm-6'>";
 echo "<table class='newTableAll' cellspacing=0 border=0>";
 echo "<tr id='row_0' >
-    <td colspan=2>Rôles</td>";
-if ( $competences == 1 ) echo "<td colspan=2>Compétence requise</td>";
+    <td colspan=2>RÃ´les</td>";
+if ( $competences == 1 ) echo "<td colspan=2>CompÃ©tence requise</td>";
 else echo "<td colspan=2></td>";
 echo "</tr>";
 
@@ -391,8 +391,8 @@ for ( $i = 1; $i <= $MAX; $i++ ) {
     
     echo "<tr id='row_$i' >
             <td align=right>$i </td>
-            <td align=left><input type='text' class='form-control form-control-sm' name='ROLE_$i' id='ROLE_$i' size='20' value=\"".$ROLE_NAME."\" title=\"Saisissez ici le nom du rôle, exemples: Conducteur, Chef d'agrès ... \" >";
-    // Définition des competences requises
+            <td align=left><input type='text' class='form-control form-control-sm' name='ROLE_$i' id='ROLE_$i' size='20' value=\"".$ROLE_NAME."\" title=\"Saisissez ici le nom du rÃ´le, exemples: Conducteur, Chef d'agrÃ¨s ... \" >";
+    // DÃ©finition des competences requises
     if ( $competences == 1 ) {
     $query2="select p.PS_ID, p.EQ_ID, p.TYPE, p.DESCRIPTION, e.EQ_NOM
             from poste p, equipe e
@@ -400,8 +400,8 @@ for ( $i = 1; $i <= $MAX; $i++ ) {
             order by e.EQ_ORDER, p.TYPE";
     echo "<td></td>
             <td align=left>";
-    echo "<select class='form-control select-control' id ='PS_$i' name='PS_$i' style='max-width:220px;font-size: 12px;' title='Une compétence peut être requise pour pouvoir exercer la fonction, définir laquelle'>";
-    echo "<option value='0'>Aucune compétence requise</option>";
+    echo "<select class='form-control select-control' id ='PS_$i' name='PS_$i' style='max-width:220px;font-size: 12px;' title='Une compÃ©tence peut Ãªtre requise pour pouvoir exercer la fonction, dÃ©finir laquelle'>";
+    echo "<option value='0'>Aucune compÃ©tence requise</option>";
     $result2=mysqli_query($dbc,$query2);
     $prevEQ_ID=-1;
     while ($row2=mysqli_fetch_array($result2)) {
@@ -427,7 +427,7 @@ echo "</table></div></div></div>";
 
 if($operation == 'update'){
 	if ( $nombre > 0 ) 
-		echo "<input type='submit' class='btn btn-danger' name='operation' value='Supprimer' disabled title='Impossible de supprimer car il y a $nombre véhicules de ce type dans la base'> ";
+		echo "<input type='submit' class='btn btn-danger' name='operation' value='Supprimer' disabled title='Impossible de supprimer car il y a $nombre vÃ©hicules de ce type dans la base'> ";
 	else
 		echo "<input type='submit' class='btn btn-danger' name='operation' value='Supprimer'> ";
 	echo "<input type='submit' class='btn btn-success' name='operation' value='Sauvegarder'> ";

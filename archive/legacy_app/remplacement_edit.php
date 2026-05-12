@@ -66,13 +66,13 @@ if ($action <> 'undefined') {
     if (isset($_GET["replaced"])) $replaced=intval($_GET["replaced"]); else $replaced=0;
     if ( $rid == 0 ) {
         if ( $replaced == 0 ) {
-            $html .= "<div class='alert alert-danger' role='alert'> Aucune personne ‡ remplacer choisie.</div><p>";
+            $html .= "<div class='alert alert-danger' role='alert'> Aucune personne √† remplacer choisie.</div><p>";
             $error=1; 
         }
         else {
             if (  $action == 'create_validate' and $admin_evenement ) {
                 if ( $substitute == 0 ) {
-                    $html .= "<div class='alert alert-danger' role='alert'> Aucun remplaÁant sÈlectionnÈ.</div><p>";
+                    $html .= "<div class='alert alert-danger' role='alert'> Aucun rempla√ßant s√©lectionn√©.</div><p>";
                     $error=1;
                 }
                 else {
@@ -135,7 +135,7 @@ if ($action <> 'undefined') {
         
         if ( $action == "validate" and $admin_evenement and $current_rejected == 0) {
             if ( $substitute == 0 ) {
-                $html .= "<div class='alert alert-danger' role='alert'> Aucun remplaÁant sÈlectionnÈ.</div><p>";
+                $html .= "<div class='alert alert-danger' role='alert'> Aucun rempla√ßant s√©lectionn√©.</div><p>";
                 $error=1;
             }
             else {
@@ -210,7 +210,7 @@ $html .= "<div class='table-responsive'>";
 $html .= "<div class='col-sm-6'>
         <div class='card hide card-default graycarddefault' style=''>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> DÈtails de la demande </strong></div>
+                <div class='card-title'><strong> D√©tails de la demande </strong></div>
             </div>
             <div class='card-body graycard'>";
             
@@ -225,7 +225,7 @@ $S_PRINCIPAL=@$row2["S_ID"];
 if (is_iphone()) $small_device=true;
 else $small_device=false;
 
-// RemplacÈ
+// Remplac√©
 $html .= "<tr><td>A remplacer</td></tr><tr><td>";
 if ( $rid > 0 ) {
     if ( $grades )  $html .="<img src=".$grades_imgdir."/".$row["g1"].".png height=20 title='".$row["g1"]."' style='PADDING:1px;' class='img-max-20'>";
@@ -267,7 +267,7 @@ else {
 }
 $html .="</td></tr>";
 
-//PÈriode
+//P√©riode
 $nb_sessions = get_nb_sessions($evenement);
 if ( $nb_sessions == 2 ) {
     $P=intval($EH_ID);
@@ -283,7 +283,7 @@ if ( $nb_sessions == 2 ) {
     }
     else if ( $id <> $replaced and ! $admin_evenement ) $disabled='disabled';
     else $disabled='';
-    $html .= "<tr><td>PÈriode ";
+    $html .= "<tr><td>P√©riode ";
     if ( $periode == 0 ) $checked='checked';
     else if ( $P == 0 ) $checked='checked';
     else $checked='';
@@ -294,7 +294,7 @@ if ( $nb_sessions == 2 ) {
     else {
         $t1 = 'Partie 1'; $t2='Partie 2';
     }
-    $html .= " <input type=radio name='periode' id='periode0' value='0' $checked $disabled title='DurÈe complËte' onchange=\"javascript:reload('".$rid."','".$evenement."','".$action."');\"> <label for='periode0'> DurÈe complËte</label>";
+    $html .= " <input type=radio name='periode' id='periode0' value='0' $checked $disabled title='Dur√©e compl√®te' onchange=\"javascript:reload('".$rid."','".$evenement."','".$action."');\"> <label for='periode0'> Dur√©e compl√®te</label>";
     if ( $periode == 1 ) $checked='checked';
     elseif ( $P == 1 ) $checked='checked';
     else $checked='';
@@ -305,8 +305,8 @@ if ( $nb_sessions == 2 ) {
     $html .= " <input type=radio name='periode' id='periode2' value='2' $checked $disabled title='$t2 seulement' onchange=\"javascript:reload('".$rid."','".$evenement."','".$action."');\"> <label for='periode2'> $t2</label></td></tr> "; 
 }
 
-// RemplaÁant
-$html .= "<tr><td>RemplaÁant proposÈ</td></tr><tr><td>";
+// Rempla√ßant
+$html .= "<tr><td>Rempla√ßant propos√©</td></tr><tr><td>";
 if ( $approved == 1 or $rejected == 1 ) {
     if ( $grades and $substitute > 0 )  $html .="<img src=".$grades_imgdir."/".$row["g8"].".png height=20 title='".$row["g8"]."' style='PADDING:1px;' class='img-max-20'>";
     $html .= " <b>".$substitute_name."</b><input type='hidden' name='substitute' id='substitute' value=".$substitute.">";
@@ -322,7 +322,7 @@ else if ( $admin_evenement or
     if ( $S_PRINCIPAL <> '' ) $subquery .= " or S_ID = ".$S_PRINCIPAL." or S_PARENT=".$S_PRINCIPAL;
     
     $html .= "<select name='substitute' id='substitute' $disabled  class='selectpicker' data-live-search='true' data-container='body' >
-    <option value='0' option-ebrigade>Proposer un remplaÁant</option>";
+    <option value='0' option-ebrigade>Proposer un rempla√ßant</option>";
     $query="select p.P_ID, p.P_NOM, p.P_PRENOM, p.P_GRADE, p.P_STATUT, s.S_CODE 
         from pompier p, section s
         where p.P_SECTION in (".$subquery.")
@@ -368,7 +368,7 @@ else if ( $admin_evenement or
         $html .= "<option value='".$row["P_ID"]."' class='option-ebrigade ".$row["P_STATUT"]."' $selected>".$R."</option>";
     }
     $html .="</select>";
-    if ( $nbR == 0 ) $html .="<br><small>Le responsable pourra choisir une autre remplaÁant.</small>";
+    if ( $nbR == 0 ) $html .="<br><small>Le responsable pourra choisir une autre rempla√ßant.</small>";
 }
 else {
     if ( $grades and $substitute > 0 )  $html .="<img src=".$grades_imgdir."/".$row["g8"].".png height=20 title='".$row["g8"]."' style='PADDING:1px;' class='img-max-20'>";
@@ -376,32 +376,32 @@ else {
 }
 $html .= "</td></tr>";
 
-// dÈtails de la demande
+// d√©tails de la demande
 if ( $nbR == 1 ) {
-    $html .= "<tr  class='small'><td><span class='badge' style='background-color:orange;'>DemandÈ</span>";
+    $html .= "<tr  class='small'><td><span class='badge' style='background-color:orange;'>Demand√©</span>";
     $html .= " Le ".$date_request." Par ".$requested_by."</td></tr>";
     if ( $accepted == 1 ) {
-        $html .= "<tr  class='small'><td><span class='badge' style='background-color:purple;'>AcceptÈ</span>";
-        $html .= " Le ".$date_accept." Par le remplaÁant  ".$accepted_by."</td></tr>";
+        $html .= "<tr  class='small'><td><span class='badge' style='background-color:purple;'>Accept√©</span>";
+        $html .= " Le ".$date_accept." Par le rempla√ßant  ".$accepted_by."</td></tr>";
     }
     if ( $rejected == 1 ) {
-        $html .= "<tr  class='small'><td><span class='badge' style='background-color:red;'>RefusÈ</span>";
+        $html .= "<tr  class='small'><td><span class='badge' style='background-color:red;'>Refus√©</span>";
         $html .= " Le ".$date_reject." Par ".$rejected_by."</td></tr>";
 
     }
     else if ( $approved == 1 ) {
-        $html .= "<tr  class='small'><td><span class='badge' style='background-color:green;'>ApprouvÈ</span>";
+        $html .= "<tr  class='small'><td><span class='badge' style='background-color:green;'>Approuv√©</span>";
         $html .= " Le ".$date_approve." Par ".$approved_by."</td></tr>";
     }
 }
 $html .= "</table>";
 $aftercard=[];
-// crÈer un remplacement
+// cr√©er un remplacement
 if ( $nbR == 0  ) {
-    $html .= "<input type='button' value='Demander'  class='btn btn-primary' title='Sauver la demande de remplacement, un mail sera envoyÈ'
+    $html .= "<input type='button' value='Demander'  class='btn btn-primary' title='Sauver la demande de remplacement, un mail sera envoy√©'
             onclick=\"javascript:create('".$evenement."','demande');\">";
     if ( $admin_evenement ) {
-        $html .= " <input type='submit' value='Approuver' class='btn btn-success' title='Valider la demande de remplacement, le personnel sera remplacÈ'
+        $html .= " <input type='submit' value='Approuver' class='btn btn-success' title='Valider la demande de remplacement, le personnel sera remplac√©'
                 onclick=\"javascript:create('".$evenement."','validate');\">";
     }
     $aftercard[2] = " <input type='button' value='Retour'  class='btn btn-secondary' title='Retour' onclick='javascript:self.location.href=\"evenement_display.php?tab=2&child=2&evenement=".$evenement."\"'>";
@@ -421,7 +421,7 @@ else if ($rejected == 0 and $approved == 0 ) {
     if ( $admin_evenement ) {
         $html .= " <input type='submit' value='Rejeter' class='btn btn-warning' title='Rejeter la demande de remplacement' 
                 onclick=\"javascript:update('".$rid."','".$evenement."','reject');\">";
-        $html .= " <input type='submit' value='Approuver' class='btn btn-success' title='Valider la demande de remplacement, le personnel sera remplacÈ'
+        $html .= " <input type='submit' value='Approuver' class='btn btn-success' title='Valider la demande de remplacement, le personnel sera remplac√©'
                 onclick=\"javascript:update('".$rid."','".$evenement."','validate');\">";
         if ( $allowed_delete )
             $aftercard[0] = " <input type='submit' value='Supprimer' class='btn btn-danger' title='Supprimer la demande de remplacement' 
@@ -429,7 +429,7 @@ else if ($rejected == 0 and $approved == 0 ) {
     }
     $aftercard[2]= " <input type='button' value='Retour'  class='btn btn-secondary' title='Retour' onclick='javascript:self.location.href=\"evenement_display.php?tab=2child=2&evenement=".$evenement."\"'>";
 }
-// dÈj‡ approuvÈ ou rejetÈ
+// d√©j√† approuv√© ou rejet√©
 else {
     $aftercard[2] = " <input type='button' value='Retour' class='btn btn-secondary' title='Retour' onclick='javascript:history.go(-1)'>";
     if ( $allowed_delete and $admin_evenement)

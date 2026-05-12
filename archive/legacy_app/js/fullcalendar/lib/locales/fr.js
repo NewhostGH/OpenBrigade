@@ -8,19 +8,19 @@ FullCalendar.globalLocales.push(function () {
       doy: 4, // The week that contains Jan 4th is the first week of the year.
     },
     buttonText: {
-      prev: 'Précédent',
+      prev: 'PrÃ©cÃ©dent',
       next: 'Suivant',
       today: "Aujourd'hui",
-      year: 'Année',
+      year: 'AnnÃ©e',
       month: 'Mois',
       week: 'Semaine',
       day: 'Jour',
       list: 'Planning',
     },
     weekText: 'Sem.',
-    allDayText: 'Toute la journée',
+    allDayText: 'Toute la journÃ©e',
     moreLinkText: 'en plus',
-    noEventsText: 'Aucun événement à afficher',
+    noEventsText: 'Aucun Ã©vÃ©nement Ã  afficher',
   };
 
   return fr;

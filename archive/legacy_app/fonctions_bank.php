@@ -58,7 +58,7 @@ function Rib2Iban($codebanque,$codeguichet,$numerocompte,$cle){
         "I" => "18","J" => "19","K" => "20","L" => "21","M" => "22","N" => "23","O" => "24","P" => "25","Q" => "26",
         "R" => "27","S" => "28","T" => "29","U" => "30","V" => "31","W" => "32","X" => "33","Y" => "34","Z" => "35");
         $tmpiban = strtr(strtoupper($codebanque.$codeguichet.$numerocompte.$cle)."FR00",$charConversion);
-        // Soustraction du modulo 97 de l'IBAN temporaire à 98
+        // Soustraction du modulo 97 de l'IBAN temporaire Ã  98
         $cleiban = strval(98 - intval(my_bcmod($tmpiban,"97")));
         if (strlen($cleiban) == 1)
                 $cleiban = "0".$cleiban;
@@ -95,7 +95,7 @@ function display_IBAN($iban) {
 }
 
 function isValidIban($iban) {
-    /*Régles de validation par pays*/
+    /*RÃ©gles de validation par pays*/
     static $rules = array(
     'AL'=>'[0-9]{8}[0-9A-Z]{16}',
     'AD'=>'[0-9]{8}[0-9A-Z]{12}',
@@ -152,30 +152,30 @@ function isValidIban($iban) {
     'AE'=>'[0-9]{19}',
     'GB'=>'[A-Z]{4}[0-9]{14}'
     );
-    /*On vérifie la longueur minimale*/
+    /*On vÃ©rifie la longueur minimale*/
     if(mb_strlen($iban) < 18) {
         return false;
     }
-    /*On récupère le code ISO du pays*/
+    /*On rÃ©cupÃ¨re le code ISO du pays*/
     $ctr = substr($iban,0,2);
     if(isset($rules[$ctr]) === false) {
         return false;
     }
-    /*On récupère la règle de validation en fonction du pays*/
+    /*On rÃ©cupÃ¨re la rÃ¨gle de validation en fonction du pays*/
     $check = substr($iban,4);
-    /*Si la règle n'est pas bonne l'IBAN n'est pas valide*/
+    /*Si la rÃ¨gle n'est pas bonne l'IBAN n'est pas valide*/
     if(preg_match('~'.$rules[$ctr].'~',$check) !== 1) {
         return false;
     }
-    /*On récupère la chaine qui permet de calculer la validation*/
+    /*On rÃ©cupÃ¨re la chaine qui permet de calculer la validation*/
     $check = $check.substr($iban,0,4);
-    /*On remplace les caractères alpha par leurs valeurs décimales*/
+    /*On remplace les caractÃ¨res alpha par leurs valeurs dÃ©cimales*/
     $check = str_replace(
         array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T','U', 'V', 'W', 'X', 'Y', 'Z'),
         array('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'),
         $check
     );
-    /*On effectue la vérification finale*/
+    /*On effectue la vÃ©rification finale*/
     return my_bcmod($check,"97") == 1;
 }
 

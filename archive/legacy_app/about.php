@@ -34,7 +34,7 @@ else $class = '';
 echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'about.php?tab=2' role = 'tab'>
             <i class='fa fa-hands-helping'></i>
-            <span>Communauté </span>
+            <span>CommunautÃ© </span>
         </a>
     </li>";
 
@@ -78,7 +78,7 @@ if ($tab == 3) {
     echo "<div class='row'>";
     echo "<div class='col-sm-6' align=center><div class='card hide card-default graycarddefault' align=center>";
     echo "<div class='card-header graycard'>
-                <div class='card-title'><h6><strong>Licence en français</strong></h6></div>
+                <div class='card-title'><h6><strong>Licence en franÃ§ais</strong></h6></div>
             </div>";
     echo "<div class='card-body graycard'>";
     echo file_get_contents('license_fr.txt');
@@ -99,7 +99,7 @@ if($tab == 4){
     echo "<div class='col-sm-4' align=center style='' >";
     echo "<div class='card hide card-default graycarddefault' align=center style=''>
             <div class='card-header graycard'>
-                <div class='card-title' align=center><strong>Technologies utilisées</strong></div>
+                <div class='card-title' align=center><strong>Technologies utilisÃ©es</strong></div>
             </div>
             <div class='card-body graycard'>
                <table cellspacing='0' border='0' class='noBorder fullWidth separate'>

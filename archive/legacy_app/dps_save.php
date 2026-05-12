@@ -37,14 +37,14 @@ if(isset($_POST['P1'])){
     if( check_rights($_SESSION['id'], 15) ){
         echo "
         <p>Vous pouvez imprimer la grille:<br><ul>
-        <li><a href=\"pdf.php?pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">grille complète</a> </li> 
-        <li><a href=\"pdf.php?page=1&pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">page 1 seulement</a> <span class=small2>à joindre à la convention</span></li>
+        <li><a href=\"pdf.php?pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">grille complÃ¨te</a> </li> 
+        <li><a href=\"pdf.php?page=1&pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">page 1 seulement</a> <span class=small2>Ã  joindre Ã  la convention</span></li>
         </ul></p>
         ";
     }
 }
 else{
-    echo "<p>Aucune donnée envoyée...</p>";
+    echo "<p>Aucune donnÃ©e envoyÃ©e...</p>";
 }
 
 writefoot();

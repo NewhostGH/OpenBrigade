@@ -81,10 +81,10 @@ while (custom_fetch_array($result)) {
     else $partie="";
     echo "<td style='border-bottom:0px;'>".$partie."</td>";
     $periode = "";
-    if ( $RAW_DATE_DEBUT <> $date ) $periode = "du ".$EH_DATE_DEBUT." à ".$EH_DEBUT;
+    if ( $RAW_DATE_DEBUT <> $date ) $periode = "du ".$EH_DATE_DEBUT." Ã  ".$EH_DEBUT;
     else $periode = " de ".$EH_DEBUT;
-    if ( $RAW_DATE_FIN <> $date ) $periode .= " au ".$EH_DATE_FIN." à ".$EH_FIN;
-    else $periode .= " à ".$EH_FIN;
+    if ( $RAW_DATE_FIN <> $date ) $periode .= " au ".$EH_DATE_FIN." Ã  ".$EH_FIN;
+    else $periode .= " Ã  ".$EH_FIN;
     echo "<td style='border-bottom:0px;'>".$periode."</td>";
     echo "<tr>";
 }

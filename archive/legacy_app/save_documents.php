@@ -91,7 +91,7 @@ if ( isset ($_FILES['userfile'])) {
             list($file_name, $error, $msgstring ) = explode(";", $upload_result);
 
             if ( $error == 0 ) {
-                    // upload réussi: insérer les informations relatives au document dans la base
+                    // upload rÃ©ussi: insÃ©rer les informations relatives au document dans la base
                     $_SESSION['dossier'] = intval($dossier);
                     $query="insert into document(S_ID,D_NAME,TD_CODE,DS_ID,D_CREATED_BY,D_CREATED_DATE,DF_ID)
                            values (".$S_ID.",\"".$file_name."\",\"".$TD_CODE."\",\"".$DS_ID."\",".$id.",NOW(),".intval($dossier).")";

@@ -164,7 +164,7 @@ echo " </td>
 //=====================================================================
 
 echo "<tr>
-            <td>N° SIRET</td>
+            <td>NÂ° SIRET</td>
             <td  align=left><input type='text' name='C_SIRET' size='30' class='form-control form-control-sm maxsize'
 value='' onchange='checkNumber(form.C_SIRET,\"\")'>";
 echo " </td>
@@ -206,7 +206,7 @@ echo "</tr>";
 //=====================================================================
 
 echo "<tr>
-            <td>Téléphone</td>
+            <td>TÃ©lÃ©phone</td>
             <td  align=left>
             <input type='text' name='phone' size='20' class='form-control form-control-sm maxsize' value='' onchange='checkPhone(form.phone,\"\",\"".$min_numbers_in_phone."\")'>";
 echo "</tr>";

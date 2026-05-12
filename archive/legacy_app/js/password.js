@@ -31,12 +31,12 @@ $(document).ready(function() {
         if (charPassword[i].match(/[A-Z]/g)) {num.Upper++;}
         if (charPassword[i].match(/[a-z]/g)) {num.Lower++;}
         if (charPassword[i].match(/[0-9]/g)) {num.Numbers++;}
-        if (charPassword[i].match(/(.*[!,@,#,$,%,^,&,*,?,_,~,£,µ,§,=,.,é,è,ç,à,ù,>,<,€,\.,\;,\,,\:,+,-,¤,|])/)) {num.Symbols++;}
+        if (charPassword[i].match(/(.*[!,@,#,$,%,^,&,*,?,_,~,Â£,Âµ,Â§,=,.,Ã©,Ã¨,Ã§,Ã ,Ã¹,>,<,â‚¬,\.,\;,\,,\:,+,-,Â¤,|])/)) {num.Symbols++;}
     }
 
     // Test longueur
     if (charPassword.length < minPasswordLength) {
-        $('#passwordStrength').removeClass().addClass('alert alert-warning').html('La longueur du mot de passe doit être de au moins ' + minPasswordLength + ' caractères.');
+        $('#passwordStrength').removeClass().addClass('alert alert-warning').html('La longueur du mot de passe doit Ãªtre de au moins ' + minPasswordLength + ' caractÃ¨res.');
         $('#sauver').attr('disabled','disabled');
         return false;
     }
@@ -53,9 +53,9 @@ $(document).ready(function() {
         return false;
     }
 
-    // test caractères spéciaux
+    // test caractÃ¨res spÃ©ciaux
     if ( passwordQuality == 2 && num.Symbols == 0) {
-        $('#passwordStrength').removeClass().addClass('alert alert-danger').html('Le mot de passe doit aussi contenir des caractères spéciaux choisis parmi ceux-ci: !,@,#,$,%,^,&,*,?,_,~,£,µ,§,=,é,è,ç,à,ù,>,<,€,.,;,:,+,-,¤,|');
+        $('#passwordStrength').removeClass().addClass('alert alert-danger').html('Le mot de passe doit aussi contenir des caractÃ¨res spÃ©ciaux choisis parmi ceux-ci: !,@,#,$,%,^,&,*,?,_,~,Â£,Âµ,Â§,=,Ã©,Ã¨,Ã§,Ã ,Ã¹,>,<,â‚¬,.,;,:,+,-,Â¤,|');
         $('#sauver').attr('disabled','disabled');
         return false;
     }
@@ -64,17 +64,17 @@ $(document).ready(function() {
     if (num.Upper && num.Lower && num.Numbers && num.Symbols && num.Excess > 0 ) {
             $('#passwordStrength').removeClass().addClass('alert alert-success').html('Bon Mot de passe!');
         } else if (num.Numbers == 0 ) {
-            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sécurité, mettez aussi des chiffres!');
+            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sÃ©curitÃ©, mettez aussi des chiffres!');
         } else if (num.Letters == 0 ) {
-            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sécurité, mettez aussi des lettres!');
+            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sÃ©curitÃ©, mettez aussi des lettres!');
         } else if (num.Lower == 0 ) {
-            $('#passwordStrength').removeClass().addClass('alert alert-info ').html('Pour plus de sécurité, mettez aussi des lettres minuscules!');
+            $('#passwordStrength').removeClass().addClass('alert alert-info ').html('Pour plus de sÃ©curitÃ©, mettez aussi des lettres minuscules!');
         } else if (num.Upper == 0 ) {
-            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sécurité, mettez aussi des lettres majuscules!');
+            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sÃ©curitÃ©, mettez aussi des lettres majuscules!');
         } else if (num.Symbols == 0 ) {
-            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sécurité, mettez aussi des caractères spéciaux!');
+            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sÃ©curitÃ©, mettez aussi des caractÃ¨res spÃ©ciaux!');
         } else if (num.Excess == 0 ) {
-            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sécurité, choisissez un mot de passe encore plus long!');
+            $('#passwordStrength').removeClass().addClass('alert alert-info').html('Pour plus de sÃ©curitÃ©, choisissez un mot de passe encore plus long!');
         }
         $('#sauver').removeAttr('disabled');
         return true;

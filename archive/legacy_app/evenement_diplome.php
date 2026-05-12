@@ -59,7 +59,7 @@ $EH_DATE_DEBUT=$debut;
 $chefs=get_chefs_evenement($evenement);
 if (! in_array($id,$chefs) and ! check_rights($id, 4, "$S_ID")) check_all(24);
 
-// cas pas de responsable désigné, choisir un formateur
+// cas pas de responsable dÃ©signÃ©, choisir un formateur
 if ( count($chefs) == 0 ) {
     $query2="select ep.P_ID, ep.TP_ID, tp.TP_NUM
          from evenement_participation ep, type_participation tp, pompier p
@@ -84,7 +84,7 @@ if ( count($chefs) == 0 ) {
 $query="delete from personnel_formation where E_CODE > 0 and E_CODE=".$evenement;
 $result=mysqli_query($dbc,$query);
 
-// ensuite on réenregistre
+// ensuite on rÃ©enregistre
 $listpersonnel=""; $destid="";
 if ( count($chefs) > 0  ) $resp=ucfirst(get_prenom($chefs[0]))." ".strtoupper(get_nom($chefs[0]));
 else $resp="";
@@ -112,7 +112,7 @@ foreach ($_POST as $result_nme => $result_val) {
         and E_CODE = ".$evenement;
         $result=mysqli_query($dbc,$query);
         if ( mysqli_num_rows($result) > 0 ) {
-            $listpersonnel .= " diplôme n° ".$result_val." ";
+            $listpersonnel .= " diplÃ´me nÂ° ".$result_val." ";
             $k=true;
         }
     }
@@ -126,15 +126,15 @@ foreach ($_POST as $result_nme => $result_val) {
             and E_CODE = ".$evenement;
             $result=mysqli_query($dbc,$query);
             
-            $listpersonnel .= " Compétence valide jusqu'au: ".$result_val." ";
+            $listpersonnel .= " CompÃ©tence valide jusqu'au: ".$result_val." ";
             $k=true;
             
-            // mettre à jour prolongation sur la fiche formation
+            // mettre Ã  jour prolongation sur la fiche formation
             $query="update personnel_formation set Q_EXPIRATION='".$expiration."',
                     where P_ID=".$P_ID." and E_CODE = ".$evenement;
             $result=mysqli_query($dbc,$query);
             
-            // mettre à jour competence
+            // mettre Ã  jour competence
             $query="update qualification set Q_EXPIRATION='".$expiration."',
                                     Q_UPDATED_BY=".$_SESSION['id'].", Q_UPDATE_DATE=NOW()
                      where ( Q_EXPIRATION <> '".$expiration."' or Q_EXPIRATION is null )
@@ -147,7 +147,7 @@ foreach ($_POST as $result_nme => $result_val) {
             if ($log_actions == 1 and $updated == 1 ) {
                 insert_log("UPDQ",$P_ID, $TYPE." ".$expiration);
             }
-            // changer date expiration sur les compétences inférieures de la hiérarchie      
+            // changer date expiration sur les compÃ©tences infÃ©rieures de la hiÃ©rarchie      
             if ( $PH_UPDATE_LOWER_EXPIRY == 1 ) {
                 if ( $update_hierarchy == 1 or $PH_UPDATE_MANDATORY ) {  
                     $query2="update qualification
@@ -159,7 +159,7 @@ foreach ($_POST as $result_nme => $result_val) {
                                             and PH_CODE='".$PH_CODE."'
                                             and PH_LEVEL <= ".$PH_LEVEL." )";
                     $result2=mysqli_query($dbc,$query2);
-                    // cas particulier mettre à jour une compétence d'une autre hiérarchie
+                    // cas particulier mettre Ã  jour une compÃ©tence d'une autre hiÃ©rarchie
                     if ( $TYPE == 'FDF PSE') {
                         $query2="update qualification
                             set Q_EXPIRATION = '".$expiration."'
@@ -172,7 +172,7 @@ foreach ($_POST as $result_nme => $result_val) {
             }
         }
         else {
-            // mettre à jour prolongation
+            // mettre Ã  jour prolongation
             $query="update personnel_formation set Q_EXPIRATION=null,
                     where P_ID=".$P_ID." and E_CODE = ".$evenement;
             $result=mysqli_query($dbc,$query);
@@ -207,21 +207,21 @@ if ( $TF_CODE == 'I'  or  $TF_CODE == 'R' or  $TF_CODE == 'M' ) {
     $row=@mysqli_fetch_array($result);
     if ( $row["NB"] > 0) {
         $datesheures=get_dates_heures($evenement);
-        $subject  = "Résultats de la formation - ".$TYPE." de ".$E_LIEU;
+        $subject  = "RÃ©sultats de la formation - ".$TYPE." de ".$E_LIEU;
         $message  = "Bonjour,\n";
-        $message .= "Les personnes suivantes ont suivi avec cette formation avec succès\n";
+        $message .= "Les personnes suivantes ont suivi avec cette formation avec succÃ¨s\n";
         
         $url=get_plain_url($cisurl);
         $siteurl = "http://".$url."/index.php?evenement=".$evenement;
 
-        $message  .= "<a href=".$siteurl." title='cliquer pour voir le détail'>".$TF_LIBELLE." ".$TYPE."</a>.";
-        $message .= "\névénement numéro: ".$evenement;
-        $message .= "\ndates: ".$datesheures."\norganisée à ".$E_LIEU." par ".get_section_code("$S_ID").":\n\n";
+        $message  .= "<a href=".$siteurl." title='cliquer pour voir le dÃ©tail'>".$TF_LIBELLE." ".$TYPE."</a>.";
+        $message .= "\nÃ©vÃ©nement numÃ©ro: ".$evenement;
+        $message .= "\ndates: ".$datesheures."\norganisÃ©e Ã  ".$E_LIEU." par ".get_section_code("$S_ID").":\n\n";
         $message .= $listpersonnel;
         
         $nb = mysendmail("$destid" , $_SESSION['id'] , "$subject" , "$message" );
         
-        // envoyer aussi a l'adresse formation du département
+        // envoyer aussi a l'adresse formation du dÃ©partement
         $query="select s.S_EMAIL3, sf.NIV
                 from section_flat sf, section s
                 where s.S_ID = sf.S_ID
@@ -238,11 +238,11 @@ if ( $TF_CODE == 'I'  or  $TF_CODE == 'R' or  $TF_CODE == 'M' ) {
             mysendmail2("$S_EMAIL3","$subject","$message",$SenderName,$SenderMail);
         }
        
-        // notifier ceux qui doivent imprimer le diplôme national
+        // notifier ceux qui doivent imprimer le diplÃ´me national
         if ( $TF_CODE == 'I' and $PS_NATIONAL == 1 and $PS_PRINTABLE == 1 ) {
             $destid = get_granted(48,0,'local','yes');
-            $subject  = "Diplomes nationaux à imprimer - ".$TYPE." (".get_section_code("$S_ID").")";
-            $message .= "\nMerci de procéder à l'impression des diplômes nationaux ".$TYPE;
+            $subject  = "Diplomes nationaux Ã  imprimer - ".$TYPE." (".get_section_code("$S_ID").")";
+            $message .= "\nMerci de procÃ©der Ã  l'impression des diplÃ´mes nationaux ".$TYPE;
             $nb = mysendmail("$destid" , $_SESSION['id'] , "$subject" , "$message" );
         }
     }

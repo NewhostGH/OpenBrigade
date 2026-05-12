@@ -48,7 +48,7 @@ $TI_FLAG=$row["TI_FLAG"];
 $status=$row["I_STATUS"];
 $tmp=explode ( "-",$debut); $month1=$tmp[1]; $day1=$tmp[0]; $year1=$tmp[2];
 $tmp=explode ( "-",$fin); $month2=$tmp[1]; $day2=$tmp[0]; $year2=$tmp[2];
-// cas particulier, je peux supprimer ma demande de Congés en attente de validation
+// cas particulier, je peux supprimer ma demande de CongÃ©s en attente de validation
 if ( $action == "supprimer" and  $TI_FLAG == 1 and $person == $id and $status == 'ATT' )
     check_all(0);
 else {
@@ -61,7 +61,7 @@ if ($I_JOUR_COMPLET == 1  and  $debut == $fin )
 else if ($I_JOUR_COMPLET == 1 )
     $periode="du ".$debut." au ".$fin;
 else if ( $debut == $fin )
-    $periode="du ".$debut." de ".$IH_DEBUT." à ".$IH_FIN;
+    $periode="du ".$debut." de ".$IH_DEBUT." Ã  ".$IH_FIN;
 else
     $periode="du ".$debut." (".$IH_DEBUT.") au ".$fin." (".$IH_FIN.")";
 
@@ -81,7 +81,7 @@ if ( $action == "valider" )  {
        I_STATUS_BY=".$id."
        where I_CODE=".$code;
     $result=mysqli_query($dbc,$query);
-    $st="acceptée";
+    $st="acceptÃ©e";
     //Quand demi absence
     if ($I_TYPE_PERIODE == 2){
         $query2=" UPDATE evenement_participation SET EP_REMINDER=0,EP_ABSENT=1,EP_EXCUSE=1 WHERE P_ID = '".$person."'
@@ -116,7 +116,7 @@ if ( $action == "refuser" )  {
        I_STATUS_BY=".$id."
        where I_CODE=".$code;
     $result=mysqli_query($dbc,$query);
-    $st="refusée";
+    $st="refusÃ©e";
     if ($log_actions == 1)
         insert_log('REFABS', $person, $type." ".$periode." ".$st);
 }
@@ -125,7 +125,7 @@ if ( $action == "supprimer" )  {
     $query="delete from  indisponibilite
            where I_CODE=".$code;
     $result=mysqli_query($dbc,$query);
-    $st="supprimée";
+    $st="supprimÃ©e";
     $query2=" UPDATE evenement_participation SET EP_REMINDER=0,EP_ABSENT=0,EP_EXCUSE=0 WHERE P_ID = '".$person."'
     AND E_CODE IN ( SELECT E_CODE FROM evenement_horaire eh WHERE eh.EH_DATE_DEBUT >= '".$year1."-".$month1."-".$day1."' 
     and eh.EH_DATE_DEBUT<='".$year2."-".$month2."-".$day2."')";
@@ -137,7 +137,7 @@ if ( $action == "supprimer" )  {
 // envoi email de notification
 if ( $type == 'CP' ||  $type == 'RTT' ) {
     $destid=get_granted(13,"$section",'parent','yes').','.$person;
-    // notifier auss les responsables d'autres sections selon les rôles de l'organigramme de la personne
+    // notifier auss les responsables d'autres sections selon les rÃ´les de l'organigramme de la personne
     $query="select S_ID from section_role where S_ID <> ".$section ."
             and P_ID = ".$person;
     $result=mysqli_query($dbc,$query);
@@ -151,7 +151,7 @@ if ( $type == 'CP' ||  $type == 'RTT' ) {
     $message="Bonjour,\n
 La demande de ".$type." de ".ucfirst(get_prenom($person))." ".strtoupper(get_nom($person))."\n";
     $message .= $periode;
-    $message .="\na été ".$st." par ".ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)).".\n";
+    $message .="\na Ã©tÃ© ".$st." par ".ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)).".\n";
     $nb = mysendmail("$destid" , $id , $subject , "$message" );
 }
 

@@ -44,12 +44,12 @@ if (isset ($_GET["redirect_to"])) $redirect_to=intval($_GET["redirect_to"]);
 else $redirect_to=0;
 
 if ( $P_ID == 0 ) {
-    write_msgbox("erreur de paramètres", $P_ID." ".$error_pic, $error_8."<p align=center><a href=personnel.php><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
+    write_msgbox("erreur de paramÃ¨tres", $P_ID." ".$error_pic, $error_8."<p align=center><a href=personnel.php><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
     exit;
 }
 
 if ( $P_ID == 1 ) {
-    write_msgbox("erreur", $error_pic, "Cette fiche personnelle ne doit pas être supprimée<p align=center><a href=upd_personnel.php?pompier=".$P_ID."><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
+    write_msgbox("erreur", $error_pic, "Cette fiche personnelle ne doit pas Ãªtre supprimÃ©e<p align=center><a href=upd_personnel.php?pompier=".$P_ID."><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
     exit;
 }
 

@@ -6,25 +6,25 @@ function modify( form, confid, value, defaultvalue ) {
     var ok=1;
     formid = document.getElementById('f'+confid);
     if (value.indexOf(' ') >= 0 && confid != 39 && confid != 40 && confid != 41 && confid != 6 && confid != 102 && confid != 103 && confid != 104 && confid != 105 && confid != 106){
-          swalAlert("Ce paramètre de configuration ne doit pas contenir d'espaces.");
+          swalAlert("Ce paramÃ¨tre de configuration ne doit pas contenir d'espaces.");
           form.value = defaultvalue;
     }
     else {
         if( confid == 98 || confid == 99 || confid == 102 || confid == 103 || confid == 104 || confid == 105 || confid == 106 ) {
             if (value === '') {
-                swalAlert("Ce paramètre de configuration ne peut pas être vide.");
+                swalAlert("Ce paramÃ¨tre de configuration ne peut pas Ãªtre vide.");
                 form.value = defaultvalue;
             }
         }
         if( confid == 100 ) {
             if(value.length < 2 || value[0] !== "+") {
-                swalAlert("Ce paramètre de configuration doit commencer par un +.");
+                swalAlert("Ce paramÃ¨tre de configuration doit commencer par un +.");
                 form.value = defaultvalue;
             }
             else {
                 for(var i=1; i<value.length; i++) {
                     if(parseInt(value[i]) != value[i] && value[i] !== '-') {
-                        swalAlert("Ce paramètre de configuration ne peut contenir que des chiffres et les symboles + et -.");
+                        swalAlert("Ce paramÃ¨tre de configuration ne peut contenir que des chiffres et les symboles + et -.");
                         form.value = defaultvalue;
                         break;
                     }
@@ -84,7 +84,7 @@ function modify( form, confid, value, defaultvalue ) {
         if ( confid == 12 ) {
             var re = /^([\.\:\=a-zA-Z0-9_-]*)$/;
             if (! re.test(value)) {
-                swalAlert ("Seul des lettres, numéros ou les caractères . : = - _ sont attendus: "+ value + " ne convient pas.");
+                swalAlert ("Seul des lettres, numÃ©ros ou les caractÃ¨res . : = - _ sont attendus: "+ value + " ne convient pas.");
                 form.value = defaultvalue;
             }
         }

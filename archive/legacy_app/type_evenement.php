@@ -80,19 +80,19 @@ echo "<tr>
     <td width=30></td>
     <td><a href=parametrage.php?tab=2&child=5&order=TE_CODE>Code</a></td>
     <td><a href=parametrage.php?tab=2&child=5&order=TE_LIBELLE>Nom</a></td>
-    <td><a href=parametrage.php?tab=2&child=5&order=CEV_DESCRIPTION>Catégorie</a></td>
+    <td><a href=parametrage.php?tab=2&child=5&order=CEV_DESCRIPTION>CatÃ©gorie</a></td>
     <td class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_PERSONNEL >Personnel</a></td>";
 if ( $vehicules == 1 ) 
-echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_VEHICULES>Véhicules</a></td>";
+echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_VEHICULES>VÃ©hicules</a></td>";
 if ( $materiel == 1 ) 
-echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_MATERIEL>Matériel</a></td>";
+echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_MATERIEL>MatÃ©riel</a></td>";
 if ( $consommables == 1 )
 echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_CONSOMMABLES>Consommables</a></td>";
 echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_DOCUMENT>Docs</a></td>";
 echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_MAIN_COURANTE>Rapport</a></td>
     <td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_VICTIMES>Victimes</a></td>
     <td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=TE_MULTI_DUPLI>Duplication Multiple</a></td>
-    <td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=ACCES_RESTREINT>Accès restreint</a></td>";
+    <td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=ACCES_RESTREINT>AccÃ¨s restreint</a></td>";
 if ( $syndicate == 0 ) 
 echo "<td align=center class='hide_mobile'><a href=parametrage.php?tab=2&child=5&order=COLONNE_RENFORT>Colonne renfort</a></td>";
 if ( $bilan == 1 ) 
@@ -107,40 +107,40 @@ echo "</tr>";
 $i=0;
 while (custom_fetch_array($result)) {
     
-    if ( $TE_MAIN_COURANTE == 1 ) $TE_MAIN_COURANTE = "<i class='fa fa-check' title=\"Il est possible d'écrire une main courante pour ce type d'activité\"></i>";
+    if ( $TE_MAIN_COURANTE == 1 ) $TE_MAIN_COURANTE = "<i class='fa fa-check' title=\"Il est possible d'Ã©crire une main courante pour ce type d'activitÃ©\"></i>";
     else $TE_MAIN_COURANTE ="";
     
-    if ( $TE_VICTIMES == 1 ) $TE_VICTIMES = "<i class='fa fa-check'  title=\"Il est possible d'enregistrer des victimes sur ce type d'activités\"></i>";
+    if ( $TE_VICTIMES == 1 ) $TE_VICTIMES = "<i class='fa fa-check'  title=\"Il est possible d'enregistrer des victimes sur ce type d'activitÃ©s\"></i>";
     else $TE_VICTIMES ="";
     
-    if ( $TE_MULTI_DUPLI == 1 ) $TE_MULTI_DUPLI = "<i class='fa fa-check'  title=\"Il est possible de faire des duplications multiples pour ce type d'activité\"></i>";
+    if ( $TE_MULTI_DUPLI == 1 ) $TE_MULTI_DUPLI = "<i class='fa fa-check'  title=\"Il est possible de faire des duplications multiples pour ce type d'activitÃ©\"></i>";
     else $TE_MULTI_DUPLI ="";
     
-    if ( $ACCES_RESTREINT == 1 ) $ACCES_RESTREINT = "<i class='fa fa-check'  title=\"Les activités de ce type ne sont visibles que par les inscrits et les responsables\"></i>";
+    if ( $ACCES_RESTREINT == 1 ) $ACCES_RESTREINT = "<i class='fa fa-check'  title=\"Les activitÃ©s de ce type ne sont visibles que par les inscrits et les responsables\"></i>";
     else $ACCES_RESTREINT ="";
     
-    if ( $TE_PERSONNEL == 1 ) $TE_PERSONNEL = "<i class='fa fa-check'  title=\"On peut inscrire du personnel sur ce type d'activité\"></i>";
+    if ( $TE_PERSONNEL == 1 ) $TE_PERSONNEL = "<i class='fa fa-check'  title=\"On peut inscrire du personnel sur ce type d'activitÃ©\"></i>";
     else $TE_PERSONNEL ="";
     
-    if ( $TE_VEHICULES == 1 ) $TE_VEHICULES = "<i class='fa fa-check'  title=\"Les véhicules peuvent être engagés sur ce type d'activités\"></i>";
+    if ( $TE_VEHICULES == 1 ) $TE_VEHICULES = "<i class='fa fa-check'  title=\"Les vÃ©hicules peuvent Ãªtre engagÃ©s sur ce type d'activitÃ©s\"></i>";
     else $TE_VEHICULES ="";
     
-    if ( $TE_MATERIEL == 1 ) $TE_MATERIEL = "<i class='fa fa-check'  title=\"Du matériel peut êtree engagé sur ce type d'activités\"></i>";
+    if ( $TE_MATERIEL == 1 ) $TE_MATERIEL = "<i class='fa fa-check'  title=\"Du matÃ©riel peut Ãªtree engagÃ© sur ce type d'activitÃ©s\"></i>";
     else $TE_MATERIEL ="";
     
-    if ( $TE_CONSOMMABLES == 1 ) $TE_CONSOMMABLES = "<i class='fa fa-check'  title=\"Des consommations de produits peuvent être enregistrées sur ce type d'activité\"></i>";
+    if ( $TE_CONSOMMABLES == 1 ) $TE_CONSOMMABLES = "<i class='fa fa-check'  title=\"Des consommations de produits peuvent Ãªtre enregistrÃ©es sur ce type d'activitÃ©\"></i>";
     else $TE_CONSOMMABLES ="";
     
-    if ( $COLONNE_RENFORT == 1 ) $COLONNE_RENFORT = "<i class='fa fa-check'  title=\"Les activités de ce type peuvent avoir la propriété colonne de renfort activée.\"></i>";
+    if ( $COLONNE_RENFORT == 1 ) $COLONNE_RENFORT = "<i class='fa fa-check'  title=\"Les activitÃ©s de ce type peuvent avoir la propriÃ©tÃ© colonne de renfort activÃ©e.\"></i>";
     else $COLONNE_RENFORT ="";
     
-    if ( $TE_BILAN == 1 ) $TE_BILAN = "<i class='fa fa-check'  title=\"Les activités de ce typesont prise en compte dans les bilans PDFs annuels.\"></i>";
+    if ( $TE_BILAN == 1 ) $TE_BILAN = "<i class='fa fa-check'  title=\"Les activitÃ©s de ce typesont prise en compte dans les bilans PDFs annuels.\"></i>";
     else $TE_BILAN ="";
     
-    if ( $REMPLACEMENT == 1 ) $REMPLACEMENT = "<i class='fa fa-check'  title=\"Les remplacements de personnel sont possibles sur ce type d'activité.\"></i>";
+    if ( $REMPLACEMENT == 1 ) $REMPLACEMENT = "<i class='fa fa-check'  title=\"Les remplacements de personnel sont possibles sur ce type d'activitÃ©.\"></i>";
     else $REMPLACEMENT ="";
     
-    if ( $TE_DOCUMENT == 1 ) $TE_DOCUMENT = "<i class='fa fa-check'  title=\"Des documents peuvent être attachés sur ce type d'activité\"></i>";
+    if ( $TE_DOCUMENT == 1 ) $TE_DOCUMENT = "<i class='fa fa-check'  title=\"Des documents peuvent Ãªtre attachÃ©s sur ce type d'activitÃ©\"></i>";
     else $TE_DOCUMENT ="";
 
     $i=$i+1;

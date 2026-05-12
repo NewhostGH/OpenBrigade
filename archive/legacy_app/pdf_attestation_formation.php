@@ -34,7 +34,7 @@ else $evenement=0;
 // infos evenement formation
 //=============================
 
-// dates et infos événement
+// dates et infos Ã©vÃ©nement
 $query = "SELECT distinct e.PS_ID, eh.EH_ID, DATE_FORMAT(eh.EH_DATE_DEBUT, '%d-%m-%Y') as EH_DATE_DEBUT, YEAR(eh.EH_DATE_DEBUT) YEAR,
           DATE_FORMAT(eh.EH_DATE_FIN, '%d-%m-%Y') as EH_DATE_FIN, e.E_LIEU, sf.NIV, s.S_PARENT,
           s.S_DESCRIPTION, s.S_ID, s.S_CODE, s.S_CITY, s.S_PDF_PAGE, e.E_LIBELLE,
@@ -126,7 +126,7 @@ while ($row = mysqli_fetch_array($result)) {
     $date2[$i]=mktime(0,0,0,$month2[$i],$day2[$i],$year2[$i]);
 
     if ( $EH_DATE_DEBUT[$i] == $EH_DATE_FIN[$i])
-        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." à ".$EH_FIN[$i];
+        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." Ã  ".$EH_FIN[$i];
     else
         $horaire_evt[$i]="du ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$EH_DEBUT[$i]." au "
                          .date_fran($month2[$i], $day2[$i] ,$year2[$i])." ".moislettres($month2[$i])." ".$year2[$i]." ".$EH_FIN[$i];
@@ -194,14 +194,14 @@ else if (! is_chef_evenement($id, $evenement) ) {
 //=============================
 
 if ( $niv == $nbmaxlevels -1 ) {
-        // cas antenne locale, on donne les infos du département
+        // cas antenne locale, on donne les infos du dÃ©partement
         $query2="select S_ID, S_CODE, S_DESCRIPTION from section where S_ID=".$S_PARENT;
         $res2 = mysqli_query($dbc,$query2);
         $row2 = mysqli_fetch_array($res2);
         $section_affiche = $row2['S_DESCRIPTION'];
         $antenne_affiche = ", antenne de ".$organisateur;
         $tmpS=$row2["S_ID"];
-        // mais on récupère le responsable de l'antenne
+        // mais on rÃ©cupÃ¨re le responsable de l'antenne
         $queryy="select p.P_ID, p.P_PRENOM, p.P_NOM, g.GP_DESCRIPTION, p.P_SEXE
         from pompier p, groupe g, section_role sr
         where sr.GP_ID = g.GP_ID
@@ -216,7 +216,7 @@ if ( $niv == $nbmaxlevels -1 ) {
         $responsable_antenne = my_ucfirst($data2["P_PRENOM"])." ".strtoupper($data2["P_NOM"]);
 }
 else {
-        // cas département ou plus haut dans l'organigramme
+        // cas dÃ©partement ou plus haut dans l'organigramme
         $section_affiche = $organisateur;
         $antenne_affiche = "";
         $responsable_antenne = "";
@@ -226,7 +226,7 @@ $section_prefix=get_prefix_section($section_affiche);
 
 $section_president= $section_affiche;
 
-// chercher le chef ou président départemental
+// chercher le chef ou prÃ©sident dÃ©partemental
 $queryy="select p.P_ID, p.P_PRENOM, p.P_NOM, g.GP_DESCRIPTION, p.P_SEXE, 
         sr.S_ID, s.S_DESCRIPTION, s.S_IMAGE_SIGNATURE
         from pompier p, groupe g, section_role sr, section s
@@ -244,7 +244,7 @@ if ( $num_resulty == 0) {
         $chef_long = " de ";
         $titre_prefix = "";
         $titre = "";
-        $soussigne="soussigné(e)";
+        $soussigne="soussignÃ©(e)";
         $S_IMAGE_SIGNATURE="";
 }
 else {
@@ -254,13 +254,13 @@ else {
             $titre = rtrim(str_replace(" (e)","e", $data2["GP_DESCRIPTION"]));
             $titre = rtrim(str_replace("(e)","e", $titre));
             $titre_prefix = "La ";
-            $soussigne="soussignée";
+            $soussigne="soussignÃ©e";
         }
         else {
             $titre = rtrim(str_replace(" (e)", "", $data2["GP_DESCRIPTION"]));
             $titre = rtrim(str_replace("(e)", "", $titre));
             $titre_prefix = "Le ";
-            $soussigne="soussigné";
+            $soussigne="soussignÃ©";
         }
         $S_IMAGE_SIGNATURE=$data2["S_IMAGE_SIGNATURE"];
         $chef = my_ucfirst($data2["P_PRENOM"])." ".strtoupper($data2["P_NOM"]);
@@ -274,7 +274,7 @@ $chef_long .=$section_president_prefix." ".$section_president;
 
 
 //=============================
-// données formateur et signature
+// donnÃ©es formateur et signature
 //=============================
 $query="select p.P_ID, p.P_NOM, p.P_PRENOM from pompier p, evenement_participation ep, evenement e
     where ep.P_ID = p.P_ID
@@ -293,7 +293,7 @@ else {
     $signature_file="";
 }
 //=============================
-// données stagiaires
+// donnÃ©es stagiaires
 //=============================
 $pdf= new PDFEB();
 $pdf->AliasNbPages();
@@ -330,11 +330,11 @@ while ($data = mysqli_fetch_array($result)) {
     $P_ID=$data['P_ID'];
     $civilite=rtrim($data["TC_SHORT"],'.');
     if ( $date_nai <> ""  or $lieu_nai <> "" ) {
-        if ( $data['P_SEXE'] == 'M' ) $birthinfo="Né";
-        else $birthinfo="Née";
+        if ( $data['P_SEXE'] == 'M' ) $birthinfo="NÃ©";
+        else $birthinfo="NÃ©e";
         if ( $nom_naissance <> "" ) $birthinfo .= " ".$nom_naissance.",";
         if ( $date_nai <> "" ) $birthinfo .= " le ".$date_nai;
-        if ( $lieu_nai <> "" ) $birthinfo .= " à ".$lieu_nai;
+        if ( $lieu_nai <> "" ) $birthinfo .= " Ã  ".$lieu_nai;
         if ( $dep_nai <> "" ) $birthinfo .= " (".$dep_nai.")";
     }
     else $birthinfo="";
@@ -378,13 +378,13 @@ while ($data = mysqli_fetch_array($result)) {
         $pdf->MultiCell(180,10,$birthinfo,"","C");
         $y = $y + 15;
         $pdf->SetXY(15,$y);
-        $pdf->MultiCell(180,10,"a suivi une séance de sensibilisation de deux heures aux gestes qui sauvent.","","");
+        $pdf->MultiCell(180,10,"a suivi une sÃ©ance de sensibilisation de deux heures aux gestes qui sauvent.","","");
         $y = $y + 20;
         // footer
         $y=160;
         $pdf->SetXY(15,$y);
         $pdf->SetFont($police,'',$size);
-        $pdf->MultiCell(160,6,"Fait à ".$organisateur_city." le ".date('d-m-Y'),"","L");
+        $pdf->MultiCell(160,6,"Fait Ã  ".$organisateur_city." le ".date('d-m-Y'),"","L");
         
         $y=185;
         $pdf->SetXY(25,$y);
@@ -405,7 +405,7 @@ while ($data = mysqli_fetch_array($result)) {
     else if ( $TF_CODE == 'R' ) {
         if ( $PF_ADMIS == 0 ) {
             //--------------------------------------------
-            // imprime une page par stagiaire: échec
+            // imprime une page par stagiaire: Ã©chec
             //--------------------------------------------
             $pdf->MultiCell(160,8,"NOTIFICATION\nFORMATION CONTINUE ".$YEAR,"1","C");
             $pdf->SetXY(25,$y);
@@ -432,7 +432,7 @@ while ($data = mysqli_fetch_array($result)) {
         }
         if ( $PF_ADMIS > 0 )  {
             //--------------------------------------------
-            // imprime une page par stagiaire réussi
+            // imprime une page par stagiaire rÃ©ussi
             //--------------------------------------------
 
             $pdf->MultiCell(160,8,"ATTESTATION DE \nFORMATION CONTINUE ".$YEAR,"1","C");
@@ -468,7 +468,7 @@ while ($data = mysqli_fetch_array($result)) {
             $y = $y + 8;
             $pdf->SetFont($police,'',$size);
             $pdf->SetXY(25,$y);
-            $pdf->MultiCell(160,6,"qui s'est déroulée ".$periode." à ".$lieu.".","","L");  $y = $y + 10;
+            $pdf->MultiCell(160,6,"qui s'est dÃ©roulÃ©e ".$periode." Ã  ".$lieu.".","","L");  $y = $y + 10;
             $pdf->SetXY(25,$y);
             $pdf->MultiCell(170,5,$attestation_complement1,"","L"); 
             $k = strlen($attestation_complement1) / 80;
@@ -480,7 +480,7 @@ while ($data = mysqli_fetch_array($result)) {
             $y=240;
             $pdf->SetXY(25,$y); $y = $y + 8;
             $pdf->SetFont($police,'',$size);
-            $pdf->MultiCell(160,6,"Fait à ".$organisateur_city." le ".date('d-m-Y'),"","R");
+            $pdf->MultiCell(160,6,"Fait Ã  ".$organisateur_city." le ".date('d-m-Y'),"","R");
             if ( $S_IMAGE_SIGNATURE <> "" ) {
                 $signature_file="images/user-specific/".$S_IMAGE_SIGNATURE;
                 if ( @is_file($signature_file)) {
@@ -493,7 +493,7 @@ while ($data = mysqli_fetch_array($result)) {
             $y=267;
             $pdf->SetXY(15,$y);
             $pdf->SetFont($police,'',8);
-            $pdf->MultiCell(120,6,"FC ".$formation." - ".$cisname." - n° ".$YEAR." / ".$evenement." - ".$i,"","L");
+            $pdf->MultiCell(120,6,"FC ".$formation." - ".$cisname." - nÂ° ".$YEAR." / ".$evenement." - ".$i,"","L");
         }
     }
     //================================================
@@ -504,13 +504,13 @@ while ($data = mysqli_fetch_array($result)) {
 
         $diplome="";
         if ( $PF_ADMIS == 1 ) {
-            if ( $type == 'PSC1')  $reussite="A suivi avec succès ".$type_formation;
-            else $reussite="A fait l’objet d’un bilan favorable suite à ".$type_formation;
-            if ( $PF_DIPLOME <> "" )  $diplome = " et a obtenu le diplôme n°".$PF_DIPLOME;
+            if ( $type == 'PSC1')  $reussite="A suivi avec succÃ¨s ".$type_formation;
+            else $reussite="A fait lâ€™objet dâ€™un bilan favorable suite Ã  ".$type_formation;
+            if ( $PF_DIPLOME <> "" )  $diplome = " et a obtenu le diplÃ´me nÂ°".$PF_DIPLOME;
         }
-        else $reussite="A participé à ".$type_formation;
+        else $reussite="A participÃ© Ã  ".$type_formation;
         
-        if ( substr($description,0,21) == "Prévention et Secours") $fonction = "secouriste qualifié ";
+        if ( substr($description,0,21) == "PrÃ©vention et Secours") $fonction = "secouriste qualifiÃ© ";
         else $fonction = "";
         
         $complement  = $attestation_complement1;
@@ -541,7 +541,7 @@ while ($data = mysqli_fetch_array($result)) {
         $pdf->MultiCell(180,10,$birthinfo,"","C");
         $pdf->SetFont('Arial','',10);
         $pdf->SetXY(25,145);
-        $pdf->MultiCell(160,7, $reussite." \"".$description."\", ".$periode." à ".$lieu.$diplome.".","","J");    
+        $pdf->MultiCell(160,7, $reussite." \"".$description."\", ".$periode." Ã  ".$lieu.$diplome.".","","J");    
         if ( $PF_ADMIS == 1 and $type  <> 'PSC1' ) {
            $pdf->SetXY(25,165);
            $pdf->MultiCell(160,7,$complement);

@@ -124,10 +124,10 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 
 // Add the columns heads
 $columns=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P');
-$columns_title=array("Nature\ndu déplacement","Nom de\nl'adhérent","Prénom de\nl'adhérent","Lieu de\ndépart","Lieu de\nréunion",
-				     "Date\ndépart","Heure\ndépart","km véhicule\nperso aller","Date\nretour","Heure\nretour",
-					 "Lieu\nretour","km véhicule\nperso retour","ASA","DAS","Nombre\nd'heures",
-					 "Total km\nvéhicule perso");
+$columns_title=array("Nature\ndu dÃ©placement","Nom de\nl'adhÃ©rent","PrÃ©nom de\nl'adhÃ©rent","Lieu de\ndÃ©part","Lieu de\nrÃ©union",
+				     "Date\ndÃ©part","Heure\ndÃ©part","km vÃ©hicule\nperso aller","Date\nretour","Heure\nretour",
+					 "Lieu\nretour","km vÃ©hicule\nperso retour","ASA","DAS","Nombre\nd'heures",
+					 "Total km\nvÃ©hicule perso");
 foreach ($columns as $c => $letter) {
  	$objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));
  	$objPHPExcel->getActiveSheet()->getColumnDimension($letter)->setAutoSize(true);

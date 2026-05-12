@@ -89,7 +89,7 @@ $C_CONTACT_NAME=STR_replace("\"","",$C_CONTACT_NAME);
 
 
 if ( $C_NAME == "") {
-    write_msgbox("erreur", $error_pic, "Le nom de l'entreprise doit être renseigné.<br>
+    write_msgbox("erreur", $error_pic, "Le nom de l'entreprise doit Ãªtre renseignÃ©.<br>
     <p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:history.back(1);\"> ",10,0);
     exit;
 }

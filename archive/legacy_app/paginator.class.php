@@ -201,7 +201,7 @@ class Paginator {
                 $option .= "<option value=\"$i\">$i</option>\n";
         }
         return "<li class='page-item hide_mobile '>
-                <select style='height:66.5%;' class='page-link no-round  table responsive ' title='Numéro de page'
+                <select style='height:66.5%;' class='page-link no-round  table responsive ' title='NumÃ©ro de page'
                  id='inputGroupSelect01' onchange=\"window.location='$this->page_name?$add_get&page='+this[this.selectedIndex].value+'&ipp=$this->items_per_page';return false\">$option</select></a> </li> \n";
     }
 

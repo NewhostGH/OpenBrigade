@@ -47,7 +47,7 @@ else $domain=-1;
 if ( $domain >= 0 ) $order='TF_ID';
 
 // 3 possible categories: 
-// - droit d'accès habilitation (GP_ID < 100 TR_CONFIG=1)
+// - droit d'accÃ¨s habilitation (GP_ID < 100 TR_CONFIG=1)
 // - role organigramme ( GP_ID >= 100 and TR_CONFIG=2)
 // - permission  organigramme ( GP_ID >= 100 and TR_CONFIG=3)
 
@@ -90,9 +90,9 @@ else {
     $typeclass = 'inactive-badge';
 }
 echo "<li class='nav-item'>
-<a class='nav-link $class' href='habilitations.php?tab=1' title=\"Droit d'accès\" role='tab' aria-controls='tab1' href='#tab1' >
+<a class='nav-link $class' href='habilitations.php?tab=1' title=\"Droit d'accÃ¨s\" role='tab' aria-controls='tab1' href='#tab1' >
             <i class='fa fa-lock-open'></i>
-            <span>Droits d'accès </span>
+            <span>Droits d'accÃ¨s </span>
             <span class='badge $typeclass'>".$NB[1]."</span></a>
     </li>";
 
@@ -105,9 +105,9 @@ else {
     $typeclass = 'inactive-badge';
 }
 echo "<li class='nav-item'>
-<a class='nav-link $class' href='habilitations.php?tab=2' title=\"Rôle dans l'organigramme, exemple président\" role='tab' aria-controls='tab2' href='#tab2' >
+<a class='nav-link $class' href='habilitations.php?tab=2' title=\"RÃ´le dans l'organigramme, exemple prÃ©sident\" role='tab' aria-controls='tab2' href='#tab2' >
             <i class='fa fa-sitemap'></i>
-            <span>Rôles dans l'organigramme </span>
+            <span>RÃ´les dans l'organigramme </span>
             <span class='badge $typeclass'>".$NB[2]."</span></a>
     </li>";
 
@@ -120,7 +120,7 @@ else {
     $typeclass = 'inactive-badge';
 }
 echo "<li class='nav-item'>
-<a class='nav-link $class' href='habilitations.php?tab=3' title=\"Permissions dans l'organigramme, exemple responsable véhicule\" role='tab' aria-controls='tab3' href='#tab3' >
+<a class='nav-link $class' href='habilitations.php?tab=3' title=\"Permissions dans l'organigramme, exemple responsable vÃ©hicule\" role='tab' aria-controls='tab3' href='#tab3' >
             <i class='fa fa-shield-alt'></i>
             <span>Permissions organigramme </span>
             <span class='badge $typeclass'>".$NB[3]."</span></a>
@@ -162,7 +162,7 @@ echo "</form>";
 
 if ( check_rights($id, 9)) {
     if($tab == 1) $text = 'Droit';
-    elseif($tab == 2) $text = 'Rôle';
+    elseif($tab == 2) $text = 'RÃ´le';
     elseif($tab == 3) $text = 'Permission';
     else $text = '';
     
@@ -170,7 +170,7 @@ if ( check_rights($id, 9)) {
         echo "<div class='dropdown-right' align=right><a class='btn btn-success' onclick=\"bouton_redirect('ins_groupe.php?tab=$tab');\"'>
                 <i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> $text</span></a></div>";
     else
-        echo "<font color=red ><b>Vous ne pouvez plus ajouter de groupes de cette catégorie( maximum atteint: $nbmaxgroupes)</b></font>";
+        echo "<font color=red ><b>Vous ne pouvez plus ajouter de groupes de cette catÃ©gorie( maximum atteint: $nbmaxgroupes)</b></font>";
 }
 
 if ( $nbg > 0 ) {
@@ -180,24 +180,24 @@ if ( $nbg > 0 ) {
     // premiere ligne du tableau
     // ===============================================
     echo "<tr>
-            <td><a href=habilitations.php?tab=".$tab."&order=F_ID title='Trier le tableau par numéro croissant'>N°</a></td>
-            <td><a href=habilitations.php?tab=".$tab."&order=F_LIBELLE title='Trier le tableau par ordre alphabétique'>Fonctionnalité</a></td> 
-            <td><a href=habilitations.php?tab=".$tab."&order=TF_ID title='Trier le tableau par catégories'>Catégorie</a></td>";
+            <td><a href=habilitations.php?tab=".$tab."&order=F_ID title='Trier le tableau par numÃ©ro croissant'>NÂ°</a></td>
+            <td><a href=habilitations.php?tab=".$tab."&order=F_LIBELLE title='Trier le tableau par ordre alphabÃ©tique'>FonctionnalitÃ©</a></td> 
+            <td><a href=habilitations.php?tab=".$tab."&order=TF_ID title='Trier le tableau par catÃ©gories'>CatÃ©gorie</a></td>";
     while (custom_fetch_array($result2)) {
           
-        if ( $GP_DESCRIPTION == "Président (e)" ) $title=$GP_DESCRIPTION." ou responsable d'antenne.";
-        else if ( $GP_DESCRIPTION == "Vice président (e)" ) $title=$GP_DESCRIPTION." ou responsable adjoint d'antenne.";
+        if ( $GP_DESCRIPTION == "PrÃ©sident (e)" ) $title=$GP_DESCRIPTION." ou responsable d'antenne.";
+        else if ( $GP_DESCRIPTION == "Vice prÃ©sident (e)" ) $title=$GP_DESCRIPTION." ou responsable adjoint d'antenne.";
         else $title="";
       
         if ( $GP_ASTREINTE  == 1 and $cron_allowed == 1) {
-            $title="Ce rôle peut être attribué pour des astreintes.";
+            $title="Ce rÃ´le peut Ãªtre attribuÃ© pour des astreintes.";
         }
         
         if ( $GP_USAGE  == 'externes' ) $class="green12";
         else if ( $GP_USAGE  == 'all') $class="orange12";
         else if ( $GP_ASTREINTE  == 1 and $cron_allowed == 1) {
                $class="purple12";
-               $title="Ce rôle peut être attribué pour des astreintes";
+               $title="Ce rÃ´le peut Ãªtre attribuÃ© pour des astreintes";
         }
         else $class="";
         
@@ -218,7 +218,7 @@ if ( $nbg > 0 ) {
         if (( $gardes == 1 ) or ( $F_TYPE <> 1 )) {
             $prevtype=$TF_ID;
 
-            if ( $F_FLAG == 1  and  $nbsections == 0 )  $cmt=" <i class='fa fa-asterisk' style='color:red; position: relative; top: -3px; font-size:0.5em;' title='Permission valide au niveau départemental seulement'></i>";
+            if ( $F_FLAG == 1  and  $nbsections == 0 )  $cmt=" <i class='fa fa-asterisk' style='color:red; position: relative; top: -3px; font-size:0.5em;' title='Permission valide au niveau dÃ©partemental seulement'></i>";
             else $cmt="";
             $help_link=" ";
             echo "<tr>";
@@ -248,7 +248,7 @@ if ( $nbg > 0 ) {
 echo "<p>";
 
 if ( $nbsections == 0 and $nbg > 0 ) 
-    echo "<p><small>$asterisk<i> ces fonctionnalités ne sont pas accessibles aux personnes habilitées seulement au niveau antenne</i></small>";
+    echo "<p><small>$asterisk<i> ces fonctionnalitÃ©s ne sont pas accessibles aux personnes habilitÃ©es seulement au niveau antenne</i></small>";
 echo "</div>";
 
 writefoot();

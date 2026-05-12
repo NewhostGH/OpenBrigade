@@ -49,17 +49,17 @@ $result1=mysqli_query($dbc,$query1);
 $number=mysqli_num_rows($result1);
 
 echo "<div class='dropdown-right' align=right>";
-echo "<a class='btn btn-success' name='ajouter'  title='Ajouter un type de compétence' 
+echo "<a class='btn btn-success' name='ajouter'  title='Ajouter un type de compÃ©tence' 
         onclick=\"bouton_redirect('parametrage.php?tab=1&child=8&ope=edit&eqid=0');\"><i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> Type</span></a></div>";
 
 if ( $number == 0 ) 
-    echo "<p>Aucun élément paramétré";
+    echo "<p>Aucun Ã©lÃ©ment paramÃ©trÃ©";
 else {
     echo "<div class='col-sm-12'>";
     echo "<table class='newTableAll'>";
     echo "<tr>";
     echo "<td style='width:23%'>Description</td>"; 
-    echo "<td width=60 align=center ><span title='Nombre de compétences pour ce type'>Compétences</span></td>";
+    echo "<td width=60 align=center ><span title='Nombre de compÃ©tences pour ce type'>CompÃ©tences</span></td>";
     $query2="select distinct CEV_CODE, CEV_DESCRIPTION from categorie_evenement";
     $result2=mysqli_query($dbc,$query2);
     while (custom_fetch_array($result2)) {
@@ -91,7 +91,7 @@ else {
 
         echo "<tr onclick=\"this.bgColor='#33FF00'; displaymanager2($EQ_ID)\" >";
         echo "<td align=left>$EQ_NOM</td>
-              <td align=center><span class='badge' title=\"il y a $NB_POSTES compétences de type $EQ_NOM\">$NB_POSTES</span></td>";
+              <td align=center><span class='badge' title=\"il y a $NB_POSTES compÃ©tences de type $EQ_NOM\">$NB_POSTES</span></td>";
         
         $query2="select distinct ce.CEV_CODE, ce.CEV_DESCRIPTION, cea.FLAG1 
             from categorie_evenement ce, categorie_evenement_affichage cea
@@ -99,7 +99,7 @@ else {
             and cea.EQ_ID=".$EQ_ID;
         $result2=mysqli_query($dbc,$query2);
         while (custom_fetch_array($result2)) {
-            if ( $FLAG1 == 1 ) $show="<i class='fa fa-check fa-lg' title = \"Les compétences de la catégorie ".$CEV_DESCRIPTION." sont visibles sur la page des événements\"></i>";
+            if ( $FLAG1 == 1 ) $show="<i class='fa fa-check fa-lg' title = \"Les compÃ©tences de la catÃ©gorie ".$CEV_DESCRIPTION." sont visibles sur la page des Ã©vÃ©nements\"></i>";
             else $show="";
             echo  "<td align=center class='hide_mobile'>".$show."</td>";
         }

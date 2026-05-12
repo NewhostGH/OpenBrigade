@@ -54,7 +54,7 @@ else if ( $gardesp and check_rights($id, 6) and $nbsections > 0 ) $granted_event
 else if ( $gardesp and check_rights($id, 6, $organisateur ) and $nbsections == 0 ) $granted_event=true;
 else $granted_event=false;
 
-// bloquer les changements dans le passé
+// bloquer les changements dans le passÃ©
 $ended=get_number_days_after_block($evenement);
 $changeallowed=true;
 if ( $ended > 0 ) {
@@ -155,7 +155,7 @@ else if ( $cid > 0 )  {
     $title .= $label;
 }
 else if ( $action == 'colonne' )  {
-    $title = "Rattacher un refort à la colonne";
+    $title = "Rattacher un refort Ã  la colonne";
 }
 else if ( $action == 'facturation' )  {
     $query = "SELECT e.*, eh.*, te.TE_LIBELLE, te.TE_ICON,
@@ -175,9 +175,9 @@ else if ( $action == 'facturation' )  {
         $evtDuree= $EH_DUREE + $evtDuree;
         $evtDureeTotale= $E_NB * $EH_DUREE + $evtDureeTotale;
         if ($evtDateDebut!=$evtDateFin) 
-            $defaultDateHeure .= "du ".datesql2txt($evtDateDebut)." à ".$evt_hdtdb." au ".datesql2txt($evtDateFin)." à ".$evt_hdtfn.",\n";
+            $defaultDateHeure .= "du ".datesql2txt($evtDateDebut)." Ã  ".$evt_hdtdb." au ".datesql2txt($evtDateFin)." Ã  ".$evt_hdtfn.",\n";
         else 
-            $defaultDateHeure .= "le ".datesql2txt($evtDateDebut)." de ".$evt_hdtdb." à ".$evt_hdtfn.",\n";
+            $defaultDateHeure .= "le ".datesql2txt($evtDateDebut)." de ".$evt_hdtdb." Ã  ".$evt_hdtfn.",\n";
     }
     $evtDuree .= " Heures / intervenant";
     $defaultDateHeure = substr($defaultDateHeure,0,strlen($defaultDateHeure) -2);
@@ -195,7 +195,7 @@ write_modal_header($title);
 $out =  "<div align=center >";
   
 if (  $action <> 'intervention' and ! $granted_event )
-    $out .= "Vous n'avez pas les permissions de modifier les données pour cette activité!";
+    $out .= "Vous n'avez pas les permissions de modifier les donnÃ©es pour cette activitÃ©!";
     
 // -------------------------------------
 // fonction participant
@@ -295,7 +295,7 @@ else if ( $action =='equipe' or $action =='vequipe' or $action =='mequipe') {
     }
     $out .="<p>Equipe <select name='pe".$ident."' id='pe".$ident."' $disabled
             onchange=\"saveequipe(".$evenement.", this,".$ident.",'".$cat."',document.getElementById('divpe".$ident."'));\">
-            <option value='0'>aucune équipe</option>";
+            <option value='0'>aucune Ã©quipe</option>";
     foreach ($equipes as $e) {
         if ( $e[0] == $EE_ID) $selected='selected';
         else $selected='';
@@ -326,28 +326,28 @@ else if ( $action =='statut' ) {
 }
 
 // -------------------------------------
-// kilométrage véhicule
+// kilomÃ©trage vÃ©hicule
 // -------------------------------------
 
 else if ( $action == 'km' ) {
-    $out .= "<p>Saisie du kilométrage réalisé ";
+    $out .= "<p>Saisie du kilomÃ©trage rÃ©alisÃ© ";
     $out .= " <input type=text size=5 maxlength=5 name='km".$vid."' id='km".$vid."' value='".$EV_KM."'
                 onchange='checkNumber(this,\"\")'
-                title='saisir ici le kilométrage réalisé sur cette activité'> km";
+                title='saisir ici le kilomÃ©trage rÃ©alisÃ© sur cette activitÃ©'> km";
     $out .= " <p><input type='button' name='s".$vid."' value='Sauvegarder'\" class='btn btn-success'
                onclick=\"savekm(".$evenement.", '".$EC."', '".$vid."', document.getElementById('vkmdiv".$vid."'), document.getElementById('km".$V_ID."'));\"
-               title='cliquer pour valider le kilométrage'>";
+               title='cliquer pour valider le kilomÃ©trage'>";
 }
 
 // -------------------------------------
-// nombre matériel
+// nombre matÃ©riel
 // -------------------------------------
 
 else if ( $action == 'mnombre' ) {
-    $out .= "<p>Saisie du nombre d'unités (max ".$MA_NB.")";
+    $out .= "<p>Saisie du nombre d'unitÃ©s (max ".$MA_NB.")";
     $out .= " <input type=text size=5 maxlength=5 name='nb".$mid."' id='nb".$mid."' value='$EM_NB' 
                 onchange='checkNumber(this,\"\")'
-                title=\"saisir ici le nombre d'unités à engager\">";
+                title=\"saisir ici le nombre d'unitÃ©s Ã  engager\">";
     $out .= "<p><input type=button class='btn btn-success' name='s".$mid."' value='Sauvegarder'\"
                     onclick=\"savenbmat(".$evenement.", '".$EC."', '".$mid."', document.getElementById('mnbdiv".$mid."'), document.getElementById('nb".$mid."'));\"
                     title='cliquer pour valider le nombre'>";
@@ -358,11 +358,11 @@ else if ( $action == 'mnombre' ) {
 // -------------------------------------
 
 else if ( $action == 'cnombre' ) {
-    $out .= "<p>Quantité de produits consommés";
+    $out .= "<p>QuantitÃ© de produits consommÃ©s";
 
     $out .=   " <input type=text size=5 maxlength=5 name='nb".$cid."' id='nb".$cid."'  style='width:50px;' value='$EC_NOMBRE'
                   onchange='checkNumber(this,\"\")'
-                  title=\"saisir ici la quantité de produit consommées\">";
+                  title=\"saisir ici la quantitÃ© de produit consommÃ©es\">";
     if ( $STOCK_ID > 0 ) $out .= "    <i>stock restant $C_NOMBRE</i> ";
     $out .= "<p align=center><input type=submit class='btn btn-success' name='s".$cid."' value='Sauvegarder'\"
                 onclick=\"savenbconso(".$evenement.", '".$STOCK_ID."', '".$cid."', document.getElementById('cnbdiv".$cid."'), document.getElementById('nb".$cid."'));\"
@@ -370,7 +370,7 @@ else if ( $action == 'cnombre' ) {
 }
 
 // -------------------------------------
-// détail pour page facturation
+// dÃ©tail pour page facturation
 // -------------------------------------
 
 else if ( $action =='facturation' ) {
@@ -384,16 +384,16 @@ else if ( $action =='facturation' ) {
 
     $out .= "<p>
             <table class='noBorder'>
-              <tr><td width=140><b>N° Convention </b></td><td> $E_CONVENTION </td></tr>
+              <tr><td width=140><b>NÂ° Convention </b></td><td> $E_CONVENTION </td></tr>
               <tr><td><b>Lieu </b></td><td> $E_LIEU </td></tr>
               <tr><td><b>Dates </b></td><td> $defaultDateHeure </td></tr>
-              <tr><td><b>Durée effective </td><td> $evtDuree </td></tr>";
+              <tr><td><b>DurÃ©e effective </td><td> $evtDuree </td></tr>";
     if ( $evtNbPers  <> "") 
-        $out .= "<tr><td><b>Nombre d'intervenants </td><td> $evtNbPers inscrits / $E_NB demandés </td></tr>";
+        $out .= "<tr><td><b>Nombre d'intervenants </td><td> $evtNbPers inscrits / $E_NB demandÃ©s </td></tr>";
     else
-        $out .= "<tr><td><b>Nombre d'intervenants demandés </td><td> $E_NB </td></tr>";
-    $out .= "<tr><td><b>Durée Totale prévue</td><td> $evtDureeTotale Heures </td></tr>";
-    if ( $evtKm <> "" )  $out .= "<tr><td><b>Kilomètres parcourus</td><td> $evtKm </td></tr>";
+        $out .= "<tr><td><b>Nombre d'intervenants demandÃ©s </td><td> $E_NB </td></tr>";
+    $out .= "<tr><td><b>DurÃ©e Totale prÃ©vue</td><td> $evtDureeTotale Heures </td></tr>";
+    if ( $evtKm <> "" )  $out .= "<tr><td><b>KilomÃ¨tres parcourus</td><td> $evtKm </td></tr>";
     $out .= "</table><br>"; 
 }
 
@@ -404,11 +404,11 @@ else if ( $action =='facturation' ) {
 else if ( $action == 'colonne' ) {
     $out .=" <form method=post action='evenement_add_renfort.php'>
             <br><input type='hidden' id='evenement' name='evenement' value=".$evenement.">
-            <b>numéro d'activité à rattacher en tant que ".$renfort_label."</b><br>
+            <b>numÃ©ro d'activitÃ© Ã  rattacher en tant que ".$renfort_label."</b><br>
             <input type=text maxlength=7 size=5 id='renfort' name='renfort' autofocus='autofocus' onchange=\"checkNumber(form.renfort,'');\"> 
             <input type='submit' class='btn btn-default' value='Ajouter'>
             </form>
-            <br>Ce rattachement n'est cependant possible que si les ".$renfort_label."s à rattacher n'ont qu'une partie";
+            <br>Ce rattachement n'est cependant possible que si les ".$renfort_label."s Ã  rattacher n'ont qu'une partie";
 }
 
 // -------------------------------------

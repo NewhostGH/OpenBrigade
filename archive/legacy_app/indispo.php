@@ -112,7 +112,7 @@ echo "<tr $display_none>
         <td>Personne $asterisk</td>
         <td  align=left>";
 
-//cas personnel habilités sur F 12
+//cas personnel habilitÃ©s sur F 12
 if ( check_rights($id, 12) ) {
    $query="select P_ID, P_PRENOM, P_NOM , S_CODE
               from pompier, section
@@ -154,7 +154,7 @@ echo "<tr height=20>
             <td  align=left>";
 
 echo "<select id='type' name='type' onchange='changedType()' class='form-control form-control-sm'>";
-echo "<option value=''>Type d'indisponibilité </option>\n";
+echo "<option value=''>Type d'indisponibilitÃ© </option>\n";
 $query="select TI_CODE, TI_LIBELLE, TI_FLAG
         from type_indisponibilite
         where TI_CODE <> ''";
@@ -172,7 +172,7 @@ echo "<optgroup class='categorie' label=\"Pas de validation\" />\n";
 $prev=0;
 while (custom_fetch_array($result)) {
     if ( $TI_FLAG == 1 and $prev == 0) {
-        echo "<optgroup class='categorie' label=\"Validation nécessaire\" />\n";
+        echo "<optgroup class='categorie' label=\"Validation nÃ©cessaire\" />\n";
         $prev=$TI_FLAG;
     }
     echo "<option value='".$TI_CODE."' class='type'>".$TI_CODE." - ".$TI_LIBELLE."</option>\n";
@@ -181,17 +181,17 @@ echo "</select></td>";
 echo "</tr>";
 
 //=====================================================================
-// début et fin
+// dÃ©but et fin
 //=====================================================================
 
 echo "<tr>
-            <td>Date début $asterisk</td>
+            <td>Date dÃ©but $asterisk</td>
             <td  align=left>
             <input type='text' size='10' name='dc1' id='dc1' value='' autocomplete='off' class='datepicker form-control form-control-sm' data-provide='datepicker'
             placeholder='JJ-MM-AAAA'
             onchange=checkDate2(document.demoform.dc1)>";
 
-echo " <select id='debut' name='debut' title=\"heure de début de l'absence\" onchange=\"EvtCalcDuree(document.demoform.duree);\" $style>";
+echo " <select id='debut' name='debut' title=\"heure de dÃ©but de l'absence\" onchange=\"EvtCalcDuree(document.demoform.duree);\" $style>";
 for ( $i=0; $i <= 24; $i++ ) {
     $check = $i.":00";
     if (  $i == 8 ) $selected="selected";
@@ -223,7 +223,7 @@ echo "<tr>
             <td  align=left>
             <label class='switch'>
                 <input type='checkbox' name='full_day' id='full_day' value='1' checked onclick='changeDisplay();'
-                    title=\"cochez cette case si l'absence concerne une ou plusieurs journées complètes\">
+                    title=\"cochez cette case si l'absence concerne une ou plusieurs journÃ©es complÃ¨tes\">
                 <span class='slider round' data-original-title='' title=''></span>               
             </label>
         </td>";        
@@ -236,18 +236,18 @@ echo "<tr>
             <td  align=left>
             <label class='switch'>
                 <input type='checkbox' name='morning' id='morning' value='1' onclick='changeDisplay2();'
-            title=\"cochez cette case si l'absence concerne une demi-journée seulement\">
+            title=\"cochez cette case si l'absence concerne une demi-journÃ©e seulement\">
                 <span class='slider round' data-original-title='' title=''></span>               
             </label>";
             
 echo "</td></tr>";
 
 echo "<tr>
-            <td>Après-midi uniquement</td>
+            <td>AprÃ¨s-midi uniquement</td>
             <td  align=left>
             <label class='switch'>
                 <input type='checkbox' name='afternoon' id='afternoon' value='1' onclick='changeDisplay2b();'
-                title=\"cochez cette case si l'absence concerne une demi-journée seulement\"> 
+                title=\"cochez cette case si l'absence concerne une demi-journÃ©e seulement\"> 
                 <span class='slider round' data-original-title='' title=''></span>               
             </label>";    
 echo "</td></tr>";

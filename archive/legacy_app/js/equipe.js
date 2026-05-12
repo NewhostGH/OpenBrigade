@@ -65,7 +65,7 @@ function redirect(type) {
 
 function suppress(id, type) {
     if ( type == 'COMPETENCE' ) {
-        if ( confirm("Voulez vous vraiment supprimer ce type de compétence? \nCeci entrainera une suppression des compétences de ce type \net des enregistrements concernés dans le tableau des qualifications")) {
+        if ( confirm("Voulez vous vraiment supprimer ce type de compÃ©tence? \nCeci entrainera une suppression des compÃ©tences de ce type \net des enregistrements concernÃ©s dans le tableau des qualifications")) {
             url="del_equipe.php?EQ_ID="+id;
         }
         else {

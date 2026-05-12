@@ -51,9 +51,9 @@ $accept_date2=get_accept_date ($id,2);
  
 echo "<body class='top15'>";
 
-$info = "<div align=left><h3>Information aux bénévoles : Covid-19</h3>
-<p>La Fédération a diffusé une note d'information rappelant les règles de protection et les limites d'action de la Protection Civile le 27 février 2020.  Vous trouverez en pièce-jointe une version mise à jour.
-<p>En tant qu'acteur, vous pouvez être confronté à une situation impliquant un cas suspecté ou confirmé de Covid-19. Nous vous demandons donc de prendre connaissance de cette nouvelle note qui annule et remplace la précédente.
+$info = "<div align=left><h3>Information aux bÃ©nÃ©voles : Covid-19</h3>
+<p>La FÃ©dÃ©ration a diffusÃ© une note d'information rappelant les rÃ¨gles de protection et les limites d'action de la Protection Civile le 27 fÃ©vrier 2020.  Vous trouverez en piÃ¨ce-jointe une version mise Ã  jour.
+<p>En tant qu'acteur, vous pouvez Ãªtre confrontÃ© Ã  une situation impliquant un cas suspectÃ© ou confirmÃ© de Covid-19. Nous vous demandons donc de prendre connaissance de cette nouvelle note qui annule et remplace la prÃ©cÃ©dente.
 ";
 
 $file = "Note_information_CAT_coronavirus_2019-nCoV_III.pdf";
@@ -64,20 +64,20 @@ if ( file_exists($filesdir."/charte/".$file)) {
 }
 
 $info .="En cliquant ici, vous confirmez avoir pris connaissance des informations de protection face au virus.
-Cette acceptation n'entraîne pas obligation de participer à des missions relatives au Covid-19.";
+Cette acceptation n'entraÃ®ne pas obligation de participer Ã  des missions relatives au Covid-19.";
 
 if ( $accept_date2 == "" ) {
     $info .= "<p><input type='submit' class='btn btn-primary' value='Continuer' id='continue' title='En cliquant, je confirme avoir pris connaissance de ce message' onclick=\"accept2();\" />";
 }
 else {
-    $info .= "<p><span class=small> J'ai déjà lu ce message ".$accept_date2."</span><br>";
+    $info .= "<p><span class=small> J'ai dÃ©jÃ  lu ce message ".$accept_date2."</span><br>";
     $info .= "<input type='button' class='btn btn-secondary' value='Retour' onclick=\"javascript:history.back(1);\"/>";
     if ( check_rights($id, 14)) {
-        $info .= "<p><input type='submit' class='btn btn-warning' value='Forcer tous les utilisateurs à approuver de nouveau' id='reset' title='Forcer chaque utilisateur à relire ce message à la connexion' onclick=\"reset2();\"/>";
+        $info .= "<p><input type='submit' class='btn btn-warning' value='Forcer tous les utilisateurs Ã  approuver de nouveau' id='reset' title='Forcer chaque utilisateur Ã  relire ce message Ã  la connexion' onclick=\"reset2();\"/>";
     }
 }
 
-$info .="<p>L'équipe du siège fédéral se tient à votre disposition pour répondre à vos questions.";
+$info .="<p>L'Ã©quipe du siÃ¨ge fÃ©dÃ©ral se tient Ã  votre disposition pour rÃ©pondre Ã  vos questions.";
 $info .= "</div>";
 write_msgbox("Note d'information importante", "", $info, 30,30, 850);
 

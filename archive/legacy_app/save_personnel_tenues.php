@@ -125,7 +125,7 @@ if ( $updated > 0 ) {
             and m.AFFECTED_TO=".$P_ID;
     $result=mysqli_query($dbc,$query);
     $row=mysqli_fetch_array($result);
-    insert_log('UPDHAB', $P_ID, $updated." lignes modifiée(s). Nombre de lignes: ".$NB1." => ".$row["NB"]);
+    insert_log('UPDHAB', $P_ID, $updated." lignes modifiÃ©e(s). Nombre de lignes: ".$NB1." => ".$row["NB"]);
 }
 
 echo "<body onload=\"onclick=redirect3('upd_personnel.php?from=tenues&pompier=".$P_ID."&tab=5');\">";

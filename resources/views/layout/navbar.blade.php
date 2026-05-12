@@ -1,3 +1,5 @@
+@php($topGroups = $legacyTopGroups ?? [])
+
 <div class="container-fluid noprint">
 <nav class="navbar navbar-expand-lg fixed-top noprint navbar-ebrigade">
     <div class="nav-left">
@@ -8,7 +10,7 @@
             <span class="navbar-toggler-icon nav-picture"><i class="fa fa-bars py-1 text-violet"></i></span>
         </button>
         <div class="nav-center">
-            <a href="{{ route('personnel.index') }}" class="nav-text navtop-hover" title="Liste du personnel" role="button">
+            <a href="{{ url('/index_d.php') }}" class="nav-text navtop-hover" title="Accueil legacy" role="button">
                 <span class="navbar-toggler-icon nav-icon"><i class="fas fa-users fa-lg"></i></span>
             </a>
         </div>
@@ -20,17 +22,28 @@
     </div>
     <div class="collapse navbar-collapse nav-right" id="navbarMain">
         <ul class="navbar-nav nav-top">
-            {{-- Personnel dropdown --}}
-            <li class="nav-item dropdown nav-top-item navtop-hover margin-li">
-                <a class="dropdown-toggle nav-link hover-white text-violet nodowntoggle" data-toggle="dropdown" href="#" title="Personnel">
-                    <i class="fas fa-user fa-lg"></i> Personnel<i class="fas fa-chevron-down fa-xs"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item dropdown-item-profil" href="{{ route('personnel.index') }}">
-                        <i class="fas fa-list fa-lg"></i> Liste
-                    </a>
-                </div>
-            </li>
+            @foreach ($topGroups as $group)
+                @if (count($group['items']) > 0)
+                    <li class="nav-item dropdown nav-top-item navtop-hover margin-li">
+                        <a class="dropdown-toggle nav-link hover-white text-violet nodowntoggle" data-toggle="dropdown" href="#" title="{{ $group['name'] }}">
+                            @if ($group['icon'] !== '')
+                                <i class="fas fa-{{ $group['icon'] }} fa-lg"></i>
+                            @endif
+                            {{ $group['name'] }}<i class="fas fa-chevron-down fa-xs"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            @foreach ($group['items'] as $item)
+                                <a class="dropdown-item dropdown-item-profil" href="{{ $item['external'] ? $item['url'] : url($item['url']) }}" @if ($item['external']) target="_blank" @endif>
+                                    @if ($item['icon'] !== '')
+                                        <i class="fa fa-{{ $item['icon'] }} fa-lg"></i>
+                                    @endif
+                                    {{ $item['name'] }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </li>
+                @endif
+            @endforeach
 
             {{-- Help --}}
             <a class="nav-text navtop-hover" style="padding-top:7px;" href="{{ route('about') }}" title="A propos" role="button">

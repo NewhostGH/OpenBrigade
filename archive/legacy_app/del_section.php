@@ -54,7 +54,7 @@ $regime=get_regime($S_ID);
 
 if ( $regime > 0 and $gardes ) {
     if ( in_array($S_ID,array(1,2,3,4,$regime))) {
-    write_msgbox("erreur permission",$error_pic,"Vous ne pouvez pas supprimer cette section, elle est utilisée dans les tableaux de garde.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'>",10,0);
+    write_msgbox("erreur permission",$error_pic,"Vous ne pouvez pas supprimer cette section, elle est utilisÃ©e dans les tableaux de garde.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'>",10,0);
     exit;
     }
 }
@@ -105,7 +105,7 @@ $result=mysqli_query($dbc,$query);
 
 
 //=====================================================================
-// mise à jour données
+// mise Ã  jour donnÃ©es
 //=====================================================================
 
 $query="update pompier set P_SECTION =".$parent." where P_SECTION =".$S_ID ;

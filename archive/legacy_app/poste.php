@@ -88,9 +88,9 @@ echo "</select></div>";
 
 if ( $number < $nbmaxpostes )
     echo " <div class='dropdown-right' align=right ><a class='btn btn-success' value='Ajouter'
-            onclick=\"bouton_redirect('parametrage.php?tab=1&child=7&ope=add');\"><i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> Compétence</span></a></div>";
+            onclick=\"bouton_redirect('parametrage.php?tab=1&child=7&ope=add');\"><i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> CompÃ©tence</span></a></div>";
 else
-    echo " <a href='#'><i class='fas fa-exclamation-circle fa-2x' style='color:red;' title='Vous ne pouvez plus ajouter de compétences,  maximum atteint: $nbmaxpostes'></i></a>";
+    echo " <a href='#'><i class='fas fa-exclamation-circle fa-2x' style='color:red;' title='Vous ne pouvez plus ajouter de compÃ©tences,  maximum atteint: $nbmaxpostes'></i></a>";
 
 
 // ====================================
@@ -109,44 +109,44 @@ echo "<table class='newTableAll'>";
     // ===============================================
     echo "<tr>
                 <td><a href=parametrage.php?tab=1&child=7&order=EQ_ID >Type</a></td>
-                <td width=30><a href=parametrage.php?tab=1&child=7&order=PS_ID >N°</a></td>
+                <td width=30><a href=parametrage.php?tab=1&child=7&order=PS_ID >NÂ°</a></td>
                 <td><a href=parametrage.php?tab=1&child=7&order=TYPE >Code</a></td>
-              <td><a href=parametrage.php?tab=1&child=7&order=PH_CODE >Hiérarchie</a></td>
+              <td><a href=parametrage.php?tab=1&child=7&order=PH_CODE >HiÃ©rarchie</a></td>
                 <td class='hide_mobile'><a href=parametrage.php?tab=1&child=7&order=DESCRIPTION >Description</a></td>";
                 
     echo "  <td  align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_SECOURISME  title='Compétence officielle de secourisme' >Secourisme</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_SECOURISME  title='CompÃ©tence officielle de secourisme' >Secourisme</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_FORMATION  title=\"On peut organiser des formations pour cette compétence\">Formation.</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_FORMATION  title=\"On peut organiser des formations pour cette compÃ©tence\">Formation.</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_RECYCLE  title='Recyclage ou formation continue nécessaire'>Recycl.</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_RECYCLE  title='Recyclage ou formation continue nÃ©cessaire'>Recycl.</a></td>
             <td width=50 align=center >
-                <a href=parametrage.php?tab=1&child=7&order=PS_EXPIRABLE  title=\"On peut définir une date d'expiration sur cette compétence\">Exp.</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_EXPIRABLE  title=\"On peut dÃ©finir une date d'expiration sur cette compÃ©tence\">Exp.</a></td>
             <td width=60 align=center >
-                <a href=parametrage.php?tab=1&child=7&order=DAYS_WARNING  title=\"Warning plusieurs jours avant l'expiratuion, la compétence apparaît en orange\">Warn.</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=DAYS_WARNING  title=\"Warning plusieurs jours avant l'expiratuion, la compÃ©tence apparaÃ®t en orange\">Warn.</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_DIPLOMA  title='Un diplôme est délivré après formation' >Diplôme</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_DIPLOMA  title='Un diplÃ´me est dÃ©livrÃ© aprÃ¨s formation' >DiplÃ´me</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_NUMERO  title='Diplômes numéroté de façon unique' >Numéro</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_NUMERO  title='DiplÃ´mes numÃ©rotÃ© de faÃ§on unique' >NumÃ©ro</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_NATIONAL  title='Le diplôme est délivré au niveau national seulement' >National</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_NATIONAL  title='Le diplÃ´me est dÃ©livrÃ© au niveau national seulement' >National</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_PRINTABLE  title=\"Possibilité d'imprimer un diplôme\">Print.</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_PRINTABLE  title=\"PossibilitÃ© d'imprimer un diplÃ´me\">Print.</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_PRINT_IMAGE  title=\"L'image du diplôme est obligatoirement imprimée\">Image.</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_PRINT_IMAGE  title=\"L'image du diplÃ´me est obligatoirement imprimÃ©e\">Image.</a></td>
             <td width=50 align=center class='hide_mobile'>
                 <a href=parametrage.php?tab=1&child=7&order=PS_USER_MODIFIABLE  title='Modifiable par chaque utilisateur'>Modif.</a></td> 
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=PS_AUDIT  title='Un mail est envoyé au secrétariat en cas de modification'>Audit</a></td>
+                <a href=parametrage.php?tab=1&child=7&order=PS_AUDIT  title='Un mail est envoyÃ© au secrÃ©tariat en cas de modification'>Audit</a></td>
             <td width=50 align=center class='hide_mobile'>
-                <a href=parametrage.php?tab=1&child=7&order=F_LIBELLE  title='Permission spéciale requise pour modifier cette compétence'>Perm.</a></td>";
+                <a href=parametrage.php?tab=1&child=7&order=F_LIBELLE  title='Permission spÃ©ciale requise pour modifier cette compÃ©tence'>Perm.</a></td>";
     echo "</tr>";
 
     while (custom_fetch_array($result)) {
         $DESCRIPTION=strip_tags($DESCRIPTION);
 
         if ( $PS_FORMATION == 1 ) $formation="<i class='fa fa-check '
-        title = 'Possibilité d''organiser des formations pour cette compétence'></i>";
+        title = 'PossibilitÃ© d''organiser des formations pour cette compÃ©tence'></i>";
         else $formation="";
         if ( $PS_EXPIRABLE == 1 ) $expirable="<i class='fa fa-check' 
         title = 'Expiration possible'></i>";
@@ -155,31 +155,31 @@ echo "<table class='newTableAll'>";
         title = 'Alerter si modifications'></i>";
         else $audit="";
         if ( $PS_DIPLOMA == 1 ) $diploma="<i class='fa fa-check '
-        title = 'Diplôme délivré après une formation'></i>";
+        title = 'DiplÃ´me dÃ©livrÃ© aprÃ¨s une formation'></i>";
         else $diploma="";
         if ( $PS_NUMERO == 1 ) $numero="<i class='fa fa-check '
-        title = 'Diplôme numéroté de façon unique'></i>";
+        title = 'DiplÃ´me numÃ©rotÃ© de faÃ§on unique'></i>";
         else $numero="";
         if ( $PS_SECOURISME == 1 ) $secourisme="<i class='fa fa-check '
-        title = 'Compétence officielle de secourisme'></i>";
+        title = 'CompÃ©tence officielle de secourisme'></i>";
         else $secourisme="";
         if ( $PS_NATIONAL == 1 ) $national="<i class='fa fa-check '
-        title = 'Diplôme délivré au niveau national seulement'></i>";
+        title = 'DiplÃ´me dÃ©livrÃ© au niveau national seulement'></i>";
         else $national="";
         if ( $PS_RECYCLE == 1 ) $recycle="<i class='fa fa-check' 
-        title = 'Un recyclage périodique est nécessaire'></i>";
+        title = 'Un recyclage pÃ©riodique est nÃ©cessaire'></i>";
         else $recycle="";
         if ( $PS_USER_MODIFIABLE == 1 ) $modifiable="<i class='fa fa-check' 
         title = 'Modifiable par chaque utilisateur'></i>";
         else $modifiable="";
         if ( $PS_PRINTABLE == 1 ) $printable="<i class='fa fa-check '
-        title = 'Possibilité d''imprimer un diplôme'></i>";
+        title = 'PossibilitÃ© d''imprimer un diplÃ´me'></i>";
         else $printable="";
         if ( $PS_PRINT_IMAGE == 1 ) $print_image="<i class='fa fa-check '
-        title = 'L'image du diplôme est obligatoirement imprimée'></i>";
+        title = 'L'image du diplÃ´me est obligatoirement imprimÃ©e'></i>";
         else $print_image="";
         if ( $F_ID <> 4 ) $permission="<i class='fa fa-check' 
-        title = \"Permission '$F_ID - $F_LIBELLE' requise pour modifier cette compétence\"></i> $F_ID";
+        title = \"Permission '$F_ID - $F_LIBELLE' requise pour modifier cette compÃ©tence\"></i> $F_ID";
         else $permission="";
         if ( $PH_CODE <> "" ) $hierarchy=$PH_CODE." niveau ".$PH_LEVEL;
         else $hierarchy="";
@@ -218,7 +218,7 @@ echo "<table class='newTableAll'>";
     echo "</table></div>";
 }
 else
-    echo "Il n'y a pas de compétence pour ce type";
+    echo "Il n'y a pas de compÃ©tence pour ce type";
 echo @$later;
 writefoot();
 ?>

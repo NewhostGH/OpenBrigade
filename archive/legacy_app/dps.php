@@ -29,7 +29,7 @@ $table_params = (!isset($_GET['table'])) ? 0 : $_GET['table'];
 if (!$table_params) {
 
     writehead();
-    writeBreadCrumb("Dispositifs prévisionnels","Evénement", "aa");
+    writeBreadCrumb("Dispositifs prÃ©visionnels","EvÃ©nement", "aa");
 }
 
 $msgerr="";
@@ -85,7 +85,7 @@ $(document).ready(function(){
         target:     '#resultat',
         url:        'dps_save.php',
         success:    function() {
-            //swalAlert("Dimensionnement enregistré.");
+            //swalAlert("Dimensionnement enregistrÃ©.");
         } 
     };
     $('form#frmDPS').ajaxForm(options);
@@ -144,7 +144,7 @@ echo  "<div style='padding-top:0px'><div class='col-sm-12'><table cellpading=0 c
 <td>
 Descriptif de la demande pour les acteurs
 <textarea name="dimNbISActeursCom" style="width:90%;FONT-SIZE: 10pt; FONT-FAMILY: Arial;"><?php echo $dimNbISActeursCom; ?></textarea>
-<br>Equivalence en nombre d'intervenants secouristes pour les acteurs :<input type="text" name="dimNbISActeurs" id="dimNbISActeurs"  value="<?php echo $dimNbISActeurs; ?>"  style="background-color:Yellow;"> <br >(Minimum = 4, si un dispositif est demandé pour les acteurs)  
+<br>Equivalence en nombre d'intervenants secouristes pour les acteurs :<input type="text" name="dimNbISActeurs" id="dimNbISActeurs"  value="<?php echo $dimNbISActeurs; ?>"  style="background-color:Yellow;"> <br >(Minimum = 4, si un dispositif est demandÃ© pour les acteurs)  
 </td>
 <td></td>
 </tr>
@@ -154,60 +154,60 @@ Descriptif de la demande pour les acteurs
 <tr><th class="TabHeader" colspan="2"><b>Dimensionnement pour le public : </b></th></tr>
 <tr>
 <td colspan="2">
-<b>Nota :</b><br />Dans le cas où les acteurs présenteraient un risque différent du public, et en absence d'un dispositif spécifique pour les acteurs, le PAPS n'est pas un dispositif de secours suffisant.
+<b>Nota :</b><br />Dans le cas oÃ¹ les acteurs prÃ©senteraient un risque diffÃ©rent du public, et en absence d'un dispositif spÃ©cifique pour les acteurs, le PAPS n'est pas un dispositif de secours suffisant.
 </td>
 </tr>
-<tr><th class="TabHeader"><b>Effectif déclaré du public</b></th>
+<tr><th class="TabHeader"><b>Effectif dÃ©clarÃ© du public</b></th>
 <th class="TabHeader">Indicateur P1</th></tr>
 <tr>
 <td><input type="text" name="P1" id="P1" value="<?php echo $dimP1; ?>" style="background-color:Yellow;"></td>
 <td><input type="text" name="P" id="P" value="" readonly class="result" style="border:0px;background-color: transparent;"></td>
 </tr>
 <tr>
-<tr><th class="TabHeader">Activité du rassemblement</th>
+<tr><th class="TabHeader">ActivitÃ© du rassemblement</th>
 <th class="TabHeader">Indicateur P2</th></tr>
 <tr>
-<td><input type="radio" name="P2" value="0.25"  <?php echo ($dimP2==0.25?"checked=\"yes\"":""); ?>> Public assis : <small>spectacle, cérémonie cultuelle, réunion publique, restauration, rendez-vous sportif...</small></td>
+<td><input type="radio" name="P2" value="0.25"  <?php echo ($dimP2==0.25?"checked=\"yes\"":""); ?>> Public assis : <small>spectacle, cÃ©rÃ©monie cultuelle, rÃ©union publique, restauration, rendez-vous sportif...</small></td>
 <td>0,25</td>
 </tr>
 <tr>
-<td><input type="radio" name="P2" value="0.30" <?php echo ($dimP2==0.30?"checked=\"yes\"":""); ?>> Public debout : <small>cérémonie cultuelle, réunion publique, restauration, exposition, foire, salon, comice agricole...</small></td>
+<td><input type="radio" name="P2" value="0.30" <?php echo ($dimP2==0.30?"checked=\"yes\"":""); ?>> Public debout : <small>cÃ©rÃ©monie cultuelle, rÃ©union publique, restauration, exposition, foire, salon, comice agricole...</small></td>
 <td>0,30</td>
 </tr>
 <tr>
-<td><input type="radio" name="P2" value="0.35" <?php echo ($dimP2==0.35?"checked=\"yes\"":""); ?>> Public debout : <small>spectacle avec public statique, fête foraine, rendez-vous sportif avec protection du public par rapport à  l'événement...</small></td>
+<td><input type="radio" name="P2" value="0.35" <?php echo ($dimP2==0.35?"checked=\"yes\"":""); ?>> Public debout : <small>spectacle avec public statique, fÃªte foraine, rendez-vous sportif avec protection du public par rapport Ã Â  l'Ã©vÃ©nement...</small></td>
 <td>0,35</td>
 <tr>
-<td><input type="radio" name="P2" value="0.40" <?php echo ($dimP2==0.40?"checked=\"yes\"":""); ?>> Public debout : <small>spectacle avec public dynamique, danse, feria, fête votive, carnaval, spectacle de rue, grande parade, rendez-vous sportif sans protection du public par rapport à  l'événement ...
-Evénement se déroulant sur plusieurs jours avec présence permanente du public : hébergement sur site ou à proximité. </small></td>
+<td><input type="radio" name="P2" value="0.40" <?php echo ($dimP2==0.40?"checked=\"yes\"":""); ?>> Public debout : <small>spectacle avec public dynamique, danse, feria, fÃªte votive, carnaval, spectacle de rue, grande parade, rendez-vous sportif sans protection du public par rapport Ã Â  l'Ã©vÃ©nement ...
+EvÃ©nement se dÃ©roulant sur plusieurs jours avec prÃ©sence permanente du public : hÃ©bergement sur site ou Ã Â proximitÃ©. </small></td>
 <td>0,40</td>
 </tr>
 <tr>
-<th class="TabHeader">Caractéristiques de l'environnement ou de l'accessibilité du site</th>
+<th class="TabHeader">CaractÃ©ristiques de l'environnement ou de l'accessibilitÃ© du site</th>
 <th class="TabHeader">Indicateur E1</th>
 </tr>
 <tr>
-<td><input type="radio" name="E1" value="0.25"  <?php echo ($dimE1==0.25?"checked=\"yes\"":""); ?>> Structures permanentes : Bâtiment, salle « en dur »,...
-<br /><small>Voies publiques, rues,...avec accès dégagés. Conditions d'accès aisés </small></td>
+<td><input type="radio" name="E1" value="0.25"  <?php echo ($dimE1==0.25?"checked=\"yes\"":""); ?>> Structures permanentes : BÃ¢timent, salle Â« en dur Â»,...
+<br /><small>Voies publiques, rues,...avec accÃ¨s dÃ©gagÃ©s. Conditions d'accÃ¨s aisÃ©s </small></td>
 <td>0.25</td>
 </tr>
 <tr>
 <td><input type="radio" name="E1" value="0.30"  <?php echo ($dimE1==0.30?"checked=\"yes\"":""); ?>> Structures non permanentes : gradins, tribunes, chapiteaux,...
-<br /><small>Espaces naturels : surface = 2 hectares. Brancardage : 150 m < longueur = 300 m. Terrain en pente sur plus de 100 mètres 0,30</small></td>
+<br /><small>Espaces naturels : surface = 2 hectares. Brancardage : 150 m < longueur = 300 m. Terrain en pente sur plus de 100 mÃ¨tres 0,30</small></td>
 <td>0.30</td>
 </tr>
 <tr>
 <td><input type="radio" name="E1" value="0.35"  <?php echo ($dimE1==0.35?"checked=\"yes\"":""); ?>> Espaces naturels : 2 ha < surface = 5 ha 
-<br /><small>Brancardage : 300 m < longueur = 600 m. Terrain en pente sur plus de 150 mètres. Autres conditions d'accès difficiles</small></td>
+<br /><small>Brancardage : 300 m < longueur = 600 m. Terrain en pente sur plus de 150 mÃ¨tres. Autres conditions d'accÃ¨s difficiles</small></td>
 <td>0.35</td>
 </tr>
 <tr>
 <td><input type="radio" name="E1" value="0.40"  <?php echo ($dimE1==0.40?"checked=\"yes\"":""); ?>> Espaces naturels : surface > 5 hectares
-<br /><small>Brancardage : longueur > 600 mètres. Terrain en pente sur plus de 300 mètres. Autres conditions d'accès difficiles : Talus, escaliers, voies d'accès non carrossables,...Progression des secours rendue difficile par la présence du public </small></td>
+<br /><small>Brancardage : longueur > 600 mÃ¨tres. Terrain en pente sur plus de 300 mÃ¨tres. Autres conditions d'accÃ¨s difficiles : Talus, escaliers, voies d'accÃ¨s non carrossables,...Progression des secours rendue difficile par la prÃ©sence du public </small></td>
 <td>0.40</td>
 </tr>
 <tr>
-<th class="TabHeader"> Délai d'intervention des secours publics </th>
+<th class="TabHeader"> DÃ©lai d'intervention des secours publics </th>
 <th class="TabHeader"> Indicateur E2</th>
 </tr>
 <tr>
@@ -234,21 +234,21 @@ Evénement se déroulant sur plusieurs jours avec présence permanente du public : 
 <th colspan="2" class="TabHeader"> Rappel du RNMSC-DPS</th>
 </tr>
 <tr><td>
-<p style="text-align:justify; padding:0 1em 0 1em;"><small>Le dimensionnement du dispositif de secours pour les <b>acteurs</b> est de la seule responsabilité du demandeur et/ou de l'autorité de police compétente. 
+<p style="text-align:justify; padding:0 1em 0 1em;"><small>Le dimensionnement du dispositif de secours pour les <b>acteurs</b> est de la seule responsabilitÃ© du demandeur et/ou de l'autoritÃ© de police compÃ©tente. 
 <br />
-Le dimensionnement du dispositif de secours pour le <b>public</b> est régit par le Référentiel National des Missions de Sécurité Civile - Dispositifs Prévisionnels de Secours
+Le dimensionnement du dispositif de secours pour le <b>public</b> est rÃ©git par le RÃ©fÃ©rentiel National des Missions de SÃ©curitÃ© Civile - Dispositifs PrÃ©visionnels de Secours
 Ce calcul de dimensionnement minimal est mis a disposition pour "information".
-<br />Seule une étude personnalisée de votre manifestation avec une association de sécurité civile permettra de dimensionner <b>votre</b> dispositif prévisionnel de secours
+<br />Seule une Ã©tude personnalisÃ©e de votre manifestation avec une association de sÃ©curitÃ© civile permettra de dimensionner <b>votre</b> dispositif prÃ©visionnel de secours
 Le nombre d'intervenant correspond au nombre de Secouriste, Equipier Secouriste, Chef d'Equipe, Chef de Poste. <br />Sont exclus: l'encadrement et la logistique.
 
-Les DPS font partie des missions de sécurité civile dévolues uniquement aux associations agréées de sécurité civile.
+Les DPS font partie des missions de sÃ©curitÃ© civile dÃ©volues uniquement aux associations agrÃ©Ã©es de sÃ©curitÃ© civile.
 <br />
-En tout état de cause, il incombe à  l'autorité de police compétente, si elle le juge nécessaire ou approprié, de prendre toute disposition en matière de secours à  personnes pour assurer la sécurité lors d'un rassemblement de personnes, sur son territoire de compétences. A ce titre, elle peut imposer à  l'organisateur un DPS dimensionné selon les modalités du présent référentiel national.
+En tout Ã©tat de cause, il incombe Ã Â  l'autoritÃ© de police compÃ©tente, si elle le juge nÃ©cessaire ou appropriÃ©, de prendre toute disposition en matiÃ¨re de secours Ã Â  personnes pour assurer la sÃ©curitÃ© lors d'un rassemblement de personnes, sur son territoire de compÃ©tences. A ce titre, elle peut imposer Ã Â  l'organisateur un DPS dimensionnÃ© selon les modalitÃ©s du prÃ©sent rÃ©fÃ©rentiel national.
 <br />
-En outre, l'organisateur est libre de faire appel, en complément du DPS à  personnes prescrit, à  tout autre moyen humain ou matériel, destiné à  augmenter le niveau de sécurité de la manifestation.</small></p>
-<p style="text-decoration:none;font-size:0.8em;">Arrêté du 7 novembre 2006 fixant le référentiel national relatif aux dispositifs prévisionnels de secours<br><a href="http://www.legifrance.gouv.fr/WAspad/UnTexteDeJorf?numjo=INTE0600910A" target="_blank">NOR: INTE0600910A</a>
+En outre, l'organisateur est libre de faire appel, en complÃ©ment du DPS Ã Â  personnes prescrit, Ã Â  tout autre moyen humain ou matÃ©riel, destinÃ© Ã Â  augmenter le niveau de sÃ©curitÃ© de la manifestation.</small></p>
+<p style="text-decoration:none;font-size:0.8em;">ArrÃªtÃ© du 7 novembre 2006 fixant le rÃ©fÃ©rentiel national relatif aux dispositifs prÃ©visionnels de secours<br><a href="http://www.legifrance.gouv.fr/WAspad/UnTexteDeJorf?numjo=INTE0600910A" target="_blank">NOR: INTE0600910A</a>
 </p><a href="https://www.interieur.gouv.fr/content/download/94241/736020/file/RNMSC%202006_10%20-%20DPS.pdf" target="_blank" style="text-decoration:none;font-size:0.8em;">
-Réferentiel National - Missions de Sécurité Civile : Dispositifs Prévisionnels de Secours</a>
+RÃ©ferentiel National - Missions de SÃ©curitÃ© Civile : Dispositifs PrÃ©visionnels de Secours</a>
 </td></tr></table>
 <p>
 </div>

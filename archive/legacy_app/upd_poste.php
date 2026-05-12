@@ -80,7 +80,7 @@ echo "<input type='hidden' name='DAYS_WARNING' value='0'>";
 echo "<div class='col-sm-8  mx-auto' >
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Modification Compétence </strong></div>
+                <div class='card-title'><strong> Modification CompÃ©tence </strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0>";
@@ -147,10 +147,10 @@ echo "</tr>";
 $query2="select distinct ph.PH_CODE, ph.PH_NAME from poste_hierarchie ph order by ph.PH_CODE ";
 $result2=mysqli_query($dbc,$query2);
 echo "<tr>
-    <td><b>Hiérarchie</b> $asterisk</td>
+    <td><b>HiÃ©rarchie</b> $asterisk</td>
     <td>
-    <select name='PH_CODE' id='PH_CODE' title=\"Si cette compétence fait partie d'une hiérarchie\"  class='form-control form-control-sm' onchange=\"changedType();\">";
-    echo "<option value='' $selected>Ne fait pas partie d'une hiérarchie</option>";
+    <select name='PH_CODE' id='PH_CODE' title=\"Si cette compÃ©tence fait partie d'une hiÃ©rarchie\"  class='form-control form-control-sm' onchange=\"changedType();\">";
+    echo "<option value='' $selected>Ne fait pas partie d'une hiÃ©rarchie</option>";
     while ($row2=@mysqli_fetch_array($result2)) {
         $string = "";
         if ( $row2[0] == $PH_CODE ) $selected='selected';
@@ -170,9 +170,9 @@ if ( $PH_CODE == '' ) $style="style='display:none'";
 else  $style="";
 
 echo "<tr id='rowOrder' $style>
-    <td align=right><i>Ordre dans la hiérarchie</i> $asterisk</td>
+    <td align=right><i>Ordre dans la hiÃ©rarchie</i> $asterisk</td>
     <td>
-    <select name='PH_LEVEL' title=\"Ordre dans la hiérarchie\">";
+    <select name='PH_LEVEL' title=\"Ordre dans la hiÃ©rarchie\">";
     for ( $i=0; $i < 10; $i++ ) {
         if ( $i == $PH_LEVEL ) $selected='selected';
         else $selected='';
@@ -191,7 +191,7 @@ $result2=mysqli_query($dbc,$query2);
 echo "<tr>
           <td><b>Habilitation</b> $asterisk</td>
           <td>
-        <select name='F_ID' title='Choisir la permission requise pour pouvoir modifier cette compétence'>";
+        <select name='F_ID' title='Choisir la permission requise pour pouvoir modifier cette compÃ©tence'>";
         while ($row2=@mysqli_fetch_array($result2)) {
             if ( $row2[0] == $F_ID ) $selected='selected';
             else $selected='';
@@ -211,7 +211,7 @@ echo "<tr>
       <td>
             <label for='PS_SECOURISME'>
             <input type='checkbox' name='PS_SECOURISME' id='PS_SECOURISME' value='1' $checked >
-            Compétence officielle de secourisme</label>
+            CompÃ©tence officielle de secourisme</label>
             </td>";
 echo "</tr>";
 
@@ -227,7 +227,7 @@ echo "<tr>
         <td>
             <label for='PS_FORMATION'>
             <input type='checkbox' name='PS_FORMATION' id='PS_FORMATION' value='1' $checked  onchange='changedDiplome();'>
-            On peut organiser des formations pour cette compétence</label>
+            On peut organiser des formations pour cette compÃ©tence</label>
         </td>";
 echo "</tr>";
 
@@ -243,7 +243,7 @@ echo "<tr>
         <td>
             <label for='PS_RECYCLE'>
             <input type='checkbox' name='PS_RECYCLE' id='PS_RECYCLE' value='1' $checked  $disabled1>
-            Une formation continue régulière est nécessaire</label>
+            Une formation continue rÃ©guliÃ¨re est nÃ©cessaire</label>
         </td>";
 echo "</tr>";
 
@@ -264,7 +264,7 @@ echo "<tr>
         <td>
             <label for='PS_EXPIRABLE'>
             <input type='checkbox' name='PS_EXPIRABLE' id='PS_EXPIRABLE' value='1' $checked onchange='changedExpirable();'>
-            On peut définir une date d'expiration sur cette compétence</label>
+            On peut dÃ©finir une date d'expiration sur cette compÃ©tence</label>
         </td>";
 echo "</tr>";
 
@@ -275,7 +275,7 @@ echo "</tr>";
 echo "<tr id='rowWarning' $style>
         <td align=right><i>Warning</i></td>
         <td>
-        <select name='DAYS_WARNING' id='DAYS_WARNING' title='Warning plusieurs jours ou mois avant expiration, la compétence apparaît en orange'>";
+        <select name='DAYS_WARNING' id='DAYS_WARNING' title='Warning plusieurs jours ou mois avant expiration, la compÃ©tence apparaÃ®t en orange'>";
         if ( $DAYS_WARNING == 0) $selected='selected'; else $selected='';
         echo "<option value='0'    $selected>Pas de warning</option>";
         if ( $DAYS_WARNING == 1) $selected='selected'; else $selected='';
@@ -310,11 +310,11 @@ if ( $PS_DIPLOMA == 1 ) $checked="checked";
 else $checked="";
 echo "<tr>
       <td>
-            <b>Diplôme délivré</b></td>
+            <b>DiplÃ´me dÃ©livrÃ©</b></td>
       <td>
             <label for='PS_DIPLOMA'>
             <input type='checkbox' name='PS_DIPLOMA' id='PS_DIPLOMA' value='1' $checked onchange='changedDiplome();'>
-            Un diplôme ou document officiel est délivré</label>
+            Un diplÃ´me ou document officiel est dÃ©livrÃ©</label>
        </td>";
 echo "</tr>";
 
@@ -322,11 +322,11 @@ if ( $PS_NUMERO == 1 ) $checked="checked";
 else $checked="";
 echo "<tr>
       <td>
-            <b>Diplôme numéroté</b></td>
+            <b>DiplÃ´me numÃ©rotÃ©</b></td>
       <td>
             <label for='PS_NUMERO'>
             <input type='checkbox' name='PS_NUMERO' id='PS_NUMERO' value='1' $checked  $disabled2 >
-            Chaque diplôme a un numéro unique</label>
+            Chaque diplÃ´me a un numÃ©ro unique</label>
         </td>";
 echo "</tr>";
 
@@ -334,22 +334,22 @@ if ( $PS_NATIONAL == 1 ) $checked="checked";
 else $checked="";
 echo "<tr>
       <td>
-            <b>Diplôme national</b></td>
+            <b>DiplÃ´me national</b></td>
       <td>
             <label for='PS_NATIONAL'>
             <input type='checkbox' name='PS_NATIONAL' id='PS_NATIONAL'  value='1' $checked  $disabled2>
-            Diplôme délivré au niveau national seulement</label>
+            DiplÃ´me dÃ©livrÃ© au niveau national seulement</label>
        </td>";
 echo "</tr>";
 if ( $PS_PRINTABLE == 1 ) $checked="checked";
 else $checked="";
 echo "<tr>
       <td>
-            <b>Diplôme imprimable</b></td>
+            <b>DiplÃ´me imprimable</b></td>
       <td>
             <label for='PS_PRINTABLE'>
             <input type='checkbox' name='PS_PRINTABLE' id='PS_PRINTABLE' value='1' $checked  $disabled2 onchange='changedDiplome();'>
-            Possibilité d'imprimer un diplôme</label>
+            PossibilitÃ© d'imprimer un diplÃ´me</label>
        </td>";
 echo "</tr>";
 if ( $PS_PRINT_IMAGE == 1 ) $checked="checked";
@@ -360,7 +360,7 @@ echo "<tr>
       <td>
             <label for='PS_PRINT_IMAGE'>
             <input type='checkbox' name='PS_PRINT_IMAGE' id='PS_PRINT_IMAGE' value='1' $checked  $disabled2 $disabled3>
-            L'image est obligatoirement imprimée</label>
+            L'image est obligatoirement imprimÃ©e</label>
       </td>";
 echo "</tr>";
 
@@ -392,7 +392,7 @@ echo "<tr>
         <td>
             <label for='PS_AUDIT'>
             <input type='checkbox' name='PS_AUDIT' id='PS_AUDIT' value='1' $checked  >
-            Un mail est envoyé au secrétariat en cas de modification</label>
+            Un mail est envoyÃ© au secrÃ©tariat en cas de modification</label>
         </td>";
 echo "</tr>";
 echo "</table></div></div>"; 

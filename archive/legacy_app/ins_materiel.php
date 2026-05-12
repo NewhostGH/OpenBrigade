@@ -69,7 +69,7 @@ $picture=$row["PICTURE"];
 
 echo "<div align=center><table class='noBorder'>
       <tr><td width = 40 ></td><td>
-      ".writeBreadCrumb($cmt, "Matériel", "./materiel.php")."</td></tr></table>";
+      ".writeBreadCrumb($cmt, "MatÃ©riel", "./materiel.php")."</td></tr></table>";
 
 echo "<form name='vehicule' action='save_materiel.php' method='POST'>";
 
@@ -143,21 +143,21 @@ echo "<input type='hidden' name='from' value=''>";
 echo "<div class='col-sm-5'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:0px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Informations matériel </strong></div>
+                <div class='card-title'><strong> Informations matÃ©riel </strong></div>
             </div>
             <div class='card-body graycard'>";
 
 echo "<table class='noBorder'>";
 
 //=====================================================================
-// ligne catégorie
+// ligne catÃ©gorie
 //=====================================================================
 echo "<tr>
-            <td><b>Catégorie </b> $asterisk</td>
+            <td><b>CatÃ©gorie </b> $asterisk</td>
             <td align=left>
           <select id ='TM_USAGE'name='TM_USAGE' class='form-control form-control-sm' data-style='btn-default'
           onchange=\"displaymanager(document.getElementById('TM_USAGE').value)\">";
-if ( $usage == 'ALL') echo "<option value='ALL'>Choisissez une catégorie</option>";
+if ( $usage == 'ALL') echo "<option value='ALL'>Choisissez une catÃ©gorie</option>";
 $query2="select cm.TM_USAGE, cm.CM_DESCRIPTION from categorie_materiel cm
         where exists (select 1 from type_materiel tm where cm.TM_USAGE =tm.TM_USAGE)
         order by cm.CM_DESCRIPTION";
@@ -206,11 +206,11 @@ echo "<tr>
       </tr>";
      
 //=====================================================================
-// ligne modèle
+// ligne modÃ¨le
 //=====================================================================
 
 echo "<tr>
-            <td><b>Marque/Modèle</b> $asterisk</td>
+            <td><b>Marque/ModÃ¨le</b> $asterisk</td>
             <td align=left><input type='text' name='MA_MODELE' size='25' class='form-control form-control-sm' maxlength='40' value=\"$_MA_MODELE\" required>";
 echo "</tr>";
 
@@ -247,7 +247,7 @@ echo "</tr>";
 // ligne nombre
 //=====================================================================
 echo "<tr>
-            <td><b>Nombre de pièces</b> $asterisk</td>
+            <td><b>Nombre de piÃ¨ces</b> $asterisk</td>
             <td align=left height=25>
             <input type='text' name='quantity' size='6' class='form-control form-control-sm' value='".$_MA_NB."' onchange='checkNumber(form.quantity,\"1\")'></td>";
 echo "</tr>";
@@ -263,7 +263,7 @@ $query2="select VP_LIBELLE, VP_ID, VP_OPERATIONNEL
 $result2=mysqli_query($dbc,$query2);
 
 echo "<tr>
-            <td><b>Position du matériel</b> $asterisk</td>
+            <td><b>Position du matÃ©riel</b> $asterisk</td>
             <td align=left>
         <select name='VP_ID' class='form-control form-control-sm' data-style='btn-default'>";
              while ($row2=@mysqli_fetch_array($result2)) {
@@ -280,22 +280,22 @@ echo " </td>
       </tr>";
 
 //=====================================================================
-// ligne numéro de série
+// ligne numÃ©ro de sÃ©rie
 //=====================================================================
 
 echo "<tr>
-            <td><b>Numéro de série</b></td>
+            <td><b>NumÃ©ro de sÃ©rie</b></td>
             <td align=left height=25><input type='text' name='MA_NUMERO_SERIE' size='20' class='form-control form-control-sm' value=\"".$_MA_NUMERO_SERIE."\">";
 echo "</tr>";
 
 //=====================================================================
-// ligne année
+// ligne annÃ©e
 //=====================================================================
 
 $curyear=date("Y");
 $year=$curyear - 30; 
 echo "<tr>
-            <td><b>Année</b></td>
+            <td><b>AnnÃ©e</b></td>
             <td align=left>
             <select name='MA_ANNEE' class='form-control form-control-sm' data-style='btn-default'>";
 echo "<option value='' selected>inconnue</option>";
@@ -321,7 +321,7 @@ echo " </td>
       </tr>";
 
 //=====================================================================
-// affecté à 
+// affectÃ© Ã  
 //=====================================================================
 if ( $_AFFECTED_TO > 0 ) {
     $query2="select p.P_ID, p.P_PRENOM, p.P_NOM , s.S_CODE
@@ -335,7 +335,7 @@ if ( $_AFFECTED_TO > 0 ) {
     $result2=mysqli_query($dbc,$query2);
 
     echo "<tr>
-            <td><b>Affecté à </b></td>
+            <td><b>AffectÃ© Ã  </b></td>
             <td align=left>";
    echo "<select id='affected_to' name='affected_to' class='form-control form-control-sm'>
            <option value='0' selected >--personne--</option>\n";
@@ -357,7 +357,7 @@ if ( $_AFFECTED_TO > 0 ) {
 //=====================================================================
 
 echo "<tr>
-            <td><b>N°d'inventaire</b></td>
+            <td><b>NÂ°d'inventaire</b></td>
             <td align=left><input type='text' name='MA_INVENTAIRE' size='25' class='form-control form-control-sm' value=\"$_MA_INVENTAIRE\">";
 echo " </td>
       </tr>";
@@ -373,7 +373,7 @@ echo " </td>
       </tr>";
 
 //=====================================================================
-// dates de prochaine révision ou péremption
+// dates de prochaine rÃ©vision ou pÃ©remption
 //=====================================================================
 
 echo "<input type='hidden' name='dc0' value='".getnow()."'>";
@@ -381,7 +381,7 @@ echo "<input type='hidden' name='dc0' value='".getnow()."'>";
 
 // assurance
 echo "<tr>
-            <td><b>Prochaine révision ou péremption</b></td>
+            <td><b>Prochaine rÃ©vision ou pÃ©remption</b></td>
             <td align=left>
             <input type='text' size='10' name='dc1' value='' class='form-control form-control-sm datepicker' data-provide='datepicker'
             placeholder='JJ-MM-AAAA' autocomplete='off'
@@ -401,7 +401,7 @@ echo "<tr>
             <td><label for='MA_EXTERNE'>$cisname</label></td>
             <td align=left>
             <input type='checkbox' name='MA_EXTERNE' id='MA_EXTERNE' value='1' $checked>
-            <label for='MA_EXTERNE'>Mis à disposition (utilisable, non modifiable)</label>";
+            <label for='MA_EXTERNE'>Mis Ã  disposition (utilisable, non modifiable)</label>";
 echo " </td>
       </tr>";
 }            

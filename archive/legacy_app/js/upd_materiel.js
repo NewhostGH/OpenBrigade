@@ -64,7 +64,7 @@ function changetype() {
 }
 
 function suppress(id,from) {
-  if ( confirm("Voulez vous vraiment supprimer ce matériel?")) {
+  if ( confirm("Voulez vous vraiment supprimer ce matÃ©riel?")) {
      url="del_materiel.php?from="+from+"&MA_ID="+id;
      self.location.href=url;
   }

@@ -28,17 +28,17 @@ function changeCentre(p1,p2,p3,p4,p5) {
 
 function bouton_redirect(cible, action, nom_equipe) {
  if ( action == 'delete' ) {
-    if ( confirm ("Attention : vous êtes sur le point de supprimer le tableau de '"+nom_equipe+"'.\nLes données seront perdues. Voulez vous continuer ?" )) {
+    if ( confirm ("Attention : vous Ãªtes sur le point de supprimer le tableau de '"+nom_equipe+"'.\nLes donnÃ©es seront perdues. Voulez vous continuer ?" )) {
      self.location.href = cible;
     }
  }
  else if ( action == 'vider' ) {
-    if ( confirm ("Attention : vous êtes sur le point de vider le tableau de '"+nom_equipe+"'.\nLes données seront perdues. Voulez vous continuer ?" )) {
+    if ( confirm ("Attention : vous Ãªtes sur le point de vider le tableau de '"+nom_equipe+"'.\nLes donnÃ©es seront perdues. Voulez vous continuer ?" )) {
      self.location.href = cible;
     }
  }
  else if ( action == 'remplir' ) {
-    if ( confirm ("Attention : vous êtes sur le point de remplir automatiquement les trous du tableau de '"+nom_equipe+" avec le personnel disponible'.\nVoulez vous continuer ?" )) {
+    if ( confirm ("Attention : vous Ãªtes sur le point de remplir automatiquement les trous du tableau de '"+nom_equipe+" avec le personnel disponible'.\nVoulez vous continuer ?" )) {
      self.location.href = cible;
     }
  }
@@ -67,7 +67,7 @@ function redirect_to(cible) {
 }
 
 function CheckAll(dForm,checkValue){
-    // Parcours des jours et mise à jour des cases à cocher
+    // Parcours des jours et mise Ã  jour des cases Ã  cocher
     for (i=0;i<dForm.length;i++) {
         var element = dForm[i];
         if (element.type=='checkbox'){

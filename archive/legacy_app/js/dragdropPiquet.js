@@ -9,7 +9,7 @@ function dragListed() {
                 revertDuration: 0,
                 helper: "clone",
                 appendTo: "body",
-                start: function(e, ui) {//l'élément draggable a toujours le z-index le plus elevé
+                start: function(e, ui) {//l'Ã©lÃ©ment draggable a toujours le z-index le plus elevÃ©
                     $(".ui-draggable").not(ui.helper.css("z-index", "1"))
                         .css("z-index", "0");
                 },
@@ -28,17 +28,17 @@ function dropPoste() {
         drop: function (event, ui) {
             var i = event.target.id.split('_')[1];
             var j = ui.draggable.attr('id').split('_')[1];
-            //un personnel peut être nouvellement affecté à un poste ou déplacé
+            //un personnel peut Ãªtre nouvellement affectÃ© Ã  un poste ou dÃ©placÃ©
             var classPompier = ui.draggable.attr('class').split(' ')[0];
             if ((i == j) || (j == 12)) {
-                if (classPompier == 'listed') { //si l'étiquette est déplacée de la liste des personnels
+                if (classPompier == 'listed') { //si l'Ã©tiquette est dÃ©placÃ©e de la liste des personnels
                     $clone = ui.draggable.clone(false);
-                    $clone.prop('id', ui.draggable.attr('id') + '_' + occ);//changement d'id nécessaire pour ne pas avoir de conflit de ids
+                    $clone.prop('id', ui.draggable.attr('id') + '_' + occ);//changement d'id nÃ©cessaire pour ne pas avoir de conflit de ids
                     $chaine = ui.draggable.attr('class');
                     $nouvellechaine = $chaine.replace("listed", "affected");//class modified
                     $clone.prop('class', $nouvellechaine);
                     occ = occ + 1
-                    $clone.draggable({//rendre la clone draggable à son tour
+                    $clone.draggable({//rendre la clone draggable Ã  son tour
                         revert: "invalid",
                         revertDuration: 0,
                         appendTo: "body",
@@ -61,7 +61,7 @@ function dropPoste() {
                     placePompier(ui.draggable, $(this));
                 }
             } else {
-                if (classPompier == 'affected') { //si le personnel était déplacé donc il retourne à sa place si ça correspond pas à la periode
+                if (classPompier == 'affected') { //si le personnel Ã©tait dÃ©placÃ© donc il retourne Ã  sa place si Ã§a correspond pas Ã  la periode
                     ui.draggable.draggable("option", "revert", true);
                     ui.draggable.draggable("option", "revertDuration", 0);
                 }
@@ -71,7 +71,7 @@ function dropPoste() {
                     $msg = "Non disponible la nuit";
                 }
                 if ($(this).find('div').length == 0) {//si l'emplacement du drop qui ne correspond pas est vide
-                    $text=$(this).html();//le role affiché par défaut
+                    $text=$(this).html();//le role affichÃ© par dÃ©faut
                     $(this).html($msg).animate({'background-color': 'red'}, 700, function () {
                         $(this).css({background: "#11ffee00"})
                         $(this).html($text).css({color:'darkgrey'});
@@ -90,7 +90,7 @@ function dropPoste() {
     });
 }
 
-dropPoste();//rendre les emplacements dans les différents tableaux droppables
+dropPoste();//rendre les emplacements dans les diffÃ©rents tableaux droppables
 
 //*********************************************************************************************************************************
 function dragAffectedPompier() {
@@ -122,7 +122,7 @@ function dragAffectedPompier() {
         })
 }
 
-dragAffectedPompier();//cette fonction est necéssaire aprés la mise à jour du tableau (Ajax) sinon les pompiers affectés ne se déplacent pas
+dragAffectedPompier();//cette fonction est necÃ©ssaire aprÃ©s la mise Ã  jour du tableau (Ajax) sinon les pompiers affectÃ©s ne se dÃ©placent pas
 
 //*********************************************************************************************************************************
 function placePompier($pompier, $poste){
@@ -186,7 +186,7 @@ function dropMinus() {
     });
 }
 
-dropMinus();//suppression d'un pompier en le déplaçant sur le bonhomme minus
+dropMinus();//suppression d'un pompier en le dÃ©plaÃ§ant sur le bonhomme minus
 //*******************************************************************************************************************************************
 function update_page(evenement,vehicule) {
     $.ajax({
@@ -287,7 +287,7 @@ function doubleClickPompier24()
         placePompier(copie,$('#'+idParentCible));
     });
 }
-doubleClickPompier24(); //la dupplication d'un pompier 24h pour la 2ième periode par un double click
+doubleClickPompier24(); //la dupplication d'un pompier 24h pour la 2iÃ¨me periode par un double click
 
 });
 

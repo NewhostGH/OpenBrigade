@@ -111,14 +111,14 @@ echo "<form name='formf' action='departement.php'>";
 if ( $nbsections == 0  ) {
     echo "<div class='div-decal-left' style='float:left'>";
     echo "<select id='filter' name='filter' class='selectpicker' ".datalive_search()." data-style='btn-default' data-container='body'
-        title=\"Choisir un filtre géographique\"
+        title=\"Choisir un filtre gÃ©ographique\"
         onchange=\"redirect( this.value, '$niv')\">";
     if ( isset($_SESSION['sectionorder']) ) $sectionorder=$_SESSION['sectionorder'];
     else $sectionorder=$defaultsectionorder;
     display_children2(-1, 0, $filter , $nbmaxlevels , $sectionorder);
     echo "</select>";
     echo "<select id='niv' name='niv' class='selectpicker' data-style='btn-default' data-container='body'
-            title=\"Montrer un niveau géographique\"
+            title=\"Montrer un niveau gÃ©ographique\"
             onchange=\"redirect( '$filter', this.value)\">
             <option value='0'>Tous les niveaux de l'organigramme</option>";
     $query2="select NIV from section_flat where S_ID=".$filter;
@@ -137,10 +137,10 @@ if ( $nbsections == 0  ) {
     echo "</div>";
     echo "<div class='dropdown-right' align=right>";
     echo "<input type=text name=searchdep value=\"".preg_replace("/\%/","",$searchdep)."\" class='form-control medium-input' style='display:inline-block; height:36px'
-            title=\"Saisissez un mot à rechercher (dans le code ou la description)\"/>";
+            title=\"Saisissez un mot Ã  rechercher (dans le code ou la description)\"/>";
     echo " <button class='btn btn-secondary' onclick='formf.submit()' style='margin-top: -1px;'><i class='fa fa-search'></i></button>";
     if ( $searchdep <> "" ) {
-        echo " <a href=departement.php?searchdep= title='effacer le critère de recherche'><i class='fa fa-eraser fa-lg' style='color:pink;'></i></a>";
+        echo " <a href=departement.php?searchdep= title='effacer le critÃ¨re de recherche'><i class='fa fa-eraser fa-lg' style='color:pink;'></i></a>";
     }
 }
 echo "</form>";
@@ -158,7 +158,7 @@ if ( $number > 0 ) {
     echo"<center style='margin-bottom:4px'><span class='badge'>$number</span> $K</center>";
     echo "<table class='newTableAll' cellspacing=0 border=0>";
 
-    if ( $syndicate == 1 ) $t="adhérents";
+    if ( $syndicate == 1 ) $t="adhÃ©rents";
     else $t="personnes";
 
     echo "<tr><td>
@@ -174,7 +174,7 @@ if ( $number > 0 ) {
     }
     if ( $nbsections == 0 )
         echo "<td class='hide_mobile2'>
-                <a href=departement.php?order=SECTION_PARENT>Dépend de ".spawn_chevron('SECTION_PARENT')."</td>";
+                <a href=departement.php?order=SECTION_PARENT>DÃ©pend de ".spawn_chevron('SECTION_PARENT')."</td>";
     if ( $assoc ) {
         echo "<td class='hide_mobile2'>
                 <a href=departement.php?order=S_ID_RADIO>ID Radio ".spawn_chevron('S_ID_RADIO')."</td>";
@@ -188,7 +188,7 @@ if ( $number > 0 ) {
     // ===============================================
     while (custom_fetch_array($result)) {
         if ( $S_INACTIVE == 1 )
-            $inac=" <i class='fa fa-exclamation-triangle' style='color:orange;' title='section inactive, pas affichée sur le site public'></i>";
+            $inac=" <i class='fa fa-exclamation-triangle' style='color:orange;' title='section inactive, pas affichÃ©e sur le site public'></i>";
         else $inac="";
 
         $nb=get_section_tree_nb_person($S_ID);

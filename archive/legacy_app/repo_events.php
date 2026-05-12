@@ -83,7 +83,7 @@ if (check_rights($_SESSION['id'], 27)) {
     echo "<li class = 'nav-item'>
             <a class = 'nav-link $class' href = 'repo_events.php?tab=1' role = 'tab'>
                 <i class='fa fa-chart-area'></i>
-                <span>Général </span>
+                <span>GÃ©nÃ©ral </span>
             </a>
         </li>";
     if ($tab == 2) $class = 'active';
@@ -137,32 +137,32 @@ echo "<tr>
     
 echo "<OPTGROUP label='Utilisation'>";
 show_option(0,"Connexions par section");
-show_option(23,"Systèmes d'exploitation utilisés");
-show_option(24,"Navigateurs utilisés");
-show_option(67,"Connexions par heure de la journée");
+show_option(23,"SystÃ¨mes d'exploitation utilisÃ©s");
+show_option(24,"Navigateurs utilisÃ©s");
+show_option(67,"Connexions par heure de la journÃ©e");
 show_option(68,"Connexions par jour de la semaine");
 show_option(69,"Connexions par jour - ".$days_audit." derniers");
 show_option(70,"Erreurs de connexions par jour - ".$days_audit." derniers");
-show_option(71,"Connexions de la journée");
-show_option(73,"Erreurs de connexions de la journée");
+show_option(71,"Connexions de la journÃ©e");
+show_option(73,"Erreurs de connexions de la journÃ©e");
 
 if ( $assoc == 1 ) {
     echo "<OPTGROUP label='Statistiques'>";
-    show_option(55,"Nombres d'activités par catégorie");
-    show_option(56,"Nombres d'activités Opérations de secours");
-    show_option(57,"Nombres d'activités Autres activités opérationnelles");
+    show_option(55,"Nombres d'activitÃ©s par catÃ©gorie");
+    show_option(56,"Nombres d'activitÃ©s OpÃ©rations de secours");
+    show_option(57,"Nombres d'activitÃ©s Autres activitÃ©s opÃ©rationnelles");
     show_option(51,"Statistiques DPS");
-    show_option(52,"Statistiques Opérations de secours");
-    show_option(53,"Statistiques Autres activités opérationnelles");
-    show_option(74,"Nombre d'activités par jour");
-    show_option(72,"Nombre de participations par jour des bénévoles");
-    echo "<OPTGROUP label='Activités'>";
-    show_option(1,"Activités par mois");
-    show_option(2,"Activités par type");
-    show_option(11,"Activités par section");
-    show_option(50,"Activités en cours aujourd'hui");
-    show_option(4,"Activités annulés (% annuel)");
-    show_option(36,"Activités annulés par mois");
+    show_option(52,"Statistiques OpÃ©rations de secours");
+    show_option(53,"Statistiques Autres activitÃ©s opÃ©rationnelles");
+    show_option(74,"Nombre d'activitÃ©s par jour");
+    show_option(72,"Nombre de participations par jour des bÃ©nÃ©voles");
+    echo "<OPTGROUP label='ActivitÃ©s'>";
+    show_option(1,"ActivitÃ©s par mois");
+    show_option(2,"ActivitÃ©s par type");
+    show_option(11,"ActivitÃ©s par section");
+    show_option(50,"ActivitÃ©s en cours aujourd'hui");
+    show_option(4,"ActivitÃ©s annulÃ©s (% annuel)");
+    show_option(36,"ActivitÃ©s annulÃ©s par mois");
     show_option(63,"Attentats");
     show_option(64,"Inondations"); 
 
@@ -182,13 +182,13 @@ if ( $assoc == 1 ) {
     show_option(39,"DPS statistiques mensuelles  (y compris renforts)");
     show_option(30,"DPS statistiques annuelles (hors renforts)");
     show_option(38,"DPS statistiques annuelles (y compris renforts)");
-    show_option(21,"DPS par catégorie");
-    show_option(22,"DPS par catégorie par mois");
+    show_option(21,"DPS par catÃ©gorie");
+    show_option(22,"DPS par catÃ©gorie par mois");
 
     echo "<OPTGROUP label='Formations'>";
     show_option(14,"Formations par mois");
-    show_option(15,"Formations initiales/diplômes par mois");
-    show_option(16,"Formations complémentaires par mois");
+    show_option(15,"Formations initiales/diplÃ´mes par mois");
+    show_option(16,"Formations complÃ©mentaires par mois");
     show_option(17,"Formations continues par mois");
     show_option(18,"Formations / stagiaires / formateurs");
 
@@ -205,7 +205,7 @@ if ( $assoc == 1 ) {
     $rowz=@mysqli_fetch_array($resultz);
     $PAE=$rowz["NB"];
     if ( $PSE + $PSC > 0 ) {
-        show_option(29,"Diplômes de secourisme délivrés par an");
+        show_option(29,"DiplÃ´mes de secourisme dÃ©livrÃ©s par an");
         if ( $PSC > 0 ) show_option(33,"Formations PSC1 par an selon le public");
         show_option(34,"Formations de secourisme par an");
     }
@@ -215,52 +215,52 @@ if ( $assoc == 1 ) {
     show_option(12,"Gardes au centre de secours");
     show_option(13,"Maraudes");
     show_option(5,"Chiffre d'affaire par mois");
-    show_option(25,"Ages des véhicules");
-    show_option(32,"Activité nautique");
+    show_option(25,"Ages des vÃ©hicules");
+    show_option(32,"ActivitÃ© nautique");
   
     echo "<OPTGROUP label='Personnel'>";
     show_option(6,"Secouristes PSE1 / PSE2");
-    show_option(7,"Compétences du personnel");
-    show_option(8,"Pyramide des âges");
-    show_option(37,"Répartition du personnel par sexe");
+    show_option(7,"CompÃ©tences du personnel");
+    show_option(8,"Pyramide des Ã¢ges");
+    show_option(37,"RÃ©partition du personnel par sexe");
     show_option(9,"Origine des participants aux DPS");
-    show_option(19,"Personnel par catégorie");
-    show_option(40,"Bénévoles par année");
-    show_option(41,"Salariés par année");
-    show_option(42,"Externes par année");
+    show_option(19,"Personnel par catÃ©gorie");
+    show_option(40,"BÃ©nÃ©voles par annÃ©e");
+    show_option(41,"SalariÃ©s par annÃ©e");
+    show_option(42,"Externes par annÃ©e");
     show_option(20,"Flux de personnel (par mois)");
     show_option(26,"Flux de personnel (annuel)");
-    show_option(27,"Personnel externe ajouté(par mois)");
-    show_option(28,"Personnel externe ajouté (annuel)");
+    show_option(27,"Personnel externe ajoutÃ©(par mois)");
+    show_option(28,"Personnel externe ajoutÃ© (annuel)");
     show_option(31,"Taux de participation par section");
-    show_option(66,"Ancienneté du personnel");
-    show_option(77,"Durée moyenne d'engagement du personnel");
-    show_option(78,"Durée moyenne d'engagement par age");
+    show_option(66,"AnciennetÃ© du personnel");
+    show_option(77,"DurÃ©e moyenne d'engagement du personnel");
+    show_option(78,"DurÃ©e moyenne d'engagement par age");
 }
 else if ( $syndicate == 1 ) {
-    echo "<OPTGROUP label='Adhérents'>";
-    show_option(8,"Pyramide des âges");
-    show_option(37,"Répartition des adhérents par sexe");
-    show_option(19,"Personnel par catégorie");
-    show_option(40,"Adhérents par année");
-    show_option(41,"Salariés par année");
-    show_option(79,"Adhérents par mois (total)");
-    show_option(20,"Evolution nombre d'adhérents (par mois)");
-    show_option(26,"Evolution nombre d'adhérents (annuel)");
-    if ( $grades ) show_option(65,"Répartition des adhérents par grade");
-    show_option(66,"Ancienneté du personnel");
+    echo "<OPTGROUP label='AdhÃ©rents'>";
+    show_option(8,"Pyramide des Ã¢ges");
+    show_option(37,"RÃ©partition des adhÃ©rents par sexe");
+    show_option(19,"Personnel par catÃ©gorie");
+    show_option(40,"AdhÃ©rents par annÃ©e");
+    show_option(41,"SalariÃ©s par annÃ©e");
+    show_option(79,"AdhÃ©rents par mois (total)");
+    show_option(20,"Evolution nombre d'adhÃ©rents (par mois)");
+    show_option(26,"Evolution nombre d'adhÃ©rents (annuel)");
+    if ( $grades ) show_option(65,"RÃ©partition des adhÃ©rents par grade");
+    show_option(66,"AnciennetÃ© du personnel");
 }
 else {
     echo "<OPTGROUP  label='Personnel'>";
-    show_option(8,"Pyramide des âges");
-    show_option(37,"Répartition du personnel par sexe");
-    show_option(19,"Personnel par catégorie");
-    show_option(40,"Personnel par année");
+    show_option(8,"Pyramide des Ã¢ges");
+    show_option(37,"RÃ©partition du personnel par sexe");
+    show_option(19,"Personnel par catÃ©gorie");
+    show_option(40,"Personnel par annÃ©e");
     show_option(20,"Evolution nombre de personnel (par mois)");
     show_option(26,"Evolution nombre de personnel (annuel)");
-    if ( $grades ) show_option(65,"Répartition du personnel par grade");
-    show_option(66,"Ancienneté du personnel");
-    show_option(77,"Durée moyenne d'engagement du personnel");
+    if ( $grades ) show_option(65,"RÃ©partition du personnel par grade");
+    show_option(66,"AnciennetÃ© du personnel");
+    show_option(77,"DurÃ©e moyenne d'engagement du personnel");
 }
 
 echo  "</select>";
@@ -287,13 +287,13 @@ if ( get_children("$filter") <> '' ) {
     }
 }
 // ===============================
-// choix type evenement/activité
+// choix type evenement/activitÃ©
 // ===============================
 $choixTypeEvt = array(1,4,11,31,50,72,74);
 if ( in_array($report, $choixTypeEvt)) {
     echo "<tr><td><select id='type' name='type' class='selectpicker' data-style='btn-default'  data-container='body'
             onchange=\"orderfilter1('".$filter."','".$subsections."',document.getElementById('type').value,'".$year."','".$report."','".$equipe."', '".$dtdb."', '".$dtfn."')\">";
-    echo "<option value='ALL' selected>Toutes activités</option>";
+    echo "<option value='ALL' selected>Toutes activitÃ©s</option>";
     $query="select distinct te.CEV_CODE, ce.CEV_DESCRIPTION, te.TE_CODE, te.TE_LIBELLE
             from type_evenement te, categorie_evenement ce
             where te.CEV_CODE=ce.CEV_CODE
@@ -342,7 +342,7 @@ if ( $report == 7 ) {
 }
 
 // ===============================
-// choix année
+// choix annÃ©e
 // ===============================
 $noYearReports = array(0,6,7,8,19,23,24,25,26,28,29,30,33,34,35,37,38,40,41,50,51,52,53,55,56,57,63,64,65,
                        66,67,68,69,70,71,72,73,74,77,78);
@@ -364,7 +364,7 @@ if (! in_array($report, $noYearReports)) {
 // ===============================
 $withDates = array(51,52,53,55,56,57,72,74);
 if ( in_array($report, $withDates)) {
-    echo "</table><table class='noBorder'><tr><td align=right >Début</td>
+    echo "</table><table class='noBorder'><tr><td align=right >DÃ©but</td>
               <td align=left> <input type='text' size='10' name='dtdb' id='dtdb' value=\"".$dtdb."\" class='datepicker datepicker2' data-provide='datepicker'
                 placeholder='JJ-MM-AAAA'
                 onchange=checkDate2(this.form.dtdb)'>";

@@ -47,7 +47,7 @@ echo "
 </HEAD>";
 
 //=====================================================================
-// enregistrer pointages ou dÈpointages
+// enregistrer pointages ou d√©pointages
 //=====================================================================
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
@@ -60,7 +60,7 @@ if (isset($_GET['action'])) {
     
     $week=date('W');
     $year=date('Y');
-    // cas particulier, on affiche Y+1 si la derniere semaine est a cheval sur 2 annÈes
+    // cas particulier, on affiche Y+1 si la derniere semaine est a cheval sur 2 ann√©es
     $month=date('m');
     if ( $month == '12' and $week == '01' ) $year = $year + 1;
 }
@@ -73,7 +73,7 @@ if ( $view == 'list' ) {
     echo "<div class='col-sm-5'>
             <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
                 <div class='card-header graycard cardtab'>
-                    <div class='card-title'><strong>Horaires de travail du personnel salariÈ </strong></div>
+                    <div class='card-title'><strong>Horaires de travail du personnel salari√© </strong></div>
                 </div>
                 <div class='card-body graycard'>";
     echo "<form><table class='noBorder'>";
@@ -102,12 +102,12 @@ if ( $view == 'list' ) {
     echo "<select class='selectpicker smalldropdown2' data-container='body' data-style='btn btn-default' id='person' name='person' 
         onchange=\"change_display(document.getElementById('person').value,'".$week."','".$year."', '".$view."', '".$from."','".$horaire_list_mode."');\" $disabled>";
     echo "<option value='ALL' >Choix personne</option>"; 
-    echo "\n<OPTGROUP LABEL=\"Personnel salariÈ actif\" style=\"background-color:$mylightcolor\">";
+    echo "\n<OPTGROUP LABEL=\"Personnel salari√© actif\" style=\"background-color:$mylightcolor\">";
     $done=false;
 
     while (custom_fetch_array($result)) {
         if ( $done == false and $P_OLD_MEMBER > 0 ) {
-            echo "\n<OPTGROUP LABEL=\"Anciens salariÈs\" style=\"background-color:$mygreycolor\">";
+            echo "\n<OPTGROUP LABEL=\"Anciens salari√©s\" style=\"background-color:$mygreycolor\">";
             $done=true;
         }
         echo "<option value='".$P_ID."'";
@@ -137,8 +137,8 @@ if ( intval($person) > 0 ) {
     else if ( check_rights($id, 13, $P_SECTION)) $update_allowed=true;
     else $update_allowed=false;
 
-    if ( $P_SEXE == 'M' ) $t="salariÈ";
-    else $t="salariÈe";
+    if ( $P_SEXE == 'M' ) $t="salari√©";
+    else $t="salari√©e";
 }
 
 //=====================================================================
@@ -154,7 +154,7 @@ if ( $view == 'week' ){
     echo "<form>";
 
     if (!$onlyTable)
-        echo "pÈriode";
+        echo "p√©riode";
     echo " <select class='selectpicker smalldropdown' data-container='body' data-style='btn btn-default' name='menu2' style='padding:8px;height: 36px;'
         onchange=\"fillmenu(this.form,this.form.menu1,this.form.menu2,'".$person."','".$from."')\">";
     $w=1;
@@ -205,28 +205,28 @@ if ( $view == 'week' ){
     echo "<div class='col-sm-12' align=center style='margin: 15px auto;' >
             <div class='card hide card-default graycarddefault' align=center style=''>
                 <div class='card-header graycard'>
-                    <div class='card-title'><strong>DurÈe travail </strong></div>
+                    <div class='card-title'><strong>Dur√©e travail </strong></div>
                 </div>
                 <div class='card-body graycard'>";
     echo "<table cellspacing='0' border='0' class='noBorder flexTable'>
         <tr>
           <th rowspan=2 style='text-align:center;'>Jour</font></th>
           <th colspan=2 style='text-align:center;'>Matin</th>
-          <th colspan=2 style='text-align:center;'>AprËs-midi</th>
+          <th colspan=2 style='text-align:center;'>Apr√®s-midi</th>
           <th rowspan=2 style='text-align:center;max-width:50px;' class='hide_mobile'>Absence</th>";
     if ( $syndicate == 1 ) {
-        echo "<th rowspan=2 style='text-align:center;' class='hide_mobile' title='Autorisation spÈciale d''absence 7h'>ASA</th>";
+        echo "<th rowspan=2 style='text-align:center;' class='hide_mobile' title='Autorisation sp√©ciale d''absence 7h'>ASA</th>";
         echo "<th rowspan=2 style='text-align:center;' class='hide_mobile' title='Formation 8h'>FORM</th>";
         echo "<th rowspan=2 style='text-align:center;' class='hide_mobile' title='Formation Syndicale 7h'>FORMS</th>";
     }
     echo "<th rowspan=2 style='text-align:center;' class='hide_mobile2'>Heures sup.</th>
-          <th rowspan=2 style='text-align:center;' class='hide_mobile2'> DurÈe Totale</th>
-          <th rowspan=2 style='text-align:center;' class='hide_mobile2'> DÈtail</th>
+          <th rowspan=2 style='text-align:center;' class='hide_mobile2'> Dur√©e Totale</th>
+          <th rowspan=2 style='text-align:center;' class='hide_mobile2'> D√©tail</th>
         </tr>
         <tr>
-          <th style='text-align:center;'><i>DÈbut</i></th>
+          <th style='text-align:center;'><i>D√©but</i></th>
           <th style='text-align:center;'><i>Fin</i></th>
-          <th style='text-align:center;'><i>DÈbut</i></th>
+          <th style='text-align:center;'><i>D√©but</i></th>
           <th style='text-align:center;'><i>Fin</i></th>
         </tr>";
 
@@ -299,11 +299,11 @@ if ( $view == 'week' ){
         else $duree_affichage=convert_hours_minutes ($duree_minutes);
 
         
-        // jour fÈriÈ?
+        // jour f√©ri√©?
         $tmp=explode ( "-",$theday); $month1=$tmp[1]; $day1=$tmp[2]; $year1=$tmp[0];
         if ( dateCheckPublicholiday( mktime(0,0,0,$month1,$day1,$year1) )) {
             $TI_CODE="FERIE";
-            $commentaire_absence="Jour fÈriÈ";
+            $commentaire_absence="Jour f√©ri√©";
             $selectedcolor=$orange;
         }
         // absence?
@@ -322,7 +322,7 @@ if ( $view == 'week' ){
             $row2=@mysqli_fetch_array($result2);
             $TI_CODE=@$row2["TI_CODE"];
             if ( @$row2["I_JOUR_COMPLET"]  == 0 )
-                $commentaire_absence=@$row2["TI_LIBELLE"]." ".@$row2["I_COMMENT"]." du ".@$row2["I_DEBUT"]." ‡ ".@$row2["IH_DEBUT"]." au ".@$row2["I_FIN"]." ‡ ".@$row2["IH_FIN"];
+                $commentaire_absence=@$row2["TI_LIBELLE"]." ".@$row2["I_COMMENT"]." du ".@$row2["I_DEBUT"]." √† ".@$row2["IH_DEBUT"]." au ".@$row2["I_FIN"]." √† ".@$row2["IH_FIN"];
             else if ( @$row2["I_JOUR_COMPLET"]  == 2 ) 
                 $commentaire_absence=@$row2["TI_LIBELLE"]." ".@$row2["I_COMMENT"]." le ".@$row2["I_DEBUT"];
             else if ( @$row2["I_JOUR_COMPLET"]  == 1 and @$row2["I_DEBUT"] == @$row2["I_FIN"])
@@ -337,7 +337,7 @@ if ( $view == 'week' ){
           
         <td align=center><input class='form-control form-control-sm' type='text' size=5 style='max-width:80px;' id='debut1".$i."' name='debut1".$i."'  value='".$debut1."' tabindex=".$tabindex1." maxlength='5' $disabled
             onchange=\"calculate(form.debut1".$i.",form.fin1".$i.",form.debut2".$i.",form.fin2".$i.",form.duree".$i.",form.duree_min".$i.", form.duree2_min".$i.");\"
-            title=\"Saisissez ici l'heure de dÈbut pour le matin au format hh:mi\"></td>
+            title=\"Saisissez ici l'heure de d√©but pour le matin au format hh:mi\"></td>
             
         <td align=center><input class='form-control form-control-sm' type='text' size=5 style='max-width:80px;' id='fin1".$i."' name='fin1".$i."' value='".$fin1."'  tabindex=".$tabindex2." maxlength='5' $disabled
             onchange=\"calculate(form.debut1".$i.",form.fin1".$i.",form.debut2".$i.",form.fin2".$i.",form.duree".$i.",form.duree_min".$i.", form.duree2_min".$i.");\"
@@ -345,11 +345,11 @@ if ( $view == 'week' ){
          
         <td align=center><input class='form-control form-control-sm' type='text' size=5 style='max-width:80px;' id='debut2".$i."' name='debut2".$i."'  value='".$debut2."' tabindex=".$tabindex3." maxlength='5' $disabled
             onchange=\"calculate(form.debut1".$i.",form.fin1".$i.",form.debut2".$i.",form.fin2".$i.",form.duree".$i.",form.duree_min".$i.", form.duree2_min".$i.");\"
-            title=\"Saisissez ici l'heure de dÈbut pour l'aprËs-midi au format hh:mi\"></td>
+            title=\"Saisissez ici l'heure de d√©but pour l'apr√®s-midi au format hh:mi\"></td>
             
         <td align=center><input class='form-control form-control-sm' type='text' size=5 style='max-width:80px;' id='fin2".$i."' name='fin2".$i."' value='".$fin2."'  tabindex=".$tabindex4." maxlength='5' $disabled
             onchange=\"calculate(form.debut1".$i.",form.fin1".$i.",form.debut2".$i.",form.fin2".$i.",form.duree".$i.",form.duree_min".$i.", form.duree2_min".$i.");\"
-            title=\"Saisissez ici l'heure de fin pour l'aprËs-midi au format hh:mi\"></td>
+            title=\"Saisissez ici l'heure de fin pour l'apr√®s-midi au format hh:mi\"></td>
         
         <td align=center  class='hide_mobile'><span title=\"".$commentaire_absence."\" class=red12 style='text-decoration:underline;'>".$TI_CODE."</span></td>";
         
@@ -360,7 +360,7 @@ if ( $view == 'week' ){
             if ( $asa == 1 ) $checked='checked';
             else $checked ='';
             echo "<td align=center  class='hide_mobile'>
-            <input type='checkbox' title=\"Autorisation spÈciale d'absence 7h\" name='asa_".$i."' id='asa_".$i."' value=1 $checked $disabled2
+            <input type='checkbox' title=\"Autorisation sp√©ciale d'absence 7h\" name='asa_".$i."' id='asa_".$i."' value=1 $checked $disabled2
                 onchange=\"check_option(form.asa_".$i.", form.forma_".$i.", form.formas_".$i.",
                                     form.debut1".$i.",form.fin1".$i.",form.debut2".$i.",form.fin2".$i.",form.duree2_".$i.",
                                     form.duree".$i.",form.duree_min".$i.");\">
@@ -388,13 +388,13 @@ if ( $view == 'week' ){
         
         $url="horaires_modal.php?pid=".$person."&week=".$week."&year=".$year."&day=".$i;
         echo "<input type=hidden name='comment".$i."' id='comment".$i."' value=\"".$H_COMMENT."\">";
-        if ( $H_COMMENT == '' ) $cmt="texte libre permettant de noter le dÈtail du travail de la journÈe";
+        if ( $H_COMMENT == '' ) $cmt="texte libre permettant de noter le d√©tail du travail de la journ√©e";
         else $cmt=$H_COMMENT;
         $link="<button class='btn btn-default btn-action'><i class='".$icon."' title=\"".$cmt."\" id='icon_".$i."' name='icon_".$i."'></i></button>";
         $modal = write_modal( $url, "cmt_".$i, $link);
         
         echo "<td align=center  class='hide_mobile2'><input type='text' class='form-control form-control-sm' style='max-width:80px;' maxlength='5'  id='duree2_".$i."' name='duree2_".$i."' value='".$duree2."' 
-            title='Heures comptabilisÈes pour cette journÈe, hors pointages. Par exemple, Maladie, Formations ... Format du type 6h25' placeholder='00h00' $disabled2
+            title='Heures comptabilis√©es pour cette journ√©e, hors pointages. Par exemple, Maladie, Formations ... Format du type 6h25' placeholder='00h00' $disabled2
             onchange=\"change_heures_sup(form.duree2_".$i.", form.duree2_min".$i.", '".$duree2."', '".$duree2_minutes."',
                         form.debut1".$i.",form.fin1".$i.",form.debut2".$i.",form.fin2".$i.",form.duree".$i.",form.duree_min".$i.");\"/></td>
 
@@ -462,7 +462,7 @@ if ( $view == 'week' ){
         <input type='text' class='form-control form-control-sm' size=3 id='total1' name='total1' value='$duree_mois' readonly class='".$HS_CLASS." noboxshadow'
         style='width:auto;display:inline-flex;font-weight:bold;margin-top:-2px;width:55px;'></div>";
         
-    echo "<div style='padding-bottom:7px'> Total annÈe ".$year2.": 
+    echo "<div style='padding-bottom:7px'> Total ann√©e ".$year2.": 
         <input type='text' class='form-control form-control-sm' size=3 id='total2' name='total2' value='$duree_year' readonly class='".$HS_CLASS." noboxshadow'
         style='width:auto;display:inline-flex;font-weight:bold;margin-top:-2px;width:64px;'></div>";
 
@@ -499,21 +499,21 @@ if ( $view == 'week' ){
         
         $thisyear = date('Y');
         $lastyear = $thisyear -1;
-        echo "<p><table class='noBorder'><tr><td align=left> Heures de travail prÈvues par an</td><td align=left><b>".$annuelles."h</b></td></tr>";
+        echo "<p><table class='noBorder'><tr><td align=left> Heures de travail pr√©vues par an</td><td align=left><b>".$annuelles."h</b></td></tr>";
         if ( $syndicate ) {
             $cppris=count_conges_val($person,$thisyear."-01-01",$thisyear."-12-31",$type='CP');
             $rttpris=count_conges_val($person,$thisyear."-01-01",$thisyear."-12-31",$type='RTT');
             $restecp = $cpdroits - $cppris;
-            echo "<tr><td align=left> CongÈs restants annÈe $lastyear</td><td align=left><b>".$TS_RELIQUAT_CP."</b> jours CP et <b>".$TS_RELIQUAT_RTT."</b> jours RTT</td></tr>";
-            echo "<tr><td align=left> CongÈs pour annÈe $thisyear</td><td align=left><b>".$cpdroits."</b> jours CP</td></tr>";
-            echo "<tr><td align=left> CongÈs utilisÈs $thisyear</td><td align=left><b>".$cppris."</b> dÈj‡ pris ou posÈs cette annÈe. Reste <b>".$restecp."</b> jours.";
-            echo "<tr><td align=left> RTT annÈe $thisyear</td><td align=left><b>".$rttpris."</b> dÈj‡ pris ou posÈs cette annÈe.</td></tr>";
+            echo "<tr><td align=left> Cong√©s restants ann√©e $lastyear</td><td align=left><b>".$TS_RELIQUAT_CP."</b> jours CP et <b>".$TS_RELIQUAT_RTT."</b> jours RTT</td></tr>";
+            echo "<tr><td align=left> Cong√©s pour ann√©e $thisyear</td><td align=left><b>".$cpdroits."</b> jours CP</td></tr>";
+            echo "<tr><td align=left> Cong√©s utilis√©s $thisyear</td><td align=left><b>".$cppris."</b> d√©j√† pris ou pos√©s cette ann√©e. Reste <b>".$restecp."</b> jours.";
+            echo "<tr><td align=left> RTT ann√©e $thisyear</td><td align=left><b>".$rttpris."</b> d√©j√† pris ou pos√©s cette ann√©e.</td></tr>";
         }
-        echo "<tr><td align=left> Heures supplÈmentaires rÈalisÈes $year</td>
+        echo "<tr><td align=left> Heures suppl√©mentaires r√©alis√©es $year</td>
                 <td align=left>
                 <span style='color:".$color.";font-weight: bold;'>".$heures_sup."h</span>
                 <i class='far fa-lightbulb' 
-                    title=\"Estimation calculÈe ‡ partir des ".$duree_year." rÈalisÈes en ".$nb_jours_travailles." jours de semaine,\nsur les ".$nb_jours_travail_annuel." jours de semaine prÈvus sur l'annÈe ".$year2." (incluant ".$cpdroits."j de CP et les fÈriÈs)\"></i>
+                    title=\"Estimation calcul√©e √† partir des ".$duree_year." r√©alis√©es en ".$nb_jours_travailles." jours de semaine,\nsur les ".$nb_jours_travail_annuel." jours de semaine pr√©vus sur l'ann√©e ".$year2." (incluant ".$cpdroits."j de CP et les f√©ri√©s)\"></i>
                     </td></tr>
                     </table>";
     }
@@ -595,7 +595,7 @@ else {
     if ( $number > 0 ) {
         echo "<table class='newTableAll' cellspacing=0 border=0>";
         echo "<tr>";
-         echo "<td>AnnÈe</td>";
+         echo "<td>Ann√©e</td>";
         if ( $horaire_list_mode == 'W' ) 
              echo "<td>Semaine</td>
                   <td>Commence le</td>";
@@ -603,16 +603,16 @@ else {
                 echo "<td style='min-width:100px;'>Jour</td>
                     <td>Mois</td>
                     <td>Matin</td>
-                    <td>AprËs-midi</td>";
+                    <td>Apr√®s-midi</td>";
         echo "<td align=center>Heures saisies</td>
                   <td align=center>Dont sans pointage</td>";
         if ( $horaire_list_mode == 'W' ) 
-            echo "<td align=center>SupplÈmentaires</td>";
+            echo "<td align=center>Suppl√©mentaires</td>";
         echo " <td align=center>Statut</td>";
         if ( $horaire_list_mode == 'W' )
         echo " <td align=center>Saisie par</td>
                   <td align=center>Le</td>
-                  <td align=center>ValidÈs par</td>
+                  <td align=center>Valid√©s par</td>
                   <td align=center>Le</td>";
         else
             echo " <td align=left>Commentaire</td>";
@@ -660,7 +660,7 @@ else {
             echo "<tr>";
             if ( $horaire_list_mode == 'W' ) 
                 echo "<td>".$ANNEE."</td>
-                  <td>semaine n∞".$SEMAINE."</td>
+                  <td>semaine n¬∞".$SEMAINE."</td>
                   <td>".$JOUR."</td>
                   <td align=center >$HEURES</td>
                   <td align=center class=small>".$HEURES2."</td>

@@ -35,23 +35,23 @@ $_SESSION["param"]=$param;
 
 $maps = array(
     0 => "<optgroup label='Affichage du Personnel'>",
-    1 => "Opérations de secours - participants",
-    2 => "Autres Opérations - participants",
+    1 => "OpÃ©rations de secours - participants",
+    2 => "Autres OpÃ©rations - participants",
     3 => "Formations - participants",
-    4 => "Veille opérationnelle",
+    4 => "Veille opÃ©rationnelle",
     5 => "Personnel disponible",
-    6 => "Personnel par département (adresse)",
-    7 => "Personnel par département (affectation)",
+    6 => "Personnel par dÃ©partement (adresse)",
+    7 => "Personnel par dÃ©partement (affectation)",
     
-    8 => "<optgroup label='Affichage des Véhicules et du Matériel'>",
-    9 => "Matériel ".$cisname,
-    10 => "Véhicules",
-    11 => "Matériel de pompage",
-    12 => "Matériel hébergement urgence",
-    13=> "<optgroup label='Affichage des Compétences du personnel'>",
-    14 => "Compétences",
-    15 => "<optgroup label='Affichage des activités en cours'>",
-    16 => "Activités",
+    8 => "<optgroup label='Affichage des VÃ©hicules et du MatÃ©riel'>",
+    9 => "MatÃ©riel ".$cisname,
+    10 => "VÃ©hicules",
+    11 => "MatÃ©riel de pompage",
+    12 => "MatÃ©riel hÃ©bergement urgence",
+    13=> "<optgroup label='Affichage des CompÃ©tences du personnel'>",
+    14 => "CompÃ©tences",
+    15 => "<optgroup label='Affichage des activitÃ©s en cours'>",
+    16 => "ActivitÃ©s",
     17 => "<optgroup label='Personnel externe'>",
     18 => "Personnel externe"
 );
@@ -104,7 +104,7 @@ if ( $map_mode == 14 ) {
     $prevEQ_ID=0;
     echo "<option value=0";
     if ($param == 0 ) echo " selected ";
-    echo ">Choisir une compétence.....</option>";
+    echo ">Choisir une compÃ©tence.....</option>";
     while (custom_fetch_array($result2)) {
         if ( $prevEQ_ID <> $EQ_ID ) echo "<OPTGROUP LABEL='".$EQ_NOM."'>";
         $prevEQ_ID=$EQ_ID;
@@ -127,11 +127,11 @@ if ( $map_mode == 16 ) {
     $prevCAT="";
     echo "<option value=0";
     if ($param == 0 ) echo " selected ";
-    echo ">Choisir un type d'activité .....</option>";
+    echo ">Choisir un type d'activitÃ© .....</option>";
     
     echo "<option value=ALL";
     if ($param == 'ALL' ) echo " selected ";
-    echo ">Toutes les activités</option>";
+    echo ">Toutes les activitÃ©s</option>";
     while (custom_fetch_array($result2)) {
         if ( $prevCAT <> $CEV_CODE ) echo "<OPTGROUP LABEL='".$CEV_DESCRIPTION."'>";
         $prevCAT=$CEV_CODE;

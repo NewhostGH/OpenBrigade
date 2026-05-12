@@ -23,7 +23,7 @@ check_all(18);
 ?>
 <script>
 function suppress(cat_old) {
-    if (confirm("Voulez vous vraiment supprimer cette catégorie?\nTous les éléments de cette catégorie seront supprimés."))
+    if (confirm("Voulez vous vraiment supprimer cette catÃ©gorie?\nTousÂ lesÂ Ã©lÃ©mentsÂ deÂ cetteÂ catÃ©gorieÂ serontÂ supprimÃ©s."))
         self.location.href="del_edit_categorie.php?cat_old="+cat_old;
     else
         self.location.href="parametrage.php?tab=3&child=3";
@@ -55,7 +55,7 @@ if ($cat_description == '' || $cat_value == '') {
     exit();
 }
 
-if ($cat_old === 'Nouvelle catégorie') {
+if ($cat_old === 'Nouvelle catÃ©gorie') {
     $query = "INSERT INTO categorie_materiel(TM_USAGE, CM_DESCRIPTION, PICTURE) VALUES (\"".$cat_value."\", \"".$cat_description."\", \"".$logo."\")";
     $result = mysqli_query($dbc, $query);
 }
@@ -99,7 +99,7 @@ if ($logo <> 'cog') {
 // Redirect
 //=====================================================================
 
-if ($del === 'Supprimer catégorie')
+if ($del === 'Supprimer catÃ©gorie')
     echo "<body onload=suppress('".$cat_old."')>";
 else
     header("Location: parametrage.php?tab=3&child=3&ope=edit&catmateriel=$cat_value");

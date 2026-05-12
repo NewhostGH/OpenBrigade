@@ -60,7 +60,7 @@ function get_nb_records_api($cli=0) {
         or die("ERROR - cannot retrieve data from $url");
     if ($json === false) {
         if ( $cli ) print "ERROR - l'appel a l'API licencie retourne l'erreur suivante\n".get_curl_errors($url)."\n";
-        else print  "<div id='msgError' class='alert alert-danger' role='alert'><strong>ERREUR </strong> Impossible d'accéder à l'URL de l'API ".$import_api_url.", vérifier le token. <br>".get_curl_errors($import_api_url)."</div>";
+        else print  "<div id='msgError' class='alert alert-danger' role='alert'><strong>ERREUR </strong> Impossible d'accÃ©der Ã  l'URL de l'API ".$import_api_url.", vÃ©rifier le token. <br>".get_curl_errors($import_api_url)."</div>";
         return 0;
     }
     $array=json_decode($json, true);
@@ -82,7 +82,7 @@ function import_one_user($pid) {
     $json = file_get_contents($url)
         or die("ERROR - cannot retrieve data from $url");
     if ($json === false) {
-        $out .= "<div id='msgError' class='alert alert-danger' role='alert'><strong>ERREUR </strong> id licencié $pid probablement non trouvé<br>".get_curl_errors($url)."</div>";
+        $out .= "<div id='msgError' class='alert alert-danger' role='alert'><strong>ERREUR </strong> id licenciÃ© $pid probablement non trouvÃ©<br>".get_curl_errors($url)."</div>";
     }
     else {
         $array=json_decode($json, true);
@@ -258,10 +258,10 @@ function update_ebrigade_user($pid, $dataset,$cli=0) {
 
     $out="";
     // -------------------------------------------------------------
-    // cas où la fiche eBrigade existe mais sans le api
+    // cas oÃ¹ la fiche eBrigade existe mais sans le api
     // -------------------------------------------------------------
     if ( $NB == 0 ) {
-        // y a t'il une fiche active avec le numéro de licence.
+        // y a t'il une fiche active avec le numÃ©ro de licence.
         $query="select count(1) as NB from pompier where ( ID_API is null or ID_API = '' ) and P_LICENCE=\"".$NumeroLcs."\"";
         $res=mysqli_query($dbc,$query);
         $row=mysqli_fetch_array($res);
@@ -311,7 +311,7 @@ function update_ebrigade_user($pid, $dataset,$cli=0) {
                 }
             }
         }
-        else if ( $NB2 == 0 ) { // sinon on recherche un homonyme actif avec même date de naissance
+        else if ( $NB2 == 0 ) { // sinon on recherche un homonyme actif avec mÃªme date de naissance
             $query="update pompier set ID_API=".$pid.", P_LICENCE = \"".$NumeroLcs."\" 
                     where P_NOM=\"".strtolower($NomLcs)."\" 
                     and P_PRENOM=\"".strtolower($PrenomLcs)."\"
@@ -330,11 +330,11 @@ function update_ebrigade_user($pid, $dataset,$cli=0) {
                 $out .= "SUCCESS mapping NAME/BIRTHDATE - $pid - $NomLcs $PrenomLcs - $NumeroLcs".$br;
                 if ($log_actions == 1) {
                     $P_ID=get_code_from_api($pid);
-                    insert_log('UPDP', $P_ID, "mapping via api nom/prénom/date");
+                    insert_log('UPDP', $P_ID, "mapping via api nom/prÃ©nom/date");
                 }
             }
             else { 
-                // sinon on recherche un homonyme ancien avec même date de naissance et on le réactive
+                // sinon on recherche un homonyme ancien avec mÃªme date de naissance et on le rÃ©active
                 $query="update pompier set ID_API=".$pid.", P_LICENCE = \"".$NumeroLcs."\", P_OLD_MEMBER = 0, GP_ID=0, GP_ID2=0
                     where P_NOM=\"".strtolower($NomLcs)."\" 
                     and P_PRENOM=\"".strtolower($PrenomLcs)."\"
@@ -354,11 +354,11 @@ function update_ebrigade_user($pid, $dataset,$cli=0) {
                     $out .= "SUCCESS mapping NAME/BIRTHDATE reactivate - $pid - $NomLcs $PrenomLcs - $NumeroLcs".$br;
                     if ($log_actions == 1) {
                         $P_ID=get_code_from_api($pid);
-                        insert_log('UPDP', $P_ID, "mapping via api nom/prénom/date reactivé");
+                        insert_log('UPDP', $P_ID, "mapping via api nom/prÃ©nom/date reactivÃ©");
                     }
                 }
                 else {
-                    // au pire juste un homonyme sans date de naissance renseignée
+                    // au pire juste un homonyme sans date de naissance renseignÃ©e
                     $query="select P_ID as NB from pompier where P_OLD_MEMBER=0 and P_NOM=\"".strtolower($NomLcs)."\" and P_PRENOM=\"".strtolower($PrenomLcs)." and ( ID_API is null or ID_API = '' ) and P_BIRTHDATE is null";
                     $res=mysqli_query($dbc,$query);
                     if ( @mysqli_num_rows($res) == 1 ) {
@@ -376,7 +376,7 @@ function update_ebrigade_user($pid, $dataset,$cli=0) {
                             $out .= "SUCCESS mapping NAME/NO BIRTHDATE - $pid - $NomLcs $PrenomLcs - $NumeroLcs".$br;
                             if ($log_actions == 1) {
                                 $P_ID=get_code_from_api($pid);
-                                insert_log('UPDP', $P_ID, "mapping via api nom/prénom");
+                                insert_log('UPDP', $P_ID, "mapping via api nom/prÃ©nom");
                             }
                         }
                     }
@@ -482,13 +482,13 @@ function update_ebrigade_user($pid, $dataset,$cli=0) {
         if ( $EmailLcs <> "" and $inserted == 1 ) {
             $message  = "Bonjour ".ucfirst($PrenomLcs).",\n";
             $n=ucfirst($PrenomLcs)." ".strtoupper($NomLcs);
-            $subject  = "Nouveau compte licencié pour - ".$n;
-            $message .= "Je viens de créer votre compte personnel sur ".$application_title."\n";
+            $subject  = "Nouveau compte licenciÃ© pour - ".$n;
+            $message .= "Je viens de crÃ©er votre compte personnel sur ".$application_title."\n";
             $message .= "identifiant: ".$identifiant."\n";
             if ( $PasswordLcs == '' )
                 $message .= "mot de passe: ".$mypass."\n";
             else
-                $message .= "mot de passe identique à celui du site fédéral.\n";
+                $message .= "mot de passe identique Ã  celui du site fÃ©dÃ©ral.\n";
             
             $query="insert into mailer(MAILDATE, MAILTO, SENDERNAME, SENDERMAIL, SUBJECT, MESSAGE)
                     values( NOW(), \"".$EmailLcs ."\", \"Admin ".$cisname."\",\"donotreply\",\"".$subject."\", \"".$message."\")";
@@ -627,37 +627,37 @@ function get_numero_affiliation($id_club) {
 }
 
 //=====================================================================
-// mapping nationalité
+// mapping nationalitÃ©
 //=====================================================================
 
 function map_nationalite($code) {
     $nationalites = array(
-        array("279", "Française",65),
-        array("215", "Algérienne",4),
+        array("279", "FranÃ§aise",65),
+        array("215", "AlgÃ©rienne",4),
         array("216", "Allemande",5),
-        array("217", "Américaine",61),
+        array("217", "AmÃ©ricaine",61),
         array("218", "Andorrane",6),
         array("219", "Angolaise",7),
         array("220", "Argentine",10),
-        array("221", "Arménienne",11),
+        array("221", "ArmÃ©nienne",11),
         array("222", "Australienne",12),
         array("223", "Autrichienne",13),
-        array("224", "Azerbaïdjanaise",14),
+        array("224", "AzerbaÃ¯djanaise",14),
         array("225", "Bahamienne",15),
-        array("226", "Bahreïnienne",16),
+        array("226", "BahreÃ¯nienne",16),
         array("227", "Bangladaise",17),
         array("228", "Barbadienne",18),
-        array("229", "Bélarussienne",24),
+        array("229", "BÃ©larussienne",24),
         array("230", "Belge",20),
-        array("231", "Bélizienne",21),
-        array("232", "Béninoise",22),
+        array("231", "BÃ©lizienne",21),
+        array("232", "BÃ©ninoise",22),
         array("233", "Bhoutanaise",23),
         array("234", "Bolivienne",26),
         array("235", "Botswanaise",28),
-        array("236", "Brésilienne",29),
+        array("236", "BrÃ©silienne",29),
         array("237", "Britannique",148),
         array("238", "Bulgare",31),
-        array("239", "Burkinabè",32),
+        array("239", "BurkinabÃ¨",32),
         array("240", "Burundaise",33),
         array("241", "Cambodgienne",34),
         array("242", "Camerounaise",35),
@@ -670,66 +670,66 @@ function map_nationalite($code) {
         array("249", "Colombienne",41),
         array("250", "Comorienne",42),
         array("251", "Congolaise",43),
-        array("252", "Coréenne",47),
+        array("252", "CorÃ©enne",47),
         array("253", "Costaricienne",48),
         array("254", "Croate",50),
         array("255", "Cubaine",51),
         array("256", "Danoise",52),
-        array("257", "De Bosnie-et-Herzégovine",27),
-        array("258", "De Guinée-Bissau",74),
-        array("259", "De São Tomé E Príncipe",159),
+        array("257", "De Bosnie-et-HerzÃ©govine",27),
+        array("258", "De GuinÃ©e-Bissau",74),
+        array("259", "De SÃ£o TomÃ© E PrÃ­ncipe",159),
         array("260", "De Sierra Leone",162),
-        array("261", "Des Émirats Arabes Unis",56),
-        array("262", "Des Îles Cook",45),
-        array("263", "Des Îles Fidji",63),
+        array("261", "Des Ã‰mirats Arabes Unis",56),
+        array("262", "Des ÃŽles Cook",45),
+        array("263", "Des ÃŽles Fidji",63),
         array("264", "Djiboutienne",53),
         array("265", "Dominicaine",145),
         array("266", "Dominiquaise",54),
         array("267", "Du Brunei",30),
         array("268", "Du Lesotho",97),
-        array("269", "D’Antigua-et-Barbuda",8),
-        array("270", "Égyptienne",55),
-        array("271", "Équato-guinéenne",75),
-        array("272", "Équatorienne",57),
-        array("273", "Érythréenne",58),
+        array("269", "Dâ€™Antigua-et-Barbuda",8),
+        array("270", "Ã‰gyptienne",55),
+        array("271", "Ã‰quato-guinÃ©enne",75),
+        array("272", "Ã‰quatorienne",57),
+        array("273", "Ã‰rythrÃ©enne",58),
         array("274", "Espagnole",59),
         array("275", "Est-timorais",0),
         array("276", "Estonienne",60),
-        array("277", "Éthiopienne",62),
+        array("277", "Ã‰thiopienne",62),
         array("278", "Finlandaise",64),
         array("280", "Gabonaise",66),
         array("281", "Gambienne",67),
-        array("282", "Géorgienne",68),
-        array("283", "Ghanéenne",69),
+        array("282", "GÃ©orgienne",68),
+        array("283", "GhanÃ©enne",69),
         array("284", "Grecque",70),
         array("285", "Grenadine",155),
-        array("286", "Guatémaltèque",72),
-        array("287", "Guinéenne",73),
+        array("286", "GuatÃ©maltÃ¨que",72),
+        array("287", "GuinÃ©enne",73),
         array("288", "Guyanienne",76),
-        array("289", "Haïtienne",77),
+        array("289", "HaÃ¯tienne",77),
         array("290", "Hondurienne",78),
         array("291", "Hongroise",79),
         array("292", "Indienne",80),
-        array("293", "Indonésienne",81),
+        array("293", "IndonÃ©sienne",81),
         array("294", "Iranienne",82),
         array("295", "Iraquienne",83),
         array("296", "Irlandaise",84),
         array("297", "Islandaise",85),
-        array("298", "Israélienne",86),
+        array("298", "IsraÃ©lienne",86),
         array("299", "Italienne",87),
         array("300", "Ivoirienne",49),
-        array("301", "Jamaïquaine",88),
+        array("301", "JamaÃ¯quaine",88),
         array("302", "Japonaise",89),
         array("303", "Jordanienne",90),
         array("304", "Kazakhe",91),
-        array("305", "Kényane",92),
+        array("305", "KÃ©nyane",92),
         array("306", "Kirghize",93),
         array("307", "Kiribatienne",94),
-        array("308", "Koweïtienne",95),
+        array("308", "KoweÃ¯tienne",95),
         array("309", "Laotienne",96),
         array("310", "Lettone",98),
         array("311", "Libanaise",99),
-        array("312", "Libérienne",100),
+        array("312", "LibÃ©rienne",100),
         array("313", "Libyenne",101),
         array("314", "Liechtensteinoise",102),
         array("315", "Lituanienne",103),
@@ -745,31 +745,31 @@ function map_nationalite($code) {
         array("325", "Mauricienne",114),
         array("326", "Mauritanienne",115),
         array("327", "Mexicaine",116),
-        array("328", "Micronésienne",117),
+        array("328", "MicronÃ©sienne",117),
         array("329", "Moldave",118),
-        array("330", "Monégasque",119),
+        array("330", "MonÃ©gasque",119),
         array("331", "Mongole",120),
-        array("332", "Monténégrine",0),
+        array("332", "MontÃ©nÃ©grine",0),
         array("333", "Mozambicaine",121),
         array("334", "Namibienne",122),
         array("335", "Nauruane",123),
-        array("336", "Néerlandaise",138),
-        array("337", "Néo-zélandaise",130),
-        array("338", "Népalaise",124),
+        array("336", "NÃ©erlandaise",138),
+        array("337", "NÃ©o-zÃ©landaise",130),
+        array("338", "NÃ©palaise",124),
         array("339", "Nicaraguayenne",125),
-        array("340", "Nigériane",127),
-        array("341", "Nigérienne",126),
-        array("342", "Niuéane",128),
-        array("343", "Nord-coréenne",46),
-        array("344", "Norvégienne",129),
+        array("340", "NigÃ©riane",127),
+        array("341", "NigÃ©rienne",126),
+        array("342", "NiuÃ©ane",128),
+        array("343", "Nord-corÃ©enne",46),
+        array("344", "NorvÃ©gienne",129),
         array("345", "Omanaise",131),
         array("346", "Ougandaise",132),
-        array("347", "Ouzbèke",133),
+        array("347", "OuzbÃ¨ke",133),
         array("348", "Pakistanaise",134),
         array("349", "Palauane",0),
-        array("350", "Panaméenne",135),
+        array("350", "PanamÃ©enne",135),
         array("351", "Paraguayenne",137),
-        array("352", "Péruvienne",139),
+        array("352", "PÃ©ruvienne",139),
         array("353", "Philippine",140),
         array("354", "Polonaise",141),
         array("355", "Portugaise",142),
@@ -783,43 +783,43 @@ function map_nationalite($code) {
         array("363", "Salvadorienne",157),
         array("364", "Samoane",158),
         array("365", "Saoudienne",9),
-        array("366", "Sénégalaise",160),
+        array("366", "SÃ©nÃ©galaise",160),
         array("367", "Serbe",0),
         array("368", "Seychelloise",161),
         array("369", "Singapourienne",163),
         array("370", "Slovaque",164),
-        array("371", "Slovène",165),
+        array("371", "SlovÃ¨ne",165),
         array("372", "Somalienne",166),
         array("373", "Soudanaise",167),
         array("374", "Sri-lankaise",168),
         array("375", "Sud-africaine",2),
-        array("376", "Sud-coréenne",47),
-        array("377", "Suédoise",169),
+        array("376", "Sud-corÃ©enne",47),
+        array("377", "SuÃ©doise",169),
         array("378", "Suisse",170),
         array("379", "Surinamaise",171),
         array("380", "Swazie",172),
         array("381", "Syrienne",173),
         array("382", "Tadjike",174),
-        array("383", "Taïwanaise",0),
+        array("383", "TaÃ¯wanaise",0),
         array("384", "Tanzanienne",175),
         array("385", "Tchadienne",176),
-        array("386", "Tchèque",146),
-        array("387", "Thaïlandaise",177),
+        array("386", "TchÃ¨que",146),
+        array("387", "ThaÃ¯landaise",177),
         array("388", "Togolaise",178),
         array("389", "Tongane",179),
         array("390", "Trinidadienne",180),
         array("391", "Tunisienne",181),
-        array("392", "Turkmène",182),
+        array("392", "TurkmÃ¨ne",182),
         array("393", "Turque",183),
         array("394", "Tuvaluane",184),
         array("395", "Ukrainienne",185),
         array("396", "Uruguayenne",186),
         array("397", "Vanuatuane",187),
-        array("398", "Vénézuélienne",188),
+        array("398", "VÃ©nÃ©zuÃ©lienne",188),
         array("399", "Vietnamienne",189),
-        array("400", "Yéménite",190),
+        array("400", "YÃ©mÃ©nite",190),
         array("401", "Zambienne",193),
-        array("402", "Zimbabwéenne",194),
+        array("402", "ZimbabwÃ©enne",194),
         array("751", "Afghane",1),
         array("752", "Albanaise",3)
     );
@@ -835,7 +835,7 @@ function map_nationalite($code) {
 
 
 //=====================================================================
-// mapping départements
+// mapping dÃ©partements
 //=====================================================================
 
 function map_departement($code) {
@@ -846,20 +846,20 @@ function map_departement($code) {
         array("35", "33", "Gironde"),
         array("36", "40", "Landes"),
         array("37", "47", "Lot et Garonne"),
-        array("38", "64", "Pyrénées Atlantiques"),
+        array("38", "64", "PyrÃ©nÃ©es Atlantiques"),
         array("40", "03", "Allier"),
         array("41", "15", "Cantal"),
         array("42", "43", "Haute loire"),
-        array("43", "63", "Puy de Dôme"),
+        array("43", "63", "Puy de DÃ´me"),
         array("45", "14", "Calvados"),
         array("46", "50", "Manche"),
         array("47", "61", "Orne"),
-        array("49", "21", "Côte d'or"),
-        array("50", "58", "Nièvre"),
-        array("51", "71", "Saône et Loire"),
+        array("49", "21", "CÃ´te d'or"),
+        array("50", "58", "NiÃ¨vre"),
+        array("51", "71", "SaÃ´ne et Loire"),
         array("52", "89", "Yonne"),
-        array("54", "22", "Côtes d'Armor"),
-        array("55", "29", "Finistère"),
+        array("54", "22", "CÃ´tes d'Armor"),
+        array("55", "29", "FinistÃ¨re"),
         array("56", "35", "Ille et Vilaine"),
         array("57", "56", "Morbihan"),
         array("59", "18", "Cher"),
@@ -876,7 +876,7 @@ function map_departement($code) {
         array("72", "2B", "Haute Corse"),
         array("74", "25", "Doubs"),
         array("75", "39", "Jura"),
-        array("76", "70", "Haute Saône"),
+        array("76", "70", "Haute SaÃ´ne"),
         array("77", "90", "Territoire de Belfort"),
         array("79", "27", "Eure"),
         array("80", "76", "Seine Maritime"),
@@ -890,22 +890,22 @@ function map_departement($code) {
         array("89", "95", "Val d'Oise"),
         array("91", "11", "Aude"),
         array("92", "30", "Gard"),
-        array("93", "34", "Hérault"),
-        array("94", "48", "Lozère"),
-        array("95", "66", "Pyrénées Orientales"),
-        array("97", "19", "Corrèze"),
+        array("93", "34", "HÃ©rault"),
+        array("94", "48", "LozÃ¨re"),
+        array("95", "66", "PyrÃ©nÃ©es Orientales"),
+        array("97", "19", "CorrÃ¨ze"),
         array("98", "23", "Creuse"),
         array("99", "87", "Haute Vienne"),
         array("101", "54", "Meurthe et Moselle"),
         array("102", "55", "Meuse"),
         array("103", "57", "Moselle"),
         array("104", "88", "Vosges"),
-        array("106", "09", "Ariège"),
+        array("106", "09", "AriÃ¨ge"),
         array("107", "12", "Aveyron"),
         array("108", "31", "Haute Garonne"),
         array("109", "32", "Gers"),
         array("110", "46", "Lot"),
-        array("111", "65", "Hautes Pyrénées"),
+        array("111", "65", "Hautes PyrÃ©nÃ©es"),
         array("112", "81", "Tarn"),
         array("113", "82", "Tarn et Garonne"),
         array("115", "59", "Nord"),
@@ -913,39 +913,39 @@ function map_departement($code) {
         array("118", "04", "Alpes de haute provence"),
         array("119", "05", "Hautes alpes"),
         array("120", "06", "Alpes maritimes"),
-        array("121", "13", "Bouches du rhône"),
+        array("121", "13", "Bouches du rhÃ´ne"),
         array("122", "83", "Var"),
         array("123", "84", "Vaucluse"),
         array("125", "44", "Loire Atlantique"),
         array("126", "49", "Maine et Loire"),
         array("127", "53", "Mayenne"),
         array("128", "72", "Sarthe"),
-        array("129", "85", "Vendée"),
+        array("129", "85", "VendÃ©e"),
         array("131", "02", "Aisne"),
         array("132", "60", "Oise"),
         array("133", "80", "Somme"),
         array("135", "16", "Charente"),
         array("136", "17", "Charente maritime"),
-        array("137", "79", "Deux Sèvres"),
+        array("137", "79", "Deux SÃ¨vres"),
         array("138", "86", "Vienne"),
         array("140", "01", "Ain"),
-        array("141", "07", "Ardèche"),
-        array("142", "26", "Drôme"),
-        array("143", "38", "Isère"),
+        array("141", "07", "ArdÃ¨che"),
+        array("142", "26", "DrÃ´me"),
+        array("143", "38", "IsÃ¨re"),
         array("144", "42", "Loire"),
-        array("145", "69", "Rhône"),
+        array("145", "69", "RhÃ´ne"),
         array("146", "73", "Savoie"),
         array("147", "74", "Haute Savoie"),
         array("149", "971", "Guadeloupe"),
         array("150", "972", "Martinique"),
         array("151", "973", "Guyane"),
-        array("152", "974", "Réunion"),
+        array("152", "974", "RÃ©union"),
         array("160", "975", "Saint-Pierre-et-Miquelon"),
         array("161", "976", "Mayotte"),
         array("162", "984", "Terres Australes et Antarctiques"),
         array("163", "986", "Wallis et Futuna"),
-        array("164", "987", "Polynésie Française"),
-        array("165", "988", "Nouvelle-Calédonie"),
+        array("164", "987", "PolynÃ©sie FranÃ§aise"),
+        array("165", "988", "Nouvelle-CalÃ©donie"),
         array("753", "999", "Etranger"),
         array("811", "978", "Saint-Martin")
     );
@@ -975,7 +975,7 @@ stdClass Object
             [dptNaissanceLcs] => 464
             [PaysLcs] => 583
             [NationaliteLcs] => 279
-            [nationalite] => Française
+            [nationalite] => FranÃ§aise
             [ClubLcs] => 53
             [clubLabel] => Sauveteurs de l'Oise
             [TelephoneLcs] => 

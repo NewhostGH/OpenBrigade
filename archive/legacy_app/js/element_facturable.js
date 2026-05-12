@@ -24,7 +24,7 @@ function redirect(url) {
 }
 
 function suppress(id) {
-    if ( confirm("Voulez vous vraiment supprimer cet élément facturable?")) {
+    if ( confirm("Voulez vous vraiment supprimer cet Ã©lÃ©ment facturable?")) {
         url="del_element_facturable.php?EF_ID="+id;
         self.location.href=url;
     }

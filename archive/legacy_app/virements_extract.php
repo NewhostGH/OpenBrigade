@@ -26,7 +26,7 @@ check_all(53);
 $id=$_SESSION['id'];
 $highestsection=get_highest_section_where_granted($_SESSION['id'],53);
 get_session_parameters();
-// vérifier qu'on a les droits d'afficher pour cette section
+// vÃ©rifier qu'on a les droits d'afficher pour cette section
 $list = preg_split('/,/' , get_family("$highestsection"));
 if (! in_array($filter,$list) and ! check_rights($id, 24)) $filter=$highestsection;
 

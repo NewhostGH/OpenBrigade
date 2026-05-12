@@ -55,11 +55,11 @@ if (isset($_GET["reset"])) {
 $accept_date=get_accept_date ($id);
  
 $B="";
-$C=" affecté au sein ";
+$C=" affectÃ© au sein ";
 echo "<body class='top15'>";
 if ( $nbsections == 0 and $syndicate == 1) {
     $A="du syndicat";
-    $B=" et des adhérents ";
+    $B=" et des adhÃ©rents ";
     $C=$B;
 }
 else if ( $nbsections == 0 ) $A="de l'association";
@@ -70,67 +70,67 @@ else $site="<b>".str_replace('www.','',$cisurl)."</b>";
 
 echo "<div align=center>";
 
-$charte = "<div align=left><h3>CHARTE DEFINISSANT LES REGLES D’USAGE DU SITE «".$site."»</h3>
+$charte = "<div align=left><h3>CHARTE DEFINISSANT LES REGLES Dâ€™USAGE DU SITE Â«".$site."Â»</h3>
 
-<p><h5><span class=underline>Article 1</span> : Finalité du document</h5>
-Le présent document définit les principales règles d’usage du site «".$site."» mis à disposition du personnel ".$B.$A.".
+<p><h5><span class=underline>Article 1</span> : FinalitÃ© du document</h5>
+Le prÃ©sent document dÃ©finit les principales rÃ¨gles dâ€™usage du site Â«".$site."Â» mis Ã  disposition du personnel ".$B.$A.".
 
-<p><h5><span class=underline>Article 2</span> : Domaine d’application</h5>
-Il s’applique à toutes les personnes explicitement autorisées à utiliser le dit site et qui disposent officiellement des clés personnelles d’accès.
+<p><h5><span class=underline>Article 2</span> : Domaine dâ€™application</h5>
+Il sâ€™applique Ã  toutes les personnes explicitement autorisÃ©es Ã  utiliser le dit site et qui disposent officiellement des clÃ©s personnelles dâ€™accÃ¨s.
 
-<p><h5><span class=underline>Article 3</span> : Cadre d’utilisation</h5>
-Le site «".$site."» a pour vocation de permettre à l’ensemble du personnel".$C.$A." de:
+<p><h5><span class=underline>Article 3</span> : Cadre dâ€™utilisation</h5>
+Le site Â«".$site."Â» a pour vocation de permettre Ã  lâ€™ensemble du personnel".$C.$A." de:
 <ul>";
 
-if ( $disponibilites ) $charte .=" <li>saisir ses disponibilités ou indisponibilités mensuelles,</li>";
+if ( $disponibilites ) $charte .=" <li>saisir ses disponibilitÃ©s ou indisponibilitÃ©s mensuelles,</li>";
 if (  $nbsections > 0 ) $charte .= "<li>consulter le tableau de gardes mensuelles,</li>";
-if (  $syndicate  == 0 ) $charte .= "<li>visualiser ses compétences opérationnelles,</li>";
-$charte .= "<li>prendre connaissance des différentes informations ou consignes</li>
-<li>mettre à jour sa fiche de renseignements personnels,</li>
-<li>s’informer sur la vie ".$A."</li>
+if (  $syndicate  == 0 ) $charte .= "<li>visualiser ses compÃ©tences opÃ©rationnelles,</li>";
+$charte .= "<li>prendre connaissance des diffÃ©rentes informations ou consignes</li>
+<li>mettre Ã  jour sa fiche de renseignements personnels,</li>
+<li>sâ€™informer sur la vie ".$A."</li>
 </ul>
-<span class=small2>Nb : Cette liste est non exhaustive ; l’administrateur du site peut à tout moment la faire évoluer.</span>
+<span class=small2>Nb : Cette liste est non exhaustive ; lâ€™administrateur du site peut Ã  tout moment la faire Ã©voluer.</span>
 
-<p><h5><span class=underline>Article 4</span> : Règles d’utilisation du site «".$site."»</h5>
+<p><h5><span class=underline>Article 4</span> : RÃ¨gles dâ€™utilisation du site Â«".$site."Â»</h5>
 <ul>
-<liL’utilisateur s’engage à ne pas effectuer d’opérations qui pourraient avoir des conséquences néfastes sur le bon fonctionnement du site et/ou sur l’intégrité de ses données.</li>
-<li>L’utilisateur est seul responsable de sa session et s’engage à se déconnecter après chaque utilisation uniquement par le biais de l’onglet « déconnexion ».</li>
-<li>L’utilisateur s’engage à ne pas accepter l’enregistrement des mots de passe par le navigateur.</li>
-<li>D’une manière générale, l’utilisateur s’engage à faire preuve d’un comportement exemplaire lors de l’usage de ce site. 
-Il est de son devoir de rappeler le contenu de cette charte à toute personne qui en aurait oublié les modalités.</li>
+<liLâ€™utilisateur sâ€™engage Ã  ne pas effectuer dâ€™opÃ©rations qui pourraient avoir des consÃ©quences nÃ©fastes sur le bon fonctionnement du site et/ou sur lâ€™intÃ©gritÃ© de ses donnÃ©es.</li>
+<li>Lâ€™utilisateur est seul responsable de sa session et sâ€™engage Ã  se dÃ©connecter aprÃ¨s chaque utilisation uniquement par le biais de lâ€™onglet Â« dÃ©connexion Â».</li>
+<li>Lâ€™utilisateur sâ€™engage Ã  ne pas accepter lâ€™enregistrement des mots de passe par le navigateur.</li>
+<li>Dâ€™une maniÃ¨re gÃ©nÃ©rale, lâ€™utilisateur sâ€™engage Ã  faire preuve dâ€™un comportement exemplaire lors de lâ€™usage de ce site. 
+Il est de son devoir de rappeler le contenu de cette charte Ã  toute personne qui en aurait oubliÃ© les modalitÃ©s.</li>
 </ul>
 
 <p><h5><span class=underline>Article 5</span> : Compte utilisateur et mot de passe</h5>
 <ul>
-<li>Chaque utilisateur doit définir un mot de passe, en respectant les règles de sécurité propres au site «".$site."» (longueur, présence de chiffres, lettres et caractères spéciaux).</li>
-<li>Un compte utilisateur est strictement personnel et confidentiel. L’utilisateur ne doit en aucun cas communiquer son mot de passe à une tierce personne.</li>
-<li>Il est recommandé de ne pas utiliser le même mot de passe que sur d’autres applications et de le changer régulièrement.</li>
+<li>Chaque utilisateur doit dÃ©finir un mot de passe, en respectant les rÃ¨gles de sÃ©curitÃ© propres au site Â«".$site."Â» (longueur, prÃ©sence de chiffres, lettres et caractÃ¨res spÃ©ciaux).</li>
+<li>Un compte utilisateur est strictement personnel et confidentiel. Lâ€™utilisateur ne doit en aucun cas communiquer son mot de passe Ã  une tierce personne.</li>
+<li>Il est recommandÃ© de ne pas utiliser le mÃªme mot de passe que sur dâ€™autres applications et de le changer rÃ©guliÃ¨rement.</li>
 </ul>
 
 
-<p><h5><span class=underline>Article 6</span> : Confidentialité</h5>
+<p><h5><span class=underline>Article 6</span> : ConfidentialitÃ©</h5>
 <ul>
-<li>Les données du site «".$site."» ne doivent en aucun cas être utilisées en dehors du cadre pour lequel elles sont destinées. </li>
-<li>La divulgation des données du site «".$site."» à des tiers est STRICTEMENT INTERDITE.</li>";
+<li>Les donnÃ©es du site Â«".$site."Â» ne doivent en aucun cas Ãªtre utilisÃ©es en dehors du cadre pour lequel elles sont destinÃ©es. </li>
+<li>La divulgation des donnÃ©es du site Â«".$site."Â» Ã  des tiers est STRICTEMENT INTERDITE.</li>";
 if (  $nbsections > 0 ) {
 $charte .= "
-<li>L’article 226-13/14 du code de procédure pénale soumet tout sapeur-pompier au secret professionnel et médical. 
-De ce fait il a interdiction de divulguer à quiconque toute information inhérente à l’exercice de ses missions.</li>
-<li>Pour rappel, conformément à la loi 83634 du 13 Juillet 1983 sur les droits et obligations des fonctionnaires :
-<br>- Le sapeur-pompier est soumis à l’obligation de discrétion professionnelle. Il ne doit pas divulguer à des tiers toute information relative au fonctionnement du service.
-<br>- Le sapeur-pompier est soumis à l’obligation du devoir de réserve. Il ne doit pas proférer en public des propos, des jugements mettant en cause le fonctionnement du service ou de la hiérarchie.
+<li>Lâ€™article 226-13/14 du code de procÃ©dure pÃ©nale soumet tout sapeur-pompier au secret professionnel et mÃ©dical. 
+De ce fait il a interdiction de divulguer Ã  quiconque toute information inhÃ©rente Ã  lâ€™exercice de ses missions.</li>
+<li>Pour rappel, conformÃ©ment Ã  la loi 83634 du 13 Juillet 1983 sur les droits et obligations des fonctionnaires :
+<br>- Le sapeur-pompier est soumis Ã  lâ€™obligation de discrÃ©tion professionnelle. Il ne doit pas divulguer Ã  des tiers toute information relative au fonctionnement du service.
+<br>- Le sapeur-pompier est soumis Ã  lâ€™obligation du devoir de rÃ©serve. Il ne doit pas profÃ©rer en public des propos, des jugements mettant en cause le fonctionnement du service ou de la hiÃ©rarchie.
 </li>";
 }
 $charte .= "
-<li>Compte-tenu de ces obligations, toute transmission d’information relative au service dans sa globalité au travers des réseaux sociaux est strictement interdite.</li>
-<li>Tout contrevenant s’expose à des poursuites en corrélation avec l’article et la loi sus cités.</li>
-<li>D’une manière générale, l’utilisateur doit s’imposer le respect des lois et notamment celles relatives aux publications à caractère injurieux, raciste, pornographique, diffamatoire, sur le harcèlement sexuel et/ou moral.</li>
+<li>Compte-tenu de ces obligations, toute transmission dâ€™information relative au service dans sa globalitÃ© au travers des rÃ©seaux sociaux est strictement interdite.</li>
+<li>Tout contrevenant sâ€™expose Ã  des poursuites en corrÃ©lation avec lâ€™article et la loi sus citÃ©s.</li>
+<li>Dâ€™une maniÃ¨re gÃ©nÃ©rale, lâ€™utilisateur doit sâ€™imposer le respect des lois et notamment celles relatives aux publications Ã  caractÃ¨re injurieux, raciste, pornographique, diffamatoire, sur le harcÃ¨lement sexuel et/ou moral.</li>
 </ul>
 
-<p><h5><span class=underline>Article 7</span> : Informatique et liberté</h5>
+<p><h5><span class=underline>Article 7</span> : Informatique et libertÃ©</h5>
 <ul>
-<li>Conformément à la Loi Informatique et Libertés du 6 Janvier 1978, l’utilisateur dispose d'un droit d'accès, de modification et de suppression des données personnelles le concernant, qu’il peut exercer à tout moment.</li>
-<li>Les connexions des utilisateurs avec leur adresse IP, ainsi que les différentes actions effectuées sur le site «".$site."» sont tracées et peuvent être exploitées afin d’analyser tout changement suspect.</li>
+<li>ConformÃ©ment Ã  la Loi Informatique et LibertÃ©s du 6 Janvier 1978, lâ€™utilisateur dispose d'un droit d'accÃ¨s, de modification et de suppression des donnÃ©es personnelles le concernant, quâ€™il peut exercer Ã  tout moment.</li>
+<li>Les connexions des utilisateurs avec leur adresse IP, ainsi que les diffÃ©rentes actions effectuÃ©es sur le site Â«".$site."Â» sont tracÃ©es et peuvent Ãªtre exploitÃ©es afin dâ€™analyser tout changement suspect.</li>
 </ul>";
 
 
@@ -142,37 +142,37 @@ if ( $accept_date == "" ) {
     onchange=\"change_checkboxes();\"></td> 
     <td><label for='checkme1'>Accepter les conditions d'utilisation</label></td></tr>";
     
-    $charte .= "<tr><td colspan=2 class=small>En cochant cette case, je reconnais avoir lu et compris ces conditions d'utilisations et je m'engage à les respecter scrupuleusement.
-    Le non respect de cette charte peut m'exposer à des poursuites au civil voire au pénal.</td></tr>";
+    $charte .= "<tr><td colspan=2 class=small>En cochant cette case, je reconnais avoir lu et compris ces conditions d'utilisations et je m'engage Ã  les respecter scrupuleusement.
+    Le non respect de cette charte peut m'exposer Ã  des poursuites au civil voire au pÃ©nal.</td></tr>";
     
     if ( file_exists($filesdir."/charte/".$file)) {
         $charte .= "<tr><td colspan=2><br><h6>
         <a href=showfile.php?charte=1&file=".$file." target=_blank title='consulter le RGPD'><i class='far fa-file-pdf fa-lg' style='color:red;'></i></a>
-        <a href=showfile.php?charte=1&file=".$file." target=_blank title='consulter le RGPD'>Consulter le Règlement général sur la protection des données (RGPD).</a></h6><br></td></tr>";
+        <a href=showfile.php?charte=1&file=".$file." target=_blank title='consulter le RGPD'>Consulter le RÃ¨glement gÃ©nÃ©ral sur la protection des donnÃ©es (RGPD).</a></h6><br></td></tr>";
         
-        $charte .= "<tr><td><input type='checkbox' name='checkme2' id='checkme2' value='1' title='Cocher pour accepter le règlement général sur la protection des données (RGPD)'
+        $charte .= "<tr><td><input type='checkbox' name='checkme2' id='checkme2' value='1' title='Cocher pour accepter le rÃ¨glement gÃ©nÃ©ral sur la protection des donnÃ©es (RGPD)'
         onchange=\"change_checkboxes();\"></td> 
-        <td><label for='checkme2'>Accepter le règlement règlement général sur la protection des données (RGPD)</label><br></td></tr>";
+        <td><label for='checkme2'>Accepter le rÃ¨glement rÃ¨glement gÃ©nÃ©ral sur la protection des donnÃ©es (RGPD)</label><br></td></tr>";
 
     }
     $charte .= "</table>";
     $charte .= "<p><input type='submit'  class='btn btn-primary' value='Continuer' id='continue' title='Accepter les conditions pour pouvoir continuer' onclick=\"accept1();\"  disabled />";
-    $charte .= "<p><input type='submit'  class='btn btn-danger' value='Refuser' id='reject' title='Refuser et se déconnecter.' onclick=\"reject();\"/>";
+    $charte .= "<p><input type='submit'  class='btn btn-danger' value='Refuser' id='reject' title='Refuser et se dÃ©connecter.' onclick=\"reject();\"/>";
 }
 else {
-    $charte .= "<p><span class=small> J'ai accepté ces conditions d'utilisations ".$accept_date."</span>";
+    $charte .= "<p><span class=small> J'ai acceptÃ© ces conditions d'utilisations ".$accept_date."</span>";
     if ( file_exists($filesdir."/charte/".$file)) {
         $charte .= "<tr><td colspan=2><h6>
         <a href=showfile.php?charte=1&file=".$file." target=_blank title='consulter le RGPD'><i class='far fa-file-pdf fa-lg' style='color:red;'></i></a>
-        <a href=showfile.php?charte=1&file=".$file." target=_blank title='consulter le RGPD'>Consulter le Règlement général sur la protection des données (RGPD).</a></h6></td></tr>";
-        $charte .= "<p><span class=small> J'ai accepté le RGPD ".$accept_date."</span> <p>";
+        <a href=showfile.php?charte=1&file=".$file." target=_blank title='consulter le RGPD'>Consulter le RÃ¨glement gÃ©nÃ©ral sur la protection des donnÃ©es (RGPD).</a></h6></td></tr>";
+        $charte .= "<p><span class=small> J'ai acceptÃ© le RGPD ".$accept_date."</span> <p>";
     }
     else 
         $charte .= "<br>";
     
     $charte .= "<input type='button' class='btn btn-secondary' value='Retour'  onclick=\"javascript:history.back(1);\"/>";
     if ( check_rights($id, 14)) {
-        $charte .= "<p><input type='submit'  class='btn btn-primary' value='Forcer tous les utilisateurs à approuver' id='reset' title='Forcer chaque utilisateur à accepter la charte à nouveau' onclick=\"reset();\"/>";
+        $charte .= "<p><input type='submit'  class='btn btn-primary' value='Forcer tous les utilisateurs Ã  approuver' id='reset' title='Forcer chaque utilisateur Ã  accepter la charte Ã  nouveau' onclick=\"reset();\"/>";
     }
 
 }

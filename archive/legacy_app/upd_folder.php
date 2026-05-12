@@ -28,7 +28,7 @@ if (! check_rights($id, 47, "$S_ID"))
     check_all(24);
 
 writehead();
-writeBreadCrumb("Ajouter un dossier","Bibliothèque","./documents.php");
+writeBreadCrumb("Ajouter un dossier","BibliothÃ¨que","./documents.php");
 echo "</head><body class='top30'>";
 
 // section
@@ -48,7 +48,7 @@ echo "<div class='col-sm-4'>
 
 echo "<table class='noBorder' cellspacing=0 border=0>";
 
-// dossier supérieur
+// dossier supÃ©rieur
 if ($dossier > 0 ) {
     $parent="<b>".get_folder_name($dossier)."</b>";
     $query="select td.TD_CODE, td.TD_LIBELLE from type_document td, document_folder df 

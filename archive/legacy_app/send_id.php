@@ -64,13 +64,13 @@ else {
 if ( $mode == 'unknown' ) {
     $subject="Choisir mode d'envoi du mot de passe";
     $texte = "<input type='button' class='btn btn-primary' value='Manuel' onclick=\"javascript:redirect('".$pid."','manual','".$action."')\";><br>
-    Vous devrez communiquer le mot de passe par téléphone ou en l'envoyant vous même par mail.";
+    Vous devrez communiquer le mot de passe par tÃ©lÃ©phone ou en l'envoyant vous mÃªme par mail.";
     $texte .="<p><p><input type='button' class='btn btn-warning' value='Automatique' onclick=\"javascript:redirect('".$pid."','auto','".$action."')\";>
-    <br>Le nouveau mot de passe sera envoyé automatiquement par mail ";
+    <br>Le nouveau mot de passe sera envoyÃ© automatiquement par mail ";
     if ( $add_courrier )
-        $texte .=" avec le courrier nouvel adhérent ";
+        $texte .=" avec le courrier nouvel adhÃ©rent ";
     $texte .="<br><i class='fa fa-exclamation-triangle' style='color:orange'></i><small>
-    Attention risque d'être considéré comme un spam par certains serveurs de messagerie.</small>";
+    Attention risque d'Ãªtre considÃ©rÃ© comme un spam par certains serveurs de messagerie.</small>";
     if ( $action == 'update' ) 
         $ret = "<a href='javascript:history.back(1)'><input type='submit' class='btn btn-default' value='Annuler'></a>";
     else
@@ -90,12 +90,12 @@ else {
         $Mailcontent .= "Voici vos informations de connexion $application_title.\n\n";
         $Mailcontent .= "Identifiant: $P_CODE\n\n";
         $Mailcontent .= "Mot de passe temporaire: $newpass\n\n";
-        $Mailcontent .= "Vous pourrez les changer une fois connecté(e).\n";
+        $Mailcontent .= "Vous pourrez les changer une fois connectÃ©(e).\n";
         if ( $assoc == 1 ) $Mailcontent .= "\nAide en ligne: ".$wikiurl."\n";
         $Subject = "identifiants $application_title pour ".fixcharset(ucfirst($P_PRENOM)." ".strtoupper($P_NOM));
         $SenderName = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
         $SenderMail = $_SESSION['SES_EMAIL'];
-        $title="identifiants envoyés";
+        $title="identifiants envoyÃ©s";
         
         if ( $add_courrier ) {
             $generation_url ="pdf_courrier_nouvel_adherent.php?P_ID=".$pid."&tofile=1";
@@ -106,31 +106,31 @@ else {
         }
         else
             mysendmail2("$P_EMAIL","$Subject","$Mailcontent","$SenderName","$SenderMail");
-        $texte = "Un email contenant l'identifiant et un mot de passe temporaire a été envoyé à ".ucfirst($P_PRENOM)." ".strtoupper($P_NOM);
+        $texte = "Un email contenant l'identifiant et un mot de passe temporaire a Ã©tÃ© envoyÃ© Ã  ".ucfirst($P_PRENOM)." ".strtoupper($P_NOM);
         if ( $add_courrier )
-            $texte .=" avec le courrier nouvel adhérent.";
-        $comment = "Envoi automatique à ".$P_EMAIL;
+            $texte .=" avec le courrier nouvel adhÃ©rent.";
+        $comment = "Envoi automatique Ã  ".$P_EMAIL;
     }
     else {
         $title="Envoi manuel du mot de passe";
         if ( $action == 'update' ) {
-            $a = 'mis à jour';
+            $a = 'mis Ã  jour';
             $b = 'nouveau';
             $c = 'toujours';
         }
         else {
-            $a = 'créé';
+            $a = 'crÃ©Ã©';
             $b = '';
             $c='';
         }
         $url = "http://".get_plain_url($cisurl);
-        $texte = "Le compte de ".ucfirst($P_PRENOM)." ".strtoupper($P_NOM).", a été ".$a." sur <a href='".$url."' target='_blank'>".$url."</a>.<br>";
+        $texte = "Le compte de ".ucfirst($P_PRENOM)." ".strtoupper($P_NOM).", a Ã©tÃ© ".$a." sur <a href='".$url."' target='_blank'>".$url."</a>.<br>";
         $texte .="<br>Son identifiant pour se connecter est ".$c." <b>".$P_CODE."</b>";
         $texte .="<br>Son ".$b." mot de passe temporaire est <b>".$newpass."</b>";
         $texte .= "<br>Veuillez lui communiquer ces informations: ";
-        if ( $P_EMAIL <> '' ) $texte .="<br>- par mail à <a href='mailto:".$P_EMAIL."'>".$P_EMAIL."</a>.";
-        if ( $P_PHONE <> '' )$texte .="<br>- ou par téléphone au ".$P_PHONE.".";
-        $texte .= "<br>Il devra changer son mot de passe à la première connexion.";
+        if ( $P_EMAIL <> '' ) $texte .="<br>- par mail Ã  <a href='mailto:".$P_EMAIL."'>".$P_EMAIL."</a>.";
+        if ( $P_PHONE <> '' )$texte .="<br>- ou par tÃ©lÃ©phone au ".$P_PHONE.".";
+        $texte .= "<br>Il devra changer son mot de passe Ã  la premiÃ¨re connexion.";
         $comment = "Envoi manuel";
     }
 

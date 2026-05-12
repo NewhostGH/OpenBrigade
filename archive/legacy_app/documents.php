@@ -135,7 +135,7 @@ echo "<select id='yeardoc' name='yeardoc' onchange=\"javascript:filterdoc('".$fi
                 class='selectpicker bootstrap-select-medium' data-style='btn-default' data-container='body'>";
         
 if ( $yeardoc == 'all') $selected='selected'; else $selected='';
-echo "  <option value='all' $selected>Toutes années</option>";
+echo "  <option value='all' $selected>Toutes annÃ©es</option>";
         for ($k=0; $k < 4; $k++){
             $y = $defaultyear - $k;
             if ( $yeardoc == $y) $selected='selected'; else $selected='';
@@ -165,7 +165,7 @@ echo "</select><div style='float:right; display:inline-flex'>
       <button class='btn btn-secondary search-wen' onclick=\"formf.submit()\"><i class='fas fa-search'></i></button>"; //title=\"Recherche dans le nom des fichiers\"
 
 if ( $search <> "" ) {
-      echo " <a href=documents.php?order=file&status=documents&filter=".$filter."&dossier=0 title='effacer critère de recherche'><i class='fa fa-eraser fa-lg' style='color:pink;'></i></a>";
+      echo " <a href=documents.php?order=file&status=documents&filter=".$filter."&dossier=0 title='effacer critÃ¨re de recherche'><i class='fa fa-eraser fa-lg' style='color:pink;'></i></a>";
 }
 echo "</div>";
 echo "</div>";
@@ -313,7 +313,7 @@ if ( $number  > 0 ) {
     if ( $dossier > 0 ) {
         $dn = " <span class=newTabHeader> / </span>
                 <a href=documents.php?order=file&status=documents&filter=".$filter."&dossier=".$dossier."  class=newTabHeader
-                title='Vous êtes dans ce dossier qui contient $number documents ou dossiers'>".get_folder_name($dossier)."</a>";
+                title='Vous Ãªtes dans ce dossier qui contient $number documents ou dossiers'>".get_folder_name($dossier)."</a>";
         if ( $parent > 0 ) {
             $dn = "<span class=newTabHeader> / </span>
                 <a href=documents.php?order=file&status=documents&filter=".$filter."&dossier=".$parent."  class=newTabHeader
@@ -334,7 +334,7 @@ if ( $number  > 0 ) {
             <th style='min-width=35%'>
                 <a href=documents.php?order=file&status=documents&filter=".$filter."&dossier=0 title='Ouvrir le dossier racine'>Documents ".$dn."</a></th>
             <th class='widget-title hide_mobile' width='15%'>
-                <a href=documents.php?order=type&status=documents&filter=".$filter." title='Trier par catégorie'>Type<i class='fas fa-chevron-down fa-xs' style='padding-left: 5px'></i></a></th>
+                <a href=documents.php?order=type&status=documents&filter=".$filter." title='Trier par catÃ©gorie'>Type<i class='fas fa-chevron-down fa-xs' style='padding-left: 5px'></i></a></th>
             <th class='widget-title hide_mobile' width='15%'>
                 <a href=documents.php?order=author&status=documents&filter=".$filter." title='Trier par auteur'>Auteur<i class='fas fa-chevron-down fa-xs' style='padding-left: 5px'></i></a></th>
             <th class='widget-title hide_mobile' width='10%'>
@@ -433,7 +433,7 @@ if ( $number > 10 ) {
     execute_paginator($number, '', 'float:none; max-width:fit-content;');
     echo $later;
 }
-if ( $number == 0) echo "<p align=center><i>Aucun document trouvé</i>";
+if ( $number == 0) echo "<p align=center><i>Aucun document trouvÃ©</i>";
 
 if ( $dossier > 0 )
 echo " <p><input type='button'  class='btn btn-secondary' id='goup' name='goup' value='Retour' onclick=\"goUp('".$filter."','".$parent."');\" ></p>";

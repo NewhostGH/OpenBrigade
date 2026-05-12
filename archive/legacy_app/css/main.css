@@ -198,7 +198,7 @@ form {
 
 
 /* ============================== */
-/* menu latéral                   */
+/* menu latÃ©ral                   */
 /* ============================== */
 
 @media (min-width: 1200px) {
@@ -4325,7 +4325,7 @@ td.alert-icon {
   font-size: 11px;
 }
 
-/*** Widget Activités ***/
+/*** Widget ActivitÃ©s ***/
 
 .activity-date {
   align: left;
@@ -4672,7 +4672,7 @@ a#dropdownMenuLink {
   background-color: #ffe2e5;
 }
 
-/** Actualités et Consignes **/
+/** ActualitÃ©s et Consignes **/
 .act-message-title{
   color: #3f4254;
   font-weight: bolder;

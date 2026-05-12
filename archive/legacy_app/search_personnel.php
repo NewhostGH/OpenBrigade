@@ -41,7 +41,7 @@ if ( $tab == 6 ) forceReloadJS('js/search_habilitation.js');
 else forceReloadJS('js/search_personnel.js');
 echo "</head>";
 echo "<body>";
-if ( $syndicate == 1 ) $t="Recherche dans la base des adhérents";
+if ( $syndicate == 1 ) $t="Recherche dans la base des adhÃ©rents";
 else $t="Recherche de personnel";
 
 function print_choix_section() {
@@ -75,8 +75,8 @@ function print_choix_section() {
 
 echo "<div style='background:white;' class='table-responsive table-nav table-tabs'>";
 echo "<ul class='nav nav-tabs  noprint' id='myTab' role='tablist'>";
-if ( $syndicate == 1 ) $i="Numéro d'adhérent";
-else $i="Numéro";
+if ( $syndicate == 1 ) $i="NumÃ©ro d'adhÃ©rent";
+else $i="NumÃ©ro";
 if ( $tab == 1 ) $class='active'; else $class='';
 echo "<li class='nav-item'>
     <a class='nav-link $class' href='search_personnel.php?tab=1' title='NOM ou $i' role='tab' aria-controls='tab1' href='#tab1' >
@@ -87,9 +87,9 @@ echo "<li class='nav-item'>
 if ( $tab == 2 ) $class='active'; else $class='';
 if ( $syndicate == 0 )
     echo "<li class='nav-item'>
-    <a class='nav-link $class' href='search_personnel.php?tab=2' title='Ville ou Département' role='tab' aria-controls='tab2' href='#tab2' >
+    <a class='nav-link $class' href='search_personnel.php?tab=2' title='Ville ou DÃ©partement' role='tab' aria-controls='tab2' href='#tab2' >
                 <i class='fa fa-compass'></i>
-                <span>Ville ou Département </span>
+                <span>Ville ou DÃ©partement </span>
     </a></li>";
 if ( $tab == 3 ) $class='active'; else $class='';
 echo "<li class='nav-item'>
@@ -99,17 +99,17 @@ echo "<li class='nav-item'>
     </a></li>";
 if ( $tab == 4 ) $class='active'; else $class='';
 echo "<li class='nav-item'>
-    <a class='nav-link $class' href='search_personnel.php?tab=4' title='téléphone' role='tab' aria-controls='tab4' href='#tab4' >
+    <a class='nav-link $class' href='search_personnel.php?tab=4' title='tÃ©lÃ©phone' role='tab' aria-controls='tab4' href='#tab4' >
                 <i class='fa fa-mobile'></i>
-                <span>Téléphone </span>
+                <span>TÃ©lÃ©phone </span>
     </a></li>";
 
 if ( $tab == 5 ) $class='active'; else $class='';
 if ( $competences == 1 )
     echo "<li class='nav-item'>
-    <a class='nav-link $class' href='search_personnel.php?tab=5' title='compétences' role='tab' aria-controls='tab5' href='#tab5' >
+    <a class='nav-link $class' href='search_personnel.php?tab=5' title='compÃ©tences' role='tab' aria-controls='tab5' href='#tab5' >
                 <i class='fa fa-medal'></i>
-                <span>Compétence </span>
+                <span>CompÃ©tence </span>
     </a></li>";
 
 if ( $tab == 6 ) $class='active'; else $class='';
@@ -136,7 +136,7 @@ if ( $tab == 1 ) {
     // choix section 
     print_choix_section();
     echo "<div class='dropdown-right' align=right>";
-    $frm = "<input type='text' name='trouve' id='trouveNom' value='' autofocus='autofocus' class='form-control search-input medium-input noprint' style='width:400px' placeholder='Premières lettres du nom ou matricule'>";
+    $frm = "<input type='text' name='trouve' id='trouveNom' value='' autofocus='autofocus' class='form-control search-input medium-input noprint' style='width:400px' placeholder='PremiÃ¨res lettres du nom ou matricule'>";
     $frm .= "<input type='hidden' name='typetri' id='typetri' value='nom'>";
     $frm .= "<input type='hidden' name='selectComp' id='selectComp' value=''>";
     echo "$frm</div>";
@@ -146,7 +146,7 @@ if ( $tab == 1 ) {
 // =======================================================
 if ( $tab == 2 ) {
     echo "<div class='dropdown-right' align=right>";
-    $frm = "<input type='text' name='trouve' id='trouveVille' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder='Premières lettres de la ville ou code postal'>";
+    $frm = "<input type='text' name='trouve' id='trouveVille' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder='PremiÃ¨res lettres de la ville ou code postal'>";
     $frm .= "<input type='hidden' name='typetri' id='typetri' value='ville'>";
     echo "$frm</div>";
 }
@@ -155,7 +155,7 @@ if ( $tab == 2 ) {
 // =======================================================
 if ( $tab == 3 ) {
     echo "<div class='dropdown-right' align=right>";
-    $frm = "<input type='text' name='trouve' id='trouveMail' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder=\"Premières lettres de l'adresse e-mail\">";
+    $frm = "<input type='text' name='trouve' id='trouveMail' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder=\"PremiÃ¨res lettres de l'adresse e-mail\">";
     $frm .= "<input type='hidden' name='typetri' id='typetri' value='mail'>";
     echo "$frm</div>";
 }
@@ -164,7 +164,7 @@ if ( $tab == 3 ) {
 // =======================================================
 if ( $tab == 4 ) {
     echo "<div class='dropdown-right' align=right>"; 
-    $frm = "<input type='text' name='trouve' id='trouveTel' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder='Premiers chiffres du numéro de téléphone'>";
+    $frm = "<input type='text' name='trouve' id='trouveTel' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder='Premiers chiffres du numÃ©ro de tÃ©lÃ©phone'>";
     $frm .= "<input type='hidden' name='typetri' id='typetri' value='tel'>";
     echo "$frm</div>";
 }
@@ -188,7 +188,7 @@ if ( $tab == 5 ) {
         if ( $assoc ) {
             if ( $choixStatut == 'BENSAL' ) $selected = 'selected';
             else $selected = '';
-            echo "<option value='BENSAL' $selected>Personnel bénévole et salarié</option>";
+            echo "<option value='BENSAL' $selected>Personnel bÃ©nÃ©vole et salariÃ©</option>";
         }
         while($row=mysqli_fetch_array($res)) {
             $s=$row[0];
@@ -200,11 +200,11 @@ if ( $tab == 5 ) {
     // toutes /au moins 1 
     $CurTri = (isset($_POST['typetri'])?$_POST['typetri']:"et");
     echo "<select name='typeTri' id='typeTri' onchange='' class='selectpicker smalldropdown' data-style='btn-default' data-container='body'>
-          <option value='et' ".(($CurTri=="ET")?" selected":"").">Toutes les compétences</option>
-          <option value='ou'".(($CurTri=="OU")?" selected":"").">Au moins une des compétences sélectionnées</option>
+          <option value='et' ".(($CurTri=="ET")?" selected":"").">Toutes les compÃ©tences</option>
+          <option value='ou'".(($CurTri=="OU")?" selected":"").">Au moins une des compÃ©tences sÃ©lectionnÃ©es</option>
           </select>";
     
-    // compétences 
+    // compÃ©tences 
     $sql = "select e.eq_nom, p.eq_id, p.ps_id, type, p.description 
         from poste p, equipe e
         where e.eq_id = p.eq_id
@@ -253,13 +253,13 @@ if ( $tab == 6 ) {
             onchange=\"changeFilterHab(this.value, document.getElementById('choixSection').value);\">";
     echo "<option value='none' selected>Aucun</option>";
     if (mysqli_num_rows($res1) > 0){
-        echo "<optgroup label=\"Droits d'accès\">";
+        echo "<optgroup label=\"Droits d'accÃ¨s\">";
         while($row=mysqli_fetch_array($res1))
             echo "<option value='$row[gp_id]'>".ucfirst($row['gp_description'])."</option>";
         echo "</optgroup>";
     }
     if (mysqli_num_rows($res2) > 0){
-        echo "<optgroup label=\"Rôles de l'organigramme\">";
+        echo "<optgroup label=\"RÃ´les de l'organigramme\">";
         while($row=mysqli_fetch_array($res2))
             echo "<option value='$row[gp_id]'>".ucfirst($row['gp_description'])."</option>";
         echo "</optgroup>";
@@ -267,7 +267,7 @@ if ( $tab == 6 ) {
     echo "</select></div>";
     
     if ((mysqli_num_rows($res1)==0) and (mysqli_num_rows($res2)==0)) {
-        echo "Aucune habilitation ou rôles trouvés";
+        echo "Aucune habilitation ou rÃ´les trouvÃ©s";
     }
 }
 
@@ -276,7 +276,7 @@ if ( $tab == 6 ) {
 // =======================================================
 if ( $tab == 7 ) {
     echo "<div class='dropdown-right' align=right>"; 
-    $frm = "<input type='text' name='trouve' id='trouveCpt' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder='Premières lettres et chiffres du numéro du compte bancaire IBAN'>";
+    $frm = "<input type='text' name='trouve' id='trouveCpt' value='' autofocus='autofocus' class='form-control search-input medium-input' style='width:400px' placeholder='PremiÃ¨res lettres et chiffres du numÃ©ro du compte bancaire IBAN'>";
     $frm .= "<input type='hidden' name='typetri' id='typetri' value='compte'>";
     echo "$frm</div>";
 }

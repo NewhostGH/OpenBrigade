@@ -49,7 +49,7 @@ else if ( intval($type_victime) > 0 ){
 }
 else {
     $picture = 'medkit';
-    $title="Victimes de l'événement";
+    $title="Victimes de l'Ã©vÃ©nement";
     $color=$mydarkcolor;
 }
 writehead();
@@ -100,10 +100,10 @@ $query="select VI_ID,victime.EL_ID, VI_NOM, VI_PRENOM, VI_SEXE, VI_ADDRESS, date
         VI_DETRESSE_VITALE, VI_INFORMATION, VI_SOINS, VI_MEDICALISE, VI_TRANSPORT, VI_VETEMENT, VI_ALIMENTATION, VI_TRAUMATISME, VI_REPOS, VI_DECEDE, VI_MALAISE, p.NAME PAYS,
         victime.D_CODE,victime.T_CODE,VI_COMMENTAIRE, VI_REFUS, VI_IMPLIQUE, VI_NUMEROTATION, destination.D_NAME, transporteur.T_NAME, VI_AGE,
         victime.CAV_ID, date_format(CAV_ENTREE, '%d-%m-%Y') DATE_ENTREE, date_format(CAV_ENTREE, '%H:%i') HEURE_ENTREE,
-        date_format(CAV_SORTIE, 'le %d-%m-%Y à %H:%i') DATE_SORTIE, date_format(CAV_SORTIE, '%H:%i') HEURE_SORTIE,
+        date_format(CAV_SORTIE, 'le %d-%m-%Y Ã  %H:%i') DATE_SORTIE, date_format(CAV_SORTIE, '%H:%i') HEURE_SORTIE,
         CAV_REGULATED, cav.CAV_NAME, CAV_REGULATED,
         el.EL_TITLE, date_format(el.EL_DEBUT, '%d-%m-%Y') DEBUT_INTERVENTION, date_format(el.EL_DEBUT, '%H:%i') HEURE_DEBUT_INTERVENTION,
-        date_format(el.EL_FIN, 'le %d-%m-%Y à %H:%i') FIN_INTERVENTION, date_format(el.EL_FIN, '%H:%i') HEURE_FIN_INTERVENTION,
+        date_format(el.EL_FIN, 'le %d-%m-%Y Ã  %H:%i') FIN_INTERVENTION, date_format(el.EL_FIN, '%H:%i') HEURE_FIN_INTERVENTION,
         IDENTIFICATION";
         
 $queryadd =" from victime left join evenement_log el on el.EL_ID = victime.EL_ID
@@ -133,7 +133,7 @@ $rowcnt=@mysqli_fetch_array($resultcnt);
 $number = $rowcnt[0];
 $cmt="";
 
-// si victimes a réguler par médecin
+// si victimes a rÃ©guler par mÃ©decin
 if ( $number > 0 ) {
     $querycnt2 = $querycnt." and CAV_REGULATED = 0 ";
     $resultcnt2=mysqli_query($dbc,$querycnt2);
@@ -143,7 +143,7 @@ if ( $number > 0 ) {
     if ( $number2 > 0 ) {
         $v='victime';
         if ( $number2 > 1 ) $v .='s';
-        $cmt = "<div class='alert alert-danger' role='alert' align='center'>Dont ".$number2." à réguler par le médecin ou le PC</div>";
+        $cmt = "<div class='alert alert-danger' role='alert' align='center'>Dont ".$number2." Ã  rÃ©guler par le mÃ©decin ou le PC</div>";
     }
 }
 
@@ -186,7 +186,7 @@ echo"<optgroup class='categorie' label=\"Dans un Centre d'Accueil des Victimes\"
     
     while (custom_fetch_array($result2)) {
         if ( $CAV_RESPONSABLE == $id ) $granted_update=true;
-        if ( $CAV_OUVERT == 0 ) $CAV_NAME .= " - fermé";
+        if ( $CAV_OUVERT == 0 ) $CAV_NAME .= " - fermÃ©";
         else $cav_ouvert_found = true;
         if ( intval($type_victime) == $CAV_ID ) $selected="selected";
         else $selected="";
@@ -204,11 +204,11 @@ if ( $granted_update and $cav_ouvert_found) {
         echo "<input type='button' class='btn btn-default' value='Ajouter' name='ajouter' 
                 title=\"Ajouter une victime dans un centre d'accueil\"  onclick=\"redirect('".$url."');\">";
         echo "<a class='btn btn-default' href='scan_victime.php?evenement=".$evenement_victime."&numcav=".$numcav."' 
-                    title='Scanner QR Code pour créer la fiche victime' ><i class='fa fa-qrcode fa-lg' style='color:purple;'></i> Scan</a>";       
+                    title='Scanner QR Code pour crÃ©er la fiche victime' ><i class='fa fa-qrcode fa-lg' style='color:purple;'></i> Scan</a>";       
     }
 }
 
-// seulement les présents dans un CAV
+// seulement les prÃ©sents dans un CAV
 if ($in_cav == 1 ) $checked='checked';
 else $checked='';
 $in_cav_checkbox= "<label for='in_cav' class='label2'>En cours seulement</label></td><td width=30 align=left>
@@ -217,15 +217,15 @@ $in_cav_checkbox= "<label for='in_cav' class='label2'>En cours seulement</label>
         onClick=\"orderfilter2('".$order."','".$type_victime."',this, document.getElementById('a_reguler'));\"/><span class='slider round'></span></label>";
 if ( $a_reguler == 1 ) $checked='checked';
 else $checked='';
-$a_reguler_checkbox= "<label for='a_reguler' class='label2'>A réguler seulement</label></td><td width=30 align=left>
+$a_reguler_checkbox= "<label for='a_reguler' class='label2'>A rÃ©guler seulement</label></td><td width=30 align=left>
         <label class='switch'><input type='checkbox' name='a_reguler' id='a_reguler' value='1' $checked 
-        title=\"cocher pour afficher seulement les victimes devant être régulées par le médecin\"
+        title=\"cocher pour afficher seulement les victimes devant Ãªtre rÃ©gulÃ©es par le mÃ©decin\"
         onClick=\"orderfilter2('".$order."','".$type_victime."',document.getElementById('in_cav'),this);\"/><span class='slider round'></span></label>";
 
 // autorefresh
 if ( $autorefresh == 1 ) $checked='checked';
  else $checked='';
-$a_reguler_checkbox .= "<label for='autorefresh' class='label2'>rafraîchissement auto.</label></td><td width=30 align=left>
+$a_reguler_checkbox .= "<label for='autorefresh' class='label2'>rafraÃ®chissement auto.</label></td><td width=30 align=left>
         <label class='switch'><input type='checkbox' id='autorefresh' name='autorefresh' value='1'
         title='cocher pour activer le rafraichissement automatique toutes les 20 secondes'
         onclick=\"autorefresh_victimes();\" $checked><span class='slider round'></span></label>";
@@ -250,12 +250,12 @@ if ( $number > 0 ) {
 
 if ( $type_victime == 'intervention' ) {
     $d = "<a href=liste_victimes.php?order=EL_DEBUT title='Date intervention'>Date</a>";
-    $e = "<a href=liste_victimes.php?order=EL_DEBUT title='Début intervention'>Début</a>";
+    $e = "<a href=liste_victimes.php?order=EL_DEBUT title='DÃ©but intervention'>DÃ©but</a>";
     $s = "<a href=liste_victimes.php?order=EL_FIN  title='Fin intervention'>Fin</a>";
 }
 else {
     $d = "<a href=liste_victimes.php?order=CAV_ENTREE>Date</a>";
-    $e = "<a href=liste_victimes.php?order=CAV_ENTREE>Entrée</a>";
+    $e = "<a href=liste_victimes.php?order=CAV_ENTREE>EntrÃ©e</a>";
     $s = "<a href=liste_victimes.php?order=CAV_SORTIE>Sortie</a>";
 }
 echo "<tr>";
@@ -273,7 +273,7 @@ echo "<td width=250 align=left>
     <td width=40 align=center>
     ".$s;
 echo "<td width=130 align=center>
-    <a href=liste_victimes.php?order=VI_NOM>Identité</a>"; 
+    <a href=liste_victimes.php?order=VI_NOM>IdentitÃ©</a>"; 
 echo"<td width=30 align=center>
     <a href=liste_victimes.php?order=VI_AGE>Age</a></td>";
 echo"<td width=35 align=center>
@@ -281,16 +281,16 @@ echo"<td width=35 align=center>
 echo "<td width=75 align=center>
     <a href=liste_victimes.php?order=PAYS>Nat.</a></td>";            
 echo "<td width=35 align=center><a href=liste_victimes.php?order=VI_DECEDE>DCD</a></td>
-      <td width=35 align=center><a href=liste_victimes.php?order=VI_DETRESSE_VITALE title='Détresse vitale'>Détresse</a></td>
+      <td width=35 align=center><a href=liste_victimes.php?order=VI_DETRESSE_VITALE title='DÃ©tresse vitale'>DÃ©tresse</a></td>
       <td width=35 align=center><a href=liste_victimes.php?order=VI_MALAISE>Malaise</a></td>
       <td width=35 align=center><a href=liste_victimes.php?order=VI_TRAUMATISME>Trauma</a></td>
       <td width=35 align=center><a href=liste_victimes.php?order=VI_SOINS>Soins</a></td>
       <td width=35 align=center><a href=liste_victimes.php?order=VI_TRANSPORT>Transport</a></td>  
       <td width=35 align=center><a href=liste_victimes.php?order=VI_REPOS title='Repos sous surveillance'>Repos</a></td>
-      <td width=35 align=center><a href=liste_victimes.php?order=VI_INFORMATION title='Personne assistée'>Assisté</a></td>
-      <td width=35 align=center><a href=liste_victimes.php?order=VI_IMPLIQUE title='Impliqué indemne'>Impliqué</a></td>
-      <td width=35 align=center><a href=liste_victimes.php?order=VI_MEDICALISE title='Victime médicalisée'>Médic.</a></td>
-      <td width=35 align=center><a href=liste_victimes.php?order=REGULATED title='Régulation faite par le médecin'>Régul.</a></td>";
+      <td width=35 align=center><a href=liste_victimes.php?order=VI_INFORMATION title='Personne assistÃ©e'>AssistÃ©</a></td>
+      <td width=35 align=center><a href=liste_victimes.php?order=VI_IMPLIQUE title='ImpliquÃ© indemne'>ImpliquÃ©</a></td>
+      <td width=35 align=center><a href=liste_victimes.php?order=VI_MEDICALISE title='Victime mÃ©dicalisÃ©e'>MÃ©dic.</a></td>
+      <td width=35 align=center><a href=liste_victimes.php?order=REGULATED title='RÃ©gulation faite par le mÃ©decin'>RÃ©gul.</a></td>";
 echo  "</tr>";
 
 // ===============================================
@@ -299,13 +299,13 @@ echo  "</tr>";
 $i=0;
 while (custom_fetch_array($result)) {
     $EL_ID = intval($EL_ID);
-    if ( $VI_DETRESSE_VITALE == 1 ) $VI_DETRESSE_VITALE = "<i class='fa fa-exclamation-circle fa-lg' style='color:red;' title='détresse vitale'></i>";
+    if ( $VI_DETRESSE_VITALE == 1 ) $VI_DETRESSE_VITALE = "<i class='fa fa-exclamation-circle fa-lg' style='color:red;' title='dÃ©tresse vitale'></i>";
     else $VI_DETRESSE_VITALE = "";
     if ( $VI_TRAUMATISME == 1 ) $VI_TRAUMATISME = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;' title='traumatisme'></i>";
     else $VI_TRAUMATISME = "";
-    if ( $VI_SOINS == 1 ) $VI_SOINS = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;' title='soins donnés à la victime'></i>";
+    if ( $VI_SOINS == 1 ) $VI_SOINS = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;' title='soins donnÃ©s Ã  la victime'></i>";
     else $VI_SOINS = "";
-    if ( $VI_DECEDE == 1 ) $VI_DECEDE = "<i class='fa fa-exclamation-circle fa-lg' style='color:red;'  title='décédé'></i>";
+    if ( $VI_DECEDE == 1 ) $VI_DECEDE = "<i class='fa fa-exclamation-circle fa-lg' style='color:red;'  title='dÃ©cÃ©dÃ©'></i>";
     else $VI_DECEDE = "";
     if ( $VI_MALAISE == 1 ) $VI_MALAISE = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;' title='malaise'></i>";
     else $VI_MALAISE = "";
@@ -313,17 +313,17 @@ while (custom_fetch_array($result)) {
     else $VI_TRANSPORT = "";
     if ( $VI_REPOS == 1 ) $VI_REPOS = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;'  title=\"Repos sous surveillance\"></i>";
     else $VI_REPOS = "";
-    if ( $VI_IMPLIQUE == 1 ) $VI_IMPLIQUE = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;'  title=\"Impliqué indemne\"></i>";
+    if ( $VI_IMPLIQUE == 1 ) $VI_IMPLIQUE = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;'  title=\"ImpliquÃ© indemne\"></i>";
     else $VI_IMPLIQUE = "";
-    if ( $VI_INFORMATION == 1 ) $VI_INFORMATION = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;'  title=\"Personne assistée\"></i>";
+    if ( $VI_INFORMATION == 1 ) $VI_INFORMATION = "<i class='fa fa-exclamation-circle fa-lg' style='color:orange;'  title=\"Personne assistÃ©e\"></i>";
     else $VI_INFORMATION = "";
-    if ( $VI_MEDICALISE == 1 ) $VI_MEDICALISE = "<i class='fa fa-exclamation-circle fa-lg' style='color:red;'  title=\"Victime médicalisée\"></i>";
+    if ( $VI_MEDICALISE == 1 ) $VI_MEDICALISE = "<i class='fa fa-exclamation-circle fa-lg' style='color:red;'  title=\"Victime mÃ©dicalisÃ©e\"></i>";
     else $VI_MEDICALISE = "";
     
     if ( $IDENTIFICATION <> "" ) 
         $IDENTIFICATION="<i class ='fa fa-hashtag fa-lg' title=\"".$IDENTIFICATION."\"></i>";
     if ( $CAV_ID > 0 ) {
-        $e = "<span title=\"entrée au centre d'accueil ".$DATE_ENTREE."\">".$HEURE_ENTREE."</span>";
+        $e = "<span title=\"entrÃ©e au centre d'accueil ".$DATE_ENTREE."\">".$HEURE_ENTREE."</span>";
         $s = "<span title=\"sortie du centre d'accueil ".$DATE_SORTIE."\">".$HEURE_SORTIE."</span>";          
     }
     else {
@@ -332,7 +332,7 @@ while (custom_fetch_array($result)) {
         $HEURE_ENTREE=$HEURE_DEBUT_INTERVENTION;
         $HEURE_SORTIE=$HEURE_FIN_INTERVENTION;
         if ( $HEURE_SORTIE == '00:00' ) $HEURE_SORTIE= "";
-        $e = "<span title=\"début intervention ".$DATE_ENTREE."\">".$HEURE_ENTREE."</span>";
+        $e = "<span title=\"dÃ©but intervention ".$DATE_ENTREE."\">".$HEURE_ENTREE."</span>";
         $s = "<span title=\"fin intervention ".$DATE_SORTIE."\">".$HEURE_SORTIE."</span>";
     }
     if ( $CAV_NAME <> "") $localisation = $CAV_NAME;
@@ -342,8 +342,8 @@ while (custom_fetch_array($result)) {
     else $inter_icon="";
     
     $REGULATED=intval($CAV_REGULATED);
-    if ( $REGULATED == 1 ) $REGUL_ICON="<i class='fa fa-check-square fa-lg' style='color:green;' title='régulation faite par le médecin ou le PC'></i>";
-    else if ( $REGULATED == 0 ) $REGUL_ICON="<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='à réguler par le médecin ou le PC'></i>";
+    if ( $REGULATED == 1 ) $REGUL_ICON="<i class='fa fa-check-square fa-lg' style='color:green;' title='rÃ©gulation faite par le mÃ©decin ou le PC'></i>";
+    else if ( $REGULATED == 0 ) $REGUL_ICON="<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='Ã  rÃ©guler par le mÃ©decin ou le PC'></i>";
     else $REGUL_ICON="";
     
     $i=$i+1;
@@ -354,7 +354,7 @@ while (custom_fetch_array($result)) {
         $mycolor="#FFFFFF";
     }
     
-    if ( $REGULATED == 0 and $CAV_ID > 0 ) $span = "<span class ='red12' title='à réguler par médecin ou le PC'>";
+    if ( $REGULATED == 0 and $CAV_ID > 0 ) $span = "<span class ='red12' title='Ã  rÃ©guler par mÃ©decin ou le PC'>";
     else if ( $HEURE_SORTIE == '' ) $span = "<span class ='green12' title='en cours de traitement'>";
     else $span="<span>";
       

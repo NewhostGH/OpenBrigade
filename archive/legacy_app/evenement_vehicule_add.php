@@ -71,7 +71,7 @@ $row=mysqli_fetch_array($result);
 $OLD_KM=intval($row["OLD_KM"]);
 
 if ( $action == 'km') {
-    //incrémenter le kilométrage global véhicule
+    //incrÃ©menter le kilomÃ©trage global vÃ©hicule
     $ajouter= $km - $OLD_KM;
     $query="update vehicule set V_KM = V_KM + ".$ajouter." where V_ID=".$vehicule;
     $result=mysqli_query($dbc,$query);
@@ -79,14 +79,14 @@ if ( $action == 'km') {
     $query="update vehicule set V_KM = ".$km." where V_KM < 0 and V_ID=".$vehicule;
     $result=mysqli_query($dbc,$query);
    
-    // mettre à jour le km du véhicule
+    // mettre Ã  jour le km du vÃ©hicule
     $query="update evenement_vehicule set EV_KM=$km
     where (E_CODE =".$evenement."  or E_CODE=".$EC.")
     and V_ID=".$vehicule;
     $result=mysqli_query($dbc,$query);
 }
 elseif ( $action == 'remove') {
-    //décrémenter le kilométrage global véhicule
+    //dÃ©crÃ©menter le kilomÃ©trage global vÃ©hicule
     $query="update vehicule set V_KM = V_KM - ".$OLD_KM." where V_ID=".$vehicule;
     $result=mysqli_query($dbc,$query);
    

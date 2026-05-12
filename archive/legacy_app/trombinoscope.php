@@ -147,7 +147,7 @@ if ( $company >=0 ) $queryadd .= " and company.C_ID = $company";
 if ( $category == 'EXT' ) {
     $queryadd .= " and P_STATUT = 'EXT'";
     $mylightcolor=$mygreencolor;
-    $title='Photos du personnel extérieur';
+    $title='Photos du personnel extÃ©rieur';
 }
 else if ( $position == 'actif' ) {
     $queryadd .= " and P_OLD_MEMBER = 0 and P_STATUT <> 'EXT'";
@@ -243,8 +243,8 @@ echo "<div class='noprint'>
 <label for='birthdate'>Date de naissance</label>
 <input type=checkbox value=1 name='birthplace' id='birthplace' $birthplace_checked title='cocher pour afficher le lieu de naissance' onchange=\"filter();\">
 <label for='birthplace'>Lieu de naissance  </label>
-<input type=checkbox value=1 name='firstname' id='firstname' $firstname_checked title='cocher pour afficher le deuxième prénom' onchange=\"filter();\">
-<label for='firstname'>Deuxième prénom </label>
+<input type=checkbox value=1 name='firstname' id='firstname' $firstname_checked title='cocher pour afficher le deuxiÃ¨me prÃ©nom' onchange=\"filter();\">
+<label for='firstname'>DeuxiÃ¨me prÃ©nom </label>
 </div>";
 
 echo "<table class=noBorder>";
@@ -286,13 +286,13 @@ while (custom_fetch_array($result)) {
         $sec ="";
     $birth="";
     if ( ($with_birthdate and $P_BIRTHDATE <> '' ) or ($with_birthplace and $P_BIRTHPLACE <> '')) {
-        $birth .= "<br><span class=small>Né";
+        $birth .= "<br><span class=small>NÃ©";
         if ($P_SEXE =='F' ) $birth .="e";
         if ( $with_birthdate and $P_BIRTHDATE <> '')  {
             $birth .= " le ".$P_BIRTHDATE;
             if ( $with_birthplace and $P_BIRTHPLACE <> '' ) $birth .= "<br>";
         }
-        if ( $with_birthplace and $P_BIRTHPLACE <> '')  $birth .= " à ".$P_BIRTHPLACE;
+        if ( $with_birthplace and $P_BIRTHPLACE <> '')  $birth .= " Ã  ".$P_BIRTHPLACE;
         $birth .= "</span>";
     }
 

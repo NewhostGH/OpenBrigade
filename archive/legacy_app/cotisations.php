@@ -30,7 +30,7 @@ else $old = 0;
 if(isset($_GET['year'])) $year = secure_input($dbc, $_GET['year']);
 else $year = date('Y');
 
-// vérifier qu'on a les droits d'afficher pour cette section
+// vÃ©rifier qu'on a les droits d'afficher pour cette section
 if (! in_array($filter,$grantedsections)) {
     $list = preg_split('/,/' , get_family("$highestsection"));
     if (! in_array($filter,$list) and ! check_rights($id, 24)) $filter=$highestsection;
@@ -128,7 +128,7 @@ $resultcnt=mysqli_query($dbc,$querycnt);
 $rowcnt=@mysqli_fetch_array($resultcnt);
 $number = $rowcnt[0];
 
-if ( $syndicate == 1 ) $title='Cotisations des adhérents';
+if ( $syndicate == 1 ) $title='Cotisations des adhÃ©rents';
 else $title='Cotisations du personnel';
 if (isset($_GET['tab'])) $tab = secure_input($dbc, $_GET['tab']);
 else $tab = 1;
@@ -235,7 +235,7 @@ if (check_rights($_SESSION['id'], 53)) {
         echo "<li class = 'nav-item'>
             <a class = 'nav-link $class' href = 'cotisations.php?tab=2' role = 'tab'>
                 <i class='fa fa-receipt'></i>
-                <span>Prélèvements </span><span class='badge $typeclass'>$nbp</span></a>
+                <span>PrÃ©lÃ¨vements </span><span class='badge $typeclass'>$nbp</span></a>
         </li>";
         
         $querycnt3="select count(*) as NB";
@@ -330,7 +330,7 @@ if ( get_children("$filter") <> '' ) {
 }
 else echo "<input type='hidden' name='sub' id='sub' value='0'>";
 
-echo " <div align=right class='dropdown-right buttons-container'><a href='#' class='btn btn-default' align=right><i class='far fa-file-excel fa-1x excel-hover' id='StartExcel' border='0' title='Exporter la liste du matériel dans un fichier Excel' 
+echo " <div align=right class='dropdown-right buttons-container'><a href='#' class='btn btn-default' align=right><i class='far fa-file-excel fa-1x excel-hover' id='StartExcel' border='0' title='Exporter la liste du matÃ©riel dans un fichier Excel' 
       onclick=\"window.open('cotisations_xls.php?filter=$filter&subsections=$subsections&position=$position&type_paiement=$type_paiement&periode=$periode&year=$year&paid=$paid&include_old=$include_old');\" /></i></a></div></div></tr>";
 
 // choix section
@@ -359,10 +359,10 @@ if ( $bank_accounts == 1 ) {
 }
 echo "</tr>";
 
-// période
+// pÃ©riode
 $query2="select P_CODE, P_DESCRIPTION from periode order by P_ORDER";
 $result2=mysqli_query($dbc,$query2);
-echo " <select id='periode' name='periode' title='Choisir la période de cotisation' class='selectpicker bootstrap-select-medium' data-style='btn-default' data-container='body'
+echo " <select id='periode' name='periode' title='Choisir la pÃ©riode de cotisation' class='selectpicker bootstrap-select-medium' data-style='btn-default' data-container='body'
         onchange=\"orderfilter2('".$order."','".$filter."',document.getElementById('sub'),'".$position."','".$type_paiement."',document.getElementById('periode').value,'".$year."','".$paid."',document.getElementById('include_old'))\">";
 while ($row2=@mysqli_fetch_array($result2)) {
     if ( $row2[0] == $periode ) $selected="selected";
@@ -373,7 +373,7 @@ echo "</select>";
 $curyear=date('Y');
 $minyear=$curyear - 2;
 
-echo " <select id='year' name='year' title='année de cotisation' class='selectpicker bootstrap-select-small' data-style='btn-default' data-container='body'
+echo " <select id='year' name='year' title='annÃ©e de cotisation' class='selectpicker bootstrap-select-small' data-style='btn-default' data-container='body'
         onchange=\"orderfilter2('".$order."','".$filter."',document.getElementById('sub'),'".$position."','".$type_paiement."','".$periode."',document.getElementById('year').value,'".$paid."',document.getElementById('include_old'))\">";
 
 for ( $i=0; $i < 6; $i++) {
@@ -385,18 +385,18 @@ for ( $i=0; $i < 6; $i++) {
 echo "</select>";
 echo "";
 
-// payé?
-echo " <select id='paid' name='paid' title='Filtrer les personnes selon que la cotisation a déjà été payée (ou prélevée) ou pas'  class='selectpicker smalldropdown2' data-style='btn-default' data-container='body'
+// payÃ©?
+echo " <select id='paid' name='paid' title='Filtrer les personnes selon que la cotisation a dÃ©jÃ  Ã©tÃ© payÃ©e (ou prÃ©levÃ©e) ou pas'  class='selectpicker smalldropdown2' data-style='btn-default' data-container='body'
         onchange=\"orderfilter2('".$order."','".$filter."',document.getElementById('sub'),'".$position."','".$type_paiement."','".$periode."','".$year."',document.getElementById('paid').value,document.getElementById('include_old'))\">";     
         if ( $paid == 2 ) $selected='selected';
         else  $selected='';
         echo "<option value=2 $selected>Tout afficher</option>";
         if ( $paid == 0 ) $selected='selected';
         else  $selected='';
-        echo "<option value=0 $selected>Pas encore payé</option>";
+        echo "<option value=0 $selected>Pas encore payÃ©</option>";
         if ( $paid == 1 ) $selected='selected';
         else  $selected='';
-        echo "<option value=1 $selected>Paiement enregistré</option>";
+        echo "<option value=1 $selected>Paiement enregistrÃ©</option>";
 echo "</select>";
 echo "</td></tr>";
 
@@ -404,8 +404,8 @@ echo "</td></tr>";
 // inclure les anciens membres
 if ($old == 1 ) $checked='checked';
 else $checked='';
-if ( $syndicate ==1 ) $anciens="Radiés et suspendus ";
-else $anciens="Archivés";
+if ( $syndicate ==1 ) $anciens="RadiÃ©s et suspendus ";
+else $anciens="ArchivÃ©s";
 echo " <div style='display: inline-block; padding-left:10px'><label for='sub2'>$anciens</label>
             <label class='switch'>
                 <input type='checkbox' name='include_old' id='include_old' $checked class='ml-3 div-decal-left'
@@ -426,7 +426,7 @@ execute_paginator($number);
 
 $nb=0;
 if ( $paid == 0 and $check_all == 1 ) $nb=min($pages->items_per_page,$pages->items_total);
-echo "Nouveaux paiements enregistrés <span class='badge' id='showNumberPaid'>$nb</span>";
+echo "Nouveaux paiements enregistrÃ©s <span class='badge' id='showNumberPaid'>$nb</span>";
 echo "<input type='hidden' size=5 id=numberPaid name=numberPaid value='".$nb."' >";
 
 // cocher toutes les cases
@@ -434,7 +434,7 @@ if ( $paid  == 0 ) {
     if ($check_all == 1) $checked='checked';
     else $checked='';
     echo "<tr><td  align=left> 
-    <input type='checkbox' id='check_all_box' name='check_all_box' $checked onClick=\"check_all();\" title=\"cliquer pour pré-cocher toutes les cases 'payé'\"> 
+    <input type='checkbox' id='check_all_box' name='check_all_box' $checked onClick=\"check_all();\" title=\"cliquer pour prÃ©-cocher toutes les cases 'payÃ©'\"> 
     <label for='check_all_box' class='label2'> Tout cocher</label>";
     echo "</td></tr>";
 }
@@ -448,7 +448,7 @@ if ( $number > 0 ) {
     // ===============================================
 
     echo "<trclass='>";
-    echo "<td><a href=cotisations.php?order=P_NOM >Nom Prénom</a></td>";
+    echo "<td><a href=cotisations.php?order=P_NOM >Nom PrÃ©nom</a></td>";
     if ( $syndicate == 1 ) {
         echo " <td class=' hide_mobile' style='width:10%'><a href=cotisations.php?order=P_PROFESSION >Prof.</a></td>";
     }
@@ -459,11 +459,11 @@ if ( $number > 0 ) {
         echo "<td class=' hide_mobile'><a href=cotisations.php?order=P_STATUT >Statut</a></td>";
     }
     echo "<td class=' hide_mobile'><a href=cotisations.php?order=P_SECTION>Section</a></td>";
-    echo "<td class=' hide_mobile' style='width:8%'><a href=cotisations.php?order=P_DATE_ENGAGEMENT>Entrée</a></td>";
+    echo "<td class=' hide_mobile' style='width:8%'><a href=cotisations.php?order=P_DATE_ENGAGEMENT>EntrÃ©e</a></td>";
     echo "<td class=' hide_mobile'><a href=cotisations.php?order=P_FIN >Sortie</a></td>";
-    echo "<td  style='text-align:center'><a href=cotisations.php?order=PC_ID >Payé</a></td>";
+    echo "<td  style='text-align:center'><a href=cotisations.php?order=PC_ID >PayÃ©</a></td>";
     echo "<td  style='text-align:center'>Montant</td>";
-    echo "<td  style='text-align:center'><a href=cotisations.php?order=PC_DATE >Date payé</a></td>";
+    echo "<td  style='text-align:center'><a href=cotisations.php?order=PC_DATE >Date payÃ©</a></td>";
     echo "<td class=' hide_mobile' style='text-align:center'><a href=cotisations.php?order=COMMENTAIRE >Commentaire</a></td>";
     echo " </tr>";
     // ===============================================
@@ -479,7 +479,7 @@ if ( $number > 0 ) {
         $EXPECTED_MONTANT= get_montant($P_SECTION,$S_PARENT,$P_PROFESSION);
         
         if ( $periode == 'A' and  ($YEAR_ENGAGEMENT == $year or $YEAR_FIN == $year)) {
-            // éventuellement demander cotisation pour année incomplète
+            // Ã©ventuellement demander cotisation pour annÃ©e incomplÃ¨te
             $number_months_to_pay = 12;
             if ( $MONTH_ENGAGEMENT <> "" and $YEAR_ENGAGEMENT == $year) $number_months_to_pay =  $number_months_to_pay - $MONTH_ENGAGEMENT + 1;
             else if ( $MONTH_FIN <> "" )  $number_months_to_pay = $number_months_to_pay - ( 12 - $MONTH_FIN );
@@ -549,9 +549,9 @@ if ( $number > 0 ) {
             $montant_style="color: Grey;";
         }
         
-        // si on prèlève, ajouter la régul. Cas pas encore payé seulement.
+        // si on prÃ¨lÃ¨ve, ajouter la rÃ©gul. Cas pas encore payÃ© seulement.
         if ( $TP_ID == 1 and $MONTANT_REGUL <> 0 and $PC_DATE == '' ) {
-            $COMMENTAIRE = $COMMENTAIRE." et régul de ".$MONTANT_REGUL." ".$default_money_symbol;
+            $COMMENTAIRE = $COMMENTAIRE." et rÃ©gul de ".$MONTANT_REGUL." ".$default_money_symbol;
             $MONTANT = $MONTANT + $MONTANT_REGUL;
         }
         
@@ -571,7 +571,7 @@ if ( $number > 0 ) {
         echo "
             <td align=center class='hide_mobile'>
             <input type=text size=20 class='form-control form-control-sm' name='commentaire_".$P_ID."' id='commentaire_".$P_ID."' value=\"".$COMMENTAIRE."\"
-            title='commentaire lié au paiement'
+            title='commentaire liÃ© au paiement'
             onchange='isvalid3(frmPersonnel.commentaire_".$P_ID.",\"$COMMENTAIRE\");'></td>";
 
         echo "</tr>";

@@ -103,7 +103,7 @@ for ( $i=0; $i < sizeof($people); $i++ ) {
             $num++;
             $total =$total+$montant;
             
-            // cas de la personne en prÈlËvement, on considËre que la rÈgul a ÈtÈ faite.
+            // cas de la personne en pr√©l√®vement, on consid√®re que la r√©gul a √©t√© faite.
             $query="update pompier set MONTANT_REGUL=0 where P_ID=".$pid." and TP_ID=".$type_paiement." and TP_ID = 1 
                     and ( MONTANT_REGUL <> 0 and MONTANT_REGUL is not null)";
             $result=mysqli_query($dbc,$query);
@@ -114,7 +114,7 @@ for ( $i=0; $i < sizeof($people); $i++ ) {
     }
 }
 
-write_msgbox("OK", $star_pic, "Les cotisations ont ÈtÈ enregistrÈes,<br>pour $num personnes<br>montant total: <b>$total $default_money_symbol</b><p align=center><a href=cotisations.php><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
+write_msgbox("OK", $star_pic, "Les cotisations ont √©t√© enregistr√©es,<br>pour $num personnes<br>montant total: <b>$total $default_money_symbol</b><p align=center><a href=cotisations.php><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
 
 
 ?>

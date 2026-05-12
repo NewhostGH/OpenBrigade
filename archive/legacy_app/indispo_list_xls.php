@@ -66,7 +66,7 @@ $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
 
 // Add the columns heads
 $columns=array('A','B','C','D','E','F','G');
-$columns_title=array("Nom","Absence","Début","Fin","Nombre Jours",
+$columns_title=array("Nom","Absence","DÃ©but","Fin","Nombre Jours",
 				     "Etat demande","Commentaire");
 foreach ($columns as $c => $letter) {
  	$sheet->setCellValue($letter.'1', utf8_encode($columns_title[$c]));

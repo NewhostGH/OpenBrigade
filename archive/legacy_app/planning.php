@@ -138,21 +138,21 @@ echo "<select id='filter' name='filter' title='filtre par section' class='select
     display_children2(-1, 0, $filter, $nbmaxlevels, $sectionorder);
 echo "</select>";
 
-// type activité
+// type activitÃ©
 echo "<select id='type' name='type' class='selectpicker smalldropdown' data-style='btn-default' data-container='body'
      onchange=\"orderfilter('".$order."',document.getElementById('filter').value,'".$subsections."',document.getElementById('type').value,document.getElementById('day_planning').value)\">";
 
 if ( $type_evenement == 'DISPOSONLY' ) $selected = 'selected';
 else $selected = '';
-echo "<option value='DISPOSONLY' $selected>Seulement disponibilités </option>\n";
+echo "<option value='DISPOSONLY' $selected>Seulement disponibilitÃ©s </option>\n";
 
 if ( $type_evenement == 'ALL' ) $selected = 'selected';
 else $selected = '';
-echo "<option value='ALL' $selected>Toutes activités </option>\n";
+echo "<option value='ALL' $selected>Toutes activitÃ©s </option>\n";
 if ( $gardes == 1 ) {
     if ( $type_evenement == 'ALLBUTGARDE' ) $selected = 'selected';
     else $selected = '';
-    echo "<option value='ALLBUTGARDE' $selected>Toutes activités sauf gardes</option>\n";
+    echo "<option value='ALLBUTGARDE' $selected>Toutes activitÃ©s sauf gardes</option>\n";
 }
 $query2="select distinct te.CEV_CODE, ce.CEV_DESCRIPTION, te.TE_CODE, te.TE_LIBELLE
     from type_evenement te, categorie_evenement ce
@@ -178,7 +178,7 @@ echo "</select>";
 if ( $type_evenement == 'DISPOSONLY' ) $disabled='disabled';
 else $disabled='';
 echo " <select id='day_planning' name='day_planning' $disabled class='selectpicker bootstrap-select-small' data-style='btn-default' data-container='body'
-        title='filtre par jour, seules les personnes ayant une participation ce jour sont affichées, si Activité est sélectionnée  à seulement disponibilités, alors ce filtre est désactivé'
+        title='filtre par jour, seules les personnes ayant une participation ce jour sont affichÃ©es, si ActivitÃ© est sÃ©lectionnÃ©e  Ã  seulement disponibilitÃ©s, alors ce filtre est dÃ©sactivÃ©'
         onchange=\"orderfilter('".$order."',document.getElementById('filter').value,'".$subsections."','".$type_evenement."',document.getElementById('day_planning').value);\">";
         
 for ( $i = 0 ; $i <= $nbjoursdumois ; $i++ ) {
@@ -190,7 +190,7 @@ for ( $i = 0 ; $i <= $nbjoursdumois ; $i++ ) {
 }
 echo "</select>";
 
-// choix mois année
+// choix mois annÃ©e
 echo " <select name='menu2' id='menu2' onchange=\"fillmenu('".$order."',document.getElementById('filter').value,'".$subsections."','".$type_evenement."')\"
 class='selectpicker bootstrap-select-medium' data-style='btn-default' data-container='body'>";
 $m=1;
@@ -336,9 +336,9 @@ for ( $i = 1 ; $i <= $nbjoursdumois ; $i++ ) {
         $color=$yellow;
     else 
         $color=$white;
-    if ( $day_planning == $i ) $d="<span class='badge badge-pill badge3' title='Seules les personnes ayant une activité ce jour sont prises en compte, cliquer pour désactiver ce filtre'>
+    if ( $day_planning == $i ) $d="<span class='badge badge-pill badge3' title='Seules les personnes ayant une activitÃ© ce jour sont prises en compte, cliquer pour dÃ©sactiver ce filtre'>
                     <a href=calendar.php?tab=2&day_planning=0 style='color:white;'>".$i."</a></span>";
-    else $d="<a title='cliquer ici pour filtrer sur les personnes participant à une activité ce jour' 
+    else $d="<a title='cliquer ici pour filtrer sur les personnes participant Ã  une activitÃ© ce jour' 
     href=\"calendar.php?tab=2&day_planning=".$i."&order=".$order."&filter=".$filter."&subsections=".$subsections."&type_evenement=".$type_evenement."\" style='color:white;'>".$i."</a>";
     if ( $type_evenement == 'DISPOSONLY' )
         $d = $i;

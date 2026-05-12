@@ -40,9 +40,9 @@ else $mode=$_GET["mode"];
 if ( $mode == "auto" ) {
     $ret = backup("auto");
     if ( $ret == 1) 
-        write_msgbox("Error", $error_pic, "<p align=center><font face=arial>Il existe déja une sauvegarde.",10,0);
+        write_msgbox("Error", $error_pic, "<p align=center><font face=arial>Il existe dÃ©ja une sauvegarde.",10,0);
     else
-        write_msgbox("backup", $star_pic, "<p align=center><font face=arial>Une sauvegarde de la base de données a été réalisée.",10,0);
+        write_msgbox("backup", $star_pic, "<p align=center><font face=arial>Une sauvegarde de la base de donnÃ©es a Ã©tÃ© rÃ©alisÃ©e.",10,0);
 }
 else {
     check_all(14);

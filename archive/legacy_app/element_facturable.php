@@ -63,7 +63,7 @@ $number = $rowcnt[0];
 
 if ( check_rights($_SESSION['id'], 17)) {
     echo "<div class='dropdown-right' style='float:right' align=right> <a class='btn btn-success' value='Ajouter' name='ajouter' 
-        onclick=\"bouton_redirect('parametrage.php?tab=5&child=13&action=insert&type_element=ALL');\"><i class=\"fas fa-plus-circle\" style='color:white'></i><span class='hide_mobile'> Élément facturable</span></a>";
+        onclick=\"bouton_redirect('parametrage.php?tab=5&child=13&action=insert&type_element=ALL');\"><i class=\"fas fa-plus-circle\" style='color:white'></i><span class='hide_mobile'> Ã‰lÃ©ment facturable</span></a>";
 }
 
 echo "</div>";
@@ -83,7 +83,7 @@ $query2="select TEF_CODE, TEF_NAME from type_element_facturable order by TEF_NAM
 $result2=mysqli_query($dbc,$query2);
 if ( $type_element == 'ALL' ) $selected="selected ";
 else $selected ="";
-echo "<option value='ALL' $selected>Tous les types d'éléments facturables</option>\n";
+echo "<option value='ALL' $selected>Tous les types d'Ã©lÃ©ments facturables</option>\n";
 while ($row=@mysqli_fetch_array($result2)) {
     $TEF_CODE=$row["TEF_CODE"];
     $TEF_NAME=$row["TEF_NAME"]; 
@@ -140,7 +140,7 @@ if ( $number > 0 ) {
     echo $later;
 }
 else {
-    echo "Pas d'éléments facturables configurés.";
+    echo "Pas d'Ã©lÃ©ments facturables configurÃ©s.";
 }
 if ( $from == 'top' );
 

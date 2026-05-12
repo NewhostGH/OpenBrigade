@@ -6,7 +6,7 @@ function deletefile(event, file) {
 
 function warning_cancel(checkbox) {
   if (checkbox.checked) {
-     swalAlert("Attention : vous devez renseigner la raison de cette annulation dans la case ci contre.\n(manque de secouristes, problème de matériel, annulé par l'organisateur ...)" );
+     swalAlert("Attention : vous devez renseigner la raison de cette annulation dans la case ci contre.\n(manque de secouristes, problÃ¨me de matÃ©riel, annulÃ© par l'organisateur ...)" );
     }
 }
 
@@ -167,7 +167,7 @@ function updfin(dtdebut,dtfin) {
 }
 
 function attacher_renfort() {
-  if ( confirm("ATTENTION: Les équipes éventuellement créées sur cet événement vont être perdues.\nVoulez vous quand même rattacher cet événement en tant que renfort?\n")) {
+  if ( confirm("ATTENTION: Les Ã©quipes Ã©ventuellement crÃ©Ã©es sur cet Ã©vÃ©nement vont Ãªtre perdues.\nVoulez vous quand mÃªme rattacher cet Ã©vÃ©nement en tant que renfort?\n")) {
         return true;
   }
   document.getElementById('parent').value="null";
@@ -178,7 +178,7 @@ function checkURL(current) {
     url = document.getElementById('url');
     var res = url.value.substring(0,4);
     if ( res == 'http' ) {
-        swalAlert("L'adresse URL ne doit pas avoir un préfixe http ou https");
+        swalAlert("L'adresse URL ne doit pas avoir un prÃ©fixe http ou https");
         url.value = current;
    }
 }

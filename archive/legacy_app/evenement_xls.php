@@ -28,7 +28,7 @@ $colorxls=substr($mylightcolor,1);
 $yellowxls=substr($yellow,1);
 
 //-----------------------------
-// infos gÈnÈrales
+// infos g√©n√©rales
 //-----------------------------
 $query="select EH.EH_ID _EH_ID, E.E_CODE, E.S_ID,E.TE_CODE, TE.TE_LIBELLE, E.E_LIEU, EH.EH_DATE_DEBUT _EH_DATE_DEBUT, EH.EH_DATE_FIN _EH_DATE_FIN,
         TIME_FORMAT(EH.EH_DEBUT, '%k:%i') as _EH_DEBUT, S.S_CODE, E.E_PARENT, 
@@ -65,7 +65,7 @@ while (custom_fetch_array($result)) {
             if (! check_rights($id,41, $S_ID)) {
                 $my_parent_section = get_section_parent($_SESSION['SES_SECTION']);
                 if ( $S_PARENT <> $my_parent_section and $S_ID <> $my_parent_section ) {
-                    write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir l'ÈvÈnement n°".$evenement."<br> organisÈ par ".$S_CODE." <br><p align=center>
+                    write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir l'√©v√©nement n¬°".$evenement."<br> organis√© par ".$S_CODE." <br><p align=center>
                     <a href=\"javascript:history.back(1)\">Retour</a> ",10,0);
                     exit;
                 }
@@ -90,7 +90,7 @@ while (custom_fetch_array($result)) {
     $date2[$i]=mktime(0,0,0,$month2[$i],$day2[$i],$year2[$i]);
 
     if ( $EH_DATE_DEBUT[$i] == $EH_DATE_FIN[$i])
-        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." ‡ ".$EH_FIN[$i];
+        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." √† ".$EH_FIN[$i];
     else
         $horaire_evt[$i]="\ndu ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$EH_DEBUT[$i]." au "
                          .date_fran($month2[$i], $day2[$i] ,$year2[$i])." ".moislettres($month2[$i])." ".$year2[$i]." ".$EH_FIN[$i];
@@ -129,7 +129,7 @@ $result=mysqli_query($dbc,$query);
 $row=@mysqli_fetch_array($result);
 $NP2=$row["NB"];
 
-$participants="$cmt, inscrits $NP, prÈsents $NP2";
+$participants="$cmt, inscrits $NP, pr√©sents $NP2";
 
 date_default_timezone_set('Europe/Paris');
 
@@ -157,8 +157,8 @@ $sheet->freezePane('A2');
 $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
 
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-if ( $syndicate == 1 ) $t = "CoordonnÈes";
-else $t ="DÈtail ÈvÈnement";
+if ( $syndicate == 1 ) $t = "Coordonn√©es";
+else $t ="D√©tail √©v√©nement";
 $sheet->setTitle(utf8_encode(substr($t,0,30)));
 
 // Zoom 75%
@@ -181,7 +181,7 @@ $header=$objPHPExcel->getProperties()->getTitle();
 if (sizeof($horaire_evt) == 1) $header .=utf8_encode($horaire_evt[1]);
 $sheet->getHeaderFooter()->setOddHeader($header);
 $printby = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
-$sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprimÈ par ".$printby." le ". date('d-m-Y ‡ H:i')) . 
+$sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprim√© par ".$printby." le ". date('d-m-Y √† H:i')) . 
                                         '&RPage &P / &N');
 
 $r=1;
@@ -237,7 +237,7 @@ $sheet->setCellValue("A".$r, "Lieu");
 $sheet->setCellValue("B".$r, utf8_encode($E_LIEU)); $r++;
 
 $sheet->mergeCells('B'.$r.':L'.$r);
-$sheet->setCellValue("A".$r, utf8_encode("DurÈe"));
+$sheet->setCellValue("A".$r, utf8_encode("Dur√©e"));
 $sheet->setCellValue("B".$r, $E_DUREE_TOTALE."h"); $r++;
 
 $sheet->mergeCells('B'.$r.':L'.$r);
@@ -257,19 +257,19 @@ for ($i=1; $i <= $nbmaxsessionsparevenement; $i++) {
 }
 if ( $E_CONVENTION <> "" ) {
     $sheet->mergeCells('B'.$r.':K'.$r);
-    $sheet->setCellValue("A".$r, utf8_encode("NumÈro de convention"));
+    $sheet->setCellValue("A".$r, utf8_encode("Num√©ro de convention"));
     $sheet->setCellValue("B".$r, $E_CONVENTION);
     $r++;
 }
 
 if ( $E_CONVENTION <> "" ) {
     $sheet->mergeCells('B'.$r.':K'.$r);
-    $sheet->setCellValue("A$r", utf8_encode("DÈtails"));
+    $sheet->setCellValue("A$r", utf8_encode("D√©tails"));
     $sheet->setCellValue("B$r",  utf8_encode($E_COMMENT));
     $r++;
 }
 
-if ( $syndicate == 1 ) $section_label = "dÈpartement";
+if ( $syndicate == 1 ) $section_label = "d√©partement";
 else $section_label = "section";
 
 //------------------------------
@@ -316,17 +316,17 @@ if ( mysqli_num_rows($result) > 0 ) {
     if ( $army or $pompiers ) $t ='Matricule';
     else $t = "";
     $sheet->setCellValue("D$r", utf8_encode($t));
-    $sheet->setCellValue("E$r", utf8_encode("tÈlÈphone"));
+    $sheet->setCellValue("E$r", utf8_encode("t√©l√©phone"));
     $sheet->setCellValue("F$r", utf8_encode("email"));
     $sheet->setCellValue("G$r", utf8_encode("adresse"));
     $sheet->setCellValue("H$r", utf8_encode("commentaire"));
     if ( $syndicate == 0 ) {
         $sheet->setCellValue("I$r", utf8_encode("horaires"));
         $sheet->setCellValue("J$r", utf8_encode("fonction"));
-        $sheet->setCellValue("K$r", utf8_encode("Èquipe"));
+        $sheet->setCellValue("K$r", utf8_encode("√©quipe"));
         $sheet->setCellValue("L$r", utf8_encode("Statut"));
         $sheet->setCellValue("M$r", utf8_encode("Date naissance"));
-        $sheet->setCellValue("N$r", utf8_encode("compÈtences valides"));
+        $sheet->setCellValue("N$r", utf8_encode("comp√©tences valides"));
         $last="N";
     }
     else $last="I";
@@ -349,7 +349,7 @@ if ( mysqli_num_rows($result) > 0 ) {
     $prevEC=$evenement;
     while ($row=@mysqli_fetch_array($result)) {
         $EC=$row["EC"]; 
-        // affiche d'où vient le renfort
+        // affiche d'o¬ù vient le renfort
         if ( $EC <> $prevEC ) {
             $prevpid=0;
             $queryR="select e.E_CANCELED as CE_CANCELED, e.E_CLOSED as CE_CLOSED,
@@ -372,17 +372,17 @@ if ( mysqli_num_rows($result) > 0 ) {
                 if ( $army or $pompiers ) $t ='Matricule';
                 else $t = "";
                 $sheet->setCellValue("D$r", utf8_encode($t));
-                $sheet->setCellValue("E$r", utf8_encode("tÈlÈphone"));
+                $sheet->setCellValue("E$r", utf8_encode("t√©l√©phone"));
                 $sheet->setCellValue("F$r", utf8_encode("email"));
                 $sheet->setCellValue("G$r", utf8_encode("adresse"));
                 $sheet->setCellValue("H$r", utf8_encode("commentaire"));
                 if ( $syndicate == 0 ) {
                     $sheet->setCellValue("I$r", utf8_encode("horaires"));
                     $sheet->setCellValue("J$r", utf8_encode("fonction"));
-                    $sheet->setCellValue("K$r", utf8_encode("Èquipe"));
+                    $sheet->setCellValue("K$r", utf8_encode("√©quipe"));
                     $sheet->setCellValue("L$r", utf8_encode("Statut"));
                     $sheet->setCellValue("M$r", utf8_encode("Date naissance"));
-                    $sheet->setCellValue("N$r", utf8_encode("compÈtences valides"));
+                    $sheet->setCellValue("N$r", utf8_encode("comp√©tences valides"));
                 }
             }
             $styleP = $sheet->getStyle('A'.$r.':'.$last.$r);
@@ -474,7 +474,7 @@ if ( mysqli_num_rows($result) > 0 ) {
             $rowc=@mysqli_fetch_array($resultc);
             $comment = $rowc["EP_COMMENT"];
             $km = $rowc["EP_KM"];
-            if ( $km <> "" ) $km= $km." km en vÈhicules perso,";
+            if ( $km <> "" ) $km= $km." km en v√©hicules perso,";
             if ( $rowc["EP_ASA"] ) $asa='ASA,'; else $asa='';
             if ( $rowc["EP_DAS"] ) $das='DAS,'; else $das='';
           
@@ -509,7 +509,7 @@ if ( mysqli_num_rows($result) > 0 ) {
     
         if ( $NewPID ) {
             $fullcomment=ltrim($asa." ".$das." ".$km." ".$comment);
-            $birth=$P_BIRTHDATE." ‡ ".$P_BIRTHPLACE;
+            $birth=$P_BIRTHDATE." √† ".$P_BIRTHPLACE;
             
             $sheet->setCellValue("A$r", utf8_encode(strtoupper($P_NOM)." ".ucfirst($P_PRENOM)." ".$cmt));
             if ( $grades ) $t = $P_GRADE;
@@ -543,7 +543,7 @@ if ( mysqli_num_rows($result) > 0 ) {
 }
 
 //------------------------------
-// vÈhicules
+// v√©hicules
 //------------------------------
 
 if ( $vehicules == 1 ) {
@@ -570,11 +570,11 @@ $result=mysqli_query($dbc,$query);
 $nbvehic=mysqli_num_rows($result);
 $prevEC=$evenement; $k=0;
 if ( $nbvehic > 0 ) {
-    $sheet->setCellValue("A$r", utf8_encode("VÈhicules"));
+    $sheet->setCellValue("A$r", utf8_encode("V√©hicules"));
     $sheet->setCellValue("B$r", utf8_encode("indicatif"));
     $sheet->setCellValue("C$r", utf8_encode($section_label));
     $sheet->setCellValue("D$r", utf8_encode("immatriculation"));
-    $sheet->setCellValue("E$r", utf8_encode("Èquipe"));
+    $sheet->setCellValue("E$r", utf8_encode("√©quipe"));
     $sheet->setCellValue("F$r", utf8_encode("position"));
     $sheet->setCellValue("G$r", utf8_encode("commentaire"));
     $sheet->setCellValue("H$r", utf8_encode("km"));
@@ -595,7 +595,7 @@ if ( $nbvehic > 0 ) {
     $r++;
     
    while (custom_fetch_array($result)) {
-        // affiche d'où vient le renfort
+        // affiche d'o¬ù vient le renfort
         if ( $EC <> $prevEC ) {
             $queryR="select e.E_CANCELED as CE_CANCELED, e.E_CLOSED as CE_CLOSED,
                 s.S_CODE CS_CODE, s.S_DESCRIPTION CS_DESCRIPTION
@@ -611,7 +611,7 @@ if ( $nbvehic > 0 ) {
                 $sheet->setCellValue("B$r", utf8_encode("indicatif"));
                 $sheet->setCellValue("C$r", utf8_encode($section_label));
                 $sheet->setCellValue("D$r", utf8_encode("immatriculation"));
-                $sheet->setCellValue("E$r", utf8_encode("Èquipe"));
+                $sheet->setCellValue("E$r", utf8_encode("√©quipe"));
                 $sheet->setCellValue("F$r", utf8_encode("position"));
                 $sheet->setCellValue("G$r", utf8_encode("commentaire"));
                 $sheet->setCellValue("H$r", utf8_encode("km"));
@@ -626,13 +626,13 @@ if ( $nbvehic > 0 ) {
             $prevEC = $EC;
         } 
         if ( my_date_diff(getnow(),$V_ASS_DATE) < 0 ) {
-              $VP_LIBELLE = "assurance pÈrimÈe";
+              $VP_LIBELLE = "assurance p√©rim√©e";
         }
         else if ( my_date_diff(getnow(),$V_CT_DATE) < 0 ) {
-              $VP_LIBELLE = "CT pÈrimÈ";
+              $VP_LIBELLE = "CT p√©rim√©";
         }
         else if (( my_date_diff(getnow(),$V_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
-            $VP_LIBELLE = "rÈvision ‡ faire";
+            $VP_LIBELLE = "r√©vision √† faire";
         }
         $k++;
       
@@ -651,7 +651,7 @@ if ( $nbvehic > 0 ) {
 
 
 //------------------------------
-// matÈriel
+// mat√©riel
 //------------------------------
 
 if ( $materiel == 1 ) {
@@ -680,11 +680,11 @@ if ( $materiel == 1 ) {
     $nbmat=mysqli_num_rows($result);
     $prevEC=$evenement; $k=0;
     if ( $nbmat > 0 ) {
-        $sheet->setCellValue("A$r", utf8_encode("MatÈriel"));
-        $sheet->setCellValue("B$r", utf8_encode("modèle"));
+        $sheet->setCellValue("A$r", utf8_encode("Mat√©riel"));
+        $sheet->setCellValue("B$r", utf8_encode("mod¬èle"));
         $sheet->setCellValue("C$r", utf8_encode($section_label));
-        $sheet->setCellValue("D$r", utf8_encode("numÈro sÈrie"));
-        $sheet->setCellValue("E$r", utf8_encode("Èquipe"));
+        $sheet->setCellValue("D$r", utf8_encode("num√©ro s√©rie"));
+        $sheet->setCellValue("E$r", utf8_encode("√©quipe"));
         $sheet->setCellValue("F$r", utf8_encode("position"));
         $sheet->setCellValue("G$r", utf8_encode("nombre"));
         $styleP = $sheet->getStyle('A'.$r.':'.$last.$r);
@@ -704,7 +704,7 @@ if ( $materiel == 1 ) {
         $r++;
            
         while (custom_fetch_array($result)) {
-            // affiche d'où vient le renfort
+            // affiche d'o¬ù vient le renfort
             if ( $EC <> $prevEC ) {
                 $queryR="select e.E_CANCELED as CE_CANCELED, e.E_CLOSED as CE_CLOSED,
                     s.S_CODE CS_CODE, s.S_DESCRIPTION CS_DESCRIPTION
@@ -717,10 +717,10 @@ if ( $materiel == 1 ) {
                 $CS_DESCRIPTION=$rowR["CS_DESCRIPTION"];
                 if ( $k > 0 ) {
                     $sheet->setCellValue("A$r", utf8_encode(ucfirst($renfort_label)." de ".$CS_CODE." - ".$CS_DESCRIPTION));
-                    $sheet->setCellValue("B$r", utf8_encode("modèle"));
+                    $sheet->setCellValue("B$r", utf8_encode("mod¬èle"));
                     $sheet->setCellValue("C$r", utf8_encode($section_label));
-                    $sheet->setCellValue("D$r", utf8_encode("numÈro sÈrie"));
-                    $sheet->setCellValue("E$r", utf8_encode("Èquipe"));
+                    $sheet->setCellValue("D$r", utf8_encode("num√©ro s√©rie"));
+                    $sheet->setCellValue("E$r", utf8_encode("√©quipe"));
                     $sheet->setCellValue("F$r", utf8_encode("position"));
                     $sheet->setCellValue("G$r", utf8_encode("nombre"));
                     $styleP = $sheet->getStyle('A'.$r.':'.$last.$r);
@@ -737,7 +737,7 @@ if ( $materiel == 1 ) {
             $k++;
           
             if (( my_date_diff(getnow(),$MA_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
-                $VP_LIBELLE = "date dÈpassÈe";
+                $VP_LIBELLE = "date d√©pass√©e";
             }
           
             $sheet->setCellValue("A$r", utf8_encode($TM_USAGE." - ".$TM_CODE));
@@ -777,7 +777,7 @@ if ( $nboptions > 0 ) {
     if (sizeof($horaire_evt) == 1) $header .=utf8_encode($horaire_evt[1]);
     $sheet->getHeaderFooter()->setOddHeader($header);
     $printby = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
-    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprimÈ par ".$printby." le ". date('d-m-Y ‡ H:i')) . 
+    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprim√© par ".$printby." le ". date('d-m-Y √† H:i')) . 
                                             '&RPage &P / &N');
 
 
@@ -836,7 +836,7 @@ if ( $nboptions > 0 ) {
     $sheet->setCellValue("B".$r, utf8_encode($E_LIEU)); $r++;
 
     $sheet->mergeCells('B'.$r.':I'.$r);
-    $sheet->setCellValue("A".$r, utf8_encode("DurÈe"));
+    $sheet->setCellValue("A".$r, utf8_encode("Dur√©e"));
     $sheet->setCellValue("B".$r, $E_DUREE_TOTALE."h"); $r++;
 
     $sheet->mergeCells('B'.$r.':I'.$r);
@@ -855,14 +855,14 @@ if ( $nboptions > 0 ) {
     }
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':I'.$r);
-        $sheet->setCellValue("A".$r, utf8_encode("NumÈro de convention"));
+        $sheet->setCellValue("A".$r, utf8_encode("Num√©ro de convention"));
         $sheet->setCellValue("B".$r, $E_CONVENTION);
         $r++;
     }
 
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':I'.$r);
-        $sheet->setCellValue("A$r", utf8_encode("DÈtails"));
+        $sheet->setCellValue("A$r", utf8_encode("D√©tails"));
         $sheet->setCellValue("B$r",  utf8_encode($E_COMMENT));
         $r++;
     }
@@ -894,7 +894,7 @@ if ( $nboptions > 0 ) {
     $sheet->setCellValue("A$r", utf8_encode($label1));
     $sheet->setCellValue("B$r", utf8_encode($label2));
     $sheet->setCellValue("C$r", utf8_encode("Nom"));
-    $sheet->setCellValue("D$r", utf8_encode("PrÈnom"));
+    $sheet->setCellValue("D$r", utf8_encode("Pr√©nom"));
     $next = 'D';
     $x=$r;
     if ( intval($E_PARENT) > 0 ) 
@@ -972,7 +972,7 @@ if ( $nboptions > 0 ) {
 }
 
 // =======================================================
-// onglet 2: Èquipes
+// onglet 2: √©quipes
 // =======================================================
 
 $querym="select EE_ID, EE_NAME, EE_DESCRIPTION, EE_SIGNATURE, EE_ID_RADIO from evenement_equipe
@@ -983,7 +983,7 @@ $nbequipes = mysqli_num_rows($resultm);
 
 if ( $nbequipes > 0 ) {
     $sheet = $objPHPExcel->createSheet();
-    $sheet->setTitle(utf8_encode("Composition des Èquipes"));
+    $sheet->setTitle(utf8_encode("Composition des √©quipes"));
     $sheet->freezePane('A2');
 
     $sheet->getColumnDimension("A")->setAutoSize(true);
@@ -997,7 +997,7 @@ if ( $nbequipes > 0 ) {
     if (sizeof($horaire_evt) == 1) $header .=utf8_encode($horaire_evt[1]);
     $sheet->getHeaderFooter()->setOddHeader($header);
     $printby = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
-    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprimÈ par ".$printby." le ". date('d-m-Y ‡ H:i')) . 
+    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprim√© par ".$printby." le ". date('d-m-Y √† H:i')) . 
                                             '&RPage &P / &N');
 
     //------------------------------
@@ -1055,7 +1055,7 @@ if ( $nbequipes > 0 ) {
     $sheet->setCellValue("B".$r, utf8_encode($E_LIEU)); $r++;
 
     $sheet->mergeCells('B'.$r.':F'.$r);
-    $sheet->setCellValue("A".$r, utf8_encode("DurÈe"));
+    $sheet->setCellValue("A".$r, utf8_encode("Dur√©e"));
     $sheet->setCellValue("B".$r, $E_DUREE_TOTALE."h"); $r++;
 
     $sheet->mergeCells('B'.$r.':F'.$r);
@@ -1074,14 +1074,14 @@ if ( $nbequipes > 0 ) {
     }
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':F'.$r);
-        $sheet->setCellValue("A".$r, utf8_encode("NumÈro de convention"));
+        $sheet->setCellValue("A".$r, utf8_encode("Num√©ro de convention"));
         $sheet->setCellValue("B".$r, $E_CONVENTION);
         $r++;
     }
 
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':F'.$r);
-        $sheet->setCellValue("A$r", utf8_encode("DÈtails"));
+        $sheet->setCellValue("A$r", utf8_encode("D√©tails"));
         $sheet->setCellValue("B$r",  utf8_encode($E_COMMENT));
         $r++;
     }
@@ -1115,7 +1115,7 @@ if ( $nbequipes > 0 ) {
         
         $r++;
         
-        // personnel engagÈ sur l'Èquipe
+        // personnel engag√© sur l'√©quipe
         // trouver tous les participants
         $query="select distinct p.P_ID, p.P_NOM, p.P_PHONE, p.P_PRENOM, s.S_ID, 
             p.P_OLD_MEMBER, s.S_CODE,
@@ -1162,7 +1162,7 @@ if ( $nbequipes > 0 ) {
             $r++;
         }
         
-        // vÈhicules affectÈs ‡ l'Èquipe
+        // v√©hicules affect√©s √† l'√©quipe
         $query="select distinct ev.E_CODE as EC,v.V_ID,v.V_IMMATRICULATION,v.TV_CODE, vp.VP_LIBELLE, v.V_MODELE, v.V_INDICATIF,
             vp.VP_ID, vp.VP_OPERATIONNEL, s.S_DESCRIPTION, s.S_ID, s.S_CODE,
             DATE_FORMAT(v.V_ASS_DATE, '%d-%m-%Y') as V_ASS_DATE,
@@ -1187,17 +1187,17 @@ if ( $nbequipes > 0 ) {
             if ( $VP_OPERATIONNEL == -1) $mytxtcolor='black';
             else if ( $VP_OPERATIONNEL == 1) $mytxtcolor=$red;      
             else if ( my_date_diff(getnow(),$V_ASS_DATE) < 0 ) {
-                  $VP_LIBELLE = "assurance pÈrimÈe";
+                  $VP_LIBELLE = "assurance p√©rim√©e";
             }
             else if ( my_date_diff(getnow(),$V_CT_DATE) < 0 ) {
-                  $VP_LIBELLE = "CT pÈrimÈ";      
+                  $VP_LIBELLE = "CT p√©rim√©";      
             }
             else if ( $VP_OPERATIONNEL == 2) {
             }
             else if (( my_date_diff(getnow(),$V_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
-                $VP_LIBELLE = "rÈvision ‡ faire";
+                $VP_LIBELLE = "r√©vision √† faire";
             }  
-            if ($first ) {$p="vÈhicules ($nump)"; $first=false; }
+            if ($first ) {$p="v√©hicules ($nump)"; $first=false; }
             else $p="";
             $sheet->setCellValue("A$r", utf8_encode($p));
             $sheet->setCellValue("B$r", utf8_encode($TV_CODE." - ".$V_MODELE." - ".$V_IDENT));
@@ -1209,7 +1209,7 @@ if ( $nbequipes > 0 ) {
             $r++;
         }
         
-        // matÈriel affectÈ ‡ l'Èquipe
+        // mat√©riel affect√© √† l'√©quipe
         $query="select distinct em.E_CODE as EC, m.MA_ID, tm.TM_CODE, m.TM_ID, vp.VP_LIBELLE, m.MA_MODELE, m.MA_NUMERO_SERIE,
             vp.VP_ID, vp.VP_OPERATIONNEL, s.S_DESCRIPTION, s.S_ID, s.S_CODE, em.EM_NB, m.MA_NB, m.MA_PARENT, tm.TM_LOT,
             cm.TM_USAGE, cm.CM_DESCRIPTION,
@@ -1236,7 +1236,7 @@ if ( $nbequipes > 0 ) {
             if ( $VP_OPERATIONNEL == -1) $mytxtcolor='black';
             else if ( $VP_OPERATIONNEL == 1) $mytxtcolor=$red;      
             
-            if ($first ) {$p="matÈriel ($nump)"; $first=false; }
+            if ($first ) {$p="mat√©riel ($nump)"; $first=false; }
             else $p="";
             $sheet->setCellValue("A$r", utf8_encode($p));
             $sheet->setCellValue("B$r", utf8_encode($TM_CODE." - ".$MA_MODELE." - ".$MA_NUMERO_SERIE));
@@ -1250,8 +1250,8 @@ if ( $nbequipes > 0 ) {
     }
 
     if ( $nbp < $NP2 ) {
-    // sans Èquipes
-        $sheet->setCellValue("A$r", utf8_encode("Pas affectÈs ‡ une Èquipe"));
+    // sans √©quipes
+        $sheet->setCellValue("A$r", utf8_encode("Pas affect√©s √† une √©quipe"));
         $styleP = $sheet->getStyle('A'.$r.':F'.$r);
         $styleFont = $styleP->getFont();
         $styleFont->setBold(true);
@@ -1271,7 +1271,7 @@ if ( $nbequipes > 0 ) {
         
         $r++;
         
-        // personnel non affectÈ
+        // personnel non affect√©
         $query="select distinct p.P_ID, p.P_NOM, p.P_PHONE, p.P_PRENOM, s.S_ID, 
             p.P_OLD_MEMBER, s.S_CODE,
             EXTRACT(YEAR FROM (FROM_DAYS(DATEDIFF(NOW(),p.P_BIRTHDATE))))+0 AS age,
@@ -1315,7 +1315,7 @@ if ( $nbequipes > 0 ) {
             $r++;
         }
         
-        // vÈhicules non affectÈs
+        // v√©hicules non affect√©s
         $query="select distinct ev.E_CODE as EC,v.V_ID,v.V_IMMATRICULATION,v.TV_CODE, vp.VP_LIBELLE, v.V_MODELE, v.V_INDICATIF,
             vp.VP_ID, vp.VP_OPERATIONNEL, s.S_DESCRIPTION, s.S_ID, s.S_CODE,
             DATE_FORMAT(v.V_ASS_DATE, '%d-%m-%Y') as V_ASS_DATE,
@@ -1340,17 +1340,17 @@ if ( $nbequipes > 0 ) {
             if ( $VP_OPERATIONNEL == -1) $mytxtcolor='black';
             else if ( $VP_OPERATIONNEL == 1) $mytxtcolor=$red;      
             else if ( my_date_diff(getnow(),$V_ASS_DATE) < 0 ) {
-                  $VP_LIBELLE = "assurance pÈrimÈe";
+                  $VP_LIBELLE = "assurance p√©rim√©e";
             }
             else if ( my_date_diff(getnow(),$V_CT_DATE) < 0 ) {
-                  $VP_LIBELLE = "CT pÈrimÈ";      
+                  $VP_LIBELLE = "CT p√©rim√©";      
             }
             else if ( $VP_OPERATIONNEL == 2) {
             }
             else if (( my_date_diff(getnow(),$V_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
-                $VP_LIBELLE = "rÈvision ‡ faire";
+                $VP_LIBELLE = "r√©vision √† faire";
             }  
-            if ($first ) {$p="vÈhicules ($nump)"; $first=false; }
+            if ($first ) {$p="v√©hicules ($nump)"; $first=false; }
             else $p="";
             $sheet->setCellValue("A$r", utf8_encode($p));
             $sheet->setCellValue("B$r", utf8_encode($TV_CODE." - ".$V_MODELE." - ".$V_IDENT));
@@ -1362,7 +1362,7 @@ if ( $nbequipes > 0 ) {
             $r++;
         }
         
-        // matÈriel non affectÈs
+        // mat√©riel non affect√©s
         $query="select distinct em.E_CODE as EC, m.MA_ID, tm.TM_CODE, m.TM_ID, vp.VP_LIBELLE, m.MA_MODELE, m.MA_NUMERO_SERIE,
             vp.VP_ID, vp.VP_OPERATIONNEL, s.S_DESCRIPTION, s.S_ID, s.S_CODE, em.EM_NB, m.MA_NB, m.MA_PARENT, tm.TM_LOT,
             cm.TM_USAGE, cm.CM_DESCRIPTION,
@@ -1389,7 +1389,7 @@ if ( $nbequipes > 0 ) {
             if ( $VP_OPERATIONNEL == -1) $mytxtcolor='black';
             else if ( $VP_OPERATIONNEL == 1) $mytxtcolor=$red;      
             
-            if ($first ) {$p="matÈriel ($nump)"; $first=false; }
+            if ($first ) {$p="mat√©riel ($nump)"; $first=false; }
             else $p="";
             $sheet->setCellValue("A$r", utf8_encode($p));
             $sheet->setCellValue("B$r", utf8_encode($TM_CODE." - ".$MA_MODELE." - ".$MA_NUMERO_SERIE));
@@ -1401,7 +1401,7 @@ if ( $nbequipes > 0 ) {
             $r++;
         }
         
-    // fin sans Èquipes
+    // fin sans √©quipes
     }
 
     // signatures
@@ -1444,11 +1444,11 @@ if ( $nbequipes > 0 ) {
 
 
 // =======================================================
-// troisieme onglet : commentaires Èquipes
+// troisieme onglet : commentaires √©quipes
 // =======================================================
 
     $sheet = $objPHPExcel->createSheet();
-    $sheet->setTitle(utf8_encode("Description des Èquipes"));
+    $sheet->setTitle(utf8_encode("Description des √©quipes"));
     $sheet->freezePane('A2');
 
     $sheet->getColumnDimension("A")->setAutoSize(true);
@@ -1461,7 +1461,7 @@ if ( $nbequipes > 0 ) {
     if (sizeof($horaire_evt) == 1) $header .=utf8_encode($horaire_evt[1]);
     $sheet->getHeaderFooter()->setOddHeader($header);
     $printby = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
-    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprimÈ par ".$printby." le ". date('d-m-Y ‡ H:i')) . 
+    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprim√© par ".$printby." le ". date('d-m-Y √† H:i')) . 
                                             '&RPage &P / &N');
 
 
@@ -1520,7 +1520,7 @@ if ( $nbequipes > 0 ) {
     $sheet->setCellValue("B".$r, utf8_encode($E_LIEU)); $r++;
 
     $sheet->mergeCells('B'.$r.':E'.$r);
-    $sheet->setCellValue("A".$r, utf8_encode("DurÈe"));
+    $sheet->setCellValue("A".$r, utf8_encode("Dur√©e"));
     $sheet->setCellValue("B".$r, $E_DUREE_TOTALE."h"); $r++;
 
     $sheet->mergeCells('B'.$r.':E'.$r);
@@ -1539,14 +1539,14 @@ if ( $nbequipes > 0 ) {
     }
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':E'.$r);
-        $sheet->setCellValue("A".$r, utf8_encode("NumÈro de convention"));
+        $sheet->setCellValue("A".$r, utf8_encode("Num√©ro de convention"));
         $sheet->setCellValue("B".$r, $E_CONVENTION);
         $r++;
     }
 
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':E'.$r);
-        $sheet->setCellValue("A$r", utf8_encode("DÈtails"));
+        $sheet->setCellValue("A$r", utf8_encode("D√©tails"));
         $sheet->setCellValue("B$r",  utf8_encode($E_COMMENT));
         $r++;
     }
@@ -1588,7 +1588,7 @@ if ( $nbequipes > 0 ) {
 }
 
 // =======================================================
-// quatrième onglet : personnel avec horaires
+// quatri¬ème onglet : personnel avec horaires
 // =======================================================
 
 $sheet = $objPHPExcel->createSheet();
@@ -1605,7 +1605,7 @@ $header=$objPHPExcel->getProperties()->getTitle();
 if (sizeof($horaire_evt) == 1) $header .=utf8_encode($horaire_evt[1]);
 $sheet->getHeaderFooter()->setOddHeader($header);
 $printby = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
-$sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprimÈ par ".$printby." le ". date('d-m-Y ‡ H:i')) . 
+$sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprim√© par ".$printby." le ". date('d-m-Y √† H:i')) . 
                                         '&RPage &P / &N');
 
 
@@ -1664,7 +1664,7 @@ $sheet->setCellValue("A".$r, "Lieu");
 $sheet->setCellValue("B".$r, utf8_encode($E_LIEU)); $r++;
 
 $sheet->mergeCells('B'.$r.':E'.$r);
-$sheet->setCellValue("A".$r, utf8_encode("DurÈe"));
+$sheet->setCellValue("A".$r, utf8_encode("Dur√©e"));
 $sheet->setCellValue("B".$r, $E_DUREE_TOTALE."h"); $r++;
 
 $sheet->mergeCells('B'.$r.':E'.$r);
@@ -1683,14 +1683,14 @@ for ($i=1; $i <= $nbmaxsessionsparevenement; $i++) {
 }
 if ( $E_CONVENTION <> "" ) {
     $sheet->mergeCells('B'.$r.':E'.$r);
-    $sheet->setCellValue("A".$r, utf8_encode("NumÈro de convention"));
+    $sheet->setCellValue("A".$r, utf8_encode("Num√©ro de convention"));
     $sheet->setCellValue("B".$r, $E_CONVENTION);
     $r++;
 }
 
 if ( $E_CONVENTION <> "" ) {
     $sheet->mergeCells('B'.$r.':E'.$r);
-    $sheet->setCellValue("A$r", utf8_encode("DÈtails"));
+    $sheet->setCellValue("A$r", utf8_encode("D√©tails"));
     $sheet->setCellValue("B$r",  utf8_encode($E_COMMENT));
     $r++;
 }
@@ -1778,7 +1778,7 @@ $nump = mysqli_num_rows($result);
 $sheet->setCellValue("A$r", utf8_encode($renfort_label));
 $sheet->setCellValue("B$r", utf8_encode("Nom"));
 $sheet->setCellValue("C$r", utf8_encode($section_label));
-$sheet->setCellValue("D$r", utf8_encode("dÈbut"));
+$sheet->setCellValue("D$r", utf8_encode("d√©but"));
 $sheet->setCellValue("E$r", utf8_encode("fin"));
 $styleP = $sheet->getStyle('A'.$r.':E'.$r);
 $styleFont = $styleP->getFont();
@@ -1857,7 +1857,7 @@ if ( $syndicate == 0 ) {
     if (sizeof($horaire_evt) == 1) $header .=utf8_encode($horaire_evt[1]);
     $sheet->getHeaderFooter()->setOddHeader($header);
     $printby = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
-    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprimÈ par ".$printby." le ". date('d-m-Y ‡ H:i')) . 
+    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprim√© par ".$printby." le ". date('d-m-Y √† H:i')) . 
                                             '&RPage &P / &N');
 
 
@@ -1916,7 +1916,7 @@ if ( $syndicate == 0 ) {
     $sheet->setCellValue("B".$r, utf8_encode($E_LIEU)); $r++;
 
     $sheet->mergeCells('B'.$r.':I'.$r);
-    $sheet->setCellValue("A".$r, utf8_encode("DurÈe"));
+    $sheet->setCellValue("A".$r, utf8_encode("Dur√©e"));
     $sheet->setCellValue("B".$r, $E_DUREE_TOTALE."h"); $r++;
 
     $sheet->mergeCells('B'.$r.':I'.$r);
@@ -1935,14 +1935,14 @@ if ( $syndicate == 0 ) {
     }
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':I'.$r);
-        $sheet->setCellValue("A".$r, utf8_encode("NumÈro de convention"));
+        $sheet->setCellValue("A".$r, utf8_encode("Num√©ro de convention"));
         $sheet->setCellValue("B".$r, $E_CONVENTION);
         $r++;
     }
 
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':I'.$r);
-        $sheet->setCellValue("A$r", utf8_encode("DÈtails"));
+        $sheet->setCellValue("A$r", utf8_encode("D√©tails"));
         $sheet->setCellValue("B$r",  utf8_encode($E_COMMENT));
         $r++;
     }
@@ -1970,12 +1970,12 @@ if ( $syndicate == 0 ) {
     $sheet->setCellValue("A$r", utf8_encode($renfort_label));
     $sheet->setCellValue("B$r", utf8_encode("Nom"));
     $sheet->setCellValue("C$r", utf8_encode("Nom de naissance"));
-    $sheet->setCellValue("D$r", utf8_encode("PrÈnoms"));
+    $sheet->setCellValue("D$r", utf8_encode("Pr√©noms"));
     $sheet->setCellValue("E$r", utf8_encode("section"));
     $sheet->setCellValue("F$r", utf8_encode("age "));
     $sheet->setCellValue("G$r", utf8_encode("date naissance "));
     $sheet->setCellValue("H$r", utf8_encode("lieu naissance "));
-    $sheet->setCellValue("I$r", utf8_encode("nationalitÈ "));
+    $sheet->setCellValue("I$r", utf8_encode("nationalit√© "));
     $styleP = $sheet->getStyle('A'.$r.':I'.$r);
     $styleFont = $styleP->getFont();
     $styleFont->setBold(true);
@@ -2048,7 +2048,7 @@ if ( $syndicate == 0 ) {
     if (sizeof($horaire_evt) == 1) $header .=utf8_encode($horaire_evt[1]);
     $sheet->getHeaderFooter()->setOddHeader($header);
     $printby = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
-    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprimÈ par ".$printby." le ". date('d-m-Y ‡ H:i')) . 
+    $sheet->getHeaderFooter()->setOddFooter('&L&I' . utf8_encode(" imprim√© par ".$printby." le ". date('d-m-Y √† H:i')) . 
                                             '&RPage &P / &N');
 
 
@@ -2107,7 +2107,7 @@ if ( $syndicate == 0 ) {
     $sheet->setCellValue("B".$r, utf8_encode($E_LIEU)); $r++;
 
     $sheet->mergeCells('B'.$r.':I'.$r);
-    $sheet->setCellValue("A".$r, utf8_encode("DurÈe"));
+    $sheet->setCellValue("A".$r, utf8_encode("Dur√©e"));
     $sheet->setCellValue("B".$r, $E_DUREE_TOTALE."h"); $r++;
 
     $sheet->mergeCells('B'.$r.':I'.$r);
@@ -2126,14 +2126,14 @@ if ( $syndicate == 0 ) {
     }
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':I'.$r);
-        $sheet->setCellValue("A".$r, utf8_encode("NumÈro de convention"));
+        $sheet->setCellValue("A".$r, utf8_encode("Num√©ro de convention"));
         $sheet->setCellValue("B".$r, $E_CONVENTION);
         $r++;
     }
 
     if ( $E_CONVENTION <> "" ) {
         $sheet->mergeCells('B'.$r.':I'.$r);
-        $sheet->setCellValue("A$r", utf8_encode("DÈtails"));
+        $sheet->setCellValue("A$r", utf8_encode("D√©tails"));
         $sheet->setCellValue("B$r",  utf8_encode($E_COMMENT));
         $r++;
     }
@@ -2158,12 +2158,12 @@ if ( $syndicate == 0 ) {
 
     $sheet->setCellValue("A$r", utf8_encode($renfort_label));
     $sheet->setCellValue("B$r", utf8_encode("Nom"));
-    $sheet->setCellValue("C$r", utf8_encode("PrÈnom"));
+    $sheet->setCellValue("C$r", utf8_encode("Pr√©nom"));
     $sheet->setCellValue("D$r", utf8_encode("Section"));
     $sheet->setCellValue("E$r", utf8_encode("Equipe"));
     $sheet->setCellValue("F$r", utf8_encode("Nom contact "));
-    $sheet->setCellValue("G$r", utf8_encode("PrÈnom contact "));
-    $sheet->setCellValue("H$r", utf8_encode("TÈl contact"));
+    $sheet->setCellValue("G$r", utf8_encode("Pr√©nom contact "));
+    $sheet->setCellValue("H$r", utf8_encode("T√©l contact"));
     $sheet->setCellValue("I$r", utf8_encode("Mail contact"));
     $styleP = $sheet->getStyle('A'.$r.':I'.$r);
     $styleFont = $styleP->getFont();

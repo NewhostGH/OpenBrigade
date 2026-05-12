@@ -53,7 +53,7 @@ function swal(message, addElement = {addButton : 0}, editSwalElement = {disableB
             </div>'
     }
     if (editSwalElement.disableButton == 0)
-    swalObject += '<button type="button" class="swal2-close" style="display: "block";" aria-label="Fermer la fenêtre">×</button>';
+    swalObject += '<button type="button" class="swal2-close" style="display: "block";" aria-label="Fermer la fenÃªtre">Ã—</button>';
 
     swalObject += '</div>\
         <div class="swal2-content">\

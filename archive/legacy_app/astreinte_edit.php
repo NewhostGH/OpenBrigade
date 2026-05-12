@@ -110,7 +110,7 @@ $result=mysqli_query($dbc,$query);
 $nb=mysqli_num_rows($result);
 
 if ($nb == 0 ) {
-    write_msgbox("paramétrage incomplet", $warning_pic, "Aucun <a href=habilitations.php?category=R>rôle</a> de l'organigramme ne supporte les astreintes",10,0);
+    write_msgbox("paramÃ©trage incomplet", $warning_pic, "Aucun <a href=habilitations.php?category=R>rÃ´le</a> de l'organigramme ne supporte les astreintes",10,0);
     exit;
 }
 echo "<form name=demoform action='astreinte_save.php' method='POST'>
@@ -190,7 +190,7 @@ echo "</tr>";
 // dates
 //=====================================================================
 
-echo " <tr><td align=left><b>Date début </b>$asterisk";
+echo " <tr><td align=left><b>Date dÃ©but </b>$asterisk";
 echo "</td><td><input type='text' size='10' name='dc1' id='dc1' value=\"".$MYAS_DEBUT."\" class='form-control form-control-sm datepicker' data-provide='datepicker'
             placeholder='JJ-MM-AAAA'
             onchange=checkDate2(document.demoform.dc1)

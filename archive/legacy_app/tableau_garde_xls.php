@@ -233,7 +233,7 @@ while ( $day <= $lastday ) {
                 if (! in_array($P_ID, $day2_id) ) {
                     $day1_id[$d] = $P_ID;
                     if ( $FIN < $EH_FIN ) {
-                        // ne fait pas garde complète, chercher remplaçant
+                        // ne fait pas garde complÃ¨te, chercher remplaÃ§ant
                         $query2="select p.P_ID, p.P_GRADE, p.P_NOM, g.G_DESCRIPTION
                             from pompier p, grade g,
                             evenement_participation ep

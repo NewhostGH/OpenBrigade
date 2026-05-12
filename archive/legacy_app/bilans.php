@@ -75,21 +75,21 @@ function write_link($num,$title) {
     $btnStyle = "";
     $bgImage = "";
     $description = "";
-    if ($title == 'Généralités' ) { $bgColor = "#1B283F"; $buttonColor = "#ffa800"; $btnStyle = "btn-generalites"; $bgImage = "./images/generalites.png"; $description = "Retrouvez le bilan annuels complet du personnel et des moyens (véhicules, matériel et consommables)."; }
-    elseif ( $title == 'Activités opérationnelles' ) { $bgColor = "#8950fc";$buttonColor = "#1bc5bd"; $btnStyle = "btn-activites"; $bgImage = "./images/activites.png"; $description = "Bilan annuel de l'ensemble des activités opérationnelle de votre structure."; }
-    elseif ( $title == 'Formations') { $bgColor = "#9be0df"; $buttonColor = "#f64e60"; $btnStyle = "btn-formation"; $bgImage = "./images/formation.png"; $description = "Liste de toutes les formations prodiguées durant l'année."; }
+    if ($title == 'GÃ©nÃ©ralitÃ©s' ) { $bgColor = "#1B283F"; $buttonColor = "#ffa800"; $btnStyle = "btn-generalites"; $bgImage = "./images/generalites.png"; $description = "Retrouvez le bilan annuels complet du personnel et des moyens (vÃ©hicules, matÃ©riel et consommables)."; }
+    elseif ( $title == 'ActivitÃ©s opÃ©rationnelles' ) { $bgColor = "#8950fc";$buttonColor = "#1bc5bd"; $btnStyle = "btn-activites"; $bgImage = "./images/activites.png"; $description = "Bilan annuel de l'ensemble des activitÃ©s opÃ©rationnelle de votre structure."; }
+    elseif ( $title == 'Formations') { $bgColor = "#9be0df"; $buttonColor = "#f64e60"; $btnStyle = "btn-formation"; $bgImage = "./images/formation.png"; $description = "Liste de toutes les formations prodiguÃ©es durant l'annÃ©e."; }
     $link="<a class='btn $btnStyle btn-telecharger-mobile font-weight-bolder text-decoration-none' style='color: white;font-size:13px;position: absolute;bottom:35px;background-color: $buttonColor;' href=pdf_bilans.php?filter=".$filter."&year=".$year."&type=".$num." target='_blank'>";
     echo "<div class='flex-fill rounded m-2 p-5 card-mobile' style='background-color: $bgColor;text-align: left;background-image: url($bgImage);background-repeat: no-repeat;background-position: right 100%;background-size: 65%;'>
         <div class='font-weight-bolder h5 text-light'>$title</a></div>
         <p style='color: white;position:relative;top:0;max-width:180px;margin-bottom: 30px;font-size: 15px'>$description</p>
-        ".$link."<i class=' far fa-file-pdf p-1' style='color:white;font-size: 15px'></i>Télécharger</a>
+        ".$link."<i class=' far fa-file-pdf p-1' style='color:white;font-size: 15px'></i>TÃ©lÃ©charger</a>
         </div>";
 }
 
 echo "<p><div class='d-flex container-fluid w-100 flex-column-mobile'>";
 
-write_link(1,"Généralités");
-write_link(2,"Activités opérationnelles");
+write_link(1,"GÃ©nÃ©ralitÃ©s");
+write_link(2,"ActivitÃ©s opÃ©rationnelles");
 write_link(3,"Formations");
 
 echo "</div>";

@@ -104,7 +104,7 @@ echo "<div class='col-sm-5'>
 echo "<table class='noBorder' cellspacing=0 border=0>";
 
 //=====================================================================
-// ligne catégorie
+// ligne catÃ©gorie
 //=====================================================================
 
 $query="select CC_CODE, CC_NAME from categorie_consommable
@@ -112,7 +112,7 @@ $query="select CC_CODE, CC_NAME from categorie_consommable
 $result=mysqli_query($dbc,$query);
 
 echo "<tr>
-            <td >Catégorie $asterisk</td>
+            <td >CatÃ©gorie $asterisk</td>
             <td align=left>
           <select class='form-control-sm' name='CC_CODE' >";
                while ($row=@mysqli_fetch_array($result)) {
@@ -121,7 +121,7 @@ echo "<tr>
                   echo "<option value=\"".$row["CC_CODE"]."\" $selected>".$row["CC_CODE"]." - ".$row["CC_NAME"]."</option>";
               }
  echo "</select>";
- echo " <i class='fa fa-pencil-alt fa-lg' onClick=\"redirect_edit()\"/ title=\"Editer une catégorie de matériel\"></i></td>";
+ echo " <i class='fa fa-pencil-alt fa-lg' onClick=\"redirect_edit()\"/ title=\"Editer une catÃ©gorie de matÃ©riel\"></i></td>";
  echo "</td>
       </tr>";
 
@@ -157,7 +157,7 @@ echo "</td>
       </tr>";
      
 //=====================================================================
-// ligne quantité par conditionnement et unité de mesure
+// ligne quantitÃ© par conditionnement et unitÃ© de mesure
 //=====================================================================
 
 $query="select TUM_CODE, TUM_DESCRIPTION from type_unite_mesure
@@ -168,9 +168,9 @@ echo "<tr>
             <td >Contenance  $asterisk</td>
             <td>
           <input style='width: 49%' class='form-control-sm' type='text' size='3' maxlength='4' name='TC_QUANTITE_PAR_UNITE' 
-            value='".$TC_QUANTITE_PAR_UNITE."' title='Précisez la quantité ou le nombre pour une unité de conditionnement'
+            value='".$TC_QUANTITE_PAR_UNITE."' title='PrÃ©cisez la quantitÃ© ou le nombre pour une unitÃ© de conditionnement'
             onchange=\"checkFloat(this,'".$TC_QUANTITE_PAR_UNITE."')\";>
-          <select style='width: 50%' class='form-control-sm' name='TUM_CODE' title='précisez l'unité de mesure'>";
+          <select style='width: 50%' class='form-control-sm' name='TUM_CODE' title='prÃ©cisez l'unitÃ© de mesure'>";
                while ($row=@mysqli_fetch_array($result)) {
                   if ( $row["TUM_CODE"] == $TUM_CODE ) $selected='selected';
                   else $selected='';
@@ -181,17 +181,17 @@ echo "</td>
       </tr>";
   
 //=====================================================================
-// lot de matériel
+// lot de matÃ©riel
 //=====================================================================
 if ( $TC_PEREMPTION == 1 ) $checked='checked';
 else $checked='';
 
 echo "<tr>
-            <td>Périssable</td>
+            <td>PÃ©rissable</td>
             <td align=left>
             <input type='checkbox' name='TC_PEREMPTION' value='1' $checked
-            title=\"Cochez la case si ce type de consommable est périssable\">
-            <font size=1><i>denrée périssable, avec une date limite<i></font>";
+            title=\"Cochez la case si ce type de consommable est pÃ©rissable\">
+            <font size=1><i>denrÃ©e pÃ©rissable, avec une date limite<i></font>";
 echo " </td>
       </tr>";
 

@@ -20,8 +20,8 @@
 
 /*
 Consultation de l'agenda depuis Google Agenda
-Authentification selon une clé md5 propre a chaque utilisateur
-Possibilité de voir l'agenda de sa section filtré ou non sur un type d'événement, ou seulement l'agenda perso et ses favoris.
+Authentification selon une clÃ© md5 propre a chaque utilisateur
+PossibilitÃ© de voir l'agenda de sa section filtrÃ© ou non sur un type d'Ã©vÃ©nement, ou seulement l'agenda perso et ses favoris.
 
 key = md5($perso."-".$nom."-".md5($mdp));
 exemple : md5("2-kuntz-".md5(motdepasse));
@@ -31,10 +31,10 @@ exemple d'URL a passer dans Google Agenda
 Calendrier de la section d'appartenance
 http://<url>/evenements.php?cid=f0c40f6478abe127dbbf21fdb57bbeb0
 
-Calendrier de la section filtré sur un type d'événement
+Calendrier de la section filtrÃ© sur un type d'Ã©vÃ©nement
 http://<url>/evenements.php?type_evenement=FOR&cid=f0c40f6478abe127dbbf21fdb57bbeb0
 
-Calendrier perso et des favoris filtré sur un type d'événement
+Calendrier perso et des favoris filtrÃ© sur un type d'Ã©vÃ©nement
 http://<url>/evenements.php?perso=1&cid=f0c40f6478abe127dbbf21fdb57bbeb0
 
 */
@@ -44,7 +44,7 @@ require_once("fonctions.php");
 
 $out="";
 
-// récupération des variables
+// rÃ©cupÃ©ration des variables
 $key = (isset($_GET['cid']) ? secure_input($dbc, $_GET['cid'],$strict=true) : "");
 $subsections = (isset($_GET['niv'])?1:0);
 $perso = (isset($_GET['perso'])?intval($_GET['perso']):"");
@@ -54,7 +54,7 @@ $type_evenement=(isset($_GET['type_evenement'])?secure_input($dbc,$_GET['type_ev
 if ($key == "" ){
     $nomenu=1;
     writehead();
-    write_msgbox("Erreur", $error_pic, "Paramètre de connexion inconnu!",30,0);
+    write_msgbox("Erreur", $error_pic, "ParamÃ¨tre de connexion inconnu!",30,0);
     exit;
 }
 
@@ -62,7 +62,7 @@ if ($key == "" ){
 $evenement="";
 $ical_perso="";
 
-//  DEB - Identification via une clé spéciale passée en GET
+//  DEB - Identification via une clÃ© spÃ©ciale passÃ©e en GET
 $sqlp="select p.p_id, p.p_nom, p.p_prenom, p.p_code, p.p_mdp ,p.p_calendar, p.p_section section, s.s_code,
 md5(concat(p.p_id,'-',p.p_nom,'-',p.p_mdp)) keyp
 from pompier p , section s
@@ -85,15 +85,15 @@ while($rowp= mysqli_fetch_array($resp)){
         $code_section = fixcharset($cisname);
     }
 }
-//  FIN - Identification via une clé spéciale passée en GET
+//  FIN - Identification via une clÃ© spÃ©ciale passÃ©e en GET
 
 if ($p_id > 0 and check_rights($p_id, 41)) {
 
-// DEB idem evenement_ical.php, sauf mise en commentaire signalée is_formateur()
+// DEB idem evenement_ical.php, sauf mise en commentaire signalÃ©e is_formateur()
 $section_parent = get_section_parent("$section");
 if ( $type_evenement == 'ALERT_NAT' ) $calendarname="Alertes des benevoles ".$cisname;
 else if ($ical_perso!="") $calendarname="Mon Calendrier $code_section";
-else if ( $type_evenement <> 'ALL' ) $calendarname=((count(explode(',',$type_evenement))>2)?"Evenements de ":"$type_evenement")." $code_section";// limiter les types d'événements à l'affichage
+else if ( $type_evenement <> 'ALL' ) $calendarname=((count(explode(',',$type_evenement))>2)?"Evenements de ":"$type_evenement")." $code_section";// limiter les types d'Ã©vÃ©nements Ã  l'affichage
 else $calendarname="Activites de $code_section";
 
 $v = new vcalendar();
@@ -245,6 +245,6 @@ $v->returnCalendar();
 else {
     $nomenu=1;
     writehead();
-    write_msgbox("Erreur", $error_pic, "Utilisateur non identifié ou permissions insuffisantes!",30,0);
+    write_msgbox("Erreur", $error_pic, "Utilisateur non identifiÃ© ou permissions insuffisantes!",30,0);
 }
 ?>

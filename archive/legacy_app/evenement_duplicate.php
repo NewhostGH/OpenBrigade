@@ -24,29 +24,29 @@ $id=$_SESSION['id'];
 $section=$_SESSION['SES_SECTION'];
 writehead();
 
-// demander paramètres de la duplication
+// demander paramÃ¨tres de la duplication
 if ( ! isset ($_POST["evenement"])) {
     $evenement=intval($_GET["evenement"]);
     $nb_parties=get_nb_sessions($evenement);
     if ( $nb_parties > 1 ) {
-        write_msgbox("Erreur", $error_pic, "La duplication multiple d'une activité n'est possible seulement pour les activités qui n'ont que une partie, celle-ci en a ".$nb_parties.".
+        write_msgbox("Erreur", $error_pic, "La duplication multiple d'une activitÃ© n'est possible seulement pour les activitÃ©s qui n'ont que une partie, celle-ci en a ".$nb_parties.".
                                             <p><form><input type=button value='Annuler' class='btn btn-default' onclick=\"javascript:history.back(1);\"></form></div>", 30,30, 600);
         exit;
     }
     $message = "<form method='POST' action='evenement_duplicate.php'>";
-    $message .= "<div align=left>Vous allez dupliquer cette activité du calendrier.";
-    $message .= " Veuillez préciser comment l'activité doit être dupliquée:";
+    $message .= "<div align=left>Vous allez dupliquer cette activitÃ© du calendrier.";
+    $message .= " Veuillez prÃ©ciser comment l'activitÃ© doit Ãªtre dupliquÃ©e:";
     $message .= " <input type='hidden' name='evenement' value='".$evenement."'>";
     $message .= " <p><i>Sur combien de semaines?</i> <select name='numweeks'>";
     for ( $i=1; $i <= 10; $i++ ) $message .= "<option value=".$i." >".$i." semaines</option>\n";
     $message .= "</select>";
-    $message .= " <p><i>Sur quels jours de la semaine l'activité doit-elle être dupliquée?</i><br>";
+    $message .= " <p><i>Sur quels jours de la semaine l'activitÃ© doit-elle Ãªtre dupliquÃ©e?</i><br>";
     for ( $i=0; $i < sizeof($jours); $i++ ) {
         $message .= " <input type='checkbox' value=1 name='D".$i."' id='D".$i."'> <label for='D".$i."'>".$jours[$i]."</label><br>";
     }
-    $message .= " <p><i>Les éléments suivants doivent-ils aussi être dupliqués? </i><br>";
-    $message .= " <input type='checkbox' value=1 name='P' id='P'> <label for='P'>le personnel, les équipes et fonctions?</label> <br>";
-    $message .= " <input type='checkbox' value=1 name='V' id='V'> <label for='V'>les véhicules et le matériel?</label> <br>";
+    $message .= " <p><i>Les Ã©lÃ©ments suivants doivent-ils aussi Ãªtre dupliquÃ©s? </i><br>";
+    $message .= " <input type='checkbox' value=1 name='P' id='P'> <label for='P'>le personnel, les Ã©quipes et fonctions?</label> <br>";
+    $message .= " <input type='checkbox' value=1 name='V' id='V'> <label for='V'>les vÃ©hicules et le matÃ©riel?</label> <br>";
     $message .= " <p><input type='submit' class='btn btn-success' value='Sauvegarder'> <input type=button value='Annuler' class='btn btn-secondary'  onclick=\"javascript:history.back(1);\"></div></form>";
     write_msgbox("question", $question_pic, $message, 30,30, 600);
     exit;
@@ -77,7 +77,7 @@ else {
     $number=mysqli_num_rows($result);
     
     if ( $number <> 1 ) {
-        $errmsg="Seules les activités à une seule partie peuvent faire l'object de duplication multiple<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
+        $errmsg="Seules les activitÃ©s Ã  une seule partie peuvent faire l'object de duplication multiple<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
         write_msgbox("error", $error_pic, $errmsg, 30, 30);
         exit;
     }
@@ -94,19 +94,19 @@ else {
     $dayofweek=$row["DAYOFWEEK"];
 
     if (! check_rights($id, 15, "$S_ID")) {
-        $errmsg="Vous n'avez pas les permissions suffisantes pour de dupliquer cette activité<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
+        $errmsg="Vous n'avez pas les permissions suffisantes pour de dupliquer cette activitÃ©<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
         write_msgbox("error", $error_pic, $errmsg, 30, 30);
         exit;     
      
     }
     if ( $TE_MULTI_DUPLI == 0 ) {
-        $errmsg="Ce type d'activité ne peut pas faire l'objet de duplication multiple<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
+        $errmsg="Ce type d'activitÃ© ne peut pas faire l'objet de duplication multiple<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
         write_msgbox("error", $error_pic, $errmsg, 30, 30);
         exit;
     }
     
     if ( $DATE_DEBUT <> $DATE_FIN ) {
-        $errmsg="Seules les activités sur une seule journée peuvent faire l'object de duplication multiple<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
+        $errmsg="Seules les activitÃ©s sur une seule journÃ©e peuvent faire l'object de duplication multiple<p><a href=evenement_display.php?evenement=".$evenement."><input type='submit' class='btn btn-secondary' value='Retour'></a>";
         write_msgbox("error", $error_pic, $errmsg, 30, 30);
         exit;
     }
@@ -178,7 +178,7 @@ else {
                 $result=mysqli_query($dbc,$query);
             }
             
-            // véhicules et matériel
+            // vÃ©hicules et matÃ©riel
             if (isset($_POST["V"])) {
                 $query="insert into evenement_vehicule (V_ID, E_CODE, EV_KM) 
                     select V_ID, ".$new.", EV_KM 
@@ -194,7 +194,7 @@ else {
             }
         }
     } 
-    write_msgbox("info", $star_pic, "copie réalisée, ".$copied." activités générées<p><a href=evenement_choice.php><input type='submit' class='btn btn-secondary' value='Retour'></a>", 30, 30);
+    write_msgbox("info", $star_pic, "copie rÃ©alisÃ©e, ".$copied." activitÃ©s gÃ©nÃ©rÃ©es<p><a href=evenement_choice.php><input type='submit' class='btn btn-secondary' value='Retour'></a>", 30, 30);
 }
 writefoot();
 ?>

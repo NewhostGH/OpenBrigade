@@ -73,7 +73,7 @@ $nomenu=1;
 writehead();
 
 $helper="<a href='#' data-toggle='popover' title=\"Aide\" data-trigger='hover' data-placement='bottom'
-            data-content=\"Cette page permet d'enregistrer les identifiants de la personne pour les réseaux sociaux 
+            data-content=\"Cette page permet d'enregistrer les identifiants de la personne pour les rÃ©seaux sociaux 
                             et les outils de communication, par exemple Skype\" ><i class='fas fa-info-circle'></i></a>";
         
 write_modal_header("Identifiants de ".ucfirst(get_prenom($person))." ".strtoupper(get_nom($person))." ".$helper);
@@ -101,7 +101,7 @@ while ( custom_fetch_array($result)) {
             <td><input type='text' name='c".$CT_ID."' id='c".$CT_ID."' value=\"".$CONTACT_VALUE."\" title=\"saisir l'identifiant ".$CONTACT_TYPE."\">";
     if ( $CONTACT_TYPE == 'WhatsApp' ) 
         $html.=" <a href='#' data-toggle='popover' title=\"Aide\" data-trigger='hover' data-placement='bottom'
-                data-content=\"Numéro de téléphone avec + et le préfixe du pays, exemple +33 6 10 20 30 40\" ><i class='fas fa-question-circle'></i></a>";
+                data-content=\"NumÃ©ro de tÃ©lÃ©phone avec + et le prÃ©fixe du pays, exemple +33 6 10 20 30 40\" ><i class='fas fa-question-circle'></i></a>";
     $html.="</td></tr>";
 }
 $html.= "</table>";

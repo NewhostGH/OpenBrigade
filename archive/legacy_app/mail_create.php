@@ -56,11 +56,11 @@ writeBreadCrumb();
         if (mode[0].checked) {
               choice="mail";
               if (nbdest > MaxNB) {
-                   swalAlert("Vous avez choisi d'envoyer un mail à "+ nbdest +" personnes. \n Le maximum autorisé par le menu 'message' est "+ MaxNB+ "\n pour envoyer un message à un plus grand nombre de destinataires, utiliser plutôt le menu 'alerte', qui n'a pas de limitation.");
+                   swalAlert("Vous avez choisi d'envoyer un mail Ã  "+ nbdest +" personnes. \n Le maximum autorisÃ© par le menu 'message' est "+ MaxNB+ "\n pour envoyer un message Ã  un plus grand nombre de destinataires, utiliser plutÃ´t le menu 'alerte', qui n'a pas de limitation.");
                  return;
               }
               else if (nbdest > MaxWithoutConfirm) {
-                 if ( confirm("Vous allez envoyer un email à "+ nbdest +" personnes.\nContinuer?"))
+                 if ( confirm("Vous allez envoyer un email Ã  "+ nbdest +" personnes.\nContinuer?"))
                    confirmed = 1;
                else return;
             }
@@ -69,14 +69,14 @@ writeBreadCrumb();
               if (mode[1].checked) choice="sms";
               else return;
               if (nbdest > MaxSMS) {
-                   swalAlert("Vous avez choisi d'envoyer un SMS à "+ nbdest +" personnes. \n Le maximum autorisé est "+ MaxSMS);
+                   swalAlert("Vous avez choisi d'envoyer un SMS Ã  "+ nbdest +" personnes. \n Le maximum autorisÃ© est "+ MaxSMS);
                  return;
               }
               if ( compteur.value > MaxcharSMS ) {
-                   swalAlert("La longueur des messages SMS est limitée à " + MaxcharSMS + " caractères.\nVous avez: " + compteur.value + " caratères.");
+                   swalAlert("La longueur des messages SMS est limitÃ©e Ã  " + MaxcharSMS + " caractÃ¨res.\nVous avez: " + compteur.value + " caratÃ¨res.");
                    return;
               }
-              if ( confirm("Vous allez envoyer un SMS à "+ nbdest +" personnes.\nATTENTION l'envoi de ces SMS a un coût.\nContinuer?"))
+              if ( confirm("Vous allez envoyer un SMS Ã  "+ nbdest +" personnes.\nATTENTION l'envoi de ces SMS a un coÃ»t.\nContinuer?"))
                    confirmed = 1;
             else return;
         }
@@ -138,7 +138,7 @@ echo "<FORM name='formulaire' id='formulaire'>";
 $disabled='disabled';
 $credits = get_sms_credits($mysection);
 if (( check_rights($id, 23) ) and ($SMS_CONFIG[1] <> 0)) {
-    if ( intval($credits) > 0  or $credits == "Solde illimité" or $credits == "OK" ) $disabled='';
+    if ( intval($credits) > 0  or $credits == "Solde illimitÃ©" or $credits == "OK" ) $disabled='';
 }
 $sms_mode = false;
 if ( isset($_GET["mode"])) {
@@ -169,7 +169,7 @@ if ( check_rights($id, 23)){
     echo "<div align=right class='dropdown-right'><div class='alert-container'>";
     if ( $mail_allowed == 0 ) {
        echo "<div style='cursor: default;' class='alert-warning btn'>
-                Mails désactivés
+                Mails dÃ©sactivÃ©s
             </div>";
     }
     echo "<div class='btn btn-default' id='divalert' role='alert' style='width:fit-content;cursor: default;display: none;'>";
@@ -182,7 +182,7 @@ if ( check_rights($id, 23)){
 echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Créer un mail</strong></div>
+                <div class='card-title'><strong> CrÃ©er un mail</strong></div>
             </div>
             <div class='card-body graycard'>";
 
@@ -191,10 +191,10 @@ if (isset($_POST['Messagesubject']))$subject=$_POST['Messagesubject'];
 else $subject="";
 if (isset($_POST['Messagebody']))$msg=$_POST['Messagebody'];
 else $msg="";
-$msg .="\n\nEnvoyé par ".$from = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM']))." depuis ".$application_title);
+$msg .="\n\nEnvoyÃ© par ".$from = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM']))." depuis ".$application_title);
 $nbchar=strlen($msg);
           
-echo " <tr><td align=center ><b>Destinataires <i class='far fa-lightbulb fa-lg' title='Saisissez les premières lettres du nom de chaque destinataire dans le champ ci-dessous'></i></b>
+echo " <tr><td align=center ><b>Destinataires <i class='far fa-lightbulb fa-lg' title='Saisissez les premiÃ¨res lettres du nom de chaque destinataire dans le champ ci-dessous'></i></b>
         <input type='text' class='form-control form-control-sm' id='input-facebook-theme' name='liste2'/>
         <script type='text/javascript'>
         $(document).ready(function() {
@@ -202,8 +202,8 @@ echo " <tr><td align=center ><b>Destinataires <i class='far fa-lightbulb fa-lg' 
                 theme: \"facebook\",
                 $prepopulate
                 preventDuplicates: true,
-                hintText: \"Saisissez les premières lettres du nom\",
-                noResultsText: \"Aucun résultat\",
+                hintText: \"Saisissez les premiÃ¨res lettres du nom\",
+                noResultsText: \"Aucun rÃ©sultat\",
                 searchingText: \"Recherche en cours\"
             });
         });
@@ -226,7 +226,7 @@ echo " <tr id='subjectrow' name='subjectrow'  $style><td align=center >
 echo " <tr>
       <td  align=center>
           <B>Votre message</B>
-          <span class=small2>caractères</span> <input type='text' class='form-control form-control-sm flex' name='comptage' size='1' value='".$nbchar."' readonly style='width:fit-content;height: 30px;font-weight: 600;margin-top: 5px;margin-bottom: 5px;'>
+          <span class=small2>caractÃ¨res</span> <input type='text' class='form-control form-control-sm flex' name='comptage' size='1' value='".$nbchar."' readonly style='width:fit-content;height: 30px;font-weight: 600;margin-top: 5px;margin-bottom: 5px;'>
           <span id='field1'>/ <input type='text' class='form-control form-control-sm flex' name='maxchar' id='maxchar' size='1' value='".$maxchar_mail."' readonly style='width:fit-content;height: 30px;font-weight: 600;margin-top: 5px;margin-bottom: 5px;'></span>
           <BR>
           <textarea name='mymessage'  rows='12' class='form-control form-control-sm'

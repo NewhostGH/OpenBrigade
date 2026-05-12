@@ -21,7 +21,7 @@ include_once ("config.php");
 check_all(0);
 $id=$_SESSION['id'];
 
-$printed_by="imprimÈ par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y ‡ H:i");
+$printed_by="imprim√© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y √† H:i");
 $mode=intval($_GET["mode"]);
 
 if ( isset($_GET["P_ID"])) $pid=intval($_GET["P_ID"]);
@@ -70,20 +70,20 @@ function write_victime_comments($comments) {
     global  $VI_DETRESSE_VITALE, $VI_SOINS, $VI_MEDICALISE, $VI_INFORMATION, $VI_DECEDE, $VI_MALAISE, 
             $VI_TRANSPORT, $VI_VETEMENT, $VI_ALIMENTATION, $VI_TRAUMATISME, $VI_REFUS, $VI_IMPLIQUE, $VI_REPOS, $VI_REPARTI, $T_NAME, $D_NAME, $HEURE_HOPITAL;
     if ( $comments <> "" ) $comments = rtrim($comments,'.').". ";
-    if ( $VI_DETRESSE_VITALE == 1 ) $comments .= "La victime est en dÈtresse vitale. ";
-    if ( $VI_SOINS == 1 ) $comments .= "Des soins ont ÈtÈ rÈalisÈs par l'Èquipe de secouristes. ";
-    if ( $VI_MEDICALISE == 1 ) $comments .= "La victime a ÈtÈ mÈdicalisÈe. ";
-    if ( $VI_INFORMATION == 1 ) $comments .= "La personne a ÈtÈ assistÈe, ou des renseignements et informations lui ont ÈtÈ donnÈs. ";
-    if ( $VI_DECEDE == 1 ) $comments .= "La victime est dÈcÈdÈe. ";
+    if ( $VI_DETRESSE_VITALE == 1 ) $comments .= "La victime est en d√©tresse vitale. ";
+    if ( $VI_SOINS == 1 ) $comments .= "Des soins ont √©t√© r√©alis√©s par l'√©quipe de secouristes. ";
+    if ( $VI_MEDICALISE == 1 ) $comments .= "La victime a √©t√© m√©dicalis√©e. ";
+    if ( $VI_INFORMATION == 1 ) $comments .= "La personne a √©t√© assist√©e, ou des renseignements et informations lui ont √©t√© donn√©s. ";
+    if ( $VI_DECEDE == 1 ) $comments .= "La victime est d√©c√©d√©e. ";
     if ( $VI_MALAISE == 1 ) $comments .= "La victime a eu un malaise. ";
     if ( $VI_TRAUMATISME == 1 ) $comments .= "La victime souffre d'un traumatisme. ";
-    if ( $VI_REPOS == 1 ) $comments .= "La victime a ÈtÈ mise au repos sous surveillance. ";
-    if ( $VI_TRANSPORT == 1 ) $comments .= "La victime a ÈtÈ transportÈe par ".$T_NAME.", destination: ".$D_NAME.". ";
-    if ( $HEURE_HOPITAL <> '' ) $comments .= "ArrivÈe ‡ ".$HEURE_HOPITAL.". ";
-    if ( $VI_VETEMENT == 1 ) $comments .= "Des vÍtements ou une couverture ont ÈtÈ offerts ‡ la victime. ";
-    if ( $VI_ALIMENTATION == 1 ) $comments .= "Des aliments ou une boisson ont ÈtÈ offerts ‡ la victime. ";
-    if ( $VI_REFUS == 1 ) $comments .= "La victime a refusÈ d'Ítre prise en charge. ";
-    if ( $VI_IMPLIQUE == 1 ) $comments .= "La personne est seulement impliquÈe, indemne. ";
+    if ( $VI_REPOS == 1 ) $comments .= "La victime a √©t√© mise au repos sous surveillance. ";
+    if ( $VI_TRANSPORT == 1 ) $comments .= "La victime a √©t√© transport√©e par ".$T_NAME.", destination: ".$D_NAME.". ";
+    if ( $HEURE_HOPITAL <> '' ) $comments .= "Arriv√©e √† ".$HEURE_HOPITAL.". ";
+    if ( $VI_VETEMENT == 1 ) $comments .= "Des v√™tements ou une couverture ont √©t√© offerts √† la victime. ";
+    if ( $VI_ALIMENTATION == 1 ) $comments .= "Des aliments ou une boisson ont √©t√© offerts √† la victime. ";
+    if ( $VI_REFUS == 1 ) $comments .= "La victime a refus√© d'√™tre prise en charge. ";
+    if ( $VI_IMPLIQUE == 1 ) $comments .= "La personne est seulement impliqu√©e, indemne. ";
     if ( $VI_REPARTI == 1 ) $comments .= "La victime est repartie par ses propres moyens. ";
     $comments = str_replace ("  "," ",$comments);
     $comments = str_replace (" .",".",$comments);
@@ -91,7 +91,7 @@ function write_victime_comments($comments) {
     return $comments;
 }
 
-// dates et infos ÈvÈnement
+// dates et infos √©v√©nement
 $query = "SELECT distinct e.PS_ID, eh.EH_ID, DATE_FORMAT(eh.EH_DATE_DEBUT, '%d-%m-%Y') as EH_DATE_DEBUT,
           DATE_FORMAT(eh.EH_DATE_FIN, '%d-%m-%Y') as EH_DATE_FIN, e.E_LIEU, sf.NIV, s.S_PARENT,
           s.S_DESCRIPTION, s.S_ID, s.S_CODE, s.S_CITY, s.S_PDF_PAGE, e.E_LIBELLE,
@@ -161,7 +161,7 @@ while ($row = mysqli_fetch_array($result)) {
     $contact=$row["E_CONTACT_LOCAL"];
     $num_convention=$row["E_CONVENTION"];
     $contact_tel=$row["E_CONTACT_TEL"];
-    if ($contact_tel <> "" ) $contact = "".$row["E_CONTACT_LOCAL"]." (tÈl. ".$contact_tel.")";
+    if ($contact_tel <> "" ) $contact = "".$row["E_CONTACT_LOCAL"]." (t√©l. ".$contact_tel.")";
     $section=$row["S_ID"];
     $description=stripslashes($row["E_LIBELLE"]);
     $S_URL=$row["S_URL"];
@@ -239,7 +239,7 @@ while ($row = mysqli_fetch_array($result)) {
     $date2[$i]=mktime(0,0,0,$month2[$i],$day2[$i],$year2[$i]);
 
     if ( $EH_DATE_DEBUT[$i] == $EH_DATE_FIN[$i])
-        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." ‡ ".$EH_FIN[$i];
+        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." √† ".$EH_FIN[$i];
     else
         $horaire_evt[$i]="du ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$EH_DEBUT[$i]." au "
                          .date_fran($month2[$i], $day2[$i] ,$year2[$i])." ".moislettres($month2[$i])." ".$year2[$i]." ".$EH_FIN[$i];
@@ -289,16 +289,16 @@ if ( $evenement == 0 ) {
 // responsables
 
 if ( $niv == $nbmaxlevels -1 ) {
-        // cas antenne locale, on donne les infos du dÈpartement
+        // cas antenne locale, on donne les infos du d√©partement
         $query2="select S_ID, S_CODE, S_DESCRIPTION from section where S_ID=".$S_PARENT;
         $res2 = mysqli_query($dbc,$query2);
         $row2 = mysqli_fetch_array($res2);
         $section_affiche = $row2['S_DESCRIPTION'];
         $antenne_affiche = ", ".$s_description;
         if(stristr($antenne_affiche, 'canotier') <> '' ) $antenne_affiche='';
-        else if(stristr($antenne_affiche, 'non embarquÈ') <> '' ) $antenne_affiche='';
+        else if(stristr($antenne_affiche, 'non embarqu√©') <> '' ) $antenne_affiche='';
         $tmpS=$row2["S_ID"];
-        // mais on rÈcupËre le responsable de l'antenne
+        // mais on r√©cup√®re le responsable de l'antenne
         $queryy="select p.P_ID, p.P_PRENOM, p.P_NOM, g.GP_DESCRIPTION, p.P_SEXE
         from pompier p, groupe g, section_role sr
         where sr.GP_ID = g.GP_ID
@@ -313,7 +313,7 @@ if ( $niv == $nbmaxlevels -1 ) {
         $responsable_antenne = my_ucfirst($data2["P_PRENOM"])." ".strtoupper($data2["P_NOM"]);
 }
 else {
-        // cas dÈpartement ou plus haut dans l'organigramme
+        // cas d√©partement ou plus haut dans l'organigramme
         $section_affiche = $s_description;
         $antenne_affiche = "";
         $responsable_antenne = "";
@@ -323,7 +323,7 @@ $section_prefix=get_prefix_section($section_affiche);
 
 $section_president= $section_affiche;
 
-// chercher le chef ou prÈsident dÈpartemental
+// chercher le chef ou pr√©sident d√©partemental
 $queryy="select p.P_ID, p.P_PRENOM, p.P_NOM, g.GP_DESCRIPTION, p.P_SEXE, 
         sr.S_ID, s.S_DESCRIPTION, s.S_IMAGE_SIGNATURE
         from pompier p, groupe g, section_role sr, section s
@@ -342,7 +342,7 @@ if ( $num_resulty == 0) {
         $chef_long = $chef.", de ";
         $titre_prefix = "";
         $titre = "";
-        $soussigne="soussignÈ(e)";
+        $soussigne="soussign√©(e)";
         $S_IMAGE_SIGNATURE="";
 }
 else {
@@ -352,13 +352,13 @@ else {
             $titre = rtrim(str_replace(" (e)","e", $data2["GP_DESCRIPTION"]));
             $titre = rtrim(str_replace("(e)","e", $titre));
             $titre_prefix = "La ";
-            $soussigne="soussignÈe";
+            $soussigne="soussign√©e";
         }
         else {
             $titre = rtrim(str_replace(" (e)", "", $data2["GP_DESCRIPTION"]));
             $titre = rtrim(str_replace("(e)", "", $titre));
             $titre_prefix = "Le ";
-            $soussigne="soussignÈ";
+            $soussigne="soussign√©";
         }
         $S_IMAGE_SIGNATURE=$data2["S_IMAGE_SIGNATURE"];
         $chef = my_ucfirst($data2["P_PRENOM"])." ".strtoupper($data2["P_NOM"]);
@@ -382,9 +382,9 @@ if ( $S_URL <> "" or $S_EMAIL <> "" ) {
 }
 
 if ( $S_PHONE <> "" or $S_FAX <> "" ) {
-        if ( $S_PHONE <> "" ) $phoneinfos = "TÈlÈphone : ".$S_PHONE;
+        if ( $S_PHONE <> "" ) $phoneinfos = "T√©l√©phone : ".$S_PHONE;
         if ( $S_FAX <> "" and $S_PHONE <> "" )  $phoneinfos .= " - ";
-        if ( $S_FAX <> "" ) $phoneinfos .= "TÈlÈcopie : ".$S_FAX;
+        if ( $S_FAX <> "" ) $phoneinfos .= "T√©l√©copie : ".$S_FAX;
 }
 else $phoneinfos="";
 
@@ -393,7 +393,7 @@ else $C='';
 $adr = $S_ADDRESS."\n".$C.$S_ZIP_CODE." ".$S_CITY;
 
 
-// cas note de frais, pas forcÈment liÈe ‡ un ÈvÈnement
+// cas note de frais, pas forc√©ment li√©e √† un √©v√©nement
 if ( ($mode == 13 or $mode == 19 or $mode == 20) and $evenement == 0 ) {
     $section=get_section_of("$pid");
     if ( $pid <> $id ) {
@@ -402,7 +402,7 @@ if ( ($mode == 13 or $mode == 19 or $mode == 20) and $evenement == 0 ) {
     }
 }
 else {
-    // cas gÈnÈral, toujours un ÈvÈnement
+    // cas g√©n√©ral, toujours un √©v√©nement
     $nbsessions=sizeof($EH_ID);
     $last=$i-1;
 
@@ -466,7 +466,7 @@ else {
             check_all(24);
         }
     }
-    // mode gÈnÈral imprimer tous les documents
+    // mode g√©n√©ral imprimer tous les documents
     else if (! is_chef_evenement($id, $evenement) ) {
         if ( $mode == 11  and (is_operateur_pc($id,$evenement))) {
             check_all(0);
@@ -480,7 +480,7 @@ else {
         }
     }
 
-    // On rÈcupËre le type d'ÈvËnement
+    // On r√©cup√®re le type d'√©v√®nement
 
     $querydps="select TAV_ID, TA_VALEUR from type_agrement_valeur
                where TA_CODE = 'D'
@@ -538,7 +538,7 @@ if ( $mode == 15 ) {
     $pdf->MultiCell(120,14,$t,"1","C");
     $pdf->SetFont('Arial','',11);
     $pdf->SetXY(25,67);
-    $pdf->MultiCell(160,6,"Je ".$soussigne.", ".$chef_long.", convoque les personnes dÈsignÈes ci-dessous ‡ participer ‡ :","","J");            
+    $pdf->MultiCell(160,6,"Je ".$soussigne.", ".$chef_long.", convoque les personnes d√©sign√©es ci-dessous √† participer √† :","","J");            
     $pdf->SetFont('Arial','U',11);
     $pdf->SetXY(25,88);
 
@@ -551,14 +551,14 @@ if ( $mode == 15 ) {
         $y=138;
     }
     $pdf->MultiCell(50,6,
-    "Type d'activitÈ: ".
+    "Type d'activit√©: ".
     "\nTitre:".
     "\nLieu:".
     "\nAdresse exacte:".$interligne.
     "\nDates:".
     "\nPour le compte de:".
     "\nContact sur place:".
-    "\nPersonnes convoquÈes:","","L");
+    "\nPersonnes convoqu√©es:","","L");
 
     if ($cid == 0 ) $company="";
     $pdf->SetXY(75,88);
@@ -572,7 +572,7 @@ if ( $mode == 15 ) {
     "\n".$company.
     "\n".$contact,"","L");
 
-    // afficher personnel engagÈs
+    // afficher personnel engag√©s
     $pdf->SetFont('Arial','',11);
     $pdf->SetTextColor(0,0,200);
     $nom_prenom=""; $i=0; 
@@ -608,7 +608,7 @@ if ( $mode == 15 ) {
             $y = $y +10;
         $pdf->SetXY(25,$y);
         $pdf->SetFont('Arial','iu',9);
-        $pdf->MultiCell(120,7,"DÈtail:","","L");
+        $pdf->MultiCell(120,7,"D√©tail:","","L");
         $pdf->SetFont('Arial','i',9);
         $pdf->SetXY(30,$y+6);
         $pdf->MultiCell(170,4,$E_COMMENT,"","L");
@@ -663,7 +663,7 @@ if ( $mode == 15 ) {
 //=============================
 
 if ( $mode == 25 ) {
-    if ( $E_ALLOW_REINFORCEMENT == 1 ) $title="Demande de renfort au titre de la SolidaritÈ Nationale";
+    if ( $E_ALLOW_REINFORCEMENT == 1 ) $title="Demande de renfort au titre de la Solidarit√© Nationale";
     else $title="Demande de personnels et de moyens";
     $printPageNum=true;
     $pdf=new PDFEB();
@@ -717,7 +717,7 @@ if ( $mode == 25 ) {
     }
     $perso = rtrim($perso,','); 
     
-    // VÈhicules requis
+    // V√©hicules requis
     $vehic=""; $point="";$DEMANDE_SPECIFIQUE="";
     if ( $vehicules == 1 ) {
         $vehic="";
@@ -750,7 +750,7 @@ if ( $mode == 25 ) {
         }
         $vehic = rtrim($vehic,','); 
     }
-    // MatÈriel requis
+    // Mat√©riel requis
     $mat="";
     if ( $materiel == 1 ) {
         $querym="select tm.TM_ID, tm.TM_CODE
@@ -783,15 +783,15 @@ if ( $mode == 25 ) {
     $pdf->MultiCell(15,9,"Objet:","","L");
     $pdf->SetFont('Arial','',11); 
     $pdf->SetXY(40,40);
-    $pdf->MultiCell(160,9,"Participation ‡ \"".$description."\"","","L");
+    $pdf->MultiCell(160,9,"Participation √† \"".$description."\"","","L");
     $pdf->SetFont('Arial','B',15); 
     $pdf->SetXY(25,52);
     $pdf->MultiCell(160,12,$title,"1","C");
     $pdf->SetFont('Arial','',11);
     $pdf->SetXY(25,67);
-    $txt = $_chef." sollicite les moyens matÈriels et personnels comme dÈtaillÈ ci-dessous.";
+    $txt = $_chef." sollicite les moyens mat√©riels et personnels comme d√©taill√© ci-dessous.";
     if ( $E_ALLOW_REINFORCEMENT == 1 ) $txt = "Dans le cadre d'une demande de renfort, ".$txt;
-    else $txt = "Dans le cadre de l'ÈvÈnement  \"".$description."\", ".$txt;
+    else $txt = "Dans le cadre de l'√©v√©nement  \"".$description."\", ".$txt;
     $pdf->MultiCell(160,5,$txt,"","J");
     $pdf->SetFont('Arial','U',11);
     $pdf->SetXY(25,83);
@@ -802,8 +802,8 @@ if ( $mode == 25 ) {
     "\nLieu:".
     "\nPoint regroupement:".
     "\nPersonnel Requis:".
-    "\nVÈhicules Requis:".
-    "\nMatÈriel Requis:","","L");
+    "\nV√©hicules Requis:".
+    "\nMat√©riel Requis:","","L");
     
     $pdf->SetXY(65,83);
     $pdf->SetFont('Arial','B',11);
@@ -821,28 +821,28 @@ if ( $mode == 25 ) {
     $y=135;
     if ( $consignes <> "" ) {
         $pdf->SetXY(25,$y);
-        $pdf->MultiCell(120,4,"Consignes particuliËres: ".$consignes,"","J");
+        $pdf->MultiCell(120,4,"Consignes particuli√®res: ".$consignes,"","J");
         $y= $y + 4 * substr_count( $consignes, "\n" ) + 10;
     }
     if ( $DEMANDE_SPECIFIQUE <> "" ) {
         $pdf->SetXY(25,$y);
-        $pdf->MultiCell(120,4,"Demande spÈcifique: ".$DEMANDE_SPECIFIQUE,"","J");
+        $pdf->MultiCell(120,4,"Demande sp√©cifique: ".$DEMANDE_SPECIFIQUE,"","J");
         $y=$y + 4 * substr_count( $DEMANDE_SPECIFIQUE, "\n" );
     }
     
     $pdf->SetFont('Arial','',11);
     $pdf->SetXY(25,$y + 15);
-    if ( $E_ALLOW_REINFORCEMENT == 1 or $evt_principal > 0 ) $t = ", au titre de la mutualisation des compÈtences et moyens opÈrationnels des ".$levels[3]."s ";
+    if ( $E_ALLOW_REINFORCEMENT == 1 or $evt_principal > 0 ) $t = ", au titre de la mutualisation des comp√©tences et moyens op√©rationnels des ".$levels[3]."s ";
     else $t=" ";
-    $pdf->MultiCell(160,5,"Ils s'engagent ‡ participer".$t."‡ la mise en place de \"".$description."\", ÈvÈnement ".$application_title." n∞".$evenement,"","J");        
+    $pdf->MultiCell(160,5,"Ils s'engagent √† participer".$t."√† la mise en place de \"".$description."\", √©v√©nement ".$application_title." n¬∞".$evenement,"","J");        
     
     if ( $E_ALLOW_REINFORCEMENT == 1 or $evt_principal > 0 ) {
         $y=175;
         $pdf->SetFont('Arial','B',14); 
         $pdf->SetXY(25,$y);
         if (  $evt_principal > 0 ) $t=$S_CODE;
-        else $t = "N∞ . . . .";
-        $pdf->MultiCell(160,9,"Engagement souhaitÈ ".$levels[3]." ".$t." ","1","C");
+        else $t = "N¬∞ . . . .";
+        $pdf->MultiCell(160,9,"Engagement souhait√© ".$levels[3]." ".$t." ","1","C");
 
         $pdf->SetFont('Arial','',11);
         $pdf->SetXY(25,$y + 15);
@@ -851,15 +851,15 @@ if ( $mode == 25 ) {
             else $t="du ".$EH_DATE_DEBUT[1]." au ".$EH_DATE_FIN[$nbsessions];
         }
         else $t = "du . . . . . . . . . . . . . .   au . . . . . . . . . . . . ";
-        $pdf->MultiCell(160,5,"- Confirmation de la durÈe d'engagement de tous les bÈnÈvoles inscrits ".$t.".","","J");        
+        $pdf->MultiCell(160,5,"- Confirmation de la dur√©e d'engagement de tous les b√©n√©voles inscrits ".$t.".","","J");        
         $pdf->SetXY(25,$y + 27);
         if (  $evt_principal > 0 ) $t=$evenement;
         else $t=". . . . . .";
-        $pdf->MultiCell(160,5,"- Evenement ".$application_title." crÈÈ avec personnels, vÈhicules et matÈriel sous le numÈro: ".$t,"","J");   
+        $pdf->MultiCell(160,5,"- Evenement ".$application_title." cr√©√© avec personnels, v√©hicules et mat√©riel sous le num√©ro: ".$t,"","J");   
         $pdf->SetXY(25,$y + 35);
-        if (  $evt_principal > 0 ) $t=$EH_DATE_DEBUT[1]." ‡ ".$EH_DEBUT[1];
+        if (  $evt_principal > 0 ) $t=$EH_DATE_DEBUT[1]." √† ".$EH_DEBUT[1];
         else $t=". . . . . . . . . . . . . ";
-        $pdf->MultiCell(160,5,"- ArrivÈe souhaitÈe (date et heure): ".$t.".","","J");
+        $pdf->MultiCell(160,5,"- Arriv√©e souhait√©e (date et heure): ".$t.".","","J");
         $pdf->SetXY(25,$y + 42);
         $t="par email: . . . . . . . . . . . . . . . . . . . . . .par TPH . . . . . . . . . . . . . . . . .";
         if ( $evt_principal > 0 ) {
@@ -869,12 +869,12 @@ if ( $mode == 25 ) {
             if ($rowA["P_ID"] <> '' ) 
                 $t="de ".my_ucfirst($rowA["P_PRENOM"])." ".strtoupper($rowA["P_NOM"])." par email ".$rowA["P_EMAIL"]." ou par TPH au ".phone_display_format($rowA["P_PHONE"]);
         } 
-        $pdf->MultiCell(160,5,"- Attendre avant engagement le retour du prÈsent document pour validation ".$t." et par rattachement du renfort sur l'ÈvÈnement principal ".$application_title.".","","J");     
+        $pdf->MultiCell(160,5,"- Attendre avant engagement le retour du pr√©sent document pour validation ".$t." et par rattachement du renfort sur l'√©v√©nement principal ".$application_title.".","","J");     
 
         $y=250;
         $pdf->SetFont('Arial','B',14); 
         $pdf->SetXY(25,$y);
-        $pdf->MultiCell(160,9,"Validation \"Responsable ÈvÈnement principal ".$application_title."\"","1","C");
+        $pdf->MultiCell(160,9,"Validation \"Responsable √©v√©nement principal ".$application_title."\"","1","C");
         $pdf->SetXY(25,$y+ 10);
         $pdf->MultiCell(160,10,"OUI - NON","","C");
     }
@@ -888,7 +888,7 @@ if ( $mode == 25 ) {
 
 
 //=============================
-// produits consommÈs
+// produits consomm√©s
 //=============================
 
 if ( $mode == 27 ) {
@@ -898,7 +898,7 @@ if ( $mode == 27 ) {
     $pdf->SetCreator($organisateur);
     $pdf->SetAuthor($organisateur);
     $pdf->SetDisplayMode('fullpage','single');
-    $pdf->SetTitle("Consommables utilisÈs");
+    $pdf->SetTitle("Consommables utilis√©s");
     $pdf->SetAutoPageBreak(0);    
     $pdf->AddPage();
     $pdf->SetFont('Arial','B',20); 
@@ -914,10 +914,10 @@ if ( $mode == 27 ) {
         }
     }
 
-    $pdf->MultiCell(120,14,"Produits Consommables utilisÈs","1","C");
+    $pdf->MultiCell(120,14,"Produits Consommables utilis√©s","1","C");
     $pdf->SetFont('Arial','',11);
     $pdf->SetXY(25,67);
-    $pdf->MultiCell(160,6,"Voici la liste des produits consommables utilisÈs au cours de la mission suivante:","","J");            
+    $pdf->MultiCell(160,6,"Voici la liste des produits consommables utilis√©s au cours de la mission suivante:","","J");            
     $pdf->SetFont('Arial','U',11);
     $pdf->SetXY(25,75);
     $pdf->MultiCell(50,6,
@@ -939,7 +939,7 @@ if ( $mode == 27 ) {
     "\n".$periode.
     "\n".$company,"","L");
 
-    // afficher produits consommÈs
+    // afficher produits consomm√©s
     $pdf->SetFont('Arial','',9);
     $pdf->SetTextColor(0,0,200);
     $y=115;
@@ -979,7 +979,7 @@ if ( $mode == 27 ) {
             else {
                 $S_ID=$organisateur;
             }
-            // affiche catÈgorie
+            // affiche cat√©gorie
             if ( $CC_NAME <> $prevCC_NAME) {
                 if ( $y > 240 ) {
                     $y=40;
@@ -1013,7 +1013,7 @@ if ( $mode == 27 ) {
     $pdf->SetXY(10,265);
     $pdf->SetFont('Arial','',6);
     $pdf->MultiCell(100,5,$printed_by,"","L");
-    $pdf->Output("Produits_consommables_utilisÈs_".$evenement.".pdf",'I');
+    $pdf->Output("Produits_consommables_utilis√©s_".$evenement.".pdf",'I');
 }    
     
 //=============================
@@ -1073,7 +1073,7 @@ if ( $mode == 4 ) {
     $pdf->MultiCell(120,14,$t,"1","C");
     $pdf->SetFont('Arial','',11);
     $pdf->SetXY(25,67);
-    $pdf->MultiCell(160,6,"Je ".$soussigne.", ".$chef_long.", autorise les personnes dÈsignÈes ci-dessous ‡ participer ‡ la mission suivante.","","J");            
+    $pdf->MultiCell(160,6,"Je ".$soussigne.", ".$chef_long.", autorise les personnes d√©sign√©es ci-dessous √† participer √† la mission suivante.","","J");            
     $pdf->SetFont('Arial','U',11);
     $pdf->SetXY(25,88);
     $pdf->MultiCell(50,6,
@@ -1104,7 +1104,7 @@ if ( $mode == 4 ) {
 
 
 
-    // afficher personnel engagÈs
+    // afficher personnel engag√©s
     $pdf->SetFont('Arial','',9);
     $pdf->SetTextColor(0,0,200);
     $nom_prenom=""; $i=0;
@@ -1134,7 +1134,7 @@ if ( $mode == 4 ) {
     }
     $pdf->SetTextColor(0,0,0);
         
-    // vÈhicules engagÈs
+    // v√©hicules engag√©s
     $query="select distinct ev.E_CODE, s.S_CODE, v.V_ID, v.V_IMMATRICULATION, v.TV_CODE, v.V_MODELE, v.V_INDICATIF
         from evenement_vehicule ev, vehicule v, evenement e, section s
         where v.V_ID = ev.V_ID
@@ -1154,7 +1154,7 @@ if ( $mode == 4 ) {
         $pdf->SetXY(25,$y);
         $pdf->SetFont('Arial','U',11);
         $pdf->SetTextColor(0,0,0);
-        $pdf->MultiCell(120,7,"Les vÈhicules suivants seront utilisÈs:","","L");
+        $pdf->MultiCell(120,7,"Les v√©hicules suivants seront utilis√©s:","","L");
         $pdf->SetFont('Arial','',9);
         $pdf->SetTextColor(0,0,200);
         while ($data = mysqli_fetch_array($result)) {
@@ -1176,7 +1176,7 @@ if ( $mode == 4 ) {
         $pdf->SetXY(25,$y);
         $pdf->SetFont('Arial','iu',9);
         $pdf->SetTextColor(0,0,0);
-        $pdf->MultiCell(120,7,"DÈtail:","","L");
+        $pdf->MultiCell(120,7,"D√©tail:","","L");
         $pdf->SetFont('Arial','i',9);
         $pdf->SetXY(30,$y+6);
         $pdf->MultiCell(170,4,$E_COMMENT,"","L");
@@ -1327,7 +1327,7 @@ $pdf->Output("Convention_".$evenement.".pdf",'I');
 }
 
 //=============================
-// Fiche Èvaluation formation
+// Fiche √©valuation formation
 //=============================
 
 else if ( $mode == 3 ) {
@@ -1353,14 +1353,14 @@ $pdf->SetDrawColor(0,0,0);
 $pdf->SetTextColor(0,0,0);
 $pdf->SetFont('Arial','B',12);
 $pdf->SetXY(10,200);
-$pdf->Write(5,"- Quelle est votre satisfaction globale vis ‡ vis du stage ?");
+$pdf->Write(5,"- Quelle est votre satisfaction globale vis √† vis du stage ?");
 $pdf->SetXY(10,215);
 $pdf->Write(5,"- Quels sont les points positifs de cette formation ?");
 $pdf->SetXY(10,230);
-$pdf->Write(5,"- Quels sont les points nÈgatifs de cette formation ?");
+$pdf->Write(5,"- Quels sont les points n√©gatifs de cette formation ?");
 $pdf->SetXY(10,245);
 if ( $type == 'PSC1' ) 
-$pdf->Write(5,"- Etes-vous prÍt ‡ rÈaliser une activitÈ de citoyen de sÈcuritÈ civile ? Justifier.");
+$pdf->Write(5,"- Etes-vous pr√™t √† r√©aliser une activit√© de citoyen de s√©curit√© civile ? Justifier.");
 else
 $pdf->Write(5,"- Autres commentaires.");
 
@@ -1441,36 +1441,36 @@ $pdf->Write(5,"4");
 $pdf->SetDrawColor(0,0,0);
 $pdf->SetFont('Arial','B',12);
 $pdf->SetXY(136.5,57);
-$pdf->MultiCell(55,6,"Pertinence des mÈthodes pÈdagogiques","1","C");
+$pdf->MultiCell(55,6,"Pertinence des m√©thodes p√©dagogiques","1","C");
 $pdf->SetXY(159.5,80);
-$pdf->MultiCell(47,6,"Conditions díemploi
-et qualitÈ des outils pÈdagogiques","1","C");
+$pdf->MultiCell(47,6,"Conditions d‚Äôemploi
+et qualit√© des outils p√©dagogiques","1","C");
 $pdf->SetXY(163.5,128);
-$pdf->MultiCell(42,6,"Niveau díacquisition des savoirs","1","C");
+$pdf->MultiCell(42,6,"Niveau d‚Äôacquisition des savoirs","1","C");
 $pdf->SetXY(124.5,175);
 $pdf->MultiCell(30,6,"Niveau de la logistique","1","C");
 $pdf->SetXY(39.5,168);
-$pdf->MultiCell(30,6,"IntÈrÍt des contenus","1","C");
+$pdf->MultiCell(30,6,"Int√©r√™t des contenus","1","C");
 $pdf->SetXY(19.5,138);
-$pdf->MultiCell(28,6,"QualitÈ des formateurs","1","C");
+$pdf->MultiCell(28,6,"Qualit√© des formateurs","1","C");
 $pdf->SetXY(26,80);
-$pdf->MultiCell(27,6,"ClartÈ des objectifs","1","C");
+$pdf->MultiCell(27,6,"Clart√© des objectifs","1","C");
 $pdf->SetXY(42,62);
-$pdf->MultiCell(30,6,"QualitÈ de líorganisation","1","C");
+$pdf->MultiCell(30,6,"Qualit√© de l‚Äôorganisation","1","C");
 $pdf->SetFillColor(192,192,192);
 $pdf->SetDrawColor(0,0,0);
 $pdf->SetTextColor(255,255,255);
 $pdf->SetFont('Arial','B',10);
 $pdf->SetXY(153,153);
 $pdf->MultiCell(52,5,"Veuillez hachurer les cases
-qui correspondent ‡ votre
-apprÈciation, síil vous plait !
+qui correspondent √† votre
+appr√©ciation, s‚Äôil vous plait !
 Merci de votre collaboration !","1","C","True");
 $pdf->SetXY(3,105);
 $pdf->MultiCell(42,5,"1 = Pas du tout satisfait
 2 = Peu satisfait
 3 = Satisfait
-4 = TrËs satisfait","1","L","True");
+4 = Tr√®s satisfait","1","L","True");
 
 $pdf->SetXY(10,265);
 $pdf->SetTextColor(0,0,0);
@@ -1481,7 +1481,7 @@ $pdf->Output("Fiche_evaluation_formation_".$evenement.".pdf",'I');
 
 }
 
-// Èvaluation SST
+// √©valuation SST
 else if ( $mode == 9 ) {
 //prendre le template PDF fiche de fin de stage SST qui doit exister
 $special_template=$basedir."/images/user-specific/documents/fiche_de_fin_de_stage_SST.pdf";
@@ -1500,7 +1500,7 @@ $pdf->Write(6,$periode);
 $pdf->Output("fiche_fin_de_stage_SST.pdf",'I');
 }
 //=============================
-// fiche de prÈsence
+// fiche de pr√©sence
 //=============================
 
 else if ( $mode == 1 ) {
@@ -1521,7 +1521,7 @@ else if ( $mode == 1 ) {
     $pdf->SetCreator("$cisname - $organisateur");
     $pdf->SetAuthor("$cisname");
     $pdf->SetDisplayMode('fullpage','single');
-    $pdf->SetTitle("Fiche de prÈsence");
+    $pdf->SetTitle("Fiche de pr√©sence");
     $pdf->SetAutoPageBreak(0);
     $pdf->AliasNbPages();
 
@@ -1601,7 +1601,7 @@ else if ( $mode == 1 ) {
             $pdf->SetFillColor(200);
             $pdf->SetXY(10,$y);
             $pdf->SetFont('Arial','B',14);
-            $pdf->MultiCell(70,$smallhauteur * 2,"Nom PrÈnom",1,"L",true);
+            $pdf->MultiCell(70,$smallhauteur * 2,"Nom Pr√©nom",1,"L",true);
             $pdf->SetFont('Arial','B',8);
             $pdf->SetXY(80,$y);
             $pdf->MultiCell(25,$smallhauteur * 2,"Date naissance",1,"C",true);
@@ -1618,7 +1618,7 @@ else if ( $mode == 1 ) {
                 if ( $nbsessions==1 and $EH_DATE_DEBUT[1] == $EH_DATE_FIN[1]) {
                     $day=$EH_DATE_DEBUT[1];
                     if ( $nb_cours == 2 and $k == 1) $day = $EH_DATE_DEBUT[1]." - matin";
-                    if ( $nb_cours == 2 and $k == 2) $day = $EH_DATE_DEBUT[1]." - aprËs-midi";
+                    if ( $nb_cours == 2 and $k == 2) $day = $EH_DATE_DEBUT[1]." - apr√®s-midi";
                 }
                 elseif ( $k == 1 or $nbsessions > 1) {
                     if ( $EH_DATE_DEBUT[$k] == $EH_DATE_FIN[$k]) $day=$EH_DATE_DEBUT[$k];
@@ -1637,7 +1637,7 @@ else if ( $mode == 1 ) {
                 $time="";
                 if ( $nbsessions==1 and $EH_DATE_DEBUT[1] == $EH_DATE_FIN[1]) {
                     if ( $nb_cours == 2 and $k == 1) $time = "matin";
-                    if ( $nb_cours == 2 and $k == 2) $time = "aprËs-midi";
+                    if ( $nb_cours == 2 and $k == 2) $time = "apr√®s-midi";
                 }
                 elseif ( $k == 1 or $nbsessions > 1) {
                     $time =$EH_DEBUT[$k]."-".$EH_FIN[$k];
@@ -1707,7 +1707,7 @@ else if ( $mode == 1 ) {
     $pdf->Output("Fiche_de_presence_".$evenement.".pdf",'I');
 }
 
-// fiche de prÈsence spÈcifique SST
+// fiche de pr√©sence sp√©cifique SST
 else if ( $mode == 8 ) {
     $i=0;
     $nb_cours=4;
@@ -1720,8 +1720,8 @@ else if ( $mode == 8 ) {
     $pdf = new PDFEB();
     $pdf->SetCreator("EBrigade - FPDF");
     $pdf->SetAuthor("$cisname");
-    $pdf->SetTitle("Fiche de prÈsence");
-    $pdf->SetSubject("signatures prÈsence");
+    $pdf->SetTitle("Fiche de pr√©sence");
+    $pdf->SetSubject("signatures pr√©sence");
     $pdf->SetFont('Arial','',$fontsize);
     $pdf->SetTextColor(0,0,0); 
     $pdf->SetFillColor(255,255,255); 
@@ -1782,7 +1782,7 @@ else if ( $mode == 8 ) {
     else $y = 70;
     $y=70;
     $pdf->SetXY(10,$y);
-    $pdf->MultiCell(200,$hauteur,"RESPONSABLE DE LíENTREPRISE:  ".$company_representant,0,"L",false);
+    $pdf->MultiCell(200,$hauteur,"RESPONSABLE DE L‚ÄôENTREPRISE:  ".$company_representant,0,"L",false);
     $y = $y + 6;
     if ( $cisname == 'Protection Civile' ) $detail1=" A.D.P.C/F.N.P.C-DFE";
     else $detail1=$cisname;
@@ -1808,12 +1808,12 @@ else if ( $mode == 8 ) {
             }
             $y=$y+8;
             $pdf->SetXY(10,$y);
-            $pdf->MultiCell(55,8+6,"Nom PrÈnom",1,"C",true);
+            $pdf->MultiCell(55,8+6,"Nom Pr√©nom",1,"C",true);
             $pdf->SetXY(65,$y);
             for($k=1; $k != $nb_cours+1; $k++) {
                 $pos=65+($k-1)*$largeur;
                 $pdf->SetXY($pos,$y);
-                if ( isset($EH_DEBUT[$k])) $horaires=$EH_DEBUT[$k]." ‡ ".$EH_FIN[$k];
+                if ( isset($EH_DEBUT[$k])) $horaires=$EH_DEBUT[$k]." √† ".$EH_FIN[$k];
                 else $horaires="";
                 $pdf->MultiCell($largeur,8,"$horaires",1,"C",true);
             }
@@ -1873,7 +1873,7 @@ else if ( $mode == 8 ) {
 }
 
 //=============================
-// procËs verbal
+// proc√®s verbal
 //=============================
 
 else if ( $mode == 5 ) {
@@ -1888,7 +1888,7 @@ else if ( $mode == 5 ) {
     $pdf->SetCreator("$cisname - $organisateur");
     $pdf->SetAuthor("$cisname");
     $pdf->SetDisplayMode('fullpage','single');
-    $pdf->SetTitle("ProcËs verbal");
+    $pdf->SetTitle("Proc√®s verbal");
     $pdf->SetAutoPageBreak(0);
     $pdf->AliasNbPages();
 
@@ -1954,18 +1954,18 @@ else if ( $mode == 5 ) {
             $pdf->SetFont('Arial','B',12);
             $pdf->SetXY(60,10);
             $pdf->Text(30,11,$section_affiche." ".$antenne_affiche);
-            $pdf->Text(30,16,"ProcËs verbal de la formation ".$description);
+            $pdf->Text(30,16,"Proc√®s verbal de la formation ".$description);
             $pdf->SetFont('Arial','',10);
             
             
             $type_formation="une formation";    
             if ( $TF_CODE == 'I' ) $type_formation = "une formation initiale";
             elseif ( $TF_CODE <> "" ) $type_formation = "une ".$TF_LIBELLE;
-            $txt="‡ ".$type_formation;
-            if (substr($type,0,3) == 'PSE') $txt .=" aux premiers secours en Èquipe (".$type.")";
+            $txt="√† ".$type_formation;
+            if (substr($type,0,3) == 'PSE') $txt .=" aux premiers secours en √©quipe (".$type.")";
             $pdf->Text(30,21,"Suite ".$txt.",");
-            $pdf->Text(30,25,"qui s'est dÈroulÈe ".$periode);
-            $pdf->Text(30,29,"‡ ".$lieu);
+            $pdf->Text(30,25,"qui s'est d√©roul√©e ".$periode);
+            $pdf->Text(30,29,"√† ".$lieu);
             if ( $cid > 0 ) $pdf->Text(30,33,"pour le compte de : ".$company );
             $pdf->SetXY(0,10);            
             $pdf->SetFont('Arial','',10);
@@ -1983,7 +1983,7 @@ else if ( $mode == 5 ) {
             $pdf->SetFillColor(200);
             $pdf->SetXY(10,$y);
             $pdf->SetFont('Arial','B',14);
-            $pdf->MultiCell(75,$hauteur,"Nom PrÈnom",1,"L",true);
+            $pdf->MultiCell(75,$hauteur,"Nom Pr√©nom",1,"L",true);
             $pdf->SetFont('Arial','B',10);    
             $pdf->SetXY(85,$y);
             $pdf->MultiCell(35,$hauteur,"Date de naissance",1,"C",true);
@@ -1992,7 +1992,7 @@ else if ( $mode == 5 ) {
             $pdf->SetXY(180,$y);
             $pdf->MultiCell(30,$hauteur,"Apte",1,"C",true);
             $pdf->SetXY(210,$y);
-            $pdf->MultiCell(70,$hauteur,"N∞diplÙme",1,"C",true);
+            $pdf->MultiCell(70,$hauteur,"N¬∞dipl√¥me",1,"C",true);
             
         }
         $i=$i+1;$y=$y+$hauteur;
@@ -2031,12 +2031,12 @@ else if ( $mode == 5 ) {
     $pdf->SetTextColor(0,0,0);
     $y=min(183,$y+8);
     $pdf->SetXY(100,$y);
-    $pdf->MultiCell(50,10,"Fait ‡ ",0,"L");
+    $pdf->MultiCell(50,10,"Fait √† ",0,"L");
     $pdf->SetXY(150,$y);
     $pdf->MultiCell(80,10,"le ",0,"L");
     $y = $y + 8;
     $pdf->SetXY(10,$y);
-    $pdf->MultiCell(80,10,"Signature du responsable pÈdagogique:",0,"L");
+    $pdf->MultiCell(80,10,"Signature du responsable p√©dagogique:",0,"L");
     $pdf->SetXY(120,$y);
     $pdf->MultiCell(80,10,"Signatures formateurs:",0,"L");
     $pdf->SetXY(220,$y);
@@ -2122,7 +2122,7 @@ if ( $mode == 7 or $mode == 18) {
             $pdf->MultiCell(140,10,"Facture ".$type_evenement." ".$type,"1","C");
             $pdf->SetFont('Arial','',11);
             $pdf->SetXY(55,90);
-            $pdf->MultiCell(100,10,"Facture n∞ ".$evenement."-".$P_ID,"","C");    
+            $pdf->MultiCell(100,10,"Facture n¬∞ ".$evenement."-".$P_ID,"","C");    
             $pdf->SetXY(25,105);
             $pdf->MultiCell(160,8,$facture1,"","J");
             $y=120;
@@ -2131,7 +2131,7 @@ if ( $mode == 7 or $mode == 18) {
             $pdf->MultiCell(140,8,"Convocation ".$type_evenement." ".$type."\npour ".$nom_prenom,"1","C");
             $pdf->SetXY(25,110);
             $pdf->SetFont('Arial','',11);
-            $pdf->MultiCell(160,6,"Je ".$soussigne.", ".$chef_long.", convoque ".$TC_LIBELLE." ".$nom_prenom." ‡ participer ‡ l'ÈvÈnement suivant:","","J");
+            $pdf->MultiCell(160,6,"Je ".$soussigne.", ".$chef_long.", convoque ".$TC_LIBELLE." ".$nom_prenom." √† participer √† l'√©v√©nement suivant:","","J");
             $y=130;
         
         }
@@ -2168,7 +2168,7 @@ if ( $mode == 7 or $mode == 18) {
         if($E_DUREE_TOTALE!=''){
             $y = $y + 6;
             $pdf->SetXY(25,$y); 
-            $pdf->MultiCell(160,7,"DurÈe totale: ".$E_DUREE_TOTALE." heures","","J");
+            $pdf->MultiCell(160,7,"Dur√©e totale: ".$E_DUREE_TOTALE." heures","","J");
         }
         
         if ( $mode == 7 ) {
@@ -2191,7 +2191,7 @@ if ( $mode == 7 or $mode == 18) {
             if ( $EP_PAID == 1 ) {
                 $txt=$facture4;
                 if ( intval($MODE_PAIEMENT) > 0 )  $txt .= " par ".$TP_DESCRIPTION;
-                if ( $NUM_CHEQUE <> "" ) $txt .= ", numÈro de chËque: ".$NUM_CHEQUE;
+                if ( $NUM_CHEQUE <> "" ) $txt .= ", num√©ro de ch√®que: ".$NUM_CHEQUE;
                 $txt .=".";
             }
             else $txt=$facture3;
@@ -2245,7 +2245,7 @@ if ( $mode == 7 or $mode == 18) {
 
 
 //=============================
-// reÁu adhÈsion
+// re√ßu adh√©sion
 //=============================
 
 if ( $mode == 19) {
@@ -2257,7 +2257,7 @@ if ( $mode == 19) {
     $pdf->SetCreator("$cisname");
     $pdf->SetAuthor("$cisname");
     $pdf->SetDisplayMode('fullpage','single');
-    $pdf->SetTitle("ReÁu d'adhÈsion");
+    $pdf->SetTitle("Re√ßu d'adh√©sion");
     $pdf->SetAutoPageBreak(0);
 
     $query="SELECT p.P_ID, p.P_SEXE, p.P_NOM, p.P_PRENOM, date_format(p.P_DATE_ENGAGEMENT , '%d-%m-%Y') P_DATE_ENGAGEMENT,
@@ -2301,14 +2301,14 @@ if ( $mode == 19) {
     $pdf->SetFont('Arial','B',18); 
     $pdf->SetXY(35,80);
     
-    $pdf->MultiCell(140,10,"ReÁu d'adhÈsion\npour ".$nom_prenom,"1","C");
+    $pdf->MultiCell(140,10,"Re√ßu d'adh√©sion\npour ".$nom_prenom,"1","C");
     $pdf->SetXY(25,125);
     $pdf->SetFont('Arial','',11);
     $msg="Je ".$soussigne.", ".$chef_long.", atteste que ".$TC_LIBELLE." ".$nom_prenom;
-    $adherent="membre bÈnÈvole";
+    $adherent="membre b√©n√©vole";
 
     if ( $P_OLD_MEMBER > 0 )
-        $msg .= " a ÈtÈ $adherent de notre association du ".$P_DATE_ENGAGEMENT." au ".$P_FIN;
+        $msg .= " a √©t√© $adherent de notre association du ".$P_DATE_ENGAGEMENT." au ".$P_FIN;
     else 
         $msg .=" est $adherent de notre association depuis le ".$P_DATE_ENGAGEMENT.".";
 
@@ -2403,15 +2403,15 @@ if ( $mode == 20) {
     $pdf->MultiCell(140,10,"Facture cotisation\npour ".$nom_prenom,"1","C");
     $pdf->SetXY(25,125);
     $pdf->SetFont('Arial','',11);
-    $msg=$TC_LIBELLE." ".strtoupper($row['P_NOM']).", veuillez trouver la facture correspondant ‡ votre cotisation pour ".$section_prefix." ".$section_affiche;
+    $msg=$TC_LIBELLE." ".strtoupper($row['P_NOM']).", veuillez trouver la facture correspondant √† votre cotisation pour ".$section_prefix." ".$section_affiche;
     $pdf->MultiCell(160,6, $msg ,"","J");
 
     $hauteurligne=8;
     $pdf->SetXY(25,$pdf->GetY()+8);
     $pdf->SetFillColor(221,221,221); 
     $colonnes=array(90,20,20,15,30);
-    $pdf->Cell($colonnes[0],$hauteurligne,"LibellÈ",1,0,"L",true);
-    $pdf->Cell($colonnes[1],$hauteurligne,"QtÈ",1,0,"C",true);
+    $pdf->Cell($colonnes[0],$hauteurligne,"Libell√©",1,0,"L",true);
+    $pdf->Cell($colonnes[1],$hauteurligne,"Qt√©",1,0,"C",true);
     $pdf->Cell($colonnes[2],$hauteurligne,"PU",1,0,"C",true);
     $pdf->Cell($colonnes[4],$hauteurligne,"Total",1,1,"C",true);
     $pdf->SetXY(25,$pdf->GetY());
@@ -2456,7 +2456,7 @@ if ( $mode == 20) {
 }
 
 //=============================
-// attestations de prÈsence SST
+// attestations de pr√©sence SST
 //=============================
 
 if ( $mode == 10 ) {
@@ -2507,12 +2507,12 @@ if ( $mode == 10 ) {
         $P_BIRTHDATE=$data['P_BIRTHDATE'];
         $P_BIRTHPLACE=$data['P_BIRTHPLACE'];
 
-        if ( $P_SEXE == 'M' ) $born ="NÈ";
-        else $born ="NÈe";
+        if ( $P_SEXE == 'M' ) $born ="N√©";
+        else $born ="N√©e";
         if ( $nom_naissance <> "" ) $born .= " ".$nom_naissance.",";
         
         $born .= " le ".$P_BIRTHDATE;
-        if ( $P_BIRTHPLACE <> '' ) $born .= " ‡ ".$P_BIRTHPLACE;
+        if ( $P_BIRTHPLACE <> '' ) $born .= " √† ".$P_BIRTHPLACE;
         
         $pdf->AddPage();
         $pdf->SetTextColor(0,0,0);
@@ -2559,7 +2559,7 @@ if ( $mode == 10 ) {
         if ( strlen($E_ADDRESS) > 80 ) $y = $y+ 12;
         else $y = $y +6;
         $pdf->SetXY(40,$y);
-        $pdf->MultiCell(180,6,"DurÈe: ".$E_DUREE_TOTALE." heures.","","L");
+        $pdf->MultiCell(180,6,"Dur√©e: ".$E_DUREE_TOTALE." heures.","","L");
 
         $pdf->SetXY(110,208);    
         $pdf->MultiCell(100,6,$lig5,"","J");
@@ -2568,7 +2568,7 @@ if ( $mode == 10 ) {
         $pdf->MultiCell(100,6,$lig6,"","J");
         $pdf->SetFont('Arial','',10);
         $pdf->SetXY(110,222);    
-        $pdf->MultiCell(100,6,"Fait ‡ ".$lieu.", le ".$maxdate,"","J");
+        $pdf->MultiCell(100,6,"Fait √† ".$lieu.", le ".$maxdate,"","J");
 
         
         $pdf->SetXY(13,265);
@@ -2591,8 +2591,8 @@ if ( $mode == 11 ) {
 
     if ( $ACCES_RESTREINT == 1 ) {
         if (! check_rights($id,26, intval("$section")) and ! is_inscrit($id,$evenement) and ! in_array($id, $chefs) and $E_CREATED_BY <> $id) {
-                write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'ÈvÈnement n∞".$evenement."<br>
-                    Car son accËs est restreint aux inscrits et aux personnes ayant la permission n∞26.<p align=center>
+                write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'√©v√©nement n¬∞".$evenement."<br>
+                    Car son acc√®s est restreint aux inscrits et aux personnes ayant la permission n¬∞26.<p align=center>
                     <a href=\"javascript:history.back(1)\">Retour</a> ",10,0);
                 exit;
         }
@@ -2608,7 +2608,7 @@ if ( $mode == 11 ) {
     $pdf->AddPage();
     $pdf->SetFont('Arial','B',14); 
     $pdf->SetXY(30,48);
-    if ( $te_code == 'REU' or $te_code == 'WEB' or $CEV_CODE == 'C_STA') $pdf->MultiCell(150,12,"Compte rendu de rÈunion","1","C");
+    if ( $te_code == 'REU' or $te_code == 'WEB' or $CEV_CODE == 'C_STA') $pdf->MultiCell(150,12,"Compte rendu de r√©union","1","C");
     else $pdf->MultiCell(150,12,"Rapport: ".$type_evenement,"1","C");
         
     $pdf->SetFont('Arial','',11);
@@ -2628,7 +2628,7 @@ if ( $mode == 11 ) {
     }
     if ( $te_code == 'REU' or $te_code == 'WEB' or $CEV_CODE == 'C_STA') {
         $pdf->SetXY(15,$y);
-        $pdf->MultiCell(180,5,"Veuillez trouver ci dessous le compte rendu de la rÈunion:","","L");
+        $pdf->MultiCell(180,5,"Veuillez trouver ci dessous le compte rendu de la r√©union:","","L");
         $y=$y+5;
     }
     else {
@@ -2685,7 +2685,7 @@ if ( $mode == 11 ) {
             $pdf->Image("./images/bullet_black_small.png", 15, $y, 4);
             $pdf->MultiCell(180,5, $iv,"","L");
             $y = $y+5;
-            // dÈtail victimes
+            // d√©tail victimes
             $stats=get_detailed_stats($evenement);
             $pdf->SetFont('Arial','',10);
             $lst = explode (", ", $stats);
@@ -2703,7 +2703,7 @@ if ( $mode == 11 ) {
     }
     
     if ( $show_vehicules == 1) {
-        // nb vÈhicules
+        // nb v√©hicules
         $query="select TV_CODE, count(distinct evenement_vehicule.V_ID)
                 from evenement_vehicule, vehicule
                 where E_CODE in (".$evts.") 
@@ -2721,9 +2721,9 @@ if ( $mode == 11 ) {
         $y=$y+5;
         $pdf->SetXY(20,$y);
         $pdf->Image("./images/bullet_black_small.png", 15, $y, 4);
-        if ( $NB > 1 ) $engages="vÈhicules";
-        else $engages="vÈhicule";
-        $pdf->MultiCell(180,5,"VÈhicules engagÈs: ".$NB." ".$engages,"","L");
+        if ( $NB > 1 ) $engages="v√©hicules";
+        else $engages="v√©hicule";
+        $pdf->MultiCell(180,5,"V√©hicules engag√©s: ".$NB." ".$engages,"","L");
         if ( $detail <> "") {
             $detail = substr($detail,0,strlen($detail)-2);
             $y=$y+5;
@@ -2734,7 +2734,7 @@ if ( $mode == 11 ) {
     }
 
     if ( $show_materiel == 1) {
-        // nb matÈriels
+        // nb mat√©riels
         $query="select tm.TM_CODE, sum(em.EM_NB) as NB 
         from evenement_materiel em, materiel m, type_materiel tm
         where em.E_CODE in (".$evts.")
@@ -2756,9 +2756,9 @@ if ( $mode == 11 ) {
         $pdf->SetXY(20,$y);
         $pdf->Image("./images/bullet_black_small.png", 15, $y, 4);
         $pdf->SetFont('Arial','',11);
-        if ( $NB > 1 ) $engages="ÈlÈments";
-        else $engages="ÈlÈment";
-        $pdf->MultiCell(180,5,"MatÈriel engagÈ: ".$NB." ".$engages,"","L");
+        if ( $NB > 1 ) $engages="√©l√©ments";
+        else $engages="√©l√©ment";
+        $pdf->MultiCell(180,5,"Mat√©riel engag√©: ".$NB." ".$engages,"","L");
         if ( $detail <> "" ) {
             $detail = substr($detail,0,strlen($detail)-2);
             $y=$y+5;
@@ -2768,7 +2768,7 @@ if ( $mode == 11 ) {
         }
         $y= $y + round(strlen($detail)/ 200) * 8 + 3;
     }
-    $rl = 75; // nb max de caractËres par ligne de commentaire
+    $rl = 75; // nb max de caract√®res par ligne de commentaire
     $np = 45; // $y sur nouvelle page
 
     if ( $show_cav ==  1 ) {
@@ -2812,19 +2812,19 @@ if ( $mode == 11 ) {
                 
                 $pdf->SetTextColor(0,0,200);
                 $pdf->SetFont('Arial','I',9);
-                $txt=$DATE_ENTREE." ‡ ".$HEURE_ENTREE;
-                if ( $HEURE_SORTIE <> '' ) $txt .= ", sortie ‡ ".$HEURE_SORTIE;
+                $txt=$DATE_ENTREE." √† ".$HEURE_ENTREE;
+                if ( $HEURE_SORTIE <> '' ) $txt .= ", sortie √† ".$HEURE_SORTIE;
                 $txt .=" - Victime: ";
                 if ( $VI_NUMEROTATION <> "" ) $txt .= "V".$VI_NUMEROTATION.", ";
                 $txt .= $VI_PRENOM." ".$VI_NOM;
-                if ( $VI_SEXE == 'F' ) $txt .= ", fÈminin";
+                if ( $VI_SEXE == 'F' ) $txt .= ", f√©minin";
                 else $txt .= ", masculin";
                 if ($VI_AGE <> "" ) $txt .= " ".$VI_AGE." ans";
                 if ( $VI_PAYS > 0 ) $txt .= ", ".$NOM_PAYS;
                 
                 if ( $VI_BIRTHDATE <> '' ) {
-                    if ( $VI_SEXE == 'M' ) $txt .= ", nÈ le ";
-                        else  $txt .= ", nÈe le ";
+                    if ( $VI_SEXE == 'M' ) $txt .= ", n√© le ";
+                        else  $txt .= ", n√©e le ";
                         $txt .= $VI_BIRTHDATE;
                 }
                 $y=$y+7;
@@ -2857,7 +2857,7 @@ if ( $mode == 11 ) {
         date_format(e.EL_FIN,'%d-%m') DATE_FIN, date_format(e.EL_FIN,'%H:%i') HEURE_FIN, e.EL_IMPORTANT,
         e.EL_TITLE, e.EL_ADDRESS,e.EL_COMMENTAIRE,e.EL_RESPONSABLE, p.P_NOM, p.P_PRENOM, Null as E_LIBELLE, 
         tel.TEL_DESCRIPTION, e.EL_ORIGINE, e.EL_DESTINATAIRE, TIMESTAMPDIFF(MINUTE,e.EL_DEBUT,e.EL_DATE_ADD) TIMEDIFF ,
-        date_format(e.EL_DATE_ADD,'le %d-%m-%Y ‡ %H:%i') DATE_ADD,
+        date_format(e.EL_DATE_ADD,'le %d-%m-%Y √† %H:%i') DATE_ADD,
         date_format(e.EL_SLL,'%H:%i') HEURE_SLL,
         TIMESTAMPDIFF(MINUTE,e.EL_DATE_ADD,NOW()) NEW, date_format(e.EL_DEBUT,'%Y-%m-%d') EL_DEBUT
         from evenement_log e left join pompier p on p.P_ID = e.EL_RESPONSABLE,
@@ -2868,7 +2868,7 @@ if ( $mode == 11 ) {
     $query.=" union select e.EL_ID, e.E_CODE, e.TEL_CODE ,date_format(e.EL_DEBUT,'%d-%m-%Y') DATE_DEBUT, date_format(e.EL_DEBUT,'%H:%i') HEURE_DEBUT, date_format(e.EL_FIN,'%d-%m') DATE_FIN, date_format(e.EL_FIN,'%H:%i') HEURE_FIN, e.EL_IMPORTANT,
     e.EL_TITLE, e.EL_ADDRESS,e.EL_COMMENTAIRE,e.EL_RESPONSABLE, p.P_NOM, p.P_PRENOM, evenement.E_LIBELLE,
     tel.TEL_DESCRIPTION, e.EL_ORIGINE, e.EL_DESTINATAIRE, TIMESTAMPDIFF(MINUTE,e.EL_DEBUT,e.EL_DATE_ADD) TIMEDIFF ,
-    date_format(e.EL_DATE_ADD,'le %d-%m-%Y ‡ %H:%i') DATE_ADD,
+    date_format(e.EL_DATE_ADD,'le %d-%m-%Y √† %H:%i') DATE_ADD,
     date_format(e.EL_SLL,'%H:%i') HEURE_SLL,
     TIMESTAMPDIFF(MINUTE,e.EL_DATE_ADD,NOW()) NEW, date_format(e.EL_DEBUT,'%Y-%m-%d') EL_DEBUT
     FROM evenement_log e left join pompier p on p.P_ID = e.EL_RESPONSABLE,evenement, type_evenement_log tel
@@ -2928,7 +2928,7 @@ if ( $mode == 11 ) {
                 else $y=$y+2;
             }
             $detail="";
-            // Èquipes engagÈes sur l'intervention
+            // √©quipes engag√©es sur l'intervention
             $query5="select ee.EE_ID, ee.EE_NAME
             from evenement_equipe ee, intervention_equipe ie 
             where ie.E_CODE=ee.E_CODE 
@@ -2943,13 +2943,13 @@ if ( $mode == 11 ) {
                 $eqnames .= " ".$row5["EE_NAME"].",";
             }
             if ( $nbequipes > 0 ) {
-                if ( $nbequipes == 1 ) $detail .="Equipe engagÈe: ";
-                else $detail .="Equipes engagÈes: ";
+                if ( $nbequipes == 1 ) $detail .="Equipe engag√©e: ";
+                else $detail .="Equipes engag√©es: ";
                 $detail .=rtrim($eqnames,",").". ";
             }
             
             if ( $EL_RESPONSABLE <> "" ) $detail .="Responsable: ".$P_PRENOM." ".$P_NOM.". ";
-            if ( $HEURE_SLL <> "" ) $detail .="ArrivÈe sur les lieux: ".$HEURE_SLL.". ";
+            if ( $HEURE_SLL <> "" ) $detail .="Arriv√©e sur les lieux: ".$HEURE_SLL.". ";
             if ( $HEURE_FIN <> "" ) $detail .="Fin intervention: ".$HEURE_FIN.". ";
             if ( $detail <> "" ) {
                 $pdf->SetFont('Arial','',10);
@@ -2999,14 +2999,14 @@ if ( $mode == 11 ) {
                     $txt="Personne prise en charge: ";
                     if ( $VI_NUMEROTATION <> "" ) $txt .= "V".$VI_NUMEROTATION.", ";
                     $txt .= $VI_PRENOM." ".$VI_NOM;
-                    if ( $VI_SEXE == 'F' ) $txt .= ", fÈminin";
+                    if ( $VI_SEXE == 'F' ) $txt .= ", f√©minin";
                     else $txt .= ", masculin";
                     if ($age <> "" ) $txt .= " ".$age." ans";
                     if ( $VI_PAYS > 0 ) $txt .= ", ".$NOM_PAYS;
                     
                     if ( $VI_BIRTHDATE <> '' ) {
-                        if ( $VI_SEXE == 'M' ) $txt .= ", nÈ le ";
-                        else  $txt .= ", nÈe le ";
+                        if ( $VI_SEXE == 'M' ) $txt .= ", n√© le ";
+                        else  $txt .= ", n√©e le ";
                         $txt .= $VI_BIRTHDATE;
                     }
                     $pdf->MultiCell(170,5, $txt,"","J");
@@ -3123,24 +3123,24 @@ else if ( $mode == 13 ) {
 
     $num_comptable = $NF_CODE1." / ".str_pad($NF_CODE2, 2, '0', STR_PAD_LEFT)." / ".str_pad($NF_CODE3,3, '0' , STR_PAD_LEFT);
     $pdf->SetFont('Arial','B',14);
-    $pdf->Text(60,17,"Note de frais ".$note.". N∞ comptable  ".$num_comptable);
+    $pdf->Text(60,17,"Note de frais ".$note.". N¬∞ comptable  ".$num_comptable);
     $pdf->SetXY(0,10);
     
     if ( $NF_NATIONAL == 1 ) $TM_DESCRIPTION ="National, ".$TM_DESCRIPTION;
-    else if ( $NF_DEPARTEMENTAL == 1 ) $TM_DESCRIPTION ="DÈpartemental, ".$TM_DESCRIPTION;
+    else if ( $NF_DEPARTEMENTAL == 1 ) $TM_DESCRIPTION ="D√©partemental, ".$TM_DESCRIPTION;
     $pdf->SetFont('Arial','B',11);
     $pdf->MultiCell(0,10,"$TM_DESCRIPTION",0,"R",0);
 
     $y=35;
     if ( $evenement > 0 ) {
         $pdf->SetFont('Arial','B',11);
-        $pdf->Text(12,$y,"Evenement concernÈ: ");
+        $pdf->Text(12,$y,"Evenement concern√©: ");
         $pdf->SetFont('Arial','',10);
         $pdf->Text(60,$y,$type_evenement." - ".$description." - ".$periode);
         $y += 6;
     }
     $pdf->SetFont('Arial','B',11);
-    $pdf->Text(12,$y,"BÈnÈficiaire: ");
+    $pdf->Text(12,$y,"B√©n√©ficiaire: ");
     $pdf->SetFont('Arial','',10);
     $pdf->Text(60,$y,$BENEFICIAIRE);
     $y += 6;
@@ -3150,7 +3150,7 @@ else if ( $mode == 13 ) {
         $pdf->SetFont('Arial','',10);
         $pdf->Text(60,$y,$ADDRESS);
         $pdf->SetFont('Arial','B',11);
-        $pdf->Text(210,$y,"TÈlÈphone:");
+        $pdf->Text(210,$y,"T√©l√©phone:");
         $pdf->SetFont('Arial','',10);
         $pdf->Text(235,$y,$P_PHONE);
         $y += 6;
@@ -3176,7 +3176,7 @@ else if ( $mode == 13 ) {
     $pdf->SetXY(160,$y);
     $pdf->MultiCell(80,$hauteur,"Commentaire",1,"C",true);
     $pdf->SetXY(240,$y);
-    $pdf->MultiCell(20,$hauteur,"QuantitÈ",1,"C",true);
+    $pdf->MultiCell(20,$hauteur,"Quantit√©",1,"C",true);
     $pdf->SetXY(260,$y);
     $pdf->MultiCell(20,$hauteur,"Montant",1,"C",true);
 
@@ -3233,8 +3233,8 @@ else if ( $mode == 13 ) {
     $pdf->MultiCell(20,$hauteur,my_number_format($SUM)." ".$default_money_symbol,1,"C",true);
     
     if ( $syndicate == 1 ) {
-        $label1="Validation trÈsorier";
-        $label2="Validation prÈsident";
+        $label1="Validation tr√©sorier";
+        $label2="Validation pr√©sident";
     } else {
         $label1="Validation";
         $label2="Validation 2";
@@ -3244,7 +3244,7 @@ else if ( $mode == 13 ) {
     $pdf->SetFillColor(200);
     $pdf->SetFont('Arial','B',10);
     $pdf->SetXY(10,$y);
-    $pdf->MultiCell(68,$hauteur,"CrÈation",1,"C",true);    
+    $pdf->MultiCell(68,$hauteur,"Cr√©ation",1,"C",true);    
     $pdf->SetXY(78,$y);
     $pdf->MultiCell(68,$hauteur,$label1,1,"C",true);
     $pdf->SetXY(146,$y);
@@ -3311,7 +3311,7 @@ else if ( $mode == 13 ) {
                 }
                 $pdf->AddPage();
                 $pdf->SetFont('Arial','B',12);
-                $pdf->Text(10,10,"Note de frais N∞".$note." pour ".$BENEFICIAIRE.", justificatif n∞".$i);
+                $pdf->Text(10,10,"Note de frais N¬∞".$note." pour ".$BENEFICIAIRE.", justificatif n¬∞".$i);
                 $pdf->Image($mypath."/".$file,15,15,0,180);
                 $pdf->SetXY(10,200);
                 $pdf->SetFont('Arial','',6);
@@ -3415,7 +3415,7 @@ else if ( $mode == 17 or $mode == 16 ) {
         $numcav=intval($CAV_ID);
         if ( $IDENTIFICATION <> "" ) $IDENTIFICATION=" - identifiant: ".$IDENTIFICATION;
         
-        $pdf->Text(60,$y,"Fiche victime n∞".$VI_NUMEROTATION.$IDENTIFICATION);
+        $pdf->Text(60,$y,"Fiche victime n¬∞".$VI_NUMEROTATION.$IDENTIFICATION);
         $y=$y+6;
         $pdf->SetFont('Arial','B',11 );
         $pdf->SetXY(10,$y);
@@ -3436,10 +3436,10 @@ else if ( $mode == 17 or $mode == 16 ) {
         if ( $EL_DEBUT <> "" ) {
             $y=$y+5;
             $pdf->SetXY(10,$y);
-            $pdf->MultiCell(180,5,"Date DÈbut intervention:           ".$EL_DEBUT,"","L");
+            $pdf->MultiCell(180,5,"Date D√©but intervention:           ".$EL_DEBUT,"","L");
             $y=$y+5;
             $pdf->SetXY(10,$y);
-            $pdf->MultiCell(180,5,"Heure dÈbut:                             ".$EL_HEURE_DEBUT,"","L");
+            $pdf->MultiCell(180,5,"Heure d√©but:                             ".$EL_HEURE_DEBUT,"","L");
         }
         if ( $EL_SLL <> "" ) {
             $y=$y+5;
@@ -3466,7 +3466,7 @@ else if ( $mode == 17 or $mode == 16 ) {
         if ( $nbequipes > 0 ) {
             $y=$y+5;
             $pdf->SetXY(10,$y);
-            $pdf->MultiCell(180,5,"Equipes engagÈes:                  ".$eqnames,"","L");           
+            $pdf->MultiCell(180,5,"Equipes engag√©es:                  ".$eqnames,"","L");           
         }
         if ( $numcav > 0 ) {
             $y=$y+7;
@@ -3474,10 +3474,10 @@ else if ( $mode == 17 or $mode == 16 ) {
             $pdf->MultiCell(180,5,"Centre d'accueil des victimes:   ".$CAV_NAME,"","L");
             $y=$y+5;
             $pdf->SetXY(10,$y);
-            $pdf->MultiCell(180,5,"Date entrÈe:                               ".$DATE_ENTREE,"","L");
+            $pdf->MultiCell(180,5,"Date entr√©e:                               ".$DATE_ENTREE,"","L");
             $y=$y+5;
             $pdf->SetXY(10,$y);
-            $pdf->MultiCell(180,5,"Heure entrÈe:                             ".$HEURE_ENTREE,"","L");
+            $pdf->MultiCell(180,5,"Heure entr√©e:                             ".$HEURE_ENTREE,"","L");
             if ( $HEURE_SORTIE <> '' ) {
                 $y=$y+5;
                 if ( $DATE_SORTIE  <> $DATE_ENTREE ) {
@@ -3498,7 +3498,7 @@ else if ( $mode == 17 or $mode == 16 ) {
         $pdf->SetFont('Arial','',10 );
         $pdf->SetXY(20,$y);
         $pdf->Image("./images/bullet_black_small.png", 15, $y, 4);
-        $pdf->MultiCell(180,5,"IdentitÈ victime: ".$VI_PRENOM." ".$VI_NOM,"","L");
+        $pdf->MultiCell(180,5,"Identit√© victime: ".$VI_PRENOM." ".$VI_NOM,"","L");
         
         $y=$y+5;
         $pdf->SetXY(20,$y);
@@ -3507,7 +3507,7 @@ else if ( $mode == 17 or $mode == 16 ) {
         $y=$y+5;
         $pdf->SetXY(20,$y);
         $pdf->Image("./images/bullet_black_small.png", 15, $y, 4);
-        $pdf->MultiCell(180,5,"NationalitÈ: ".$NAME,"","L");
+        $pdf->MultiCell(180,5,"Nationalit√©: ".$NAME,"","L");
         if ( $VI_ADDRESS <> '' ) {
             $y=$y+5;
             $pdf->SetXY(20,$y);
@@ -3530,11 +3530,11 @@ else if ( $mode == 17 or $mode == 16 ) {
         $pdf->MultiCell(170,5,$comments,"","J");
         $y = $y + $nb_lignes * 5;
 
-        // bilan dÈtaillÈ
+        // bilan d√©taill√©
         $y=$y+10;
         $pdf->SetXY(10,$y);
         $pdf->SetFont('Arial','B',11 );
-        $pdf->MultiCell(180,5,"Bilan dÈtaillÈ:","","L");    
+        $pdf->MultiCell(180,5,"Bilan d√©taill√©:","","L");    
         $pdf->SetFont('Arial','',9);
         $y=$y+5;
         
@@ -3606,7 +3606,7 @@ else if ( $mode == 17 or $mode == 16 ) {
     }
     else { // fiche intervention
 
-        $pdf->Text(60,$y,"Fiche intervention n∞".$numinter);
+        $pdf->Text(60,$y,"Fiche intervention n¬∞".$numinter);
         $y=$y+6;
         $pdf->SetFont('Arial','B',11 );
         $pdf->SetXY(10,$y);
@@ -3633,9 +3633,9 @@ else if ( $mode == 17 or $mode == 16 ) {
         }
         if ( $EL_DEBUT <> "" ) {
             $y=$y+5;
-            $pdf->MultiCell(180,5,"Date DÈbut intervention:   ".$EL_DEBUT,"","L");
+            $pdf->MultiCell(180,5,"Date D√©but intervention:   ".$EL_DEBUT,"","L");
             $y=$y+5;
-            $pdf->MultiCell(180,5,"Heure dÈbut:                     ".$EL_HEURE_DEBUT,"","L");
+            $pdf->MultiCell(180,5,"Heure d√©but:                     ".$EL_HEURE_DEBUT,"","L");
         }
         if ( $EL_SLL <> "" ) {
             $y=$y+5;
@@ -3655,7 +3655,7 @@ else if ( $mode == 17 or $mode == 16 ) {
         }
         if ( $nbequipes > 0 ) {
             $y=$y+5;
-            $pdf->MultiCell(180,5,"Equipes engagÈes:          ".$eqnames,"","L");           
+            $pdf->MultiCell(180,5,"Equipes engag√©es:          ".$eqnames,"","L");           
         }
         if ( $EL_ADDRESS <> "" ) {
             $y=$y+5;
@@ -3720,7 +3720,7 @@ else if ( $mode == 17 or $mode == 16 ) {
             $pdf->MultiCell(180,5,"- Age ou date de naissance: ".$age,"","L");
             $y=$y+5;
             $pdf->SetXY(20,$y);
-            $pdf->MultiCell(180,5,"- NationalitÈ: ".$NAME,"","L");
+            $pdf->MultiCell(180,5,"- Nationalit√©: ".$NAME,"","L");
             if ( $VI_ADDRESS <> '' ) {
                 $y=$y+5;
                 $pdf->SetXY(20,$y);
@@ -3732,7 +3732,7 @@ else if ( $mode == 17 or $mode == 16 ) {
             $pdf->SetXY(10,$y);
             $pdf->SetFont('Arial','',9);
             $comments = write_victime_comments($VI_COMMENTAIRE);
-            $rl = 85; // nb max de caractËres par ligne de commentaire
+            $rl = 85; // nb max de caract√®res par ligne de commentaire
             $hauteur_commentaire=(strlen($comments) / $rl) * 4;
             $pdf->SetXY(20,$y);
             $pdf->MultiCell(170,5,"- ".$comments,"","J");
@@ -3753,7 +3753,7 @@ else if ( $mode == 17 or $mode == 16 ) {
 
 
 //===========================================================
-// fiche Bilan PSSP - Centre Accueil des impliquÈs CADI
+// fiche Bilan PSSP - Centre Accueil des impliqu√©s CADI
 //===========================================================
 
 else if ( $mode == 21 ) {
@@ -3772,7 +3772,7 @@ else if ( $mode == 21 ) {
     $pdf->SetXY(0,10);
 
     $pdf->SetXY(10,$y);
-    $pdf->MultiCell(180,5,"FICHE BILAN PSSP - Centre Accueil Des ImpliquÈs","","C");
+    $pdf->MultiCell(180,5,"FICHE BILAN PSSP - Centre Accueil Des Impliqu√©s","","C");
     $y=$y+8;
     $pdf->SetFont('Arial','B',10 );
     $pdf->SetXY(10,$y);
@@ -3783,7 +3783,7 @@ else if ( $mode == 21 ) {
     $pdf->MultiCell(180,5,"Date(s):           ".$periode,"","L");
     $y=$y+5;
     $pdf->SetXY(10,$y);
-    $pdf->MultiCell(180,5,"Fiche N∞:         ......................","","L");
+    $pdf->MultiCell(180,5,"Fiche N¬∞:         ......................","","L");
     $y=$y+7;
 
     $pdf->SetDrawColor(13,53,148);
@@ -3797,13 +3797,13 @@ else if ( $mode == 21 ) {
     $y=$y+5;
     $pdf->SetXY(10,$y);
     $pdf->SetFont('Arial','',10 );
-    $pdf->MultiCell(180,5,"Nom ........................................ PrÈnoms ........................................ Date Naissance ............................. (Age .......)","","L");
+    $pdf->MultiCell(180,5,"Nom ........................................ Pr√©noms ........................................ Date Naissance ............................. (Age .......)","","L");
     $y=$y+5;
     $pdf->SetXY(10,$y);
     $pdf->MultiCell(180,5,"Adresse .....................................................................................................................................................................","","L");
     $y=$y+5;
     $pdf->SetXY(10,$y);
-    $pdf->MultiCell(180,5,"TÈl .........................................Personne ‡ prÈvenir....................................................................................................","","L");
+    $pdf->MultiCell(180,5,"T√©l .........................................Personne √† pr√©venir....................................................................................................","","L");
     $y=$y+7;
 
     $pdf->SetDrawColor(13,53,148);
@@ -3813,7 +3813,7 @@ else if ( $mode == 21 ) {
     $y=$y+4;
     $pdf->SetFont('Arial','B',10);
     $pdf->SetXY(15,$y);
-    $pdf->MultiCell(180,5,"SIGNES REPERES (* : soins MÈdico Psychologiques)");
+    $pdf->MultiCell(180,5,"SIGNES REPERES (* : soins M√©dico Psychologiques)");
 
     $y=$y+7;
     $pdf->SetLineWidth(0.5);
@@ -3956,7 +3956,7 @@ else if ( $mode == 21 ) {
     $pdf->Rect(178, $y, 5, 5);
     $y=$y+7;
     $pdf->SetXY(140,$y);
-    $pdf->MultiCell(36,5,"accompagnÈ","","R");
+    $pdf->MultiCell(36,5,"accompagn√©","","R");
     $pdf->Rect(178, $y, 5, 5);
 
     $y=$y+7;

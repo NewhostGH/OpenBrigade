@@ -59,7 +59,7 @@ list($_ETABLISSEMENT, $_GUICHET, $_COMPTE) = explode(";",get_RIB_section("$filte
 // compte				11
 // montant en centimes	16
 // libelle prelev		31
-// code établissement 	5
+// code Ã©tablissement 	5
 // blanc 				6
 
 $code=		str_pad($A1, 12);

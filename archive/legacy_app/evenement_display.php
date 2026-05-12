@@ -162,7 +162,7 @@ $E_OPEN_TO_EXT=intval($row["E_OPEN_TO_EXT"]);
 if ( $nb == 0  ) {
     // remove cookie if set
     @setcookie("evenement", "", time()-3600);
-    write_msgbox("ERREUR", $error_pic, "Activité n°$evenement introuvable<br><p align=center>
+    write_msgbox("ERREUR", $error_pic, "ActivitÃ© nÂ°$evenement introuvable<br><p align=center>
         <a href='index.php' target='_top'><input type='submit' class='btn btn-secondary' value='Retour'></font></a> ",10,0);
     exit;
 }
@@ -170,9 +170,9 @@ else if ( $S_HIDE == 1 and $E_OPEN_TO_EXT == 0 ) {
     if (! check_rights($id,41, intval($S_ID)) and ! $is_inscrit) {
         $my_parent_section = get_section_parent($_SESSION['SES_SECTION']);
         if ( $S_PARENT <> $my_parent_section and $S_ID <> $my_parent_section ) {
-            // cas personne ayant des permissions sur une antenne du département, OK, sinon msg erreur
+            // cas personne ayant des permissions sur une antenne du dÃ©partement, OK, sinon msg erreur
             if ( ! has_role_in_dep($id, $S_ID)) {
-                write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activité n°".$evenement."<br> organisée par ".$S_CODE." <br><p align=center>
+                write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activitÃ© nÂ°".$evenement."<br> organisÃ©e par ".$S_CODE." <br><p align=center>
                 <a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
                 exit;
             }
@@ -254,13 +254,13 @@ while (custom_fetch_array($result)) {
         $E_COMMENT2=stripslashes($E_COMMENT2);
         $E_ADDRESS=stripslashes($E_ADDRESS);
         $E_HEURE_RDV=substr($E_HEURE_RDV,0,5);
-        if ( $E_EXTERIEUR == 1 ) $E_LIEU .= " <span style='background-color:yellow;'>hors département</span>";
+        if ( $E_EXTERIEUR == 1 ) $E_LIEU .= " <span style='background-color:yellow;'>hors dÃ©partement</span>";
         if ( $S_HIDE == 1 and $E_OPEN_TO_EXT == 0 ) {
             if (! check_rights($id,41, intval($S_ID))) {
                 $my_parent_section = get_section_parent($_SESSION['SES_SECTION']);
                 if ( $S_PARENT <> $my_parent_section and $S_ID <> $my_parent_section ) {
                     if ( ! has_role_in_dep($id, $S_ID)) {
-                        write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activité n°".$evenement."<br> organisée par ".$S_CODE." <br><p align=center>
+                        write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activitÃ© nÂ°".$evenement."<br> organisÃ©e par ".$S_CODE." <br><p align=center>
                         <a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
                         exit;
                     }
@@ -269,9 +269,9 @@ while (custom_fetch_array($result)) {
         }
         if ( $ACCES_RESTREINT == 1 ) {
             if (! check_rights($id,26, intval($S_ID)) and ! $is_inscrit and ! in_array($id,$chefs) and $E_CREATED_BY <> $id) {
-                write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activité n°".$evenement."<br>
-                Le type d'activité <b>$TE_LIBELLE</b> a été configuré en accès restreint par l'administrateur.
-                Seuls les inscrits et les personnes ayant la permission n°26 peuvent voir le détail.<p align=center>
+                write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activitÃ© nÂ°".$evenement."<br>
+                Le type d'activitÃ© <b>$TE_LIBELLE</b> a Ã©tÃ© configurÃ© en accÃ¨s restreint par l'administrateur.
+                Seuls les inscrits et les personnes ayant la permission nÂ°26 peuvent voir le dÃ©tail.<p align=center>
                 <a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
                 exit;
             }
@@ -302,7 +302,7 @@ while (custom_fetch_array($result)) {
                     from evenement_horaire where E_CODE=".$evenement." and EH_ID=1";
             $resultr=mysqli_query($dbc,$queryr);
             $rowr=mysqli_fetch_array($resultr);
-            $CLOSE_TIME="à ".$rowr["CLOSE_TIME"];
+            $CLOSE_TIME="Ã  ".$rowr["CLOSE_TIME"];
             $REMAINING_DAYS=intval($rowr["REMAINING_DAYS"]);
             $REMAINING= $REMAINING_DAYS * 1440 + intval($rowr["REMAINING"]);
 
@@ -335,7 +335,7 @@ while (custom_fetch_array($result)) {
 
     $very_end=$day2[$i]."-".$month2[$i]."-".$year2[$i];
     if ( $EH_DATE_DEBUT[$i] == $EH_DATE_FIN[$i])
-        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." à ".$EH_FIN[$i];
+        $horaire_evt[$i]=date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." Ã  ".$EH_FIN[$i];
     else
         $horaire_evt[$i]="\ndu ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$EH_DEBUT[$i]." au "
             .date_fran($month2[$i], $day2[$i] ,$year2[$i])." ".moislettres($month2[$i])." ".$year2[$i]." ".$EH_FIN[$i];
@@ -388,11 +388,11 @@ if ( in_array($id,$chefs) or in_array($id,$chefs_parent)) {
 
 if ( $assoc ) {
     $voircompta = check_rights($id, 29,"$S_ID");
-    // le chef de l'activité a toujours accès à ces fonctionnalités
+    // le chef de l'activitÃ© a toujours accÃ¨s Ã  ces fonctionnalitÃ©s
     if ( $chef ) {
         $voircompta = true;
     }
-    // le cadre de permanence a toujours accès à ces fonctionnalités
+    // le cadre de permanence a toujours accÃ¨s Ã  ces fonctionnalitÃ©s
     if ( get_cadre ($S_ID) == $id ) {
         $voircompta = true;
     }
@@ -430,13 +430,13 @@ $ischef=is_chef($id,$S_ID);
 $OPEN_TO_ME = 1;
 $perm_via_role=false;
 if (( $E_OPEN_TO_EXT == 0 ) and ( ! check_rights($id, 39, $S_ID) )) {
-    // hors département?
+    // hors dÃ©partement?
     if ( get_section_parent("$mysection") <> get_section_parent("$S_ID")) {
         $list = preg_split('/,/' , get_family_up("$S_ID"));
         if (! in_array($mysection,$list)) {
             $list = preg_split('/,/' , get_family("$S_ID"));
             if (! in_array($mysection,$list)) {
-                // permission sur une antenne via rôle? => permettre inscription sur tout le département
+                // permission sur une antenne via rÃ´le? => permettre inscription sur tout le dÃ©partement
                 if ( get_level("$S_ID") ==  $nbmaxlevels - 2 ) $sections_roles_list = get_family("$S_ID");
                 else if ( get_level("$S_ID") ==  $nbmaxlevels - 1 ) $sections_roles_list = get_family(get_section_parent("$S_ID"));
                 else $sections_roles_list = "$S_ID";
@@ -454,13 +454,13 @@ if (( $E_OPEN_TO_EXT == 0 ) and ( ! check_rights($id, 39, $S_ID) )) {
         }
     }
     else {
-        // je peux inscrire sur les antennes voisines mais pas les départements voisins
-        // si je suis à un niveau supérieur à antenne -> je ne peux pas m'inscrire
+        // je peux inscrire sur les antennes voisines mais pas les dÃ©partements voisins
+        // si je suis Ã  un niveau supÃ©rieur Ã  antenne -> je ne peux pas m'inscrire
         if ( get_level("$mysection") + 2 <= $nbmaxlevels  )
             $OPEN_TO_ME = 0;
     }
 }
-// activité national,régional
+// activitÃ© national,rÃ©gional
 $list = preg_split('/,/'  , get_family_up("$mysection"));
 if ( $nbsections == 0 and $mysection <> $S_ID and in_array($S_ID,$list)) {
     if ( get_level($S_ID) < $nbmaxlevels - 2  and  ! check_rights($id, 26)) {
@@ -468,7 +468,7 @@ if ( $nbsections == 0 and $mysection <> $S_ID and in_array($S_ID,$list)) {
             $OPEN_TO_ME = -2;
     }
 }
-// cas particulier un agent lambda ne doit pas s'inscrire lui même sur un activité extérieur
+// cas particulier un agent lambda ne doit pas s'inscrire lui mÃªme sur un activitÃ© extÃ©rieur
 elseif ( $nbsections == 0 and $E_OPEN_TO_EXT == 1  and ! check_rights($id, 39, $S_ID) ) {
     if ( get_section_parent("$mysection") <> $S_ID
         and  get_section_parent("$mysection") <> get_section_parent("$S_ID")) {
@@ -525,8 +525,8 @@ else $granted_consommables=false;
 
 if ( $ACCES_RESTREINT == 1 ) {
     if (! check_rights($id,26, intval($S_ID)) and ! $is_inscrit and ! $chef and $E_CREATED_BY <> $id) {
-        write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activité n°".$evenement."<br> 
-            Car son accès est restreint aux inscrits et aux personnes ayant la permission n°26.<p align=center>
+        write_msgbox("ERREUR", $error_pic, "Vous n'avez pas les permissions pour voir <br>l'activitÃ© nÂ°".$evenement."<br> 
+            Car son accÃ¨s est restreint aux inscrits et aux personnes ayant la permission nÂ°26.<p align=center>
             <a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
         exit;
     }
@@ -574,7 +574,7 @@ if ( intval($E_PARENT) > 0 ) {
 else
     $PARENT_CLOSED=0;
 
-// ajout documents générés
+// ajout documents gÃ©nÃ©rÃ©s
 if ( $granted_event ) {
     if ( $EVAL_PAR_STAGIAIRES == 1  and $competences == 1)  $NB4++;
     if ( $FACTURE_INDIV == 1  and $E_TARIF > 0 )  $NB4++;
@@ -591,7 +591,7 @@ if ( $granted_event or $is_present ) {
     if ( $ORDRE_MISSION == 1  and $E_CLOSED == 1 )  $NB4++;
 }
 
-// ajout des documents spécifiques formation ou DPS
+// ajout des documents spÃ©cifiques formation ou DPS
 $query1="select TYPE from poste where PS_ID='".$PS_ID."' union select '".$TE_CODE."'";
 $result1=mysqli_query($dbc,$query1);
 $row1=@mysqli_fetch_array($result1);
@@ -599,7 +599,7 @@ $type_doc=$row1["TYPE"];
 // documents SST, PSC1 ou autres  (DPS)
 $NB4 = $NB4 + count_specific_documents($type_doc);
 
-// attestations de présence SST
+// attestations de prÃ©sence SST
 if ( $E_CLOSED == 1 and ( $type_doc == 'SST' or $type_doc == 'PRAP' ) and $granted_event) $NB4 = $NB4 + 1;
 
 // main courante
@@ -608,14 +608,14 @@ $result1=mysqli_query($dbc,$query1);
 $row1=@mysqli_fetch_array($result1);
 $NB5=$row1[0];
 
-// produits consommés
+// produits consommÃ©s
 $query="select count(1) as NB from evenement_consommable
      where E_CODE in (".$evts.")";
 $result=mysqli_query($dbc,$query);
 $row=@mysqli_fetch_array($result);
 $NB6=$row["NB"];
 
-// PDF produits consommés
+// PDF produits consommÃ©s
 if ( $NB6 > 0 and $granted_event) $NB4 = $NB4 + 1;
 
 // remplacements
@@ -694,7 +694,7 @@ if (! $print ) {
         $buttons_container .= " <a class='btn btn-default hide_mobile' href='#'><i class='far fa-file-excel fa-1x noprint excel-hover' title='Excel' onclick=\"window.open('evenement_xls.php?evenement=$evenement')\"/></i></a>";
         if ( $gardeSP )
             $buttons_container .= " <a class='btn btn-default noprint' href='evenement_display.php?evenement=$evenement&print=1&from=print'><i class='fa fa-print fa-1x' title='Version imprimable' ></i></a>";
-        $buttons_container .= " <a class='btn btn-default noprint' href=\"evenement_ical.php?evenement=$evenement&section=$section\" target=_blank><i class='far fa-calendar-alt fa-1x' title=\"Télécharger le fichier ical\"></i></a>";
+        $buttons_container .= " <a class='btn btn-default noprint' href=\"evenement_ical.php?evenement=$evenement&section=$section\" target=_blank><i class='far fa-calendar-alt fa-1x' title=\"TÃ©lÃ©charger le fichier ical\"></i></a>";
     }
     //BOUTON INSCRIRE DESINSCRIRE
     $query="select DATEDIFF(NOW(), ep.EP_DATE) as NB_DAYS 
@@ -706,7 +706,7 @@ if (! $print ) {
     $num=mysqli_num_rows($r1);
 
 
-    // savoir si le public peut s'inscrire lui même sur une garde du tableau
+    // savoir si le public peut s'inscrire lui mÃªme sur une garde du tableau
     if ( $gardeSP ) {
         if ( ! isset($public_can_enroll)) {
             if ( $assoc == 1 ) $public_can_enroll=1;
@@ -725,10 +725,10 @@ if (! $print ) {
                     if ( $photo == '' ) {
                         $since=get_nb_days_since_creation($id);
                         if ( $since > $limit_days_photo )
-                            $disabled_inscr=" disabled title=\"Inscription interdite: Vous n'avez pas enregistré votre photo\" ";
+                            $disabled_inscr=" disabled title=\"Inscription interdite: Vous n'avez pas enregistrÃ© votre photo\" ";
                     }
                 }
-                // attention si il y a déjà inscription sur principal, bloquer le bouton s'inscrire
+                // attention si il y a dÃ©jÃ  inscription sur principal, bloquer le bouton s'inscrire
                 $query2="select count(*) as NB from evenement_participation ep, evenement e
                     where ep.E_CODE = e.E_CODE
                     and e.E_CODE =(select E_PARENT from evenement where E_CODE=".$evenement." )
@@ -737,17 +737,17 @@ if (! $print ) {
                 $rowd=@mysqli_fetch_array($r2);
                 $num2=$rowd["NB"];
                 if ($num2 > 0 and $disabled_inscr == '' )
-                    $disabled_inscr=" disabled title=\"Inscription interdite: Vous êtes déjà inscrit sur l'activité principale\" ";
+                    $disabled_inscr=" disabled title=\"Inscription interdite: Vous Ãªtes dÃ©jÃ  inscrit sur l'activitÃ© principale\" ";
 
                 if ( $OPEN_TO_ME == 1 and check_rights($id, 39))
                     $buttons_container.= " <button type='button' class='btn btn-success noprint' value=\"S'inscrire\" title data-original-title=\"S'inscrire\" $disabled_inscr
                     onclick='bouton_redirect(\"evenement_inscription.php?evenement=".$evenement."&action=inscription\",\"inscription\");'><i class='fas fa-user-plus'></i><span class='hide_mobile'> S'inscrire</span></button> ";
                 else if ( $OPEN_TO_ME == -1 )
                     $buttons_container.= " <button type='button' title data-original-title=\"S'inscrire\" class='btn btn-default noprint' value=\"S'inscrire\" $disabled_inscr
-                    onclick=\"swalAlert('Votre inscription sur cette activité extérieur ne peut être faite que par votre responsable.');\"><i class='fas fa-user-plus'></i><span class='hide_mobile'> S'inscrire</span></button> ";
+                    onclick=\"swalAlert('Votre inscription sur cette activitÃ© extÃ©rieur ne peut Ãªtre faite que par votre responsable.');\"><i class='fas fa-user-plus'></i><span class='hide_mobile'> S'inscrire</span></button> ";
                 else if (( $OPEN_TO_ME == -2 ) or ( $OPEN_TO_ME == -3 ))
                     $buttons_container.= " <button type='button' title data-original-title=\"S'inscrire\" class='btn btn-default noprint' value=\"S'inscrire\" $disabled_inscr
-                    onclick=\"swalAlert('Votre inscription sur cette activité national ou régional ne peut être faite que par votre responsable.');\"><i class='fas fa-user-plus'></i><span class='hide_mobile'> S'inscrire</span></button> ";
+                    onclick=\"swalAlert('Votre inscription sur cette activitÃ© national ou rÃ©gional ne peut Ãªtre faite que par votre responsable.');\"><i class='fas fa-user-plus'></i><span class='hide_mobile'> S'inscrire</span></button> ";
             }
             else {
                 $row=mysqli_fetch_array($r1);
@@ -759,13 +759,13 @@ if (! $print ) {
                 else $show_btn=true;
 
                 if (check_rights($id, 39) and $show_btn )
-                    $buttons_container.= " <button type='button' title data-original-title=\"Se désinscrire\" class='btn btn-warning' value=\"Se désinscrire\" onclick='bouton_redirect(\"evenement_inscription.php?evenement=".$evenement."&action=desinscription\",\"desinscription\");'><i class='fas fa-user-minus'></i><span class='hide_mobile'> Se désinscrire</span></button>";
+                    $buttons_container.= " <button type='button' title data-original-title=\"Se dÃ©sinscrire\" class='btn btn-warning' value=\"Se dÃ©sinscrire\" onclick='bouton_redirect(\"evenement_inscription.php?evenement=".$evenement."&action=desinscription\",\"desinscription\");'><i class='fas fa-user-minus'></i><span class='hide_mobile'> Se dÃ©sinscrire</span></button>";
             }
         }
     }
 
     $buttons_container .= "</div>";
-    writeBreadCrumb($cmt,"Activité","evenement_choice.php", $buttons_container);
+    writeBreadCrumb($cmt,"ActivitÃ©","evenement_choice.php", $buttons_container);
 }
 
 if ( $E_ANOMALIE and $gardeSP ) {
@@ -776,13 +776,13 @@ if ( $E_VISIBLE_INSIDE == 0  ) {
     if ( $gardeSP )
         echo "<p><font color=orange><i class='fa fa-exclamation-triangle fa-lg'></i> Le tableau de garde n'est pas accessible par le personnel.</font></p>";
     else {
-        // activité caché
+        // activitÃ© cachÃ©
         if ( ! $is_inscrit and ! check_rights($id,9) and ! in_array($id, $chefs)) {
-            write_msgbox("ERREUR", $error_pic, "Activité n°$evenement introuvable<br><p align=center>
+            write_msgbox("ERREUR", $error_pic, "ActivitÃ© nÂ°$evenement introuvable<br><p align=center>
             <a href='index.php' target='_top'><input type='submit' class='btn btn-secondary' value='Retour'></font></a> ",10,0);
             exit;
         }
-        echo "<p><font color=orange><i class='fa fa-exclamation-triangle fa-lg'></i> Activité cachée, seules les personnes inscrites ou disposant de la permission n°9 peuvent le voir.</font></p>";
+        echo "<p><font color=orange><i class='fa fa-exclamation-triangle fa-lg'></i> ActivitÃ© cachÃ©e, seules les personnes inscrites ou disposant de la permission nÂ°9 peuvent le voir.</font></p>";
     }
 }
 
@@ -793,7 +793,7 @@ echo  "<ul class='nav nav-tabs noprint' id='myTab' role='tablist'>";
 if ( $tab == 1 or $tab == 51 or $tab ==52 or $tab == 53 or $tab == 54 or $tab == 55 or $tab == 58 or $tab == 59 or $tab == 60 or $tab==63) $class='active'; else $class='';
 echo "<li class='nav-item'><a class='nav-link $class' href=\"evenement_display.php?pid=$pid&from=$from&tab=1&evenement=$evenement\" role='tab' aria-controls='tab1' href='#tab1'>
         <i class='fa fa-info-circle'></i>
-        <span title=\"Informations générales sur l'activité\">Information</span></a>
+        <span title=\"Informations gÃ©nÃ©rales sur l'activitÃ©\">Information</span></a>
     </li>";
 
 // personnel
@@ -810,7 +810,7 @@ if ( $TE_PERSONNEL == 1 or $PIQUET==1 or $REMPLACEMENT==1) {
     }
     echo "\n"."<li class='nav-item'><a class='nav-link $class'  href=\"evenement_display.php?pid=$pid&from=$from&tab=2&evenement=$evenement\" role='tab' aria-controls='tab2' href='#tab2'>
             <i class='fa fa-users'></i>
-            <span title=\"Personnel inscrit et présent sur l'activité\">$label <span class='badge $typeclass'> $NP2 </span><i class='ml-1 fas fa-chevron-down fa-xs'></i></span></a>
+            <span title=\"Personnel inscrit et prÃ©sent sur l'activitÃ©\">$label <span class='badge $typeclass'> $NP2 </span><i class='ml-1 fas fa-chevron-down fa-xs'></i></span></a>
             </li>";
 }
 //logistique
@@ -819,7 +819,7 @@ if ( ($vehicules == 1 and $TE_VEHICULES ==  1) || ($materiel == 1 and $TE_MATERI
     if ( $tab == 3 or $tab == 50) $class='active'; else $class='';
     echo "\n"."<li class='nav-item'><a class='nav-link $class' href=\"evenement_display.php?pid=$pid&from=$from&tab=3&child=1&evenement=$evenement\" role='tab' aria-controls='tab3' href='#tab3'>
             <i class='fa fa-clipboard-list'></i>
-            <span title=\"Véhicule, matériel et consommable de l'activité\">Logistique <i class='ml-1 fas fa-chevron-down fa-xs'></i></span></a>
+            <span title=\"VÃ©hicule, matÃ©riel et consommable de l'activitÃ©\">Logistique <i class='ml-1 fas fa-chevron-down fa-xs'></i></span></a>
             </li>";
 }
 else $show_logistique=false;
@@ -829,7 +829,7 @@ if ($competences == 1  and  $TE_CODE == 'FOR'  and  $PS_ID <> "" and $TF_CODE <>
     if ( $tab == 5 ) $class='active'; else $class='';
     echo "\n"."<li class='nav-item'><a class='nav-link $class' href=\"evenement_display.php?pid=$pid&from=$from&tab=5&evenement=$evenement\" role='tab' aria-controls='tab5' href='#tab5'>
             <i class='fa fa-medal'></i>
-            <span title=\"Informations concernant la formation et les diplômes\">Formation </span></a>
+            <span title=\"Informations concernant la formation et les diplÃ´mes\">Formation </span></a>
             </li>";
 }
 
@@ -854,7 +854,7 @@ if ($TE_DOCUMENT == 1) {
     }
     echo "\n"."<li class='nav-item'><a class='nav-link $class' href=\"evenement_display.php?pid=$pid&from=$from&tab=7&evenement=$evenement\" role='tab' aria-controls='tab7' href='#tab7'>
             <i class='fa fa-folder-open'></i>
-            <span title=\"Documents générés ou attachés à l'activité\">Document <span class='badge $badgeClass'>$NB4</span></span></a>
+            <span title=\"Documents gÃ©nÃ©rÃ©s ou attachÃ©s Ã  l'activitÃ©\">Document <span class='badge $badgeClass'>$NB4</span></span></a>
         </li>";
 }
 
@@ -863,7 +863,7 @@ if ($TE_MAP==1 and (check_rights($id,76) or $is_operateur_pc)) {
     if ( $tab == 15 ) $class='active'; else $class='';
     echo "\n"."<li class='nav-item'><a class='nav-link $class' class='nav-link $class' href=\"evenement_display.php?pid=$pid&from=$from&tab=15&evenement=$evenement&table=1\" role='tab' aria-controls='tab15' href='#tab15'>
             <i class='fa fa-map-marked'></i>
-            <span title=\"Carte avec géolocalisation des équipes\">Carte</span></a>
+            <span title=\"Carte avec gÃ©olocalisation des Ã©quipes\">Carte</span></a>
         </li>";
 }
 
@@ -917,7 +917,7 @@ if ( $TE_DPS==1 ) {
     if ( $tab == 16 ) $class='active'; else $class='';
     echo "\n"."<li class='nav-item'><a class='nav-link $class' href=\"evenement_display.php?pid=$pid&from=$from&tab=16&evenement=$evenement&table=1\" role='tab' aria-controls='tab16' href='#tab16'>
             <i class='fa fa-th-list'></i>
-            <span title=\"Dimentionnement du dispositif prévisionnel de secours\">DPS</span></a>
+            <span title=\"Dimentionnement du dispositif prÃ©visionnel de secours\">DPS</span></a>
     </li>";
 }
 
@@ -933,13 +933,13 @@ if (check_rights($id,49)) {
     }
     echo "\n"."<li class='nav-item'><a class='nav-link $class' href=\"evenement_display.php?pid=$pid&from=$from&tab=9&evenement=$evenement&lccode=E&lcid=$evenement&order=LH_STAMP&ltcode=ALL&table=1\" role='tab' aria-controls='tab7' href='#tab7'>
             <i class='fa fa-history'></i>
-            <span title=\"Historique des modifications pour cette activité\">Historique <span class='badge $badgeClass'>$nHistory</span></span></a>
+            <span title=\"Historique des modifications pour cette activitÃ©\">Historique <span class='badge $badgeClass'>$nHistory</span></span></a>
             </li>";
 }
 echo "\n"."</ul>"; // fin tabs
 echo "</div>";
 
-// bloquer les changements dans le passé
+// bloquer les changements dans le passÃ©
 $ended=get_number_days_after_block($evenement);
 $changeallowed=true;
 if ( $ended > 0 ) {
@@ -953,13 +953,13 @@ if ( $ended > 0 ) {
     }
     $link="<a href=upd_section.php?S_ID=".$organisateur."&status=parametrage title='Voir la configuration'>".$ended."</a>";
 
-    if (! $print ) echo "<table class='noBorder noprint'><tr><td><i class='fa fa-exclamation-triangle' style='color:$widget_fgorange' title=\"Cette activité n'est plus modifiable, sauf par les personnes ayant la permission n°19\"></i></td>
-                    <td><small>Les modifications sur cette activité terminé ne sont plus possibles depuis ".$link." jours.</small></td>
+    if (! $print ) echo "<table class='noBorder noprint'><tr><td><i class='fa fa-exclamation-triangle' style='color:$widget_fgorange' title=\"Cette activitÃ© n'est plus modifiable, sauf par les personnes ayant la permission nÂ°19\"></i></td>
+                    <td><small>Les modifications sur cette activitÃ© terminÃ© ne sont plus possibles depuis ".$link." jours.</small></td>
                     </tr></table>";
 }
 
 //=====================================================================
-// équipes 
+// Ã©quipes 
 //=====================================================================
 
 if ( intval($E_PARENT) > 0 ) $evts_list=$evenement.",".intval($E_PARENT);
@@ -996,7 +996,7 @@ if ( $print) {
     }
     else {
         echo "<table class='noBorder'><tr><td width=90><img src=".$logo." style='max-width:60px';></td><td><font size=5>".$S_DESCRIPTION0."</font><br><font size=4>Section : ".$S_CODE." - ".$S_DESCRIPTION."</font></td></tr></table>
-        <p>Bonjour, veuillez trouver ci-dessous les éléments relatifs à la mise en place de :<br>
+        <p>Bonjour, veuillez trouver ci-dessous les Ã©lÃ©ments relatifs Ã  la mise en place de :<br>
         ".$TE_LIBELLE." - ".$E_LIBELLE." (".$E_LIEU.")";
 
         for ($i=1; $i <= $nbmaxsessionsparevenement; $i++) {
@@ -1011,7 +1011,7 @@ if ( $print) {
 }
 
 //=====================================================================
-// informations générales
+// informations gÃ©nÃ©rales
 //=====================================================================
 if ( $tab == 1 or $print){
     if(isset($_GET['upd_company']) and $_GET['upd_company'] == 1 and isset($_GET['C_ID'])){
@@ -1024,8 +1024,8 @@ if ( $tab == 1 or $print){
         
         //Switch ouvert
         if ( $E_AUTOCLOSE_BEFORE >= 0 ) {
-            $t=" Attention il y a une clôture automatique activée pour cette activité.";
-            if (isset($REMAINING) and $REMAINING <= 0 ) $t .= " Et il est trop tard pour le réouvrir.";
+            $t=" Attention il y a une clÃ´ture automatique activÃ©e pour cette activitÃ©.";
+            if (isset($REMAINING) and $REMAINING <= 0 ) $t .= " Et il est trop tard pour le rÃ©ouvrir.";
         }
 
         if ( $E_CANCELED == 0 and $TE_PERSONNEL == 1 and (!$gardeSP or $assoc)) {
@@ -1038,14 +1038,14 @@ if ( $tab == 1 or $print){
                 $action='open';
                 
                 if ( $granted_event and $changeallowed) {
-                    // ne pas permettre d'ouvrir un renfort si le principal est fermé
+                    // ne pas permettre d'ouvrir un renfort si le principal est fermÃ©
                     $queryd="select E_CLOSED from evenement where E_CODE =".intval($E_PARENT);
                     $resultd=mysqli_query($dbc,$queryd);
                     $rowd=@mysqli_fetch_array($resultd);
                     $c=@$rowd["E_CLOSED"];
                     if ( $c == 1 and ! check_rights($id, 14) and ! $chef ) {
                         $disabled="disabled";
-                        $t .=" On ne peut pas réouvrir un ".$renfort_label." pour lequel l'activité principale est clôturé";
+                        $t .=" On ne peut pas rÃ©ouvrir un ".$renfort_label." pour lequel l'activitÃ© principale est clÃ´turÃ©";
                     }
                     else {
                         if ( $E_AUTOCLOSE_BEFORE >= 0 ) {
@@ -1053,7 +1053,7 @@ if ( $tab == 1 or $print){
                                 $disabled="disabled";
                             }
                         }
-                        else $t .=" Ouvrir les inscriptions pour cette activité et ses ".$renfort_label."s";
+                        else $t .=" Ouvrir les inscriptions pour cette activitÃ© et ses ".$renfort_label."s";
                     }
                 }
             }
@@ -1063,12 +1063,12 @@ if ( $tab == 1 or $print){
                 echo "<label class='switch' style='float:left; margin-top:12px;margin-left:3px;margin-right:12px;'>
                      <input type='checkbox' value='1' $checked $disabled
                             onclick='bouton_redirect(\"evenement_inscription.php?evenement=".$evenement."&action=".$action."\",\"".$action."\");' >
-                            <span class='slider round' title='Ouvrir ou fermer les inscriptions sur cette activité. ".$t."'></span>
+                            <span class='slider round' title='Ouvrir ou fermer les inscriptions sur cette activitÃ©. ".$t."'></span>
                         </label>";
             }
             
             if ( check_rights($id, 77) and $notes ==1)
-                echo "<span style='margin-left:10px;'><a class='btn btn-success' value=\"+ Note de frais\" title=Créer une note de frais pour me faire rembourser de mes dépenses sur cette activité'
+                echo "<span style='margin-left:10px;'><a class='btn btn-success' value=\"+ Note de frais\" title=CrÃ©er une note de frais pour me faire rembourser de mes dÃ©penses sur cette activitÃ©'
                         onclick='bouton_redirect(\"note_frais_edit.php?evenement=".$evenement."&action=insert&person=".$id."\",\"note de frais\");'>
                         <i class='fas fa-plus-circle' style='color:white' data-original-title='' title=''></i> Note de Frais</a></span>";
         }
@@ -1082,7 +1082,7 @@ if ( $tab == 1 or $print){
             if ( $E_CLOSED == 0 and $E_CANCELED == 0 ) {
                 if ( $E_MAIL1 == 0 ) {
                     echo "<input type='button' class='btn btn-primary' value='Message ouverture'
-                        title=\"envoyer un message à tout le personnel pour les inviter à s'inscrire\"
+                        title=\"envoyer un message Ã  tout le personnel pour les inviter Ã  s'inscrire\"
                         onclick='bouton_redirect(\"evenement_notify.php?evenement=".$evenement."&action=enroll\",\"notify\");'>";
                 }
             }
@@ -1105,7 +1105,7 @@ if ( $tab == 1 or $print){
             if ( $E_CANCELED == 1 ) {
                 if ( $E_MAIL3 == 0 ) {
                     echo "<input type='button' class='btn btn-primary' value='Message annulation'
-                        title=\"envoyer un message aux inscrits pour leur indiquer que l'activité est annulée\"
+                        title=\"envoyer un message aux inscrits pour leur indiquer que l'activitÃ© est annulÃ©e\"
                         onclick='bouton_redirect(\"evenement_notify.php?evenement=".$evenement."&action=canceled\",\"notify\");'>";
                 }
             }
@@ -1136,14 +1136,14 @@ if ( $tab == 1 or $print){
                   <div class='dropdown-menu' style ='margin-right:23px' aria-labelledby='dropdownMenuButton1'>
                    <a class ='dropdown-item' onclick='bouton_redirect(\"evenement_edit.php?evenement=".$evenement."&action=copy\",\"copy\");'><div>Une fois</div></a>";
             if ($TE_MULTI_DUPLI == 1 ) {
-                echo " <a class ='dropdown-item' title='Dupliquer multiple, possible seulement pour les activités à une seule partie'
+                echo " <a class ='dropdown-item' title='Dupliquer multiple, possible seulement pour les activitÃ©s Ã  une seule partie'
                 onclick='bouton_redirect(\"evenement_duplicate.php?evenement=".$evenement."\",\"update\");'><div>Plusieurs fois</div></a>";
             }
             echo "</div></div>";
         }
 
         //=====================================================================
-        // boutons d'inscription /désinscription
+        // boutons d'inscription /dÃ©sinscription
         //=====================================================================
 
         $query="select DATEDIFF(NOW(), ep.EP_DATE) as NB_DAYS 
@@ -1162,7 +1162,7 @@ if ( $tab == 1 or $print){
             if ( $E_CLOSED == 1 or $E_CANCELED == 1 ) $disabled='disabled';
             else $disabled="";
 
-            // pour une ADPC on peut créer les renforts pour chaque antenne
+            // pour une ADPC on peut crÃ©er les renforts pour chaque antenne
             $level_orga = get_level("$S_ID");
             if ( $nbsections == 0 and ($level_orga == $nbmaxlevels - 2  or $level_orga <= 2  )) {
                 if ( $level_orga <= 2 ) $t=$levels[3];
@@ -1171,20 +1171,20 @@ if ( $tab == 1 or $print){
                 echo "<div class='btn-group' style='float:left; position:inherit;margin-left:10px'>
                       <button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton2' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' style='float:left' > Renfort</button>
                           <div class='dropdown-menu' style ='position:relative'aria-labelledby='dropdownMenuButton2'>
-                            <a class='dropdown-item' href='evenement_edit.php?evenement=".$evenement."&action=renfort'>Créer ".$renfort_label." simple</a></li>
-                            <a class='dropdown-item' href='evenement_display.php?evenement=".$evenement."&tab=59'>Créer ".$renfort_label." pour chaque ".$t."</a>
+                            <a class='dropdown-item' href='evenement_edit.php?evenement=".$evenement."&action=renfort'>CrÃ©er ".$renfort_label." simple</a></li>
+                            <a class='dropdown-item' href='evenement_display.php?evenement=".$evenement."&tab=59'>CrÃ©er ".$renfort_label." pour chaque ".$t."</a>
                           </div>
                     </div>";
             }
             else
-                echo "<input type='button' style='margin-left:10px;float:left' class='btn btn-primary' value='Créer ".$renfort_label."' title='créer une activité en ".$renfort_label." de celle-ci' $disabled
+                echo "<input type='button' style='margin-left:10px;float:left' class='btn btn-primary' value='CrÃ©er ".$renfort_label."' title='crÃ©er une activitÃ© en ".$renfort_label." de celle-ci' $disabled
                         onclick='bouton_redirect(\"evenement_edit.php?evenement=".$evenement."&action=renfort\",\"renfort\");'> ";
         }
         echo "</div>";
     }
 
     if ( $E_CREATED_BY <> '' and ! $print)
-        $author = "<font size=1><i> - créé par ".my_ucfirst(get_prenom($E_CREATED_BY))." ".strtoupper(get_nom($E_CREATED_BY))."
+        $author = "<font size=1><i> - crÃ©Ã© par ".my_ucfirst(get_prenom($E_CREATED_BY))." ".strtoupper(get_nom($E_CREATED_BY))."
                    le ". $E_CREATE_DATE."
                     </i></font>";
     else
@@ -1200,7 +1200,7 @@ if ( $tab == 1 or $print){
     
     echo "<div class='card hide card-default graycarddefault' align=center >
                 <div class='card-header graycard'>
-                <div class='card-title'><strong> Activité n° ".$E_CODE ."</strong></div>
+                <div class='card-title'><strong> ActivitÃ© nÂ° ".$E_CODE ."</strong></div>
                 </div>
                     <div class='card-body graycard'>";
 
@@ -1218,7 +1218,7 @@ if ( $tab == 1 or $print){
         $SR_CODE=$rowR["S_CODE"];
         $SR_DESCRIPTION=$rowR["S_DESCRIPTION"];
         echo "<td width=67%><a href=evenement_display.php?evenement=".$E_PARENT.">
-        ".$ER_LIBELLE." organisé par ".$SR_CODE." - ".$SR_DESCRIPTION."</a></td></tr>";
+        ".$ER_LIBELLE." organisÃ© par ".$SR_CODE." - ".$SR_DESCRIPTION."</a></td></tr>";
     }
 
     for ($i=1; $i <= $nbmaxsessionsparevenement; $i++) {
@@ -1233,7 +1233,7 @@ if ( $tab == 1 or $print){
         }
     }
     if($E_DUREE_TOTALE <> ''){
-        echo "<tr style='color:#3f4254'><td>Durée totale </td>
+        echo "<tr style='color:#3f4254'><td>DurÃ©e totale </td>
             <td> ".$E_DUREE_TOTALE." heures</td></tr>";
     }
 
@@ -1293,14 +1293,14 @@ if ( $tab == 1 or $print){
     }
 
     if ( intval($E_TEL) > 0 )
-        echo "<tr style='color:#3f4254'><td title=\"Donne tous les droits d'accès sur cet évenement\">Téléphone Contact</td>
+        echo "<tr style='color:#3f4254'><td title=\"Donne tous les droits d'accÃ¨s sur cet Ã©venement\">TÃ©lÃ©phone Contact</td>
             <td><a href='tel:".$E_TEL."'>".$E_TEL."</a></td></tr>";
 
 
     if ( $E_WHATSAPP <> "" and ($is_inscrit or $granted_personnel)) {
         echo "<tr style='color:#3f4254'><td>Groupe Whatsapp</td>
                 <td><a href=\"".$whatsapp_chat_url."/".$E_WHATSAPP."\" target='_blank'
-                title=\"Rejoindre ou communiquer avec le groupe Whatsapp de cette activité.\">
+                title=\"Rejoindre ou communiquer avec le groupe Whatsapp de cette activitÃ©.\">
                 <i class='fab fa-whatsapp-square fa-2x' style='color:#00cc00'></i></a></td></tr>";
     }
     
@@ -1319,10 +1319,10 @@ if ( $tab == 1 or $print){
         if ( $E_CANCELED == 1 ) {
             if ( $E_CANCEL_DETAIL <> '' ) $pr=" - ".$E_CANCEL_DETAIL." ";
             else $pr='';
-            echo "<div style='text-align:right'><font size=3 color=red>Evénement annulé ".$pr."</font></div>";
+            echo "<div style='text-align:right'><font size=3 color=red>EvÃ©nement annulÃ© ".$pr."</font></div>";
         }
         else if ( ! $gardeSP ) {
-            if ( $E_CLOSED == 1 ) echo "<div style='float:right;display:inline-block;$widget_all_orange;padding:5px;border-radius:5px;margin-top:-5px'>Inscriptions fermées</div>";
+            if ( $E_CLOSED == 1 ) echo "<div style='float:right;display:inline-block;$widget_all_orange;padding:5px;border-radius:5px;margin-top:-5px'>Inscriptions fermÃ©es</div>";
             else if ( $OPEN_TO_ME == 0 ) echo "<div style='float:right;display:inline-block;$widget_all_orange;padding:5px;border-radius:5px;margin-top:-5px'>Inscriptions interdites pour les personnes des autres ".$levels[3]."s</div>";
             else if ( $OPEN_TO_ME == -1 ) echo "<div style='float:right;display:inline-block;$widget_all_orange;padding:5px;border-radius:5px;margin-top:-5px'>Inscriptions possibles pour les personnes des autres ".$levels[3]."s par leur responsable</div>";
             else echo "<div style='float:right;display:inline-block;$widget_all_green;padding:5px;border-radius:5px;margin-top:-5px'>Inscriptions ouvertes</div>";
@@ -1342,10 +1342,10 @@ if ( $tab == 1 or $print){
             <td width=70%><a href=http://".$E_URL." target='_blank'>".$E_URL."</a></td></tr>";
     }
 
-    if ( $syndicate == 1 )  $t = "Gestionnaire de l'activité";
+    if ( $syndicate == 1 )  $t = "Gestionnaire de l'activitÃ©";
     else $t = "Responsable ".$cisname;
 
-    echo "<tr style='color:#3f4254'><td title=\"Donne tous les droits d'accès sur cet évenement\"> ".$t." </td>
+    echo "<tr style='color:#3f4254'><td title=\"Donne tous les droits d'accÃ¨s sur cet Ã©venement\"> ".$t." </td>
             <td>";
     if ( count($chefs) > 0 ) {
         for ( $c = 0; $c < count($chefs); $c++ ) {
@@ -1368,7 +1368,7 @@ if ( $tab == 1 or $print){
                         $phone=" - **********";
                 }
             }
-            echo "<a href=upd_personnel.php?pompier=".$chefs[$c]." title=\"A tous les droits d'accès sur cet évenement\"> 
+            echo "<a href=upd_personnel.php?pompier=".$chefs[$c]." title=\"A tous les droits d'accÃ¨s sur cet Ã©venement\"> 
                 ".my_ucfirst($rowz["P_PRENOM"])." ".strtoupper($rowz["P_NOM"])."</a> ".$phone;
             if ( $c < (count($chefs) -1) ) echo "<br>";
         }
@@ -1380,7 +1380,7 @@ if ( $tab == 1 or $print){
     }
     echo "</td></tr>";
 
-    // compétences requises
+    // compÃ©tences requises
     $querym="select EH_ID from evenement_horaire where E_CODE=".$evenement." order by EH_ID";
     $resultm=mysqli_query($dbc,$querym);
 
@@ -1427,7 +1427,7 @@ if ( $tab == 1 or $print){
             // FIN PARTIE A OPTIMISER 
             // -------------------------
 
-            // total personnel demandé
+            // total personnel demandÃ©
             $type='TOTAL';
             $inscrits=get_nb_competences($evenement,$i,0);
             if ( $inscrits == $nbt ){
@@ -1452,7 +1452,7 @@ if ( $tab == 1 or $print){
             $showcpt .= " <a title=\"$nbt personnes requises\n".$desc."\"><span class='badge' style='background-color:$bgcolor; color:$fgcolor'> $nbt </span></a>";
             if ( $nbp > 0 ) $showcpt .= " <small>dont </small>";
 
-            // détail par compétence
+            // dÃ©tail par compÃ©tence
             while ( custom_fetch_array($resultp) ) {
                 $inscrits=get_nb_competences($evenement,$i,$PS_ID);
                 if ($inscrits >= $nb ){
@@ -1464,14 +1464,14 @@ if ( $tab == 1 or $print){
                     $bgcolor=$widget_bgred;
                 }
                 $desc=$nb." ".$DESCRIPTION." requis, ";
-                if ( $inscrits < 2 ) $desc .= $inscrits." participant ayant cette compétence valide.";
-                else $desc .= "\n".$inscrits." participants ayant cette compétence valide.";
+                if ( $inscrits < 2 ) $desc .= $inscrits." participant ayant cette compÃ©tence valide.";
+                else $desc .= "\n".$inscrits." participants ayant cette compÃ©tence valide.";
                 $showcpt .= " <a title=\"".$desc."\"><span class='badge' style='background-color:$bgcolor; color:$fgcolor'>$nb $TYPE</span></a>";
                 $showcpt = rtrim($showcpt,',');
             }
             if ( $granted_event and (!$print) and $changeallowed ) {
-                if ( $competences ) $cmt = 'Modifier les compétences demandées';
-                else $cmt = 'Modifier le nombre de personnes demandées';
+                if ( $competences ) $cmt = 'Modifier les compÃ©tences demandÃ©es';
+                else $cmt = 'Modifier le nombre de personnes demandÃ©es';
                 $showcpt .= " <a class='btn btn-default btn-action' href='#'><i class='fa fa-edit fa-lg' title='".$cmt."' 
                             onclick=\"modifier_competences('".$evenement."',".$i.",58)\"></i></a>";
             }
@@ -1481,7 +1481,7 @@ if ( $tab == 1 or $print){
         print $showcpt;
     }
 
-    // équipes, groupes (seulement pour activité principale)
+    // Ã©quipes, groupes (seulement pour activitÃ© principale)
     if ($E_PARENT == '' and  $TE_PERSONNEL == 1 and $TE_CODE <> 'MC') {
         $querym="select EE_ID, EE_NAME, EE_DESCRIPTION from evenement_equipe
             where E_CODE=".$evenement."
@@ -1500,7 +1500,7 @@ if ( $tab == 1 or $print){
         $showcpt = rtrim($showcpt,',');
 
         if ( !$print and ( $granted_event or $is_operateur_pc))
-            $showcpt .= " <a class='btn btn-default btn-action' href=evenement_display.php?tab=55&evenement=".$evenement." title=\"Voir l'organisation des équipes\">
+            $showcpt .= " <a class='btn btn-default btn-action' href=evenement_display.php?tab=55&evenement=".$evenement." title=\"Voir l'organisation des Ã©quipes\">
                 <i class='fa fa-edit fa-lg'></i></a>  ";
         $showcpt .= "</td></tr>";
         print $showcpt;
@@ -1509,7 +1509,7 @@ if ( $tab == 1 or $print){
     // cas du DPS
     if ( $TE_CODE == 'DPS' ) {
         $warn="";
-        if ( $TAV_ID == 1  or  $TAV_ID == '' ) $tdps='Non défini';
+        if ( $TAV_ID == 1  or  $TAV_ID == '' ) $tdps='Non dÃ©fini';
         else {
             // type de DPS choisi
             $querydps="select TAV_ID, TA_VALEUR from type_agrement_valeur
@@ -1519,7 +1519,7 @@ if ( $tab == 1 or $print){
             $rowdps=mysqli_fetch_array($resultdps);
             $tdps = $rowdps["TA_VALEUR"];
 
-            //comparer avec agrément
+            //comparer avec agrÃ©ment
             $queryag="select a.S_ID, a.A_DEBUT, a.A_FIN, tav.TAV_ID, tav.TA_VALEUR,
                         DATEDIFF(NOW(), a.A_FIN) as NB_DAYS
                         from agrement a, type_agrement_valeur tav
@@ -1537,20 +1537,20 @@ if ( $tab == 1 or $print){
 
             if ( $tagid <> "" and ( !$print)) {
                 if ( $TAV_ID > $tagid or $debut == '') {
-                    $title="ATTENTION Il n'y a pas d'agrément ou l'agrément est insuffisant pour ce type de DPS.";
+                    $title="ATTENTION Il n'y a pas d'agrÃ©ment ou l'agrÃ©ment est insuffisant pour ce type de DPS.";
                     if ( $tagid > 1 and $debut <> '')
-                        $title .=" L'agrément permet seulement l'organisation de DPS de type $tag.";
+                        $title .=" L'agrÃ©ment permet seulement l'organisation de DPS de type $tag.";
                     $warn_img="<i class='fa fa-exclamation-circle fa-lg' style='color:$widget_fgred;' title=\"$title\" ></i>";
                 }
                 else if  ( $nbd > 0  )
-                    $warn_img="<i class='fa fa-exclamation-circle fa-lg' style='color:$widget_fgred;' title=\"ATTENTION agrément pour les DPS périmé\" ></i>";
+                    $warn_img="<i class='fa fa-exclamation-circle fa-lg' style='color:$widget_fgred;' title=\"ATTENTION agrÃ©ment pour les DPS pÃ©rimÃ©\" ></i>";
                 else if ( $DPS_MAX_TYPE <> '' and $DPS_MAX_TYPE < $TAV_ID ) {
-                    $warn_img="<i class='fa fa-exclamation-triangle' style='color:$widget_fgorange' title=\"ATTENTION le $levels[3] ne permet pas à cette $levels[4] d'organiser ce type de DPS\" border=0></i>";
+                    $warn_img="<i class='fa fa-exclamation-triangle' style='color:$widget_fgorange' title=\"ATTENTION le $levels[3] ne permet pas Ã  cette $levels[4] d'organiser ce type de DPS\" border=0></i>";
                     $warn="<a href=upd_section.php?S_ID=".$S_ID.">".$warn_img."</a>";
                 }
                 else
                     $warn_img="<i class='fa fa-check fa-lg' style='color:$widget_fggreen'
-                        title=\"Agrément valide pour ce type de DPS\"></i>";
+                        title=\"AgrÃ©ment valide pour ce type de DPS\"></i>";
 
                 if ( $warn == '')
                     $warn="<a href=upd_section.php?S_ID=".$sectionag."&status=agrements>".$warn_img."</a>";
@@ -1563,7 +1563,7 @@ if ( $tab == 1 or $print){
     }
 
     if ( $E_CONVENTION <> "" ) {
-        echo "<tr style='color:#3f4254'><td width=30%>Numéro de convention</td>
+        echo "<tr style='color:#3f4254'><td width=30%>NumÃ©ro de convention</td>
             <td width=70%> ".$E_CONVENTION."</td></tr>";
     }
     if ( $E_DATE_ENVOI_CONVENTION <> "" ) {
@@ -1574,7 +1574,7 @@ if ( $tab == 1 or $print){
         if ( $E_OPEN_TO_EXT == 1 && $E_ALLOW_REINFORCEMENT == 1 )
             $cmt="Possibles pour les personnes des autres ".$levels[3]."s et pour les ".$renfort_label."s.";
         elseif ( $E_OPEN_TO_EXT == 1 && $E_ALLOW_REINFORCEMENT == 0 )
-            $cmt="Possibles pour les personnes extérieures.";
+            $cmt="Possibles pour les personnes extÃ©rieures.";
         elseif ( $E_OPEN_TO_EXT == 0 && $E_ALLOW_REINFORCEMENT == 1 )
             $cmt="Impossibles pour les personnes des autres ".add_final_s($levels[3]).", mais possible pour les ".$renfort_label."s.";
         else
@@ -1591,35 +1591,35 @@ if ( $tab == 1 or $print){
                  <td width=70%>".$cmt."</td></tr>";
 
     if ( $E_COMMENT <> "" ) {
-        echo "<tr style='color:#3f4254'><td width=30%>Détails</td>
+        echo "<tr style='color:#3f4254'><td width=30%>DÃ©tails</td>
             <td width=70%> ".$E_COMMENT."</td></tr>";
     }
     if ( $E_AUTOCLOSE_BEFORE > -1 ) {
         if ( $E_AUTOCLOSE_BEFORE >= 24 ) {
             $TIME_BEFORE = $E_AUTOCLOSE_BEFORE / 24;
-            $TIME_BEFORE .= " jours avant le début";
+            $TIME_BEFORE .= " jours avant le dÃ©but";
         }
         else if ( $E_AUTOCLOSE_BEFORE > 0 ) {
-            $TIME_BEFORE = $E_AUTOCLOSE_BEFORE." heures avant le début";
+            $TIME_BEFORE = $E_AUTOCLOSE_BEFORE." heures avant le dÃ©but";
         }
-        else $TIME_BEFORE = "au début, quand elle commence";
+        else $TIME_BEFORE = "au dÃ©but, quand elle commence";
 
-        echo "<tr style='color:#3f4254'><td width=30%>Clôture automatique</td>
+        echo "<tr style='color:#3f4254'><td width=30%>ClÃ´ture automatique</td>
             <td width=70%><i class='fa fa-exclamation-triangle' style='color:$widget_fgorange' title=\"Date limite pour les inscriptions ".$TIME_BEFORE.".\" ></i> 
-             L'activité est automatiquement clôturée ".$TIME_BEFORE.", soit ".$CLOSE_TIME.".</td></tr>";
+             L'activitÃ© est automatiquement clÃ´turÃ©e ".$TIME_BEFORE.", soit ".$CLOSE_TIME.".</td></tr>";
     }
     if ( $E_VISIBLE_OUTSIDE == 1 ) {
-        echo "<tr><td width=30%>Visible de l'extérieur </td>
-            <td width=70%>Peut être vu dans un site externe sans identification <i class='fa fa-exclamation-triangle noprint' style='color:$widget_fgorange' title=\"Visible de l'extérieur\"></i></td></tr>";
+        echo "<tr><td width=30%>Visible de l'extÃ©rieur </td>
+            <td width=70%>Peut Ãªtre vu dans un site externe sans identification <i class='fa fa-exclamation-triangle noprint' style='color:$widget_fgorange' title=\"Visible de l'extÃ©rieur\"></i></td></tr>";
     }
     if ( $E_COMMENT2 <> "" ) {
-        echo "<tr><td width=30%>Commentaire extérieur </td>
+        echo "<tr><td width=30%>Commentaire extÃ©rieur </td>
             <td width=70%> ".$E_COMMENT2."</td></tr>";
     }
 
     if ( $C_ID <> '' and $C_ID > 0 ) {
 
-        // responsable formation ou opérationnel
+        // responsable formation ou opÃ©rationnel
         $queryr="select p.P_ID, p.P_NOM, p.P_PRENOM, ".phone_display_mask('p.P_PHONE')." P_PHONE , tcr.TCR_DESCRIPTION
                     from pompier p, company_role cr, type_company_role tcr 
                     where p.P_ID=cr.P_ID
@@ -1679,19 +1679,19 @@ if ( $tab == 1 or $print){
             while ( custom_fetch_array($resultA)) {
                 if ( $CE_CANCELED == 1 ) {
                     $color="#f64e60";
-                    $info="activité annulée";
+                    $info="activitÃ© annulÃ©e";
                 }
                 elseif ( $CE_CLOSED == 1 ) {
                     $color="orange";
-                    $info="activité clôturée";
+                    $info="activitÃ© clÃ´turÃ©e";
                 }
                 else {
                     $color= "#1bc5bd";
-                    $info="activité ouverte";
+                    $info="activitÃ© ouverte";
                 }
                 if ($granted_event and ! $print and $changeallowed)
                     $cancelbtn = "<a class='btn btn-default btn-action' href=\"javascript:cancel_renfort('".$evenement."','".$CE_CODE."')\">
-                        <i class='far fa-trash-alt fa-lg' title='détacher ce renfort' ></i></a>";
+                        <i class='far fa-trash-alt fa-lg' title='dÃ©tacher ce renfort' ></i></a>";
                 else $cancelbtn ='';
 
                 echo "<tr><td colspan=2> <a href=evenement_display.php?evenement=".$CE_CODE.">
@@ -1734,11 +1734,11 @@ if ( $tab == 1 or $print){
                     $j++;
                 }
 
-                // boucle sur les dates de l'activité principale
+                // boucle sur les dates de l'activitÃ© principale
                 $j=1;$c="";
                 if ( $E_COLONNE_RENFORT == 1 ) {
                     if ( evenements_overlap( $evenement, $CE_CODE )) echo "<i class='fa fa-clock fa-lg' style='color:#1bc5bd'  title=\"".$detail_renfort[$j]."\"></i>";
-                    else echo "<i class='fa fa-ban fa-lg' style='color:$widget_fgred'  title=\"Les dates de ".$renfort_label." ne correspondent pas à celles de l'activité principale.\"></i>";
+                    else echo "<i class='fa fa-ban fa-lg' style='color:$widget_fgred'  title=\"Les dates de ".$renfort_label." ne correspondent pas Ã  celles de l'activitÃ© principale.\"></i>";
                     echo " <small>".$detail_renfort[$j]."</small>";
                 }
                 else {
@@ -1757,7 +1757,7 @@ if ( $tab == 1 or $print){
                                 $j++;
                             }
                             else {
-                                echo "<a class='btn btn-default btn-action' href='#'><i class = 'fa fa-ban fa-lg' style='color:gray' title=\"".ucfirst($renfort_label)." non activé pour la Partie n°".$EH_ID[$i]."\"></i></a>";
+                                echo "<a class='btn btn-default btn-action' href='#'><i class = 'fa fa-ban fa-lg' style='color:gray' title=\"".ucfirst($renfort_label)." non activÃ© pour la Partie nÂ°".$EH_ID[$i]."\"></i></a>";
                             }
                         }
                     }
@@ -1774,7 +1774,7 @@ if ( $tab == 1 or $print){
     if ( $TE_CODE == 'FOR' ){
         if ( intval($PS_ID_FORMATION) == 0 ) {
             $_TYPE="";
-            $_DESCRIPTION="<i>non défini</i>";
+            $_DESCRIPTION="<i>non dÃ©fini</i>";
         }
         else {
             $query2="select PS_ID, TYPE, DESCRIPTION from poste where PS_ID =".intval($PS_ID_FORMATION);
@@ -1786,7 +1786,7 @@ if ( $tab == 1 or $print){
         echo "<tr><td>Formation pour</td><td><span class='badge noprint'>".$_TYPE."</span> ".$_DESCRIPTION."</td></tr>";
 
         if ( $TF_CODE == '' ) {
-            $_TF_LIBELLE="<i>non défini</i>";
+            $_TF_LIBELLE="<i>non dÃ©fini</i>";
         }
         else {
             $query2="select TF_LIBELLE from type_formation where TF_CODE='".$TF_CODE."'";
@@ -1801,21 +1801,21 @@ if ( $tab == 1 or $print){
     echo "</tr>";
 
     //=====================================================================
-    // lien webex pour les activités de 1 jour max, à une seule partie
+    // lien webex pour les activitÃ©s de 1 jour max, Ã  une seule partie
     //=====================================================================
 
     if ( ($is_inscrit or $granted_event) and $E_WEBEX_URL <> '') {
         if ( $nbsessions == 1 and $EH_DATE_DEBUT[1] == $EH_DATE_FIN[1]) {
             if ( $E_WEBEX_START == '' ) $E_WEBEX_START=$EH_DEBUT[1];
             $E_WEBEX_START=substr($E_WEBEX_START,0,5);
-            echo "<tr><td CLASS='newTabHeader' colspan=2>Lien Conférence Web</td></tr>";
+            echo "<tr><td CLASS='newTabHeader' colspan=2>Lien ConfÃ©rence Web</td></tr>";
             echo "<tr><td CLASS='Menu' bgcolor=$mylightcolor colspan=2>";
             echo " <a href=\"".$E_WEBEX_URL."\" target='_blank'>
-                            <label class='btn btn-default btn-file' title='Accèder à la conférence web' style='margin-top:3px;'>
+                            <label class='btn btn-default btn-file' title='AccÃ¨der Ã  la confÃ©rence web' style='margin-top:3px;'>
                             <i class='fas fa-video' style='color:$widget_fggreen;'></i>
-                        </label></a>    <span> Début de la conférence web à ".$E_WEBEX_START."";
+                        </label></a>    <span> DÃ©but de la confÃ©rence web Ã  ".$E_WEBEX_START."";
             if ( $E_WEBEX_PIN <> '' )
-                echo ". Code à utiliser ".$E_WEBEX_PIN."";
+                echo ". Code Ã  utiliser ".$E_WEBEX_PIN."";
             echo "</span></td></tr>";
         }
     }
@@ -1832,9 +1832,9 @@ if ( $tab == 1 or $print){
                       <div class='card-title'><strong> Logistique</strong></div>
                     </div>
                     <div class='card-body graycard'><table class='noBorder'>";
-        // Véhicules requis
+        // VÃ©hicules requis
         if ( $vehicules == 1 and $TE_VEHICULES ==  1 and (! $gardeSP or $assoc == 1) ) {
-            echo "<tr><td>Véhicules requis</td><td>";
+            echo "<tr><td>VÃ©hicules requis</td><td>";
             $url="evenement_display.php?evenement=".$evenement."&tab=54";
             $detail="";
             $querym="select NB_VEHICULES 
@@ -1874,13 +1874,13 @@ if ( $tab == 1 or $print){
                 }
             }
             echo $detail;
-            if ( $granted_event ) echo " <a class='btn btn-default btn-action' href='".$url."' title='Modifier les véhicules et matériel demandés'><i class='fa fa-edit fa-lg noprint' ></i></a>";
+            if ( $granted_event ) echo " <a class='btn btn-default btn-action' href='".$url."' title='Modifier les vÃ©hicules et matÃ©riel demandÃ©s'><i class='fa fa-edit fa-lg noprint' ></i></a>";
             echo "</td><tr>";
         }
-        // Matériel requis
+        // MatÃ©riel requis
         if ( $materiel == 1 and $TE_MATERIEL ==  1 and ! $gardeSP ) {
             $detail="";
-            echo "<tr><td>Matériel requis</td><td>";
+            echo "<tr><td>MatÃ©riel requis</td><td>";
             $querym="select tm.TM_ID, tm.TM_CODE
                         from type_materiel tm, demande_renfort_materiel drm 
                         where tm.TM_ID = drm.TYPE_MATERIEL
@@ -1904,7 +1904,7 @@ if ( $tab == 1 or $print){
                     $fgcolor=$widget_fgred;
                     $bgcolor=$widget_bgred;
                 }
-                $detail .=  " <span class='badge' style='color:$fgcolor; background-color:$bgcolor' title=\"besoin de ".$rowm["TM_CODE"]."\n$inscrits engagés\">".$rowm["TM_CODE"]."</span>";
+                $detail .=  " <span class='badge' style='color:$fgcolor; background-color:$bgcolor' title=\"besoin de ".$rowm["TM_CODE"]."\n$inscrits engagÃ©s\">".$rowm["TM_CODE"]."</span>";
             }
 
             $querym="select cm.TM_USAGE, cm.CM_DESCRIPTION
@@ -1931,10 +1931,10 @@ if ( $tab == 1 or $print){
                     $fgcolor=$widget_fgred;
                     $bgcolor=$widget_bgred;
                 }
-                $detail .=  " <span class='badge' style='color:$fgcolor; background-color:$bgcolor' title=\"besoin de ".$rowm["CM_DESCRIPTION"]."\n$inscrits engagés\">".$rowm["TM_USAGE"]."</span>";
+                $detail .=  " <span class='badge' style='color:$fgcolor; background-color:$bgcolor' title=\"besoin de ".$rowm["CM_DESCRIPTION"]."\n$inscrits engagÃ©s\">".$rowm["TM_USAGE"]."</span>";
             }
             echo $detail;
-            if ( $granted_event ) echo " <a class='btn btn-default btn-action' href='".$url."' title='Modifier les véhicules et matériel demandés'><i class='fa fa-edit fa-lg noprint' ></i></a>";
+            if ( $granted_event ) echo " <a class='btn btn-default btn-action' href='".$url."' title='Modifier les vÃ©hicules et matÃ©riel demandÃ©s'><i class='fa fa-edit fa-lg noprint' ></i></a>";
             echo "</td></table>";
         }
         echo "</div></div>";
@@ -1960,10 +1960,10 @@ if ( $tab == 1 or $print){
                 if ( $finished > 0 )
                     $S = "<a href=evenement_display.php?from=interventions&evenement=".$evenement." 
                 title=\"Modifier les statistiques dans l'onglet Rapport\">
-                <span class='badge' style='color:$widget_fgred; background-color:$widget_bgred'> Aucune statistique enregistrée</span></a>";
+                <span class='badge' style='color:$widget_fgred; background-color:$widget_bgred'> Aucune statistique enregistrÃ©e</span></a>";
             }
             if($S == '')
-                $S = 'Rien à afficher';
+                $S = 'Rien Ã  afficher';
             echo "<tr>
                <td>".$S."</td>
             </tr>";
@@ -2037,7 +2037,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
         if(!$print){
             echo "<div align=right class='table-responsive tab-buttons-container'>";
             if ( $remplacements and $REMPLACEMENT==1 and $is_present) {
-                echo " <div class='noprint'><label style='float:left' class='btn btn-primary' title='Je veux demander à être remplacé' onclick=\"bouton_redirect('evenement_display.php?tab=61&child=2&replaced=".$id."&evenement=$evenement');\">
+                echo " <div class='noprint'><label style='float:left' class='btn btn-primary' title='Je veux demander Ã  Ãªtre remplacÃ©' onclick=\"bouton_redirect('evenement_display.php?tab=61&child=2&replaced=".$id."&evenement=$evenement');\">
                      Me faire remplacer
                     </label></div>";
             }
@@ -2054,7 +2054,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     echo "<a class='btn btn-success noprint' style='float:right;margin-left:10px' onclick=\"inscrire(".$evenement.",'personnel');\">
                         <i class='fas fa-plus-circle' style='color:white'></i> Personnel</a>";
                 }
-                // cas général
+                // cas gÃ©nÃ©ral
 
                 else {
                     if ( $syndicate == 1 ) $label = "Inscrire";
@@ -2064,7 +2064,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     if ( ! $gardeSP or check_rights($id,6, $organisateur))
                         echo " <a class='btn btn-success noprint' value='".$label."' onclick=\"inscrire(".$evenement.",'".$cat."')\"><i class='fas fa-plus-circle' style='color:white' data-original-title='''></i> ".$label."</a>";
 
-                    if ( $nbsections == 0 and $gardeSP ) {// deuxième bouton pour pouvoir inscrire du personnel des autres centres
+                    if ( $nbsections == 0 and $gardeSP ) {// deuxiÃ¨me bouton pour pouvoir inscrire du personnel des autres centres
                         if ( $sdis ) $lib = 'centres';
                         else $lib = $levels[4].'s';
                         if($lib == 'antennes') $lib = 'sections';
@@ -2073,7 +2073,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     if ( $externes == 1 and ! $gardeSP ) {
                         echo " <a class='btn btn-success noprint' onclick=\"inscrire(".$evenement.",'personnelexterne')\"><i class='fas fa-plus-circle' style='color:white' data-original-title='''></i> Externe</a>";
                         if (check_rights($id, 37)) {
-                            echo " <a class='btn btn-success noprint' onclick=\"nouvel_externe(".$evenement.");\"><i class='fas fa-plus-circle' style='color:white' data-original-title='''></i> Créer Externe</a>";
+                            echo " <a class='btn btn-success noprint' onclick=\"nouvel_externe(".$evenement.");\"><i class='fas fa-plus-circle' style='color:white' data-original-title='''></i> CrÃ©er Externe</a>";
                         }
                     }
                 }
@@ -2095,7 +2095,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
             if ( $nbsessions == 2 and $gardeSP) {
                 $date_selector =" Montrer le personnel <select name='evenement_periode' class='selectpicker smalldropdown2' data-container='body' data-style='btn btn-default' id='evenement_periode' onchange=\"change_periode('".$evenement."')\" 
                         style='max-width:178px'>";
-                $date_selector .="<option value='0' selected > sur toutes les périodes</option>";
+                $date_selector .="<option value='0' selected > sur toutes les pÃ©riodes</option>";
                 if ( $evenement_periode == '1' ) {
                     $selected = 'selected';
                     $found2=true;
@@ -2103,13 +2103,13 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                 else $selected = '';
                 $periode1 = $EH_DEBUT[1]."-".$EH_FIN[1];
                 $periode2 = $EH_DEBUT[2]."-".$EH_FIN[2];
-                $date_selector .="<option value='1' $selected >présent ".$periode1."</option>";
+                $date_selector .="<option value='1' $selected >prÃ©sent ".$periode1."</option>";
                 if ( $evenement_periode == '2' ) {
                     $selected = 'selected';
                     $found2=true;
                 }
                 else $selected = '';
-                $date_selector .="<option value='2' $selected >présent ".$periode2."</option>";
+                $date_selector .="<option value='2' $selected >prÃ©sent ".$periode2."</option>";
                 $date_selector .="</select>";
             }
             else if ( $_date <> $last and $nbsessions > 1 ) {
@@ -2123,7 +2123,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                         $found=true;
                     }
                     else $selected = '';
-                    $date_selector .="<option value='".$_date."' $selected >présent le ".$day."-".$month."-".$year."</option>";
+                    $date_selector .="<option value='".$_date."' $selected >prÃ©sent le ".$day."-".$month."-".$year."</option>";
                     $real_date = date_create($_date);
                     date_modify($real_date, '+1 day');
                     $_date = date_format($real_date, 'Y-m-d');
@@ -2135,7 +2135,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     $found=true;
                 }
                 else $selected = '';
-                $date_selector .="<option value='".$_date."' $selected >présent le ".$day."-".$month."-".$year."</option>";
+                $date_selector .="<option value='".$_date."' $selected >prÃ©sent le ".$day."-".$month."-".$year."</option>";
                 $date_selector .="</select>";
             }
             else $date_selector="";
@@ -2215,17 +2215,17 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                 echo "</table><div class='table-responsive'>";
                 if ( $print )  echo "<div class='col-sm-12'>
                 
-                <div style='float:right'>".$cmt." Inscrits <span class='badge'>$NP</span> Présents <span class='badge'>$NP2</span> ".$date_selector." </td></tr>
+                <div style='float:right'>".$cmt." Inscrits <span class='badge'>$NP</span> PrÃ©sents <span class='badge'>$NP2</span> ".$date_selector." </td></tr>
                 </div><table class ='newTableAll' cellspacing=0 border=0  style='font-weight:100 !important'>";
                 else echo "<div class='col-sm-12'>
                 
-                <div style='float:right'>".$cmt." Inscrits <span class='badge'>$NP</span> Présents <span class='badge'>$NP2</span> ".$date_selector." 
+                <div style='float:right'>".$cmt." Inscrits <span class='badge'>$NP</span> PrÃ©sents <span class='badge'>$NP2</span> ".$date_selector." 
                 </div><table class ='newTableAll' cellspacing=0 border=0  style='font-weight:100 !important'>";
                 if ( $evenement_show_competences == 1 ) $checked='checked';
                 else $checked='';
 
                 if ( $competences == 1 )
-                    $competences_checkbox = "<span style='position:relative;top:-5px'> Compétence </span>
+                    $competences_checkbox = "<span style='position:relative;top:-5px'> CompÃ©tence </span>
                         <label class='switch'>
                             <input type='checkbox' id ='evenement_show_competences' class='ml-3' 
                             value='1' style='height:22px' 
@@ -2282,20 +2282,20 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                 if ( $print ) $date_selector='';
                 else
                     echo "<td width=60>Image</td>";
-                if ( $grades ) echo "<td width=40><a href=evenement_display.php?evenement=".$evenement."&tab=2&order=G_LEVEL title='trier par Grade décroissant'>Grade</a></td>";
-                if ( $print ) echo "<td style='min-width:300px;' >Personnel présent</td>";
+                if ( $grades ) echo "<td width=40><a href=evenement_display.php?evenement=".$evenement."&tab=2&order=G_LEVEL title='trier par Grade dÃ©croissant'>Grade</a></td>";
+                if ( $print ) echo "<td style='min-width:300px;' >Personnel prÃ©sent</td>";
                 else {
                     echo "<td style='min-width:300px;'>";
                     if ( "$evts" <> "$evenement" ) echo " <a href=evenement_display.php?evenement=".$evenement."&tab=2&order=E_PARENT title='trier par ".$renfort_label."'>".ucfirst($renfort_label)."</a> /";
                     echo " <a href=evenement_display.php?evenement=".$evenement."&tab=2&order=P_NOM title='trier par Nom'>Inscrits</a></td>";
                 }
-                if ( ! $print) echo "<td style='max-width:160px; min-width:60px' align=left>Téléphone</td>";
+                if ( ! $print) echo "<td style='max-width:160px; min-width:60px' align=left>TÃ©lÃ©phone</td>";
                 if ( $nbfn > 0 ){
                     if ($granted_event and (!$print) and $changeallowed) echo "<td width=170><a href=evenement_display.php?evenement=".$evenement."&tab=2&order=TP_LIBELLE title='trier par fonction'>Fonction</a></td>";
                     else echo "<td style='min-width:80px;'>Fonction</td>";
                 }
                 else echo "<td></td>";
-                if ( $nbe > 0 ) echo "<td style='min-width:80px;'><a href=evenement_display.php?evenement=".$evenement."&tab=2&order=EE_NAME title='trier par équipe'>Equipe</a></td>";
+                if ( $nbe > 0 ) echo "<td style='min-width:80px;'><a href=evenement_display.php?evenement=".$evenement."&tab=2&order=EE_NAME title='trier par Ã©quipe'>Equipe</a></td>";
                 if ( $gardes == 0 and $TE_VICTIMES == 1)
                     echo "<td width=22><a href=evenement_display.php?evenement=".$evenement."&tab=2&order=TSP_ID title='trier par statut'>Statut.</a></td>";
                 else echo "<td></td>";
@@ -2344,15 +2344,15 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                             $CS_DESCRIPTION=$rowR["CS_DESCRIPTION"];
                             if ( $CE_CANCELED == 1 ) {
                                 $color="red";
-                                $info="activité annulée";
+                                $info="activitÃ© annulÃ©e";
                             }
                             elseif ( $CE_CLOSED == 1 ) {
                                 $color=$widget_fgorange;
-                                $info="activité clôturée";
+                                $info="activitÃ© clÃ´turÃ©e";
                             }
                             else {
                                 $color=$widget_fggreen;
-                                $info="activité ouverte";
+                                $info="activitÃ© ouverte";
                             }
                             if ( $EH_DATE_DEBUT0[$n] <> $EH_DATE_FIN0[$n] ) $dates_renfort=$EH_DATE_DEBUT0[$n] ." au ".$EH_DATE_FIN0[$n];
                             else $dates_renfort=$EH_DATE_DEBUT0[$n];
@@ -2407,7 +2407,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     if ( check_rights($id, 10,"$S_ID")) $granted_update=true;
                     else $granted_update=false;
 
-                    // récupérer horaires de la personne dans un tableau
+                    // rÃ©cupÃ©rer horaires de la personne dans un tableau
                     $clock="";
                     $EP_DATE_DEBUT=array();
                     $EP_DATE_FIN=array();
@@ -2456,7 +2456,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     }
                     else $overlap = false;
 
-                    // boucle sur les dates de l'activité principal
+                    // boucle sur les dates de l'activitÃ© principal
                     $j=1;$clock="";$p1=0;$p2=0;
                     for ($i=1; $i <= $nbmaxsessionsparevenement; $i++) {
                         $subclock="";
@@ -2476,27 +2476,27 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                                     else if ( $EP_ASTREINTE[$key] == 1 ) {
                                         $normalicon="$widget_fgblue";
                                         $normalicon2="#3333cc";
-                                        $titleprefix="ASTREINTE (garde non rémunérée) ";
+                                        $titleprefix="ASTREINTE (garde non rÃ©munÃ©rÃ©e) ";
                                     }
                                     else {
                                         $normalicon="$widget_fggreen";
                                         $normalicon2="$widget_fgorange";
                                         $titleprefix="";
                                     }
-                                    if ($nbsessions == 1 ) $t=" de l'activité";
-                                    else $t=" de la partie n°".$num_partie;
+                                    if ($nbsessions == 1 ) $t=" de l'activitÃ©";
+                                    else $t=" de la partie nÂ°".$num_partie;
                                     if ( $EP_ABSENT[$key] == 1 ) {
-                                        if ( $EP_EXCUSE[$key] == 0 ) $n='non excusée';
-                                        else $n='excusée';
+                                        if ( $EP_EXCUSE[$key] == 0 ) $n='non excusÃ©e';
+                                        else $n='excusÃ©e';
                                         $subclock ="<i class='fa fa-clock fa-lg' style='color:darkgrey' title=\"Absence ".$n."\ncliquer pour modifier\"></i>";
                                     }
                                     elseif ( $EP_DATE_DEBUT[$key] <> "" ) {
                                         if ( $EP_DATE_DEBUT[$key] == $EP_DATE_FIN[$key] ) $horaire_p[$key]= substr($EP_DATE_DEBUT[$key],0,5).", ".$EP_DEBUT[$key]."-".$EP_FIN[$key];
                                         else $horaire_p[$key]= substr($EP_DATE_DEBUT[$key],0,5)." au ".substr($EP_DATE_FIN[$key],0,5).", ".$EP_DEBUT[$key]."-".$EP_FIN[$key];
-                                        $subclock ="<i class='fa fa-clock fa-lg' style='color:".$normalicon2."' title=\"".$titleprefix."horaires différents de ceux $t \n".$horaire_p[$key]."\"></i>";
+                                        $subclock ="<i class='fa fa-clock fa-lg' style='color:".$normalicon2."' title=\"".$titleprefix."horaires diffÃ©rents de ceux $t \n".$horaire_p[$key]."\"></i>";
                                     }
-                                    else if ( isset($horaire_renfort[$i])) $subclock ="<i class='fa fa-clock fa-lg' style='color:".$normalicon."'  title=\"".$titleprefix."horaires identiques à ceux $t \n".$horaire_renfort[$i]."\"></i>";
-                                    else $subclock ="<i class='fa fa-clock fa-lg' style='color:".$normalicon."' title=\"".$titleprefix."horaires identiques à ceux de la partie n°".$i." \n".$horaire_renfort[$j]."\"></i>";
+                                    else if ( isset($horaire_renfort[$i])) $subclock ="<i class='fa fa-clock fa-lg' style='color:".$normalicon."'  title=\"".$titleprefix."horaires identiques Ã  ceux $t \n".$horaire_renfort[$i]."\"></i>";
+                                    else $subclock ="<i class='fa fa-clock fa-lg' style='color:".$normalicon."' title=\"".$titleprefix."horaires identiques Ã  ceux de la partie nÂ°".$i." \n".$horaire_renfort[$j]."\"></i>";
                                     if ( $num_partie == 1 ) {
                                         $tmp_arr = explode(":",$EH_DEBUT[$i]);
                                         $heure_deb = $tmp_arr[0];
@@ -2507,22 +2507,22 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                                 }
                                 else if ( $E_COLONNE_RENFORT == 1 ) {
                                     if ( $overlap ) $subclock ="<i class='fa fa-clock fa-lg' style='color:$widget_fggreen'></i>";
-                                    else $subclock ="<i class='fa fa-ban fa-lg' style='color:$widget_fgred' title=\"Les dates de ".$renfort_label." ne correspondent pas à celles de l'activité principale.\"></i>";
+                                    else $subclock ="<i class='fa fa-ban fa-lg' style='color:$widget_fgred' title=\"Les dates de ".$renfort_label." ne correspondent pas Ã  celles de l'activitÃ© principale.\"></i>";
                                 }
-                                else $subclock ="<i class='far fa-circle fa-lg' style='color:grey' title=\"Pas inscrit(e) pour la Partie n°".$EH_ID[$i]."\"></i>";
+                                else $subclock ="<i class='far fa-circle fa-lg' style='color:grey' title=\"Pas inscrit(e) pour la Partie nÂ°".$EH_ID[$i]."\"></i>";
                                 $j++;
                             }
                             else {
-                                if ( $E_COLONNE_RENFORT == 1 ) $subclock ="<i class='fa fa-ban fa-lg' style='color:$widget_fgred' title=\"Les dates de ".$renfort_label." ne correspondent pas à celles de l'activité principale\"></i>";
-                                else $subclock ="<i class='fa fa-ban fa-lg' style='color:$widget_fgred'  title=\"".ucfirst($renfort_label)." inactif pour la Partie n°".$EH_ID[$i]."\"></i>";
+                                if ( $E_COLONNE_RENFORT == 1 ) $subclock ="<i class='fa fa-ban fa-lg' style='color:$widget_fgred' title=\"Les dates de ".$renfort_label." ne correspondent pas Ã  celles de l'activitÃ© principale\"></i>";
+                                else $subclock ="<i class='fa fa-ban fa-lg' style='color:$widget_fgred'  title=\"".ucfirst($renfort_label)." inactif pour la Partie nÂ°".$EH_ID[$i]."\"></i>";
                             }
                         }
-                        if ( $CE_CANCELED == 1 and $subclock <> "" ) $subclock = "<i class='fa fa-clock fa-lg' style='color:$widget_fgred'  title=\"annulé\"></i>";
+                        if ( $CE_CANCELED == 1 and $subclock <> "" ) $subclock = "<i class='fa fa-clock fa-lg' style='color:$widget_fgred'  title=\"annulÃ©\"></i>";
                         if($subclock != '')
                             $clock .= "<button class='btn btn-default btn-action noprint'>$subclock</button>";
                     }
 
-                    // Cas garde SP, vérifier la dispo des SPV, sinon Warning
+                    // Cas garde SP, vÃ©rifier la dispo des SPV, sinon Warning
                     $warnclock="";
                     if ( $gardeSP and $P_STATUT == 'SPV') {
                         $query1="select sum( d.PERIOD_ID * d.PERIOD_ID ) as NUM from disponibilite d where d.P_ID=".$P_ID." and d.D_DATE='".$year1[1]."-".$month1[1]."-".$day1[1]."'";
@@ -2537,7 +2537,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                             ( $p1 == 1 and $heure_debut_garde < 12 and ! in_array($NUM,$array_jour))    ||
                             ( $p1 == 1 and $heure_debut_garde >= 12 and ! in_array($NUM,$array_aprem))  ||
                             ( $p2 == 1 and ! in_array($NUM,$array_nuit))  )
-                            $warnclock = " <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgred' title=\"Attention: ce SPV n'a pas la disponibilité suffisante pour cette garde ".$label."\"></i>";
+                            $warnclock = " <i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgred' title=\"Attention: ce SPV n'a pas la disponibilitÃ© suffisante pour cette garde ".$label."\"></i>";
                     }
 
                     if ( $EP_FLAG1[1] == 1 and $EP_COMMENT <> '') $txtimg="sticky-note fa-lg' style='color:purple;";
@@ -2551,16 +2551,16 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     }
                     else $inscritPar="";
                     $popup="Inscrit le: ".$EP_DATE;
-                    if ( $gardeSP and $P_STATUT == 'SPP' and $EP_FLAG1[1] == 1 ) $popup .= "\nGarde en qualité de SPP";
+                    if ( $gardeSP and $P_STATUT == 'SPP' and $EP_FLAG1[1] == 1 ) $popup .= "\nGarde en qualitÃ© de SPP";
                     else if ( $EP_FLAG1[1] == 1 ) {
                         if ( $SC ) $ss = "service civique";
-                        else $ss = "salarié(e)";
+                        else $ss = "salariÃ©(e)";
                         $popup .= "\nParticipation en tant que ".$ss;
                     }
                     if ( $EP_COMMENT <> "" ) $popup .= "\nCommentaire: ".$EP_COMMENT;
 
                     $myimg="";
-                    if ( $gardeSP ) { // vérifier que pas inscrit sur 2 tableaux de gardes
+                    if ( $gardeSP ) { // vÃ©rifier que pas inscrit sur 2 tableaux de gardes
                         $querySP="select count(1) from evenement_participation ep, evenement e, evenement_horaire eh
                             where ep.P_ID=".$P_ID." 
                             and ep.E_CODE = e.E_CODE 
@@ -2573,14 +2573,14 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                         $resultSP=mysqli_query($dbc,$querySP);
                         $rowSP=@mysqli_fetch_array($resultSP);
                         $autre_garde=$rowSP[0];
-                        if ( $autre_garde > 0 ) $myimg="<i class='fa fa-exclamation' style='color:$widget_fgred' title='attention ce personnel est parallèlement inscrit sur une autre garde'></i>";
+                        if ( $autre_garde > 0 ) $myimg="<i class='fa fa-exclamation' style='color:$widget_fgred' title='attention ce personnel est parallÃ¨lement inscrit sur une autre garde'></i>";
                     }
                     if ( $nbsessions == 1 and ! $gardeSP and $nbparticipants < 30 and $TE_CODE <> 'MC' ) {
                         $nb = get_nb_inscriptions($P_ID, $year1[1], $month1[1], $day1[1], $year2[$nummaxpartie], $month2[$nummaxpartie], $day2[$nummaxpartie], 0, $EC) ;
                         if ( $nb > 1 )
-                            $myimg="<i class='fa fa-exclamation' style='color:$widget_fgred'  title='attention ce personnel est parallèlement inscrit sur $nb autres activités'></i>";
+                            $myimg="<i class='fa fa-exclamation' style='color:$widget_fgred'  title='attention ce personnel est parallÃ¨lement inscrit sur $nb autres activitÃ©s'></i>";
                         else if ( $nb == 1 )
-                            $myimg="<i class='fa fa-exclamation' style='color:#ff8000'  title='attention ce personnel est parallèlement inscrit sur 1 autre activité'></i>";
+                            $myimg="<i class='fa fa-exclamation' style='color:#ff8000'  title='attention ce personnel est parallÃ¨lement inscrit sur 1 autre activitÃ©'></i>";
                     }
 
                     $cmt="";
@@ -2607,7 +2607,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     if ( $P_CIVILITE > 3 )
                         $cmt="<span class='badge' style='background-color:purple; color:white; font-size:9px; padding:2px;'>chien</span>";
                     else if ( $AGE <> '' )
-                        if ($AGE < 18 ) $cmt="<span class='badge' style='background-color:$widget_fgred; color:white; font-size:9px; padding:2px;' title=\"mineur au début de l'activité\">-18</span>";
+                        if ($AGE < 18 ) $cmt="<span class='badge' style='background-color:$widget_fgred; color:white; font-size:9px; padding:2px;' title=\"mineur au dÃ©but de l'activitÃ©\">-18</span>";
 
                     // nouvelle ligne
                     if ( ! $print or ! $full_absent ) {
@@ -2615,7 +2615,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                         $SP_SPECIFIC_TEXT="";
                         if ( $gardeSP and $P_STATUT == 'SPV' ) {
                             $SP_DISPO_TIME_DAY = dispo_hr_spp ($P_ID, $date); // les heures dispo
-                            $SP_HORAIRE_GARDE = get_horaire($P_ID, $E_CODE); // horaires prévus de garde
+                            $SP_HORAIRE_GARDE = get_horaire($P_ID, $E_CODE); // horaires prÃ©vus de garde
                             $SP_HORAIRE_GARDE = $SP_HORAIRE_GARDE[1];
                             $free_time = $SP_DISPO_TIME_DAY - $SP_HORAIRE_GARDE;
                             if($free_time > 0)
@@ -2644,29 +2644,29 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                             echo "<td><img src='$src' class='img-max-40' style='border-radius:10px'></td>";
                         if ( $grades ) echo "<td align=left >".$altcolor.$P_GRADE."</font></td>";
                         echo "<td style='padding-left:3px;'><a href=upd_personnel.php?pompier=$P_ID title=\"$extcmt\">".$altcolor.strtoupper($P_NOM)." ".my_ucfirst($P_PRENOM)." $cmt</a>";
-                        if ( $warn_duplicate_pid ) echo "<i class='fa fa-exclamation-triangle' style='color:$widget_fgorange' title='Attention cette personne apparaît plusieurs fois dans la liste'></i>";
+                        if ( $warn_duplicate_pid ) echo "<i class='fa fa-exclamation-triangle' style='color:$widget_fgorange' title='Attention cette personne apparaÃ®t plusieurs fois dans la liste'></i>";
                         echo $SP_SPECIFIC_TEXT;
                         echo "</td>";
 
                         echo "<td>$P_PHONE</td>";
 
-                        // compétences
+                        // compÃ©tences
                         $required_comp = intval($F_PS_ID + $F_PS_ID2);
                         $postes ="";
                         if ( $evenement_show_competences == 1 ) $postes=get_competences($P_ID, $TE_CODE);
                         else if ( $required_comp > 0 ) $null=get_competences($P_ID, $TE_CODE);
-                        // affiche fonctions / équipes
+                        // affiche fonctions / Ã©quipes
                         if (($granted_personnel or $granted_event or $granted_update or ($granted_inscription and $gardeSP))
                             and ! $print and $changeallowed ) {
                             if ( $nbfn > 0 ) {
                                 $warnflag="";
                                 if ( $required_comp > 0  and ! $found) {
-                                    $warnflag="<i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgorange' title=\"Attention cette personne n'est pas qualifiée pour assurer cette fonction\"></i>";
+                                    $warnflag="<i class='fa fa-exclamation-triangle fa-lg' style='color:$widget_fgorange' title=\"Attention cette personne n'est pas qualifiÃ©e pour assurer cette fonction\"></i>";
                                 }
                                 if (  ($granted_event or ($granted_inscription and $gardeSP) ) and $changeallowed ) {
                                     // choix fonction
                                     $url="evenement_modal.php?action=fonction&evenement=".$evenement."&pid=".$P_ID;
-                                    if ( $TP_ID == "" or $TP_ID == 0 ) $TP_LIBELLE="<div id='divfn".$P_ID."' class='noprint' title='sélectionner une fonction'>Choisir</div>";
+                                    if ( $TP_ID == "" or $TP_ID == 0 ) $TP_LIBELLE="<div id='divfn".$P_ID."' class='noprint' title='sÃ©lectionner une fonction'>Choisir</div>";
                                     else $TP_LIBELLE="<div id='divfn".$P_ID."' title='changer la fonction'>".$TP_LIBELLE." ".$warnflag."</div>";
                                     echo "<td>";
                                     print write_modal( $url, "fonction_".$P_ID, $TP_LIBELLE);
@@ -2679,17 +2679,17 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                             }
                             else echo "<td></td>";
 
-                            // choix équipe
+                            // choix Ã©quipe
                             if ( $nbe > 0 ) {
                                 if (! $granted_event or ! $changeallowed) {
                                     if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="";
                                     echo  "<td><small>".$EE_NAME." </small></a></td>";
                                 }
                                 else {
-                                    // choix équipe
+                                    // choix Ã©quipe
                                     $url="evenement_modal.php?action=equipe&evenement=".$evenement."&pid=".$P_ID;
-                                    if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="<div id='divpe".$P_ID."' title='Choisir une équipe' class='noprint'>Choisir équipe</div>";
-                                    else $EE_NAME="<div id='divpe".$P_ID."' title='Changer équipe'>".$EE_NAME." <a></a></div>";
+                                    if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="<div id='divpe".$P_ID."' title='Choisir une Ã©quipe' class='noprint'>Choisir Ã©quipe</div>";
+                                    else $EE_NAME="<div id='divpe".$P_ID."' title='Changer Ã©quipe'>".$EE_NAME." <a></a></div>";
                                     echo "<td>";
                                     print write_modal( $url, "equipe_".$P_ID, $EE_NAME);
                                     echo "</td>";
@@ -2720,24 +2720,24 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                             }
 
                             if ( $EP_REMINDER == 1 and $cron_allowed == 1 and $P_EMAIL <> "")
-                                $bell="<span class='btn btn-default btn-action'><i class='fa fa-bell fa-lg' style='color:$widget_fgred;' title=\"Une notification de rappel sera envoyée la veille par mail\" ></i></span>";
+                                $bell="<span class='btn btn-default btn-action'><i class='fa fa-bell fa-lg' style='color:$widget_fgred;' title=\"Une notification de rappel sera envoyÃ©e la veille par mail\" ></i></span>";
                             else
                                 $bell='';
 
                             if ( $EP_ASTREINTE == 1 ) {
                                 $garde_astreinte="<span class='btn btn-default btn-action' >
-                                        <i class='fa fa-exclamation-triangle' style='color:$widget_fgorange;' title=\"Astreinte (garde non rémunérée) sur les parties de la garde montrant une horloge bleue ou orange.\" ></i>
+                                        <i class='fa fa-exclamation-triangle' style='color:$widget_fgorange;' title=\"Astreinte (garde non rÃ©munÃ©rÃ©e) sur les parties de la garde montrant une horloge bleue ou orange.\" ></i>
                                         </span>";
                             }
                             else {
                                 $garde_astreinte='';
                             }
 
-                            if ( $EP_KM <> '' ) $_km="<span class='btn btn-default btn-action' title='$EP_KM km parcourus en véhicule personnel'>".$EP_KM." </span>";
+                            if ( $EP_KM <> '' ) $_km="<span class='btn btn-default btn-action' title='$EP_KM km parcourus en vÃ©hicule personnel'>".$EP_KM." </span>";
                             else $_km='';
-                            if ( $EP_ASA == 1 ) $_asa="<span class='btn btn-default btn-action' title=\"Autorisation spéciale d'absence\">ASA</span>";
+                            if ( $EP_ASA == 1 ) $_asa="<span class='btn btn-default btn-action' title=\"Autorisation spÃ©ciale d'absence\">ASA</span>";
                             else $_asa='';
-                            if ( $EP_DAS == 1 ) $_das="<span class='btn btn-default btn-action' title=\"Décharge d'activité de service\">DAS</span>";
+                            if ( $EP_DAS == 1 ) $_das="<span class='btn btn-default btn-action' title=\"DÃ©charge d'activitÃ© de service\">DAS</span>";
                             else $_das='';
                             
                             $laterprint='';
@@ -2748,7 +2748,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                         }
 
                         // statut participation?
-                        // sur les activités opérationnelles associatives on peut choisir un statut
+                        // sur les activitÃ©s opÃ©rationnelles associatives on peut choisir un statut
                         if ( $gardes == 0 and $TE_VICTIMES == 1 and ! $print) {
                             $url="evenement_modal.php?action=statut&evenement=".$evenement."&pid=".$P_ID;
                             if ( $granted_event )
@@ -2799,7 +2799,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                         // suppression
                         if (($granted_event or ($granted_inscription and (check_rights($id,15,"$organisateur") or $gardeSP)) )
                             and ! $print and $changeallowed and ( $E_CLOSED == 0 or $chef or check_rights($id,14))) {
-                            echo "<a class='btn btn-default btn-action noprint' href=\"javascript:desinscrire('".$evenement."','".$EC."','".$P_ID."');\" title='désinscrire' >
+                            echo "<a class='btn btn-default btn-action noprint' href=\"javascript:desinscrire('".$evenement."','".$EC."','".$P_ID."');\" title='dÃ©sinscrire' >
                                     <i class='far fa-trash-alt fa-lg'></i></a>";
                         }
                         echo "</td>";
@@ -2809,7 +2809,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                 echo "</div></table>";
 
                 if (! $personnel_visible )
-                    echo " <br><div class='alert alert-warning' role='alert'>Attention, vous n'avez pas la permission de voir les noms des inscrits autres que vous même.</div>";
+                    echo " <br><div class='alert alert-warning' role='alert'>Attention, vous n'avez pas la permission de voir les noms des inscrits autres que vous mÃªme.</div>";
             }
             else echo "Aucun personnel inscrit. (".$cmt.").<br>";
 
@@ -2822,7 +2822,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                 if ( $E_ANOMALIE == 1 ) $checked='checked';
                 else $checked='';
                 echo  " <label for='evenement_anomalie' style='margin-right: 6px;'>Garde en anomalie </label><input type=checkbox id='evenement_anomalie' name='evenement_anomalie' values='1' $checked 
-                        title='Cocher si cette garde présente une anomalie'
+                        title='Cocher si cette garde prÃ©sente une anomalie'
                         onchange=\"change_anomalie('".$evenement."')\"
                         style='margin-right: 20px;'>";
             }
@@ -2841,7 +2841,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                     $date_veille = date('Y-m-d', strtotime($year1[1].'-'.$month1[1].'-'.$day1[1].' - 1 days'));
                     $garde_veille=get_garde_jour(0, $E_EQUIPE, $date_veille);
                     if ( $garde_veille  > 0 )
-                        echo " <label class='btn btn-default' title='Garde précédente' onclick=\"bouton_redirect('evenement_display.php?evenement=$garde_veille&from=gardes');\">
+                        echo " <label class='btn btn-default' title='Garde prÃ©cÃ©dente' onclick=\"bouton_redirect('evenement_display.php?evenement=$garde_veille&from=gardes');\">
                             <i class='fa fa-chevron-left' ></i>
                             </label>";
 
@@ -2868,20 +2868,20 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                 echo  "<form name='FrmEmail' id='FrmEmail'method='post' action='mail_create.php'>";
                 echo  "<input type='hidden' name='Messagesubject' value=\"".str_replace("'","",$E_LIBELLE)."\">";
                 if ( $E_WHATSAPP <> "" and ($is_inscrit or $granted_personnel)) {
-                    $msg = "\n\n\n\nRejoignez le groupe Whatsapp de cette activité ".$whatsapp_chat_url."/".$E_WHATSAPP;
+                    $msg = "\n\n\n\nRejoignez le groupe Whatsapp de cette activitÃ© ".$whatsapp_chat_url."/".$E_WHATSAPP;
                     echo  "<input type='hidden' name='Messagebody' value=\"".$msg."\">";
                 }
                 echo  "<input type='hidden' name='SelectionMail'
                         value=\"".rtrim($listePompiers,',')."\" />";
                 if ( check_rights($id, 43)) {
-                    echo "<a class='dropdown-item' onClick='document.getElementById(\"FrmEmail\").submit();' title=\"envoyer un message aux inscrits à partir de l'application web\"/>Envoyer</a>";
+                    echo "<a class='dropdown-item' onClick='document.getElementById(\"FrmEmail\").submit();' title=\"envoyer un message aux inscrits Ã  partir de l'application web\"/>Envoyer</a>";
                     if ( $mailist <> "" ) {
                         echo " <a class='dropdown-item' href='#' onclick=\"DirectMailTo('".rtrim($mailist,',')."','".$evenement."')\"
-                    title=\"Envoyer un mail aux inscrits à partir de votre logiciel de messagerie.\">Mail</a>";
+                    title=\"Envoyer un mail aux inscrits Ã  partir de votre logiciel de messagerie.\">Mail</a>";
                     }
 
-                    echo " <a  class='dropdown-item' onclick=\"getListMails('".rtrim($mailist,',')."');\" title=\"Récupérer la liste des adresses email des inscrits\"><i class=\"fas fa-file-download\"></i> liste TXT</a>";
-                    echo " <a class='dropdown-item' onclick=\"getListContacts('".rtrim($mailist,',')."');\" title=\"Récupérer la liste des contacts au format csv, pour les importer dans un groupe de messagerie\"><i class=\"fas fa-file-download\"></i> liste CSV</a>";
+                    echo " <a  class='dropdown-item' onclick=\"getListMails('".rtrim($mailist,',')."');\" title=\"RÃ©cupÃ©rer la liste des adresses email des inscrits\"><i class=\"fas fa-file-download\"></i> liste TXT</a>";
+                    echo " <a class='dropdown-item' onclick=\"getListContacts('".rtrim($mailist,',')."');\" title=\"RÃ©cupÃ©rer la liste des contacts au format csv, pour les importer dans un groupe de messagerie\"><i class=\"fas fa-file-download\"></i> liste CSV</a>";
                 }
                 echo "</form>";
                 echo "</div>";
@@ -2891,7 +2891,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
 
             if ( $E_WHATSAPP <> "" and ($is_inscrit or $granted_personnel)) {
                 echo " <a class='btn btn-default noprint' href=\"".$whatsapp_chat_url."/".$E_WHATSAPP."\" target='_blank'
-                title=\"Rejoindre ou communiquer avec le groupe Whatsapp de cette activité.\">
+                title=\"Rejoindre ou communiquer avec le groupe Whatsapp de cette activitÃ©.\">
                 <i class='fab fa-whatsapp fa-lg' style='color:#00cc00'></i></a>";
             }
         }
@@ -2974,7 +2974,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
         }
         $body .="<div id='myDiv' class='container-fluid'  >";
         if ( is_iphone() && check_rights($id,6,$organisateur)){//la version mobile peut consulter uniquement les piquets avec affichage sur la largeur du mobile
-            $body .= "<div align='center' style='font-weight: bold;color:$mydarkcolor'>Vous pouvez accéder depuis votre ordinateur pour modifier les piquets</div> <br>";
+            $body .= "<div align='center' style='font-weight: bold;color:$mydarkcolor'>Vous pouvez accÃ©der depuis votre ordinateur pour modifier les piquets</div> <br>";
             $body .="<div id='myRow' class='row' ><div class='col-md-12'>";
         }
         else {
@@ -2988,7 +2988,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
                 AND tv.TV_NB > 0
                 order by v.TV_CODE, v.V_INDICATIF";
         $result=mysqli_query($dbc,$query);//search vehicules participating in the event
-        if ( mysqli_num_rows($result) == 0 ) echo "<div class='alert alert-info' role='alert'> Pour utiliser les affectations, il faut configurer les équipes et les véhicules de l'activité </div>";
+        if ( mysqli_num_rows($result) == 0 ) echo "<div class='alert alert-info' role='alert'> Pour utiliser les affectations, il faut configurer les Ã©quipes et les vÃ©hicules de l'activitÃ© </div>";
         write_debugbox($query);
         while (custom_fetch_array($result)){// a boucle to display the guard table for each vehicule
             if ( $V_INDICATIF <> '' ) $vname = $V_INDICATIF ;
@@ -3021,7 +3021,7 @@ if ( $tab == 2  or $tab == 61 or $print ) {
     }
 }
 //=====================================================================
-// véhicules demandés
+// vÃ©hicules demandÃ©s
 //=====================================================================
 if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommables)) ) {
 
@@ -3039,7 +3039,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
     }
     if ($vehicules)
         echo "<li class = 'nav-item'>
-            <a class = 'nav-link $class' href = 'evenement_display.php?pid=$pid&from=$from&tab=$tab&child=1&evenement=$evenement' role = 'tab'>Véhicule <span class='badge $badgeClass'>$NB2</span></a>
+            <a class = 'nav-link $class' href = 'evenement_display.php?pid=$pid&from=$from&tab=$tab&child=1&evenement=$evenement' role = 'tab'>VÃ©hicule <span class='badge $badgeClass'>$NB2</span></a>
         </li>";
 
     if ($child == 2) {
@@ -3053,7 +3053,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
 
     if ($materiel)
         echo "<li class = 'nav-item'>
-        <a class = 'nav-link $class' href = 'evenement_display.php?pid=$pid&from=$from&tab=$tab&child=2&evenement=$evenement' role = 'tab'>Matériel <span class='badge $badgeClass'>$NB3</span></a>
+        <a class = 'nav-link $class' href = 'evenement_display.php?pid=$pid&from=$from&tab=$tab&child=2&evenement=$evenement' role = 'tab'>MatÃ©riel <span class='badge $badgeClass'>$NB3</span></a>
         </li>";
 
     if ($child == 3) {
@@ -3080,7 +3080,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
         if (( $E_CANCELED == 0 ) and !$print and  $granted_vehicule) {
             $url="evenement_display.php?evenement=".$evenement."&what=vehicule&tab=50";
             echo "<div align=right class='table-responsive tab-buttons-container'>";
-            echo "<a href='".$url."' class='btn btn-success'><i class='fa fa-plus-circle'></i> <span class='hide_mobile'>Véhicule</span></a>";
+            echo "<a href='".$url."' class='btn btn-success'><i class='fa fa-plus-circle'></i> <span class='hide_mobile'>VÃ©hicule</span></a>";
             echo "</div>";
         }
 
@@ -3121,7 +3121,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
             echo "<table class='newTableAll'>";
             echo "<tr>
                     <td class='hide_mobile'></td>
-                    <td>Véhicule</td>
+                    <td>VÃ©hicule</td>
                     <td>Statut</td>";
             if ( $assoc ) {
                     echo "<td class='hide_mobile'>Indicatif</td>
@@ -3129,7 +3129,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
             }
             echo "<td align=center class='hide_mobile2'>Fonction</td>
                     <td align=center class='hide_mobile2'>Equipe</td>
-                    <td >Kilométrage</td>
+                    <td >KilomÃ©trage</td>
                     <td class='hide_mobile'></td>
                     <td ></td>
                 </tr>";
@@ -3141,7 +3141,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 if ( $V_MODELE == "" ) $vehicule_string = $TV_CODE;
                 else $vehicule_string = $TV_CODE." - ".$V_MODELE;
 
-                // affiche d'où vient le renfort
+                // affiche d'oÃ¹ vient le renfort
                 if ( $EC <> $prevEC ) {
                     $queryR="select e.E_CANCELED as CE_CANCELED, e.E_CLOSED as CE_CLOSED, eh.EH_ID,
                         s.S_CODE CS_CODE, s.S_DESCRIPTION CS_DESCRIPTION,
@@ -3172,15 +3172,15 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                         $CS_DESCRIPTION=$rowR["CS_DESCRIPTION"];
                         if ( $CE_CANCELED == 1 ) {
                             $color="red";
-                            $info="activité annulée";
+                            $info="activitÃ© annulÃ©e";
                         }
                         elseif ( $CE_CLOSED == 1 ) {
                             $color=$widget_fgorange;
-                            $info="activité clôturée";
+                            $info="activitÃ© clÃ´turÃ©e";
                         }
                         else {
                             $color=$widget_fggreen;
-                            $info="activité ouverte";
+                            $info="activitÃ© ouverte";
                         }
                         if ( $EH_DATE_DEBUT0[$n] <> $EH_DATE_FIN0[$n] ) $dates_renfort=$EH_DATE_DEBUT0[$n] ." au ".$EH_DATE_FIN0[$n];
                         else $dates_renfort=$EH_DATE_DEBUT0[$n];
@@ -3206,12 +3206,12 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                     $mytxtcolor="#f64e60";
                     $fgcolor = $widget_fgred;
                     $bgcolor = $widget_bgred;
-                    $VP_LIBELLE = "Assurance périmée";
+                    $VP_LIBELLE = "Assurance pÃ©rimÃ©e";
                 }
                 else if ( my_date_diff(getnow(),$V_CT_DATE) < 0 ) {
                     $fgcolor = $widget_fgred;
                     $bgcolor = $widget_bgred;
-                    $VP_LIBELLE = "CT périmé";
+                    $VP_LIBELLE = "CT pÃ©rimÃ©";
                 }
                 else if ( $VP_OPERATIONNEL == 2) {
                     $fgcolor = $widget_fgorange;
@@ -3220,14 +3220,14 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 else if (( my_date_diff(getnow(),$V_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
                     $fgcolor = $widget_fgorange;
                     $bgcolor = $widget_bgorange;
-                    $VP_LIBELLE = "Révision à faire";
+                    $VP_LIBELLE = "RÃ©vision Ã  faire";
                 }
                 else {
                     $fgcolor = $widget_fggreen;
                     $bgcolor = $widget_bggreen;
                 }
 
-                // récupérer horaires du véhicule
+                // rÃ©cupÃ©rer horaires du vÃ©hicule
                 $clock="";
                 for ($i=1; $i <= $nbmaxsessionsparevenement; $i++) {
                     if ( isset ($horaire_renfort[$i])) {
@@ -3253,8 +3253,8 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                             $EV_DATE_FIN1=$rowH["EV_DATE_FIN1"];
                             $EV_DEBUT=$rowH["EV_DEBUT"];
                             $EV_FIN=$rowH["EV_FIN"];
-                            if ($nbsessions == 1 ) $t=" de l'activité";
-                            else $t=" de la partie n°$EH_ID";
+                            if ($nbsessions == 1 ) $t=" de l'activitÃ©";
+                            else $t=" de la partie nÂ°$EH_ID";
                             if ( $EV_DATE_DEBUT <> "" ) {
                                 if ( $EV_DATE_DEBUT1 == $EH_DATE_DEBUT0[$i] and $EV_DATE_FIN1 == $EH_DATE_FIN0[$i] ) $horaire_v=$EV_DEBUT."-".$EV_FIN;
                                 else if ( $EV_DATE_DEBUT == $EV_DATE_FIN ) $horaire_v= substr($EV_DATE_DEBUT,0,5).", ".$EV_DEBUT."-".$EV_FIN;
@@ -3273,10 +3273,10 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                     $nb = get_nb_engagements('V', $V_ID, $year1[1], $month1[1], $day1[1], $year2[$nummaxpartie], $month2[$nummaxpartie], $day2[$nummaxpartie] , $EC);
                     if ( $nb > 1 )
                         $myimg="<a href=evenement_vehicule.php?vehicule=".$V_ID."&dtdb=".$day1[1]."-".$month1[1]."-".$year1[1]."&dtfn=".$day2[$nummaxpartie]."-".$month2[$nummaxpartie]."-".$year2[$nummaxpartie]."&order=dtdb&filter=".$S_ID.">
-                        <i class='fa fa-exclamation noprint' style='color:$widget_fgred' title='attention ce véhicule est parallèlement engagé sur $nb autres activités' border=0></i></a>";
+                        <i class='fa fa-exclamation noprint' style='color:$widget_fgred' title='attention ce vÃ©hicule est parallÃ¨lement engagÃ© sur $nb autres activitÃ©s' border=0></i></a>";
                     else if ( $nb == 1 )
                         $myimg="<a href=evenement_vehicule.php?vehicule=".$V_ID."&dtdb=".$day1[1]."-".$month1[1]."-".$year1[1]."&dtfn=".$day2[$nummaxpartie]."-".$month2[$nummaxpartie]."-".$year2[$nummaxpartie]."&order=dtdb&filter=".$S_ID.">
-                        <i class='fa fa-exclamation noprint' style='color:#ff8000' title='attention ce véhicule est parallèlement engagé sur 1 autre activité' ></i></a>";
+                        <i class='fa fa-exclamation noprint' style='color:#ff8000' title='attention ce vÃ©hicule est parallÃ¨lement engagÃ© sur 1 autre activitÃ©' ></i></a>";
                     else $myimg="";
                 }
                 $altcolor=(($S_ID==$organisateur)?"":"<font color=purple>");
@@ -3296,24 +3296,24 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 if ( ! $print ) {
                     // choix fonction
                     $url="evenement_modal.php?&action=vfonction&evenement=".$evenement."&vid=".$V_ID;
-                    if ( $TFV_ID == "" or $TFV_ID == 0 ) $TFV_NAME="<div id='divfn".$V_ID."' title='sélectionner une fonction'>Choisir</div>";
+                    if ( $TFV_ID == "" or $TFV_ID == 0 ) $TFV_NAME="<div id='divfn".$V_ID."' title='sÃ©lectionner une fonction'>Choisir</div>";
                     else $TFV_NAME="<div id='divfn".$V_ID."' title='changer la fonction'>".$TFV_NAME."</div>";
                     echo "<td style='min-width:5px;' align=center class='hide_mobile2'>";
                     print write_modal( $url, "fonction_".$V_ID, $TFV_NAME);
                     echo "</td>";
                 }
 
-                // choix équipe
+                // choix Ã©quipe
                 if ( $nbe > 0 ) {
                     if (! $granted_event or ! $changeallowed or $print) {
                         if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="";
                         echo  "<td style='min-width:80px;' class='hide_mobile2'><font>".$EE_NAME."</font></td>";
                     }
                     else {
-                        // choix équipe
+                        // choix Ã©quipe
                         $url="evenement_modal.php?action=vequipe&evenement=".$evenement."&vid=".$V_ID;
-                        if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="<div id='divpe".$V_ID."' title='Choisir une équipe' class='noprint'>Choisir équipe</div>";
-                        else $EE_NAME="<div id='divpe".$V_ID."' title='Changer équipe'>".$EE_NAME."</div>";
+                        if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="<div id='divpe".$V_ID."' title='Choisir une Ã©quipe' class='noprint'>Choisir Ã©quipe</div>";
+                        else $EE_NAME="<div id='divpe".$V_ID."' title='Changer Ã©quipe'>".$EE_NAME."</div>";
                         echo "<td align=center style='min-width:80px;' class='hide_mobile2'>";
                         print write_modal( $url, "equipe_".$V_ID, $EE_NAME);
                         echo "</td>";
@@ -3324,12 +3324,12 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 if ( $granted_vehicule ) $readonly="";
                 else $readonly="readonly";
 
-                // kilométrage
+                // kilomÃ©trage
                 if ( $EV_KM == '' ) $showEV_KM = 'renseigner ';
                 else $showEV_KM  = $EV_KM;
 
                 $url="evenement_modal.php?action=km&evenement=".$evenement."&vid=".$V_ID;
-                $showEV_KM = "<div id='vkmdiv".$V_ID."' title='Renseigner le kilométrage'>".ucfirst($showEV_KM)." km</div>";
+                $showEV_KM = "<div id='vkmdiv".$V_ID."' title='Renseigner le kilomÃ©trage'>".ucfirst($showEV_KM)." km</div>";
                 echo "<td>";
                 if ( $readonly == '') print write_modal( $url, "km_".$V_ID, $showEV_KM);
                 else if ($EV_KM > 0 ) echo "$EV_KM km";
@@ -3351,7 +3351,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
 
                 // supprimer 
                 if ( $granted_vehicule and ! $print) {
-                    echo "<a class='btn btn-default btn-action' href=evenement_vehicule_add.php?evenement=$evenement&EC=$EC&action=remove&V_ID=$V_ID&from=evenement title='désengager ce véhicule'>
+                    echo "<a class='btn btn-default btn-action' href=evenement_vehicule_add.php?evenement=$evenement&EC=$EC&action=remove&V_ID=$V_ID&from=evenement title='dÃ©sengager ce vÃ©hicule'>
                             <i class='far fa-trash-alt fa-lg'></i></a>";
                 }
                 echo "</div></td>";
@@ -3359,7 +3359,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
             }
             echo "</table>";
         }
-        else echo "Aucun véhicule engagé.<br>";
+        else echo "Aucun vÃ©hicule engagÃ©.<br>";
     }
 
     if ($child == 2){
@@ -3367,7 +3367,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
         if (( $E_CANCELED == 0 ) and !$print and ( $granted_vehicule )) {
             echo "<div align=right class='table-responsive tab-buttons-container'>";
             echo "<a class='btn btn-success'  name='ajouter' title=''
-               onclick=\"redirect('evenement_display.php?evenement=".$evenement."&what=materiel&tab=50');\"><i class='fa fa-plus-circle'></i> <span class='hide_mobile'>Matériel</span></a>";
+               onclick=\"redirect('evenement_display.php?evenement=".$evenement."&what=materiel&tab=50');\"><i class='fa fa-plus-circle'></i> <span class='hide_mobile'>MatÃ©riel</span></a>";
             echo "</div>";
         }
 
@@ -3396,7 +3396,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
             echo "<div class='table-responsive'>";
             echo "<div class='col-sm-12'>";
             echo "<table class='newTableAll'>";
-            echo "<tr><td colspan=10>Matériel</td></tr>";
+            echo "<tr><td colspan=10>MatÃ©riel</td></tr>";
 
             $prevTM_USAGE='';
             $prevEC=$evenement;
@@ -3406,11 +3406,11 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                     $nb = get_nb_engagements('M', $MA_ID, $year1[1], $month1[1], $day1[1], $year2[$nummaxpartie], $month2[$nummaxpartie], $day2[$nummaxpartie], $EC) ;
                     if ( $nb > 1 ) {
                         $myimg="<a href=evenement_materiel.php?matos=".$MA_ID."&dtdb=".$day1[1]."-".$month1[1]."-".$year1[1]."&dtfn=".$day2[$nummaxpartie]."-".$month2[$nummaxpartie]."-".$year2[$nummaxpartie]."&order=dtdb&filter=".$S_ID.">
-                        <i class='fa fa-exclamation-triangle' style='color:#ff8000;' title='attention ce matériel est parallèlement engagé un ou des autres activités' ></i></a>";
+                        <i class='fa fa-exclamation-triangle' style='color:#ff8000;' title='attention ce matÃ©riel est parallÃ¨lement engagÃ© un ou des autres activitÃ©s' ></i></a>";
                     }
                 }
 
-                // affiche catégorie
+                // affiche catÃ©gorie
                 if ( $TM_USAGE <> $prevTM_USAGE) {
                     echo "<tr><td colspan=10>".ucfirst($CM_DESCRIPTION)."</td></tr>";
                 }
@@ -3421,7 +3421,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 else if ( $VP_OPERATIONNEL == 1) $mytxtcolor=$widget_fgred;
                 else if ( my_date_diff(getnow(),$MA_REV_DATE) < 0 ) {
                     $mytxtcolor=$widget_fgorange;
-                    $VP_LIBELLE = "date dépassée";
+                    $VP_LIBELLE = "date dÃ©passÃ©e";
                 }
                 else if ( $VP_OPERATIONNEL == 2) {
                     $mytxtcolor=$widget_fgorange;
@@ -3429,8 +3429,8 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 else $mytxtcolor=$widget_fggreen;
 
                 $element="<font color=$mylightcolor>.....";
-                if ( $TM_LOT == 1 ) $element .="</font><i class='fa fa-plus-square fa-lg' title=\"Ceci est un lot de matériel\"></i> ";
-                elseif ( $MA_PARENT > 0  ) $element .="...</font><i class='fa fa-minus'  title=\"élément d'un lot de matériel\"></i> ";
+                if ( $TM_LOT == 1 ) $element .="</font><i class='fa fa-plus-square fa-lg' title=\"Ceci est un lot de matÃ©riel\"></i> ";
+                elseif ( $MA_PARENT > 0  ) $element .="...</font><i class='fa fa-minus'  title=\"Ã©lÃ©ment d'un lot de matÃ©riel\"></i> ";
                 else $element .="</font><i class='fa fa-caret-right fa-lg' title=\"Ne fait pas partie d'un lot\"></i> ";
 
                 $altcolor=(($S_ID==$organisateur)?"":"<font color=purple>");
@@ -3442,17 +3442,17 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 <font color=$mytxtcolor>".$VP_LIBELLE."</font></td>";
                 echo "<td width=20>".$myimg."</td>";
 
-                // choix équipe
+                // choix Ã©quipe
                 if ( $nbe > 0 ) {
                     if (! $granted_event or ! $changeallowed) {
                         if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="";
                         echo  "<td>$EE_NAME</a></td>";
                     }
                     else {
-                        // choix équipe
+                        // choix Ã©quipe
                         $url="evenement_modal.php?action=mequipe&evenement=".$evenement."&mid=".$MA_ID;
-                        if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="<div id='divpe".$MA_ID."' title='Choisir une équipe'><i>Choisir équipe</i></div>";
-                        else $EE_NAME="<div id='divpe".$MA_ID."' title='Changer équipe'>".$EE_NAME."</div>";
+                        if ( $EE_ID == "" or $EE_ID == 0 ) $EE_NAME="<div id='divpe".$MA_ID."' title='Choisir une Ã©quipe'><i>Choisir Ã©quipe</i></div>";
+                        else $EE_NAME="<div id='divpe".$MA_ID."' title='Changer Ã©quipe'>".$EE_NAME."</div>";
                         echo "<td width=120>";
                         print write_modal( $url, "equipe_".$MA_ID, $EE_NAME);
                         echo "</td>";
@@ -3468,11 +3468,11 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                     // choix nombre
                     if ( $EM_NB == '' )  $EM_NB = 0;
                     if ( $readonly == ''){
-                        $EM_NB="<div id='mnbdiv".$MA_ID."' style='font-size:11px;' title='Renseigner le nombre'>".$EM_NB." unités</div>";
+                        $EM_NB="<div id='mnbdiv".$MA_ID."' style='font-size:11px;' title='Renseigner le nombre'>".$EM_NB." unitÃ©s</div>";
                         $url="evenement_modal.php?action=mnombre&evenement=".$evenement."&mid=".$MA_ID;
                         print write_modal( $url, "nombre_".$MA_ID, $EM_NB);
                     }
-                    else echo "$EM_NB pièces";
+                    else echo "$EM_NB piÃ¨ces";
                 }
                 echo "</td>";
                 if ( $nbsections == 0 ) echo "<td width=120>$S_CODE";
@@ -3480,7 +3480,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
 
                 if ( $granted_vehicule  and (! $print) ) {
                     echo "<td width=20>
-                    <a class='btn btn-default btn-action' href=evenement_materiel_add.php?evenement=".$evenement."&EC=".$EC."&action=remove&MA_ID=".$MA_ID."&from=evenement title='désengager ce matériel'>
+                    <a class='btn btn-default btn-action' href=evenement_materiel_add.php?evenement=".$evenement."&EC=".$EC."&action=remove&MA_ID=".$MA_ID."&from=evenement title='dÃ©sengager ce matÃ©riel'>
                     <i class='far fa-trash-alt fa-lg'></i></a></td>";
                 }
                 else
@@ -3490,7 +3490,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
             echo "</table></td></tr>";
             echo "</table>";
         }
-        else echo "Aucun matériel engagé.<br>";
+        else echo "Aucun matÃ©riel engagÃ©.<br>";
     }
 
     if ($child == 3){
@@ -3523,7 +3523,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
             echo "<div class='col-sm-12'>";
             echo "<table class='newTableAll' cellspacing=0 border=0 >";
 
-            // echo "<tr><td colspan=20>Produits consommés sur cette activité</td></tr>";
+            // echo "<tr><td colspan=20>Produits consommÃ©s sur cette activitÃ©</td></tr>";
             echo "<tr><td colspan=20>Consommable";
             $prevCC_NAME='';
             $prevEC=$evenement;
@@ -3544,7 +3544,7 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                     $S_CODE="";
                 }
 
-                // affiche catégorie
+                // affiche catÃ©gorie
                 if ( $CC_NAME <> $prevCC_NAME) {
                     echo "<tr><td colspan=20><b style='font-weight: 600;'> $CC_NAME</td></tr>";
                 }
@@ -3554,20 +3554,20 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
                 if ( $C_ID > 0 )
                     echo "<a href=upd_consommable.php?from=evenement&cid=$C_ID title=\"$S_CODE - $S_DESCRIPTION\"> ".$altcolor.$label."</a>    ";
                 else
-                    echo "<span title=\"Origine du stock non précisée\">".$label."</span>";
+                    echo "<span title=\"Origine du stock non prÃ©cisÃ©e\">".$label."</span>";
                 echo "</td>";
                 if ( $granted_consommables ) $readonly="";
                 else $readonly="readonly";
                 echo "<td width=80 align=center>";
 
-                // nombre d'uités consommées
+                // nombre d'uitÃ©s consommÃ©es
                 if ( $EC_NOMBRE == '' )  $EC_NOMBRE = 0;
                 $url="evenement_modal.php?action=cnombre&evenement=".$evenement."&cid=".$EC_ID;
-                $EC_NOMBRE = "<div id='cnbdiv".$EC_ID."' style='font-size:11px;' title='Renseigner le nombre'>".intval($EC_NOMBRE)." unités</div>";
+                $EC_NOMBRE = "<div id='cnbdiv".$EC_ID."' style='font-size:11px;' title='Renseigner le nombre'>".intval($EC_NOMBRE)." unitÃ©s</div>";
                 if ( ! $print ) {
                     echo "<td width=120>";
                     if ( $readonly == '') print write_modal( $url, "nombre_".$EC_ID, $EC_NOMBRE);
-                    else echo "$EC_NOMBRE unités";
+                    else echo "$EC_NOMBRE unitÃ©s";
                     echo "</td>";
                 }
 
@@ -3590,12 +3590,12 @@ if ( (( $tab == 3 ) or ($print)) and (($vehicules) || ($materiel) || ($consommab
             echo "</table></td></tr>";
             echo "</table>";
         }
-        else echo "Aucun consommable n'est renseigné.<br>";
+        else echo "Aucun consommable n'est renseignÃ©.<br>";
     }
 }
 
 //=====================================================================
-// formation / diplômes
+// formation / diplÃ´mes
 //=====================================================================
 if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") and ($TF_CODE <> "")){
 
@@ -3648,7 +3648,7 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
     echo "<div class='col-sm-4'>";
     echo "<div class='card hide card-default graycarddefault' align=center >
                 <div class='card-header graycard'>
-                    <div class='card-title'><strong>Résultats de ".$tt."</strong></div>
+                    <div class='card-title'><strong>RÃ©sultats de ".$tt."</strong></div>
                 </div>
                 <div class='card-body graycard'>
                 <table class='noBorder'>";
@@ -3663,12 +3663,12 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
         $ER_LIBELLE=stripslashes($rowR["E_LIBELLE"]);
         $SR_CODE=$rowR["S_CODE"];
         $SR_DESCRIPTION=$rowR["S_DESCRIPTION"];
-        echo "<tr><td>Voir activité principale </td><td><a href=evenement_display.php?evenement=".$E_PARENT."&from=formation>".$ER_LIBELLE." organisé par ".$SR_CODE." - ".$SR_DESCRIPTION."</a></td></tr>";
+        echo "<tr><td>Voir activitÃ© principale </td><td><a href=evenement_display.php?evenement=".$E_PARENT."&from=formation>".$ER_LIBELLE." organisÃ© par ".$SR_CODE." - ".$SR_DESCRIPTION."</a></td></tr>";
         echo "</table>";
     }
     else {
         if($E_DUREE_TOTALE!=''){
-            echo "<tr><td colspan=2>Durée effective: ".$E_DUREE_TOTALE." heures</td></tr>";
+            echo "<tr><td colspan=2>DurÃ©e effective: ".$E_DUREE_TOTALE." heures</td></tr>";
         }
         //instructeurs
         $queryi="select distinct ep.E_CODE as EC, p.P_ID,p.P_NOM,".phone_display_mask('p.P_PHONE')." P_PHONE, p.P_PRENOM, p.P_GRADE, s.S_ID, s.S_CODE, p.P_STATUT, c.C_NAME,
@@ -3760,17 +3760,17 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                     $url="evenement_horaires.php?evenement=".$evenement."&pid=".$P_ID."&vid=0";
                     
                     if ($n1 < $nbsessions)
-                        $clock="<i class='fa fa-clock fa-lg' style='color:grey' title=\"Attention n'est pas présent à toutes les parties de la formation\" border=0></i>";
+                        $clock="<i class='fa fa-clock fa-lg' style='color:grey' title=\"Attention n'est pas prÃ©sent Ã  toutes les parties de la formation\" border=0></i>";
                     else if ($n2 > 0)
-                        $clock="<i class='fa fa-clock fa-lg' style='color:$widget_fgorange'  title='Attention horaires différents de ceux de la formation' border=0></i>";
+                        $clock="<i class='fa fa-clock fa-lg' style='color:$widget_fgorange'  title='Attention horaires diffÃ©rents de ceux de la formation' border=0></i>";
                     else
-                        $clock="<i class='fa fa-clock fa-lg' style='color:$widget_fggreen'  title='Présence totale sur la formation' border=0></i>";
+                        $clock="<i class='fa fa-clock fa-lg' style='color:$widget_fggreen'  title='PrÃ©sence totale sur la formation' border=0></i>";
                     $warn=write_modal($url,"Horaire_".$P_ID, $clock);
                 }
                 else {
-                    if ($n1 < $nbsessions) $warn="<i class='fa fa-clock fa-lg' style='color:$widget_fgred'  title=\"Attention n'est pas présent à toutes les parties de la formation\" border=0></i>";
-                    else if ($n2 > 0) $warn="<i class='fa fa-clock fa-lg' style='color:$widget_fgorange'  title='Attention horaires différents de ceux de la formation' border=0></i>";
-                    else $warn="<i class='fa fa-clock fa-lg' style='color:$widget_fggreen'  title='Présence totale sur la formation' border=0></i>";
+                    if ($n1 < $nbsessions) $warn="<i class='fa fa-clock fa-lg' style='color:$widget_fgred'  title=\"Attention n'est pas prÃ©sent Ã  toutes les parties de la formation\" border=0></i>";
+                    else if ($n2 > 0) $warn="<i class='fa fa-clock fa-lg' style='color:$widget_fgorange'  title='Attention horaires diffÃ©rents de ceux de la formation' border=0></i>";
+                    else $warn="<i class='fa fa-clock fa-lg' style='color:$widget_fggreen'  title='PrÃ©sence totale sur la formation' border=0></i>";
                 }
 
                 $query1="select PF_ADMIS, PF_DIPLOME, date_format(PF_EXPIRATION,'%d-%m-%Y') PF_EXPIRATION  from personnel_formation pf
@@ -3793,7 +3793,7 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                 $for=strtoupper($P_NOM)." ".my_ucfirst($P_PRENOM);
                 $laterprint .= "<tr><td><label class='switch'><input type=checkbox value='".$P_ID."' $checked $disabledtf 
                     id='dipl_".$P_ID."' name='dipl_".$P_ID."' 
-                    title=\"cochez cette case si ".$for." a réussi la formation\"";
+                    title=\"cochez cette case si ".$for." a rÃ©ussi la formation\"";
 
                 if ($_PS_EXPIRABLE == 1)
                     $laterprint .= "onchange=\"change_date_exp('".$P_ID."');\"";
@@ -3802,7 +3802,7 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                 if ( $TF_CODE == 'I' and $_PS_NUMERO == 1) {
                     $laterprint .= " <input type=text id='num_".$P_ID."' name='num_".$P_ID."' class='form-control flex'
                         style='max-width:200px;margin-bottom:3px;' maxlength='25'
-                        title=\"saisissez le numéro de diplôme décerné à ".$for."\"
+                        title=\"saisissez le numÃ©ro de diplÃ´me dÃ©cernÃ© Ã  ".$for."\"
                         value='".$PF_DIPLOME."' $disabledtf>";
                 }
                 if ($_PS_EXPIRABLE == 1) {
@@ -3812,7 +3812,7 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                     autocomplete='off'
                     class='datepicker' data-provide='datepicker'
                     style='margin-bottom:3px;'
-                    title =\"saisissez ici la date de validité de la compétence pour ".$for." au format JJ-MM-AAAA\"
+                    title =\"saisissez ici la date de validitÃ© de la compÃ©tence pour ".$for." au format JJ-MM-AAAA\"
                     onchange=\"change_date_exp('".$P_ID."');\">";
                 }
 
@@ -3840,21 +3840,21 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                 if ( $Q_VAL <> '' ) {
                     if ( $Q_EXPIRATION <> '') {
                         if ($NB <= 0)
-                            $cmt2="<font size=1 color=$widget_fgred>Compétence $_TYPE expirée depuis $Q_EXPIRATION</font>";
+                            $cmt2="<font size=1 color=$widget_fgred>CompÃ©tence $_TYPE expirÃ©e depuis $Q_EXPIRATION</font>";
                         else if ($NB < $_DAYS_WARNING)
-                            $cmt2="<font size=1 color=$widget_fgorange>Compétence $_TYPE expire le $Q_EXPIRATION</font>";
+                            $cmt2="<font size=1 color=$widget_fgorange>CompÃ©tence $_TYPE expire le $Q_EXPIRATION</font>";
                         else if ( $Q_VAL == 2 )
-                            $cmt2="<font size=1 color=$widget_fgblue>Compétence secondaire $_TYPE expire le $Q_EXPIRATION</font>";
+                            $cmt2="<font size=1 color=$widget_fgblue>CompÃ©tence secondaire $_TYPE expire le $Q_EXPIRATION</font>";
                         else if ( $Q_VAL == 1 )
-                            $cmt2="<font size=1 color=$widget_fggreen>Compétence principale $_TYPE expire le $Q_EXPIRATION</font>";
+                            $cmt2="<font size=1 color=$widget_fggreen>CompÃ©tence principale $_TYPE expire le $Q_EXPIRATION</font>";
                     }
                     else if ( $Q_VAL == 2 )
-                        $cmt2="<font size=1 color=$widget_fgblue>Compétence secondaire $_TYPE valide</font>";
+                        $cmt2="<font size=1 color=$widget_fgblue>CompÃ©tence secondaire $_TYPE valide</font>";
                     else if ( $Q_VAL == 1 )
-                        $cmt2="<font size=1 color=$widget_fggreen>Compétence principale $_TYPE valide</font>";
+                        $cmt2="<font size=1 color=$widget_fggreen>CompÃ©tence principale $_TYPE valide</font>";
                 }
                 else {
-                    $cmt2="<font size=1 color=black>En formation pour obtenir la compétence $_TYPE</font>";
+                    $cmt2="<font size=1 color=black>En formation pour obtenir la compÃ©tence $_TYPE</font>";
                     // cas particulier: ne pas montrer PSE1 si PSE2 valide
                     if ( $_TYPE == 'PSE1') {
                         $query3="select count(1) as NB from qualification q, poste p
@@ -3862,7 +3862,7 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                         $result3=mysqli_query($dbc,$query3);
                         $row3=@mysqli_fetch_array($result3);
                         $NB=$row3["NB"];
-                        if ( $NB == 1 ) $cmt2="<font size=1 color=blue>Possède la compétence supérieure PSE2</font>";
+                        if ( $NB == 1 ) $cmt2="<font size=1 color=blue>PossÃ¨de la compÃ©tence supÃ©rieure PSE2</font>";
                     }
                 }
 
@@ -3893,11 +3893,11 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                             $competencesH .= $row1["TYPE"].",";
                         }
                         if ( $_PH_UPDATE_MANDATORY == 1 )
-                            echo "<tr><td><small>La date de validité des compétences inférieures de la hiérarchie ".$hierarchieN." sera automatiquement prolongée (".rtrim($competencesH,',').").</small></td></tr>";
+                            echo "<tr><td><small>La date de validitÃ© des compÃ©tences infÃ©rieures de la hiÃ©rarchie ".$hierarchieN." sera automatiquement prolongÃ©e (".rtrim($competencesH,',').").</small></td></tr>";
                         else
                             echo "<tr><td><input type='checkbox' name='update_hierarchy' value='1' checked
-                                title=\"Cocher pour reporter aussi l'expiration des compétences inférieures de la hiérarchie\"></td>
-                                <td class=small2> Prolonger aussi la validité des compétences expirables de la hiérarchie ".$hierarchieN." (".rtrim($competencesH,',').")</td></tr>";
+                                title=\"Cocher pour reporter aussi l'expiration des compÃ©tences infÃ©rieures de la hiÃ©rarchie\"></td>
+                                <td class=small2> Prolonger aussi la validitÃ© des compÃ©tences expirables de la hiÃ©rarchie ".$hierarchieN." (".rtrim($competencesH,',').")</td></tr>";
                     }
                 }
                 echo "<tr><td colspan=2>";
@@ -3919,36 +3919,36 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
         
         echo "<div class='col-sm-8'>
                 <table class='newTableAll'>
-                <tr><td>Réussite des stagiaires à la formation</td></tr>";
+                <tr><td>RÃ©ussite des stagiaires Ã  la formation</td></tr>";
         echo @$laterprint;
         echo "</table></div></div>";
         
         if ( $E_CLOSED == 0 ) {
-            echo "<div class='alert alert-warning'>Veuillez fermer les inscriptions sur l'activité, alors vous pourrez sauver les diplômes.</div>";
+            echo "<div class='alert alert-warning'>Veuillez fermer les inscriptions sur l'activitÃ©, alors vous pourrez sauver les diplÃ´mes.</div>";
         }
         else {
             echo "<input type='submit' class='btn btn-success' value='Sauvegarder'>";
             if (( $printdiplomes or $granted_event ) and $nbstagiaires > 0 ) {
-                // désactiver les attestation de formation continues de secourisme car plus aux normes
+                // dÃ©sactiver les attestation de formation continues de secourisme car plus aux normes
                 $enable_this=true;
                 if ( isset($no_attestations_continue_secourisme) and $TF_CODE == 'R' ) {
                     if ( in_array(str_replace(" ", "",$_TYPE),array('PSC1','PSE1','PSE2','PAEPSC','PAEPS','FDFPSC','FDFPSE')) and intval($no_attestations_continue_secourisme) <= $YEAR )
                         $enable_this=false;
                 }
                 if ( $enable_this ) {
-                    $t = "Diplômes";
+                    $t = "DiplÃ´mes";
                     if ( $TF_CODE == 'R' ) $t = "Attestation";
                     else $t .= " ou attestations";
                     echo "<div class='dropdown show' style='display: inline-block; white-space: nowrap; align:top'  >
                           <a class='btn btn-primary dropdown-toggle' href='#' role='button' id='dropdownMenuLink2' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' 
-                            title='imprimer ".$t.", choisissez un des différents modes proposés' style='margin-bottom:7px; margin:0px;' >
+                            title='imprimer ".$t.", choisissez un des diffÃ©rents modes proposÃ©s' style='margin-bottom:7px; margin:0px;' >
                             <i class='fa fa-print'></i> $t
                           </a>
                           <div class='dropdown-menu' aria-labelledby='dropdownMenuLink2'>";
                     if ( $granted_event ) {
                         $link = "pdf_attestation_formation.php?evenement=".$evenement."&section=".$S_ID;
                         echo "<a class='dropdown-item' href=$link target=_blank
-                            title=\"Imprimer des attestations sur papier vierge, possible pour tous les stagiaires ayant réussi ou échoué.\">
+                            title=\"Imprimer des attestations sur papier vierge, possible pour tous les stagiaires ayant rÃ©ussi ou Ã©chouÃ©.\">
                             Attestations de formation</a>";
                     }
                     if ( $printdiplomes and $nbadmis > 0 and
@@ -3956,29 +3956,29 @@ if (( $tab == 5 ) and (! $print) and ( $TE_CODE == 'FOR' ) and ( $PS_ID <> "") a
                     ) {
                         if ( $_PS_PRINT_IMAGE == 1 or $printfulldiplome ) {
                             echo "<a class='dropdown-item' href='pdf_diplome.php?evenement=".$evenement."&mode=3' target=_blank
-                            title=\"Choisissez cette option si vous utilisez de feuilles de papier vierges, l'image du diplôme sera imprimée en même temps que les informations du stagiaire diplômé.\">
-                            Diplôme $_TYPE sur papier blanc</a>";
+                            title=\"Choisissez cette option si vous utilisez de feuilles de papier vierges, l'image du diplÃ´me sera imprimÃ©e en mÃªme temps que les informations du stagiaire diplÃ´mÃ©.\">
+                            DiplÃ´me $_TYPE sur papier blanc</a>";
                         }
                         else  if ( $_PS_PRINT_IMAGE == 0 ) {
                             if ( $_PS_SECOURISME == 1 and $_PS_NUMERO == 1 ) {
                                 echo "<a class='dropdown-item' href='pdf_diplome.php?evenement=".$evenement."&mode=1' target=_blank
-                            title=\"Choisissez cette option si vous disposez de feuilles de diplômes pre-imprimées, ayant chacune un numéro unique. 
-                            Les n° de diplômes doivent être saisis ci-dessus avant de lancer l'impression. ATTENTION: Les feuilles doivent être introduites dans le bon ordre dans l'imprimante.\">
-                            Diplôme $_TYPE sur papier pré-imprimé numéroté</a>";
+                            title=\"Choisissez cette option si vous disposez de feuilles de diplÃ´mes pre-imprimÃ©es, ayant chacune un numÃ©ro unique. 
+                            Les nÂ° de diplÃ´mes doivent Ãªtre saisis ci-dessus avant de lancer l'impression. ATTENTION: Les feuilles doivent Ãªtre introduites dans le bon ordre dans l'imprimante.\">
+                            DiplÃ´me $_TYPE sur papier prÃ©-imprimÃ© numÃ©rotÃ©</a>";
                             }
                             if ( $_PS_NUMERO == 1 )
                                 echo "<a class='dropdown-item' href='pdf_diplome.php?evenement=".$evenement."&mode=2' target=_blank
-                            title=\"Choisissez cette option si vous disposez de feuilles de diplômes pre-imprimées, sans numéro unique.
-                            Les n° de diplômes doivent être saisis ci-dessus avant de lancer l'impression, ils seront imprimés.\">
-                            Diplôme $_TYPE sur papier pré-imprimé non numéroté</a>";
+                            title=\"Choisissez cette option si vous disposez de feuilles de diplÃ´mes pre-imprimÃ©es, sans numÃ©ro unique.
+                            Les nÂ° de diplÃ´mes doivent Ãªtre saisis ci-dessus avant de lancer l'impression, ils seront imprimÃ©s.\">
+                            DiplÃ´me $_TYPE sur papier prÃ©-imprimÃ© non numÃ©rotÃ©</a>";
                             else
                                 echo "<a class='dropdown-item' href='pdf_diplome.php?evenement=".$evenement."&mode=2' target=_blank
-                            title=\"Choisissez cette option si vous disposez de feuilles de diplômes pre-imprimées non numérotées.\">
-                            Diplôme $_TYPE sur papier pré-imprimé</a>";
+                            title=\"Choisissez cette option si vous disposez de feuilles de diplÃ´mes pre-imprimÃ©es non numÃ©rotÃ©es.\">
+                            DiplÃ´me $_TYPE sur papier prÃ©-imprimÃ©</a>";
                             echo "<a class='dropdown-item' href='pdf_diplome.php?evenement=".$evenement."&mode=4' target=_blank
-                            title=\"Choisissez cette option si vous utilisez de feuilles de papier vierges, un aperçu du diplôme officiel sera imprimé.
-                            Les n° de diplômes doivent être saisis ci-dessus avant de lancer l'impression.\">
-                            Aperçu avant impression $_TYPE</a>";
+                            title=\"Choisissez cette option si vous utilisez de feuilles de papier vierges, un aperÃ§u du diplÃ´me officiel sera imprimÃ©.
+                            Les nÂ° de diplÃ´mes doivent Ãªtre saisis ci-dessus avant de lancer l'impression.\">
+                            AperÃ§u avant impression $_TYPE</a>";
                         }
                     }
                 }
@@ -4051,7 +4051,7 @@ if (( $tab == 6 ) and (! $print) and ( $E_TARIF > 0 ) and $granted_event){
         $showtarif=$tarif;
         if ( $EP_PAID == 1 ) {
             $color=$widget_fggreen;
-            $title='paiement réalisé ';
+            $title='paiement rÃ©alisÃ© ';
             if ( $MODE_PAIEMENT > 0 ) {
                 $title.=" - ".$TP_DESCRIPTION;
                 $showtarif.=" ".$TP_DESCRIPTION;
@@ -4059,7 +4059,7 @@ if (( $tab == 6 ) and (! $print) and ( $E_TARIF > 0 ) and $granted_event){
         }
         else {
             $color=$widget_fgred;
-            $title='pas encore payé';
+            $title='pas encore payÃ©';
         }
 
         if ( $C_ID == 0 ) $company='';
@@ -4117,7 +4117,7 @@ if ( $tab == 7  and ! $print ){
         <div class='col-sm-12'>
         <table class='newTableAll'>
             <tr class='newTabHeader'>
-                <th class='widget-title' style='padding: 12px 5px 12px 5px; pointer-events: none;'>Documents attachés</th>
+                <th class='widget-title' style='padding: 12px 5px 12px 5px; pointer-events: none;'>Documents attachÃ©s</th>
                 <th class='widget-title hide_mobile' style='pointer-events: none;'>Auteur</th>
                 <th class='widget-title hide_mobile' style='pointer-events: none;'>Date</th>
                 <th class='widget-title'></th>
@@ -4130,21 +4130,21 @@ if ( $tab == 7  and ! $print ){
         // DOCUMENTS GENERES
         if ($granted_event) {
             if ( $FICHE_PRESENCE == 1  and $E_CLOSED == 1 ) {
-                // fiche de présence spécifique SST
-                if ( $type_doc == 'SST') $table .=show_auto_doc("Fiche de présence SST", "8", true);
-                else if ( $type_doc == 'PRAP') $table .=show_auto_doc("Fiche de présence PRAP", "8", true);
-                else $table .=show_auto_doc("Fiche de présence", "1", true);
-                if ( $type_doc == 'SST') $table .=show_auto_doc("Attestations de présence SST", "10", true);
-                else if ( $type_doc == 'PRAP') $table .=show_auto_doc("Attestations de présence PRAP", "10", true);
+                // fiche de prÃ©sence spÃ©cifique SST
+                if ( $type_doc == 'SST') $table .=show_auto_doc("Fiche de prÃ©sence SST", "8", true);
+                else if ( $type_doc == 'PRAP') $table .=show_auto_doc("Fiche de prÃ©sence PRAP", "8", true);
+                else $table .=show_auto_doc("Fiche de prÃ©sence", "1", true);
+                if ( $type_doc == 'SST') $table .=show_auto_doc("Attestations de prÃ©sence SST", "10", true);
+                else if ( $type_doc == 'PRAP') $table .=show_auto_doc("Attestations de prÃ©sence PRAP", "10", true);
             }
             if ( $PROCES_VERBAL == 1  and $E_CLOSED == 1 and  $PS_ID <> '' and in_array($TF_CODE,array('I','C','R','M')))
-                $table .=show_auto_doc("Procès verbal", "5", true);
+                $table .=show_auto_doc("ProcÃ¨s verbal", "5", true);
             if ( $EVAL_PAR_STAGIAIRES == 1  and $competences == 1) {
                 $level=get_level("$S_ID");
                 $sstspec=$basedir."/images/user-specific/documents/fiche_de_fin_de_stage_SST.pdf";
-                if ( $type_doc == 'SST' and (file_exists($sstspec)) and $level < 3 ) $table .=show_auto_doc("Fiche d'évaluation de la formation SST", "9", false);
-                else if ( $type_doc == 'PRAP' and (file_exists($sstspec)) and $level < 3 ) $table .=show_auto_doc("Fiche d'évaluation de la formation PRAP", "9", false);
-                else $table .=show_auto_doc("Fiche d'évaluation de la formation", "3", false);
+                if ( $type_doc == 'SST' and (file_exists($sstspec)) and $level < 3 ) $table .=show_auto_doc("Fiche d'Ã©valuation de la formation SST", "9", false);
+                else if ( $type_doc == 'PRAP' and (file_exists($sstspec)) and $level < 3 ) $table .=show_auto_doc("Fiche d'Ã©valuation de la formation PRAP", "9", false);
+                else $table .=show_auto_doc("Fiche d'Ã©valuation de la formation", "3", false);
             }
             if ( $FACTURE_INDIV == 1  and $E_TARIF > 0 ) $table .=show_auto_doc("Factures individuelles", "7", false);
 
@@ -4152,11 +4152,11 @@ if ( $tab == 7  and ! $print ){
                 if ( $TE_CODE == 'FOR' ) $docnum=26;
                 else $docnum=6;
                 $table .=show_auto_doc("Convention sans signature", $docnum, $secured=false, $signed=false);
-                if ( signature_president_disponible($S_ID))$table .= show_auto_doc("Convention signée par le président", $docnum, $secured=false, $signed=true);
+                if ( signature_president_disponible($S_ID))$table .= show_auto_doc("Convention signÃ©e par le prÃ©sident", $docnum, $secured=false, $signed=true);
             }
             if ( $EVAL_RISQUE == 1  and dim_ready($evenement)) {
-                $table .=show_auto_doc("Grille d'évaluation des risques - complète", "-1", false);
-                $table .=show_auto_doc("Grille d'évaluation des risques - page 1", "-2", false);
+                $table .=show_auto_doc("Grille d'Ã©valuation des risques - complÃ¨te", "-1", false);
+                $table .=show_auto_doc("Grille d'Ã©valuation des risques - page 1", "-2", false);
             }
             if ( $CONVOCATIONS == 1  and $E_CLOSED == 1 ) {
                 $table .=show_auto_doc("Convocation collective", "15", false);
@@ -4168,7 +4168,7 @@ if ( $tab == 7  and ! $print ){
                 $table .=show_auto_doc($title, "25", false);
             }
             if ( $NB6 > 0 ) {
-                $table .=show_auto_doc("Produits consommables utilisés", "27", false);
+                $table .=show_auto_doc("Produits consommables utilisÃ©s", "27", false);
             }
         }
         if ( $granted_event or $is_present ) {
@@ -4201,7 +4201,7 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
             if ( $granted_event or $is_operateur_pc ) {
                 if ( $autorefresh == 1 ) $checked='checked';
                 else $checked='';
-                echo "<div style = 'float:left;margin-top:10px;margin-left:10px;'> Rafraîchissement automatique
+                echo "<div style = 'float:left;margin-top:10px;margin-left:10px;'> RafraÃ®chissement automatique
                 <label class='switch'>
                     <input type='checkbox' id ='autorefresh' class='ml-3' id='autorefresh' name='autorefresh' 
                     value='1' 
@@ -4232,9 +4232,9 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
         echo "<div class='left'>";
 
         if ( intval($E_PARENT) > 0 ) {
-            echo "<a class='btn btn-secondary' id='victall' name='victall' value=\"Voir les informations sur l'activité principal\" 
+            echo "<a class='btn btn-secondary' id='victall' name='victall' value=\"Voir les informations sur l'activitÃ© principal\" 
                     onclick=\"javascript:self.location.href='evenement_display.php?evenement=".$E_PARENT."&tab=8';\" 
-                    title=\"Voir les informations sur l'activité principale\"><i class='fa fa-eye pr-2'></i>Activité principale</a>";
+                    title=\"Voir les informations sur l'activitÃ© principale\"><i class='fa fa-eye pr-2'></i>ActivitÃ© principale</a>";
         }
         echo "</div>";
         echo "</div>";
@@ -4302,7 +4302,7 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
         date_format(e.EL_DEBUT,'%d-%m-%Y') DATE_DEBUT, date_format(e.EL_DEBUT,'%H:%i') HEURE_DEBUT,
         e.EL_TITLE, e.EL_COMMENTAIRE, e.EL_IMPORTANT,
         tel.TEL_DESCRIPTION, TIMESTAMPDIFF(MINUTE,e.EL_DEBUT,e.EL_DATE_ADD) TIMEDIFF ,
-        date_format(e.EL_DATE_ADD,'le %d-%m-%Y à %H:%i') DATE_ADD,
+        date_format(e.EL_DATE_ADD,'le %d-%m-%Y Ã  %H:%i') DATE_ADD,
         date_format(e.EL_SLL,'%H:%i') HEURE_SLL,
         TIMESTAMPDIFF(MINUTE,e.EL_DATE_ADD,NOW()) NEW, date_format(e.EL_DEBUT,'%Y-%m-%d') EL_DEBUT,
         p.P_NOM, p.P_PRENOM
@@ -4325,13 +4325,13 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
         echo "<table class='noBorder'>";
         if ( $nbmessages == 0 )
             echo "<tr>
-                <td colspan=5 class=small>Aucun compte rendu n'a été saisi. Cliquez sur 'Message' pour ajouter un bloc.</td></tr>";
+                <td colspan=5 class=small>Aucun compte rendu n'a Ã©tÃ© saisi. Cliquez sur 'Message' pour ajouter un bloc.</td></tr>";
         else
             echo "<tr>
                 <td>Date</td>
                 <td></td>
                 <td align=left>Heure</td>
-                <td style='min-width=120px;' align=left>Rédacteur</td>
+                <td style='min-width=120px;' align=left>RÃ©dacteur</td>
                 <td >Message</td>
             </tr>";
 
@@ -4347,10 +4347,10 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                 $prev_DATE_DEBUT=$DATE_DEBUT;
             }
 
-            if ( abs($NEW) < 10 ) $new="<i class='fa fa-star' style='color:yellow;' title=\"Cette ligne a été ajoutée il y a moins de 10 minutes\" ></i>";
+            if ( abs($NEW) < 10 ) $new="<i class='fa fa-star' style='color:yellow;' title=\"Cette ligne a Ã©tÃ© ajoutÃ©e il y a moins de 10 minutes\" ></i>";
             else $new='';
 
-            if ( $granted_event or $is_operateur_pc ) $title_msg = "<a href=intervention_edit.php?evenement=".$E_CODE."&numinter=".$EL_ID."&action=update&type=".$TEL_CODE." title='Cliquer pour éditer' >".$EL_TITLE."</a>";
+            if ( $granted_event or $is_operateur_pc ) $title_msg = "<a href=intervention_edit.php?evenement=".$E_CODE."&numinter=".$EL_ID."&action=update&type=".$TEL_CODE." title='Cliquer pour Ã©diter' >".$EL_TITLE."</a>";
             else $title_msg = $EL_TITLE;
 
             echo "<tr>
@@ -4407,9 +4407,9 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                 $CAV_OUVERT=$row["CAV_OUVERT"];
                 $CAV_NAME = $row["CAV_NAME"];
                 if ( $CAV_OUVERT == 0 ) {
-                    $CAV_CMT = "<span class=small title='le centre est fermé, on ne peut pas ajouter de victimes'>fermé</span>";
+                    $CAV_CMT = "<span class=small title='le centre est fermÃ©, on ne peut pas ajouter de victimes'>fermÃ©</span>";
                     $color='red';
-                    $title="centre accueil victimes fermé, on ne peut pas ajouter de victimes";
+                    $title="centre accueil victimes fermÃ©, on ne peut pas ajouter de victimes";
                 }
                 else {
                     $CAV_CMT = "";
@@ -4446,7 +4446,7 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                 echo "<tr bgcolor=>
                         <td></td>
                         <td><i class='fa fa-h-square fa-lg' style='color:".$color.";' title=\"".$title."\"></i></td>
-                        <td colspan=4 align=left><a href=cav_edit.php?numcav=".$CAV_ID." title='éditer ce centre'>".$CAV_NAME."</a> ".$CAV_CMT."</td>
+                        <td colspan=4 align=left><a href=cav_edit.php?numcav=".$CAV_ID." title='Ã©diter ce centre'>".$CAV_NAME."</a> ".$CAV_CMT."</td>
                         <td colspan=1 align=left>".$resp."</td>
                         <td align=center><a href='liste_victimes.php?evenement_victime=".$evenement."&type_victime=".$CAV_ID."&from=evenement' title=\"Voir les victimes de ce centre d'accueil\">
                             <span class='badge' style='color:$fgcolor; background-color:$bgcolor'> ".$nb."</span></a></td>
@@ -4498,7 +4498,7 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
         date_format(e.EL_FIN,'%d-%m') DATE_FIN, date_format(e.EL_FIN,'%H:%i') HEURE_FIN, e.EL_IMPORTANT,
         e.EL_TITLE, e.EL_ADDRESS,e.EL_COMMENTAIRE,e.EL_RESPONSABLE, p.P_NOM, p.P_PRENOM,
         tel.TEL_DESCRIPTION, e.EL_ORIGINE, e.EL_DESTINATAIRE, TIMESTAMPDIFF(MINUTE,e.EL_DEBUT,e.EL_DATE_ADD) TIMEDIFF ,
-        date_format(e.EL_DATE_ADD,'le %d-%m-%Y à %H:%i') DATE_ADD,
+        date_format(e.EL_DATE_ADD,'le %d-%m-%Y Ã  %H:%i') DATE_ADD,
         date_format(e.EL_SLL,'%H:%i') HEURE_SLL,
         TIMESTAMPDIFF(MINUTE,e.EL_DATE_ADD,NOW()) NEW, date_format(e.EL_DEBUT,'%Y-%m-%d') EL_DEBUT,
         date_format(e.EL_DEBUT, '%Y-%m-%d') as M_DATE_DEBUT, date_format(e.EL_FIN, '%Y-%m-%d') as M_DATE_FIN,
@@ -4591,12 +4591,12 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                 }
                 else $transports="";
 
-                $TEL_DESCRIPTION = "Enregistré par ".my_ucfirst($AUTHOR_FIRSTNAME)." ".strtoupper($AUTHOR_LASTNAME)." - ".$DATE_ADD." - ".$TEL_DESCRIPTION;
+                $TEL_DESCRIPTION = "EnregistrÃ© par ".my_ucfirst($AUTHOR_FIRSTNAME)." ".strtoupper($AUTHOR_LASTNAME)." - ".$DATE_ADD." - ".$TEL_DESCRIPTION;
 
                 if ( $TEL_CODE == 'I' ) {
                     if ( $EL_IMPORTANT == 1 ) {
                         $img="class='fa fa-medkit' style='color:$widget_fgred'";
-                        $TEL_DESCRIPTION .= " important, sera imprimé dans le bulletin de renseignements quotidiens";
+                        $TEL_DESCRIPTION .= " important, sera imprimÃ© dans le bulletin de renseignements quotidiens";
                     }
                     else $img="class='fa fa-medkit' ";
                     $query2="select VI_ID, VI_NUMEROTATION, VI_SEXE, VI_AGE
@@ -4620,7 +4620,7 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                 else if ( $TEL_CODE == 'M' ) {
                     if ( $EL_IMPORTANT == 1 ) {
                         $img="class='far fa-file-text' style='color:$widget_fgred'";
-                        $TEL_DESCRIPTION .= " important, sera imprimé dans le bulletin de renseignements";
+                        $TEL_DESCRIPTION .= " important, sera imprimÃ© dans le bulletin de renseignements";
                     }
                     else $img="class='far fa-file-text'";
                     $nbv="";
@@ -4644,10 +4644,10 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
 
                 $td=abs($TIMEDIFF);
                 if ( ($td > 10 and $TEL_CODE == 'M') or ($td > 120 and $TEL_CODE == 'I'))
-                    $warn=" <i class='fa fa-exclamation' style='color:$widget_fgorange' title=\"Attention cette ligne n'a pas été enregistrée en direct, mais ".$DATE_ADD."\" ></i>";
+                    $warn=" <i class='fa fa-exclamation' style='color:$widget_fgorange' title=\"Attention cette ligne n'a pas Ã©tÃ© enregistrÃ©e en direct, mais ".$DATE_ADD."\" ></i>";
                 else $warn='';
 
-                if ( abs($NEW) < 10 ) $new="<i class='fa fa-star' style='color:$widget_fgorange' title=\"Cette ligne a été ajoutée il y a moins de 10 minutes\" ></i>";
+                if ( abs($NEW) < 10 ) $new="<i class='fa fa-star' style='color:$widget_fgorange' title=\"Cette ligne a Ã©tÃ© ajoutÃ©e il y a moins de 10 minutes\" ></i>";
                 else $new='';
                 if($TEL_CODE=="I"){
                     $styletitle2="style='background-color:#ffe2e5;color:#f64e60;padding:4px;border-radius:5px;'";
@@ -4671,7 +4671,7 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                 echo "<tr style='background-color:#f5f4f6'>
                 <td style='border-bottom:0.5px solid white'>$datedisplay</td>
                 <td style='border-bottom:0.5px solid white'>".$HEURE_DEBUT.$HEURE_SLL.$HEURE_FIN."</td>
-                <td style='border-bottom:0.5px solid white'><a $styletitle2 href=intervention_edit.php?evenement=".$E_CODE."&numinter=".$EL_ID."&action=update&type=".$TEL_CODE." title='Cliquer pour éditer' >".$EL_TITLE." ".$warn."</a></td>
+                <td style='border-bottom:0.5px solid white'><a $styletitle2 href=intervention_edit.php?evenement=".$E_CODE."&numinter=".$EL_ID."&action=update&type=".$TEL_CODE." title='Cliquer pour Ã©diter' >".$EL_TITLE." ".$warn."</a></td>
                 <td style='border-bottom:0.5px solid white' class='hide_mobile'><a href=upd_personnel.php?pompier=".$EL_RESPONSABLE." title='Voir la fiche'>".$P_PRENOM." ".$P_NOM."</a></td>
                 <td style='border-bottom:0.5px solid white'> $nbv </td>
                 <td style='border-bottom:0.5px solid white' class='hide_mobile'> $nbt </td>
@@ -4709,9 +4709,9 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                     <td> Id </td>
                     <td> Localisation </td>
                     <td> Date </td>
-                    <td> Entrée </td>
+                    <td> EntrÃ©e </td>
                     <td> Sortie </td>
-                    <td> Identité </td>
+                    <td> IdentitÃ© </td>
                     <td> Age </td>
                     <td> Sexe </td>
                     <td></td>
@@ -4735,20 +4735,20 @@ if ( $tab == 8  and ! $print and $TE_MAIN_COURANTE == 1) {
                         if ($CAV_SORTIE[1]<>NULL )$CAV_SORTIE=$CAV_SORTIE[0].":".$CAV_SORTIE[1];
                         else $CAV_SORTIE="";
                     }
-                    if ($CAV_REGULATED==1) $CAV_REGULATED = "<i style='color:#dc3545' class='far fa-registered fa-lg' title='A été régulé par le médecin'></i>";
+                    if ($CAV_REGULATED==1) $CAV_REGULATED = "<i style='color:#dc3545' class='far fa-registered fa-lg' title='A Ã©tÃ© rÃ©gulÃ© par le mÃ©decin'></i>";
                     else $CAV_REGULATED ="";
 
                     if($VI_DETRESSE_VITALE==1 or $VI_DECEDE==1 or $VI_MALAISE==1 or $VI_MEDICALISE==1 or $VI_IMPLIQUE==1 or $VI_TRAUMATISME==1 or $VI_SOINS==1 or $VI_TRANSPORT==1 or $VI_REPOS==1 ){
                         $displayinfo=1;
                         $infotitle="";
-                        if ($VI_DETRESSE_VITALE==1) $infotitle.="Détresse vitale <br>";
-                        if ($VI_DECEDE==1) $infotitle.="Décédé.e <br>";
+                        if ($VI_DETRESSE_VITALE==1) $infotitle.="DÃ©tresse vitale <br>";
+                        if ($VI_DECEDE==1) $infotitle.="DÃ©cÃ©dÃ©.e <br>";
                         if ($VI_MALAISE==1) $infotitle.="Malaise <br>";
-                        if ($VI_MEDICALISE==1) $infotitle .="Médicalisé.e <br>";
-                        if ($VI_IMPLIQUE==1) $infotitle.="Impliqué.e <br>";
+                        if ($VI_MEDICALISE==1) $infotitle .="MÃ©dicalisÃ©.e <br>";
+                        if ($VI_IMPLIQUE==1) $infotitle.="ImpliquÃ©.e <br>";
                         if ($VI_TRAUMATISME==1) $infotitle.="Traumatisme <br>";
                         if ($VI_SOINS==1) $infotitle.="Soins <br>";
-                        if ($VI_TRANSPORT==1) $infotitle.="Transporté.e <br>";
+                        if ($VI_TRANSPORT==1) $infotitle.="TransportÃ©.e <br>";
                         if ($VI_REPOS==1) $infotitle.="Repos <br>";
                     }
                     else $displayinfo=0;
@@ -4826,7 +4826,7 @@ if($tab == 63){
     include_once('note_frais_edit.php');
 }
 //=====================================================================
-// historique de l'activité
+// historique de l'activitÃ©
 //=====================================================================
 if ( $tab == 9  and check_rights($id,49)) {
     $_GET['evenement'] = $evenement;
@@ -4854,7 +4854,7 @@ if ( $tab == 17 ) {
     include_once('evenement_facturation.php');
 }
 if ( $print ) {
-    echo "<p><div><span class=small >Imprimé par: ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id))."</span></div>";
+    echo "<p><div><span class=small >ImprimÃ© par: ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id))."</span></div>";
     echo "<p><div class='noprint' ><input type='button' value='fermer cette page' onclick='fermerfenetre();' ></div> ";
 }
 echo "<p>";

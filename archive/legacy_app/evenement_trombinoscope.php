@@ -29,7 +29,7 @@ $nomenu=1;
 get_session_parameters();
 $html = "";
 writehead();
-writeBreadCrumb("Trombinoscope de l'événement", "Evénement", "zz");
+writeBreadCrumb("Trombinoscope de l'Ã©vÃ©nement", "EvÃ©nement", "zz");
 
 if ($show_section == 1) {
     $with_section=true;
@@ -148,7 +148,7 @@ $html .=  "<div align='center'>
         <table class='noBorder'>
         <tr>
         <td width=60><img src=images/evenements/".$TE_ICON." height=40 title=\"".$TE_LIBELLE."\"></td>
-        <td><span class='ebrigade-h4'>".$E_LIBELLE."</span><br><i>".$E_LIEU."<br>début le ".$EH_DATE_DEBUT."</i>
+        <td><span class='ebrigade-h4'>".$E_LIBELLE."</span><br><i>".$E_LIEU."<br>dÃ©but le ".$EH_DATE_DEBUT."</i>
         </td>
         </tr>
         </table>";
@@ -162,12 +162,12 @@ $html .= "<p><div class='noprint'>
 <label for='birthdate'>Date de naissance</label> 
 <input type=checkbox value=1 name='birthplace' id='birthplace' $birthplace_checked title='cocher pour afficher le lieu de naissance' onchange=\"filter('".$evenement."');\"> 
 <label for='birthplace'>Lieu de naissance  </label> 
-<input type=checkbox value=1 name='firstname' id='firstname' $firstname_checked title='cocher pour afficher le deuxième prénom' onchange=\"filter('".$evenement."');\"> 
-<label for='firstname'>Deuxième prénom </label> 
-<input type=checkbox value=1 name='nationality' id='nationality' $nationality_checked title='cocher pour afficher la nationalité' onchange=\"filter('".$evenement."');\"> 
-<label for='nationality'>Nationalité  </label>
-<input type=checkbox value=1 name='evenement_show_competences' id='evenement_show_competences' $competence_checked title='cocher pour afficher les compétences' onchange=\"filter('".$evenement."');\"> 
-<label for='evenement_show_competences'>Compétences</label>
+<input type=checkbox value=1 name='firstname' id='firstname' $firstname_checked title='cocher pour afficher le deuxiÃ¨me prÃ©nom' onchange=\"filter('".$evenement."');\"> 
+<label for='firstname'>DeuxiÃ¨me prÃ©nom </label> 
+<input type=checkbox value=1 name='nationality' id='nationality' $nationality_checked title='cocher pour afficher la nationalitÃ©' onchange=\"filter('".$evenement."');\"> 
+<label for='nationality'>NationalitÃ©  </label>
+<input type=checkbox value=1 name='evenement_show_competences' id='evenement_show_competences' $competence_checked title='cocher pour afficher les compÃ©tences' onchange=\"filter('".$evenement."');\"> 
+<label for='evenement_show_competences'>CompÃ©tences</label>
 <input type=checkbox value=1 name='fonction' id='fonction' $fonction_checked title='cocher pour afficher la fonction' onchange=\"filter('".$evenement."');\"> 
 <label for='fonction'>Fonction</label></div>";
         
@@ -235,7 +235,7 @@ while ($row2=mysqli_fetch_array($result2)) {
         $class="class='img-circle'";
     }
     else $class="";
-    // compétences
+    // compÃ©tences
     
     
     // rupture renfort 
@@ -255,13 +255,13 @@ while ($row2=mysqli_fetch_array($result2)) {
                 <b><a href=upd_personnel.php?pompier=".$P_ID.">".$name."</a></b>";
     if ( $with_section ) $html .= " <i>(".$S_CODE.")</i>";
     if ( ($with_birthdate and $P_BIRTHDATE <> '' ) or ($with_birthplace and $P_BIRTHPLACE <> '')) {
-        $html .= "<br><span class=small>Né";
+        $html .= "<br><span class=small>NÃ©";
         if ($P_SEXE =='F' ) $html .="e";
         if ( $with_birthdate and $P_BIRTHDATE <> '')  $html .= " le ".$P_BIRTHDATE;
-        if ( $with_birthplace and $P_BIRTHPLACE <> '')  $html .= " à ".$P_BIRTHPLACE;
+        if ( $with_birthplace and $P_BIRTHPLACE <> '')  $html .= " Ã  ".$P_BIRTHPLACE;
         $html .= "</span>";
     }
-    if ( $with_nationality and $PAYS <> '') $html .= "<br><span class=small>Nationalité: ".$PAYS."</span>";
+    if ( $with_nationality and $PAYS <> '') $html .= "<br><span class=small>NationalitÃ©: ".$PAYS."</span>";
     if ( $with_fonction  and $TP_LIBELLE <> "" )             
         $html .=  "<br>".$TP_LIBELLE;
     if ( $with_competence ) {

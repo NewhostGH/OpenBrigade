@@ -86,8 +86,8 @@ $modal=true;
 $nomenu=1;
 writehead();
 
-$helper="<a href='#' data-toggle='popover' title=\"Détails du contrat\" data-trigger='hover' data-placement='bottom'
-            data-content=\"Indiquer les nombres d'heures ou de jours. Le format attendu est décimal, en utilisant le '.' comme séparateur pour les décimales.\" ><i class='fas fa-info-circle'></i></a>";
+$helper="<a href='#' data-toggle='popover' title=\"DÃ©tails du contrat\" data-trigger='hover' data-placement='bottom'
+            data-content=\"Indiquer les nombres d'heures ou de jours. Le format attendu est dÃ©cimal, en utilisant le '.' comme sÃ©parateur pour les dÃ©cimales.\" ><i class='fas fa-info-circle'></i></a>";
         
 write_modal_header(ucfirst(get_prenom($person))." ".strtoupper(get_nom($person))." ".$helper);
 
@@ -102,7 +102,7 @@ $html=  "<body><div align=center><form name='salarie' action='upd_personnel_sala
 <input type='hidden' name='person' value='".$person."'>
 <table class='noBorder' >
     <tr height=10 style='background-color:white;'>
-      <td width='150' align=left><b>Paramètre</b></td>
+      <td width='150' align=left><b>ParamÃ¨tre</b></td>
       <td width='50' align=center><b>Nombre</b></td>
     </tr>";
     
@@ -113,43 +113,43 @@ else $important_update_disabled="disabled";
 
 $html.= "<tr style='background-color:white;'><td>Heures par semaine</td>
             <td><input type='text' name='heures' id='heures' size=3 maxlength=4 value='".$TS_HEURES."' class='inputText50' autocomplete='off'
-                          title=\"Indiquer ici le nombre d'heures travaillées par semaine, exemple 35\"
+                          title=\"Indiquer ici le nombre d'heures travaillÃ©es par semaine, exemple 35\"
                           onchange='checkFloat(form.heures,\"".$TS_HEURES."\");' $important_update_disabled>
                 </td></tr>";
                 
 $html.= "<tr style='background-color:white;'><td>Heures par jour</td>
         <td><input type='text' name='heures_par_jour' id='heures_par_jour' size=5 maxlength=5 value='".$TS_HEURES_PAR_JOUR."'
-                  title=\"Indiquer ici le nombre d'heures de travail prévues par jour, exemple 7.5\" class='inputText50' autocomplete='off'
+                  title=\"Indiquer ici le nombre d'heures de travail prÃ©vues par jour, exemple 7.5\" class='inputText50' autocomplete='off'
                   onchange='checkFloatOrNothing(form.heures_par_jour,\"".$TS_HEURES_PAR_JOUR."\");' $important_update_disabled>
         </td></tr>";
         
 $html.= "<tr style='background-color:white;'><td>Heures par an</td>
         <td><input type='text' name='heures_par_an' id='heures_par_an' size=6 maxlength=6 value='".$TS_HEURES_PAR_AN."'
-                  title=\"Indiquer ici le nombre d'heures de travail prévues par an, exemple 1670\" class='inputText50' autocomplete='off'
+                  title=\"Indiquer ici le nombre d'heures de travail prÃ©vues par an, exemple 1670\" class='inputText50' autocomplete='off'
                   onchange='checkFloat(form.heures_par_an,\"".$TS_HEURES_PAR_AN."\");' $important_update_disabled>
         </td></tr>";
         
-$html.= "<tr style='background-color:white;'><td>Heures à récupérer</td>
+$html.= "<tr style='background-color:white;'><td>Heures Ã  rÃ©cupÃ©rer</td>
         <td><input type='text' name='heures_a_recuperer' id='heures_a_recuperer' size=6 maxlength=6 value='".$TS_HEURES_A_RECUPERER."'
-                  title=\"Indiquer ici le nombre d'heures à récupérer, exemple 25\" class='inputText50' autocomplete='off'
+                  title=\"Indiquer ici le nombre d'heures Ã  rÃ©cupÃ©rer, exemple 25\" class='inputText50' autocomplete='off'
                   onchange='checkFloat(form.heures_a_recuperer,\"".$TS_HEURES_A_RECUPERER."\");' $important_update_disabled>
         </td></tr>";
         
 $html.= "<tr style='background-color:white;'><td>Jours CP par an</td>
         <td><input type='text' name='cp_par_an' id='cp_par_an' size=4 maxlength=4 value='".$TS_JOURS_CP_PAR_AN."'
-            title='Indiquer ici le nombre de droits à jours de congés payés par an, exemple 27' class='inputText50' autocomplete='off'
+            title='Indiquer ici le nombre de droits Ã  jours de congÃ©s payÃ©s par an, exemple 27' class='inputText50' autocomplete='off'
                   onchange='checkFloat(form.cp_par_an,\"".$TS_JOURS_CP_PAR_AN."\");' $important_update_disabled>
         </td></tr>";
 
 $html.= "<tr style='background-color:white;'><td>Reliquat CP ".$datep."</td>
         <td><input type='text' name='reliquat_cp' id='reliquat_cp' size=6 maxlength=6 value='".$TS_RELIQUAT_CP."'
-                  title=\"Indiquer ici le nombre de jours de CP restant de l'année dernière, exemple 3.5\" class='inputText50' autocomplete='off'
+                  title=\"Indiquer ici le nombre de jours de CP restant de l'annÃ©e derniÃ¨re, exemple 3.5\" class='inputText50' autocomplete='off'
                   onchange='checkFloat(form.reliquat_cp,\"".$TS_RELIQUAT_CP."\");' $important_update_disabled>
         </td></tr>";
 
 $html.= "<tr style='background-color:white;'><td>Reliquat RTT ".$datep."</td>
         <td><input type='text' name='reliquat_rtt' id='reliquat_rtt' size=6 maxlength=6 value='".$TS_RELIQUAT_RTT."'
-          title=\"Indiquer ici le nombre de jours de RTT restant de l'année dernière, exemple 1\" class='inputText50' autocomplete='off'
+          title=\"Indiquer ici le nombre de jours de RTT restant de l'annÃ©e derniÃ¨re, exemple 1\" class='inputText50' autocomplete='off'
           onchange='checkFloat(form.reliquat_rtt,\"".$TS_RELIQUAT_RTT."\");' $important_update_disabled>
         </td></tr>";
 

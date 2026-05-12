@@ -27,8 +27,8 @@ $mail->Mailer   = "smtp";
 
 @MYSQL_CONNECT("localhost","root","password");
 @mysql_select_db("my_company");
-$query  = "SELECT full_name, email, photo FROM employee WHERE id=$id";
-$result = @MYSQL_QUERY($query);
+$queryÂ  =Â "SELECT full_name, email,Â photoÂ FROM employeeÂ WHEREÂ id=$id";
+$resultÂ =Â @MYSQL_QUERY($query);
 
 while ($row = mysql_fetch_array ($result))
 {

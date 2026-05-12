@@ -21,7 +21,7 @@ include_once ("config.php");
 check_all(0);
 $id=$_SESSION['id'];
 
-$printed_by="imprimÈ par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y ‡ H:i");
+$printed_by="imprim√© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y √† H:i");
 
 if ( isset($_GET["P_ID"])) $pid=intval($_GET["P_ID"]);
 else $pid=0;
@@ -78,7 +78,7 @@ custom_fetch_array($result);
 
 if ( $pid <> $id and ! check_rights($id, 2,"$P_SECTION")) {
     $infos_visible=false;
-    // si rÙles hors dÈpartement, tester permissions sur autre dÈpartements, rendre infos visibles
+    // si r√¥les hors d√©partement, tester permissions sur autre d√©partements, rendre infos visibles
     if ( $P_STATUT <> 'EXT' and  check_rights($id, 2)) {
         $query="select distinct S_ID EXTERNAL_SECTION from section_role where P_ID=".$pid." and S_ID <> ".intval($P_SECTION);
         $result=mysqli_query($dbc,$query);
@@ -115,14 +115,14 @@ $y=$np;
 
 $pdf->SetFont('Arial','B',20); 
 $pdf->SetXY($GoX,$y);
-$pdf->MultiCell(100,15,"Passeport du bÈnÈvole","1","C");
+$pdf->MultiCell(100,15,"Passeport du b√©n√©vole","1","C");
 GoDown(4);
 // =========================================================
-// IdentitÈ
+// Identit√©
 // =========================================================
 if ( $P_PHOTO <> ""  and is_file($P_PHOTO)) $pdf->Image($P_PHOTO,15,$y + 5);
 $pdf->SetFont('Arial','B',12);
-$pdf->Text($GoX,$y,"IdentitÈ: ");
+$pdf->Text($GoX,$y,"Identit√©: ");
 $pdf->SetTextColor(13,53,148);
 $pdf->Text($GoX2,$y,$TC_LIBELLE." ".$P_NOM." ".$P_PRENOM);
 $pdf->SetTextColor(0,0,0);
@@ -139,13 +139,13 @@ $pdf->Text($GoX2,$y,$P_ADDRESS);
 GoDown(1);
 $pdf->Text($GoX2,$y,$P_ZIP_CODE." ".$P_CITY);
 GoDown(1);
-$pdf->Text($GoX,$y,"TÈlÈphone: ");
+$pdf->Text($GoX,$y,"T√©l√©phone: ");
 $pdf->Text($GoX2,$y,$P_PHONE);
 GoDown(1);
 $pdf->Text($GoX,$y,"Email: ");
 $pdf->Text($GoX2,$y,$P_EMAIL);
 GoDown(1);
-$pdf->Text($GoX,$y,"DÈpartement: ");
+$pdf->Text($GoX,$y,"D√©partement: ");
 $pdf->Text($GoX2,$y,$DEPARTEMENT);
 GoDown(1);
 if ( $ANTENNE <> "" ) {
@@ -167,7 +167,7 @@ function GoDown($returns=1, $ymax = 240) {
 }
 
 // =========================================================
-// MÈdailles dÈpartementales
+// M√©dailles d√©partementales
 // =========================================================
 
 $query="select ta.TA_CODE, ta.TA_DESCRIPTION, a.A_COMMENT, date_format(a.A_DEBUT, '%d-%m-%Y') A_DEBUT, s2.S_DESCRIPTION
@@ -189,7 +189,7 @@ if ( $num > 0 ) {
     
     $pdf->Image("images/medal.png", 50, $y - 2);
     $pdf->SetXY($GoX + 10,$y);
-    $pdf->MultiCell(80,8,"DÈcorations collectives","1","C");
+    $pdf->MultiCell(80,8,"D√©corations collectives","1","C");
     GoDown(2);
     
     $hauteur=8;
@@ -200,13 +200,13 @@ if ( $num > 0 ) {
     $pdf->SetDrawColor(0,0,0);
     $pdf->SetFillColor(200);
     $pdf->SetFont('Arial','B',11);
-    $pdf->MultiCell($L1,$hauteur,"MÈdaille",1,"C",true);
+    $pdf->MultiCell($L1,$hauteur,"M√©daille",1,"C",true);
     $pdf->SetXY($startX + $L1 ,$y);
     $pdf->MultiCell($L2,$hauteur,"Date",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2,$y);
     $pdf->MultiCell($L3,$hauteur,"Agrafe",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3,$y);
-    $pdf->MultiCell($L4,$hauteur,"DÈcernÈe ‡",1,"C",true);
+    $pdf->MultiCell($L4,$hauteur,"D√©cern√©e √†",1,"C",true);
 
     while ($row=@mysqli_fetch_array($result)) {
         $TA_CODE=$row["TA_CODE"];
@@ -232,9 +232,9 @@ if ( $num > 0 ) {
 }
 
 // =========================================================
-// MÈdailles individuelles
+// M√©dailles individuelles
 // =========================================================
-$decoration_pattern='MÈdailles et RÈcompenses';
+$decoration_pattern='M√©dailles et R√©compenses';
 $query="select e.EQ_ID, e.EQ_NOM, p.PS_ID, TYPE, p.DESCRIPTION, q.Q_VAL
          from equipe e, qualification q, poste p
          where q.PS_ID=p.PS_ID
@@ -265,11 +265,11 @@ if ( $num > 0 ) {
     $pdf->SetDrawColor(0,0,0);
     $pdf->SetFillColor(200);
     $pdf->SetFont('Arial','B',11);
-    $pdf->MultiCell($L1,$hauteur,"MÈdaille",1,"C",true);
+    $pdf->MultiCell($L1,$hauteur,"M√©daille",1,"C",true);
     $pdf->SetXY($startX + $L1 ,$y);
-    $pdf->MultiCell($L2,$hauteur,"DÈcernÈe",1,"C",true);
+    $pdf->MultiCell($L2,$hauteur,"D√©cern√©e",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 ,$y);
-    $pdf->MultiCell($L3,$hauteur,"‡",1,"C",true);
+    $pdf->MultiCell($L3,$hauteur,"√†",1,"C",true);
 
     while ($row=@mysqli_fetch_array($result)) {
         $TYPE=$row["TYPE"];
@@ -282,7 +282,7 @@ if ( $num > 0 ) {
         $pdf->SetXY($startX ,$y);
         $pdf->MultiCell($L1,$hauteur,$DESCRIPTION,1,"C",true);
         $pdf->SetXY($startX + $L1 ,$y);
-        $pdf->MultiCell($L2,$hauteur,"‡ titre individuel",1,"C",true);
+        $pdf->MultiCell($L2,$hauteur,"√† titre individuel",1,"C",true);
         $pdf->SetXY($startX + $L1 + $L2 ,$y);
         $pdf->MultiCell($L3,$hauteur,$P_PRENOM." ".$P_NOM,1,"C",true);
     }
@@ -312,7 +312,7 @@ if ( $num > 0 ) {
     
     $pdf->Image("images/certificate.png", 50, $y - 2);
     $pdf->SetXY($GoX + 10,$y);
-    $pdf->MultiCell(80,8,"DiplÙmes officiels","1","C");
+    $pdf->MultiCell(80,8,"Dipl√¥mes officiels","1","C");
     GoDown(2);
     
     $hauteur=8;
@@ -329,9 +329,9 @@ if ( $num > 0 ) {
     $pdf->SetXY($startX + $L1 + $L2,$y);
     $pdf->MultiCell($L3,$hauteur,"Date",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3,$y);
-    $pdf->MultiCell($L4,$hauteur,"Num diplÙme",1,"C",true);
+    $pdf->MultiCell($L4,$hauteur,"Num dipl√¥me",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4 ,$y);
-    $pdf->MultiCell($L5,$hauteur,"DÈlivrÈ par",1,"C",true);
+    $pdf->MultiCell($L5,$hauteur,"D√©livr√© par",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4 + $L5,$y);
     $pdf->MultiCell($L6,$hauteur,"Lieu",1,"C",true);
 
@@ -396,14 +396,14 @@ if ( $num > 0 ) {
     $pdf->SetFont('Arial','B',14); 
     $pdf->SetXY($GoX ,$y);
     $pdf->Image("images/certificate2.png", 40, $y - 2);
-    $pdf->MultiCell(100,8,"CompÈtences valides au ".date('d-m-Y'),"1","C");
+    $pdf->MultiCell(100,8,"Comp√©tences valides au ".date('d-m-Y'),"1","C");
     GoDown(2);
     
     $pdf->SetXY($startX,$y);
     $pdf->SetDrawColor(0,0,0);
     $pdf->SetFillColor(200);
     $pdf->SetFont('Arial','B',9);
-    $pdf->MultiCell($L1,$hauteur,"CatÈgorie",1,"C",true);
+    $pdf->MultiCell($L1,$hauteur,"Cat√©gorie",1,"C",true);
     $pdf->SetXY($startX + $L1 ,$y);
     $pdf->MultiCell($L2,$hauteur,"Type",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2,$y);
@@ -513,7 +513,7 @@ if ( $num > 0 ) {
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4 + $L5,$y);
     $pdf->MultiCell($L6,$hauteur,"Heures",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4 + $L5 + $L6,$y);
-    $pdf->MultiCell($L7,$hauteur,"RÙle",1,"C",true);
+    $pdf->MultiCell($L7,$hauteur,"R√¥le",1,"C",true);
 
     while ($row=@mysqli_fetch_array($result)) {
         $e_libelle = substr($row["e_libelle"],0,24);
@@ -553,12 +553,12 @@ if ( $num > 0 ) {
     
     GoDown(2);
     $pdf->SetFont('Arial','',10);
-    $pdf->Text($GoX0,$y,"Nombre total d'heures de formation bÈnÈvole depuis un an: ".$sum."h");
+    $pdf->Text($GoX0,$y,"Nombre total d'heures de formation b√©n√©vole depuis un an: ".$sum."h");
 }
 
 
 //=====================================================================
-// opÈrations de secours
+// op√©rations de secours
 //=====================================================================
 
 $query=" select eh.eh_id, e_libelle, te.TE_LIBELLE, e.TE_CODE,
@@ -602,7 +602,7 @@ if ( $num > 0 ) {
     $pdf->SetFont('Arial','B',14); 
     $pdf->SetXY($GoX + 10,$y);
     $pdf->Image("images/secours.png", 50, $y - 3);
-    $pdf->MultiCell(90,8,"OpÈrations de secours depuis 1 an","1","C");
+    $pdf->MultiCell(90,8,"Op√©rations de secours depuis 1 an","1","C");
     GoDown(2);
     
     $hauteur=8;
@@ -616,7 +616,7 @@ if ( $num > 0 ) {
     $pdf->SetFont('Arial','B',11);
     $pdf->MultiCell($L1,$hauteur,"Date",1,"C",true);
     $pdf->SetXY($startX + $L1 ,$y);
-    $pdf->MultiCell($L2,$hauteur,"ActivitÈ",1,"C",true);
+    $pdf->MultiCell($L2,$hauteur,"Activit√©",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2,$y);
     $pdf->MultiCell($L3,$hauteur,"Description",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3 ,$y);
@@ -624,7 +624,7 @@ if ( $num > 0 ) {
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4,$y);
     $pdf->MultiCell($L5,$hauteur,"Heures",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4 + $L5,$y);
-    $pdf->MultiCell($L6,$hauteur,"RÙle",1,"C",true);
+    $pdf->MultiCell($L6,$hauteur,"R√¥le",1,"C",true);
 
     while ($row=@mysqli_fetch_array($result)) {
         $e_libelle = substr($row["e_libelle"],0,26);
@@ -661,14 +661,14 @@ if ( $num > 0 ) {
     
     GoDown(2);
     $pdf->SetFont('Arial','',10);
-    $pdf->Text($GoX0,$y,"Nombre total d'heures de participation bÈnÈvole aux activitÈs de secours depuis un an: ".$sum."h");
+    $pdf->Text($GoX0,$y,"Nombre total d'heures de participation b√©n√©vole aux activit√©s de secours depuis un an: ".$sum."h");
 
 }
 
 
 
 //=====================================================================
-// activitÈs opÈrationnelles
+// activit√©s op√©rationnelles
 //=====================================================================
 
 $query=" select eh.eh_id, e_libelle, te.TE_LIBELLE,
@@ -712,7 +712,7 @@ if ( $num > 0 ) {
     $pdf->SetFont('Arial','B',14); 
     $pdf->SetXY($GoX + 10,$y);
     $pdf->Image("images/help.png", 50, $y - 4);
-    $pdf->MultiCell(100,8,"ActivitÈs opÈrationnelles depuis 1 an","1","C");
+    $pdf->MultiCell(100,8,"Activit√©s op√©rationnelles depuis 1 an","1","C");
     GoDown(2);
     
     $hauteur=8;
@@ -726,7 +726,7 @@ if ( $num > 0 ) {
     $pdf->SetFont('Arial','B',11);
     $pdf->MultiCell($L1,$hauteur,"Date",1,"C",true);
     $pdf->SetXY($startX + $L1 ,$y);
-    $pdf->MultiCell($L2,$hauteur,"ActivitÈ",1,"C",true);
+    $pdf->MultiCell($L2,$hauteur,"Activit√©",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2,$y);
     $pdf->MultiCell($L3,$hauteur,"Description",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3 ,$y);
@@ -734,7 +734,7 @@ if ( $num > 0 ) {
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4,$y);
     $pdf->MultiCell($L5,$hauteur,"Heures",1,"C",true);
     $pdf->SetXY($startX + $L1 + $L2 + $L3 + $L4 + $L5,$y);
-    $pdf->MultiCell($L6,$hauteur,"RÙle",1,"C",true);
+    $pdf->MultiCell($L6,$hauteur,"R√¥le",1,"C",true);
 
     while ($row=@mysqli_fetch_array($result)) {
         $e_libelle = substr($row["e_libelle"],0,26);
@@ -769,12 +769,12 @@ if ( $num > 0 ) {
     
     GoDown(2);
     $pdf->SetFont('Arial','',10);
-    $pdf->Text($GoX0,$y,"Nombre total d'heures de participation bÈnÈvole aux activitÈs opÈrationnelles depuis un an: ".$sum."h");
+    $pdf->Text($GoX0,$y,"Nombre total d'heures de participation b√©n√©vole aux activit√©s op√©rationnelles depuis un an: ".$sum."h");
 
 }
 
 // =========================================================
-// tableau rÈcapitulatif heures
+// tableau r√©capitulatif heures
 // =========================================================
 
 function get_number_hours($type, $year) {
@@ -812,7 +812,7 @@ $pdf->SetTextColor(0,0,0);
 $pdf->SetFont('Arial','B',14); 
 $pdf->SetXY($GoX ,$y);
 $pdf->Image("images/participations.png", 40, $y - 5);
-$pdf->MultiCell(110,8,"Bilan participations bÈnÈvole sur 5 ans","1","C");
+$pdf->MultiCell(110,8,"Bilan participations b√©n√©vole sur 5 ans","1","C");
 GoDown(2);
 $hauteur=8;
 $startX=15;
@@ -822,7 +822,7 @@ $pdf->SetXY($startX,$y);
 $pdf->SetDrawColor(0,0,0);
 $pdf->SetFillColor(200);
 $pdf->SetFont('Arial','B',11);
-$pdf->MultiCell($L1,$hauteur,"ActivitÈ",1,"C",true);
+$pdf->MultiCell($L1,$hauteur,"Activit√©",1,"C",true);
 $pdf->SetXY($startX + $L1 ,$y);
 $pdf->MultiCell($L2,$hauteur,$Y -4,1,"C",true);
 $pdf->SetXY($startX + $L1 + $L2,$y);

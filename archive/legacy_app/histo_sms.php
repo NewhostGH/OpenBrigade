@@ -67,9 +67,9 @@ if ( $nbsections == 0 ) {
     echo "<select id='type' name='type'  class='selectpicker' data-style='btn-default' data-container='body'
     onchange=\"redirect(this.value, '$sms_account',  '$dtdb', '$dtfn', '$order');\" >";
     if ( $type == 'histo' ) $selected='selected'; else $selected='';
-    echo "<option value='histo' $selected>SMS envoyés (historique)</option>";
+    echo "<option value='histo' $selected>SMS envoyÃ©s (historique)</option>";
     if ( $type == 'compta' ) $selected='selected'; else $selected='';
-    echo "<option value='compta' $selected>SMS envoyés par département</option>";
+    echo "<option value='compta' $selected>SMS envoyÃ©s par dÃ©partement</option>";
     echo "</select>";
 }
 
@@ -98,7 +98,7 @@ echo "</div>";
 
 echo "<div class='dropdown-right' align=right>";
 // Choix Dates
-echo "<label>Début</label>
+echo "<label>DÃ©but</label>
 <input type='text' size='10' name='dtdb' id='dtdb' value=\"".$dtdb."\" class='datepicker datepicker3' style='display:inline-flex;' data-provide='datepicker'
             placeholder='JJ-MM-AAAA'
             style='width:100px;'>";

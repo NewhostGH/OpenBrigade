@@ -26,11 +26,11 @@ $action=$_GET["action"];
 get_session_parameters();
 writehead();
 if( $action == 'create' ){
-    $title = "Ajout activité";
+    $title = "Ajout activitÃ©";
     writeBreadCrumb($title);
 }
 else if(isset($_GET['evenement']))
-    $title = 'Modification activité';
+    $title = 'Modification activitÃ©';
 
 $query="select TE_CODE, COLONNE_RENFORT from type_evenement";
 $result = mysqli_query($dbc,$query);
@@ -65,9 +65,9 @@ echo "
 
 function display_evt_accepte_renfort($evt,$renfortde="null"){
     global $dbc,$renfort_label;
-    // Affiche les activités de même type aux mêmes dates de début et fin
-    // e1 : Activité renfort possible
-    // e2 : Activité courant
+    // Affiche les activitÃ©s de mÃªme type aux mÃªmes dates de dÃ©but et fin
+    // e1 : ActivitÃ© renfort possible
+    // e2 : ActivitÃ© courant
     $out='';
 
     $sql = "select e1.e_code, e1.e_libelle , e1.s_id
@@ -94,11 +94,11 @@ function display_evt_accepte_renfort($evt,$renfortde="null"){
     }
     if ( $renfortde == "null" ) $onchange="onchange=\"attacher_renfort();\"";
     else $onchange="";
-    echo "<select class='selectpicker form-control form-control-sm' name=\"parent\" id=\"parent\" title=\"Activité(s) à la même date\" ".$onchange." style='max-width:380px;font-size:10pt;' data-style='btn btn-default'>";
+    echo "<select class='selectpicker form-control form-control-sm' name=\"parent\" id=\"parent\" title=\"ActivitÃ©(s) Ã  la mÃªme date\" ".$onchange." style='max-width:380px;font-size:10pt;' data-style='btn btn-default'>";
     if ( $renfortde == "null" ) 
         echo "<option value=\"null\">Lier en tant que ".$renfort_label." de...</option>";
     else 
-        echo "<option value=\"null\">Désactiver ".$renfort_label."</option>";
+        echo "<option value=\"null\">DÃ©sactiver ".$renfort_label."</option>";
     echo $out;
     echo "</select>";
 }
@@ -119,8 +119,8 @@ if ( $action == "copy" ) {
                 and e.E_CODE=".$evenement;
         $result= mysqli_query($dbc,$query);
         custom_fetch_array($result);
-        $message .= "<div align=left>Vous allez dupliquer cette activité <b>".$TE_LIBELLE."</b> du calendrier.";
-        $message .= " Vous pourrez modifier les paramètres (date, heure, lieu ...).";
+        $message .= "<div align=left>Vous allez dupliquer cette activitÃ© <b>".$TE_LIBELLE."</b> du calendrier.";
+        $message .= " Vous pourrez modifier les paramÃ¨tres (date, heure, lieu ...).";
         
         $message_1="";
         $show=false;
@@ -135,8 +135,8 @@ if ( $action == "copy" ) {
         if ( $TE_VEHICULES == 1 ) {
             $nbv=count_entities("evenement_vehicule", "E_CODE=".$evenement." and EH_ID=1");
             if ( $nbv ) {
-                $message_1 .= "<br><input type='checkbox' name='vehicules' id='vehicules' title=\"cocher pour dupliquer les engagements de véhicules \" value=1>
-                            <label for='vehicules'>Véhicules ($nbv)</label>";
+                $message_1 .= "<br><input type='checkbox' name='vehicules' id='vehicules' title=\"cocher pour dupliquer les engagements de vÃ©hicules \" value=1>
+                            <label for='vehicules'>VÃ©hicules ($nbv)</label>";
                 $show=true;
             }
             else 
@@ -149,7 +149,7 @@ if ( $action == "copy" ) {
             $nbm=count_entities("evenement_materiel", "E_CODE=".$evenement);
             if ( $nbm ) {
                 $message_1 .= "<br><input type='checkbox' name='materiel' id='materiel' title=\"cocher pour dupliquer les engagements de materiel\" value=1>
-                            <label for='materiel'>Matériel ($nbm)</label>";
+                            <label for='materiel'>MatÃ©riel ($nbm)</label>";
                 $show=true;
             }
             else 
@@ -180,7 +180,7 @@ if ( $action == "copy" ) {
              $message_1 .= "<input type='hidden' name='personnel' id='personnel' value=0><input type='hidden' name='options' id='options' value=0>";
          
         if ( $show )
-            $message .= "<p><p><b>Choisissez les éléments à dupliquer en plus de l'activité</b>";
+            $message .= "<p><p><b>Choisissez les Ã©lÃ©ments Ã  dupliquer en plus de l'activitÃ©</b>";
         
         $message .= $message_1;
         $message .= "<p><div align=center>
@@ -390,14 +390,14 @@ if ( ! is_chef_evenement($id, $evenement) ) {
 }
 
 //=====================================================================
-// debut éditeur
+// debut Ã©diteur
 //=====================================================================
 
 echo "<body onload=\"change('".$MYTE_CODE."');\">";
 
-if ($action == 'copy') $txt="Duplication d'une activité";
+if ($action == 'copy') $txt="Duplication d'une activitÃ©";
 else if ( $ec_mode == 'MC' ) $txt="Saisie Main courante";
-else $txt='Saisie activité';
+else $txt='Saisie activitÃ©';
 
 echo "<form name=demoform action='evenement_save.php' method='POST' enctype='multipart/form-data'>";
 
@@ -421,7 +421,7 @@ echo "<input type='hidden' name='copycheffrom' value='$copycheffrom'>";
 
 
 //=====================================================================
-// premier bloc - généralités et horaires
+// premier bloc - gÃ©nÃ©ralitÃ©s et horaires
 //=====================================================================
 
 echo "<div class='container-fluid'>";
@@ -434,7 +434,7 @@ echo "<div class='col-sm-6' align=center style='' >
             <div class='card-body graycard'>";
 echo "<table cellspacing='0' border='0' class='noBorder flexTable'>";
 
-// si des diplômes ont été données sur cette formation, interdire de changer  ces paramètres
+// si des diplÃ´mes ont Ã©tÃ© donnÃ©es sur cette formation, interdire de changer  ces paramÃ¨tres
 $readonly="";
 if ( $evenement > 0 ) {
     $queryf="select count(1) as NB from personnel_formation where E_CODE=".$evenement;
@@ -443,7 +443,7 @@ if ( $evenement > 0 ) {
     if  ( $rowf["NB"] > 0 ) $readonly="disabled";
 }
 
-// recherche d'interdictions sur la période pour la section ou le niveau supérieur
+// recherche d'interdictions sur la pÃ©riode pour la section ou le niveau supÃ©rieur
 $queryi="select s.SSE_ID from section_stop_evenement s 
            where s.S_ID in (".get_family_up("$MYS_ID").")
             and s.END_DATE  >=  NOW()
@@ -452,7 +452,7 @@ $resulti=mysqli_query($dbc,$queryi);
 $warn ="";
 if ( mysqli_num_rows ($resulti) > 0 ) {
     $warn="<a href='upd_section.php?section".$MYS_ID."&tab=6' 
-        title='Attention il y a une ou des interdictions de créer des activités, voir le détail'>
+        title='Attention il y a une ou des interdictions de crÃ©er des activitÃ©s, voir le dÃ©tail'>
        <i class='fas fa-exclamation-triangle' style='color:orange;'></i></a>";
 }
 
@@ -522,7 +522,7 @@ if ( $MYE_EQUIPE > 0 and $MYTE_CODE == 'GAR' ) {
 // section organisatice
 
  echo "<tr>
-            <td>Organisé par $asterisk</td>
+            <td>OrganisÃ© par $asterisk</td>
             <td align=left colspan=2>";
 
 $mysection=get_highest_section_where_granted($id,15);
@@ -534,7 +534,7 @@ else $sectionorder=$defaultsectionorder;
 
 if ( $level == 0 ) 
     $all_regions=($mysection);
-// cas particulier pour une personne habilitée sur 2 ou plus de niveaux équivalents 
+// cas particulier pour une personne habilitÃ©e sur 2 ou plus de niveaux Ã©quivalents 
 else 
     $all_regions=get_all_sections_where_granted($id, 15, $level);
 
@@ -581,7 +581,7 @@ echo "</tr>";
 // description
 
 echo "<tr>
-            <td>Libellé $asterisk</td>
+            <td>LibellÃ© $asterisk</td>
             <td align=left colspan=2><input type='text' name='libelle' class='form-control form-control-sm' id='libelle' size='50' value=\"$MYE_LIBELLE\" colspan=2>";
 echo "</tr>";
 
@@ -595,7 +595,7 @@ echo "</tr>";
 
 // adresse facultatif
 
-$helptext="Si l'adresse renseignée est correcte, alors un lien Google Maps est activé";
+$helptext="Si l'adresse renseignÃ©e est correcte, alors un lien Google Maps est activÃ©";
 $helpicon=" <a href='#'  title=\"Adresse exacte ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
 echo "<tr>
             <td>Adresse exacte <br>avec code postal</b>".$helpicon."</td>
@@ -610,24 +610,24 @@ if ( $MYTE_CODE <> 'MC' ) {
                 <td>Lieu de Rendez-vous</b>
               </td>
                 <td align=left colspan=2>";
-    echo "<input type='text' name='lieu_rdv' size='30' class='form-control form-control-sm' value=\"$MYE_LIEU_RDV\" title=\"Saisir ici le lieu de rendez vous prévu pour le personnel\"></td>";
+    echo "<input type='text' name='lieu_rdv' size='30' class='form-control form-control-sm' value=\"$MYE_LIEU_RDV\" title=\"Saisir ici le lieu de rendez vous prÃ©vu pour le personnel\"></td>";
     echo "</tr>";
 
-    if ( $syndicate == 1 ) $t="d'arrivée <small>le premier jour</small>";
+    if ( $syndicate == 1 ) $t="d'arrivÃ©e <small>le premier jour</small>";
     else $t="de Rendez-vous";
     echo "<tr>
                 <td>Heure $t</b>
               </td>
                 <td align=left colspan=2>";
     echo "<input type='text' name='heure_rdv' class='form-control form-control-sm' size='5' value=\"$MYE_HEURE_RDV\" placeholder='hh:mm'
-            title=\"Saisir ici l'heure de rendez vous prévu pour le personnel\" onchange=\"checkTime(demoform.heure_rdv,'');\"></td>";
+            title=\"Saisir ici l'heure de rendez vous prÃ©vu pour le personnel\" onchange=\"checkTime(demoform.heure_rdv,'');\"></td>";
     echo "</tr>";
 }
 else {
     echo "<input type=hidden name='lieu_rdv' value=''><input type=hidden name='heure_rdv' value=''>";
 }
 
-// date heure début
+// date heure dÃ©but
 
 for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
 
@@ -637,7 +637,7 @@ for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
     $next = $k + 1;
     $previous = $k - 1;
     echo "<tr id=debrow[".$k."] $style >
-          <td rowspan=3>Dates partie n°".$k." ";
+          <td rowspan=3>Dates partie nÂ°".$k." ";
               
     if ( $k == 1 ) echo " $asterisk";
     else {
@@ -646,17 +646,17 @@ for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
     }    
     echo "</td>";
 
-    if ( $MYE_PARENT <> 'null' ) $t1 = " Attention, veillez à bien garder les mêmes dates et heures de début que sur l'une des parties de l'activité principale pour assurer la correspondance des parties.";
+    if ( $MYE_PARENT <> 'null' ) $t1 = " Attention, veillez Ã  bien garder les mÃªmes dates et heures de dÃ©but que sur l'une des parties de l'activitÃ© principale pour assurer la correspondance des parties.";
     else $t1='';
 
-    echo " <td align=left colspan=2><div class='d-flex mt-1 align-items-center'><span title=\"Date début format jj-mm-yyyy".$t1."\">du </span>
+    echo " <td align=left colspan=2><div class='d-flex mt-1 align-items-center'><span title=\"Date dÃ©but format jj-mm-yyyy".$t1."\">du </span>
         <span class='mr-2'>$asterisk</span>";
 
     echo "<input name='dc1_$k' id='dc1_$k' placeholder='JJ-MM-AAAA' value=\"".$MYE_DATE_DEBUT[$k]."\" class='datepicker datepicker2 form-control form-control-sm' data-provide='datepicker' 
         autocomplete='off' style='min-width:90px;'
         onchange=\"updfin(document.demoform.dc1_$k,document.demoform.dc2_$k);\">";
 
-    echo "<span class='p-2'>à</span><select class='selectpicker form-control form-control-sm' data-style='btn-default' data-container='body' id='debut_$k' name='debut_$k' title=\"".$t1."\"
+    echo "<span class='p-2'>Ã </span><select class='selectpicker form-control form-control-sm' data-style='btn-default' data-container='body' id='debut_$k' name='debut_$k' title=\"".$t1."\"
     onchange=\"EvtCalcDuree(document.demoform.dc1_$k,document.demoform.dc2_$k,document.demoform.debut_$k,document.demoform.fin_$k,document.demoform.duree_$k);\">";
     for ( $i=0; $i <= 24; $i++ ) {
         $check = $i.":00";
@@ -685,7 +685,7 @@ for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
         autocomplete='off'  style='min-width:90px;'
         onchange=\"verifyDateRange(document.demoform.dc1_$k,document.demoform.dc2_$k);\">";
 
-    echo "<span class='p-2'>à</span><select class='selectpicker form-control form-control-sm' data-style='btn-default' data-container='body' id='fin_$k' name='fin_$k' 
+    echo "<span class='p-2'>Ã </span><select class='selectpicker form-control form-control-sm' data-style='btn-default' data-container='body' id='fin_$k' name='fin_$k' 
     onchange=\"EvtCalcDuree(document.demoform.dc1_$k,document.demoform.dc2_$k,document.demoform.debut_$k,document.demoform.fin_$k,document.demoform.duree_$k);\">";
     for ( $i=0; $i <= 24; $i++ ) {
         if ( $i.":00" == $MYE_FIN[$k] ) $selected="selected";
@@ -706,15 +706,15 @@ for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
     }
     echo "</select></td></tr>";
     
-    echo "<tr id=dureerow[".$k."] $style><td><span class='hide_mobile'>durée</span> ";
+    echo "<tr id=dureerow[".$k."] $style><td><span class='hide_mobile'>durÃ©e</span> ";
     echo "<input type=\"text\" class='form-control form-control-sm' style='width:fit-content; display:inline-block' name=\"duree_$k\" id=\"duree_$k\" value=\"".$MYE_DUREE[$k]."\" size='3' length='3'
     onfocus=\"EvtCalcDuree(document.demoform.dc1_$k,document.demoform.dc2_$k,document.demoform.debut_$k,document.demoform.fin_$k,document.demoform.duree_$k);\" 
-    title='durée en heures de la partie n°$k'> h";
+    title='durÃ©e en heures de la partie nÂ°$k'> h";
     echo "</td>";
 
     echo "<td><span class='hide_mobile'>description</span> ";
     echo "<input type=\"text\" cname=\"description_$k\" id=\"description_$k\" value=\"".$MYE_DESCRIPTION[$k]."\" style='max-width:90px;'
-            title='description facultative pour la partie n°$k'>";
+            title='description facultative pour la partie nÂ°$k'>";
     echo "</td></tr>";
 
     if ( $k == 1 and $MYE_DATE_DEBUT[$k] == "" ) $style="style=''";
@@ -737,13 +737,13 @@ for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
             echo "<tr id='plusrow[$k]' $style >
                 <td></td>
                 <td class=small align=center colspan=2 >
-                <i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title=\"Vous ne pouvez pas avoir plus de parties sur l'activité ".$renfort_label." que sur l'activité principale\"></i> Maximum atteint
+                <i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title=\"Vous ne pouvez pas avoir plus de parties sur l'activitÃ© ".$renfort_label." que sur l'activitÃ© principale\"></i> Maximum atteint
                 </td></tr>";
         else
             echo "<tr id='plusrow[$k]' $style >
             <td></td>
             <td align=center colspan=2>
-            <i class='fa fa-plus-circle fa-lg' style='color:green;' title='Ajouter une partie n°$k dates/heures '
+            <i class='fa fa-plus-circle fa-lg' style='color:green;' title='Ajouter une partie nÂ°$k dates/heures '
             onclick=\"javascript:showNextRow('debrow[$next]','finrow[$next]','dureerow[$next]','plusrow[$k]','plusrow[$next]',$last,'debrow[$afternext]');\" ></i>
             </td></tr>";
     }
@@ -761,7 +761,7 @@ echo "</tr>";
 
 echo "</table></div></div>";
 
-// emails envoyés
+// emails envoyÃ©s
 
 if ( $action <> 'create' ) {
     echo "<div class='card hide card-default graycarddefault' align=center style=''>
@@ -775,7 +775,7 @@ if ( $action <> 'create' ) {
     else $checked="";
 
     echo "<tr>
-            <td>Email ouverture envoyé</td>
+            <td>Email ouverture envoyÃ©</td>
             <td align=left colspan=2>
                 <label class='switch'>
                     <input type='checkbox' name='mail1' value='1' $checked>
@@ -787,7 +787,7 @@ if ( $action <> 'create' ) {
     if ( $MYE_MAIL2 == 1 )$checked="checked";
     else $checked="";
     echo "<tr>
-            <td>Email clôture envoyé</td>
+            <td>Email clÃ´ture envoyÃ©</td>
             <td align=left colspan=2>
                 <label class='switch'>
                     <input type='checkbox' name='mail2' value='1' $checked>
@@ -799,7 +799,7 @@ if ( $action <> 'create' ) {
     if ( $MYE_MAIL3 == 1 )$checked="checked";
     else $checked="";
     echo "<tr>
-            <td>Email annulation envoyé</td>
+            <td>Email annulation envoyÃ©</td>
             <td align=left colspan=2>
             <label class='switch'>
                 <input type='checkbox' name='mail3' value='1' $checked>
@@ -815,13 +815,13 @@ else {
 }
 
 //=====================================================================
-// bloc conférence
+// bloc confÃ©rence
 //=====================================================================
 
 if ( $gardes == 0 or $MYTE_CODE <> 'GAR' ) {
     echo "<div class='card hide card-default graycarddefault' align=center style=''>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Conférence </strong></div>
+                <div class='card-title'><strong> ConfÃ©rence </strong></div>
             </div>
             <div class='card-body graycard'>
         <table cellspacing='0' border='0' class='noBorder flexTable'>";
@@ -830,39 +830,39 @@ if ( $gardes == 0 or $MYTE_CODE <> 'GAR' ) {
     $warnicon="";
     if ( $action == 'update' ) {
         if ( $z > 1 or $MYE_DATE_DEBUT[1] <> $MYE_DATE_FIN[1]) {
-            $warntext="Seules les activités à une seule partie et sur une journée au plus peuvent avoir un lien Conférence web. Ici le lien, même si vous le renseignez, n'apparaîtra pas sur la page activité.";
-            $warnicon=" <a href='#' title=\"Pas de conférence possible ".$warntext."\"><i class='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i></a>";
+            $warntext="Seules les activitÃ©s Ã  une seule partie et sur une journÃ©e au plus peuvent avoir un lien ConfÃ©rence web. Ici le lien, mÃªme si vous le renseignez, n'apparaÃ®tra pas sur la page activitÃ©.";
+            $warnicon=" <a href='#' title=\"Pas de confÃ©rence possible ".$warntext."\"><i class='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i></a>";
         }
     }
 
-    $helptext="Si le champ Lien Conférence Web est renseigné, alors une icône visio conférence apparaitra sur le premier onglet de l'activité pour les seuls inscrits et responsables de l'activité,
-                permettant de rejoindre la visio conférence.
-                La visio conférence doit au préalable être créée dans Skype, Teams, Zoom, Cisco Webex ou autre application de conférence.";
-    $helpicon=" <a href='#' title=\"Lien Conférence Web ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
+    $helptext="Si le champ Lien ConfÃ©rence Web est renseignÃ©, alors une icÃ´ne visio confÃ©rence apparaitra sur le premier onglet de l'activitÃ© pour les seuls inscrits et responsables de l'activitÃ©,
+                permettant de rejoindre la visio confÃ©rence.
+                La visio confÃ©rence doit au prÃ©alable Ãªtre crÃ©Ã©e dans Skype, Teams, Zoom, Cisco Webex ou autre application de confÃ©rence.";
+    $helpicon=" <a href='#' title=\"Lien ConfÃ©rence Web ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
     echo "<tr>
-                <td>Lien Conférence Web ".$warnicon."".$helpicon."</td>
+                <td>Lien ConfÃ©rence Web ".$warnicon."".$helpicon."</td>
                 <td align=left colspan=2>";
     echo "<input type='text' name='webex_url' size='50' class='form-control form-control-sm' value=\"".$MYE_WEBEX_URL."\" autocomplete='OFF'
        onchange=\"isValidUrl(demoform.webex_url,'".$MYE_WEBEX_URL."')\";> </td>";
     echo "</tr>";
 
-    $helptext="Si un code d'accès est requis pour la visio conférence, il peut être indiqué ici. Seuls les inscrits à l'événement et les responsables de l'événement peuvent le voir.";
-    $helpicon=" <a href='#'  title=\"Code d'accès Conférence web ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
+    $helptext="Si un code d'accÃ¨s est requis pour la visio confÃ©rence, il peut Ãªtre indiquÃ© ici. Seuls les inscrits Ã  l'Ã©vÃ©nement et les responsables de l'Ã©vÃ©nement peuvent le voir.";
+    $helpicon=" <a href='#'  title=\"Code d'accÃ¨s ConfÃ©rence web ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
     echo "<tr>
-                <td>Code Conférence".$helpicon." </td>
+                <td>Code ConfÃ©rence".$helpicon." </td>
                 <td align=left colspan=2>";
     echo "<input type='text' name='webex_pin' size='20' class='form-control form-control-sm' value=\"".$MYE_WEBEX_PIN."\" autocomplete='OFF'> </td>";
     echo "</tr>";
 
-    $helptext="Préciser l'heure de début de la conférence Web, si elle est différente de l'heure de début de l'activité. Attention, on ne peut pas créer de conférence sur des activités à plusieurs
-        parties ou étalés sur plusieurs jours";
-    $helpicon=" <a href='#'  title=\"Heure de début ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
+    $helptext="PrÃ©ciser l'heure de dÃ©but de la confÃ©rence Web, si elle est diffÃ©rente de l'heure de dÃ©but de l'activitÃ©. Attention, on ne peut pas crÃ©er de confÃ©rence sur des activitÃ©s Ã  plusieurs
+        parties ou Ã©talÃ©s sur plusieurs jours";
+    $helpicon=" <a href='#'  title=\"Heure de dÃ©but ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
     echo "<tr>
                 <td>Heure debut".$helpicon."</td>
                 <td align=left colspan=2>";
-        $helptext="Préciser l'heure de début de la conférence Web, si elle est différente de l'heure de début de l'activité. Attention, on ne peut pas créer de conférence sur des activités à plusieurs
-        parties ou étalés sur plusieurs jours";
-        $helpicon=" <a href='#'  title=\"Heure de début ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
+        $helptext="PrÃ©ciser l'heure de dÃ©but de la confÃ©rence Web, si elle est diffÃ©rente de l'heure de dÃ©but de l'activitÃ©. Attention, on ne peut pas crÃ©er de confÃ©rence sur des activitÃ©s Ã  plusieurs
+        parties ou Ã©talÃ©s sur plusieurs jours";
+        $helpicon=" <a href='#'  title=\"Heure de dÃ©but ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
     echo "<input type='text' name='webex_start' class='form-control form-control-sm' size='5' value=\"".$MYE_WEBEX_START."\" placeholder='hh:mm' autocomplete='OFF' onchange=\"checkTime(demoform.webex_start,'');\"> </td>";
     echo "</tr>";
     
@@ -870,7 +870,7 @@ if ( $gardes == 0 or $MYTE_CODE <> 'GAR' ) {
 }
     
 //=====================================================================
-// bloc éléments pour convention ou facture 
+// bloc Ã©lÃ©ments pour convention ou facture 
 //=====================================================================
 
 if ( $MYTE_CONVENTION == 1 or $MYTE_CODE == 'FOR') {
@@ -883,38 +883,38 @@ if ( $MYTE_CONVENTION == 1 or $MYTE_CODE == 'FOR') {
     
     if ( $MYTE_CONVENTION == 1 ) {
         echo "<tr>
-                  <td align=left>Horaires spécifiques convention<br><small>imprimés sur la convention</small></td>
+                  <td align=left>Horaires spÃ©cifiques convention<br><small>imprimÃ©s sur la convention</small></td>
                   <td align=left colspan=2>";
-            echo "<textarea name='custom_horaire' class='form-control form-control-sm' id='custom_horaire' title=\"Ce texte, si il est renseigné, remplace la liste des dates et heures de l'activité sur la convention\" cols='50' rows='3' style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' 
+            echo "<textarea name='custom_horaire' class='form-control form-control-sm' id='custom_horaire' title=\"Ce texte, si il est renseignÃ©, remplace la liste des dates et heures de l'activitÃ© sur la convention\" cols='50' rows='3' style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' 
                  value=\"$MYE_CUSTOM_HORAIRE\" maxlength=400>".$MYE_CUSTOM_HORAIRE."</textarea></td>";    
         echo "</tr>";
         echo "<tr>
-                  <td align=left>Représentant Légal convention<br><small>imprimés sur la convention</small></td>
+                  <td align=left>ReprÃ©sentant LÃ©gal convention<br><small>imprimÃ©s sur la convention</small></td>
                   <td align=left colspan=2>";
-            echo "<input type='text' class='form-control form-control-sm' name='representant_legal' id='representant_legal'  title=\"Ce texte, si il est renseigné, s'affiche sur la convention dans la rubrique représentant légal\" size='50' maxlength='200'
+            echo "<input type='text' class='form-control form-control-sm' name='representant_legal' id='representant_legal'  title=\"Ce texte, si il est renseignÃ©, s'affiche sur la convention dans la rubrique reprÃ©sentant lÃ©gal\" size='50' maxlength='200'
                  value=\"$MYE_REPRESENTANT_LEGAL\"></td>";
         echo "</tr>";
         echo "<tr>
-                  <td align=left>Date Envoi convention<br><small>à renseigner si envoyée</small></td>
+                  <td align=left>Date Envoi convention<br><small>Ã  renseigner si envoyÃ©e</small></td>
                   <td align=left colspan=2>";
             echo "<input type='text' class='form-control form-control-sm' name='date_envoi_convention' id='date_envoi_convention'  onchange=\"checkDate2(document.demoform.date_envoi_convention)\"
-                title=\"Renseigner cette date lorsque la convention a été envoyée forma JJ-MM-AAAA\" size='10' maxlength='10'
+                title=\"Renseigner cette date lorsque la convention a Ã©tÃ© envoyÃ©e forma JJ-MM-AAAA\" size='10' maxlength='10'
                  value=\"$MYE_DATE_ENVOI_CONVENTION\"><span class=small>JJ-MM-AAAA</span></td>";    
         echo "</tr>";
     }
     echo "<tr>
-            <td>N° Convention</td>
+            <td>NÂ° Convention</td>
             <td align=left colspan=2><input type='text' class='form-control form-control-sm' name='convention' size='20' value=\"$MYE_CONVENTION\">";        
     echo "</tr>";
 
     echo "<tr>
-            <td align=right><small>Nombre de VPS prévus</small></td>
+            <td align=right><small>Nombre de VPS prÃ©vus</small></td>
             <td align=left colspan=2>
           <input type='text' class='form-control form-control-sm' name='nb_vpsp' size='3' value=\"$MYE_NB_VPSP\" onchange='checkNumber(form.nb_vpsp,\"$MYE_NB_VPSP\")'>";        
     echo "</tr>";
 
     echo "<tr>
-            <td align=right><small>Nombre d'autres <br>véhicules prévus</small></td>
+            <td align=right><small>Nombre d'autres <br>vÃ©hicules prÃ©vus</small></td>
             <td align=left colspan=2>
           <input type='text' class='form-control form-control-sm' name='nb_autres_vehicules' size='3' value=\"$MYE_NB_AUTRES_VEHICULES\" onchange='checkNumber(form.nb_autres_vehicules,\"$MYE_NB_AUTRES_VEHICULES\")'>";        
     echo "</tr>";
@@ -926,13 +926,13 @@ if ( $MYTE_CONVENTION == 1 or $MYTE_CODE == 'FOR') {
     echo "</tr>";
 
     echo "<tr>
-            <td align=right><small>Clause particulière</small></td>
+            <td align=right><small>Clause particuliÃ¨re</small></td>
             <td align=left colspan=2>";
     echo "<textarea name='clauses' class='form-control form-control-sm' id='clauses' cols='50' rows='3' style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' value=\"$MYE_CLAUSES\" maxlength=500>".$MYE_CLAUSES."</textarea></td>";        
     echo "</tr>";
 
     echo "<tr>
-            <td align=right><small>Clause particulière 2</small></td>
+            <td align=right><small>Clause particuliÃ¨re 2</small></td>
             <td align=left colspan=2>";
     echo "<textarea name='clauses2' class='form-control form-control-sm' id='clauses2' cols='50' rows='3' style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' value=\"$MYE_CLAUSES2\" maxlength=500>".$MYE_CLAUSES2."</textarea></td>";    
     echo "</tr>";
@@ -948,7 +948,7 @@ if ( $MYTE_CONVENTION == 1 or $MYTE_CODE == 'FOR') {
     echo "</tr>";
     
     echo "<tr>
-          <td align=right><small>Transport assuré <br>par l'association</small></td>
+          <td align=right><small>Transport assurÃ© <br>par l'association</small></td>
           <td aligne=left colspan=2>";
           
     $checked = $MYE_TRANSPORT == 1 ? 'checked' : '';
@@ -992,20 +992,20 @@ if ( $MYTE_CODE != 'MC' ) {
     else $checked="";
 
     echo "<tr>
-                <td>Visible de l'extérieur</td>
+                <td>Visible de l'extÃ©rieur</td>
                 <td align=left colspan=2>
                     <label class='switch'>
                         <input type='checkbox' name='visible_outside' id='visible_outside' value='1' $checked onclick='makeVisibleExternal(this)'
-                            title=\"Si cette case est cochée, l'activité peut être visible sans identification dans un site web externe\">
+                            title=\"Si cette case est cochÃ©e, l'activitÃ© peut Ãªtre visible sans identification dans un site web externe\">
                         <span class='slider round'></span>
                     </label>";
     echo "</tr>";
 
-    // commentaire extérieur
+    // commentaire extÃ©rieur
     if ( $MYE_VISIBLE_OUTSIDE == 1 )  $style="style=''";
     else  $style="style='display:none'";
     echo "<tr id=rowcomment2 $style >
-                <td>Commentaire extérieur<br><small>visible dans un site externe</small></td>
+                <td>Commentaire extÃ©rieur<br><small>visible dans un site externe</small></td>
                 <td align=left colspan=2>";
     echo "<textarea name='comment2' id='comment2' cols='50' rows='3' style='FONT-SIZE: 10pt; FONT-FAMILY: Arial;' value=\"$MYE_COMMENT2\" maxlength=800>".$MYE_COMMENT2."</textarea></td>";
     echo "</tr>";
@@ -1017,11 +1017,11 @@ if ( $MYE_EXTERIEUR == 1 )$checked="checked";
 else $checked="";
 
 echo "<tr>
-            <td>Activité extérieure au département</b></td>
+            <td>ActivitÃ© extÃ©rieure au dÃ©partement</b></td>
             <td align=left colspan=2>
                 <label class='switch'>
                     <input type='checkbox' name='exterieur' value='1' 
-                        title=\"cocher cette case si l'activité se déroule dans un autre département\" $checked>
+                        title=\"cocher cette case si l'activitÃ© se dÃ©roule dans un autre dÃ©partement\" $checked>
                     <span class='slider round'></span>
                 </label>
             </td>";
@@ -1044,8 +1044,8 @@ echo "<tr id='rowflag1' $style >
             </td>";
 echo "</tr>";
 
-// si l'événement a déjà des renforts, on ne peut pas le rattacher comme renfort
-// d'un autre événement (éviter les renforts en cascade)
+// si l'Ã©vÃ©nement a dÃ©jÃ  des renforts, on ne peut pas le rattacher comme renfort
+// d'un autre Ã©vÃ©nement (Ã©viter les renforts en cascade)
 if ( $nbsections == 0 ) {
     $query="select count(1) as NB from evenement where E_PARENT=".$evenement;
     $result=mysqli_query($dbc,$query);
@@ -1093,11 +1093,11 @@ if ( $nbsections == 0  and $syndicate == 0) {
               <td align=left colspan=2>
                 <label class='switch'>
                     <input type='checkbox' name='colonne' id='colonne' value='1' $checked $disabled
-                 title=\"Cocher cette case pour pouvoir rattacher n'importe quelle activité en tant que ".$renfort_label." par son numéro\"> 
+                 title=\"Cocher cette case pour pouvoir rattacher n'importe quelle activitÃ© en tant que ".$renfort_label." par son numÃ©ro\"> 
                     <span class='slider round'></span>               
                 </label>";
-    $helptext="Si la case Colonne de ".$renfort_label." est cochée, alors il est possible d'attacher n'importe quelle activité par son numéro.
-                Ce rattachement n'est cependant possible que si les ".$renfort_label."s à rattacher n'ont qu'une partie. De même les colonnes de ".$renfort_label."s ne peuvent avoir que une partie.";
+    $helptext="Si la case Colonne de ".$renfort_label." est cochÃ©e, alors il est possible d'attacher n'importe quelle activitÃ© par son numÃ©ro.
+                Ce rattachement n'est cependant possible que si les ".$renfort_label."s Ã  rattacher n'ont qu'une partie. De mÃªme les colonnes de ".$renfort_label."s ne peuvent avoir que une partie.";
     $helpicon=" <a href='#'  title=\"Colonne de ".$renfort_label."s".$helptext."\"><i class='fa fa-question-circle fa-lg' ></i></a>";
     echo $helpicon;
     
@@ -1106,7 +1106,7 @@ if ( $nbsections == 0  and $syndicate == 0) {
 else 
     echo "<input type='hidden' name='colonne' id='colonne' value='0'>";
 
-// Lignes spécifiques formations
+// Lignes spÃ©cifiques formations
 
 if ($MYTE_CODE == 'FOR' ) $style="";
 else  $style="style='display:none'";
@@ -1114,10 +1114,10 @@ else  $style="style='display:none'";
 echo "<tr id='rowforpour' $style >
           <td>Formation pour</td>";
 echo "<td colspan=2>
-<select class='selectpicker' data-live-search='true' data-style='btn-default' data-container='body' id='ps' name='ps' title='saisir ici le type de compétence ou le diplôme obtenu grâce à cette formation' 
+<select class='selectpicker' data-live-search='true' data-style='btn-default' data-container='body' id='ps' name='ps' title='saisir ici le type de compÃ©tence ou le diplÃ´me obtenu grÃ¢ce Ã  cette formation' 
 style='max-width: 380px;' $readonly onchange=\"change_ps();\">";
 if ( $MYE_PS_ID == 0 ) $selected="selected"; else $selected="";
-echo "<option value='0' $selected class='type'>non renseigné</option>\n";
+echo "<option value='0' $selected class='type'>non renseignÃ©</option>\n";
 $query2="select PS_ID, TYPE, DESCRIPTION from poste 
         where PS_FORMATION=1 or PS_ID =".intval($MYE_PS_ID)."
         order by TYPE asc";
@@ -1138,7 +1138,7 @@ echo "<tr id='rowntypefor' $style >
           <td >Type de formation</td>";
 echo "<td colspan=2><select class='selectpicker' data-style='btn-default' data-container='body' id='tf' name='tf' title='saisir ici le type de formation' $readonly>";
 if ($MYE_TF_CODE == '') $selected="selected"; else $selected='';
-echo "<option value='' $selected class='type'>non renseigné</option>\n";
+echo "<option value='' $selected class='type'>non renseignÃ©</option>\n";
 $query2="select TF_CODE, TF_LIBELLE from type_formation order by TF_LIBELLE asc";
 $result2=mysqli_query($dbc,$query2);
 while ($row2=@mysqli_fetch_array($result2)) {
@@ -1165,7 +1165,7 @@ echo "<tr id='rowtarif' $style >
             <td>Tarif formation par stagiaire</td>
             <td align=left colspan=2><input type='text' name='tarif' id='tarif' value='".$MYE_TARIF."' size=5
              onchange='checkFloat(form.tarif,\"$MYE_TARIF\");'
-             title='Dans le cas des formations grand public, prix de la formation pour chaque stagiaire'> ".$default_money_symbol."<i><small> Permet de générer des factures individuelles</small></i></td>";
+             title='Dans le cas des formations grand public, prix de la formation pour chaque stagiaire'> ".$default_money_symbol."<i><small> Permet de gÃ©nÃ©rer des factures individuelles</small></i></td>";
 echo "</tr>";
 
 $t = "Lien URL vers descriptif";
@@ -1173,27 +1173,27 @@ $t = "Lien URL vers descriptif";
 echo "<tr id='rowurl' $style >
             <td>".$t."</td>
             <td align=left colspan=2><input type='text' name='url' id='url' value='".$MYE_URL."' style='width:100%' placeholder='www.adresse.org/page'
-             title='URL pointant vers le calendriel ou le descriptif de la formation, sans préfixe http:// ou https://'
+             title='URL pointant vers le calendriel ou le descriptif de la formation, sans prÃ©fixe http:// ou https://'
              onchange=\"javascript:checkURL('".$MYE_URL."')\";></td>";
 echo "</tr>";
 
-// événement caché
+// Ã©vÃ©nement cachÃ©
 
 if ( check_rights($id,9) ) {
     if ( $MYE_VISIBLE_INSIDE == 0 ) $checked="checked";
     else $checked="";
     echo "<input type='hidden' name='show_hide_option' value='1'>";
     echo "<tr>
-              <td>Activité cachée</td>
+              <td>ActivitÃ© cachÃ©e</td>
               <td align=left colspan=2>
                     <label class='switch'>
                     <input type='checkbox' name='hidden' id='hidden' value='1' $checked onclick='makeHidden(this)'
-                        title=\"Si cette case est cochée, l'activité est cachée, seules certaines personnes (ayant la permission n°9 peuvent le voir)\">
+                        title=\"Si cette case est cochÃ©e, l'activitÃ© est cachÃ©e, seules certaines personnes (ayant la permission nÂ°9 peuvent le voir)\">
                     <span class='slider round'></span>
                 </label>";
-    $helptext="Si la case Activité cachée est cochée, alors l'activité ne sera visible dans la liste que par les personnes possédant la permission n°9.
-       De même le calendrier des inscrits sur cette activité ne montrera cette inscription que aux personnes ayant la permission n°9.";
-    $helpicon=" <a href='#'  title=\"Activité cachée ".$helptext."\"><i class='fa fa-question-circle fa-lg' ></i></a>";
+    $helptext="Si la case ActivitÃ© cachÃ©e est cochÃ©e, alors l'activitÃ© ne sera visible dans la liste que par les personnes possÃ©dant la permission nÂ°9.
+       De mÃªme le calendrier des inscrits sur cette activitÃ© ne montrera cette inscription que aux personnes ayant la permission nÂ°9.";
+    $helpicon=" <a href='#'  title=\"ActivitÃ© cachÃ©e ".$helptext."\"><i class='fa fa-question-circle fa-lg' ></i></a>";
     echo $helpicon;
     echo "</td></tr>";
 }
@@ -1236,7 +1236,7 @@ echo "<tr>
             <td align=left colspan=2>
                 <label class='switch'>
                     <input type='checkbox' name='allow_reinforcement' value='1' 
-                        title=\"cocher cette case si des activités ".$renfort_label."s peuvent être créés.\" $checked $disabled>
+                        title=\"cocher cette case si des activitÃ©s ".$renfort_label."s peuvent Ãªtre crÃ©Ã©s.\" $checked $disabled>
                     <span class='slider round'></span>
                 </label>
           </td>";
@@ -1244,21 +1244,21 @@ echo "</tr>";
 }
 else echo "<input name='allow_reinforcement' type='hidden' value='1'>";
 
-// clôture automatique
+// clÃ´ture automatique
 
-$helptext="L'activité peut être automatiquement clôturé quelques jours ou heures avant le début, choisissez alors le nombre de jours ou heures. 
-            Les inscriptions du personnel ne sont plus possible après clôture de l'activité.";
+$helptext="L'activitÃ© peut Ãªtre automatiquement clÃ´turÃ© quelques jours ou heures avant le dÃ©but, choisissez alors le nombre de jours ou heures. 
+            Les inscriptions du personnel ne sont plus possible aprÃ¨s clÃ´ture de l'activitÃ©.";
 $helpicon=" <a href='#'  title=\"".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
 echo "<tr>
-            <td>Clôturer automatiquement".$helpicon."</td>
+            <td>ClÃ´turer automatiquement".$helpicon."</td>
             <td align=left colspan=2>";
 echo "<select class='selectpicker form-control form-control-sm' data-style='btn-default' id='autoclose' name='autoclose' data-container='body'>";
 if ( $MYE_AUTOCLOSE_BEFORE == -1 ) $selected="selected";
 else $selected="";
-echo "<option value='-1' $selected >Pas de clôture automatique</option>";
+echo "<option value='-1' $selected >Pas de clÃ´ture automatique</option>";
 if ( $MYE_AUTOCLOSE_BEFORE == 0 ) $selected="selected";
 else $selected="";
-echo "<option value='0' $selected >Au début de l'activité</option>";
+echo "<option value='0' $selected >Au dÃ©but de l'activitÃ©</option>";
 for ( $i=1; $i <= 12; $i++ ) {
     if ( $i == $MYE_AUTOCLOSE_BEFORE ) $selected="selected";
     else $selected="";
@@ -1273,14 +1273,14 @@ foreach( $days as $i ) {
 }
 echo "</select></td></tr>";
 
-// activité annulée
+// activitÃ© annulÃ©e
 
 if ( $MYE_CANCELED == 1 )$checked="checked";
 else $checked="";
 
 if(isset($_GET['evenement'])){
     echo "<tr>
-                <td>Activité annulé</td>
+                <td>ActivitÃ© annulÃ©</td>
                 <td align=left colspan=2>
                     <label class='switch'>
                         <input type='checkbox' name='canceled'  value='1' $checked onclick='warning_cancel(this)'>
@@ -1304,12 +1304,12 @@ echo "<div class='card hide card-default graycarddefault' align=center style=''>
             <div class='card-body graycard'>";
 echo "<table cellspacing='0' border='0' class='noBorder flexTable'>";
 
-// inscriptions fermées
+// inscriptions fermÃ©es
 
 if ( $MYE_CLOSED == 1 ) $checked="checked";
 else $checked="";
 
-// ne pas permettre d'ouvrir un renfort sur le principal est fermé
+// ne pas permettre d'ouvrir un renfort sur le principal est fermÃ©
 if ( intval($MYE_PARENT) > 0 ) {
     $queryd="select E_CLOSED from evenement where E_CODE =".intval($MYE_PARENT);
     $resultd=mysqli_query($dbc,$queryd);
@@ -1320,16 +1320,16 @@ else
     $c=0;
 if ( $c == 1 and ! check_rights($id, 14) and ! is_chef_evenement($id, $evenement) and $MYE_CLOSED == 1) {
     $disabledclosed="disabled"; 
-    $t="On ne peut pas réouvrir les inscriptions sur un ".$renfort_label." pour lequel l'activité principale est clôturé";
+    $t="On ne peut pas rÃ©ouvrir les inscriptions sur un ".$renfort_label." pour lequel l'activitÃ© principale est clÃ´turÃ©";
     echo "<input type='hidden' name='closed' value=1>";
 }
 else { 
     $disabledclosed=''; 
-    $t="ouvrir les inscriptions pour cette activité et ses ".$renfort_label."s";
+    $t="ouvrir les inscriptions pour cette activitÃ© et ses ".$renfort_label."s";
 }
 
 echo "<tr>
-            <td>Inscriptions fermées</td>
+            <td>Inscriptions fermÃ©es</td>
             <td align=left colspan=2>
                     <label class='switch'>
                         <input type='checkbox' name='closed' value='1' $checked $disabledclosed title='$t'>
@@ -1341,7 +1341,7 @@ echo "</tr>";
 // nombre de personnes requises
 
 echo "<tr>
-            <td>Nombre maximum d'inscrit</b> $asterisk<br><small>0 pour illimité</small></td>
+            <td>Nombre maximum d'inscrit</b> $asterisk<br><small>0 pour illimitÃ©</small></td>
             <td align=left colspan=2>";
 echo "<select class='form-control form-control-sm selectpicker' data-style='btn-default' data-container='body' id='nombre' name='nombre' onchange='decreaseMax();'>";
 if ( $MYE_NB == 0 ) $selected="selected";
@@ -1357,7 +1357,7 @@ if ( $MYTE_CODE == 'FOR' ) echo " <i><small> Stagiaires + Formateurs.</small></i
 
 $dim=false;
 if ( $MYTE_CODE == 'DPS' ){
-    // le chef, le cadre de l'activité ont toujours accès à cette fonctionnalité, les autres doivent avoir 15 ou 24
+    // le chef, le cadre de l'activitÃ© ont toujours accÃ¨s Ã  cette fonctionnalitÃ©, les autres doivent avoir 15 ou 24
     if (check_rights($_SESSION['id'],15,get_section_organisatrice($evenement)))
         $dim=true;
     else if ( is_chef_evenement($id, $evenement) )
@@ -1365,7 +1365,7 @@ if ( $MYTE_CODE == 'DPS' ){
     else if ( get_cadre (get_section_organisatrice ( $evenement )) == $id )
         $dim=true;
     
-    if ( $MYE_PARENT <> 'null' ) echo " <a href=evenement_display.php?evenement=$MYE_PARENT >Voir activité principale</a>";
+    if ( $MYE_PARENT <> 'null' ) echo " <a href=evenement_display.php?evenement=$MYE_PARENT >Voir activitÃ© principale</a>";
     else echo " Effectif minimum ".(isset($MYE_NB_DPS)?$MYE_NB_DPS:" ? ")."</b>";        
 }
 if ( $dim and ( $MYE_PARENT == 'null' ))
@@ -1376,8 +1376,8 @@ echo "</td></tr>";
 
 // lien whatsapp
 
-$helptext="Groupe Whatsapp: Si le champ Whatsapp Group est renseigné, alors une icône whatsapp apparaitra sur la liste des inscrits, permettant de rejoindre le groupe ou d'envoyer un message whatsapp à ce groupe.
-        Le groupe whatsapp doit être préalablement créé dans l'application Whatsapp";
+$helptext="Groupe Whatsapp: Si le champ Whatsapp Group est renseignÃ©, alors une icÃ´ne whatsapp apparaitra sur la liste des inscrits, permettant de rejoindre le groupe ou d'envoyer un message whatsapp Ã  ce groupe.
+        Le groupe whatsapp doit Ãªtre prÃ©alablement crÃ©Ã© dans l'application Whatsapp";
 $helpicon=" <a href='#'  title=\"".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
 echo "<tr>
             <td>Groupe WhatsApp ".$helpicon."</td>
@@ -1397,12 +1397,12 @@ if ( $nbsections == 0 and $syndicate == 0 ) {
     echo "</tr>";
 }
 
-// tél responsable
+// tÃ©l responsable
 
-$helptext="Nom du responsable ou contact administratif de l'activité, si renseigné, apparaît à la place des numéros des responsables";
-$helpicon=" <a href='#'  title=\" Téléphone Contact ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
+$helptext="Nom du responsable ou contact administratif de l'activitÃ©, si renseignÃ©, apparaÃ®t Ã  la place des numÃ©ros des responsables";
+$helpicon=" <a href='#'  title=\" TÃ©lÃ©phone Contact ".$helptext."\"><i class='fa fa-question-circle fa-lg'></i></a>";
 echo "<tr>
-      <td>Téléphone du responsable</b>".$helpicon."</td>
+      <td>TÃ©lÃ©phone du responsable</b>".$helpicon."</td>
       <td align=left colspan=2><input type='text' name='e_tel' class='form-control form-control-sm' value=\"$MYE_TEL\" maxlength=15 ;' 
         onchange='checkPhone(demoform.e_tel,\"".$MYE_TEL."\",\"".$min_numbers_in_phone."\");'></td>";
 echo "</tr>";
@@ -1429,7 +1429,7 @@ if ( $client == 1 ) {
         $MYC_ID = 0;
     }
     else $selected ='';
-    echo "<option value='' $selected >... Non précisé ...</option>";
+    echo "<option value='' $selected >... Non prÃ©cisÃ© ...</option>";
     echo companychoice($MYS_ID,$MYC_ID,$includeparticulier=false,$category='EXT');
     echo "</select>";
     echo "</td></tr>";
@@ -1440,7 +1440,7 @@ if ( $client == 1 ) {
     echo "</tr>";
     
     echo "<tr>
-            <td>Tél du contact sur place</td>
+            <td>TÃ©l du contact sur place</td>
             <td align=left colspan=2><input type='text' name='contact_tel' id='contact_tel'  class='form-control form-control-sm' maxlength=15  value=\"$MYE_CONTACT_TEL\" 
           onchange='checkPhone(form.contact_tel,\"$MYE_CONTACT_TEL\",\"".$min_numbers_in_phone."\");'>";        
     echo "</tr>";

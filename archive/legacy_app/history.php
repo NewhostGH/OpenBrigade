@@ -65,7 +65,7 @@ echo "<body>";
 
 if ( $lccode == 'A' ) {
     check_all(14);
-    $title="activités suspectes";
+    $title="activitÃ©s suspectes";
     $icon="bomb";
     $lcid=0;
 }
@@ -148,8 +148,8 @@ if ( $lcid > 0) {
         and lt.LC_CODE='E'";
         if ( $ltcode <> 'ALL' )
             $query .= " and lt.LT_CODE='".$ltcode."'";
-        $what="<br>pour l'événement n°". $lcid;
-        if ( $granted_for_all )  $what2 ="<a href=history.php?ltcode=".$ltcode."&lccode=E&lcid=0 title='historique pour tous les événements'>Voir tout</a>";
+        $what="<br>pour l'Ã©vÃ©nement nÂ°". $lcid;
+        if ( $granted_for_all )  $what2 ="<a href=history.php?ltcode=".$ltcode."&lccode=E&lcid=0 title='historique pour tous les Ã©vÃ©nements'>Voir tout</a>";
     }
 }
 else if ( $lccode == 'U' or $lccode == 'C') {
@@ -207,7 +207,7 @@ else { // $lcid=0
     if ( $lccode == 'P' )
           $what=" pour tout le personnel";
     if ( $lccode == 'E' )
-          $what=" pour tous les événements";
+          $what=" pour tous les Ã©vÃ©nements";
     if ( $lccode == 'S' )
           $what=" pour toutes les sections";
 }
@@ -281,7 +281,7 @@ else {
         echo "<li class = 'nav-item'>
             <a class = 'nav-link $class' href = 'history.php?lccode=P&ltcode=ALL&lcid=0' role = 'tab'>
                 <i class='fa fa-history'></i>
-                <span>Historique </span><span class='badge $typebadge' title='Historique des changements liés aux utilisateurs sur les $days_log derniers jours'></span>
+                <span>Historique </span><span class='badge $typebadge' title='Historique des changements liÃ©s aux utilisateurs sur les $days_log derniers jours'></span>
             </a>
         </li>";
     }
@@ -297,7 +297,7 @@ else {
         echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'history.php?lccode=A&ltcode=ALL' role = 'tab'>
                 <i class='fa fa-exclamation-triangle'></i>
-                <span>Activité suspecte </span><span class='badge $typebadge' title='Activités suspectes détectées'></span>
+                <span>ActivitÃ© suspecte </span><span class='badge $typebadge' title='ActivitÃ©s suspectes dÃ©tectÃ©es'></span>
             </a>
         </li>";
     }
@@ -452,12 +452,12 @@ if ( $number > 0 ) {
     echo "  <tr class=newTabHeader style='height: 50px;'>
             <th class='widget-title' ><a href=".$url[0].$url[1]."order=LH_STAMP>Date</a></th>
             <th class='widget-title hide_mobile' width='10'></th>
-            <th class='widget-title' ><a href=".$url[0].$url[1]."order=P_NOM>Modifié par</a></th>
+            <th class='widget-title' ><a href=".$url[0].$url[1]."order=P_NOM>ModifiÃ© par</a></th>
             <th class='widget-title' ><a href=".$url[0].$url[1]."order=LT_DESCRIPTION>Action</a></th>";
     if (!$onlyTable)
         echo "  <th class='widget-title' ><a href=".$url[0].$url[1]."order=P_NOM2>Pour</a></th>";
-    echo "  <th class='widget-title' ><a href=".$url[0].$url[1]."order=COMPLEMENT_CODE>Référence</a></th>
-            <th class='widget-title hide_mobile'><a href=".$url[0].$url[1]."order=LH_COMPLEMENT>Complément</a></th>
+    echo "  <th class='widget-title' ><a href=".$url[0].$url[1]."order=COMPLEMENT_CODE>RÃ©fÃ©rence</a></th>
+            <th class='widget-title hide_mobile'><a href=".$url[0].$url[1]."order=LH_COMPLEMENT>ComplÃ©ment</a></th>
         </tr>";
 
     // ===============================================
@@ -486,7 +486,7 @@ if ( $number > 0 ) {
 
         $LH_COMPLEMENT = str_replace ("->","<i class='fas fa-arrow-right'></i>", $LH_COMPLEMENT);
         
-        $DATE = substr($DATE,0,5)."<span class=hide_mobile>-".substr($DATE,6,4)."</span> à ".rtrim(substr($DATE,11,5),':');
+        $DATE = substr($DATE,0,5)."<span class=hide_mobile>-".substr($DATE,6,4)."</span> Ã  ".rtrim(substr($DATE,11,5),':');
         echo "<tr class=newTable-tr style='height: 20px;'>";
         echo "<td class='widget-text' >".$DATE."</td>
               <td class='widget-text hide_mobile'></td>";
@@ -505,7 +505,7 @@ if ( $number > 0 ) {
     echo "</table>";
 }
 else
-    echo "Aucun historique pour cette activité";
+    echo "Aucun historique pour cette activitÃ©";
 echo "</div>";
 
 echo @$later;

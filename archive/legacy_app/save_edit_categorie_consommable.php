@@ -23,7 +23,7 @@ check_all(18);
 ?>
 <script>
 function suppress(cat_old) {
-    if (confirm("Voulez vous vraiment supprimer cette catégorie?\nTous les éléments de cette catégorie seront supprimés."))
+    if (confirm("Voulez vous vraiment supprimer cette catÃ©gorie?\nTousÂ lesÂ Ã©lÃ©mentsÂ deÂ cetteÂ catÃ©gorieÂ serontÂ supprimÃ©s."))
         self.location.href="del_edit_categorie_consommable.php?cat_old="+cat_old;
     else
         self.location.href="parametrage.php?tab=3&child=4&ope=edit&id=0";
@@ -61,7 +61,7 @@ if ($cat_name == '' || $cat_code == '') {
 // New categorie
 //=====================================================================
 
-if ($cat_old === 'Nouvelle catégorie') {
+if ($cat_old === 'Nouvelle catÃ©gorie') {
     $query = "INSERT INTO categorie_consommable(CC_CODE, CC_NAME, CC_IMAGE, CC_DESCRIPTION) VALUES (\"".$cat_code."\", \"".$cat_name."\", \"".$logo."\", \"".$description."\")";
     $result = mysqli_query($dbc, $query);
 }
@@ -104,7 +104,7 @@ if ($logo <> 'utensils') {
 // Redirect
 //=====================================================================
 
-if ($del === 'Supprimer catégorie')
+if ($del === 'Supprimer catÃ©gorie')
     echo "<body onload=suppress('".$cat_old."')>";
 else
     header("Location: parametrage.php?tab=3&child=4&id=0");

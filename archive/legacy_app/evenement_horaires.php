@@ -43,7 +43,7 @@ writehead();
 <?php
 
 //=====================================================================
-// recupérer infos evenement
+// recupÃ©rer infos evenement
 //=====================================================================
 $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT, e.S_ID, e.E_PARENT, eh.EH_ID,
         DATE_FORMAT(eh.EH_DATE_DEBUT, '%d-%m-%Y') EH_DATE_DEBUT, DATE_FORMAT(eh.EH_DATE_FIN, '%d-%m-%Y') EH_DATE_FIN,
@@ -137,7 +137,7 @@ if (isset ($_POST["pid"])) {
     $fin=array();
     $duree=array();
     $status=array();
-    // récupérer les infos globales
+    // rÃ©cupÃ©rer les infos globales
     $query="select EH_ID, EP_DATE, EP_BY, TP_ID, EP_COMMENT, EP_FLAG1, EE_ID  
             from evenement_participation 
             where P_ID=".$pid."
@@ -148,7 +148,7 @@ if (isset ($_POST["pid"])) {
         $status[$i] = $EP_FLAG1;
     }
     if ( $EP_BY == 0 ) $EP_BY = $id;
-    // compter les absences déjà enregistrées pour la personne
+    // compter les absences dÃ©jÃ  enregistrÃ©es pour la personne
     $queryabs="select count(1) from evenement_participation 
             where P_ID=$pid
             and E_CODE in (".$evts.")
@@ -251,15 +251,15 @@ if (isset ($_POST["pid"])) {
                 if ( $absent[$k] == 1 ) {
                     $cmt = "est absent";
                     if ( $excuse[$k] == 1 ) 
-                        $cmt .= " et excusé";
+                        $cmt .= " et excusÃ©";
                     else
-                        $cmt .= " non excusé";
+                        $cmt .= " non excusÃ©";
                 }
                 else 
-                    $cmt = "est présent";
+                    $cmt = "est prÃ©sent";
                 insert_log('UPDABS', $pid, $cmt, $evenement);
             }
-            // cas particulier mêmes horaires que activité sans la coche
+            // cas particulier mÃªmes horaires que activitÃ© sans la coche
             if ( $identique[$k] == 0 ) {
                 $query="update evenement_participation set 
                     EP_DATE_DEBUT=null,
@@ -289,7 +289,7 @@ if (isset ($_POST["pid"])) {
         }
     }
   
-    // compter les absences pour la personne après enregistrement
+    // compter les absences pour la personne aprÃ¨s enregistrement
     $queryabs="select count(1) from evenement_participation 
             where P_ID=$pid
             and E_CODE in (".$evts.")
@@ -303,7 +303,7 @@ if (isset ($_POST["pid"])) {
     else {
         $nboptions=count_entities("evenement_option", "E_CODE=".$evenement);
         if ( $nboptions > 0 ) {
-            // si absent à toutes les parties supprimer les options
+            // si absent Ã  toutes les parties supprimer les options
             $query="select count(1) from evenement_participation 
             where P_ID=$pid
             and E_CODE in (".$evts.")
@@ -337,7 +337,7 @@ if (isset ($_POST["vid"])) {
     $fin=array();
     $duree=array();
 
-    // récupérer les infos globales
+    // rÃ©cupÃ©rer les infos globales
     $query="select EV_KM from evenement_vehicule
             where V_ID=$vid
             and E_CODE=$evenement";
@@ -416,7 +416,7 @@ if (isset ($_POST["vid"])) {
         // sauver
         $result=mysqli_query($dbc,$query);
     
-        // cas particulier mêmes horaires que activité sans la coche
+        // cas particulier mÃªmes horaires que activitÃ© sans la coche
         if ( $identique[$k] == 0 ) {
             $query="update evenement_vehicule set 
                 EV_DATE_DEBUT=null,
@@ -577,7 +577,7 @@ if ( $pid > 0 ) {
             if ( $EH_DESCRIPTION[$k] <> '' ) $dp = $EH_DESCRIPTION[$k];
             else $dp="";
             echo "<tr id='identiquerow_".$k."' height=25 style='$display background-color:transparent !important;'>
-              <td rowspan=3 align=center style='width:100px'><b>Partie n°".$k."</b> ".$dp;
+              <td rowspan=3 align=center style='width:100px'><b>Partie nÂ°".$k."</b> ".$dp;
             
             $granted_trash_add = false;
             if ( $granted_personnel ) $granted_trash_add = true;
@@ -594,46 +594,46 @@ if ( $pid > 0 ) {
 
             if ( $nbsessions > 1 ) {
                 if ( $granted_trash_add ) {
-                    echo "<a href='#' class='btn btn-default btn-action'><i class='fa fa-trash-alt' title=\"Désinscrire de cette partie.\" 
+                    echo "<a href='#' class='btn btn-default btn-action'><i class='fa fa-trash-alt' title=\"DÃ©sinscrire de cette partie.\" 
                     onclick=\"javascript:hideRow('$k');\"></i></a>";
                 }
             }
             if ( $gardes and $TE_CODE == 'GAR' and $granted_personnel) 
                 echo "<br><label for='absent_$k' ><i>Astreinte</i></label>
                     <label class='switch'><input type=checkbox id='astreinte_$k' name='astreinte_$k' value=1 $astreintechecked $savedisabled
-                        title=\"Cochez si astreinte (garde non rémunérée)\"><span class='slider round'></span></label>";
+                        title=\"Cochez si astreinte (garde non rÃ©munÃ©rÃ©e)\"><span class='slider round'></span></label>";
                 if ( $P_STATUT == 'SPP') {
                     echo "<br><label for='status_$k' ><i>SPP</i></label>
                     <label class='switch'><input type=checkbox id='status_$k' name='status_$k' value=1 $statuschecked
                         title=\"Cochez si status SPP\"><span class='slider round'></span></label>";
                 }
             echo "</td>";
-            echo "<td><label for='identique_$k'><b>Identique partie n°$k?</b></label>
+            echo "<td><label for='identique_$k'><b>Identique partie nÂ°$k?</b></label>
                       <label class='switch'><input type=checkbox id='identique_$k' name='identique_$k' value=1 $checked $savedisabled
                         onclick=\"custom('$k','$EH_DATE_DEBUT[$k]','$EH_DATE_FIN[$k]','$EH_DEBUT[$k]','$EH_FIN[$k]','$EH_DUREE[$k]');\"
-                        title=\"Cochez si les horaires de la partie n°$k sont les mêmes que ceux de l'activité\"><span class='slider round'></span></label>";
+                        title=\"Cochez si les horaires de la partie nÂ°$k sont les mÃªmes que ceux de l'activitÃ©\"><span class='slider round'></span></label>";
             echo "<br><label for='absent_$k'>Absent</label>
                     <label class='switch'><input type=checkbox id='absent_$k' name='absent_$k' value=1 $absentchecked $savedisabled
                         onclick=\"absent('$k');\"
                         title=\"Cochez en cas d'absence\"><span class='slider round'></span></label>
-                    <label id='labelexcuse_$k' for='excuse_$k' $excusestyle>Excusé</label>
+                    <label id='labelexcuse_$k' for='excuse_$k' $excusestyle>ExcusÃ©</label>
                     <label class='switch'><input type=checkbox id='excuse_$k' name='excuse_$k' value=1  $excusestyle $excusechecked $savedisabled
-                        title=\"Cochez si l'absence est excusée\"><span id='sliderexcuse_$k' class='slider round' $excusestyle></span></label>
+                        title=\"Cochez si l'absence est excusÃ©e\"><span id='sliderexcuse_$k' class='slider round' $excusestyle></span></label>
                     </td>";
-            echo "<td rowspan=3 align=center>durée h ";
+            echo "<td rowspan=3 align=center>durÃ©e h ";
             
             echo "<input type=\"text\" name=\"duree_$k\" id=\"duree_$k\" value=\"".$EP_DUREE[$k]."\" size=\"3\" length=3 style='width: 35px;'
             onfocus=\"EvtCalcDuree(document.frm.dc1_$k,document.frm.dc2_$k,document.frm.debut_$k,document.frm.fin_$k,document.frm.duree_$k);\" 
             onchange=\"checkFloat(this,'".$EP_DUREE[$k]."');\"
-            title='durée en heures de la partie n°$k' $disabled $savedisabled>";
+            title='durÃ©e en heures de la partie nÂ°$k' $disabled $savedisabled>";
             echo "</td></tr>";
 
             echo "<tr id='debrow_".$k."' $style>";
             echo " <td align=left> du ";
             echo "<input class=\"datepicker form-control form-control-sm flex\" name=\"dc1_$k\" id=\"dc1_$k\" value=\"".$EP_DATE_DEBUT[$k]."\" style='width: 84px;'
-            size=\"12\" onchange=\"checkDate2(document.frm.dc1_$k)\" title=\"Date début format JJ-MM-AAAA\" $disabled>";
+            size=\"12\" onchange=\"checkDate2(document.frm.dc1_$k)\" title=\"Date dÃ©but format JJ-MM-AAAA\" $disabled>";
             
-            echo " à <select id='debut_$k' name='debut_$k' class='form-control select-control flex' style='width: 76px;'
+            echo " Ã  <select id='debut_$k' name='debut_$k' class='form-control select-control flex' style='width: 76px;'
             onchange=\"EvtCalcDuree(document.frm.dc1_$k,document.frm.dc2_$k,document.frm.debut_$k,document.frm.fin_$k,document.frm.duree_$k);\" $disabled $savedisabled>";
             for ( $i=0; $i <= 24; $i++ ) {
                 $check = $i.":00";
@@ -659,7 +659,7 @@ if ( $pid > 0 ) {
             echo "<td align=left> au ";
             echo "<input class=\"datepicker form-control form-control-sm flex\" name=\"dc2_$k\" id=\"dc2_$k\" value=\"".$EP_DATE_FIN[$k]."\" style='width: 84px;'
             size=\"12\" onchange=\"checkDate2(document.frm.dc2_$k)\" title=\"Date fin format JJ-MM-AAAA\" $disabled>";
-            echo " à <select id='fin_$k' name='fin_$k' class='form-control select-control flex' style='width: 76px;'
+            echo " Ã  <select id='fin_$k' name='fin_$k' class='form-control select-control flex' style='width: 76px;'
             onchange=\"EvtCalcDuree(document.frm.dc1_$k,document.frm.dc2_$k,document.frm.debut_$k,document.frm.fin_$k,document.frm.duree_$k);\" $disabled $savedisabled>";
             for ( $i=0; $i <= 24; $i++ ) {
                 if ( $i.":00" == $EP_FIN[$k] ) $selected="selected";
@@ -681,21 +681,21 @@ if ( $pid > 0 ) {
             echo "</select></td></tr>";
             
             echo "<tr id='plusrow_".$k."' style='$antistyle background-color:transparent !important;'>
-               <td align=center width=80><b>Partie n°".$k."</b>";
+               <td align=center width=80><b>Partie nÂ°".$k."</b>";
             
             if ( $NB_DAYS_START[$k] <= 0 )
                 echo "<br><a href='#'>
-               <i class='fa fa-plus-circle fa-lg' style='color:green;' title='Ajouter participation à cette partie' 
+               <i class='fa fa-plus-circle fa-lg' style='color:green;' title='Ajouter participation Ã  cette partie' 
                  onclick=\"javascript:showRow('$k');\"> </i></a> ";
             echo "</td>
                   <td colspan=2>
-                  <i>Pas de participation sur la partie n°$k</i></td></tr>";
+                  <i>Pas de participation sur la partie nÂ°$k</i></td></tr>";
         }
     }
 }
 
 //=====================================================================
-// modifier horaires d'un véhicule
+// modifier horaires d'un vÃ©hicule
 //=====================================================================
 
 if ( $vid > 0 ) {
@@ -769,29 +769,29 @@ if ( $vid > 0 ) {
             }
 
             echo "<tr id='identiquerow_".$k."' height=25 $style >
-              <td rowspan=3 align=center width=80><b>Partie n°".$k."</b> ";
+              <td rowspan=3 align=center width=80><b>Partie nÂ°".$k."</b> ";
             if ( $nbsessions > 1 ) 
-                echo "<br><a href='#' class='btn btn-default btn-action'><i class='fa fa-trash-alt' title=\"Désengager de cette partie.\" 
+                echo "<br><a href='#' class='btn btn-default btn-action'><i class='fa fa-trash-alt' title=\"DÃ©sengager de cette partie.\" 
                 onclick=\"javascript:hideRow('$k');\"></i></a>";
             echo "</td>";
             
-            echo "<td ><label for='identique_$k'><b>Identique partie n°$k?</b></label>
+            echo "<td ><label for='identique_$k'><b>Identique partie nÂ°$k?</b></label>
                   <label class='switch'><input type=checkbox id='identique_$k' name='identique_$k' value=1 $checked 
                     onclick=\"custom('$k','$EH_DATE_DEBUT[$k]','$EH_DATE_FIN[$k]','$EH_DEBUT[$k]','$EH_FIN[$k]','$EH_DUREE[$k]');\"
-                    title=\"Cochez si les horaires de la partie n°$k sont les mêmes que ceux de l'activité\"><span class='slider round'></span></label>";
-            echo "<td rowspan=3 >durée ";
+                    title=\"Cochez si les horaires de la partie nÂ°$k sont les mÃªmes que ceux de l'activitÃ©\"><span class='slider round'></span></label>";
+            echo "<td rowspan=3 >durÃ©e ";
             
             echo "<input type=\"text\" name=\"duree_$k\" id=\"duree_$k\" value=\"".$EV_DUREE[$k]."\" style='width:30px;'
             onfocus=\"EvtCalcDuree(document.frm.dc1_$k,document.frm.dc2_$k,document.frm.debut_$k,document.frm.fin_$k,document.frm.duree_$k);\" 
-            title='durée en heures de la partie n°$k' $disabled> h ";
+            title='durÃ©e en heures de la partie nÂ°$k' $disabled> h ";
             echo "</td></tr>";
 
             echo "<tr id='debrow_".$k."' $style>";
             echo " <td align=left> du ";
             echo "<input class=\"plain\" name=\"dc1_$k\" id=\"dc1_$k\" value=\"".$EV_DATE_DEBUT[$k]."\"
-            size=\"12\" onchange=\"checkDate2(document.frm.dc1_$k)\" title=\"Date début format JJ-MM-AAAA\" $disabled>";
+            size=\"12\" onchange=\"checkDate2(document.frm.dc1_$k)\" title=\"Date dÃ©but format JJ-MM-AAAA\" $disabled>";
             
-            echo " à <select id='debut_$k' name='debut_$k' 
+            echo " Ã  <select id='debut_$k' name='debut_$k' 
             onchange=\"EvtCalcDuree(document.frm.dc1_$k,document.frm.dc2_$k,document.frm.debut_$k,document.frm.fin_$k,document.frm.duree_$k);\" $disabled>";
             for ( $i=0; $i <= 24; $i++ ) {
                 $check = $i.":00";
@@ -817,7 +817,7 @@ if ( $vid > 0 ) {
             echo "<td align=left> au ";
             echo "<input class=\"plain\" name=\"dc2_$k\" id=\"dc2_$k\" value=\"".$EV_DATE_FIN[$k]."\"
             size=\"12\" onchange=\"checkDate2(document.frm.dc2_$k)\" title=\"Date fin format JJ-MM-AAAA\" $disabled>";
-            echo " à <select id='fin_$k' name='fin_$k' 
+            echo " Ã  <select id='fin_$k' name='fin_$k' 
             onchange=\"EvtCalcDuree(document.frm.dc1_$k,document.frm.dc2_$k,document.frm.debut_$k,document.frm.fin_$k,document.frm.duree_$k);\" $disabled>";
             for ( $i=0; $i <= 24; $i++ ) {
                    if ( $i.":00" == $EV_FIN[$k] ) $selected="selected";
@@ -839,12 +839,12 @@ if ( $vid > 0 ) {
             echo "</select></td></tr>";
             
             echo "<tr id='plusrow_".$k."' $antistyle>
-               <td align=center width=80><b>Partie n°".$k."</b><br>
-               <i class='fa fa-plus-circle fa-lg' style='color:green;' title='Ajouter participation à cette partie' 
+               <td align=center width=80><b>Partie nÂ°".$k."</b><br>
+               <i class='fa fa-plus-circle fa-lg' style='color:green;' title='Ajouter participation Ã  cette partie' 
                  onclick=\"javascript:showRow('$k');\"></i>";
             echo "</td>
                   <td colspan=2>
-                  <i>Pas de participation sur la partie n°$k</i></td></tr>";
+                  <i>Pas de participation sur la partie nÂ°$k</i></td></tr>";
         }
     }
 }

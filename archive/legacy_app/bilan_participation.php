@@ -75,7 +75,7 @@ if (isset ($_GET["c3"])) $c3=intval($_GET["c3"]); else $c3=1;
 // title
 //=====================================================================
 if ( $mode_garde == 1 ) $t="gardes";
-else $t="événements";
+else $t="Ã©vÃ©nements";
 echo "<body>";
 echo "<div align=center class='table-responsive'>";
 
@@ -122,13 +122,13 @@ if ( $mode_garde == 1 ) {
     else $checked="";
     echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>Grouper Gardes J/N</label>
                 <label class='switch'>
-                    <input type='checkbox' name='groupJN' id='groupJN' value='1' $checked title='cocher pour regrouper jour et nuit sur le même segment' class='ml-3'
+                    <input type='checkbox' name='groupJN' id='groupJN' value='1' $checked title='cocher pour regrouper jour et nuit sur le mÃªme segment' class='ml-3'
                     onClick=\"redirect(".$year.",".$month.",".$filter.",".$mode_garde.",this,c1,c2,c3,".$tab.")\"/>
                     <span class='slider round'></span>
                 </label></div>";
 }
 
-// choix catégories événements
+// choix catÃ©gories Ã©vÃ©nements
 if ( $mode_garde == 0 ) {
     $query="select CEV_CODE, CEV_DESCRIPTION from categorie_evenement where CEV_CODE not in ('C_DIV','C_DIF','C_ZAL') order by CEV_CODE";
     $result=mysqli_query($dbc,$query);
@@ -141,7 +141,7 @@ if ( $mode_garde == 0 ) {
             if($CEV_CODE == 'C_SEC')
                 $CEV_DESCRIPTION = 'Secourisme';
             elseif($CEV_CODE == 'C_OPE')
-                $CEV_DESCRIPTION = 'Autre activités';
+                $CEV_DESCRIPTION = 'Autre activitÃ©s';
             elseif($CEV_CODE == 'C_FOR')
                 $CEV_DESCRIPTION = 'Formation';
             echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>$CEV_DESCRIPTION</label>

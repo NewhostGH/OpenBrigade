@@ -168,12 +168,12 @@ if ( check_rights($id, 52)) $withlinks=true;
 else  $withlinks=false;
 
 if ( check_rights($id, 40)) {
-    if ( $syndicate == 1 ) $t="adhérents";
+    if ( $syndicate == 1 ) $t="adhÃ©rents";
     else $t="personnes";
     $complement=" <a href='personnel.php?category=INT&order=P_NOM&filter=".$S_ID."&subsections=1&position=actif' title=\"voir $t\">
         <span class='badge' style='background-color:purple;'>".get_section_tree_nb_person("$S_ID")."</span></a> ".$t;
-    if ( $syndicate == 0 ) $complement .= " et <a href='vehicule.php?order=TV_USAGE&filter=".$S_ID."&filter2=ALL&subsections=1' title=\"voir véhicules\">
-    <span class='badge' style='background-color:purple;'>".get_section_tree_nb_vehicule("$S_ID")."</span></a> véhicules ";
+    if ( $syndicate == 0 ) $complement .= " et <a href='vehicule.php?order=TV_USAGE&filter=".$S_ID."&filter2=ALL&subsections=1' title=\"voir vÃ©hicules\">
+    <span class='badge' style='background-color:purple;'>".get_section_tree_nb_vehicule("$S_ID")."</span></a> vÃ©hicules ";
 }
 else $complement="";
 
@@ -225,9 +225,9 @@ if ( $assoc ) {
         if ( $tab == 3 ) $class='active';
         else $class='';
         echo "<li class='nav-item'>
-        <a class='nav-link $class' href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=3' title='Paramétrage' role='tab' aria-controls='tab3' href='#tab3' >
+        <a class='nav-link $class' href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=3' title='ParamÃ©trage' role='tab' aria-controls='tab3' href='#tab3' >
             <i class='fa fa-user-cog'></i>
-            <span>Paramétrage</span>
+            <span>ParamÃ©trage</span>
         </a>
     </li>";
     }
@@ -237,9 +237,9 @@ if ( $assoc ) {
         if ( $tab == 4 ) $class='active';
         else $class='';
         echo "<li class='nav-item'>
-        <a class='nav-link $class' href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=4' title='Agréments et Médailles' role='tab' aria-controls='tab4' href='#tab4' >
+        <a class='nav-link $class' href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=4' title='AgrÃ©ments et MÃ©dailles' role='tab' aria-controls='tab4' href='#tab4' >
             <i class='fa fa-medal'></i>
-            <span>Agréments et Médailles</span>
+            <span>AgrÃ©ments et MÃ©dailles</span>
         </a>
     </li>";
     }
@@ -248,7 +248,7 @@ if ( $NIV < $nbmaxlevels -1 and $cotisations == 1 and check_rights($id, 22)) {
     if ( $tab == 5 ) $class='active';
     else $class='';
     echo "<li class='nav-item'>
-    <a class='nav-link $class' href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=5' title='définir le montant des cotisations' role='tab' aria-controls='tab5' href='#tab5' >
+    <a class='nav-link $class' href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=5' title='dÃ©finir le montant des cotisations' role='tab' aria-controls='tab5' href='#tab5' >
             <i class='fa fa-euro-sign'></i>
             <span>Cotisations</span>
         </a>
@@ -259,9 +259,9 @@ if ( $NIV >= $nbmaxlevels -2  and $assoc == 1 and $granted22 ) {
     if ( $tab == 6 ) $class='active';
     else $class='';
     echo "<li class='nav-item'>
-        <a class='nav-link $class'  href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=6' title=\"blocage de certains types d'activités\">
+        <a class='nav-link $class'  href='upd_section.php?from=$from&S_ID=".$S_ID."&tab=6' title=\"blocage de certains types d'activitÃ©s\">
             <i class='fa fa-user-clock'></i>
-            <span>Activité</span>
+            <span>ActivitÃ©</span>
         </a>
     </li>";
 }
@@ -294,30 +294,30 @@ if ( $tab == 1 ) {
     else  $withlinks=false;
 
     if ( check_rights($id, 40)) {
-        if ( $syndicate == 1 ) $t="adhérent(s)";
+        if ( $syndicate == 1 ) $t="adhÃ©rent(s)";
         else $t="personne(s)";
         $complement=" <a href='personnel.php?category=INT&order=P_NOM&filter=".$S_ID."&subsections=1&position=actif' title=\"voir $t\">
             <span class='badge' style='background-color:purple;'>".get_section_tree_nb_person("$S_ID")."</span></a> ".$t;
-        if ( $syndicate == 0 ) $complement .= " et <a href='vehicule.php?order=TV_USAGE&filter=".$S_ID."&filter2=ALL&subsections=1' title=\"voir véhicules\">
-        <span class='badge' style='background-color:purple;'>".get_section_tree_nb_vehicule("$S_ID")."</span></a> véhicule(s) ";
+        if ( $syndicate == 0 ) $complement .= " et <a href='vehicule.php?order=TV_USAGE&filter=".$S_ID."&filter2=ALL&subsections=1' title=\"voir vÃ©hicules\">
+        <span class='badge' style='background-color:purple;'>".get_section_tree_nb_vehicule("$S_ID")."</span></a> vÃ©hicule(s) ";
     }
     else $complement="";
     if (! $withlinks ) $complement = '';
     
-    $help="Les identifiants Radio sont composés de 5 chiffres au niveau des sections.
-    Un premier bloc de 3 chiffres correspond au département, complété à gauche par un zéro (006 pour Alpes Maritimes, 083 pour le Var).
-    Le deuxième bloc de 2 chiffres correspond à l'antenne (01, 02, 03 ..., 99). On utilise 00 si on n'est pas dans une antenne mais directement au niveau départemental.
-    Ces identifiants de 5 chiffres doivent être uniques. Seul l'administrateur peut les modifier.";
+    $help="Les identifiants Radio sont composÃ©s de 5 chiffres au niveau des sections.
+    Un premier bloc de 3 chiffres correspond au dÃ©partement, complÃ©tÃ© Ã  gauche par un zÃ©ro (006 pour Alpes Maritimes, 083 pour le Var).
+    Le deuxiÃ¨me bloc de 2 chiffres correspond Ã  l'antenne (01, 02, 03 ..., 99). On utilise 00 si on n'est pas dans une antenne mais directement au niveau dÃ©partemental.
+    Ces identifiants de 5 chiffres doivent Ãªtre uniques. Seul l'administrateur peut les modifier.";
     
     
-    $help2="Certaines données relatives aux sections sont affichées sur un site public, en plus de $application_title. 
-    En particulier les données relatives au contact pour les inscriptions aux formations.
-    Vous pouvez choisir d'afficher toutes ces informations ou seulement certaines parmi: le téléphone de la formation, 
-    l'adresse email de la formation, et l'adresse URL du site web détaillant ces formations. 
-    Pour cela il suffit de cocher les cases à côté des champs devant être montrés au public.";
+    $help2="Certaines donnÃ©es relatives aux sections sont affichÃ©es sur un site public, en plus de $application_title. 
+    En particulier les donnÃ©es relatives au contact pour les inscriptions aux formations.
+    Vous pouvez choisir d'afficher toutes ces informations ou seulement certaines parmi: le tÃ©lÃ©phone de la formation, 
+    l'adresse email de la formation, et l'adresse URL du site web dÃ©taillant ces formations. 
+    Pour cela il suffit de cocher les cases Ã  cÃ´tÃ© des champs devant Ãªtre montrÃ©s au public.";
     
-    $help3="La coche 'section inactive' est cochée sur la section, cette section n'est plus visible sur le site public (si il y en a un).
-    La suppression d'une section ne devrait normalement pas être utilisée sauf si elle a été créée par erreur. La supression a les effets suivants:
+    $help3="La coche 'section inactive' est cochÃ©e sur la section, cette section n'est plus visible sur le site public (si il y en a un).
+    La suppression d'une section ne devrait normalement pas Ãªtre utilisÃ©e sauf si elle a Ã©tÃ© crÃ©Ã©e par erreur. La supression a les effets suivants:
     L'ensemble du personnel devient automatiquement 'ancien' et ne pourra plus se connecter.";
     
     echo "<div id='infos' >";
@@ -347,7 +347,7 @@ if ( $tab == 1 ) {
               <td >$S_ID</td>";
         echo "</tr>";
     }
-    if ( $syndicate == 1 and $NIV == 3) $t="Département";
+    if ( $syndicate == 1 and $NIV == 3) $t="DÃ©partement";
     else $t="Nom";
 
     if (check_rights($id, 55, $S_PARENT )) $disabled3='';
@@ -369,7 +369,7 @@ if ( $tab == 1 ) {
               <td><select class='form-control form-control-sm' name='ordre' $disabled  $disabled3>";
         if ( $S_ORDER == 0 ) $selected='selected';
         else $selected='';
-        echo "<option value='0' $selected>Non défini</option>";
+        echo "<option value='0' $selected>Non dÃ©fini</option>";
         for ( $i=1; $i < 10; $i++ ) {
             if ( $S_ORDER == $i ) $selected='selected';
             else $selected='';
@@ -400,7 +400,7 @@ if ( $tab == 1 ) {
      
             if ( $disabled == "" and $mysection <> $S_ID and check_rights($id, 55, $S_PARENT )) {
                 echo "<tr>
-              <td>Dépend de </td>";
+              <td>DÃ©pend de </td>";
                 echo "<td align=left>";
                 echo "<select class='form-control select-control' data-container='body' data-style='btn btn-default' id='parent' name='parent' $disabledparent>"; 
                 if ( $mysection <> 0 ){ 
@@ -415,7 +415,7 @@ if ( $tab == 1 ) {
             }
             else {
                 echo "<tr>
-                <td>Dépend de</td>";
+                <td>DÃ©pend de</td>";
                 echo "<td  align=left>";
                 if ( $withlinks ) echo "<a href=upd_section.php?S_ID=$S_PARENT>".get_section_code($S_PARENT)." - ".get_section_name($S_PARENT)."</a>";
                 else echo get_section_code($S_PARENT)." - ".get_section_name($S_PARENT);
@@ -436,19 +436,19 @@ if ( $tab == 1 ) {
     //=====================================================================
 
     echo "<tr>
-              <td width='25%'>Téléphone <span style='float:right;'>".show_contry_code($S_PHONE)."</span></td>
+              <td width='25%'>TÃ©lÃ©phone <span style='float:right;'>".show_contry_code($S_PHONE)."</span></td>
               <td class='d-flex justify-content-between align-items-center'><input type='text' class='form-control form-control-sm'  name='phone' size='16' maxlength=16
                 value='$S_PHONE' $disabled onchange='checkPhone(form.phone,\"".$S_PHONE."\",\"".$min_numbers_in_phone."\")'> </td>";
     echo "</tr>";
 
     if ($assoc ) {
         echo "<tr>
-              <td>Tél opérationnel <span style='float:right;'>".show_contry_code($S_PHONE2)."</span></td>
+              <td>TÃ©l opÃ©rationnel <span style='float:right;'>".show_contry_code($S_PHONE2)."</span></td>
               <td class='d-flex justify-content-between align-items-center'><input type='text' class='form-control form-control-sm' width='90%'  name='phone2' size='16' maxlength=16
                 value='$S_PHONE2' $disabled onchange='checkPhone(form.phone2,\"".$S_PHONE2."\",\"".$min_numbers_in_phone."\")'><div></div></td>";
         echo "</tr>";
         echo "<tr>
-              <td>Tél Formations <span style='float:right;'>".show_contry_code($S_PHONE3)."</span></td>
+              <td>TÃ©l Formations <span style='float:right;'>".show_contry_code($S_PHONE3)."</span></td>
               <td class='d-flex justify-content-between align-items-center'><input type='text' class='form-control form-control-sm'  name='phone3' size='16' maxlength=16
                 value='$S_PHONE3' $disabled 
                 onchange='checkPhone(form.phone3,\"".$S_PHONE3."\",\"".$min_numbers_in_phone."\");changeInfoFormation( form.phone3, form.SHOW_PHONE3 );'>";
@@ -472,24 +472,24 @@ if ( $tab == 1 ) {
     // ligne email
     //=====================================================================
     
-    if ( $syndicate == 1 ) $e="Email président";
-    else $e="Email opérationnel";
+    if ( $syndicate == 1 ) $e="Email prÃ©sident";
+    else $e="Email opÃ©rationnel";
     echo "<tr>
               <td>".$e."</td>
-              <td align=left><input type='text' class='form-control form-control-sm'  name='email' title='Cette adresse est utilisée pour les besoins de la veille opérationnelle.'
+              <td align=left><input type='text' class='form-control form-control-sm'  name='email' title='Cette adresse est utilisÃ©e pour les besoins de la veille opÃ©rationnelle.'
                 value='$S_EMAIL' $disabled onchange='mailCheck(form.email,\"".$S_EMAIL."\")'></td>";
     echo "</tr>";
 
     echo "<tr>
-              <td>Email secrétariat</td>
-              <td align=left><input type='text' class='form-control form-control-sm'  name='email2'title='Cette adresse email utilisée dans les documents PDF générés, et reçoit toutes les notifications relatives aux activités et au personnel.'
+              <td>Email secrÃ©tariat</td>
+              <td align=left><input type='text' class='form-control form-control-sm'  name='email2'title='Cette adresse email utilisÃ©e dans les documents PDF gÃ©nÃ©rÃ©s, et reÃ§oit toutes les notifications relatives aux activitÃ©s et au personnel.'
                 value='$S_EMAIL2' $disabled onchange='mailCheck(form.email2,\"".$S_EMAIL2."\")'></td>";
     echo "</tr>";
 
     if ( $assoc ) {
         echo "<tr>
               <td>Email formation</td>
-              <td align=left><input type='text' class='form-control form-control-sm'  name='email3' title='Adresse email utilisée pour les contacts liés aux formations.'
+              <td align=left><input type='text' class='form-control form-control-sm'  name='email3' title='Adresse email utilisÃ©e pour les contacts liÃ©s aux formations.'
                 value='$S_EMAIL3' $disabled onchange='mailCheck(form.email3,\"".$S_EMAIL3."\");changeInfoFormation( form.email3, form.SHOW_EMAIL3 );'>";
         if ( $webservice_key <> '' and $shownewbuttons) {
             if ( $SHOW_EMAIL3 == 1 ) $checked ='checked';
@@ -509,10 +509,10 @@ if ( $tab == 1 ) {
     if ( $granted22 or $S_ID  == $_SESSION['SES_SECTION'] or $S_ID  == $_SESSION['SES_PARENT']) {
         echo "<tr>
                       <td>Groupe Whatsapp </td>";
-            $helptext=" Si ce champ est renseigné, 
-            Une icône whatsapp apparaitra dans l'entête de cette page, 
-            permettant de rejoindre le groupe ou d'envoyer un message whatsapp à ce groupe.
-            Le groupe whatsapp doit être préalablement créé dans l'application Whatsapp";
+            $helptext=" Si ce champ est renseignÃ©, 
+            Une icÃ´ne whatsapp apparaitra dans l'entÃªte de cette page, 
+            permettant de rejoindre le groupe ou d'envoyer un message whatsapp Ã  ce groupe.
+            Le groupe whatsapp doit Ãªtre prÃ©alablement crÃ©Ã© dans l'application Whatsapp";
          $helpicon=" <a  href='#' title=\"Groupe Whatsapp :".$helptext."\" ><i class='fa fa-question-circle fa-lg'  ></i></a>";
         echo "<td><input type='text' class='form-control form-control-sm' style='display:inline-flex;width:90%' name='whatsapp_group' size='36' value=\"".$S_WHATSAPP."\" $disabled> $helpicon  ";
         echo "</td></tr>";
@@ -535,7 +535,7 @@ if ( $tab == 1 ) {
                    <td>ID Radio</td>
                     <td class='maxsize'>";
         if ( check_rights($id,14))
-            echo "<input type='text' class='form-control form-control-sm' name='rad1' size=3 maxlength=3 title='code département sur 3 chiffres' value='$rad1' style='width: 50px; padding: 2px; display:inline-flex'
+            echo "<input type='text' class='form-control form-control-sm' name='rad1' size=3 maxlength=3 title='code dÃ©partement sur 3 chiffres' value='$rad1' style='width: 50px; padding: 2px; display:inline-flex'
                     onchange='checkNumber(form.rad1,\"$rad1\");'>
                   <input type='text' class='form-control form-control-sm' name='rad2' size=2 maxlength=2 title='code antenne sur 2 chiffres' value='$rad2' style='width: 38px; padding: 2px; display:inline-flex'
                     onchange='checkNumber(form.rad2,\"$rad2\");'>";
@@ -549,7 +549,7 @@ if ( $tab == 1 ) {
     echo "</table></div></div></div>";
     
     //=====================================================================
-    // 2ème bloc
+    // 2Ã¨me bloc
     //=====================================================================
     if ( $nbsections == 0 ) {
         echo "<div class='col-sm-6'>
@@ -582,7 +582,7 @@ if ( $tab == 1 ) {
         echo "</tr>";
 
         echo "<tr>
-                  <td><i style='font-weight:200'>Complément d'adresse</i></td>
+                  <td><i style='font-weight:200'>ComplÃ©ment d'adresse</i></td>
                   <td><input type='text' class='form-control form-control-sm' name='address_complement' size=16 value=\"$S_ADDRESS_COMPLEMENT\" $disabled></td>";
         echo "</tr>";
 
@@ -640,7 +640,7 @@ if ( $tab == 1 ) {
         //=====================================================================
         if ( $NIV == $nbmaxlevels -1 and $assoc ) {
 
-            // agrément DPS du département
+            // agrÃ©ment DPS du dÃ©partement
             $queryag="select TAV_ID from agrement where  TA_CODE='D' and S_ID=".$S_PARENT;
             $resultag=mysqli_query($dbc,$queryag);
             $rowag=mysqli_fetch_array($resultag);
@@ -655,7 +655,7 @@ if ( $tab == 1 ) {
                 <td align=left>
                 <select id='dps' name='dps' $disabled style='max-width:200px;'>";
                 if ($DPS_MAX_TYPE == '' ) 
-                    echo "<option value='' selected>à définir</option>";
+                    echo "<option value='' selected>Ã  dÃ©finir</option>";
                 while ( $rowdps=mysqli_fetch_array($resultdps)) {
                     $TAV_ID = $rowdps["TAV_ID"];
                     $TA_VALEUR = $rowdps["TA_VALEUR"];
@@ -679,8 +679,8 @@ if ( $tab == 1 ) {
                         value='$S_SIRET' $disabled></td>";
             echo "</tr>";
             echo "<tr>
-                      <td>N° Affiliation</td>
-                      <td align=left><input type='text' class='form-control form-control-sm'  name='affiliation' size='20' title=\"Numéro d'affiliation l'organisation\" autocomplete='off'
+                      <td>NÂ° Affiliation</td>
+                      <td align=left><input type='text' class='form-control form-control-sm'  name='affiliation' size='20' title=\"NumÃ©ro d'affiliation l'organisation\" autocomplete='off'
                         value='$S_AFFILIATION' $disabled></td>";
             echo "</tr>";
         }
@@ -727,14 +727,14 @@ if ( ($tab == 2 or $tab == 7 )and $showresponsable) {
 
     if ( $tab == 7 ) $link=3;
     else $link=2;
-    if ($withlinks) $T="<a href=habilitations.php?tab=$link title='voir les habilitations de chaque rôle'>
+    if ($withlinks) $T="<a href=habilitations.php?tab=$link title='voir les habilitations de chaque rÃ´le'>
                  <i class='fa fa-question-circle'></i> <font size=1>voir les habilitations $application_title</font></a>";
     else $T="";
     echo "<div class='table-responsive'>";
     echo "<div class='container-fluid'>";
     echo "<div class='col-sm-12'>";
     echo "<table class='newTableAll' cellspacing=0 border=0>";
-    echo "<tr><td width=200>Rôle ou permission</td>
+    echo "<tr><td width=200>RÃ´le ou permission</td>
                <td>$T</td>
                <td style='width:1%'></td>
           </tr>";
@@ -774,10 +774,10 @@ if ( ($tab == 2 or $tab == 7 )and $showresponsable) {
         }
         $img = "<img src='$src' class='img-max-40' style='border-radius:10px'>";
         if ( $prev == $c ) $GP_DESCRIPTION="";
-        // cas specifique association, pas de président sur les antennes
+        // cas specifique association, pas de prÃ©sident sur les antennes
         if (( get_level("$S_ID") + 1 == $nbmaxlevels ) and ( $nbsections == 0 )) {
-            if ( $GP_DESCRIPTION == "Président (e)" ) $GP_DESCRIPTION="Responsable d'antenne";
-            if ( $GP_DESCRIPTION == "Vice président (e)" ) $GP_DESCRIPTION="Responsable adjoint";
+            if ( $GP_DESCRIPTION == "PrÃ©sident (e)" ) $GP_DESCRIPTION="Responsable d'antenne";
+            if ( $GP_DESCRIPTION == "Vice prÃ©sident (e)" ) $GP_DESCRIPTION="Responsable adjoint";
         }
         echo "<tr>
                 <td width=200 >".ucfirst($GP_DESCRIPTION)."</td>
@@ -793,7 +793,7 @@ if ( ($tab == 2 or $tab == 7 )and $showresponsable) {
         
         // le cadre de permanence peut se changer
         if ( ($granted22 or $cadre) and $prev <> $c){
-            echo "<a class='btn btn-default btn-action' href='upd_responsable.php?S_ID=".$S_ID."&GP_ID=".$c."'><i class='fa fa-edit' title='choisir une ou des personnes pour ce rôle'></i></a>";
+            echo "<a class='btn btn-default btn-action' href='upd_responsable.php?S_ID=".$S_ID."&GP_ID=".$c."'><i class='fa fa-edit' title='choisir une ou des personnes pour ce rÃ´le'></i></a>";
         }
         echo "</td></tr>";
         $prev=$c;
@@ -829,19 +829,19 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
         echo "<div class='col-sm-6'>
             <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
                 <div class='card-header graycard'>
-                    <div class='card-title'><strong> Papier à entête </strong></div>
+                    <div class='card-title'><strong> Papier Ã  entÃªte </strong></div>
                 </div>
                 <div class='card-body graycard'>";
     
         echo "<table class='noBorder' cellspacing=0 border=0>";
         echo "<tr>
-                    <td  width=150>Modèle (.PDF)</td>
+                    <td  width=150>ModÃ¨le (.PDF)</td>
                     <td align=left>";
         if ( $S_PDF_PAGE!="" ) {
             if ( file_exists($basedir."/images/user-specific/".$S_PDF_PAGE ) )
                 echo "<a href=\"".$basedir."/images/user-specific/".$S_PDF_PAGE."\" target=\"_blank\">Voir</a>";
             else
-                echo "<span class=small color=red>Fichier non trouvé sur le serveur</span>";
+                echo "<span class=small color=red>Fichier non trouvÃ© sur le serveur</span>";
             
             echo " <input type='checkbox' name='delpage' id='delpage'> <label for='delpage'>Supprimer</label>";
         }
@@ -865,7 +865,7 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
                     <font size=1 style='align-self:flex-end'> mm</td>";
         echo "</tr>";
         echo "<tr>
-                    <td  >Début de la zone de texte</td>
+                    <td  >DÃ©but de la zone de texte</td>
                     <td style='display:inline-flex' align=left>
                     <input type='text' class='form-control form-control-sm' name='pdf_texte_top' size='5' value=\"$S_PDF_TEXTE_TOP\" onchange='checkNumber(form.pdf_texte_top,\"$S_PDF_TEXTE_TOP\");' style='width:100px'>
                     <font size=1 style='align-self:flex-end'> mm du haut de la feuille</td>";
@@ -895,7 +895,7 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
             if ( file_exists($basedir."/images/user-specific/".$S_PDF_BADGE ) )
                 echo "<a href=\"".$basedir."/images/user-specific/".$S_PDF_BADGE."\" target=\"_blank\">Voir</a>";
             else
-                echo "<span class=small color=red>Fichier non trouvé sur le serveur</span>";
+                echo "<span class=small color=red>Fichier non trouvÃ© sur le serveur</span>";
             
             echo " <input type='checkbox' name='delbadge' id='delbadge'> <label for='delbadge'>Supprimer</label>";
         }
@@ -908,11 +908,11 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
     }
     
     //------------------------------
-    // bloquer événements terminés
+    // bloquer Ã©vÃ©nements terminÃ©s
     //------------------------------
         echo "<div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Interdire les modifications sur les activités terminées </strong></div>
+                <div class='card-title'><strong> Interdire les modifications sur les activitÃ©s terminÃ©es </strong></div>
             </div>
             <div class='card-body graycard'>";  
         echo "<table class='noBorder maxsize' cellspacing=0 border=0>";
@@ -927,15 +927,15 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
            if ( $NB_DAYS_BEFORE_BLOCK == $values[$i] ) $selected='selected';
            else $selected='';
            if ( $values[$i] == 0 ) echo "<option value='0' $selected>Jamais</option>";
-           else echo "<option value='".$values[$i]."' $selected>".$values[$i]." jours après la fin</option>";
+           else echo "<option value='".$values[$i]."' $selected>".$values[$i]." jours aprÃ¨s la fin</option>";
        }
        echo "</select>";          
     }
     else {
         if ( $NB_DAYS_BEFORE_BLOCK == 0 ) echo "Jamais";
-        else echo $NB_DAYS_BEFORE_BLOCK." jours après la fin";
+        else echo $NB_DAYS_BEFORE_BLOCK." jours aprÃ¨s la fin";
     }
-    if ( $NB_DAYS_BEFORE_BLOCK > 0 ) echo "<br><font size=1><i>Sauf pour les personnes ayant la permission n°19</i></font></td>";
+    if ( $NB_DAYS_BEFORE_BLOCK > 0 ) echo "<br><font size=1><i>Sauf pour les personnes ayant la permission nÂ°19</i></font></td>";
     echo "</tr>";
 
     //------------------------------
@@ -945,11 +945,11 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
         if ( $S_HIDE == 0 ) $checked='';
         else $checked='checked';
         echo "<tr>
-                <td>Cacher activités</td>
+                <td>Cacher activitÃ©s</td>
                 <td align=left>
                 <label class='switch'>
                 <input type = checkbox name='hide' value='1' $checked>
-                <span class='slider round' title='cocher pour rendre les activités de cette section invisibles pour les personnes non habilitées des autres départements, ils ne pourront pas voir le détail' ></span>
+                <span class='slider round' title='cocher pour rendre les activitÃ©s de cette section invisibles pour les personnes non habilitÃ©es des autres dÃ©partements, ils ne pourront pas voir le dÃ©tail' ></span>
             </label>";
     }
     else 
@@ -1023,7 +1023,7 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
                 <td title='API ID clickatell, ou address:port pour SMS Gateway Android, ou Device ID pour smsgateway.me'> SMS API ID </td>
               <td align=left>
                 <input name='SMS_LOCAL_API_ID' id='SMS_LOCAL_API_ID' type='text' class='form-control form-control-sm'  maxlength='30' size='30' value='".$SMS_LOCAL_API_ID."' 
-                title=\"Numéro d'API dans le cas de clickatell, ou adresseIP:port dans le cas de SMS Gateway exemple 88.65.125.65:9000, ou adresse pour SMSEagle exemple demounit.smseagle.eu\"
+                title=\"NumÃ©ro d'API dans le cas de clickatell, ou adresseIP:port dans le cas de SMS Gateway exemple 88.65.125.65:9000, ou adresse pour SMSEagle exemple demounit.smseagle.eu\"
                 $style_api>
               </td>
             </tr>";
@@ -1034,7 +1034,7 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
         echo "<div class='col-sm-6'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Textes par défaut pour devis et factures </strong></div>
+                <div class='card-title'><strong> Textes par dÃ©faut pour devis et factures </strong></div>
             </div>
             <div class='card-body graycard'>";  
         echo "<table class='noBorder maxsize' cellspacing=0 border=0>";
@@ -1045,7 +1045,7 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
                     <textarea class='form-control form-control-sm maxsize' name='pdf_signature' cols='30' rows='2'>$S_PDF_SIGNATURE</textarea></td>";
         echo "</tr>";
         echo "<tr>
-                    <td  align=left>Début du devis</td>
+                    <td  align=left>DÃ©but du devis</td>
                     <td  align=left>
                     <textarea class='form-control form-control-sm maxsize' name='devis_debut' cols='30' rows='2'>$devis_debut</textarea></td>";
         echo "</tr>";
@@ -1055,7 +1055,7 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
                     <textarea class='form-control form-control-sm maxsize' name='devis_fin' cols='30' rows='2'>$devis_fin</textarea></td>";
         echo "</tr>"; 
         echo "<tr>
-                    <td  align=left>Début de facture</td>
+                    <td  align=left>DÃ©but de facture</td>
                     <td  align=left>
                     <textarea class='form-control form-control-sm maxsize' name='facture_debut' cols='30' rows='2'>$facture_debut</textarea></td>";
         echo "</tr>"; 
@@ -1069,25 +1069,25 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
         if ( $NIV < $nbmaxlevels -1 ) {
             echo "<div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
                 <div class='card-header graycard'>
-                    <div class='card-title'><strong> Image de la signature du président </strong></div>
+                    <div class='card-title'><strong> Image de la signature du prÃ©sident </strong></div>
                 </div>
                 <div class='card-body graycard'>";  
             echo "<table class='noBorder' cellspacing=0 border=0>";
 
             echo "<tr>
-                    <td  >Signature scannée</td>
+                    <td  >Signature scannÃ©e</td>
                     <td  align=left>";
                     
             if ( $S_IMAGE_SIGNATURE!="" ) {
                 if ( file_exists($basedir."/images/user-specific/".$S_IMAGE_SIGNATURE ) )
                     echo "<a href=\"".$basedir."/images/user-specific/".$S_IMAGE_SIGNATURE."\" target=\"_blank\">Voir</a>";
                 else
-                    echo "<span class=small color=red>Fichier non trouvé sur le serveur</span>";
+                    echo "<span class=small color=red>Fichier non trouvÃ© sur le serveur</span>";
                 
                 echo " <input type='checkbox' name='delsignature' id='delsignature'> <label for='delsignature'>Supprimer</label>";
             }
             else
-                echo "<div style='display:inline-flex'><label class='btn btn-default btn-file label2' title='Choisir fichier, Image .gif, .jpg ou .png, taille recommandée 5cm x 3cm' id='upload_label2' style='margin-top:-2px;width:130px;'>
+                echo "<div style='display:inline-flex'><label class='btn btn-default btn-file label2' title='Choisir fichier, Image .gif, .jpg ou .png, taille recommandÃ©e 5cm x 3cm' id='upload_label2' style='margin-top:-2px;width:130px;'>
                 <i class='fas fa-file-upload fa-lg'></i> Choisir<input type='file' id='image_signature' name='image_signature' style='display: none;' >
                 </label> <input type='text' class='form-control form-control-sm' id='selected_file_name2' value=\"".$S_IMAGE_SIGNATURE."\" readonly=readonly></div>";
             echo "</td>";
@@ -1109,7 +1109,7 @@ if (( $showfact or $showbadge or $granted22) and $assoc and $tab == 3){
 
 
 //=====================================================================
-// tab 4 agréments - sauf niveau antenne locale
+// tab 4 agrÃ©ments - sauf niveau antenne locale
 //=====================================================================
 
 if (( $NIV < $nbmaxlevels -1 ) and  $assoc and $tab == 4 ) {
@@ -1154,8 +1154,8 @@ if (( $NIV < $nbmaxlevels -1 ) and  $assoc and $tab == 4 ) {
             echo "<table class='newTableAll' style='margin-bottom:15px'>";
             echo "<tr>
                 <td colspan=3>$CA_DESCRIPTION</td>";
-            if ( $CA_CODE == '_MED' ) echo "<td>Délivrée le</td><td>Agrafe</td>";
-            else echo "<td>Début</td><td>Fin</td>";
+            if ( $CA_CODE == '_MED' ) echo "<td>DÃ©livrÃ©e le</td><td>Agrafe</td>";
+            else echo "<td>DÃ©but</td><td>Fin</td>";
             echo "</tr>";
             $old_CA_CODE = $CA_CODE;
         }
@@ -1185,14 +1185,14 @@ if (( $NIV < $nbmaxlevels -1 ) and  $assoc and $tab == 4 ) {
         else if (( $CURA_DEBUT <> '' ) and ( $CURA_FIN == '' )) {
              if (my_date_diff($CURA_DEBUT,getnow()) > 0) $agr=1;
         }
-        else { // 2 dates renseignées
+        else { // 2 dates renseignÃ©es
              if (my_date_diff(getnow(),$CURA_FIN) < 0)$agr=-1;
              else if ((my_date_diff($CURA_DEBUT,getnow()) > 0) and (my_date_diff(getnow(),$CURA_FIN) > 0)) $agr=1;
         }
         $img='';
-        if ( $agr == 1 and $CA_CODE == '_MED' ) $img="<i class='fa fa-certificate fa-lg' style='color:yellow;' title='médaille décernée'></i>";
-        else if ( $agr == 1 ) $img="<i class='fa fa-check' style='color:green;' title='agrément actif'></i>";
-        else if ( $agr == -1 ) $img="<i class='fa fa-exclamation-triangle'  style='color:orange;' title='agrément périmé' ></i>";
+        if ( $agr == 1 and $CA_CODE == '_MED' ) $img="<i class='fa fa-certificate fa-lg' style='color:yellow;' title='mÃ©daille dÃ©cernÃ©e'></i>";
+        else if ( $agr == 1 ) $img="<i class='fa fa-check' style='color:green;' title='agrÃ©ment actif'></i>";
+        else if ( $agr == -1 ) $img="<i class='fa fa-exclamation-triangle'  style='color:orange;' title='agrÃ©ment pÃ©rimÃ©' ></i>";
         
         echo "<tr>
                 <td >$TA_CODE</td>
@@ -1219,7 +1219,7 @@ if (( $NIV < $nbmaxlevels -1 ) and  $assoc and $tab == 4 ) {
         $query="select TAV_ID, TA_CODE, TA_VALEUR from type_agrement_valeur where TA_CODE='".$TA_CODE."'";
         $result=mysqli_query($dbc,$query);
         if ( mysqli_num_rows($result) > 0 ) {
-             echo "<tr><td  align=right><font size=1>agrément</font></td>";
+             echo "<tr><td  align=right><font size=1>agrÃ©ment</font></td>";
              echo "<td  colspan=4 align=left>";
              if ( $granted_agrement ) {
                 echo " <select name='val_".$TA_CODE."'>";
@@ -1273,7 +1273,7 @@ if ( $NIV < $nbmaxlevels -1  and $cotisations == 1 and $granted22 and $tab == 5 
         
         echo "<div class='card hide card-default graycarddefault' style='margin-bottom:5px;'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Compte bancaire - utilisé pour prélèvements et virements </strong></div>
+                <div class='card-title'><strong> Compte bancaire - utilisÃ© pour prÃ©lÃ¨vements et virements </strong></div>
             </div>
             <div class='card-body graycard'>";
         echo "</table><table class='noBorder' cellspacing=0 border=0>";
@@ -1286,20 +1286,20 @@ if ( $NIV < $nbmaxlevels -1  and $cotisations == 1 and $granted22 and $tab == 5 
         $BIC=@$row["BIC"];
         $IBAN=@$row["IBAN"];
         $UPDATE_DATE=@$row["UPDATE_DATE"];
-        if ( $UPDATE_DATE <> "" ) $UPDATE_DATE = "modifié le ".$UPDATE_DATE;
+        if ( $UPDATE_DATE <> "" ) $UPDATE_DATE = "modifiÃ© le ".$UPDATE_DATE;
 
         if ( $granted_cotisations ) {
              echo "
                 <tr>
                     <td>BIC</td>
                     <td><input type='text' class='form-control form-control-sm' name='bic' id='bic' size=12 maxlength=11 class='inputRIB-lg11'  style='width:120px;display:inline-flex'
-                        title='11 caractères, chiffres et lettres' value='$BIC' onchange='isValid5(this,\"$BIC\",\"11\");' autocomplete='off'></td>
+                        title='11 caractÃ¨res, chiffres et lettres' value='$BIC' onchange='isValid5(this,\"$BIC\",\"11\");' autocomplete='off'></td>
                 </tr>
                 <tr><td>IBAN</td>
                 <td style='float:left;'>
                     <input type='text' id='iban' name='iban' class='iban-field' style='height:36px;width:260px;padding:5px;text-transform:uppercase;display:inline;'
                         value='".$IBAN."'
-                        title='IBAN jusque 32 caractères lettres majuscules et numéros'
+                        title='IBAN jusque 32 caractÃ¨res lettres majuscules et numÃ©ros'
                         onKeyUp=\"verificationIBAN();\">";
                 $errstyle="style='display:none'";
                 $successstyle="style='display:none'";
@@ -1307,12 +1307,12 @@ if ( $NIV < $nbmaxlevels -1  and $cotisations == 1 and $granted22 and $tab == 5 
                 if ( $IBAN == '' ) $warnsstyle="";
                 else if ( isValidIban($IBAN) ) $successstyle="";
                 else $errstyle="";
-                echo " <span id='iban_warn' $warnsstyle><i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='IBAN saisi non renseigné ou incomplet, on ne peut pas vérifier si il est valide' ></i></span>
+                echo " <span id='iban_warn' $warnsstyle><i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' title='IBAN saisi non renseignÃ© ou incomplet, on ne peut pas vÃ©rifier si il est valide' ></i></span>
                    <span id='iban_success' $successstyle><i class='fa fa-check-square fa-lg' style='color:green;' title='IBAN valide' ></i>
-                        <a href='#'><i class='fa fa-copy fa-lg' title='Copier le numéro de compte IBAN' onclick='copy_to_clipboard(\"".$IBAN."\");'></i></a>
+                        <a href='#'><i class='fa fa-copy fa-lg' title='Copier le numÃ©ro de compte IBAN' onclick='copy_to_clipboard(\"".$IBAN."\");'></i></a>
                    </span>
                    <span id='iban_error' $errstyle><i class='fa fa-ban fa-lg' style='color:red;' title='IBAN faux'></i></span>
-                  <a href='#'><i class='fa fa-eraser fa-lg' style='color:pink' title='Effacer données IBAN' onclick='eraser_iban();'></i></a> ";
+                  <a href='#'><i class='fa fa-eraser fa-lg' style='color:pink' title='Effacer donnÃ©es IBAN' onclick='eraser_iban();'></i></a> ";
                 echo "</td><td class=small>".$UPDATE_DATE."</td></tr>";
             
         }
@@ -1346,7 +1346,7 @@ if ( $NIV < $nbmaxlevels -1  and $cotisations == 1 and $granted22 and $tab == 5 
     echo "<td >Commentaire</td>";
     echo "</tr>";
 
-    // afficher les montants par profession ( si syndicat) , le même pour toutes professions sinon
+    // afficher les montants par profession ( si syndicat) , le mÃªme pour toutes professions sinon
     $query2="select TP_CODE, TP_DESCRIPTION from type_profession tp";
     if ( $syndicate == 0 ) $query2 .=" where TP_CODE='SPP'";
 
@@ -1412,19 +1412,19 @@ if ( $NIV < $nbmaxlevels -1  and $cotisations == 1 and $granted22 and $tab == 5 
 if ( $NIV >= $nbmaxlevels -2  and $assoc == 1 and $granted22 and $tab == 6 ) {
      
     echo "<div id='evenements'><p>";
-    $help="La création de certains types d'activités peut être bloquée temporairement. 
-    Ceci permet d'éviter l'engagement du personnel sur des activités secondaires non critiques au détriment de certaines activités importantes déjà prévues.";
+    $help="La crÃ©ation de certains types d'activitÃ©s peut Ãªtre bloquÃ©e temporairement. 
+    Ceci permet d'Ã©viter l'engagement du personnel sur des activitÃ©s secondaires non critiques au dÃ©triment de certaines activitÃ©s importantes dÃ©jÃ  prÃ©vues.";
     
     echo "<div class='table-responsive'>";
     echo "<div class='col-sm-10'>
             <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
                 <div class='card-header graycard'>
-                    <div class='card-title'><strong> Interdictions de créer certaines activités <a title=\"$help\"><i class='fa fa-question-circle' ></i></a> </strong></div>
+                    <div class='card-title'><strong> Interdictions de crÃ©er certaines activitÃ©s <a title=\"$help\"><i class='fa fa-question-circle' ></i></a> </strong></div>
                 </div>
                 <div class='card-body graycard'>";
     if ( intval($old_included) == 1 ) $checked='checked';
     else $checked='';
-    echo "<label><b style='font-size:13px'>Inclure les périodes passées</b></label>
+    echo "<label><b style='font-size:13px'>Inclure les pÃ©riodes passÃ©es</b></label>
             <label class='switch'>
                 <input type='checkbox' id='old_included' name='old_included' $checked onchange=\"change_old_period(".$S_ID.");\">
                 <span class='slider round'></span>
@@ -1449,15 +1449,15 @@ if ( $NIV >= $nbmaxlevels -2  and $assoc == 1 and $granted22 and $tab == 6 ) {
     write_debugbox($query);
     if ( mysqli_num_rows ($result) > 0 ) {
         echo "<table class='newTableAll' cellspacing=0 border=0>";
-        echo "<tr><td colspan=2>Type activité</td>
+        echo "<tr><td colspan=2>Type activitÃ©</td>
                    <td>Niveau</td>
-                   <td>Début</td>
+                   <td>DÃ©but</td>
                    <td>Fin</td>
                    <td>Actif</td>
                    <td style='width:1%'></td>
               </tr>";
         while (custom_fetch_array($result)) {
-            if ( $TE_CODE == 'ALL' ) $TE_LIBELLE = "Tous les types d'activités";
+            if ( $TE_CODE == 'ALL' ) $TE_LIBELLE = "Tous les types d'activitÃ©s";
             $img="<img src=images/evenements/".$TE_ICON." class='img-max-20'>";
             if ( $TE_ICON == '' ) $img='';
             if ( $SSE_ACTIVE == 1 ) $active="<i class='fas fa-check' style='color:$widget_fggreen;' title=\"L'interdiction est active\"></i>";
@@ -1467,7 +1467,7 @@ if ( $NIV >= $nbmaxlevels -2  and $assoc == 1 and $granted22 and $tab == 6 ) {
             else $color='';
             
             $cmt = $SSE_COMMENT;
-            if ( intval($SSE_BY) > 0 ) $cmt .= " - Interdiction ajoutée par ".my_ucfirst($P_PRENOM)." ".strtoupper($P_NOM)." le ".$SSE_WHEN; 
+            if ( intval($SSE_BY) > 0 ) $cmt .= " - Interdiction ajoutÃ©e par ".my_ucfirst($P_PRENOM)." ".strtoupper($P_NOM)." le ".$SSE_WHEN; 
             if ( $cmt <> '' )  $cmt = "<a href='#' class='btn btn-default btn-action' title=\"Commentaire".$cmt."\"><i class='far fa-file-alt fa-lg' style='$color'></i></a>";
             
             $font= "font-weight: 600 !important; font-size: 12px !important";

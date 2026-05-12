@@ -77,11 +77,11 @@ while ( $row=mysqli_fetch_array($result)) {
 $url=get_plain_url($cisurl);
 $siteurl = "http://".$url."/index.php?evenement=".$evenement;
 $message_desc = "date..................: le ".date_fran($month1[1], $day1[1] ,$year1[1])." ".moislettres($month1[1])." ".$year1[1]."\n";
-$message_desc  .= "<a href=".$siteurl." title='cliquer pour voir le détail'>".$E_LIBELLE."</a>.\n\n";
+$message_desc  .= "<a href=".$siteurl." title='cliquer pour voir le dÃ©tail'>".$E_LIBELLE."</a>.\n\n";
 $admins_garde = get_granted(60,"$S_ID",'local','yes');
 $chefs=get_chefs_evenement($evenement);
 
-// qui est déjà inscrit?
+// qui est dÃ©jÃ  inscrit?
 $old_inscrits=array();
 $old_inscrits[0]=explode(",",get_inscrits_garde($evenement));
 $old_inscrits[1]=explode(",",get_inscrits_garde($evenement,1));
@@ -97,7 +97,7 @@ while ($rowG=@mysqli_fetch_array($resultG)) {
     array_push($parties,array($rowG["EH_ID"],$rowG["EH_DUREE"]));
 }
 
-// ceux qui sont maintenant cochés
+// ceux qui sont maintenant cochÃ©s
 $new_inscrits[1]=array();
 $new_inscrits[2]=array();
 foreach ($_POST as $key => $value) {
@@ -114,7 +114,7 @@ foreach ($_POST as $key => $value) {
             // tableau des nouveaux inscrits
             array_push($new_inscrits[$ehid],$pid);
         
-            // si déjà inscrit, passer au suivant
+            // si dÃ©jÃ  inscrit, passer au suivant
             if (in_array($pid, $old_inscrits[$ehid]))
             continue;
         
@@ -133,7 +133,7 @@ foreach ($_POST as $key => $value) {
                         insert_log('INSCP', $pid, $comment, $evenement);
                 }
             }
-            // nouvel inscrit après publication tableau de garde, envoyer notification ici
+            // nouvel inscrit aprÃ¨s publication tableau de garde, envoyer notification ici
             // on notifie le SP nouvellement inscrit et le chef de garde + ceux qui peuvent modifier le tableau
             // dans le cas association, pas de notification car le tableau est fait au fil de l'eau
             if ( $E_VISIBLE_INSIDE == 1 and ! in_array($pid, $already_sent) and $pompiers ) {
@@ -141,7 +141,7 @@ foreach ($_POST as $key => $value) {
                 $prenom=my_ucfirst(get_prenom($pid));
                 $nom=strtoupper(get_nom($pid));
                 $message = "Bonjour,\n
-Pour information, ".$prenom." ".$nom."\nvient d'être enregistré pour participer à la garde suivante:\n";
+Pour information, ".$prenom." ".$nom."\nvient d'Ãªtre enregistrÃ© pour participer Ã  la garde suivante:\n";
                 $message .= $message_desc;
                 $message .= "pour plus d'information sur les horaires consulter votre calendrier.\n";
                 $destid = $admins_garde.",".$pid;
@@ -153,9 +153,9 @@ Pour information, ".$prenom." ".$nom."\nvient d'être enregistré pour participer 
     }
 }
 
-//les désinscriptions Jour
+//les dÃ©sinscriptions Jour
 desinscrire_garde($evenement, $old_inscrits[1], $new_inscrits[1], 1, $year1[1],$month1[1], $day1[1]);
-//les désinscriptions Nuit
+//les dÃ©sinscriptions Nuit
 desinscrire_garde($evenement, $old_inscrits[2], $new_inscrits[2], 2, $year1[1],$month1[1], $day1[1]);
 
 echo "<body onload=\"javascript:self.location.href='evenement_display.php?evenement=".$evenement."&tab=2';\">";

@@ -93,11 +93,11 @@ while ( custom_fetch_array($result)) {
     if (( $EH_DATE_FIN[$i] <> '' ) and ( $EH_DATE_FIN[$i] <> $EH_DATE_DEBUT[$i] )) {
             $tmp=explode ( "-",$EH_DATE_FIN[$i]); $year2[$i]=$tmp[0]; $month2[$i]=$tmp[1]; $day2[$i]=$tmp[2];
             $date2[$i]=mktime(0,0,0,$month2[$i],$day2[$i],$year2[$i]);
-            $infos_dates[$i] = "date: du ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." à ".$EH_DEBUT[$i];
-            $infos_dates[$i] .= " au ".date_fran($month2[$i], $day2[$i] ,$year2[$i])." ".moislettres($month2[$i])." ".$year2[$i]." à ".$EH_FIN[$i]."\n";
+            $infos_dates[$i] = "date: du ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." Ã  ".$EH_DEBUT[$i];
+            $infos_dates[$i] .= " au ".date_fran($month2[$i], $day2[$i] ,$year2[$i])." ".moislettres($month2[$i])." ".$year2[$i]." Ã  ".$EH_FIN[$i]."\n";
     }
     else {
-            $infos_dates[$i] = "date: le ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." à ".$EH_FIN[$i]."\n";
+            $infos_dates[$i] = "date: le ".date_fran($month1[$i], $day1[$i] ,$year1[$i])." ".moislettres($month1[$i])." ".$year1[$i]." de ".$EH_DEBUT[$i]." Ã  ".$EH_FIN[$i]."\n";
     }
     $i++;
 }
@@ -108,8 +108,8 @@ $subject=$TE_LIBELLE.":  ".$E_LIBELLE;
 $url=get_plain_url($cisurl);
 $siteurl = "http://".$url."/index.php?evenement=".$evenement;
 
-$message_desc1  = "<a href=".$siteurl." title='cliquer pour voir le détail'>".$TE_LIBELLE." : ".$E_LIBELLE."</a>.\n\n";
-$message_desc1 .= "organisé par: ".$S_CODE." - ".$S_DESCRIPTION."\n";
+$message_desc1  = "<a href=".$siteurl." title='cliquer pour voir le dÃ©tail'>".$TE_LIBELLE." : ".$E_LIBELLE."</a>.\n\n";
+$message_desc1 .= "organisÃ© par: ".$S_CODE." - ".$S_DESCRIPTION."\n";
 $message_desc1 .= "lieu: ".$E_LIEU.".\n";
 
 if ( $E_PARENT <> '' ) {
@@ -162,21 +162,21 @@ $SenderMail = $_SESSION['SES_EMAIL'];
 $COLMAIL='NO';
 
 if ( $action == 'created' and $E_VISIBLE_INSIDE == 1 ) {
-    $subject="création - ".$subject;
+    $subject="crÃ©ation - ".$subject;
     $ttte="";
     if ( $TE_CODE == 'DPS' and $TAV_ID == 5) $ttt="un nouveau DPS de grande envergure";
     else if ( $TE_CODE == 'DPS') $ttt="un nouveau DPS";
     else if ( $TE_CODE == 'ALERT') {
-        $ttt="une nouvelle alerte des bénévoles";
+        $ttt="une nouvelle alerte des bÃ©nÃ©voles";
         $ttte="e";
     }
-    else  $ttt="un nouvel événement";
+    else  $ttt="un nouvel Ã©vÃ©nement";
     if ( $E_EXTERIEUR == 1 ) {
-        $ttt .= " hors département";
-        $subject .= " hors département";
+        $ttt .= " hors dÃ©partement";
+        $subject .= " hors dÃ©partement";
     }
     $message = "Bonjour,\n
-Pour information, ".$ttt." vient d'être créé".$ttte.":\n";
+Pour information, ".$ttt." vient d'Ãªtre crÃ©Ã©".$ttte.":\n";
     $message .= $message_desc;
     if (( $S_EMAIL <> "" ) and ( $TE_CODE == 'DPS' or $TE_CODE == 'ALERT' )) $veille=true;
     if ( $S_EMAIL3 <> "" and  $TE_CODE == 'FOR') $mail_formation=true;
@@ -185,12 +185,12 @@ Pour information, ".$ttt." vient d'être créé".$ttte.":\n";
     if ( count($chefs) > 0 )  $destid .= ",".implode(",",$chefs);
     // si evenement sur antenne locale , prevenir aussi le departement
     if ( get_children("$S_ID") == '' ) $destid .= ",".$adminsparent;
-    // si renfort, prevenir les responsables de l'événement principal
+    // si renfort, prevenir les responsables de l'Ã©vÃ©nement principal
     if ( $E_PARENT <> '' ) {
         if ( count($chefs_parent) > 0 ) $destid .= ",".implode(",",$chefs_parent);
         $destid .= ",".get_granted(21,"$S2",'local','yes');
     }
-    // si DPS GE, ou alerte des bénévoles ou hors département prévenir le niveau national et toujours le niveau parent
+    // si DPS GE, ou alerte des bÃ©nÃ©voles ou hors dÃ©partement prÃ©venir le niveau national et toujours le niveau parent
     if ( $TAV_ID == 5 or $TE_CODE == 'ALERT' or $E_EXTERIEUR == 1 ) {
         $destid .= ",".get_granted(21,0,'local','yes');
         $destid .= ",".$adminsparent;
@@ -201,7 +201,7 @@ if ( $action == 'enroll' and $E_VISIBLE_INSIDE == 1 ) {
     $COLMAIL='E_MAIL1';
     $subject="inscriptions ouvertes - ".$subject;
     $message = "Bonjour,\n
-Tu peux dès maintenant t'inscrire pour:\n";
+Tu peux dÃ¨s maintenant t'inscrire pour:\n";
     $message .= $message_desc;
     $destid=get_granted(39,"$S_ID",'tree','yes').",".$admins;
 }
@@ -212,7 +212,7 @@ if ( $action == 'closed' ) {
     $message = "Bonjour,\n
 Voici la liste des personnes retenues:\n";
     $message .= get_noms_inscrits($evenement);
-    $message .="\nPour participer à:\n";
+    $message .="\nPour participer Ã :\n";
     $message .= $message_desc;
     $message .= get_vehicules_inscrits($evenement);
     $whatsapp = $E_WHATSAPP;
@@ -222,7 +222,7 @@ Voici la liste des personnes retenues:\n";
         $whatsapp=str_replace('-','',$whatsapp);
     }
     if ( $whatsapp <> "" ) {
-        $message .= "\n\nRejoignez le groupe Whatsapp de cet événement ".$whatsapp_chat_url."/".$whatsapp;
+        $message .= "\n\nRejoignez le groupe Whatsapp de cet Ã©vÃ©nement ".$whatsapp_chat_url."/".$whatsapp;
     }
     if (( $S_EMAIL <> "" ) and ( $TE_CODE == 'DPS' )) $veille=true;
     if ( $S_EMAIL3 <> "" and  $TE_CODE == 'FOR') $mail_formation=true;
@@ -244,13 +244,13 @@ Voici la liste des personnes retenues:\n";
         $destid_r = rtrim($destid_r,",");
         if ( $destid_r <> '' ) {
             $message_r = "Bonjour,\n\n";
-            $message_r .= "L'événement principal auquel est rattaché votre renfort est maintenant validé:\n";
+            $message_r .= "L'Ã©vÃ©nement principal auquel est rattachÃ© votre renfort est maintenant validÃ©:\n";
             $message_r .= $message_desc; 
-            $message_r .= "Merci de valider le renfort pour lequel vous êtes désigné responsable, et de ne plus modifier la liste des inscrits.";
+            $message_r .= "Merci de valider le renfort pour lequel vous Ãªtes dÃ©signÃ© responsable, et de ne plus modifier la liste des inscrits.";
             $nb2 = mysendmail("$destid_r" , $id , "$subject" , "$message_r" );
             if ( $nb_resp > 1 ) $s1="s"; else $s1="";
             if ( $nb_renforts > 1 ) $s2="s"; else $s2="";
-            $message_complement = "\nDe plus, un message spécifique a été envoyé à ".$nb_resp." responsable".$s1." enregistré".$s1." sur ".$nb_renforts." renfort".$s2.".";
+            $message_complement = "\nDe plus, un message spÃ©cifique a Ã©tÃ© envoyÃ© Ã  ".$nb_resp." responsable".$s1." enregistrÃ©".$s1." sur ".$nb_renforts." renfort".$s2.".";
         }
     }
 }
@@ -260,7 +260,7 @@ if ( $action == 'canceled' ) {
     $COLMAIL='E_MAIL3';
     $subject="annulation - ".$subject;
     $message = "Bonjour,\n
-L'événement suivant a été annulé (".$E_CANCEL_DETAIL."):\n";
+L'Ã©vÃ©nement suivant a Ã©tÃ© annulÃ© (".$E_CANCEL_DETAIL."):\n";
     $message .= $message_desc;
     $destid = get_inscrits($evenement,$includecanceledevents= 'yes').",".$admins;
     if ( count($chefs) > 0 ) $destid .= ",".implode(',',$chefs);
@@ -277,16 +277,16 @@ if ( $action == 'desinscrit'  and isset ($_GET["P_ID"])) {
     $row=mysqli_fetch_array($result);
     $prenom = my_ucfirst($row["P_PRENOM"]);
     $nom = strtoupper($row["P_NOM"]);
-    // notifier la personne qui est désinscrite et éventuellement le chef
+    // notifier la personne qui est dÃ©sinscrite et Ã©ventuellement le chef
     $subject="Participation annulee - ".$subject;
     $message = "Bonjour,\n
-La participation de ".$prenom." ".$nom." a été annulée pour:\n";
+La participation de ".$prenom." ".$nom." a Ã©tÃ© annulÃ©e pour:\n";
     $message .= $message_desc;
     if ( $E_VISIBLE_INSIDE == 0 ) $destid='';
     else {
         $destid = $P_ID;
         if ( $E_CLOSED == 1 ) {
-                //notifier le chef si une personne est désinscrite alors que l'événement est clôturé
+                //notifier le chef si une personne est dÃ©sinscrite alors que l'Ã©vÃ©nement est clÃ´turÃ©
                 if ( count($chefs) > 0 ) $destid .=','.implode(',',$chefs);
                 if ( count($chefs_parent) > 0 )  $destid .= ",".implode(',',$chefs_parent);
         }
@@ -296,7 +296,7 @@ La participation de ".$prenom." ".$nom." a été annulée pour:\n";
 if ( $action == 'absent'  and isset ($_GET["P_ID"])) {
     $COLMAIL='NO';
     $P_ID=intval($_GET["P_ID"]);
-    $subject="Absence signalée - ".$subject;
+    $subject="Absence signalÃ©e - ".$subject;
     $query="select P_PRENOM, P_NOM, P_SEXE from pompier where P_ID = ".$P_ID;
     $result=mysqli_query($dbc,$query);
     $row=mysqli_fetch_array($result);
@@ -344,17 +344,17 @@ if (( $action == 'inscription' ) and isset ($_GET["P_ID"])) {
     $nom = strtoupper($row["P_NOM"]);
     $S_EMAIL2 = $row["S_EMAIL2"];
 
-    // cas inscription d'un salarié, notifier ses responsables en indiquant son statut
+    // cas inscription d'un salariÃ©, notifier ses responsables en indiquant son statut
     if ( $statut_of == 'SAL' ) {
         if ( get_level("$usersection") == $nbmaxlevels - 1 )  $level = 'parent';
         else $level = 'local';
         $destid=get_granted(13,"$usersection",$level,'yes');
         if ($row["EP_FLAG1"] == 1 ) {
             if ( $SC ) $as='service civique';
-            else $as='salarié(e)';
+            else $as='salariÃ©(e)';
         }
-        else if ( $syndicate == 1 )  $as='adhérent';
-        else $as='bénévole';
+        else if ( $syndicate == 1 )  $as='adhÃ©rent';
+        else $as='bÃ©nÃ©vole';
         $subject="inscription en tant que ".$as." de ".$prenom." ".$nom;
         $message = "Bonjour,\n
 Pour information, ".$prenom." ".$nom."\nvient de s'inscrire en tant que ".$as." pour:\n";
@@ -364,7 +364,7 @@ Pour information, ".$prenom." ".$nom."\nvient de s'inscrire en tant que ".$as." 
         if ( $S_EMAIL2 <> "" ) $nb2 = mysendmail2("$S_EMAIL2","$subject","$message",$SenderName,$SenderMail);
     }
     if ( $E_PARENT <> '' ) {
-        // cas inscription sur un renfort alors que evenement principal clôturé
+        // cas inscription sur un renfort alors que evenement principal clÃ´turÃ©
         // notifier responsable evenement principal
         $query="select E_CLOSED from evenement where E_CODE=".$E_PARENT;
         $result=mysqli_query($dbc,$query);
@@ -374,15 +374,15 @@ Pour information, ".$prenom." ".$nom."\nvient de s'inscrire en tant que ".$as." 
             $subject="inscription - ".$subject;
             $message = "Bonjour,\n
 Pour information,".$prenom." ".$nom."
-              \n vient de s'inscrire à un renfort pour un événement principal déjà clôturé:\n";
+              \n vient de s'inscrire Ã  un renfort pour un Ã©vÃ©nement principal dÃ©jÃ  clÃ´turÃ©:\n";
             $message .= $message_desc;
             $destid = implode(',',$chefs_parent);
             if ( $destid <> '' ) $nb = mysendmail("$destid" , $id , "$subject" , "$message" );
             $destid='';
         }
     }
-    // si un agent s'inscrit pour un événement extérieur à sa section ou à la section n+1, et qu'il
-    // est plus bas dans la hiérarchie que la section organisatrice 
+    // si un agent s'inscrit pour un Ã©vÃ©nement extÃ©rieur Ã  sa section ou Ã  la section n+1, et qu'il
+    // est plus bas dans la hiÃ©rarchie que la section organisatrice 
     // alors on notifie son chef de section
     // sauf cas gardes SP, on ne notifie pas
     if ( $usersection <> $S_ID  and ( $pompiers == 0 or $TE_CODE <> 'GAR')) {
@@ -391,7 +391,7 @@ Pour information,".$prenom." ".$nom."
             $subject="inscription - ".$subject;
             $message = "Bonjour,\n
 Pour information, ".$prenom." ".$nom." (".$usersectioncode."),
-\nvient de s'inscrire pour participer à un événement extérieur:\n";
+\nvient de s'inscrire pour participer Ã  un Ã©vÃ©nement extÃ©rieur:\n";
             $message .= $message_desc;
             $destid = get_granted(21,"$usersection",'local','yes');
             if ( $S_EMAIL2 <> "" ) $nb2 = mysendmail2("$S_EMAIL2","$subject","$message",$SenderName,$SenderMail);
@@ -412,7 +412,7 @@ if ( $mail_formation )
     $nb2 = mysendmail2("$S_EMAIL3","$subject","$message",$SenderName,$SenderMail);
 if ( $destid <> '' ) {
     if ( $action == 'closed' and $ORDRE_MISSION == 1 ) {
-        // générer l'ordre de mission et l'attacher
+        // gÃ©nÃ©rer l'ordre de mission et l'attacher
         $generation_url ="pdf_document.php?section=".$S_ID."&evenement=".$evenement."&mode=4&signed=1&tofile=1";
         $attached_file = $filesdir."/files/".$evenement."/Ordre_de_mission_".$evenement.".pdf";
         generate_file($generation_url);
@@ -423,9 +423,9 @@ if ( $destid <> '' ) {
         $nb = mysendmail("$destid" , $_SESSION['id'] , "$subject" , "$message");
 }
 if ( $COLMAIL <> 'NO' ) {
-    if ( $nb2 == 1 ) $addthis="<br>Et à cette adresse aussi: ".$S_EMAIL;
+    if ( $nb2 == 1 ) $addthis="<br>Et Ã  cette adresse aussi: ".$S_EMAIL;
     else $addthis="";
-    write_msgbox("OK", $star_pic, "Le message suivant a été envoyé à: ".$nb." personnes.".$addthis."<p align=left><font face=courrier><small><b>Sujet:[".$cisname."] ".$subject."</b><p align=left>".nl2br($message.$message_complement)."</small></font><p align=center><a href=evenement_display.php?evenement=".$evenement."&from=choice><input type='submit' class='btn btn-default' value='Retour'></a>",30,0);
+    write_msgbox("OK", $star_pic, "Le message suivant a Ã©tÃ© envoyÃ© Ã : ".$nb." personnes.".$addthis."<p align=left><font face=courrier><small><b>Sujet:[".$cisname."] ".$subject."</b><p align=left>".nl2br($message.$message_complement)."</small></font><p align=center><a href=evenement_display.php?evenement=".$evenement."&from=choice><input type='submit' class='btn btn-default' value='Retour'></a>",30,0);
 }
 else {
     if ( $action <> 'created' ) $action='inscription';

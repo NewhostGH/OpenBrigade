@@ -77,15 +77,15 @@ else $habillement=false;
 
 if ( $habillement ) {
     $columns=array('A','B','C','D','E','F','G','H','I','J','K','L');
-    $columns_title=array("Catégorie","Type", "Nb", "Section","Modèle",
-                    "Taille","N°Série","Statut","Lieu stockage","Commentaire",
-                    "année","affecté à");
+    $columns_title=array("CatÃ©gorie","Type", "Nb", "Section","ModÃ¨le",
+                    "Taille","NÂ°SÃ©rie","Statut","Lieu stockage","Commentaire",
+                    "annÃ©e","affectÃ© Ã ");
 }
 else {
     $columns=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N');
-    $columns_title=array("Catégorie","Type", "Nb", "Section","Modèle",
-                    "N°Série","Statut","Date limite","N°inventaire","Lieu stockage",
-                    "Commentaire","année","Mis à disposition","affecté à");
+    $columns_title=array("CatÃ©gorie","Type", "Nb", "Section","ModÃ¨le",
+                    "NÂ°SÃ©rie","Statut","Date limite","NÂ°inventaire","Lieu stockage",
+                    "Commentaire","annÃ©e","Mis Ã  disposition","affectÃ© Ã ");
 }                     
 foreach ($columns as $c => $letter) {
     $objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));
@@ -116,13 +116,13 @@ $query1="select distinct tm.TM_CODE,tm.TM_USAGE,
         and s.S_ID=m.S_ID"; 
 
 if ( $mad == 1 ) {
-// matériel mis à disposition seulement
+// matÃ©riel mis Ã  disposition seulement
     $query1 .= " and m.MA_EXTERNE=1";
-    $title="Liste du matériel mis à disposition";
+    $title="Liste du matÃ©riel mis Ã  disposition";
 }
 
 if ( $mid > 0 ) {
-// matériel inclus dans le lot
+// matÃ©riel inclus dans le lot
     $query1 .= " and m.MA_PARENT=".$mid;
     
      $query1 .= " union all 
@@ -139,10 +139,10 @@ if ( $mid > 0 ) {
         and s.S_ID=c.S_ID
         and c.MA_PARENT=".$mid;
         
-    $title="Liste du matériel et des consommables inclus dans le lot";
+    $title="Liste du matÃ©riel et des consommables inclus dans le lot";
 }
 else { 
-// afficher tout le matériel
+// afficher tout le matÃ©riel
     if ( $type <> 'ALL' ) $query1 .= "\n and (tm.TM_ID='".$type."' or tm.TM_USAGE='".$type."')";
     // choix section
     if ( $nbsections == 0 ) {
@@ -161,7 +161,7 @@ else {
     
     if ( $filter <> 0 ) $cmt=" de ".get_section_name("$filter");
     else $cmt=" de ".$cisname;
-    $title="Liste du matériel".$cmt;
+    $title="Liste du matÃ©riel".$cmt;
 }
 
 $result1=mysqli_query($dbc,$query1);

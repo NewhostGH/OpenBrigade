@@ -166,7 +166,7 @@ check_all(22);
 
 $_SESSION['status'] = "infos";
 //=====================================================================
-// vérifier le code section choisi
+// vÃ©rifier le code section choisi
 //=====================================================================
 if ( $code <> '' ) {
     $query="select count(1) as NB from section where S_CODE=\"".$code."\" and S_ID <> ".$S_ID;
@@ -174,14 +174,14 @@ if ( $code <> '' ) {
     $row=mysqli_fetch_array($result);
 
     if ( $operation <> 'delete'  and  $row["NB"] <> 0 ) {     
-        write_msgbox("erreur", $error_pic, "Le code choisi (".$code.") est déjà utilisé pour une autre section.<br><p align=center>
+        write_msgbox("erreur", $error_pic, "Le code choisi (".$code.") est dÃ©jÃ  utilisÃ© pour une autre section.<br><p align=center>
         <input type=submit class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
        exit;
     }
 }
 
 //=====================================================================
-// vérifier le code ID Radio choisi (unique)
+// vÃ©rifier le code ID Radio choisi (unique)
 //=====================================================================
 if ( $rad1 <> '' and $rad2 <> '' ) {
     $query="select count(1) as NB from section where S_ID_RADIO=\"".$rad1.$rad2."\" and S_ID <> ".$S_ID;
@@ -189,7 +189,7 @@ if ( $rad1 <> '' and $rad2 <> '' ) {
     $row=mysqli_fetch_array($result);
     
     if ( $operation <> 'delete'  and $row["NB"] <> 0 ) {
-        write_msgbox("erreur", $error_pic, "L'identifiant ID Radio choisi (".$rad1.$rad2.") est déjà utilisé pour une autre section.<br><p align=center>
+        write_msgbox("erreur", $error_pic, "L'identifiant ID Radio choisi (".$rad1.$rad2.") est dÃ©jÃ  utilisÃ© pour une autre section.<br><p align=center>
         <input type=submit class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
        exit;
     }
@@ -219,7 +219,7 @@ if ( $operation == 'update'  and  $status == 'infos') {
     if (check_rights($id, 55, $previous["S_PARENT"])){
         if ($code == "") {
             write_msgbox("erreur", $error_pic,
-            "Le code de la section ne peut pas être vide.<br><p align=center>
+            "Le code de la section ne peut pas Ãªtre vide.<br><p align=center>
             <input type=submit class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
             exit;
         }
@@ -286,7 +286,7 @@ if ( $operation == 'update'  and  $status == 'infos') {
         $level = get_level($S_ID);
         if ( $m > 0 and ( $level == $nbmaxlevels -2 )) {
             $subject = "Modification adresse de \"".$code." - ".$nom."\"";
-            $message = "L'adresse enregistrée pour \"".$code." - ".$nom."\" a été modifiée.\nLa nouvelle adresse est:";
+            $message = "L'adresse enregistrÃ©e pour \"".$code." - ".$nom."\" a Ã©tÃ© modifiÃ©e.\nLa nouvelle adresse est:";
             $message .= "\n".$address." ".$address_complement."\n".$zipcode." ".strtoupper($city);
             $destid=get_granted(25,0,'local','yes');
             if ( $destid <> "" ) {
@@ -313,7 +313,7 @@ if ( $operation == 'update'  and  $status == 'infos') {
     $operation="retour";
 }
 //=====================================================================
-// sauver les agréments
+// sauver les agrÃ©ments
 //=====================================================================
 
 if (( $operation == 'update' ) and ( $status == 'agrements')) {
@@ -441,7 +441,7 @@ if (( $operation == 'update' ) and ( $status == 'cotisations')) {
             $iban=str_replace(" ","",$iban);
             
             if ( strlen($iban) > 0 and (strlen($iban) < 16 or strlen($iban) > 32 )) {
-                write_msgbox("erreur", $error_pic, "Code IBAN incorrect, entre 16 et 32 caractères requis, IBAN non modifié<br><p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+                write_msgbox("erreur", $error_pic, "Code IBAN incorrect, entre 16 et 32 caractÃ¨res requis, IBAN non modifiÃ©<br><p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
                 exit;
             }
             
@@ -469,7 +469,7 @@ if (( $operation == 'update' ) and ( $status == 'cotisations')) {
 }
 
 // ===================================================
-// Modèles de documents
+// ModÃ¨les de documents
 // ===================================================
 
 if (( $operation == 'update' ) and ( $status == 'parametrage')) {
@@ -484,7 +484,7 @@ if (check_rights($id, 29, "$S_ID")) {
             $taille = filesize($_FILES['pdf_page']['tmp_name']);
             $extensions_page = array('.pdf');
             $extension = strtolower(strrchr($_FILES['pdf_page']['name'], '.')); 
-            //Début des vérifications de sécurité...
+            //DÃ©but des vÃ©rifications de sÃ©curitÃ©...
             if(!in_array($extension, $extensions_page)) //Si l'extension n'est pas dans le tableau
                 $erreur = 'Vous devez uploader un fichier de type pdf.';
             if($taille>$taille_maxi)
@@ -526,7 +526,7 @@ if (check_rights($id, 29, "$S_ID")) {
     }
 }
 
-// interdire changements  dans le passé
+// interdire changements  dans le passÃ©
 if (check_rights($id, 22, "$S_ID") and $NB_DAYS_BEFORE_BLOCK >= 0 ) {
     $sql = "UPDATE section set NB_DAYS_BEFORE_BLOCK = \"$NB_DAYS_BEFORE_BLOCK\"
     WHERE s_id =".$S_ID;
@@ -538,7 +538,7 @@ if (check_rights($id, 22, "$S_ID") and $NB_DAYS_BEFORE_BLOCK >= 0 ) {
     $result=mysqli_query($dbc,$sql);
     if ( mysqli_affected_rows($dbc) > 0 ) insert_log('UPDS17',$S_ID, "-> ".$NB_DAYS_BEFORE_BLOCK);
 }
-// masquer événements aux autres départements
+// masquer Ã©vÃ©nements aux autres dÃ©partements
 if (check_rights($id, 22, "$S_ID")) {
     $NIV_antenne=$nbmaxlevels -1;
     $NIV_dep=$nbmaxlevels -2;
@@ -579,7 +579,7 @@ if (check_rights($id, 30, "$S_ID")) {
         $taille = filesize($_FILES['pdf_badge']['tmp_name']);
         $extensions_badge = array('.gif','.png','.jpg');
         $extension = strtolower(strrchr($_FILES['pdf_badge']['name'], '.')); 
-        //Début des vérifications de sécurité...
+        //DÃ©but des vÃ©rifications de sÃ©curitÃ©...
         if(!in_array($extension, $extensions_badge)) //Si l'extension n'est pas dans le tableau
             $erreur = 'Vous devez uploader un fichier de type  gif, png ou jpg.';
         if($taille>$taille_maxi)
@@ -610,7 +610,7 @@ if (check_rights($id, 30, "$S_ID")) {
         if ( @is_file($badgefile)) unlink($badgefile);
         $sql = "update section set S_PDF_BADGE = NULL where S_ID='$S_ID'";
         $result=mysqli_query($dbc,$sql);
-        insert_log('UPDS20',$S_ID,"Suppression du modèle de badge");
+        insert_log('UPDS20',$S_ID,"Suppression du modÃ¨le de badge");
     }
 }
 
@@ -624,7 +624,7 @@ if (check_rights($id, 22, "$S_ID")) {
         $taille = filesize($_FILES['image_signature']['tmp_name']);
         $extensions_signature = array('.gif','.png','.jpg');
         $extension = strtolower(strrchr($_FILES['image_signature']['name'], '.')); 
-        //Début des vérifications de sécurité...
+        //DÃ©but des vÃ©rifications de sÃ©curitÃ©...
         if(!in_array($extension, $extensions_signature)) //Si l'extension n'est pas dans le tableau
             $erreur = 'Vous devez uploader un fichier de type gif, png ou jpg pour la signature';
         if($taille>$taille_maxi)

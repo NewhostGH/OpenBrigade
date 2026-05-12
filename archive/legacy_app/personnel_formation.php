@@ -103,7 +103,7 @@ echo "<div align=center class='table-responsive'>
 if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
     if ( $action == 'list' ) {
         //=====================================================================
-        // statut de la compétence
+        // statut de la compÃ©tence
         //=====================================================================
         $query="select Q_VAL,DATE_FORMAT(Q_EXPIRATION, '%d-%m-%Y' ) as Q_EXPIRATION, DATEDIFF(Q_EXPIRATION,NOW()) as NB
                 from qualification
@@ -116,15 +116,15 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
 
         if ( $Q_VAL <> '' ) {
             if ( $Q_EXPIRATION <> '') {
-                if ($NB <= 0) $cmt="<div class='alert alert-danger' role='alert'> Compétence $TYPE expirée depuis $Q_EXPIRATION</div>";
-                else if ($NB < $DAYS_WARNING) $cmt="<div class='alert alert-warning' role='alert'>Compétence $TYPE expire dans $NB jours le $Q_EXPIRATION</div>";
-                else if ( $Q_VAL == 2 ) $cmt="<div class='alert alert-success' role='alert'>Compétence secondaire $TYPE expire dans $NB jours le $Q_EXPIRATION</div>";
-                else if ( $Q_VAL == 1 ) $cmt="<div class='alert alert-success' role='alert'>Compétence principale $TYPE expire dans $NB jours le $Q_EXPIRATION</div>";
+                if ($NB <= 0) $cmt="<div class='alert alert-danger' role='alert'> CompÃ©tence $TYPE expirÃ©e depuis $Q_EXPIRATION</div>";
+                else if ($NB < $DAYS_WARNING) $cmt="<div class='alert alert-warning' role='alert'>CompÃ©tence $TYPE expire dans $NB jours le $Q_EXPIRATION</div>";
+                else if ( $Q_VAL == 2 ) $cmt="<div class='alert alert-success' role='alert'>CompÃ©tence secondaire $TYPE expire dans $NB jours le $Q_EXPIRATION</div>";
+                else if ( $Q_VAL == 1 ) $cmt="<div class='alert alert-success' role='alert'>CompÃ©tence principale $TYPE expire dans $NB jours le $Q_EXPIRATION</div>";
             }
-            else if ( $Q_VAL == 2 ) $cmt="<div class='alert alert-success' role='alert'>Compétence secondaire $TYPE valide</div>";
-            else if ( $Q_VAL == 1 ) $cmt="<div class='alert alert-success' role='alert'>Compétence principale $TYPE valide</div>";
+            else if ( $Q_VAL == 2 ) $cmt="<div class='alert alert-success' role='alert'>CompÃ©tence secondaire $TYPE valide</div>";
+            else if ( $Q_VAL == 1 ) $cmt="<div class='alert alert-success' role='alert'>CompÃ©tence principale $TYPE valide</div>";
         }
-        else $cmt="<div class='alert alert-secondary' role='alert'>En formation pour obtenir la compétence $TYPE</div>";
+        else $cmt="<div class='alert alert-secondary' role='alert'>En formation pour obtenir la compÃ©tence $TYPE</div>";
         echo $cmt;
         //=====================================================================
         // liste des formations
@@ -149,12 +149,12 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
             echo "<table class='newTableAll'>";
             echo "<tr class='newTabHeader'>
               <td style='min-width:80px;'><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_DATE >Date</a></td>
-              <td>Compétence</td>
+              <td>CompÃ©tence</td>
               <td class='hide_mobile'><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=TF_CODE >Type</a></td>
-              <td class='hide_mobile'><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_DIPLOME >N° diplôme</a></td>
+              <td class='hide_mobile'><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_DIPLOME >NÂ° diplÃ´me</a></td>
               <td><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_UPDATE_BY >info</a></td>
               <td><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_LIEU >Lieu</a></td>
-              <td class='hide_mobile'><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_RESPONSABLE >Délivré par</a></td>
+              <td class='hide_mobile'><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_RESPONSABLE >DÃ©livrÃ© par</a></td>
               <td class='hide_mobile'><a href=personnel_formation.php?P_ID=".$P_ID."&PS_ID=".$PS_ID."&order=PF_COMMENT >Commentaire</a></td>";
             if ( $disabled == "" )
                 echo "<td class='hide_mobile'></td>";
@@ -179,11 +179,11 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
 
                 $popup="";
                 if ( $PF_UPDATE_BY <> "" )
-                       $popup="Enregistré par:
+                       $popup="EnregistrÃ© par:
         ".ucfirst(get_prenom($PF_UPDATE_BY))." ".strtoupper(get_nom($PF_UPDATE_BY))." le ".$PF_UPDATE_DATE."
         ";
                 if ( $PF_PRINT_BY <> "" )
-                    $popup .="Diplôme imprimé par:
+                    $popup .="DiplÃ´me imprimÃ© par:
         ".ucfirst(get_prenom($PF_PRINT_BY))." ".strtoupper(get_nom($PF_PRINT_BY))." le ".$PF_PRINT_DATE;
                
                 if ( $popup <> "" )
@@ -196,7 +196,7 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
                 echo "<td>".$PF_DATE."</td>";
                 echo "<td>".$TYPE."</td>";
                 if ( intval($E_CODE) <> 0)
-                     echo "<td class='widget-text hide_mobile'><a href=evenement_display.php?evenement=".$E_CODE."&from=formation title='Voir activité de cette formation'>".$TF_LIBELLE."</a></td>";
+                     echo "<td class='widget-text hide_mobile'><a href=evenement_display.php?evenement=".$E_CODE."&from=formation title='Voir activitÃ© de cette formation'>".$TF_LIBELLE."</a></td>";
                 else 
                      echo "<td class='hide_mobile'>".$TF_LIBELLE."</td>";
                 echo "<td class='hide_mobile'><b>".$PF_DIPLOME."</b></td>";
@@ -206,7 +206,7 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
                     $resulte=mysqli_query($dbc,$querye);
                     $rowe=@mysqli_fetch_array($resulte);
                 
-                    // désactiver les attestation de formation continues de secourisme car plus aux normes
+                    // dÃ©sactiver les attestation de formation continues de secourisme car plus aux normes
                     $enable_this=true;
                     if ( isset($no_attestations_continue_secourisme) and $rowe["TF_CODE"] == 'R' ) {
                         if ( in_array(str_replace(" ", "",$TYPE),array('PSC1','PSE1','PSE2','PAEPSC','PAEPS','FDFPSC','FDFPSE')) and intval($no_attestations_continue_secourisme) <= $YEAR )
@@ -219,7 +219,7 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
                     if ( $PS_PRINTABLE == 1 and $PF_DIPLOME <> '' ) {
                         if ( check_rights($id,54) and $rowe["TF_CODE"] == "I" ) {
                                   echo " <a class='btn btn-default btn-action noprint' href=pdf_diplome.php?section=".$S_ID."&evenement=".$E_CODE."&mode=4&P_ID=".$P_ID.">
-                                <i class='far fa-file-pdf fa-lg' style='color:red;' title=\"imprimer le duplicata du diplôme\"></i></a>";
+                                <i class='far fa-file-pdf fa-lg' style='color:red;' title=\"imprimer le duplicata du diplÃ´me\"></i></a>";
                         }
                     }
                 }
@@ -252,7 +252,7 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
     if ( ( $disabled == "" ) 
         and (($action == 'add') or ( $action == 'update') or ($action == 'nothingyet')) ) {
 
-    // proposer le type de formation le plus approprié
+    // proposer le type de formation le plus appropriÃ©
     if (($action == 'add') and ( $type == '0' )) {
         $query="select TF_CODE, count(*) as NB from personnel_formation 
                 where P_ID=".$P_ID." and PS_ID=".$PS_ID." group by TF_CODE order by TF_CODE desc";
@@ -328,7 +328,7 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
     echo "</select></td>";
     echo "</tr>";
 
-    if ( $type == 'I' ) $cmt = 'Diplôme délivré le';
+    if ( $type == 'I' ) $cmt = 'DiplÃ´me dÃ©livrÃ© le';
     else $cmt = 'Date de formation';
     echo "<tr>
                 <td align=right><b>".$cmt."</b> $asterisk</td>
@@ -345,7 +345,7 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
                 <td align=left>";
     echo "<input type='text' name='lieu' size='25' value=\"".$PF_LIEU."\">";
     echo " </tr>";
-    if ( $type == 'I' ) $cmt = 'Diplôme délivré par';
+    if ( $type == 'I' ) $cmt = 'DiplÃ´me dÃ©livrÃ© par';
     else $cmt = 'Responsable de la formation';
     echo "<tr>
                 <td align=right>".$cmt."</td>
@@ -355,7 +355,7 @@ if (( $PS_DIPLOMA == 1 ) or ( $PS_RECYCLE == 1 )) {
 
     if ( $type == 'I' ) {
         echo "<tr>
-                <td align=right>Numéro de diplôme</td>
+                <td align=right>NumÃ©ro de diplÃ´me</td>
                 <td align=left>";
         echo "<input type='text' name='numdiplome' size='25' value=\"".$PF_DIPLOME."\">";
         echo " </tr>";

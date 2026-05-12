@@ -68,7 +68,7 @@ if ( isset ($_FILES['userfile'])) {
             list($file_name, $error, $msgstring ) = explode(";", $upload_result);
 
             if ( $error == 0 ) {
-                // upload rÈussi: insÈrer les informations relatives au document dans la base
+                // upload r√©ussi: ins√©rer les informations relatives au document dans la base
                 $query="insert into document(S_ID,D_NAME,V_ID,TD_CODE,DS_ID,D_CREATED_BY,D_CREATED_DATE)
                        values (".$S_ID.",\"".$file_name."\",".$V_ID.",\"".$TD_CODE."\",\"".$DS_ID."\",".$id.",NOW())";
                 $result=mysqli_query($dbc,$query);
@@ -232,9 +232,9 @@ if ( $operation == 'update' ) {
     insert_log('UPDV', $V_ID);
 
     // si reforme, vendu, detruit, on enregistre des infos
-    // et envoyer un mail au responsable des vÈhicules
+    // et envoyer un mail au responsable des v√©hicules
     if ( $OLD_VP_OPERATIONNEL <> $NEW_VP_OPERATIONNEL ) {
-            insert_log('UPDSTV', $V_ID, ($NEW_VP_OPERATIONNEL >= 0)?"de nouveau opÈrationnel":"rÈformÈ");
+            insert_log('UPDSTV', $V_ID, ($NEW_VP_OPERATIONNEL >= 0)?"de nouveau op√©rationnel":"r√©form√©");
         if (( $OLD_VP_OPERATIONNEL >= 0 ) and ( $NEW_VP_OPERATIONNEL < 0 )) {
             $query="update vehicule set V_UPDATE_BY=$id, V_UPDATE_DATE=NOW() where V_ID=".$V_ID;
             $result=mysqli_query($dbc,$query);
@@ -251,17 +251,17 @@ if ( $operation == 'update' ) {
                    if (get_level("$S_ID")  >= $nbmaxlevels -1) { // antenne locale
                          $destid=get_granted(34,"$S_ID",'parent','yes');
                    }
-                   else { // dÈpartement, rÈgion
+                   else { // d√©partement, r√©gion
                       $destid=get_granted(34,"$S_ID",'local','yes');
                   }
                   $message  = "Bonjour,\n";
                   $m=get_section_name("$S_ID");
                   $n=$TV_CODE." ".$V_MODELE." - ".$V_IMMATRICULATION."";
                   $subject = "Changement de situation pour - ".$n;
-                  $message = "La situation du vÈhicule a ÈtÈ modifiÈe pour ".$n;
+                  $message = "La situation du v√©hicule a √©t√© modifi√©e pour ".$n;
                   $message .= "\ndans la section: ".$m;
-                  if ( $NEW_VP_OPERATIONNEL >= 0 ) $message .= "\nCe vÈhicule est de nouveau utilisable.";
-                  else $message .= "\nCe vÈhicule est maintenant inutilisable car ".$NEW_VP_LIBELLE.".";
+                  if ( $NEW_VP_OPERATIONNEL >= 0 ) $message .= "\nCe v√©hicule est de nouveau utilisable.";
+                  else $message .= "\nCe v√©hicule est maintenant inutilisable car ".$NEW_VP_LIBELLE.".";
                   if ( $destid <> "" )
                       $nb = mysendmail("$destid" , $id , "$subject" , "$message" );
                   

@@ -3,14 +3,14 @@ function redirect(url) {
 }
 
 function suppress(code) {
-    if ( confirm("Voulez vous vraiment supprimer ce type d'événement?") ) {
+    if ( confirm("Voulez vous vraiment supprimer ce type d'Ã©vÃ©nement?") ) {
         url="del_type_evenement.php?TE_CODE="+code;
         self.location.href=url;
     }
 }
 
 function delete_stat(id,code) {
-    if ( confirm("Voulez vous vraiment supprimer cette statistique? Tous les enregistrements saisis sur les événements de type "+code+" pour cette statistique seront aussi effacés?") ) {
+    if ( confirm("Voulez vous vraiment supprimer cette statistique? Tous les enregistrements saisis sur les Ã©vÃ©nements de type "+code+" pour cette statistique seront aussi effacÃ©s?") ) {
         url="delete_statistique.php?TB_ID="+id;
         self.location.href=url;
     }

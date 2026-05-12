@@ -66,7 +66,7 @@ if (isset($_POST["image"])) {
             if ( is_file($uploadfile)) unlink($uploadfile);
             if (move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile)) {
                 $error = "<br>Votre image est un <strong>".$userfile_type." extension ".$file_ext."</strong>
-                    <br>Mais seules les images suivantes sont acceptées <strong>".$image_ext."</strong> sont acceptées<br>";
+                    <br>Mais seules les images suivantes sont acceptÃ©es <strong>".$image_ext."</strong> sont acceptÃ©es<br>";
                 foreach ($allowed_image_types as $mime_type => $ext) {
                     //loop through the specified image types and if they match the extension then break out
                     if ( $file_ext==$ext and $userfile_type==$mime_type) {
@@ -134,7 +134,7 @@ $html .= "<body><div align=center>
     <td align=center>";
 
 if ( file_exists($pic)) {
-    if ( $pos == 0 ) $t=' - image par défaut';
+    if ( $pos == 0 ) $t=' - image par dÃ©faut';
     else $t='';
     if ( $image == 'favicon' ) $max=22;
     else if ( $image == 'apple_icon' ) $max=40;
@@ -143,12 +143,12 @@ if ( file_exists($pic)) {
     $html .= "<i>Image actuelle ".$t."</i><p><img src=\"".$pic."\" class='img-max-".$max."' border='0' title='image actuelle'/>";
 }
 else
-    $html .= "<i>Aucune image utilisée actuellement</i>";
+    $html .= "<i>Aucune image utilisÃ©e actuellement</i>";
 if ( $pos > 0 ) {
     $html .= "<form action='configuration_theme.php' method='POST'>";
     $html .= "<input type='hidden' name='action' value='delete' />";
     $html .= "<input type='hidden' name='image' value='".$image."' />";
-    $html .= "<input type='submit' class='btn btn-danger' value='Supprimer' title=\"l'image par défaut sera utilisée\">";
+    $html .= "<input type='submit' class='btn btn-danger' value='Supprimer' title=\"l'image par dÃ©faut sera utilisÃ©e\">";
     $html .= "</form>";
 }
 $html .= "</td> 
@@ -156,7 +156,7 @@ $html .= "</td>
 $html.= "<form id='imageform' name='imageform' action='configuration_theme.php' enctype='multipart/form-data' method='POST' >
     <input type='hidden' name='action' value='upload' />
     <input type='hidden' name='image' value='".$image."' />
-    <label class='btn btn-success btn-file' title='Choisir une nouvelle image personnalisée'>
+    <label class='btn btn-success btn-file' title='Choisir une nouvelle image personnalisÃ©e'>
         <i class='far fa-image fa-lg'></i> Choisir
         <input type='file' id='upload' name='upload' style='display: none;' onchange=\"javascript:document.getElementById('imageform').submit();\" >
     </label>

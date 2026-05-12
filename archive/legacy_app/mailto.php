@@ -91,7 +91,7 @@ if ( $MailTo <> "" ) {
     echo "<p><input type=submit class='btn btn-secondary' value='fermer cette page' onclick='fermerfenetre();'> ";
 }
 else {
-    echo "<body><div align=center>Aucune adresse trouvée";
+    echo "<body><div align=center>Aucune adresse trouvÃ©e";
     echo "<br><input type=submit class='btn btn-secondary' value='fermer cette page' onclick='fermerfenetre();'> ";
 }
 echo "<div>";

@@ -92,7 +92,7 @@ $map_data="";
 $center_lat="";
 $center_lng="";
 
-// événements ou interventions
+// Ã©vÃ©nements ou interventions
 while ($row=@mysqli_fetch_array($result1)) {
     $E_CODE=$row["E_CODE"];
     $TE_CODE=$row["TE_CODE"];
@@ -137,7 +137,7 @@ while ($row=@mysqli_fetch_array($result1)) {
         });
         ";
     }
-    // point de centrage par défaut sur la dernière personne trouvée
+    // point de centrage par dÃ©faut sur la derniÃ¨re personne trouvÃ©e
     $center_lat=$L_LAT;
     $center_lng=$L_LNG;
 }
@@ -196,7 +196,7 @@ $(document).ready(function() {
 });
 
 function initialise(){
-    /* Centre sur la moyenne des latitudes et longitudes trouvées*/
+    /* Centre sur la moyenne des latitudes et longitudes trouvÃ©es*/
     var pointc = new google.maps.LatLng(<?php echo $center_lat; ?>, <?php echo $center_lng; ?>);  
     var myOptions = {
         zoom: <?php echo $zoom; ?>,
@@ -229,10 +229,10 @@ if ( $center_lat <> 0 )
 else echo "<body>";
 
 if ( $display == 'E' ) {
-  writeBreadCrumb('Activités en cours', 'Activités', 'aa');
+  writeBreadCrumb('ActivitÃ©s en cours', 'ActivitÃ©s', 'aa');
 }
 else{
-  writeBreadCrumb('Interventions en cours', 'Activités', 'aa');
+  writeBreadCrumb('Interventions en cours', 'ActivitÃ©s', 'aa');
 }
 
 echo "<div align=left>";
@@ -254,12 +254,12 @@ if ( get_children("$filter") <> '' ) {
 echo "<select class='selectpicker' id='filter' name='filter' data-style='btn-default' data-container='body'
         onchange=\"orderfilter(document.getElementById('filter').value,'".$subsections."','".$type_evenement."', '".$display."')\">";
 display_children2(-1, 0, $filter, $nbmaxlevels, $sectionorder);
-echo "</select>   ";
+echo "</select>Â Â Â ";
 
-// choix type événement
+// choix type Ã©vÃ©nement
 echo "<select class='selectpicker smalldropdown2' id='type_evenement' name='type_evenement' data-style='btn-default' data-container='body'
    onchange=\"orderfilter(document.getElementById('filter').value,'$subsections', document.getElementById('type_evenement').value, '".$display."')\">";
-echo "<option value='ALL' selected>Toutes activités </option>\n";
+echo "<option value='ALL' selected>Toutes activitÃ©s </option>\n";
 
 $query2="select distinct te.CEV_CODE, ce.CEV_DESCRIPTION, te.TE_CODE, te.TE_LIBELLE
         from type_evenement te, categorie_evenement ce
@@ -290,7 +290,7 @@ if ( $display == 'E' ) $checked1='checked'; else $checked1='';
 if ( $display == 'I' ) $checked2='checked'; else $checked2='';
 
 echo "<input type='radio' name='display' value='E' $checked1 id=d1
-        onclick=\"orderfilter(".$filter.",'".$subsections."','".$type_evenement."', 'E')\" > <label class='low-opacity' for='d1'>Activités</label>
+        onclick=\"orderfilter(".$filter.",'".$subsections."','".$type_evenement."', 'E')\" > <label class='low-opacity' for='d1'>ActivitÃ©s</label>
         <input type='radio' name='display' value='I' $checked2 id=d2
         onclick=\"orderfilter(".$filter.",'".$subsections."','".$type_evenement."', 'I')\">  <label class='low-opacity' for='d2'>Interventions</label>";
 echo "</div></div></div>";
@@ -301,7 +301,7 @@ if ( $center_lat <> 0 ) {
     echo "<div id='map_canvas' ></div>";
 }
 else {
-    echo "<div style='padding-top:8%' align=center>Pas de données d'activités à afficher</div>";
+    echo "<div style='padding-top:8%' align=center>Pas de donnÃ©es d'activitÃ©s Ã  afficher</div>";
 }
 writefoot();
 ?>

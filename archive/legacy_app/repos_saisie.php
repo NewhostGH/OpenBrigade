@@ -161,7 +161,7 @@ echo "</form>
 
 
 //=====================================================================
-// calcul : quel est le mois prochain et combien de jours possède t'il
+// calcul : quel est le mois prochain et combien de jours possÃ¨de t'il
 //=====================================================================
 //nb de jours du mois
 $d=nbjoursdumois($month, $year);
@@ -173,7 +173,7 @@ if ( check_rights($id, 12, $lasection )) {
 elseif ( $person == $id ) {
     // dates futures, dispos ouvertes
     if ((date("n") <= $month  and date("Y") == $year) or date("Y") < $year) $disabled="";
-    // mais si les dispos sont bloquées, alors on ne peut plus modifier les dispos
+    // mais si les dispos sont bloquÃ©es, alors on ne peut plus modifier les dispos
     if (( $NB2 > 0 ) and ( $gardes == 1 )) $disabled='disabled';
 }
 
@@ -181,7 +181,7 @@ elseif ( $person == $id ) {
 // affiche le tableau
 //=====================================================================
 if ( $nbp == 0 )
-    echo "Aucune personne trouvée dans cette section";
+    echo "Aucune personne trouvÃ©e dans cette section";
 else {
     echo "<form name=dispo action='repos_save.php' method='POST'>";
 
@@ -214,7 +214,7 @@ else {
 
     while ( $l <= 6 ) { // boucle des semaines
         echo "\n    <tr height=20 >\n";
-        // cases vides en début de mois
+        // cases vides en dÃ©but de mois
         while ( $k < $jj ) {
             echo "<td width='50' bgcolor=$mylightcolor >
                      <table class='noBorder'
@@ -224,7 +224,7 @@ else {
             $k=$k+1;
         }
           
-        // jours de 1 à $d variable $i
+        // jours de 1 Ã  $d variable $i
         while (( $jj <= 7 ) &&  ($i <= $d)) { // boucle des jours de la semaine
             $checked = array();
             $chekednuit = array();
@@ -295,7 +295,7 @@ else {
 
     echo "</table></div>";
 
-    // légende
+    // lÃ©gende
     echo "<p><table class='noBorder'><tr height=12>";
 
     $regime=get_regime($section);
@@ -309,13 +309,13 @@ else {
     echo "<td bgcolor=$widget_bgorange width=14 style='border: 1px solid;'></td>
          <td class=small width=80> Repos <a href='upd_personnel.php?from=default&tab=18&pompier=$person&person=$person&table=1' title='Liste des repos'>Liste</a> </td>";
     echo "<td bgcolor=$week_end width=14 style='border: 1px solid;'></td>
-        <td class=small width = 50> WE/Férié </td>";
+        <td class=small width = 50> WE/FÃ©riÃ© </td>";
     echo "<td bgcolor=#FFFFFF width=14 style='border: 1px solid;'></td>
         <td class=small width = 50> Semaine </td>";
     echo "</tr></table>";
     echo "<p>";
 
-    // la personne habilitée peut valider les dispos
+    // la personne habilitÃ©e peut valider les dispos
     if ( $disabled == "") {
         echo "<input type='submit' class='btn btn-success' value='Sauvegarder'>";
     }

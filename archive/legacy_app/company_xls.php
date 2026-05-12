@@ -61,7 +61,7 @@ $nbcols=count($columns);
 $columns_title=array("Id","Type","Nom","Description","Section",
                      "Etablissement principal","Adresse","Code postal","Ville","email",
                      "telephone","fax","Contact",
-                     "Médecin référent","Responsable Formation","Responsable Opérationnel");
+                     "MÃ©decin rÃ©fÃ©rent","Responsable Formation","Responsable OpÃ©rationnel");
 
 foreach ($columns as $c => $letter) {
     $objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));

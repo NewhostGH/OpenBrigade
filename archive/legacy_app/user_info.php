@@ -65,7 +65,7 @@ $result=mysqli_query($dbc,$query);
 
 // check input parameters
 if ( mysqli_num_rows($result) <> 1 ) {
-    write_msgbox("Erreur",$error_pic,"Aucun personnel trouvé dans la base avec les paramètres fournis.",30,30);
+    write_msgbox("Erreur",$error_pic,"Aucun personnel trouvÃ© dans la base avec les paramÃ¨tres fournis.",30,30);
     exit;
 }
 
@@ -93,7 +93,7 @@ if( $P_PHOTO != "" ){
     if(file_exists($trombidir."/".$P_PHOTO)) {
         $pic = "<img src='".$trombidir."/".$P_PHOTO."' class='img-max-60 rounded' border='0' >";
     }
-    else $pic = "<i class='fa fa-user fa-2x' title='Photo non trouvée'></i> ";
+    else $pic = "<i class='fa fa-user fa-2x' title='Photo non trouvÃ©e'></i> ";
 }
 else {
     if ( $P_CIVILITE >= 4 ) $pic='dog.png';
@@ -114,17 +114,17 @@ $html .= "<div class='col-sm-6 col-lg-4' align=center style='margin: 15px auto;'
 $html .="<table class=noBorder>";
 $html .="<tr><td><b>Position</b></td><td>".$position."</td></tr>";
 $html .="<tr><td><b>Section</b></td><td>".$S_CODE." - ".$P_DESC_SECTION."</td></tr>";
-// $html .="<tr><td>Date entrée</td><td>".$P_DATE_ENGAGEMENT."</td></tr>";
+// $html .="<tr><td>Date entrÃ©e</td><td>".$P_DATE_ENGAGEMENT."</td></tr>";
 // if ( $P_OLD_MEMBER > 0 ) $html .="<tr><td width=150>Date fin</td><td width=200>".$P_FIN."</td></tr>";
-// $html .="<tr><td>Civilité</td><td>".$TC_LIBELLE."</td></tr>";
+// $html .="<tr><td>CivilitÃ©</td><td>".$TC_LIBELLE."</td></tr>";
 // $html .="<tr><td>Date de naissance</td><td>".$P_BIRTHDATE."</td></tr>";
 // $html .="<tr><td>Lieu de naissance</td><td>".$P_BIRTHPLACE."</td></tr>";
-// $html .="<tr><td>Nationalité</td><td>".$COUNTRY."</td></tr>";
+// $html .="<tr><td>NationalitÃ©</td><td>".$COUNTRY."</td></tr>";
 // $html .="<tr><td>Adresse</td><td>".$P_ADDRESS."</td></tr>";
 // $html .="<tr><td>Code postal</td><td>".$P_ZIP_CODE."</td></tr>";
 // $html .="<tr><td>Ville</td><td>".$P_CITY."</td></tr>";
 // $html .="<tr><td>Email</td><td>".$P_EMAIL."</td></tr>";
-// $html .="<tr><td>Téléphone</td><td>".$P_PHONE."</td></tr>";
+// $html .="<tr><td>TÃ©lÃ©phone</td><td>".$P_PHONE."</td></tr>";
 
 print $html;
 ?>

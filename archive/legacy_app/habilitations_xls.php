@@ -102,7 +102,7 @@ if ( $critere == 'habilitation' ) {
 
     // Add the columns heads
     $columns=array('A','B','C','D','E','F','G','H');
-    $columns_title=array("Nom","Prénom","Civilite","Email","Section","Principal","Secondaire","Téléphone");
+    $columns_title=array("Nom","PrÃ©nom","Civilite","Email","Section","Principal","Secondaire","TÃ©lÃ©phone");
     foreach ($columns as $c => $letter) {
          $objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));
          $objPHPExcel->getActiveSheet()->getColumnDimension($letter)->setAutoSize(true);
@@ -137,8 +137,8 @@ if ( $critere == 'habilitation' ) {
         $groupe1=(isset($row['groupe1'])?$row['groupe1']:"");
         $groupe2=(isset($row['groupe2'])?$row['groupe2']:"");
         
-        if ( $groupe1 ==  'Président (e)' ) {
-            // vrai président ou responsable d'antenne
+        if ( $groupe1 ==  'PrÃ©sident (e)' ) {
+            // vrai prÃ©sident ou responsable d'antenne
             if ( $row['niv'] == 4 ) $groupe1 =  "Responsable d'antenne";
         }
         
@@ -233,11 +233,11 @@ else {
     if ( $nbsections == 0 ) $colspan=4;
         else $colspan=3;
 
-    $export_name="personnel".$cmt." par compétence";
+    $export_name="personnel".$cmt." par compÃ©tence";
   
     // Add the columns heads
     $columns=array('A','B','C','D','E','F','G','H','I');
-    $columns_title=array("Nom","Prénom","Civilité","Statut","Email","Section","Compétence","Expiration","Téléphone");
+    $columns_title=array("Nom","PrÃ©nom","CivilitÃ©","Statut","Email","Section","CompÃ©tence","Expiration","TÃ©lÃ©phone");
     foreach ($columns as $c => $letter) {
         $objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));
         $objPHPExcel->getActiveSheet()->getColumnDimension($letter)->setAutoSize(true);

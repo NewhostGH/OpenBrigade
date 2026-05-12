@@ -41,7 +41,7 @@ writehead();
 
 if(!isset($_GETSAUVE) AND empty($_GET)) {
   write_msgbox("ERREUR", $error_pic, 
-    "Vous venez de recharger la page. Votre message n'a pas été envoyé une 2e fois.
+    "Vous venez de recharger la page. Votre message n'a pas Ã©tÃ© envoyÃ© une 2e fois.
         <p align=center><a href='index.php'><input type='submit' class='btn btn-primary' value='Retour'></a>",30,0);
   writefoot();
   exit;
@@ -63,7 +63,7 @@ else {
     if ( $subject == "") $subject="message de ".ucfirst(get_prenom($id))." ".strtoupper(get_nom($id));
     $nb = mysendmail( "$dest" , $id  , $subject , "$message" );
 
-    write_msgbox("OK", $star_pic, "Le message a été envoyé à:
+    write_msgbox("OK", $star_pic, "Le message a Ã©tÃ© envoyÃ© Ã :
     <br>".$nb." personnes<p><font face=arial size=2>Sujet:[".$cisname."] ".$subject."
     <p>".nl2br($message)."</font><p align=center><a href='mail_create.php'><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
 }

@@ -49,7 +49,24 @@ class AuthController extends Controller
                 ->withInput($request->safe()->except('password'));
         }
 
-        return redirect()->intended(route('dashboard'));
+        $intended = (string) $request->session()->pull('url.intended', '');
+        if ($intended !== '') {
+            $normalizedIntended = str_replace('/index.php/index.php/', '/index.php/', $intended);
+            $normalizedIntended = str_replace('index.php/index.php/', '/index.php/', $normalizedIntended);
+            if ($normalizedIntended === '/index.php/index.php') {
+                $normalizedIntended = '/index.php/index_d.php';
+            }
+
+            if (! str_starts_with($normalizedIntended, '/')
+                && ! str_starts_with($normalizedIntended, 'http://')
+                && ! str_starts_with($normalizedIntended, 'https://')) {
+                $normalizedIntended = '/' . ltrim($normalizedIntended, '/');
+            }
+
+            return redirect()->to($normalizedIntended);
+        }
+
+        return redirect()->route('dashboard');
     }
 
     public function logout(): RedirectResponse

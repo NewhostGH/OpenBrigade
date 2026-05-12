@@ -35,7 +35,7 @@ if ( isset ($_GET["apercu"])) {
     $modal=true;
     $nomenu=1;
     writehead();
-    write_modal_header("AperÁu du formulaire");
+    write_modal_header("Aper√ßu du formulaire");
 }
 else {
     $modal=false;
@@ -60,7 +60,7 @@ function redirect_notify(evenement,pid){
 <?php
 
 //=====================================================================
-// recupÈrer infos personne, tester permissions
+// recup√©rer infos personne, tester permissions
 //=====================================================================
 
 $disabled="";
@@ -77,12 +77,12 @@ if ( ! $modal ) {
             and exists (select 1 from evenement_participation where P_ID=".$pid." and E_CODE in (".$evts."))";
     $result=mysqli_query($dbc,$query);
     if ( mysqli_num_rows($result) == 0 ) {
-        write_msgbox("Erreur",  $error_pic, "Cette personne n'est pas inscrite sur l'ÈvÈnement.<p><a href='evenement_display.php?evenement=".$evenement."&tab=2'><input type='submit' class='btn btn-default' value='Retour'></a></div>", 30, 30);
+        write_msgbox("Erreur",  $error_pic, "Cette personne n'est pas inscrite sur l'√©v√©nement.<p><a href='evenement_display.php?evenement=".$evenement."&tab=2'><input type='submit' class='btn btn-default' value='Retour'></a></div>", 30, 30);
         exit;
     }
     custom_fetch_array($result);
 
-    // bloquer les changements dans le passÈ
+    // bloquer les changements dans le pass√©
     $ended=get_number_days_after_block($evenement);
     $changeallowed=true;
     if ( $ended > 0 ) {
@@ -134,7 +134,7 @@ if ( ! $modal ) {
           <tr><td>
           <span class='ebrigade-h4'>".$name."</span> - ".$S_CODE."</td></tr>
           </table>";
-    echo "<p>Veuillez saisir les options relatives ‡ l'inscription de ".$name;
+    echo "<p>Veuillez saisir les options relatives √† l'inscription de ".$name;
 
     if ( $update_allowed )
         echo "<form action='evenement_option_choix.php' method='POST'>";
@@ -146,7 +146,7 @@ else
 echo "<p><div class='col-sm-".$sm."'>
                 <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
                 <div class='card-header graycard'>
-                <div class='card-title'><strong>Options d'inscriptions sur l'activitÈ</strong></div>
+                <div class='card-title'><strong>Options d'inscriptions sur l'activit√©</strong></div>
                 </div>
                 <div class='card-body graycard'>
               <table class='noBorder' cellspacing=0 border=0>";

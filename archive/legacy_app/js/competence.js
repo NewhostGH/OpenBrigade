@@ -44,7 +44,7 @@ function checkProlonge() {
 }
 
 function suppress_hierarchie(p1) {
-  if ( confirm("Voulez vous vraiment supprimer la hiérarchie "+ p1 +"? \n")) {
+  if ( confirm("Voulez vous vraiment supprimer la hiÃ©rarchie "+ p1 +"? \n")) {
      url="save_hierarchie_competence.php?operation=delete_confirmed&PH_CODE="+p1;
      self.location.href=url;
   }

@@ -2,26 +2,26 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>En-tête, pied de page, saut de page et image</title>
+<title>En-tÃªte, pied de page, saut de page et image</title>
 <link type="text/css" rel="stylesheet" href="../fpdf.css">
 </head>
 <body>
-<h1>En-tête, pied de page, saut de page et image</h1>
-Voici un exemple de deux pages avec en-tête, pied de page et logo :
+<h1>En-tÃªte, pied de page, saut de page et image</h1>
+Voici un exemple de deux pages avec en-tÃªte, pied de page et logo :
 <div class="source">
 <pre><code>&lt;?php
 <span class="kw">require(</span><span class="str">'fpdf.php'</span><span class="kw">);
 
 class </span>PDF <span class="kw">extends </span>FPDF
 <span class="kw">{
-</span><span class="cmt">// En-tête
+</span><span class="cmt">// En-tÃªte
 </span><span class="kw">function </span>Header<span class="kw">()
 {
     </span><span class="cmt">// Logo
     </span>$<span class="kw">this-&gt;</span>Image<span class="kw">(</span><span class="str">'logo.png'</span><span class="kw">,</span>10<span class="kw">,</span>6<span class="kw">,</span>30<span class="kw">);
     </span><span class="cmt">// Police Arial gras 15
     </span>$<span class="kw">this-&gt;</span>SetFont<span class="kw">(</span><span class="str">'Arial'</span><span class="kw">,</span><span class="str">'B'</span><span class="kw">,</span>15<span class="kw">);
-    </span><span class="cmt">// Décalage à droite
+    </span><span class="cmt">// DÃ©calage Ã  droite
     </span>$<span class="kw">this-&gt;</span>Cell<span class="kw">(</span>80<span class="kw">);
     </span><span class="cmt">// Titre
     </span>$<span class="kw">this-&gt;</span>Cell<span class="kw">(</span>30<span class="kw">,</span>10<span class="kw">,</span><span class="str">'Titre'</span><span class="kw">,</span>1<span class="kw">,</span>0<span class="kw">,</span><span class="str">'C'</span><span class="kw">);
@@ -32,51 +32,51 @@ class </span>PDF <span class="kw">extends </span>FPDF
 </span><span class="cmt">// Pied de page
 </span><span class="kw">function </span>Footer<span class="kw">()
 {
-    </span><span class="cmt">// Positionnement à 1,5 cm du bas
+    </span><span class="cmt">// Positionnement Ã  1,5 cm du bas
     </span>$<span class="kw">this-&gt;</span>SetY<span class="kw">(-</span>15<span class="kw">);
     </span><span class="cmt">// Police Arial italique 8
     </span>$<span class="kw">this-&gt;</span>SetFont<span class="kw">(</span><span class="str">'Arial'</span><span class="kw">,</span><span class="str">'I'</span><span class="kw">,</span>8<span class="kw">);
-    </span><span class="cmt">// Numéro de page
+    </span><span class="cmt">// NumÃ©ro de page
     </span>$<span class="kw">this-&gt;</span>Cell<span class="kw">(</span>0<span class="kw">,</span>10<span class="kw">,</span><span class="str">'Page '</span><span class="kw">.</span>$<span class="kw">this-&gt;</span>PageNo<span class="kw">().</span><span class="str">'/{nb}'</span><span class="kw">,</span>0<span class="kw">,</span>0<span class="kw">,</span><span class="str">'C'</span><span class="kw">);
 }
 }
 
-</span><span class="cmt">// Instanciation de la classe dérivée
+</span><span class="cmt">// Instanciation de la classe dÃ©rivÃ©e
 </span>$pdf <span class="kw">= new </span>PDF<span class="kw">();
 </span>$pdf<span class="kw">-&gt;</span>AliasNbPages<span class="kw">();
 </span>$pdf<span class="kw">-&gt;</span>AddPage<span class="kw">();
 </span>$pdf<span class="kw">-&gt;</span>SetFont<span class="kw">(</span><span class="str">'Times'</span><span class="kw">,</span><span class="str">''</span><span class="kw">,</span>12<span class="kw">);
 for(</span>$i<span class="kw">=</span>1<span class="kw">;</span>$i<span class="kw">&lt;=</span>40<span class="kw">;</span>$i<span class="kw">++)
-    </span>$pdf<span class="kw">-&gt;</span>Cell<span class="kw">(</span>0<span class="kw">,</span>10<span class="kw">,</span><span class="str">'Impression de la ligne numéro '</span><span class="kw">.</span>$i<span class="kw">,</span>0<span class="kw">,</span>1<span class="kw">);
+    </span>$pdf<span class="kw">-&gt;</span>Cell<span class="kw">(</span>0<span class="kw">,</span>10<span class="kw">,</span><span class="str">'Impression de la ligne numÃ©ro '</span><span class="kw">.</span>$i<span class="kw">,</span>0<span class="kw">,</span>1<span class="kw">);
 </span>$pdf<span class="kw">-&gt;</span>Output<span class="kw">();
 </span>?&gt;</code></pre>
 </div>
-<p class='demo'><a href='tuto2.php' target='_blank' class='demo'>[Démo]</a></p>
-Cet exemple exploite les méthodes <a href='../doc/header.htm'>Header()</a> et <a href='../doc/footer.htm'>Footer()</a> pour traiter les en-têtes et
-pieds de page. Elles sont appelées automatiquement. Leur implémentation dans la classe FPDF
-est vide, aussi doit-on dériver la classe et les redéfinir.
+<p class='demo'><a href='tuto2.php' target='_blank' class='demo'>[DÃ©mo]</a></p>
+Cet exemple exploite les mÃ©thodes <a href='../doc/header.htm'>Header()</a> et <a href='../doc/footer.htm'>Footer()</a> pour traiter les en-tÃªtes et
+pieds de page. Elles sont appelÃ©es automatiquement. Leur implÃ©mentation dans la classe FPDF
+est vide, aussi doit-on dÃ©river la classe et les redÃ©finir.
 <br>
 <br>
-Le logo est imprimé grâce à la méthode <a href='../doc/image.htm'>Image()</a> en précisant le coin supérieur gauche et
-la largeur. La hauteur est calculée automatiquement afin de respecter la proportion de l'image.
+Le logo est imprimÃ© grÃ¢ce Ã  la mÃ©thode <a href='../doc/image.htm'>Image()</a> en prÃ©cisant le coin supÃ©rieur gauche et
+la largeur. La hauteur est calculÃ©e automatiquement afin de respecter la proportion de l'image.
 <br>
 <br>
-Pour imprimer le numéro de page, une valeur nulle est passée comme largeur de cellule. Cela
-signifie que cette dernière doit s'étendre jusqu'à la marge droite de la page ; c'est pratique
-pour centrer du texte. Le numéro de page courant est retourné par la méthode <a href='../doc/pageno.htm'>PageNo()</a> ; le
-nombre total de pages s'obtient quant à lui grâce à la valeur spéciale <code>{nb}</code> qui sera
-substituée lorsque le document sera terminé (à condition d'avoir au préalable appelé
+Pour imprimer le numÃ©ro de page, une valeur nulle est passÃ©e comme largeur de cellule. Cela
+signifie que cette derniÃ¨re doit s'Ã©tendre jusqu'Ã  la marge droite de la page ; c'est pratique
+pour centrer du texte. Le numÃ©ro de page courant est retournÃ© par la mÃ©thode <a href='../doc/pageno.htm'>PageNo()</a> ; le
+nombre total de pages s'obtient quant Ã  lui grÃ¢ce Ã  la valeur spÃ©ciale <code>{nb}</code> qui sera
+substituÃ©e lorsque le document sera terminÃ© (Ã  condition d'avoir au prÃ©alable appelÃ©
 <a href='../doc/aliasnbpages.htm'>AliasNbPages()</a>).
 <br>
-A noter l'utilisation de la méthode <a href='../doc/sety.htm'>SetY()</a> qui permet de se
-positionner de manière absolue dans la page, à partir du haut ou du bas.
+A noter l'utilisation de la mÃ©thode <a href='../doc/sety.htm'>SetY()</a> qui permet de se
+positionner de maniÃ¨re absolue dans la page, Ã  partir du haut ou du bas.
 <br>
 <br>
-Une autre fonctionnalité intéressante est ici utilisée : le saut de page automatique. Lorsqu'une cellule
-descend trop bas (à 2 centimètres du bas de la page par défaut), un saut de page est effectué
-et la police est restaurée. Bien que l'en-tête et le pied de page spécifient leur propre
+Une autre fonctionnalitÃ© intÃ©ressante est ici utilisÃ©e : le saut de page automatique. Lorsqu'une cellule
+descend trop bas (Ã  2 centimÃ¨tres du bas de la page par dÃ©faut), un saut de page est effectuÃ©
+et la police est restaurÃ©e. Bien que l'en-tÃªte et le pied de page spÃ©cifient leur propre
 police (Arial), le corps de la page continue en Times. Ce principe de restauration automatique
-s'applique aussi à l'épaisseur des traits et aux couleurs. Le seuil de déclenchement du saut
-de page se règle avec <a href='../doc/setautopagebreak.htm'>SetAutoPageBreak()</a>.
+s'applique aussi Ã  l'Ã©paisseur des traits et aux couleurs. Le seuil de dÃ©clenchement du saut
+de page se rÃ¨gle avec <a href='../doc/setautopagebreak.htm'>SetAutoPageBreak()</a>.
 </body>
 </html>

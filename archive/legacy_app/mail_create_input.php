@@ -20,7 +20,7 @@
 include_once ("config.php");
 check_all(43);
 
-// la veille opérationnelle doit pouvoir alerter tout le personnel sous sa responsabilité
+// la veille opÃ©rationnelle doit pouvoir alerter tout le personnel sous sa responsabilitÃ©
 $s=get_highest_section_where_granted($_SESSION['id'], 43);
 if ( $s <> '' ) $mysection=$s;
  

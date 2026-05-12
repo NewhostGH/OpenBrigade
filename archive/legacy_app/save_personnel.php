@@ -69,7 +69,7 @@ if($operation == "update" || $operation == "insert"){
     }
 }
 
-// vérifier permissions
+// vÃ©rifier permissions
 if ( $operation == "document" or $operation == "update") {
     if ($id <> $P_ID ) {
         if (get_statut($P_ID) == 'EXT' ) {
@@ -104,7 +104,7 @@ if ( $operation == "document") {
                 exit;
             }
             else if ( $file_name <> '' ) {
-                // upload réussi: insérer les informations relatives au document dans la base
+                // upload rÃ©ussi: insÃ©rer les informations relatives au document dans la base
                    $query="insert into document(S_ID,D_NAME,P_ID,TD_CODE,DS_ID,D_CREATED_BY,D_CREATED_DATE)
                        values (".$section.",\"".$file_name."\",\"".$P_ID."\",'DIV',\"".$security."\",".$id.",NOW())";
                    $result=mysqli_query($dbc,$query);
@@ -253,7 +253,7 @@ else {
     else $zipcode="";
     $zipcode=stripslashes(secure_input($dbc,$zipcode));
     if ( isset($_POST["type_paiement"])) $type_paiement=intval($_POST["type_paiement"]);
-    else $type_paiement=4; // chèque par défaut
+    else $type_paiement=4; // chÃ¨que par dÃ©faut
     
     $matricule=STR_replace("\"","",$matricule);
 
@@ -318,14 +318,14 @@ else {
 
     if ( $matricule == "" or  $matricule == "0" ) {
        if ( $operation <> "insert"  or ($statut <> 'EXT' )) {
-            write_msgbox("erreur", $error_pic, $i." doit être renseigné.<br>
+            write_msgbox("erreur", $error_pic, $i." doit Ãªtre renseignÃ©.<br>
             <p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick=\"javascript:goback('".$P_ID."','".$insurl."');\"> ",10,0);
             exit;
        }
     }
     if ( isset($_POST["nom"]) and isset($_POST["prenom"])) {
         if ( $nom == "" or $prenom == "" ) {
-            write_msgbox("erreur", $error_pic, "Le nom et le prénom doivent être renseignés<br>
+            write_msgbox("erreur", $error_pic, "Le nom et le prÃ©nom doivent Ãªtre renseignÃ©s<br>
                 <p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick=\"javascript:goback('".$P_ID."','".$insurl."');\"> ",10,0);
             exit;
         }
@@ -333,7 +333,7 @@ else {
     if ( $matricule <> "-1" ) {
         $pid_mat = get_code($matricule);
         if ( $pid_mat <> '' and  $pid_mat <> $P_ID ) {
-            write_msgbox("erreur", $error_pic, $i." choisi (".$matricule.") est déjà utilisé pour un autre utilisateur.<br>
+            write_msgbox("erreur", $error_pic, $i." choisi (".$matricule.") est dÃ©jÃ  utilisÃ© pour un autre utilisateur.<br>
             <p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick=\"javascript:goback('".$P_ID."','".$insurl."');\"> ",10,0);
             exit;
         }
@@ -341,7 +341,7 @@ else {
     if ( $import_api and $licences and $id_api > 0 ) {
         $pid_api = get_code_from_api($id_api);
         if ( $pid_api <> $P_ID and $pid_api > 0) {
-            write_msgbox("erreur", $error_pic, "Le code Id API choisi (".$id_api.") est déjà utilisé pour un autre utilisateur 
+            write_msgbox("erreur", $error_pic, "Le code Id API choisi (".$id_api.") est dÃ©jÃ  utilisÃ© pour un autre utilisateur 
             (<a href='upd_personnel.php?pompier=".$pid_api."' title='Voir la fiche'>".$pid_api."</a>).<br>
             <p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick=\"javascript:goback('".$P_ID."','".$insurl."');\"> ",10,0);
             exit;
@@ -351,7 +351,7 @@ else {
     if ( $operation == 'insert') {
         
         if ( $block_personnel and $statut <> 'EXT' ) {
-            write_msgbox("erreur", $error_pic, "La création de fiche personnel autre que pour des externes est bloquée.<br>
+            write_msgbox("erreur", $error_pic, "La crÃ©ation de fiche personnel autre que pour des externes est bloquÃ©e.<br>
             <p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick=\"javascript:redirect_liste();\"> ",10,0);
             exit;
         }
@@ -369,7 +369,7 @@ else {
         $nb=mysqli_num_rows($result);
         if ( $nb > 0 ) {
             if (! isset($_POST["ignore_duplicate"])) {
-                $msg="Attention, il y a déjà $nb homonyme(s) dans la base:<p><font size=1>";
+                $msg="Attention, il y a dÃ©jÃ  $nb homonyme(s) dans la base:<p><font size=1>";
                 while ( $row=@mysqli_fetch_array($result)) {
                     $_P_ID=$row["P_ID"];
                     $_P_BIRTHDATE=$row["P_BIRTHDATE"];
@@ -377,11 +377,11 @@ else {
                     $_P_OLD_MEMBER=$row["P_OLD_MEMBER"];
                     $_S_DESCRIPTION=$row["S_DESCRIPTION"];
                     if ( $_P_OLD_MEMBER == 0 ) $s='actif';
-                    else if ( $syndicate == 1 ) $s='radié';
+                    else if ( $syndicate == 1 ) $s='radiÃ©';
                     else $s='ancien';
                     $msg.="<a href=upd_personnel.php?from=export&pompier=".$_P_ID." target='_blank' title='ouvrir la fiche dans une nouvelle page'>".my_ucfirst($prenom)." ".strtoupper($nom)."</a>";
                     $msg.=" ".$_S_DESCRIPTION.", ".$s." de ".$_S_CODE."<br>";
-                    if ( $_P_BIRTHDATE <> "" ) $msg.=" né(e) le ".$_P_BIRTHDATE."<br>";
+                    if ( $_P_BIRTHDATE <> "" ) $msg.=" nÃ©(e) le ".$_P_BIRTHDATE."<br>";
                 }
                 $msg .="<p align=center></font><form action='save_personnel.php' method='POST'>";
                 foreach($_POST AS $field => $value) {
@@ -389,7 +389,7 @@ else {
                 }
                 $msg .= insert_csrf('insert_personnel');
                 $msg .=" <input type='hidden' name='ignore_duplicate' value='1'>";
-                $msg .=" <input type='submit' class='btn btn-warning' value='enregistrer quand même' title='Attention il y a un risque de doublons dans la base'>";
+                $msg .=" <input type='submit' class='btn btn-warning' value='enregistrer quand mÃªme' title='Attention il y a un risque de doublons dans la base'>";
                 $msg .=" <input type='button' class='btn btn-default' value='annuler' onclick=\"javascript:goback('".$P_ID."','".$insurl."');\"><form>";
                 write_msgbox("Attention", $warning_pic, $msg,10,0);
                 exit;
@@ -401,7 +401,7 @@ else {
         $info = get_section_name("$hissection");
         if ( $level + 1 == $nbmaxlevels ) {
             $list = get_family(get_section_parent("'".$hissection."'"));
-            $info .= " ou dans le département.";
+            $info .= " ou dans le dÃ©partement.";
         }
         else {
             $list = get_family($hissection);
@@ -419,8 +419,8 @@ else {
         $result=mysqli_query($dbc,$query);
         $row=@mysqli_fetch_array($result);
         if ( $row["NB"] > 0 ) {
-            write_msgbox("erreur", $error_pic, "Une fiche active pour ".ucfirst($prenom)." ".strtoupper($nom)." date de naissance ".$birth." lieu de naissance '".$birthplace."' existe déjà dans ".$info.".<br>
-                Veuillez vérifier la présence d'une autre fiche avec les mêmes noms, prénoms et date et lieux de naissance.<p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick=\"javascript:goback('".$P_ID."','".$insurl."');\"> ",10,0);
+            write_msgbox("erreur", $error_pic, "Une fiche active pour ".ucfirst($prenom)." ".strtoupper($nom)." date de naissance ".$birth." lieu de naissance '".$birthplace."' existe dÃ©jÃ  dans ".$info.".<br>
+                Veuillez vÃ©rifier la prÃ©sence d'une autre fiche avec les mÃªmes noms, prÃ©noms et date et lieux de naissance.<p align=center><input type=submit class='btn btn-secondary' value='Retour' onclick=\"javascript:goback('".$P_ID."','".$insurl."');\"> ",10,0);
            exit;
        }
     }
@@ -509,12 +509,12 @@ else {
         if ( $PREVIOUSPOLDMEMBER == 0 and $activite > 0 ) $habilitation = -1;
         if ( $PREVIOUSPOLDMEMBER > 0 and $activite == 0 and $statut <> 'EXT') $habilitation = 0;
      
-        // cas passage de externe à membre, mettre groupe public
+        // cas passage de externe Ã  membre, mettre groupe public
         if ( $OLD_STATUT == 'EXT'  and  $statut <> 'EXT' ) {
             $habilitation=min(0,$habilitation);
             if ($habilitation < 0 ) $habilitation=0;
         }
-        // cas passage de membre à externe, mettre accès interdit
+        // cas passage de membre Ã  externe, mettre accÃ¨s interdit
         if ( $OLD_STATUT <> 'EXT'  and  $statut == 'EXT' ) {
             $habilitation=-1;
         }
@@ -523,7 +523,7 @@ else {
             $habilitation2='null';
         }
 
-        // définition des permissions
+        // dÃ©finition des permissions
         $small_permission = false;
         $big_permission = false;
         if ( $statut == 'EXT' and (
@@ -622,8 +622,8 @@ else {
             mysqli_query($dbc,$query);
             if ( mysqli_affected_rows($dbc) > 0 ) {
                 $m++;
-                if ( $flag1 == 1 ) $cmt = " et niveau supérieur"; else $cmt="";
-                insert_log('UPDGRP', $P_ID, "Droit d'accès: ".get_groupe_description ($habilitation).$cmt);
+                if ( $flag1 == 1 ) $cmt = " et niveau supÃ©rieur"; else $cmt="";
+                insert_log('UPDGRP', $P_ID, "Droit d'accÃ¨s: ".get_groupe_description ($habilitation).$cmt);
             }
             
             $query="update pompier set GP_ID2=".$habilitation2;
@@ -633,8 +633,8 @@ else {
             
             if ( mysqli_affected_rows($dbc) > 0 ) {
                 $m++;
-                if ( $flag2 == 1 ) $cmt = " et niveau supérieur"; else $cmt="";
-                insert_log('UPDGRP', $P_ID, "Droit d'accès 2: ".get_groupe_description ($habilitation2).$cmt);
+                if ( $flag2 == 1 ) $cmt = " et niveau supÃ©rieur"; else $cmt="";
+                insert_log('UPDGRP', $P_ID, "Droit d'accÃ¨s 2: ".get_groupe_description ($habilitation2).$cmt);
             }
             
             // changement de section
@@ -654,7 +654,7 @@ else {
                 insert_log('UPDSEC', $P_ID, get_section_code("$OLD_SECTION")." -> ".get_section_code("$hissection"));
             }
             
-            // particularité salariés
+            // particularitÃ© salariÃ©s
             if ( $very_big_permission ) {
                 if ( $statut == 'SAL' or $statut == 'FONC' ) {
                     $m = $m + update_field_personnel($P_ID, "TS_CODE", "$type_salarie", "$OLD_TS_CODE", 'UPDP20');
@@ -693,15 +693,15 @@ else {
                and P_STATUT = 'EXT'";
         mysqli_query($dbc,$query);
         
-        // cas où une des infos a changé
+        // cas oÃ¹ une des infos a changÃ©
         if ( $m > 0 ) {
             $destid=0;
             $message = "Bonjour,\n";
             $c=get_section_code("$hissection");
             $n=ucfirst(get_prenom("$P_ID"))." ".strtoupper(get_nom("$P_ID"));
             $subject = "Modification des informations de ".$n;
-            $message = "La fiche de ".$n." (".$c.") a été modifiée.";
-            $message .= "\nLe détail des modifications est le suivant:";
+            $message = "La fiche de ".$n." (".$c.") a Ã©tÃ© modifiÃ©e.";
+            $message .= "\nLe dÃ©tail des modifications est le suivant:";
             
             $query2="select lt.LT_DESCRIPTION, lh.LH_COMPLEMENT 
                     from log_type lt, log_history lh
@@ -725,7 +725,7 @@ else {
                     gelocalize($P_ID, 'P');
             }
             
-            // notifier le secrétariat national dans le cas du syndicat
+            // notifier le secrÃ©tariat national dans le cas du syndicat
             if ( $syndicate == 1 ) {
                 if ( "$address" <> "$OLDADDRESS" ) {
                     $queryt="select count(1) as NB from custom_field_personnel where P_ID = ".$P_ID." and CFP_VALUE=1 and CF_ID in (select CF_ID from custom_field where CF_TITLE='Envoi de Colis') ";
@@ -743,7 +743,7 @@ else {
                 if ((get_level("$hissection")  >= $nbmaxlevels -1) or ($nbsections > 0 )) { // antenne locale, pompiers
                     $destid=get_granted(50,"$hissection",'parent','yes');
                 }
-                else { // département, région
+                else { // dÃ©partement, rÃ©gion
                     $destid=get_granted(50,"$hissection",'local','yes');
                 }
             }
@@ -791,7 +791,7 @@ else {
             }
        }
         
-       // cas de changement de statut activité
+       // cas de changement de statut activitÃ©
        // envoyer un mail au responsable(s) d'association
        if ( $PREVIOUSPOLDMEMBER <> $activite ) {
             $query="select TM_CODE from type_membre where TM_ID=".$activite." and TM_SYNDICAT=".$syndicate;
@@ -808,19 +808,19 @@ else {
                 if (get_level("$hissection")  >= $nbmaxlevels -1) { // antenne locale
                     $destid=get_granted(32,"$hissection",'parent','yes');
                 }
-                else { // département, région
+                else { // dÃ©partement, rÃ©gion
                     $destid=get_granted(32,"$hissection",'local','yes');
                 }
                 $message  = "Bonjour,\n";
                 $sn=get_section_name("$hissection");
                 $n=ucfirst($prenom)." ".strtoupper($nom);
                 $subject = "Changement de situation pour - ".$n;
-                $message = "La situation d'activité a été modifiée pour ".$n;
+                $message = "La situation d'activitÃ© a Ã©tÃ© modifiÃ©e pour ".$n;
                 $message .= "\ndans la section: ".$sn;
                 if ( $activite == 0 ) $message .= "\n$n est de nouveau un membre actif.";
                 else {
                     $message .= "\n$n est maintenant ".$TM_CODE;
-                    if ( $fin_f <> "null" ) $message .=" à compter du ".$fin_f;
+                    if ( $fin_f <> "null" ) $message .=" Ã  compter du ".$fin_f;
                 }
                 if ( $destid <> "" ) 
                     $nb = mysendmail("$destid" , $id , "$subject" , "$message" );
@@ -853,13 +853,13 @@ else {
                 $row=@mysqli_fetch_array($result);
                 $NB2=$row["NB"];
                 if ( $NB1 > 0 or $NB2 > 0 ) {
-                    write_msgbox("WARNING", $warning_pic, "Attention ".ucfirst($prenom)." ".strtoupper($nom)." n'est plus un membre actif, mais des véhicules ou du matériel lui sont toujours affectés.<p><a href=upd_personnel.php?from=created&pompier=$P_ID ><input type='submit' class='btn btn-secondary' value='Retour'></a></p>",30,0);
+                    write_msgbox("WARNING", $warning_pic, "Attention ".ucfirst($prenom)." ".strtoupper($nom)." n'est plus un membre actif, mais des vÃ©hicules ou du matÃ©riel lui sont toujours affectÃ©s.<p><a href=upd_personnel.php?from=created&pompier=$P_ID ><input type='submit' class='btn btn-secondary' value='Retour'></a></p>",30,0);
                     exit;
                 }
             }
        }
        
-        // cas changement de externe à bénévole
+        // cas changement de externe Ã  bÃ©nÃ©vole
         // send login / password information
         if ( $OLD_STATUT == 'EXT'  and  $statut <> 'EXT' and $activite == 0) {
             $mylength=max($password_length , 8);
@@ -873,13 +873,13 @@ else {
                 $message  = "Bonjour ".ucfirst($prenom).",\n";
                 $n=ucfirst($prenom)." ".strtoupper($nom);
                 $subject  = "Nouveau compte membre pour - ".$n;
-                $message .= "Je viens de créer votre compte personnel ".$application_title."\n";
+                $message .= "Je viens de crÃ©er votre compte personnel ".$application_title."\n";
                 $message .= "identifiant: ".$matricule."\n";
                 $message .= "mot de passe: ".$mypass."\n";
                 $message .= "\nAide en ligne: ".$wikiurl."\n";
                 $nb = mysendmail("$destid" , $id , "$subject" , "$message" );
                 if ($nb == 1 ) {
-                    write_msgbox("OK", $star_pic, ucfirst($prenom)." ".strtoupper($nom)."peut maintenant se connecter.<br>Un email contenant ses informations de connexion lui a été envoyé<p>à cette adresse: <b> $email</b><p align=center><a href=upd_personnel.php?from=created&pompier=$P_ID ><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
+                    write_msgbox("OK", $star_pic, ucfirst($prenom)." ".strtoupper($nom)."peut maintenant se connecter.<br>Un email contenant ses informations de connexion lui a Ã©tÃ© envoyÃ©<p>Ã  cette adresse: <b> $email</b><p align=center><a href=upd_personnel.php?from=created&pompier=$P_ID ><input type='submit' class='btn btn-secondary' value='Retour'></a>",30,0);
                     exit;
                 }
                 else {
@@ -944,7 +944,7 @@ else {
         $mylength=max($password_length , 8);
         $mypass=generatePassword($mylength);
        
-        // pour externes generer un identifiant bas sur nom et prénom
+        // pour externes generer un identifiant bas sur nom et prÃ©nom
         if ($statut == 'EXT' ) $matricule=generate_identifiant($prenom,$nom,$birthdep);
        
         $hash = my_create_hash($mypass);
@@ -981,7 +981,7 @@ else {
         if (get_level("$hissection")  >= $nbmaxlevels -1) { // antenne locale
           $destid=get_granted(32,"$hissection",'parent','yes');
         }
-        else { // département, région
+        else { // dÃ©partement, rÃ©gion
             $destid=get_granted(32,"$hissection",'local','yes');
         }
         if ($statut <> 'EXT' ) {
@@ -989,7 +989,7 @@ else {
             $sn=get_section_name("$hissection");
             $n=ucfirst($prenom)." ".strtoupper($nom);
             $subject = "Nouveau compte utilisateur - ".$sn;
-            $message = "Un nouveau compte utilisateur a été créé pour:\n ".$n;
+            $message = "Un nouveau compte utilisateur a Ã©tÃ© crÃ©Ã© pour:\n ".$n;
             $message .= "\ndans la section: ".$sn;
             if ( $destid <> "" )
                 $nb = mysendmail("$destid" , $id , "$subject" , "$message" );
@@ -1014,15 +1014,15 @@ else {
        
         // send login / password information
         if ($statut == 'EXT' ) {
-            $texte = "Le compte de ".ucfirst($prenom)." ".strtoupper($nom)." a été créé.<br>En tant que personnel extérieur, ".($sexe=='M'?'il':'elle')." ne peut pas se connecter.";
+            $texte = "Le compte de ".ucfirst($prenom)." ".strtoupper($nom)." a Ã©tÃ© crÃ©Ã©.<br>En tant que personnel extÃ©rieur, ".($sexe=='M'?'il':'elle')." ne peut pas se connecter.";
             if ( $evenement > 0 ) {
                 $query="insert into evenement_participation (E_CODE, EH_ID, P_ID, EP_DATE, EP_BY, EP_FLAG1, EP_REMINDER, EP_ASA, EP_DAS, EP_DUREE)
                 select E_CODE,EH_ID, ".$P_ID.", now() ,".$id.", 0, 0, 0, 0, EH_DUREE
                 from evenement_horaire
                 where E_CODE=".$evenement;
                 $result=mysqli_query($dbc,$query);
-                insert_log('INSCP', $P_ID, "fiche créée à l'inscription", $evenement);
-                $texte .= "<p>".($sexe=='M'?'Il':'Elle')." a été inscrit".($sexe=='M'?'':'e')." sur l'événement.";
+                insert_log('INSCP', $P_ID, "fiche crÃ©Ã©e Ã  l'inscription", $evenement);
+                $texte .= "<p>".($sexe=='M'?'Il':'Elle')." a Ã©tÃ© inscrit".($sexe=='M'?'':'e')." sur l'Ã©vÃ©nement.";
                 $url="evenement_display.php?evenement=".$evenement."&tab=2";
             }
             else 

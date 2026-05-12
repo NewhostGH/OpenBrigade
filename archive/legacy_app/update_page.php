@@ -33,6 +33,6 @@ $query="select t.EQ_JOUR, t.EQ_NUIT from evenement e, type_garde t where t.EQ_ID
 $result=mysqli_query($dbc,$query);
 $row = mysqli_fetch_array($result);
 
-echo display_postes ($evenement, $vehicule, $showjour=$row["EQ_JOUR"], $shownuit=$row["EQ_NUIT"], $print_mode=false)//mise à jour d'un piquet suite à une modification
+echo display_postes ($evenement, $vehicule, $showjour=$row["EQ_JOUR"], $shownuit=$row["EQ_NUIT"], $print_mode=false)//mise Ã  jour d'un piquet suite Ã  une modification
 
 ?>

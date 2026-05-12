@@ -103,7 +103,7 @@ else  {
 
 function write_cnil_warning() {
     $cmttitle="Attention CNIL : ";
-    $cmt="Attention, l'identité complète des victimes ne doit pas être enregistrée. Il n'y a pas d'agrément CNIL pour cela. Seules les initiales du nom peuvent être enregistrées sur cette fiche. Les lettres saisies en plus seront supprimées. Le prénom par contre peut être renseigné.";
+    $cmt="Attention, l'identitÃ© complÃ¨te des victimes ne doit pas Ãªtre enregistrÃ©e. Il n'y a pas d'agrÃ©ment CNIL pour cela. Seules les initiales du nom peuvent Ãªtre enregistrÃ©es sur cette fiche. Les lettres saisies en plus seront supprimÃ©es. Le prÃ©nom par contre peut Ãªtre renseignÃ©.";
     return " <a href='#' title=\"".$cmttitle.$cmt."\"><i class='fa fa-exclamation-triangle fa-lg' style='color:orange;' ></i></a>";
 }
 
@@ -181,7 +181,7 @@ if ( isset ($_FILES['userfile'])) {
             list($file_name, $error, $msgstring ) = explode(";", $upload_result);
 
             if ( $error == 0 ) {
-                // upload réussi: insérer les informations relatives au document dans la base
+                // upload rÃ©ussi: insÃ©rer les informations relatives au document dans la base
                 $query="insert into document(S_ID,D_NAME,VI_ID,TD_CODE,DS_ID,D_CREATED_BY,D_CREATED_DATE)
                        values (".$section_victime.",\"".$file_name."\",".$victime.",'AC',\"".$DS_ID."\",".$id.",NOW())";
                 $result=mysqli_query($dbc,$query);
@@ -419,7 +419,7 @@ if ( isset ($_POST["victime"])  and ($action=='update' or $action=='insert') and
         
     }
     else {
-        // fiche victime complète
+        // fiche victime complÃ¨te
         if ( $modevictime == 'full' ) $BVC_PAGE='PSE';
         else $BVC_PAGE='PSSP';
             
@@ -439,7 +439,7 @@ if ( isset ($_POST["victime"])  and ($action=='update' or $action=='insert') and
         }
     }
     
-    // synchroniser les stats entre fiche simple et fiche complète
+    // synchroniser les stats entre fiche simple et fiche complÃ¨te
     if ( $modevictime =='simple' ) {
             $query3="delete from bilan_victime where V_ID=".$victime." and BVP_ID in (1050,1060,1070,1072)";
             $result3=mysqli_query($dbc,$query3);
@@ -464,7 +464,7 @@ if ( isset ($_POST["victime"])  and ($action=='update' or $action=='insert') and
                 $result3=mysqli_query($dbc,$query3);
             }
     }
-    else { // synchroniser les stats entre fiche complète et fiche simple
+    else { // synchroniser les stats entre fiche complÃ¨te et fiche simple
         $query3="update victime set VI_TRANSPORT=0 where VI_ID=".$victime;
         $result3=mysqli_query($dbc,$query3);
         
@@ -549,17 +549,17 @@ if  ( $action == 'insert' ) {
     $IDENTIFICATION="";
     if (isset ($_GET["qrcode"])) {
         $IDENTIFICATION=secure_input($dbc,$_GET["qrcode"]);
-        // chercher si déjà enregistré
+        // chercher si dÃ©jÃ  enregistrÃ©
         if ( $IDENTIFICATION <> '' ) {
             $query="select VI_ID from victime where IDENTIFICATION=\"".$IDENTIFICATION."\"";
             $result=mysqli_query($dbc,$query);
             $row=mysqli_fetch_array($result);
             $VI_ID=$row["VI_ID"];
             if ( intval($VI_ID) > 0 ) {
-                $msgstring = "Il y a déjà une victime enregistrée avec ce numéro d'identification ".$IDENTIFICATION;
+                $msgstring = "Il y a dÃ©jÃ  une victime enregistrÃ©e avec ce numÃ©ro d'identification ".$IDENTIFICATION;
                 $msgstring .= "<br><p align=center><a href=victimes.php?victime=".$VI_ID."&from=list><input type='submit' class='btn btn-info' value='Voir victime'></a>";
                 $msgstring .= "<br><p align=center><a class='btn btn-secondary' href='scan_victime.php?evenement=".$evenement_victime."' 
-                    title='Scanner QR Code pour créer la fiche victime' ><i class='fa fa-qrcode fa-lg' style='color:purple;'></i> Retour</a>";
+                    title='Scanner QR Code pour crÃ©er la fiche victime' ><i class='fa fa-qrcode fa-lg' style='color:purple;'></i> Retour</a>";
                 write_msgbox("ERREUR", $error_pic, $msgstring,10,0);
                 exit;
             }
@@ -618,7 +618,7 @@ if ( $victime > 0 and $granted_update) {
     $pdf="<a class='btn btn-default noprint' href='pdf_document.php?evenement=".$evenement."&section=".$section_victime."&mode=17&numinter=".$numinter."&victime=".$victime."' target=_blank>
     <i class='far fa-file-pdf fa-1x' title='Version imprimable' ></i></a>";
     $buttons_container .= "<div class='buttons-container' style='margin-left:auto'>".$pdf."</div>";
-    writeBreadCrumb("Fiche Victime","Activité","evenement_display.php?pid=&from=interventions&tab=8&evenement=".$evenement."&autorefresh=0", $buttons_container);
+    writeBreadCrumb("Fiche Victime","ActivitÃ©","evenement_display.php?pid=&from=interventions&tab=8&evenement=".$evenement."&autorefresh=0", $buttons_container);
 }
 
 echo "<form name=r action=victimes.php method=POST>";
@@ -639,7 +639,7 @@ if ( $modevictime == 'simple' ) $class='active';
 else $class='';
 
 echo "<li class='nav-item'>
-    <a class='nav-link $class' href='victimes.php?victime=$victime&modevictime=simple&action=$action' title='Information sur la victime et bilan simplifié' role='tab' aria-controls='tab1' href='#tab1' >
+    <a class='nav-link $class' href='victimes.php?victime=$victime&modevictime=simple&action=$action' title='Information sur la victime et bilan simplifiÃ©' role='tab' aria-controls='tab1' href='#tab1' >
     <i class='fa fa-user'></i> <span>Fiche victime</span></a></li>";
  
 
@@ -650,8 +650,8 @@ $d_disabled = '';
 if ( $action == 'insert' ) {
     $class='';
     $icon="<i class='fa fa-ban' style='color:#CD5C5C;'></i>";
-    $t='Cet onglet sera disponible lorsque la fiche aura ete créée';
-    $t_disabled = "title='Enregistrer la fiche victime pour pouvoir accéder à ces onglets'";
+    $t='Cet onglet sera disponible lorsque la fiche aura ete crÃ©Ã©e';
+    $t_disabled = "title='Enregistrer la fiche victime pour pouvoir accÃ©der Ã  ces onglets'";
     $d_disabled = 'disabled';
 }
 else if ( $modevictime == 'full' ) $class='active';
@@ -666,7 +666,7 @@ $icon="<i class='fa fa-user-md'></i>";
 if ( $action == 'insert' ) {
     $class='';
     $icon="<i class='fa fa-ban' style='color:#CD5C5C;'></i>";
-    $t='Cet onglet sera disponible lorsque la fiche aura ete créée';
+    $t='Cet onglet sera disponible lorsque la fiche aura ete crÃ©Ã©e';
 }
 else if ( $modevictime == 'pssp' ) $class='active';
 else $class='';
@@ -675,12 +675,12 @@ echo "<li class='nav-item' $t_disabled>
     ".$icon." <span>Bilan PSSP</span></a></li>";
 
 
-$t='Documents attachés à la fiche victime';
+$t='Documents attachÃ©s Ã  la fiche victime';
 $icon="<i class='fa fa-folder-open'></i>";
 if ( $action == 'insert' ) {
     $class='';
     $icon="<i class='fa fa-ban' style='color:#CD5C5C;'></i>";
-    $t='Cet onglet sera disponible lorsque la fiche aura ete créée';
+    $t='Cet onglet sera disponible lorsque la fiche aura ete crÃ©Ã©e';
 }
 else if ( $modevictime == 'doc' ) $class='active';
 else $class='';
@@ -740,9 +740,9 @@ if ( $modevictime == 'simple' ) {
 
     if ($CAV_REGULATED == 1 ) $checked='checked';
     else  $checked='';
-    echo "<td align=right><label for='regulated'>Régulé par le médecin ou le PC</label>
+    echo "<td align=right><label for='regulated'>RÃ©gulÃ© par le mÃ©decin ou le PC</label>
             <label class='switch'>
-                <input type='checkbox' name='regulated' id='regulated' value='1' $checked $disabled title='cocher si la victime a été régulée par le médecin ou le PC'>
+                <input type='checkbox' name='regulated' id='regulated' value='1' $checked $disabled title='cocher si la victime a Ã©tÃ© rÃ©gulÃ©e par le mÃ©decin ou le PC'>
                 <span class='slider round'></span>               
             </label></td><td></td></tr>";
 
@@ -751,12 +751,12 @@ if ( $modevictime == 'simple' ) {
     else $style="";
 
     echo "<tr id='rowtime1' $style>
-          <td>Date arrivée $asterisk</td>
+          <td>Date arrivÃ©e $asterisk</td>
           <td>
             <input type='text' name='date_in' size='10' maxlength='10'  value='".$DATE_ENTREE."' onfocus=\"fillDate(form.date_in);\" class='datepicker form-control datesize' data-provide='datepicker'
             onchange='checkDate2(form.date_in)' $disabled placeholder='JJ-MM-AAAA'>
             </td>       
-          <td>Heure arrivée $asterisk</td>
+          <td>Heure arrivÃ©e $asterisk</td>
           <td>
             <input type='text' name='time_in' value='".$HEURE_ENTREE."' onfocus=\"fillTime(form.time_in);\" 
             placeholder='hh:mm' size=5 style='width:60px;' maxlength='5' class='form-control form-control-sm'
@@ -801,10 +801,10 @@ if ( $modevictime == 'simple' ) {
     if ( isset($_GET["qrcode"])) $class='yellow';
     else $class='';
     echo "<tr><td>Nom ".$cnil_warning."</td><td><input name='nom' id='nom' class='form-control form-control-sm maxsize' type=text size=20 value=\"".$VI_NOM."\" $disabled maxlength='".$maxlength."' ></td></tr>
-        <tr><td>Prénom </td><td><input name='prenom' id='prenom' class='form-control form-control-sm maxsize' type=text size=20 value=\"".$VI_PRENOM."\" $disabled></td></tr>
+        <tr><td>PrÃ©nom </td><td><input name='prenom' id='prenom' class='form-control form-control-sm maxsize' type=text size=20 value=\"".$VI_PRENOM."\" $disabled></td></tr>
         <tr><td>Identification</td>
             <td><input name='identification' id='identification' class='form-control form-control-sm' type=text size=25 value=\"".$IDENTIFICATION."\" $disabled  class='$class'
-            title='Saisir un identifiant optionnel, exemple un numéro de bracelet de suivi'><small> <i>identifiant optionnel</i></small>
+            title='Saisir un identifiant optionnel, exemple un numÃ©ro de bracelet de suivi'><small> <i>identifiant optionnel</i></small>
         </td></tr>";
 
 
@@ -822,11 +822,11 @@ if ( $modevictime == 'simple' ) {
     else $checkedF='checked';
     echo "<tr><td align=right>Sexe $asterisk</td>
               <td><input type=radio name='sexe' id='sexe_M' value='M' $checkedM title='Masculin' $disabled > <label for='sexe_M' >M </label>
-                  <input type=radio name='sexe' id='sexe_F' $checkedF value='F' title='Féminin' $disabled > <label for='sexe_F' >F </label></td></tr>";
-    echo "<tr><td>Nationalité $asterisk";
+                  <input type=radio name='sexe' id='sexe_F' $checkedF value='F' title='FÃ©minin' $disabled > <label for='sexe_F' >F </label></td></tr>";
+    echo "<tr><td>NationalitÃ© $asterisk";
     $query2="select ID, NAME from pays order by ID asc";
     $result2=mysqli_query($dbc,$query2);
-    echo " <td align=left><select class='form-control select-control' name='pays' id='pays' $disabled title=\"Choisissez le pays correspondant à la nationalité de la personne\">";
+    echo " <td align=left><select class='form-control select-control' name='pays' id='pays' $disabled title=\"Choisissez le pays correspondant Ã  la nationalitÃ© de la personne\">";
     while ($row2=@mysqli_fetch_array($result2)) {
         $_ID=$row2["ID"];
         $_NAME=$row2["NAME"];
@@ -838,9 +838,9 @@ if ( $modevictime == 'simple' ) {
 
     if ( $action == 'update' ) {
         echo "<tr id='rowNumerotation'>
-              <td>Numérotation victime</td>
+              <td>NumÃ©rotation victime</td>
               <td colspan=1><input type='text' name='numerotation' size=5 maxlength='5' value=\"".$VI_NUMEROTATION."\" $disabled 
-                    onchange='checkNumber(form.numerotation,0)' title=\"Ce champ permet de numéroter les différentes victimes d'une intervention ou d'un événement\">
+                    onchange='checkNumber(form.numerotation,0)' title=\"Ce champ permet de numÃ©roter les diffÃ©rentes victimes d'une intervention ou d'un Ã©vÃ©nement\">
               </td>";       
         echo "</tr>";
     }
@@ -856,15 +856,15 @@ if ( $modevictime == 'simple' ) {
     echo "<div class='col-sm-6'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Bilan simplifié </strong></div>
+                <div class='card-title'><strong> Bilan simplifiÃ© </strong></div>
             </div>
             <div class='card-body graycard'>";
     echo "<table class='noBorder maxsize' cellspacing=0 border=0>";
     
     $textsize=strlen($VI_COMMENTAIRE);
     echo "<tr>
-              <td>Commentaire<br>victime,<br>Bilan médical
-              <br><input type='text' name='comptage' size='4' value='$textsize' readonly title='nombre de caractères saisis'
+              <td>Commentaire<br>victime,<br>Bilan mÃ©dical
+              <br><input type='text' name='comptage' size='4' value='$textsize' readonly title='nombre de caractÃ¨res saisis'
                 style='FONT-SIZE: 10pt;border:0px; font-weight:bold;' class='form-control form-control-sm'>
                 <span class=small>1000 max</td>
               </td>
@@ -886,14 +886,14 @@ if ( $modevictime == 'simple' ) {
     if ( $VI_DETRESSE_VITALE == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';}
     echo "  <td rowspan=7>Bilan <br>intervention</td>
-              <td><label for='detresse_vitale' id='label_detresse_vitale' class='$class'> Détresse vitale</label></td> <td><label class='switch'><input type='checkbox' name='detresse_vitale' id='detresse_vitale' value='1' $checked $disabled onchange='checkFilled(this);'
-              title=\"Hémorragie, inconscience, ACR\"> 
+              <td><label for='detresse_vitale' id='label_detresse_vitale' class='$class'> DÃ©tresse vitale</label></td> <td><label class='switch'><input type='checkbox' name='detresse_vitale' id='detresse_vitale' value='1' $checked $disabled onchange='checkFilled(this);'
+              title=\"HÃ©morragie, inconscience, ACR\"> 
               <span class='slider round'></span>               
 </label></td>";
     if ( $VI_SOINS == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';}
-    echo "<td colspan=2><label for='soins'  id='label_soins' class='$class'> Soins réalisés</label></td> <td><label class='switch'><input type='checkbox' name='soins' id='soins' value='1' $checked $disabled onchange='checkFilled(this);'
-            title=\"Des soins ont été réalisés par l'équipe de secouristes\" > 
+    echo "<td colspan=2><label for='soins'  id='label_soins' class='$class'> Soins rÃ©alisÃ©s</label></td> <td><label class='switch'><input type='checkbox' name='soins' id='soins' value='1' $checked $disabled onchange='checkFilled(this);'
+            title=\"Des soins ont Ã©tÃ© rÃ©alisÃ©s par l'Ã©quipe de secouristes\" > 
           <span class='slider round'></span>               
 </label></td>";
     echo "</tr>";
@@ -901,8 +901,8 @@ if ( $modevictime == 'simple' ) {
     echo "<tr>";
     if ( $VI_DECEDE == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';}
-    echo "<td><label for='decede' id='label_decede' class='$class'> Décédé(e)</label></td> <td><label class='switch'><input type='checkbox' name='decede' id='decede' value='1' $checked $disabled onchange='checkFilled(this);'
-            title=\"La victime est décédée\" > 
+    echo "<td><label for='decede' id='label_decede' class='$class'> DÃ©cÃ©dÃ©(e)</label></td> <td><label class='switch'><input type='checkbox' name='decede' id='decede' value='1' $checked $disabled onchange='checkFilled(this);'
+            title=\"La victime est dÃ©cÃ©dÃ©e\" > 
           <span class='slider round'></span>               
 </label></td>";
 
@@ -925,8 +925,8 @@ if ( $modevictime == 'simple' ) {
           
     if ( $VI_MEDICALISE == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';};
-    echo "<td colspan=2> <label for='medicalise' id='label_medicalise' class='$class'> Médicalisée</label></td> <td><label class='switch'><input type='checkbox' name='medicalise' id='medicalise' onchange='checkFilled(this);'
-            title=\"La victime a été médicalisée\"
+    echo "<td colspan=2> <label for='medicalise' id='label_medicalise' class='$class'> MÃ©dicalisÃ©e</label></td> <td><label class='switch'><input type='checkbox' name='medicalise' id='medicalise' onchange='checkFilled(this);'
+            title=\"La victime a Ã©tÃ© mÃ©dicalisÃ©e\"
             value=1 $checked $disabled>
           <span class='slider round'></span>               
 </label></td>";
@@ -935,14 +935,14 @@ if ( $modevictime == 'simple' ) {
     echo "<tr>";
     if ( $VI_VETEMENT == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';};
-    echo "<td><label for='vetements' id='label_vetements' class='$class'> Vêtements donnés</label></td> <td><label class='switch'><input type='checkbox' name='vetements' id='vetements'  value='1' $checked $disabled onchange='checkFilled(this);'
-            title=\"Des vêtements ou une couverture ont été offerts à la victime\">  
+    echo "<td><label for='vetements' id='label_vetements' class='$class'> VÃªtements donnÃ©s</label></td> <td><label class='switch'><input type='checkbox' name='vetements' id='vetements'  value='1' $checked $disabled onchange='checkFilled(this);'
+            title=\"Des vÃªtements ou une couverture ont Ã©tÃ© offerts Ã  la victime\">  
           <span class='slider round'></span>               
 </label></td>";
     if ( $VI_ALIMENTATION == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';};
     echo "<td colspan=2><label for='alimentation' id='label_alimentation' class='$class'> Alimentation (repas, boisson)</label></td> <td><label class='switch'><input type='checkbox' name='alimentation' id='alimentation'  value='1' $checked $disabled onchange='checkFilled(this);'
-            title=\"Des aliments ou une boisson ont été offerts à la victime\">
+            title=\"Des aliments ou une boisson ont Ã©tÃ© offerts Ã  la victime\">
           <span class='slider round'></span>               
 </label></td>";
     echo "</tr>";
@@ -950,15 +950,15 @@ if ( $modevictime == 'simple' ) {
     echo "<tr>";
     if ( $VI_INFORMATION == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';};
-    echo "  <td><label for='information' id='label_information' class='$class'> Personne assistée</label></td> <td><label class='switch'><input type='checkbox' name='information' id='information' value='1' $checked $disabled onchange='checkFilled(this);'
-            title=\"La personne a été assistée ou des renseignements, informations lui ont été donnés\"> 
+    echo "  <td><label for='information' id='label_information' class='$class'> Personne assistÃ©e</label></td> <td><label class='switch'><input type='checkbox' name='information' id='information' value='1' $checked $disabled onchange='checkFilled(this);'
+            title=\"La personne a Ã©tÃ© assistÃ©e ou des renseignements, informations lui ont Ã©tÃ© donnÃ©s\"> 
             <span class='slider round'></span>               
 </label></td>";
 
     if ( $VI_REFUS == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';};
     echo "<td colspan=2><label for='refus' id='label_refus' class='$class'> Refus de prise en charge</label></td> <td><label class='switch'><input type='checkbox' name='refus' id='refus' onchange='checkFilled(this);'
-            title=\"La victime a refusé d'être prise en charge\"
+            title=\"La victime a refusÃ© d'Ãªtre prise en charge\"
             value=1 $checked $disabled> 
           <span class='slider round'></span>               
 </label></td>";
@@ -968,15 +968,15 @@ if ( $modevictime == 'simple' ) {
     else  {$checked=''; $class='normal';};
     echo "<tr>";
     echo "<td><label for='repos' id='label_repos' class='$class'> Repos</label></td> <td><label class='switch'><input type='checkbox' name='repos' id='repos' onchange='checkFilled(this);'
-            title=\"La victime a été mise au repos sous surveillance\"
+            title=\"La victime a Ã©tÃ© mise au repos sous surveillance\"
             value=1 $checked $disabled> 
           <span class='slider round'></span>               
 </label></td>";
           
     if ( $VI_IMPLIQUE == 1 ) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';};
-    echo "<td colspan=2><label for='implique' id='label_implique' class='$class'> Impliqué</label></td> <td><label class='switch'><input type='checkbox' name='implique' id='implique' onchange='checkFilled(this);'
-            title=\"Impliqué indemne\"
+    echo "<td colspan=2><label for='implique' id='label_implique' class='$class'> ImpliquÃ©</label></td> <td><label class='switch'><input type='checkbox' name='implique' id='implique' onchange='checkFilled(this);'
+            title=\"ImpliquÃ© indemne\"
             value=1 $checked $disabled> 
           <span class='slider round'></span>               
 </label></td>";
@@ -986,7 +986,7 @@ if ( $modevictime == 'simple' ) {
     if ($VI_TRANSPORT == 1) {$checked='checked'; $class='highlighted';}
     else  {$checked=''; $class='normal';};
     echo "<td><label for='transport' id='label_transport' class='$class'> Transport</label></td> <td><label class='switch'><input type='checkbox' name='transport' id='transport'
-            title=\"La victime a été transportée\"
+            title=\"La victime a Ã©tÃ© transportÃ©e\"
             value=1 $checked $disabled
             onchange=\"checkFilled(this);changedType();\"> 
           <span class='slider round'></span>               
@@ -1037,7 +1037,7 @@ if ( $modevictime == 'simple' ) {
 
 
     echo "<tr id='rowHeureHopital' $style>";
-    echo "<td colspan=2></td><td align=right>Heure arrivée </td>
+    echo "<td colspan=2></td><td align=right>Heure arrivÃ©e </td>
         <td><input type=text name='heure_hopital' id='heure_hopital' value='".$HEURE_HOPITAL."'
         onfocus='fillTime(form.heure_hopital);' 
         onchange='checkFilled(this);'
@@ -1050,7 +1050,7 @@ if ( $modevictime == 'simple' ) {
 }
 
 //=====================================================================
-// mode full: fiche bilan complète
+// mode full: fiche bilan complÃ¨te
 //=====================================================================
 
 if ( $modevictime == 'full' or $modevictime == 'pssp') {
@@ -1065,9 +1065,9 @@ if ( $modevictime == 'full' or $modevictime == 'pssp') {
     echo "<table class='noBorder' cellspacing=0 border=0>";
              
     echo "<tr id='rowNumerotation'>
-              <td>Numérotation victime</td>
+              <td>NumÃ©rotation victime</td>
               <td><input type='text' class='form-control form-control-sm' name='numerotation' size=5 maxlength='5' value=\"".$VI_NUMEROTATION."\" $disabled 
-                    onchange='checkNumber(form.numerotation,0)' title=\"Ce champ permet de numéroter les différentes victimes d'une intervention ou d'un événement\">
+                    onchange='checkNumber(form.numerotation,0)' title=\"Ce champ permet de numÃ©roter les diffÃ©rentes victimes d'une intervention ou d'un Ã©vÃ©nement\">
               </td>";       
     echo "</tr>";
              
@@ -1081,7 +1081,7 @@ if ( $modevictime == 'full' or $modevictime == 'pssp') {
     }
 
     echo "<tr><td>Nom $asterisk ".$cnil_warning."</td><td><input name='nom' id='nom' type=text class='form-control form-control-sm' size=20 value=\"".$VI_NOM."\"  maxlength='".$maxlength."' $disabled></td></tr>
-        <tr><td>Prénom $asterisk</td><td><input name='prenom' id='prenom' type=text class='form-control form-control-sm' size=20 value=\"".$VI_PRENOM."\" $disabled></td></tr>";
+        <tr><td>PrÃ©nom $asterisk</td><td><input name='prenom' id='prenom' type=text class='form-control form-control-sm' size=20 value=\"".$VI_PRENOM."\" $disabled></td></tr>";
 
     echo "<tr>
               <td>Date naissance</td>
@@ -1097,11 +1097,11 @@ if ( $modevictime == 'full' or $modevictime == 'pssp') {
     else $checkedF='checked';
     echo "<tr><td align=right>Sexe $asterisk</td>
               <td><input type=radio name='sexe' id='sexe_M' value='M' $checkedM title='Masculin' $disabled> <label for='sexe_M'>M </label>
-                  <input type=radio name='sexe' id='sexe_F'  value='F' $checkedF title='Féminin' $disabled> <label for='sexe_F'>F </label></td>";
-    echo "<td>Nationalité $asterisk</td>";
+                  <input type=radio name='sexe' id='sexe_F'  value='F' $checkedF title='FÃ©minin' $disabled> <label for='sexe_F'>F </label></td>";
+    echo "<td>NationalitÃ© $asterisk</td>";
     $query2="select ID, NAME from pays order by ID asc";
     $result2=mysqli_query($dbc,$query2);
-    echo " <td align=left><select class='form-control select-control' name='pays1' id='pays' $disabled title=\"Choisissez le pays correspondant à la nationalité de la personne\">";
+    echo " <td align=left><select class='form-control select-control' name='pays1' id='pays' $disabled title=\"Choisissez le pays correspondant Ã  la nationalitÃ© de la personne\">";
     while ($row2=@mysqli_fetch_array($result2)) {
         $_ID=$row2["ID"];
         $_NAME=$row2["NAME"];
@@ -1148,8 +1148,8 @@ if ( $modevictime == 'full' or $modevictime == 'pssp') {
 
     while (custom_fetch_array($result2)) {
         if ( $DOC_ONLY == 1 ) {
-            if ( $modevictime == 'full' ) $BVP_TITLE=$BVP_TITLE." <i class='fa fa-user-md fa-lg' title='A renseigner par un médecin'></i>";
-            else if ( $modevictime == 'pssp' ) $BVP_TITLE=$BVP_TITLE." <i class='fa fa-plus-square' style='color:red;' title='Si coché, soins médico-psychologiques'></i>";
+            if ( $modevictime == 'full' ) $BVP_TITLE=$BVP_TITLE." <i class='fa fa-user-md fa-lg' title='A renseigner par un mÃ©decin'></i>";
+            else if ( $modevictime == 'pssp' ) $BVP_TITLE=$BVP_TITLE." <i class='fa fa-plus-square' style='color:red;' title='Si cochÃ©, soins mÃ©dico-psychologiques'></i>";
         }
         if ( $BVP_ID == 500 or  $BVP_ID == 531 or $BVP_ID == 535 )  $BVP_TITLE="<b>".$BVP_TITLE."<b>";
         if ( $prevBVC_CODE <> $BVC_CODE ) {
@@ -1176,7 +1176,7 @@ if ( $modevictime == 'full' or $modevictime == 'pssp') {
         // textarea
         if ( $BVP_TYPE == 'textarea' ) {
             if ( $i % 2 == 1 ) {
-                // passer à la ligne suivante
+                // passer Ã  la ligne suivante
                 echo "<td colspan=2></td></tr>
                     <tr>";
             }
@@ -1297,7 +1297,7 @@ if ( $modevictime == 'full' or $modevictime == 'pssp') {
 }
 
 //=====================================================================
-// documents attachés
+// documents attachÃ©s
 //=====================================================================
 
 if ( $modevictime == 'doc' ) {
@@ -1323,9 +1323,9 @@ if ( $modevictime == 'doc' ) {
             <tr class='newTabHeader'>
             <th class='widget-title'><a href='victimes.php?modevictime=doc&victime=".$victime."&order=extension' title='trier par extension'>ext</a></th>
             <th class='widget-title'><a href='victimes.php?modevictime=doc&victime=".$victime."&order=file' title='trier par nom'>Documents de la victime</a></th>
-            <th class='widget-title'><a href='victimes.php?modevictime=doc&victime=".$victime."&order=security' title='trier par sécurité'>".$s."</a></th>
+            <th class='widget-title'><a href='victimes.php?modevictime=doc&victime=".$victime."&order=security' title='trier par sÃ©curitÃ©'>".$s."</a></th>
             <th class='widget-title'><a href='victimes.php?modevictime=doc&victime=".$victime."&order=author'title='trier par auteur'>Auteur</a></th>
-            <th class='widget-title'><a href='victimes.php?modevictime=doc&victime=".$victime."&order=date' title='trier par date décroissantes'>Date</a></th>
+            <th class='widget-title'><a href='victimes.php?modevictime=doc&victime=".$victime."&order=date' title='trier par date dÃ©croissantes'>Date</a></th>
             <th class='widget-title'></th>
             </tr>";
             
@@ -1447,7 +1447,7 @@ if ( $modevictime == 'doc' ) {
             }
         }
         else
-            echo "<small>Le répertoire contenant les fichiers pour cette victime n'est pas trouvé sur ce serveur</small>";
+            echo "<small>Le rÃ©pertoire contenant les fichiers pour cette victime n'est pas trouvÃ© sur ce serveur</small>";
         echo "</table>";
     }
     else 
@@ -1458,7 +1458,7 @@ if ( $modevictime == 'doc' ) {
     $dirname=$filesdir."/files_victime/".$victime."/";
     $images = glob($dirname."*.{jpg,jpeg,png,gif,JPG,PNG,JPEG,GIF}", GLOB_BRACE);
     foreach($images as $image) {
-        echo "<a href=showfile.php?section=".$S_ID."&victime=".$victime."&file=".basename($image)." title=\"Télécharger cette image:\n".basename($image)."\"><img src='".$image."' width='160' class='img-thumbnail'> ";
+        echo "<a href=showfile.php?section=".$S_ID."&victime=".$victime."&file=".basename($image)." title=\"TÃ©lÃ©charger cette image:\n".basename($image)."\"><img src='".$image."' width='160' class='img-thumbnail'> ";
     }
 }
 
@@ -1483,11 +1483,11 @@ if ( $modevictime <> 'doc' ) {
                 <div class='dropdown-menu'>";
         if ( $numinter > 0 ) echo "<a class='dropdown-item' onclick=\"ready('".$numinter."');\">Retour intervention</a>";
         if ( $numcav > 0 or $evenement_victime > 0 ) echo "<a class='dropdown-item' onclick=\"readyliste('".$evenement_victime."','".$type_victime."');\">Retour Victime</a>";
-        echo " <a class='dropdown-item' onclick=\"redirect('".$evenement."');\">Retour Activité</a>";
+        echo " <a class='dropdown-item' onclick=\"redirect('".$evenement."');\">Retour ActivitÃ©</a>";
     }
     if (isset ($_GET["qrcode"]))
         echo " <a class='btn btn-default' href='scan_victime.php?evenement=".$evenement_victime."' 
-                        title='Scanner QR Code pour créer la fiche victime' ><i class='fa fa-qrcode fa-lg' style='color:purple;'></i> retour</a>";
+                        title='Scanner QR Code pour crÃ©er la fiche victime' ><i class='fa fa-qrcode fa-lg' style='color:purple;'></i> retour</a>";
     echo "</div></form>";
 }
 writefoot();

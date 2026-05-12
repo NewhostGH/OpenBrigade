@@ -7,4 +7,4 @@ function successCallback(position){
 if (navigator.geolocation)
     var watchId = navigator.geolocation.watchPosition(successCallback, null, {enableHighAccuracy:true});
 else
-    swalAlert('Votre navigateur ne prend pas en compte la géolocalisation HTML5');
+    swalAlert('Votre navigateur ne prend pas en compte la gÃ©olocalisation HTML5');

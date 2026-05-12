@@ -28,7 +28,7 @@ $highestsection=get_highest_section_where_granted($id,53);
 $grantedsections=get_all_sections_where_granted($id,53);
 get_session_parameters();
 
-// vérifier qu'on a les droits d'afficher pour cette section
+// vÃ©rifier qu'on a les droits d'afficher pour cette section
 if (! in_array($filter,$grantedsections)) {
     $list = preg_split('/,/' , get_family("$highestsection"));
     if (! in_array($filter,$list) and ! check_rights($id, 24)) $filter=$highestsection;
@@ -65,11 +65,11 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 // Add the columns heads
 
 if ( $syndicate == 1 ) {
-    $columns_title=array("Nom Prénom","Profession","Mode paiement","Statut","Section","Entrée", "Sortie", "Payé","Montant","Date payé","Commentaire");
+    $columns_title=array("Nom PrÃ©nom","Profession","Mode paiement","Statut","Section","EntrÃ©e", "Sortie", "PayÃ©","Montant","Date payÃ©","Commentaire");
     $columns=array('A','B','C','D','E','F','G','H','I','J','K');
 }
 else {
-    $columns_title=array("Nom Prénom","Statut","Section","Entrée", "Sortie", "Payé","Montant","Date payé","Commentaire");
+    $columns_title=array("Nom PrÃ©nom","Statut","Section","EntrÃ©e", "Sortie", "PayÃ©","Montant","Date payÃ©","Commentaire");
     $columns=array('A','B','C','D','E','F','G','H','I');
 }
 
@@ -162,7 +162,7 @@ while (custom_fetch_array($result)) {
     if ( $MONTANT == "" )  {
         $EXPECTED_MONTANT= get_montant($P_SECTION,$S_PARENT,$P_PROFESSION);
         if ( $periode == 'A' and  ($YEAR_ENGAGEMENT == $year or $YEAR_FIN == $year)) {
-            // éventuellement demander cotisation pour année incomplète
+            // Ã©ventuellement demander cotisation pour annÃ©e incomplÃ¨te
             $number_months_to_pay = 12;
             if ( $MONTH_ENGAGEMENT <> "" and $YEAR_ENGAGEMENT == $year) $number_months_to_pay =  $number_months_to_pay - $MONTH_ENGAGEMENT + 1;
             else if ( $MONTH_FIN <> "" )  $number_months_to_pay = $number_months_to_pay - ( 12 - $MONTH_FIN );
@@ -182,9 +182,9 @@ while (custom_fetch_array($result)) {
     }
     else $PAID='Oui';
     
-    // si on prèlève, ajouter la régul. Cas pas encore payé seulement.
+    // si on prÃ¨lÃ¨ve, ajouter la rÃ©gul. Cas pas encore payÃ© seulement.
     if ( $TP_ID == 1 and $MONTANT_REGUL <> 0 and $PC_DATE == '' ) {
-        $COMMENTAIRE = $COMMENTAIRE." et régul de ".$MONTANT_REGUL." ".$default_money_symbol;
+        $COMMENTAIRE = $COMMENTAIRE." et rÃ©gul de ".$MONTANT_REGUL." ".$default_money_symbol;
         $MONTANT = $MONTANT + $MONTANT_REGUL;
     }
 

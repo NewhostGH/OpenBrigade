@@ -25,8 +25,8 @@ writehead();
 @set_time_limit($mytimelimit);
 rebuild_section_flat(-1,0,6);
 
-write_msgbox("Opération terminée", $star_pic,
-"<p><font face=arial>L'organigramme (table section_flat) a été regénéré à partir de la liste des sections.
+write_msgbox("OpÃ©ration terminÃ©e", $star_pic,
+"<p><font face=arial>L'organigramme (table section_flat) a Ã©tÃ© regÃ©nÃ©rÃ© Ã Â partir de la liste des sections.
 <p align=center><a href='configuration.php?tab=conf3'><input type='submit' class='btn btn-default' value='Retour'>",10,0);
 
 writefoot();

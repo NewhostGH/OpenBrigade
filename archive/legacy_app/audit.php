@@ -137,12 +137,12 @@ echo "</table>";
   <thead>
     <tr class="widget-title">
       <th data-field="pid" data-sortable="true"  title="identifiant de la personne">Id</th>
-      <th data-field="name" data-sortable="true"  title="Nom et prénom">Nom</th>
+      <th data-field="name" data-sortable="true"  title="Nom et prÃ©nom">Nom</th>
       <th data-field="section" data-sortable="true" title="Section" >Section</th>
       <th data-field="last_connect" data-sortable="true" title="Date de connection" >Date Connexion</th>
-      <th data-field="last_action" data-sortable="true"  title="Dernière action" class="hide_mobile" >Dernière action</th>
-      <th data-field="os" data-sortable="true" title="Système d'exploitation" class="hide_mobile">OS</th>
-      <th data-field="browser" data-sortable="true"  title="Navigateur utilisé" class="hide_mobile">Browser</th>
+      <th data-field="last_action" data-sortable="true"  title="DerniÃ¨re action" class="hide_mobile" >DerniÃ¨re action</th>
+      <th data-field="os" data-sortable="true" title="SystÃ¨me d'exploitation" class="hide_mobile">OS</th>
+      <th data-field="browser" data-sortable="true"  title="Navigateur utilisÃ©" class="hide_mobile">Browser</th>
       <th data-field="ip_adress" data-sortable="true" title="addresse IP" class="hide_mobile">adresse IP</th>
       <th data-field="permission" data-sortable="true" title="Organisation type" class="hide_mobile">Permission</th>
     </tr>

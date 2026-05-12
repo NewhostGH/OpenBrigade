@@ -66,9 +66,9 @@ $objPHPExcel->getProperties()->setCreator("eBrigade ".$version)
 
 // Add the columns heads
 $columns=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O');
-$columns_title=array("Type","Date début","Date fin","Début","Fin","Durée",
+$columns_title=array("Type","Date dÃ©but","Date fin","DÃ©but","Fin","DurÃ©e",
                      "Lieu","Description","Fonction","Statut","Absence",
-                     "Commentaire","km véhicule perso","ASA","DAS");
+                     "Commentaire","km vÃ©hicule perso","ASA","DAS");
 foreach ($columns as $c => $letter) {
     $objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));
     $objPHPExcel->getActiveSheet()->getColumnDimension($letter)->setAutoSize(true);
@@ -107,7 +107,7 @@ while ($row=@mysqli_fetch_array($result)) {
        
     if ( $EP_FLAG1 == 1 ) {
         if ( $gardes == 1 and $TE_CODE == 'GAR' ) $statut='SPP';
-        else $statut='Salarié';
+        else $statut='SalariÃ©';
     }
     else $statut='';
        
@@ -140,7 +140,7 @@ while ($row=@mysqli_fetch_array($result)) {
           
           $abs='';
           if ( $EP_ABSENT == 1 ) {
-             if ( $EP_EXCUSE == 1 ) $abs='Absent Excusé';
+             if ( $EP_EXCUSE == 1 ) $abs='Absent ExcusÃ©';
              else $abs='Absent';
           }
     }

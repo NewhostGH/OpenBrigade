@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Legacy\LegacyBridgeController;
 use App\Http\Controllers\PersonnelController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,14 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
+
+    // Compatibility for middleware redirects generated from /index.php/* requests.
+    Route::get('/index.php/login', [AuthController::class, 'showLogin'])->name('login.compat');
+    Route::post('/index.php/login', [AuthController::class, 'login'])->name('login.attempt.compat');
+
+    // Legacy scripts sometimes point to login.php explicitly.
+    Route::get('/index.php/login.php', fn () => redirect('/login'));
+    Route::get('/login.php', fn () => redirect('/login'));
 });
 
 Route::middleware('auth')->group(function () {
@@ -36,14 +45,30 @@ Route::middleware('auth')->group(function () {
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');
     Route::get('/dashboard/legacy', function () {
-        return redirect()->route('legacy_migrated.index');
+        return redirect('/index.php/index_d.php');
     })->name('dashboard.legacy');
     Route::get('/about', function () {
-        return redirect('/legacy-migrated/about');
+        return redirect('/index.php/about.php');
     })->name('about');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::match(['GET', 'POST'], '/index.php/logout', [AuthController::class, 'logout'])->name('logout.compat');
+
+    Route::get('/{assetType}/{assetPath}', [LegacyBridgeController::class, 'asset'])
+        ->where('assetType', 'css|js|images|webfonts')
+        ->where('assetPath', '.*')
+        ->name('legacy_bridge.asset');
+
+    Route::get('/index.php/{assetType}/{assetPath}', [LegacyBridgeController::class, 'asset'])
+        ->where('assetType', 'css|js|images|webfonts')
+        ->where('assetPath', '.*')
+        ->name('legacy_bridge.asset.compat.pathinfo');
+
+    // Legacy links frequently resolve as /index.php/{file}. Keep compatibility.
+    Route::match(['GET', 'POST'], '/index.php/{legacyFile}', [LegacyBridgeController::class, 'show'])
+        ->where('legacyFile', '.*')
+        ->name('legacy_bridge.compat.pathinfo');
 });
 
-if (file_exists(__DIR__ . '/web_legacy_migrated.php')) {
-    require __DIR__ . '/web_legacy_migrated.php';
+if (file_exists(__DIR__ . '/web_legacy_bridge.php')) {
+    require __DIR__ . '/web_legacy_bridge.php';
 }

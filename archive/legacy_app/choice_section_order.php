@@ -31,12 +31,12 @@ write_modal_header("Choix de l'ordre des sections");
 $html = "<div align=center>";
 if ( $sectionorder == 'alphabetique') $checked='checked';
 else $checked='';
-$html .= "<label>Alphabétique <input id='sectionorder' name='sectionorder' type='radio' value='alphabetique' 
+$html .= "<label>AlphabÃ©tique <input id='sectionorder' name='sectionorder' type='radio' value='alphabetique' 
                 onclick=\"changeSectionOrder('".$page."','alphabetique')\"; $checked /></label><br>"; 
 
 if ( $sectionorder == 'hierarchique') $checked='checked';
 else $checked='';
-$html .= "<label>Hiérarchique <input id='sectionorder' name='sectionorder' type='radio' value='hierarchique' 
+$html .= "<label>HiÃ©rarchique <input id='sectionorder' name='sectionorder' type='radio' value='hierarchique' 
                 onclick=\"changeSectionOrder('".$page."','hierarchique')\"; $checked /></label>";
 $html .= "</div>";
 

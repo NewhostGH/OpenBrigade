@@ -17,7 +17,7 @@ function checkZipcode(){
     ZipCode = $("input#zipcode").val();
     var re = /^([0-9]*)$/;
     if (! re.test(ZipCode)) {
-        swalAlert ("Saisissez un code postal à 5 chiffres: '"+ ZipCode + "' ne convient pas.");
+        swalAlert ("Saisissez un code postal Ã  5 chiffres: '"+ ZipCode + "' ne convient pas.");
         return false;
     }
     if ( ZipCode.length > 5 ) {

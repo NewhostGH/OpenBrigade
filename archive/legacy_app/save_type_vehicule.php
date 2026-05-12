@@ -59,12 +59,12 @@ if ( $TV_CODE <> $OLD_TV_CODE ) {
     $result=mysqli_query($dbc,$query);
     $row=mysqli_fetch_array($result);
     if ( $row[0] > 0 ) {
-        write_msgbox("erreur", $error_pic, "Le type de véhicule choisi ( ".$TV_CODE." ) existe déjà dans la base de données.<br> Il doit être unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TV_CODE."');\">",10,0);
+        write_msgbox("erreur", $error_pic, "Le type de vÃ©hicule choisi ( ".$TV_CODE." ) existe dÃ©jÃ  dans la base de donnÃ©es.<br> Il doit Ãªtre unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TV_CODE."');\">",10,0);
         exit;
     }
     
     if (  $TV_CODE == '' ) {
-        write_msgbox("erreur", $error_pic, "Le code pour le type de véhicule choisi doit être renseigné.<br> Et il doit être unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TV_CODE."');\">",10,0);
+        write_msgbox("erreur", $error_pic, "Le code pour le type de vÃ©hicule choisi doit Ãªtre renseignÃ©.<br> Et il doit Ãªtre unique.<p align=center><input type=submit class='btn btn-default' value='Retour' onclick=\"javascript:goback('".$operation."','".$OLD_TV_CODE."');\">",10,0);
         exit;
     }
 }

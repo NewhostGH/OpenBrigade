@@ -83,7 +83,7 @@ function upload_doc($fileIndex = 0) {
             $FEXT = strtolower(substr($FNAME,strrpos($FNAME,".")));
             $FNAME = str_replace("\\","",$FNAME);
             $FNAME = str_replace(" ","_",$FNAME);
-            $FNAME = str_replace("°","",$FNAME);
+            $FNAME = str_replace("Â°","",$FNAME);
             $FNAME = str_replace("#","",$FNAME);
             $FNAME = str_replace("'","",$FNAME);
             $FNAME = str_replace("&","",$FNAME);
@@ -101,7 +101,7 @@ function upload_doc($fileIndex = 0) {
                 // create upload dir
                 if (! is_dir($upload_dir)) {
                     if (! mkdir($upload_dir, 0777, true)) {
-                        $MESSAGE = "Le répertoire d'upload n'existe pas et sa création a échoué.";
+                        $MESSAGE = "Le rÃ©pertoire d'upload n'existe pas et sa crÃ©ation a Ã©chouÃ©.";
                         $ERROR=1;
                     }
                 }
@@ -278,7 +278,7 @@ function show_attached_docs($evenement){
                     $author = $row["D_CREATED_BY"];
                     $filedate = $row["D_CREATED_DATE"];
                     $age = abs(intval($row["AGE"]));
-                    if ( $age < 1440 ) $new="<i class='fa fa-star' style='color:yellow;' title=\"Ce document a été ajouté il y a moins de 24 heures\" ></i>";
+                    if ( $age < 1440 ) $new="<i class='fa fa-star' style='color:yellow;' title=\"Ce document a Ã©tÃ© ajoutÃ© il y a moins de 24 heures\" ></i>";
                     else $new  ='';
                 }
                 else {

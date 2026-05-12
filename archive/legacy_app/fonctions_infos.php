@@ -64,10 +64,10 @@ function widget($function, $title, $link = '', $linkcomment='') {
     if($inner_html == ''){
         if($title == 'Astreinte')
             $inner_html = "Aucun personnel n'est d'astreinte";
-        elseif($title == 'Activité non réglée')
-            $inner_html = "Aucun règlement en attente";
-        elseif($title == 'Actualités')
-            $inner_html = "Aucune actualité n'est disponible";
+        elseif($title == 'ActivitÃ© non rÃ©glÃ©e')
+            $inner_html = "Aucun rÃ¨glement en attente";
+        elseif($title == 'ActualitÃ©s')
+            $inner_html = "Aucune actualitÃ© n'est disponible";
     }
     return "
     <div class='card hide card-default'>
@@ -82,7 +82,7 @@ function widget($function, $title, $link = '', $linkcomment='') {
 }
 
 //=====================================================================
-// le mot de passe expire bientôt
+// le mot de passe expire bientÃ´t
 //=====================================================================
 
 function write_pasword_expiry_alert() {
@@ -95,10 +95,10 @@ function write_pasword_expiry_alert() {
     else $DAYS_PWD=100;
     if ( $DAYS_PWD <= 0 )
          return "<div class='alert alert-danger' role='alert' align='center'><i class ='fa fa-exclamation-triangle fa-lg' style='color:red;'></i>
-            Votre mot de passe a expiré. <a href='change_password.php' title='changer le mot de passe'>Changer le mot de passe maintenant</a>.</div>";
+            Votre mot de passe a expirÃ©. <a href='change_password.php' title='changer le mot de passe'>Changer le mot de passe maintenant</a>.</div>";
     if ( $DAYS_PWD < 7 )
         return "<div class='alert alert-warning' role='alert' align='center'><i class ='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i>
-            Votre mot de passe expire bientôt, dans $DAYS_PWD jours, le $P_MDP_EXPIRY. <a href='change_password.php' title='changer le mot de passe'>Changer le mot de passe maintenant</a>.</div>";
+            Votre mot de passe expire bientÃ´t, dans $DAYS_PWD jours, le $P_MDP_EXPIRY. <a href='change_password.php' title='changer le mot de passe'>Changer le mot de passe maintenant</a>.</div>";
     return "";
 }
 
@@ -304,7 +304,7 @@ function bday($date,$date_display,$date_comment){
             }
             
             if ( $date_comment == 'Demain' ) $color='orange';
-            else if ( $date_comment == 'Après-demain' ) $color='violet';
+            else if ( $date_comment == 'AprÃ¨s-demain' ) $color='violet';
             else $color='blue';
             $out1 .="<tr>
                 <td width='50px'>
@@ -330,7 +330,7 @@ function bday($date,$date_display,$date_comment){
 function missing_field($row,$field, $description, $txt = '') {
     global $id, $trombidir;
     $out = "<tr style='width: 50%;float: left;'><td class='alert-icon'><span class = 'square'>
-    <i class='pulse-effect pulse-info' style = 'color:#3699ff' title='Attention vos données personnelles sont incomplètes' >
+    <i class='pulse-effect pulse-info' style = 'color:#3699ff' title='Attention vos donnÃ©es personnelles sont incomplÃ¨tes' >
     <i class = 'fa fa-bell fa-lg'>
     </i></i></span></td>
     <td><div class='warning-infos-perso-title'>".$description."</div><div class='warning-infos-perso-subtitle'>";
@@ -340,7 +340,7 @@ function missing_field($row,$field, $description, $txt = '') {
         if (file_exists($trombidir."/".$row["P_PHOTO"]) && $txt != '')
             $out .= $txt."</div></td>";
         else
-            $out .= "<div class='warning-infos-perso-subtitle'>À renseigner <a href=upd_personnel.php?pompier=$id&tab=1>ici</a></div></td></tr>";
+            $out .= "<div class='warning-infos-perso-subtitle'>Ã€ renseigner <a href=upd_personnel.php?pompier=$id&tab=1>ici</a></div></td></tr>";
         return $out;
     }
 }
@@ -371,9 +371,9 @@ function show_alerts_consommables() {
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Consommables</span><span class='widget-subtitle'><br>Bientôt périmés</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Consommables</span><span class='widget-subtitle'><br>BientÃ´t pÃ©rimÃ©s</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
     }
-    //produit périmé
+    //produit pÃ©rimÃ©
     $query="select count(1) as NB from consommable c
             where datediff(c.C_DATE_PEREMPTION, '".date("Y-m-d")."') <= 0
             and c.S_ID in (".get_family("$mysection").")";
@@ -385,7 +385,7 @@ function show_alerts_consommables() {
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Consommables</span><span class='widget-subtitle'><br>Périmés</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Consommables</span><span class='widget-subtitle'><br>PÃ©rimÃ©s</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
     }
 
     //rupture de stock
@@ -406,7 +406,7 @@ function show_alerts_consommables() {
 }
 
 //=====================================================================
-// function véhicules
+// function vÃ©hicules
 //=====================================================================
 
 function show_alerts_vehicules() {
@@ -418,7 +418,7 @@ function show_alerts_vehicules() {
     if ( ( $assoc or $army ) and $mysection == 0 ) $mysection=intval(@$_SESSION['SES_SECTION']);
     $out = "";
     
-    // des véhicules  indisponibles
+    // des vÃ©hicules  indisponibles
     $query="select count(1) from vehicule v, vehicule_position vp
     where vp.VP_ID=v.VP_ID
     and vp.VP_OPERATIONNEL < 2
@@ -431,14 +431,14 @@ function show_alerts_vehicules() {
 
     $out .= "<a href='vehicule.php?page=1'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=VP_OPERATIONNEL' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=VP_OPERATIONNEL' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Véhicules indisponibles</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>VÃ©hicules indisponibles</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
     }
     
-    // des assurances périmées?
+    // des assurances pÃ©rimÃ©es?
     $query="select count(1) from vehicule v, vehicule_position vp
     where vp.VP_ID=v.VP_ID
     and v.V_ASS_DATE < NOW()
@@ -449,15 +449,15 @@ function show_alerts_vehicules() {
     $nb=intval($row[0]);
     $GLOBALS['nbAlertVehicule']+=$nb;
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_ASS' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_ASS' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
 
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Assurances</span><span class='widget-subtitle'><br>Périmées</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Assurances</span><span class='widget-subtitle'><br>PÃ©rimÃ©es</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
     }
         
-    // des CT périmés?
+    // des CT pÃ©rimÃ©s?
     $query="select count(1) from vehicule v, vehicule_position vp
     where vp.VP_ID=v.VP_ID
     and datediff(v.V_CT_DATE,'".date("Y-m-d")."') <= 0
@@ -468,13 +468,13 @@ function show_alerts_vehicules() {
     $nb=intval($row[0]);
     $GLOBALS['nbAlertVehicule']+=$nb;
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_CT' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_CT' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Contrôles techniques</span><span class='widget-subtitle'><br>Périmés</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>ContrÃ´les techniques</span><span class='widget-subtitle'><br>PÃ©rimÃ©s</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
     }
-    // des assurances bientôt périmées?
+    // des assurances bientÃ´t pÃ©rimÃ©es?
     $query="select count(1) from vehicule v, vehicule_position vp
     where vp.VP_ID=v.VP_ID
     and datediff(v.V_ASS_DATE,'".date("Y-m-d")."') <= 30
@@ -486,11 +486,11 @@ function show_alerts_vehicules() {
     $nb=intval($row[0]);
     $GLOBALS['nbAlertVehicule']+=$nb;
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_ASS' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_ASS' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Assurances</span><span class='widget-subtitle'><br>Bientôt périmées</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Assurances</span><span class='widget-subtitle'><br>BientÃ´t pÃ©rimÃ©es</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
     }
     
     // des CT a refaire dans moins de 2 mois?
@@ -505,14 +505,14 @@ function show_alerts_vehicules() {
     $nb=intval($row[0]);
     $GLOBALS['nbAlertVehicule']+=$nb;
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_CT' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_CT' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Contrôles techniques</span><span class='widget-subtitle'><br>Bientôt périmés</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>ContrÃ´les techniques</span><span class='widget-subtitle'><br>BientÃ´t pÃ©rimÃ©s</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
     }
     
-    // des titres d'accès a refaire dans moins de 2 mois?
+    // des titres d'accÃ¨s a refaire dans moins de 2 mois?
     $query="select count(1) from vehicule v, vehicule_position vp
     where vp.VP_ID=v.VP_ID
     and datediff(v.V_TITRE_DATE,'".date("Y-m-d")."') <= 60
@@ -524,14 +524,14 @@ function show_alerts_vehicules() {
     $nb=intval($row[0]);
     $GLOBALS['nbAlertVehicule']+=$nb;
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_TITRE' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_TITRE' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Titres d'accès</span><span class='widget-subtitle'><br>Bientôt périmés</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Titres d'accÃ¨s</span><span class='widget-subtitle'><br>BientÃ´t pÃ©rimÃ©s</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
     }
     
-    // des titres d'accès périmés?
+    // des titres d'accÃ¨s pÃ©rimÃ©s?
     $query="select count(1) from vehicule v, vehicule_position vp
     where vp.VP_ID=v.VP_ID
     and datediff(v.V_TITRE_DATE,'".date("Y-m-d")."') <= 0
@@ -542,14 +542,14 @@ function show_alerts_vehicules() {
     $nb=intval($row[0]);
     $GLOBALS['nbAlertVehicule']+=$nb;
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_TITRE' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_TITRE' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Titres d'accès</span><span class='widget-subtitle'><br>Périmés</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-red alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Titres d'accÃ¨s</span><span class='widget-subtitle'><br>PÃ©rimÃ©s</span></div><span class='text-warning-alert' style='color:#f64e60'>".$nb."</span></a></div></td></tr></table>";
     }
     
-    // des révisions à faire
+    // des rÃ©visions Ã  faire
     $query="select count(1) from vehicule v, vehicule_position vp
     where vp.VP_ID=v.VP_ID
     and datediff(v.V_REV_DATE,'".date("Y-m-d")."') <= 0
@@ -560,17 +560,17 @@ function show_alerts_vehicules() {
     $nb=intval($row[0]);
     $GLOBALS['nbAlertVehicule']+=$nb;
     if (  $nb > 0 ) {
-        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_REV' title=\"Cliquer pour voir les véhicules\" >";
+        $a=" <a class='widget-link' href='vehicule.php?order=TV_CODE&filter=".$mysection."&TV_CODE=ALL&subsections=1&includeold=0&order=DT_REV' title=\"Cliquer pour voir les vÃ©hicules\" >";
         $out .= "<table class='noBorder widget-table'><tr>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Révisions</span><span class='widget-subtitle'><br>À faire</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>RÃ©visions</span><span class='widget-subtitle'><br>Ã€ faire</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
     }
     return $out;
 }
 
 //=====================================================================
-// function CP à valider
+// function CP Ã  valider
 //=====================================================================
 
 function show_alerts_cp() {
@@ -580,7 +580,7 @@ function show_alerts_cp() {
     $GLOBALS['nbAlertCp']=0;
     if ( $nbsections > 0 and check_rights($id,13,0)) $mysection=0;
     else $mysection=get_highest_section_where_granted($id,13);
-    // des CP à valider?
+    // des CP Ã  valider?
     $query="select date_format(min(i.I_DEBUT),'%d-%m-%Y') I_DEBUT, date_format(max(i.I_FIN),'%d-%m-%Y') I_FIN, count(1) as NB from pompier p, indisponibilite i, type_indisponibilite ti, indisponibilite_status ist
     where p.P_ID=i.P_ID
     and i.TI_CODE=ti.TI_CODE
@@ -597,23 +597,23 @@ function show_alerts_cp() {
     $GLOBALS['nbAlertCp']+=$nb;
     if ( $nb == 0 ) {
         $out .= "<a href='indispo_choice.php?tab=2&page=1'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
-        $out .= "<span class='no-content'>Aucune demande de congé à valider</span>";
+        $out .= "<span class='no-content'>Aucune demande de congÃ© Ã  valider</span>";
     }
     else {
         $min=$row["I_DEBUT"];
         $max=$row["I_FIN"];
-        $a=" <a class='widget-link' href='indispo_choice.php?tab=2&filter=".$mysection."&validation=ATT&person=ALL&dtdb=".$min."&dtfn=".$max."' title=\"Vous avez $nb Congés a valider\" >";
+        $a=" <a class='widget-link' href='indispo_choice.php?tab=2&filter=".$mysection."&validation=ATT&person=ALL&dtdb=".$min."&dtfn=".$max."' title=\"Vous avez $nb CongÃ©s a valider\" >";
         $out = "<table class='noBorder widget-table'>";
         $out .= "<a href='indispo_choice.php?tab=2&page=1'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
         if ( $nb > 1 ) $s='s';
         else $s='';
-        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Demandes de congés</span><span class='widget-subtitle'><br>À valider</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-orange alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Demandes de congÃ©s</span><span class='widget-subtitle'><br>Ã€ valider</span></div><span class='text-warning-alert' style='color:#ffa800'>".$nb."</span></a></div></td></tr></table>";
     }
     return $out;
 }
 
 //=====================================================================
-// function horaires à valider
+// function horaires Ã  valider
 //=====================================================================
 function convertToHoursMins($time) {
     if ($time < 1) return;
@@ -660,7 +660,7 @@ function show_alerts_horaires() {
     $num=mysqli_num_rows($result);
     $GLOBALS['nbAlertHoraire']+=$num;
     if ( $num == 0 ) 
-         $out .= "<span class='no-content'>Pas d'horaires à valider</span>";
+         $out .= "<span class='no-content'>Pas d'horaires Ã  valider</span>";
     else {
         $out .=   "<table class='noBorder widget-table separate'>";
         while ($row = mysqli_fetch_array($result)) {
@@ -677,7 +677,7 @@ function show_alerts_horaires() {
                     <td class='widget-text' width='80px'>Semaine ".$semaine."</td>
                     <td class='widget-text'>".$annee."</td>
                     <td class='widget-text' width='53px'>".$duree." H</td>
-                    <td width='75px;'>".$a."<span class='alert-label alert-orange' title=\"Horaires de travail à valider\">A valider</span></a></td>
+                    <td width='75px;'>".$a."<span class='alert-label alert-orange' title=\"Horaires de travail Ã  valider\">A valider</span></a></td>
                     </tr>";
         }
         $out .= "</table>";
@@ -700,7 +700,7 @@ function show_alerts_remplacements() {
         $sid=intval(@$_SESSION['SES_FAVORITE']);
         if ( $pompiers == 1 and $nbsections == 0 and get_level("$sid") ==  $nbmaxlevels - 1 ) $sid = get_section_parent("$sid");
     }
-    // des remplacements de gardes à approuver?
+    // des remplacements de gardes Ã  approuver?
     if ( $gardes == 1 and check_rights($id, 6) ) {
         $query="select date_format(min(eh.EH_DATE_DEBUT),'%d-%m-%Y') DEBUT, date_format(max(eh.EH_DATE_FIN),'%d-%m-%Y') FIN, count(1) as NB
         from remplacement r, evenement_horaire eh, evenement e
@@ -712,7 +712,7 @@ function show_alerts_remplacements() {
         and r.APPROVED = 0 and r.REJECTED = 0";
         if ( $sid > 0 )
             $query .=" and e.S_ID in (".get_family("$sid").")";
-        $txt="À approuver";
+        $txt="Ã€ approuver";
         $status="ATT";
     }
     else if ( $gardes == 1 and check_rights($id, 61) ){
@@ -725,7 +725,7 @@ function show_alerts_remplacements() {
         and r.APPROVED = 0 and r.REJECTED = 0 and r.ACCEPTED = 0
         and eh.EH_DATE_FIN >= NOW()
         and r.SUBSTITUTE = ".$id; 
-        $txt="À accepter";
+        $txt="Ã€ accepter";
         $status="DEM";
     }
     else if ( check_rights($id, 15) ) {
@@ -738,7 +738,7 @@ function show_alerts_remplacements() {
         and r.APPROVED = 0 and r.REJECTED = 0";
         if ( $sid > 0 )
             $query .=" and e.S_ID in (".get_family("$sid").")";
-        $txt="À approuver";
+        $txt="Ã€ approuver";
         $status="ATT";
     }
     else {
@@ -750,7 +750,7 @@ function show_alerts_remplacements() {
         and r.APPROVED = 0 and r.REJECTED = 0 and r.ACCEPTED = 0
         and eh.EH_DATE_FIN >= NOW()
         and r.SUBSTITUTE = ".$id; 
-        $txt="À accepter";
+        $txt="Ã€ accepter";
         $status="DEM";
     }
     if ( $query <> "" ) {
@@ -788,7 +788,7 @@ function show_proposed_remplacements() {
         $sid=intval(@$_SESSION['SES_FAVORITE']);
         if ( $pompiers == 1 and $nbsections == 0 and get_level("$sid") ==  $nbmaxlevels - 1 ) $sid = get_section_parent("$sid");
     }
-    // des recherches de remplaçants
+    // des recherches de remplaÃ§ants
     $query="select date_format(min(eh.EH_DATE_DEBUT),'%d-%m-%Y') DEBUT, date_format(max(eh.EH_DATE_FIN),'%d-%m-%Y') FIN, count(1) as NB
     from remplacement r, evenement_horaire eh, evenement e
     where eh.E_CODE = r.E_CODE 
@@ -809,12 +809,12 @@ function show_proposed_remplacements() {
         $min=$row["DEBUT"];
         $max=$row["FIN"];
         $url="remplacements.php?filter=".$sid."&dtdb=".$min."&dtfn=".$max."&status=DEM";
-        $a=" <a class='widget-link' href='".$url."' title=\"Il y a $nb recherche".$s." de remplaçant en cours.\" >";
+        $a=" <a class='widget-link' href='".$url."' title=\"Il y a $nb recherche".$s." de remplaÃ§ant en cours.\" >";
         $out = "<table class='noBorder widget-table'><tr>";
         $out .= "<a href='remplacements.php?filter=".$sid."&replaced=0&substitute=0'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
-        $out .= "<td class='alert-violet alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Recherche de remplaçant</span><span class='widget-subtitle'><br>En cours</span></div><span class='text-warning-alert' style='color: #8950fc'>".$nb."</span></a></div></td></tr></table>";
+        $out .= "<td class='alert-violet alert-element'><div class='alert-justify'><div>".$a."<span class='widget-title'>Recherche de remplaÃ§ant</span><span class='widget-subtitle'><br>En cours</span></div><span class='text-warning-alert' style='color: #8950fc'>".$nb."</span></a></div></td></tr></table>";
     }
-    if ( $out == "" ) $out = "<span class='no-content'>Aucun recherche de remplaçant.</span><a href='remplacements.php?filter=".$sid."&replaced=0&substitute=0'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
+    if ( $out == "" ) $out = "<span class='no-content'>Aucun recherche de remplaÃ§ant.</span><a href='remplacements.php?filter=".$sid."&replaced=0&substitute=0'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
     return $out;
 }
 
@@ -847,7 +847,7 @@ function welcome() {
         elseif($row["P_CIVILITE"] == '2') $img2='images/girl.png';
         elseif($row["P_CIVILITE"] == '3') $img2='images/autre.png';
         elseif ($row["P_CIVILITE"] == '4' or $row["P_CIVILITE"] == '5') $img2='images/chien.png';
-        $txt="À enregistrer ".$link;
+        $txt="Ã€ enregistrer ".$link;
     }
     else if (! file_exists($trombidir."/".$row["P_PHOTO"])) {
         $width='110';
@@ -855,7 +855,7 @@ function welcome() {
         elseif($row["P_CIVILITE"] == '2') $img2='images/girl.png';
         elseif($row["P_CIVILITE"] == '3') $img2='images/autre.png';
         elseif ($row["P_CIVILITE"] == '4' or $row["P_CIVILITE"] == '5') $img2='images/chien.png';
-        $txt="Photo enregistrée mais non trouvée sur le serveur";
+        $txt="Photo enregistrÃ©e mais non trouvÃ©e sur le serveur";
     }
     else {
         $width='110';
@@ -879,7 +879,7 @@ function welcome() {
             <div class = 'font widget-title' style = 'font-size: 1.35em;'>
                 <a href=upd_personnel.php?pompier=$id&tab=1>".ucfirst($row["P_PRENOM"])." ".strtoupper($row["P_NOM"])."</a>
             </div>
-            <div class='widget-text' style='font-size: 15px'>Nº ".$id."</div>
+            <div class='widget-text' style='font-size: 15px'>NÂº ".$id."</div>
             <div class = 'font profile-widget widget-title'>".$row['S_DESCRIPTION']."</div><br>
             <div class = 'font widget-title'>".$date."</div><div class='widget-text'>".$week."</div>
         </td></tr></table>";
@@ -892,24 +892,24 @@ function welcome() {
         $row = mysqli_fetch_array($result);
         $out .=  "<table class='noBorder profile-alerts separate' style='margin-left: 5px;width: 100%'>";
         $out .=missing_field($row,"P_PHOTO", "Photo", $txt);
-        $out .=missing_field($row,"P_PRENOM2", "Deuxième prénom");
-        $out .=missing_field($row,"P_PHONE", "Téléphone");
+        $out .=missing_field($row,"P_PRENOM2", "DeuxiÃ¨me prÃ©nom");
+        $out .=missing_field($row,"P_PHONE", "TÃ©lÃ©phone");
         $out .=missing_field($row,"P_EMAIL", "Adresse mail");
         $out .=missing_field($row,"P_ADDRESS", "Adresse");
         $out .=missing_field($row,"P_CITY", "Ville");
         $out .=missing_field($row,"P_ZIP_CODE", "Code postal");
         $out .=missing_field($row,"P_BIRTHDATE", "Date de naissance");
         $out .=missing_field($row,"P_BIRTHPLACE", "Lieu de naissance");
-        $out .=missing_field($row,"P_BIRTH_DEP", "Département de naissance");
+        $out .=missing_field($row,"P_BIRTH_DEP", "DÃ©partement de naissance");
         if ( $syndicate == 0 ) {
-            $custom=count_entities("custom_field", "CF_TITLE='Tél Père'");
+            $custom=count_entities("custom_field", "CF_TITLE='TÃ©l PÃ¨re'");
             if ( $custom == 0 or $statut <> 'JSP') {
-                $out .=missing_field($row,"P_RELATION_NOM", "Nom de la personne à prévenir en cas d'urgence");
-                $out .=missing_field($row,"P_RELATION_PRENOM", "Prénom de la personne à prévenir en cas d'urgence");
-                $out .=missing_field($row,"P_RELATION_PHONE", "Téléphone de la personne à prévenir en cas d'urgence");
+                $out .=missing_field($row,"P_RELATION_NOM", "Nom de la personne Ã  prÃ©venir en cas d'urgence");
+                $out .=missing_field($row,"P_RELATION_PRENOM", "PrÃ©nom de la personne Ã  prÃ©venir en cas d'urgence");
+                $out .=missing_field($row,"P_RELATION_PHONE", "TÃ©lÃ©phone de la personne Ã  prÃ©venir en cas d'urgence");
             }
         }
-        $out .= missing_field($row,"P_PAYS", "Nationalité");
+        $out .= missing_field($row,"P_PAYS", "NationalitÃ©");
             $out .=  "</table>";
     }
     return $out;
@@ -950,7 +950,7 @@ function show_duty() {
             $P_NOM=$row["P_NOM"];
             $S_PHONE2=$row["S_PHONE2"];
             $GP_DESCRIPTION=$row["GP_DESCRIPTION"];
-            if ( $GP_DESCRIPTION == 'Veille opérationnelle' and intval($S_PHONE2) > 0)
+            if ( $GP_DESCRIPTION == 'Veille opÃ©rationnelle' and intval($S_PHONE2) > 0)
                 $phone=$S_PHONE2;
             else if ( intval($row["P_PHONE"]) > 0 ) $phone=$row["P_PHONE"];
             else $phone="";
@@ -982,7 +982,7 @@ function show_duty() {
                 title=\"Afficher le bulletin de renseignements quotidien du ".$date1."\"> <i class='far fa-file-pdf fa-lg' style='color:red;'></i></a></div>";
             }
             $out .= "</td><td class='widget-title' width='95' style='vertical-align: top;font-size: 12px'>
-                <a href=\"tel:".str_replace(" ","",$phone)."\" title=\"Appel téléphonique.\">".$phone."</a></td></tr>";
+                <a href=\"tel:".str_replace(" ","",$phone)."\" title=\"Appel tÃ©lÃ©phonique.\">".$phone."</a></td></tr>";
         }
         $out .= "</table>";
     }
@@ -1014,11 +1014,11 @@ function my_sections() {
         $N=0;
         $names1=bday($today,$d1,"Aujourd'hui");
         $names2=bday($tomorrow,$d2,"Demain");
-        $names3=bday($dayafter,$d3,"Après-demain");
+        $names3=bday($dayafter,$d3,"AprÃ¨s-demain");
          
         if ( $N > 0 ) {
             $out .= "<table class='noBorder widget-table'>
-                <tr><td colspan='4'><i class='fa fa-birthday-cake alert-icon alert-blue' style='font-size: 20px;'></i><span class='pl-2 font-weight-bolder'>Anniversaire à souhaiter</span></td></tr>
+                <tr><td colspan='4'><i class='fa fa-birthday-cake alert-icon alert-blue' style='font-size: 20px;'></i><span class='pl-2 font-weight-bolder'>Anniversaire Ã  souhaiter</span></td></tr>
                 <tr>";
             $out .= $names1;
             $out .= $names2;
@@ -1026,7 +1026,7 @@ function my_sections() {
             $out .= "</table>";
         }
         else
-            $out .= "<table class='noBorder widget-table'><tr><td colspan='4'><i class='fa fa-birthday-cake alert-icon alert-blue' style='font-size: 20px;'></i><span class='pl-2 font-weight-bolder'>Aucun anniversaire à souhaiter</span></td></tr></table>";
+            $out .= "<table class='noBorder widget-table'><tr><td colspan='4'><i class='fa fa-birthday-cake alert-icon alert-blue' style='font-size: 20px;'></i><span class='pl-2 font-weight-bolder'>Aucun anniversaire Ã  souhaiter</span></td></tr></table>";
     }
     $query="select p.P_PHOTO, p.P_SEXE, p.P_SECTION, p.P_NOM, p.P_PRENOM, p.P_CIVILITE,
     s.S_ID, s.S_CODE, s.S_DESCRIPTION, s.S_WHATSAPP, s.S_PARENT,
@@ -1101,7 +1101,7 @@ function show_documentation() {
                     </tr>";
         }
     }
-    // cas particulier afficher les documents d'un département
+    // cas particulier afficher les documents d'un dÃ©partement
     if ( $parent == 30 or $mysection == 30 or $mysection == 0 or $mysection == 1 ) {
         
         $nb=count_document(30);
@@ -1146,7 +1146,7 @@ function show_attestation_fiscale() {
     $row=mysqli_fetch_array($result);
     $montant = intval($row["Cotisation"]);
     
-    if ( $montant == 0 ) $out =  "<td>Aucune cotisation enregistrée pour ".$fiscal_year.".</td>";
+    if ( $montant == 0 ) $out =  "<td>Aucune cotisation enregistrÃ©e pour ".$fiscal_year.".</td>";
     else {
         $a="<a href=pdf_attestation_fiscale.php?P_ID=".$id."&year=".$fiscal_year." target=_blank title='Voir cette attestation fiscale'>";
         $out .="<td".$a."<i class='far fa-file-pdf fa-2x' style='color:red;'></i></a></td>
@@ -1184,8 +1184,8 @@ function show_about() {
         <td class='widget-text' style='padding-left: 10px'>Documentation en ligne</td>
         <td><a href='".$wikiurl."' target='_blank' ><i class='fas fa-arrow-right grey-button-arrow' title='Voir la documentation en ligne'></i></a></td></tr>";
     $out .= "<tr><td class='alert-icon alert-violet' style='width: 40px;height: 40px;display: flex;justify-content: center;align-items: center'><i class='fa fa-hands-helping' style='font-size: 15px;'></i></td>
-        <td class='widget-text' style='padding-left: 10px'>Communauté eBrigade</td>
-        <td><a href='".$communityurl."' target='_blank' ><i class='fas fa-arrow-right grey-button-arrow' title='Accès à la communauté eBrigade'></i></a></td></tr>";
+        <td class='widget-text' style='padding-left: 10px'>CommunautÃ© eBrigade</td>
+        <td><a href='".$communityurl."' target='_blank' ><i class='fas fa-arrow-right grey-button-arrow' title='AccÃ¨s Ã  la communautÃ© eBrigade'></i></a></td></tr>";
 
     $out .= "<tr><td class='alert-icon alert-green-apple' style='width: 40px;height: 40px;display: flex;justify-content: center;align-items: center'><i class='fa fa-envelope' style='font-size: 15px;'></i></td>
         <td class='widget-text' style='padding-left: 10px'>Support <a href='mailto:$display_mail' >$display_mail</a></td>
@@ -1201,8 +1201,8 @@ function show_about() {
         $data = json_decode(@file_get_contents($download_url), TRUE);
         if ( isset($data["package"]) and   version_compare($patch_version, $data["latest"], '<') )
             $out .= "<tr><td class='alert-icon alert-red' style='width: 40px;height: 40px;display: flex;justify-content: center;align-items: center'><i class='fa fa-arrow-up' style='font-size: 15px;'></i></td>
-            <td class='widget-text' style='padding-left: 10px'>Nouvelle mise à jour disponible<b> ".$data["latest"]."</b></td>
-            <td><a href=".$link." ><i class='fas fa-arrow-right grey-button-arrow' title='Mise à jour ".$application_title."'></i></a></td></tr>";
+            <td class='widget-text' style='padding-left: 10px'>Nouvelle mise Ã  jour disponible<b> ".$data["latest"]."</b></td>
+            <td><a href=".$link." ><i class='fas fa-arrow-right grey-button-arrow' title='Mise Ã  jour ".$application_title."'></i></a></td></tr>";
     }
     $out .= "<tr><td class='alert-icon alert-grey' style='width: 40px;height: 40px;display: flex;justify-content: center;align-items: center'><i class='fa fa-globe' style='font-size: 15px;'></i></td>
         <td class='widget-text' style='padding-left: 10px'>Pour plus d'informations : www.ebrigade.app</td>
@@ -1222,7 +1222,7 @@ function show_infos() {
     $id=intval(@$_SESSION['id']);
     $section=intval(@$_SESSION['SES_SECTION']);
     if ( $gardes == 1 ) {
-        // affichage des consignes, sans possibilité de les supprimer
+        // affichage des consignes, sans possibilitÃ© de les supprimer
         $query="SELECT m.M_DUREE,
                 DATE_FORMAT(m.M_DATE, '%m%d%Y%T') as FORMDATE2, DATE_FORMAT(m.M_DATE,'%d-%m-%Y') as FORMDATE3,
                 m.M_TEXTE, m.M_OBJET, m.M_FILE, m.M_ID, tm.TM_ID, tm.TM_LIBELLE, tm.TM_COLOR, tm.TM_ICON, m.S_ID
@@ -1240,30 +1240,30 @@ function show_infos() {
         }
         $out .= "<div class='timeline' style='$style'></div>";
         if ( $num > 0 ) {
-            $out .= "<div class='infos-principal-title'><a href='tableau_garde.php?tab=2&mode_garde=1' title='Voir les consignes en cours'>Consignes opérationnelles</a><a href='tableau_garde.php?tab=2&mode_garde=1'>
+            $out .= "<div class='infos-principal-title'><a href='tableau_garde.php?tab=2&mode_garde=1' title='Voir les consignes en cours'>Consignes opÃ©rationnelles</a><a href='tableau_garde.php?tab=2&mode_garde=1'>
             <i class ='fa fa-ellipsis-h fa-lg infos-three-point-icon' style='font-size:22px;margin-top:25px;margin-right:4px;'></i></a></div>";
             while ($row = mysqli_fetch_array($result) ) {
                 $out .= "<table class='noBorder'>";
                 $out .= "<tr><td class='infos-date'>".$row["FORMDATE3"]."</td><td class='infos-content'><i class='infos-icon far fa-circle fa-lg' style='color:".$row["TM_COLOR"].";' title=\"message ".$row["TM_LIBELLE"]."\"></i>";
                 $out .= "<span class='infos-title' style='overflow-wrap: anywhere;'>".$row["M_OBJET"]." </span><br><span style='overflow-wrap: anywhere;'>".force_blank_target($row["M_TEXTE"])."</span>";
                 if ( $row["M_FILE"] <> "")
-                    $out .= "<a href=\"showfile.php?section=".$row["S_ID"]."&evenement=0&message=".$row["M_ID"]."&file=".$row["M_FILE"]."\"><br>Pièce jointe</a>";
+                    $out .= "<a href=\"showfile.php?section=".$row["S_ID"]."&evenement=0&message=".$row["M_ID"]."&file=".$row["M_FILE"]."\"><br>PiÃ¨ce jointe</a>";
                 $out .= "</td></tr>";
             }
         }
         else {
-            $out .= "<div class='infos-principal-title'><a href='tableau_garde.php?tab=2&mode_garde=1' title='Voir les consignes en cours'>Consignes opérationnelles</a><a href='tableau_garde.php?tab=2&mode_garde=1'>
+            $out .= "<div class='infos-principal-title'><a href='tableau_garde.php?tab=2&mode_garde=1' title='Voir les consignes en cours'>Consignes opÃ©rationnelles</a><a href='tableau_garde.php?tab=2&mode_garde=1'>
             <i class ='fa fa-ellipsis-h fa-lg infos-three-point-icon' style='font-size:22px;margin-top:25px;margin-right:4px;'></i></a></div>";
             $out .= "<p><span class='no-content' style='position:absolute;left: 10px'>Aucune consigne en cours</span>";
         }
         $out .= "</table>";
-        $out1 = "<div class='infos-principal-title' style='margin-top: 25px;padding-top: 20px'><a href='message.php?catmessage=amicale' title='Voir les informations en cours'>Actualités</a><a href='message.php?catmessage=amicale'>
+        $out1 = "<div class='infos-principal-title' style='margin-top: 25px;padding-top: 20px'><a href='message.php?catmessage=amicale' title='Voir les informations en cours'>ActualitÃ©s</a><a href='message.php?catmessage=amicale'>
         <i class ='fa fa-ellipsis-h fa-lg infos-three-point-icon' style='font-size:22px;margin-top:25px;margin-right:4px;'></i></a></div>";
     }
 
     if ( check_rights($id,44)) {
         $list = get_family_up("$section");
-        // affichage des infos diverses, sans possibilité de les supprimer
+        // affichage des infos diverses, sans possibilitÃ© de les supprimer
         $query="SELECT m.M_DUREE,
             DATE_FORMAT(m.M_DATE, '%m%d%Y%T') as FORMDATE2, DATE_FORMAT(m.M_DATE,'%d-%m-%Y') as FORMDATE3,
             m.M_TEXTE, m.M_OBJET, m.M_FILE, m.M_ID, tm.TM_ID, tm.TM_LIBELLE, tm.TM_COLOR, tm.TM_ICON, m.S_ID
@@ -1280,7 +1280,7 @@ function show_infos() {
                 $out1 .= "<tr><td class='infos-date'>".$row["FORMDATE3"]."</td><td class='infos-content'><i class='infos-icon far fa-circle fa-lg' style='color:".$row["TM_COLOR"].";' title=\"message ".$row["TM_LIBELLE"]."\"></i>";
                 $out1 .= "<span class='infos-title' style='overflow-wrap: anywhere;'>".$row["M_OBJET"]."</span><br><span style='overflow-wrap: anywhere;'>".force_blank_target($row["M_TEXTE"])."</span>";
                 if ( $row["M_FILE"] <> "")
-                    $out1 .= "<a href=\"showfile.php?section=".$row["S_ID"]."&evenement=0&message=".$row["M_ID"]."&file=".$row["M_FILE"]."\"><br>Pièce jointe</a>";
+                    $out1 .= "<a href=\"showfile.php?section=".$row["S_ID"]."&evenement=0&message=".$row["M_ID"]."&file=".$row["M_FILE"]."\"><br>PiÃ¨ce jointe</a>";
                 $out1 .= "</td></tr>";
             }
             if ( $out1 <> "" )
@@ -1288,7 +1288,7 @@ function show_infos() {
         }
     }
     else {
-        // affichage générique pour les externes qui n'ont pas le droit de voir les infos
+        // affichage gÃ©nÃ©rique pour les externes qui n'ont pas le droit de voir les infos
         $out .= "<table class='noBorder widget-table' cellpadding=10>";
         $out .= "<tr><td style='word-wrap:break-word;'>
             Vous pouvez visualiser votre calendrier en cliquant sur <b>'Calendrier'</b> dans le menu,
@@ -1322,7 +1322,7 @@ function show_events() {
 
     $limit_events = get_preference($id,15,30);
     
-    // affichage des événements en cours
+    // affichage des Ã©vÃ©nements en cours
     $query="select E.E_CODE, EH.EH_ID, E.TE_CODE, TE.TE_ICON, TE.TE_LIBELLE, 
         E.E_LIEU, DATE_FORMAT(EH.EH_DEBUT,'%H:%i') AS DEBUTDATE, DATE_FORMAT(EH.EH_FIN,'%H:%i') AS FINDATE, E.E_NB, E.E_LIBELLE, E.E_CODE,
         DATE_FORMAT(EH.EH_DATE_DEBUT,'%d-%m-%Y') as FORMDATE1, 
@@ -1362,20 +1362,20 @@ function show_events() {
         $E_NB=$row["E_NB"];
         $S_DESCRIPTION=$row["S_DESCRIPTION"];
 
-        if ( $E_CLOSED == 1 ) $myimg="<i class='fas fa-arrow-right event-arrow event-arrow-closed' title='inscriptions fermées'></i>";
+        if ( $E_CLOSED == 1 ) $myimg="<i class='fas fa-arrow-right event-arrow event-arrow-closed' title='inscriptions fermÃ©es'></i>";
         else $myimg="<i class='fas fa-arrow-right event-arrow event-arrow-opened' title='inscriptions ouvertes'></i>";
-        if ( $EH_ID > 1 ) $sess=' session n°'.$EH_ID;
+        if ( $EH_ID > 1 ) $sess=' session nÂ°'.$EH_ID;
         else $sess='';
         if (is_file("images/evenements/".$TE_ICON)) $img="<img src=images/evenements/".$TE_ICON." width=40>";
         else $img="";
         $out .= "<td width='40px'>".$img."</td>";
         $out .= "<td class='widget-title' style='padding: 10px 0 10px 10px;'><a href=evenement_display.php?evenement=$E_CODE&from=scroller>".$E_LIBELLE.$sess."<br>";
         $out .= "<span class='widget-subtitle'>$TE_LIBELLE<br>".$E_LIEU."</span></td>";
-        $out .= "<td class='widget-text' width='90px'>".$FORMDATE1."<br><span class='subtitle-small'>".$EH_DEBUT." à ".$EH_FIN."</span></td>";
+        $out .= "<td class='widget-text' width='90px'>".$FORMDATE1."<br><span class='subtitle-small'>".$EH_DEBUT." Ã  ".$EH_FIN."</span></td>";
         $out .= "<td><a href=evenement_display.php?evenement=$E_CODE&from=scroller>".$myimg."</a></td>";
         $out .= "</tr>";
     }
-    if ( $out == "" ) $out = "<span class='no-content'>Pas d'événements prévus</span>";
+    if ( $out == "" ) $out = "<span class='no-content'>Pas d'Ã©vÃ©nements prÃ©vus</span>";
     
     $out = "<table class='noBorder widget-table'>".$out."</table>";
     
@@ -1438,10 +1438,10 @@ function show_factures() {
             $termine_depuis=$row['termine_depuis'];
             $out .= "<a href='export.php?filter=".$section."&subsections=1&exp=1tnonpaye&type_event=ALL&affichage=ecran&show=1'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
             if ( $relance_date <> '' ) $c = "<span  class='alert-blue alert-label'>Relance depuis ".$relance_depuis." j</span>";
-            else if ( $facture_date <> '' ) $c = "<span class='alert-orange alert-label'>Facturé depuis ".$facture_depuis." j</span>";
+            else if ( $facture_date <> '' ) $c = "<span class='alert-orange alert-label'>FacturÃ© depuis ".$facture_depuis." j</span>";
             else $c = "<span class='alert-red alert-label'>A facturer depuis ".$termine_depuis." j</span>";
             if ( intval($montant) == 0 ) $montant = $row['devis_montant'];
-            $a=" <a class='widget-link' href='evenement_facturation.php?evenement=".$e_code."' title='Voir cet événement ".$te_code."'>";
+            $a=" <a class='widget-link' href='evenement_facturation.php?evenement=".$e_code."' title='Voir cet Ã©vÃ©nement ".$te_code."'>";
             $out .="<tr>
                     <td class='widget-title' style='min-width=120px;'>".$a."<span>".$e_libelle."</span></a></td>
                     <td class='widget-text' width='80px;'>".$eh_date_debut."</td>
@@ -1451,10 +1451,10 @@ function show_factures() {
         }
         $out .= "</table>";
     }
-    //test afin de voir si il n'y a pas d'activité à regler 
+    //test afin de voir si il n'y a pas d'activitÃ© Ã  regler 
     if ($number==0){
         $out = "<a href='export.php?filter=".$section."&subsections=1&exp=1tnonpaye&type_event=ALL&affichage=ecran&show=1'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
-        $out .= "<span class='no-content'>Aucune alerte sur les règlements</span>";
+        $out .= "<span class='no-content'>Aucune alerte sur les rÃ¨glements</span>";
 
     }
     return $out;
@@ -1507,7 +1507,7 @@ function show_stats_manquantes() {
             $te_libelle=$row['te_libelle'];
             $eh_date_fin=$row['eh_date_fin'];
             $termine_depuis=$row['termine_depuis'];
-            $a = "<a class='widget-link' href='evenement_display.php?evenement=".$e_code."&tab=8' title=\"Renseigner les statistiques de cet événement de type ".$te_libelle."\">";
+            $a = "<a class='widget-link' href='evenement_display.php?evenement=".$e_code."&tab=8' title=\"Renseigner les statistiques de cet Ã©vÃ©nement de type ".$te_libelle."\">";
             $out .="<tr>
                     <td class='widget-title' width='120px'>".$a."<span>".$e_libelle."</span></a><div class='widget-subtitle'>".ucfirst($e_lieu)."</div></td>
                     <td class='widget-text' width='78px'>".$eh_date_fin."</td>
@@ -1522,7 +1522,7 @@ function show_stats_manquantes() {
 }
 
 //=====================================================================
-// notes de frais à valider ou rembourser
+// notes de frais Ã  valider ou rembourser
 //=====================================================================
 
 function show_notes() {
@@ -1580,7 +1580,7 @@ function show_notes() {
                 fs.FS_CLASS 'class',
                 fs.FS_DESCRIPTION 'statut',
                 date_format(n.NF_CREATE_DATE,'%d-%m-%Y') 'dc',
-                'Départemental' as 'type',
+                'DÃ©partemental' as 'type',
                 tm.TM_DESCRIPTION 'motif',
                 n.NF_DEPARTEMENTAL, n.NF_NATIONAL, n.NF_VERIFIED
                 from note_de_frais n, note_de_frais_type_statut fs, note_de_frais_type_motif tm, pompier p, section s
@@ -1623,7 +1623,7 @@ function show_notes() {
     $number=mysqli_num_rows($res);
 
     if ( $number == 0 ) {
-        $out = "<span class='no-content'>Aucune note de frais à traiter</span>";
+        $out = "<span class='no-content'>Aucune note de frais Ã  traiter</span>";
     }
     else {
         $out .= "<table class='noBorder widget-table separate'>";
@@ -1642,23 +1642,23 @@ function show_notes() {
             $national=$row["NF_NATIONAL"];
             $verified=$row["NF_VERIFIED"];
             $cmt="";
-            if ( $departemental == 1 ) $cmt .= "<span title='Note de frais départementale'>D</span>";
+            if ( $departemental == 1 ) $cmt .= "<span title='Note de frais dÃ©partementale'>D</span>";
             else if ( $national == 1 ) $cmt .= "<span title='Note de frais nationale'>N</span>";
             if ( $syndicate == 1 ) {
-                if ( $fscode == 'VAL'  ) $statut = 'Validée trésorier';
-                else if ( $fscode == 'VAL1' ) $statut = 'Validée président';
+                if ( $fscode == 'VAL'  ) $statut = 'ValidÃ©e trÃ©sorier';
+                else if ( $fscode == 'VAL1' ) $statut = 'ValidÃ©e prÃ©sident';
             }
-            if ( $verified == 1 ) $v = " <i class='fas fa-check' title='vérifié par la comptabilité'></i>";
+            if ( $verified == 1 ) $v = " <i class='fas fa-check' title='vÃ©rifiÃ© par la comptabilitÃ©'></i>";
             else $v='';
 
             $alertClass = "";
             if ( $statut == "En attente" ) $alertClass = "alert-label alert-orange";
             elseif ($statut == "En cours" ) $alertClass = "alert-label alert-violet";
-            elseif ($statut == "Annulée" ) $alertClass = "alert-label alert-grey";
-            elseif ($statut == "Rejetée" ) $alertClass = "alert-label alert-red";
-            elseif ($statut == "Validée deux fois" ) $alertClass = "alert-label alert-green-apple";
+            elseif ($statut == "AnnulÃ©e" ) $alertClass = "alert-label alert-grey";
+            elseif ($statut == "RejetÃ©e" ) $alertClass = "alert-label alert-red";
+            elseif ($statut == "ValidÃ©e deux fois" ) $alertClass = "alert-label alert-green-apple";
             elseif ( substr($statut,0,3) == "Val" ) $alertClass = "alert-label alert-green";
-            elseif ($statut == "Remboursée" ) $alertClass = "alert-label alert-blue";
+            elseif ($statut == "RemboursÃ©e" ) $alertClass = "alert-label alert-blue";
 
             $a="<a class='widget-link' href=upd_personnel.php?from=personnel&tab=9&pompier=".$pid."&person=".$pid."&subPage=1&action=update&nfid=".$note." >";
             $b="<a href=upd_personnel.php?pompier=".$pid."&tab=9>";
@@ -1699,7 +1699,7 @@ function show_participations($type='ALL') {
             $out .= "<a href='evenement_choice.php?ec_mode=MC&page=1'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
         }
         else{
-            $out .="<span class='no-content'>Aucune prochain participation prévue</span>";
+            $out .="<span class='no-content'>Aucune prochain participation prÃ©vue</span>";
             $out .= "<a href='upd_personnel.php?from=inscriptions&tab=4&pompier=$id&type_evenement=ALL'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
         }
     }
@@ -1754,7 +1754,7 @@ function show_participations($type='ALL') {
                 if ( $row['ep_flag1'] == 1 ) {
                     $txtimg="sticky-note' style='color:purple;";
                     if ($nbsections > 0 ) $as = 'SPP';
-                    else $as = 'salarié(e)';
+                    else $as = 'salariÃ©(e)';
                     $cmt="Participation en tant que ".$as." \n".$cmt;
                 }
                 else if ( $cmt  <> '' ) $txtimg="sticky-note";
@@ -1762,7 +1762,7 @@ function show_participations($type='ALL') {
                 if ( $cmt <> '' ) $txtimg="<i class='fa fa-".$txtimg."' title=\"".$cmt."\" ></i>";
                 else $txtimg="";
 
-                // affichage spécial pour les gardes
+                // affichage spÃ©cial pour les gardes
                 if ( $gardeSP ) {
                     $datefin=$datedeb;
                     $libelle=$row['EQ_NOM']." ".$duree."h";
@@ -1777,7 +1777,7 @@ function show_participations($type='ALL') {
                     else $part="";
                     $libelle=$row['e_libelle']." ".$part." ".$eh_description; 
                 }
-                if (  $row['e_visible_inside'] == 0 ) $libelle .= " <i class='fa fa-exclamation-triangle' style='color:orange;' title='ATTENTION événement caché, seules les personnes inscrites ou ayant la permission n°9 peuvent le voir'></i>";
+                if (  $row['e_visible_inside'] == 0 ) $libelle .= " <i class='fa fa-exclamation-triangle' style='color:orange;' title='ATTENTION Ã©vÃ©nement cachÃ©, seules les personnes inscrites ou ayant la permission nÂ°9 peuvent le voir'></i>";
                 if ( $row['EQ_ICON'] == "" ) $img="images/evenements/".$row['te_icon'];
                 else $img=$row['EQ_ICON'];
                 $out .= "<tr><td><img border=0 src=".$img." width=40 title=\"".$te_libelle."\"></td>";
@@ -1785,8 +1785,8 @@ function show_participations($type='ALL') {
                     $out .= "<a href='evenement_choice.php?ec_mode=MC&page=1'><i class = 'fa fa-ellipsis-h fa-lg three-points-icon'></i></a>";
                 }
                 $out .= "<td class='widget-title' style='padding-left: 10px'><a href=\"evenement_display.php?pid=".$id."&from=default&tab=1&evenement=".$e_code."\" >".$libelle."</a>";
-                if (  $te_code <> 'MC' )  $out .= "<span class='widget-subtitle'><br>Durée ".$duree."h<br>$tp_libelle</span>";
-                $out .= "<td class='activity-date'><div class='widget-text'>".$datedeb."</div><span class='subtitle-small'>".$debut." à ".$fin."</span></td>";
+                if (  $te_code <> 'MC' )  $out .= "<span class='widget-subtitle'><br>DurÃ©e ".$duree."h<br>$tp_libelle</span>";
+                $out .= "<td class='activity-date'><div class='widget-text'>".$datedeb."</div><span class='subtitle-small'>".$debut." Ã  ".$fin."</span></td>";
                 $out .= "<td><a href=\"evenement_display.php?pid=".$id."&from=default&tab=1&evenement=".$e_code."\" ><i class='fas fa-arrow-right grey-button-arrow'></i></a></td>";
                 $out .= "</td></tr>";
             }
@@ -1983,7 +1983,7 @@ function display_heures_formation($pid) {
     
     $result_h=mysqli_query($dbc,$query_heures);
     
-    $out .= "<span class='no-content'>Formations suivies depuis le début ".date('Y').".</span><br>";
+    $out .= "<span class='no-content'>Formations suivies depuis le dÃ©but ".date('Y').".</span><br>";
     $out .= "<table class='noBorder widget-table'>";
     if ( mysqli_num_rows($result_h) == 0 ) {
         $out .= "<tr><td class='widget-text' width=100><b>TOTAL</b></td>";
@@ -2023,7 +2023,7 @@ function display_heures_formation($pid) {
     $result_h=mysqli_query($dbc,$query_heures);
     
     if ( mysqli_num_rows($result_h) > 0 ) {
-        $out .= "<p><span class='no-content'>Formations données depuis le début ".date('Y').".</span><br>";
+        $out .= "<p><span class='no-content'>Formations donnÃ©es depuis le dÃ©but ".date('Y').".</span><br>";
         $out .= "<table class='noBorder widget-table'>";
         $Recap_FORTMAT='';
         while ($row = mysqli_fetch_array($result_h)) {
@@ -2052,7 +2052,7 @@ function show_stats () {
     $maSection=intval(@$_SESSION['SES_FAVORITE']);
     $nowDate=new DateTime( date("Y-m-d"));
 
-    //Calculs participations évenements persos
+    //Calculs participations Ã©venements persos
     $query = "select eh.EH_DATE_DEBUT 
             from evenement_participation ep, evenement_horaire eh, evenement e
             where ep.E_CODE=eh.E_CODE
@@ -2074,7 +2074,7 @@ function show_stats () {
         $partiPersoDone++;
     }
 
-    //calcul activités sections
+    //calcul activitÃ©s sections
     $currentMonth= date("n");
     $currentYear=date("Y");
     $currentTrimesterNb=ceil($currentMonth/3);
@@ -2130,7 +2130,7 @@ function show_stats () {
         $NouveauxTri++;
     }
 
-    //calcul tâche à faire
+    //calcul tÃ¢che Ã  faire
     $nbTotalAlert=0;
     if (isset($GLOBALS['nbAlertVehicule'])) $nbTotalAlert+=$GLOBALS['nbAlertVehicule'];
     if (isset($GLOBALS['nbAlertConsommable'])) $nbTotalAlert+=$GLOBALS['nbAlertConsommable'];
@@ -2146,12 +2146,12 @@ function show_stats () {
         $maSectionName=@$answer[0][0];
     }
     
-    $helpcomment1="Ce widget montre le nombre total de mes participation depuis le début de l'année en cours et le nombre de mes participations sur des activités en cours ou à venir";
-    $helpcomment2="Ce widget montre le nombre d'activités organisés au niveau ".$maSectionName." depuis le début du mois en cours et depuis le début du trimestre en cours";
-    $helpcomment3="Ce widget montre le nombre de nouveaux membres actifs recrutés dans ".$maSectionName." depuis le début du mois en cours et depuis le début du trimestre en cours";
-    $helpcomment4="Ce widget indique le nombre d'éléments à surveiller, valider ou corriger qui apparaissent dans les autres widgets. Ceci inclut selon la configuration de l'application et vos permissions 
-                le contrôle des véhicules (révisions, assurances, CT), des consommables (périmés, en dessous du stock minimum), 
-                des CP à valider, des Horaires à vérifier, des remplacements à approuver, des champs manquants sur ma propre fiche personnel";
+    $helpcomment1="Ce widget montre le nombre total de mes participation depuis le dÃ©but de l'annÃ©e en cours et le nombre de mes participations sur des activitÃ©s en cours ou Ã  venir";
+    $helpcomment2="Ce widget montre le nombre d'activitÃ©s organisÃ©s au niveau ".$maSectionName." depuis le dÃ©but du mois en cours et depuis le dÃ©but du trimestre en cours";
+    $helpcomment3="Ce widget montre le nombre de nouveaux membres actifs recrutÃ©s dans ".$maSectionName." depuis le dÃ©but du mois en cours et depuis le dÃ©but du trimestre en cours";
+    $helpcomment4="Ce widget indique le nombre d'Ã©lÃ©ments Ã  surveiller, valider ou corriger qui apparaissent dans les autres widgets. Ceci inclut selon la configuration de l'application et vos permissions 
+                le contrÃ´le des vÃ©hicules (rÃ©visions, assurances, CT), des consommables (pÃ©rimÃ©s, en dessous du stock minimum), 
+                des CP Ã  valider, des Horaires Ã  vÃ©rifier, des remplacements Ã  approuver, des champs manquants sur ma propre fiche personnel";
 
     echo "<div class='row accueil widget-stats'>
                 <div class='col-md-3 stats-container'><div class='stats-participations'>
@@ -2172,7 +2172,7 @@ function show_stats () {
                     <a class='stats-link' name='StatSection' onclick = 'location.href = \"evenement_choice.php?ec_mode=default&page=1\"'>
                         <div class='stats-header'>
                             <div><i class='fa fa-calendar-alt stats-activities-icon stats-icon'></i></div>
-                            <div class='stats-title' >Activités<br><span class='stats-subtitle'>$maSectionName</span></div>
+                            <div class='stats-title' >ActivitÃ©s<br><span class='stats-subtitle'>$maSectionName</span></div>
                         </div>
                     
                         <div class='stats-numbers'>
@@ -2199,7 +2199,7 @@ function show_stats () {
                 <div class='col-md-3 stats-container'><div class='stats-taches'> 
                    <div class='stats-header'>
                        <div><i class='fa fa-bell fa-lg stats-taches-icon'></i></div>
-                       <div class='stats-title'>Tâches<br><span class='stats-subtitle' title=\"".$helpcomment4."\">Mes Alarmes</span></div>
+                       <div class='stats-title'>TÃ¢ches<br><span class='stats-subtitle' title=\"".$helpcomment4."\">Mes Alarmes</span></div>
                    </div>
                     
                     <div class='stats-numbers'>

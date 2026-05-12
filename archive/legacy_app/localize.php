@@ -43,7 +43,7 @@ function SendSMS(l1) {
         return;
     }
     if (nbdest > MaxSMS) {
-        swalAlert("Vous avez choisi d'envoyer un SMS à "+ nbdest +" personnes. \n Le maximum autorisé est "+ MaxSMS);
+        swalAlert("Vous avez choisi d'envoyer un SMS Ã  "+ nbdest +" personnes. \n Le maximum autorisÃ© est "+ MaxSMS);
         return;
     }
     url="localize_send.php?pid="+dests;
@@ -64,7 +64,7 @@ $html = "<body><div align=center class='table-responsive'>";
 $NO_SMS=true;
 if ( check_rights($id, 23) and $SMS_CONFIG[1] <> 0) {
     $credits = get_sms_credits($mysection);
-    if ( intval($credits) > 0  or $credits == "Solde illimité" or $credits == "OK" ) $NO_SMS=false;
+    if ( intval($credits) > 0  or $credits == "Solde illimitÃ©" or $credits == "OK" ) $NO_SMS=false;
 }
 
 $prepopulate="";
@@ -92,9 +92,9 @@ $html .= "<ul class='nav nav-tabs  noprint' id='myTab' role='tablist'>";
 if ( $tab == '1' ) $class='active';
 else $class='';
 $html .= "<li class='nav-item'>
-    <a class='nav-link $class' href='localize.php?tab=1' title='Recherche Numéro de téléphone' role='tab' aria-controls='tab1' href='#tab1' >
+    <a class='nav-link $class' href='localize.php?tab=1' title='Recherche NumÃ©ro de tÃ©lÃ©phone' role='tab' aria-controls='tab1' href='#tab1' >
             <i class='fa fa-mobile'></i>
-            <span>Recherche Numéro de téléphone</span></a>
+            <span>Recherche NumÃ©ro de tÃ©lÃ©phone</span></a>
         </li>";
     
 if ( $tab == '2' ) $class='active';
@@ -125,15 +125,15 @@ $html .=  "<TABLE class='noBorder' >";
 
 if ( $tab == '1' ) {
     $html .=  " <tr>
-                <td align=center ><b>Numéro de téléphone à localiser</b>
+                <td align=center ><b>NumÃ©ro de tÃ©lÃ©phone Ã  localiser</b>
                 <p align=center><input type='text' id='phone' name='phone'  maxlength=14  size='25' onchange='checkPhone(form.phone,\"\",\"".$min_numbers_in_phone."\")' autofocus='autofocus'/>
                 <p align=center><input type='button' class='btn btn-success' value='Envoyer' onclick='SendSMS(this.form.phone)' $disabled>
                 <input type='button' class='btn btn-secondary' value='Retour' name='annuler' onclick=\"redirect();\">
                 </td></tr>";
 }
 if ( $tab == '2' ) {
-    $html .=  " <tr><td align=center ><b>Personne à localiser 
-            <i class='far fa-lightbulb fa-lg' title='Saisissez les premières lettres du nom de chaque personne dans le champ ci-dessous'></i></b>
+    $html .=  " <tr><td align=center ><b>Personne Ã  localiser 
+            <i class='far fa-lightbulb fa-lg' title='Saisissez les premiÃ¨res lettres du nom de chaque personne dans le champ ci-dessous'></i></b>
             <input type='text' id='input-facebook-theme' name='liste2' autofocus='autofocus'/>
             <script type='text/javascript'>
             $(document).ready(function() {
@@ -141,8 +141,8 @@ if ( $tab == '2' ) {
                     theme: \"facebook\",
                     $prepopulate
                     preventDuplicates: true,
-                    hintText: \"Saisissez les premières lettres du nom\",
-                    noResultsText: \"Aucun résultat\",
+                    hintText: \"Saisissez les premiÃ¨res lettres du nom\",
+                    noResultsText: \"Aucun rÃ©sultat\",
                     searchingText: \"Recherche en cours\"
                     
                 });
@@ -163,7 +163,7 @@ if ( $tab == '2' ) {
 }
 $html .= "</TABLE>";
 $html .=  "</form></div></div></div></div></div>";
-$html .=  "<br><small>Un SMS va être envoyé à la personne sélectionnée.<br>En cliquant sur le lien reçu, il activera sa géolocalisation et vous pourrez le voir sur la carte.</small>";
+$html .=  "<br><small>Un SMS va Ãªtre envoyÃ© Ã  la personne sÃ©lectionnÃ©e.<br>En cliquant sur le lien reÃ§u, il activera sa gÃ©olocalisation et vous pourrez le voir sur la carte.</small>";
 $html .=  "</div>";
 print $html;
 writefoot();

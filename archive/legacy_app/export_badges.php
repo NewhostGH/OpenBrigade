@@ -46,9 +46,9 @@ function get_nb_rows() {
 }
 
 function get_long_name($section) {
-    if ( substr($section,0,4) == 'Fédé') $s = $section;
+    if ( substr($section,0,4) == 'FÃ©dÃ©') $s = $section;
     else if ( substr($section,0,5) == 'Prote') $s = $section;
-    else if ( substr($section,0,4) == 'Délé') $s = $section;
+    else if ( substr($section,0,4) == 'DÃ©lÃ©') $s = $section;
     else {
         $voyels = array('A','E','I','O','U','Y','H','a','e','i','o','u','y','h');
         $short2=strtolower(substr($section,0,2));
@@ -61,8 +61,8 @@ function get_long_name($section) {
         if ( $short3 == 'la ' ) $s = "de";
         else if ( $short5 == 'paris' )  {$s = ""; $section='paris seine';}
         else if ( $short5 == 'vienn' )  $s = "de la";
-        else if ( $short5 == 'côte-' )  $s = "de";
-        else if ( $short5 == 'drôme' )  $s = "de la";
+        else if ( $short5 == 'cÃ´te-' )  $s = "de";
+        else if ( $short5 == 'drÃ´me' )  $s = "de la";
         else if ( $short5 == 'corse' )  $s = "de la";
         else if ( $short5 == 'mayot' ) $s = "de";
         else if ( $short5 == 'saint' ) $s = "de";
@@ -72,10 +72,10 @@ function get_long_name($section) {
         else if ( $short5 == 'loire' or $short5 == 'sarth' or $short5 == 'somme') $s = "de la";
         else if ( $short5 == 'haute' or $short5 == 'paris') $s = "de";
         else if ( $short2 == 'ai' ) $s = "de l'";
-        else if ( $last2 == 'in' or $short5 == 'rhône') $s = " du ";
+        else if ( $last2 == 'in' or $short5 == 'rhÃ´ne') $s = " du ";
         else if ( in_array($short1 , $voyels) ) $s = "de l'";
         else if ( $short5 == 'maine' or  $short2 == 'fi' or  $short2 == 'pu' or $short2 == 'pa' or $short2 == 'va' or  $short5 == 'lot e' or  $short2 == 'ta') $s = "du";
-        else if ( $short2 == 'ma' or $short2 == 'me' or $short2 == 'ré' or $short2 == 'cô' or $short2 == 'ni' or $short2 == 'cr') $s = "de la";
+        else if ( $short2 == 'ma' or $short2 == 'me' or $short2 == 'rÃ©' or $short2 == 'cÃ´' or $short2 == 'ni' or $short2 == 'cr') $s = "de la";
         else if ( $last1 == 'e' or $last2 == 'is') $s = "de";
         else $s = "du";
         $s = "Protection Civile"." ".$s." ".fixcharset($section);
@@ -107,9 +107,9 @@ if ( $type == 'choice' ||  $type == 'save' ||  $type == 'qrcode') {
      writehead();
      echo "<body><div align=center>";
     echo "<h2>Export des informations pour badges</h2>";
-    echo "<p>Cette page permet de générer les informations nécessaires à l'impression des badges";
+    echo "<p>Cette page permet de gÃ©nÃ©rer les informations nÃ©cessaires Ã  l'impression des badges";
      echo "<p><a href=export_badges.php?type=personnel>Fichier des badges</a>";
-     echo "<p><a href=export_badges.php?type=departements>Fichier des départements</a>";
+     echo "<p><a href=export_badges.php?type=departements>Fichier des dÃ©partements</a>";
     echo "<p><a href=export_badges.php?type=qrcode>Extraire les QR Codes</a>";
     echo "<p><a href=export_badges.php?type=save>Sauver la liste</a><p>";
     
@@ -122,7 +122,7 @@ if ( $type == 'choice' ||  $type == 'save' ||  $type == 'qrcode') {
         // end of initial cleanup
      
         $nb1=get_nb_rows();
-        // supprimer les données enregistrées aujourd'hui
+        // supprimer les donnÃ©es enregistrÃ©es aujourd'hui
         $sql="delete from badge_list where DATE = CURDATE()";
         $res = mysqli_query($dbc,$sql);            
         $sql="insert into badge_list ( P_ID, S_ID, P_PHOTO, DATE) 
@@ -139,7 +139,7 @@ if ( $type == 'choice' ||  $type == 'save' ||  $type == 'qrcode') {
         where  ".$full_condition;
          $res = mysqli_query($dbc,$query);
         
-        echo "<p><font color=green><b>".$nb2." demandes de badges enregistrées.</b></font>";
+        echo "<p><font color=green><b>".$nb2." demandes de badges enregistrÃ©es.</b></font>";
     }
     if ( $type=='qrcode' ){
         @set_time_limit(600);
@@ -151,7 +151,7 @@ if ( $type == 'choice' ||  $type == 'save' ||  $type == 'qrcode') {
             extract_qr_code($P_ID,'file');
         }
         $nb= mysqli_num_rows($res);
-        echo "<p><font color=green><b>$nb QR Codes extraits dans le répertoire ".$dir.".</b></font>";  
+        echo "<p><font color=green><b>$nb QR Codes extraits dans le rÃ©pertoire ".$dir.".</b></font>";  
     }
      echo "</body></html>";
     exit;

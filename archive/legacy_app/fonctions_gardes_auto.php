@@ -49,7 +49,7 @@ function remplir_tableau_avec_disponibles ($filter,$month,$year,$equipe) {
 }
 
 //---------------------------------------------------------------------
-// choisir le personnel pour un événement
+// choisir le personnel pour un Ã©vÃ©nement
 //---------------------------------------------------------------------
 function populate_evenement($evenement) {
     global $dbc,$id,$nbsections,$QUALIFICATIONS,$INSCRITS,$COMP,$SELECTED;
@@ -80,13 +80,13 @@ function populate_evenement($evenement) {
     if (  $nbsections == 0 and ! check_rights($id, 6, $S_ID)) check_all(24);
     $INSCRITS=prepare_inscrits($evenement);
     $COMP=prepare_competences($evenement);
-//    my_print_r("Compétences demandées",$COMP);
-//    my_print_r("Personnel déjà inscrit", $INSCRITS);
+//    my_print_r("CompÃ©tences demandÃ©es",$COMP);
+//    my_print_r("Personnel dÃ©jÃ  inscrit", $INSCRITS);
 //    my_print_r ("Nombre max", $nb_jour);
 //    my_print_r ("Nombre max ", $nb_nuit);
     insert_data($S_ID, $evenement, $year, $month, $day, $QUALIFICATIONS, $durees,$sections_de_garde,$nb_jour,$nb_nuit);
-//    my_print_r("Personnel choisi par compétence",$COMP);
-//    my_print_r("Personnel déjà inscrit", $INSCRITS);
+//    my_print_r("Personnel choisi par compÃ©tence",$COMP);
+//    my_print_r("Personnel dÃ©jÃ  inscrit", $INSCRITS);
 }
 
 //---------------------------------------------------------------------
@@ -134,7 +134,7 @@ function prepare_competences($evenement) {
 }
 
 //---------------------------------------------------------------------
-// pompiers déjà inscrits de garde ce jour
+// pompiers dÃ©jÃ  inscrits de garde ce jour
 //---------------------------------------------------------------------
 
 function prepare_inscrits($evenement) {
@@ -236,7 +236,7 @@ function prev_next($year,$month,$day) {
 //---------------------------------------------------------------------
 function prepare_dispos($section,$year,$month,$day, $prev_next=array()) {
     global $dbc;
-    // trouver les gardes du jour, pour éviter d'engager sur plusieurs gardes (ex: caserne et FDF) le même jour
+    // trouver les gardes du jour, pour Ã©viter d'engager sur plusieurs gardes (ex: caserne et FDF) le mÃªme jour
     $all_gardes=all_gardes($year,$month,$day);
     $A=array();
     $query="select distinct p.P_ID, upper(p.P_NOM) P_NOM, p.P_PRENOM, p.P_STATUT, ep.E_CODE as OTHER, p.P_SECTION, sum( d.PERIOD_ID * d.PERIOD_ID ) as DISPO
@@ -269,7 +269,7 @@ function prepare_dispos($section,$year,$month,$day, $prev_next=array()) {
 }
 
 //---------------------------------------------------------------------
-// choisir la personne pour chaque compétence
+// choisir la personne pour chaque compÃ©tence
 //---------------------------------------------------------------------
 
 function select_pid($day, $partie, $section_garde, $PS_ID, $QUALIF, $DISPOS) {
@@ -278,7 +278,7 @@ function select_pid($day, $partie, $section_garde, $PS_ID, $QUALIF, $DISPOS) {
     else  $f='NUIT';
     $PRIO=array();
     $found=false;
-    // d'abord affecter les inscrits si qualifiés
+    // d'abord affecter les inscrits si qualifiÃ©s
     if ( isset ($INSCRITS[$partie])) {
         foreach($INSCRITS[$partie] as $P_ID => $value) {
             if ( isset($QUALIF[$P_ID][$PS_ID]) and ! isset($SELECTED[$partie][$P_ID])) {
@@ -313,7 +313,7 @@ function select_pid($day, $partie, $section_garde, $PS_ID, $QUALIF, $DISPOS) {
             }
         }
     }
-    //my_print_r("Priorité pour  le ".$day." partie ".$partie.", compétence ".$PS_ID, $PRIO);
+    //my_print_r("PrioritÃ© pour  le ".$day." partie ".$partie.", compÃ©tence ".$PS_ID, $PRIO);
     if ( count($PRIO) == 0 ) return 0;
     $top = array_search(max($PRIO),$PRIO);
     $SELECTED[$partie][$top] = 1;
@@ -338,7 +338,7 @@ function insert_data($section, $evenement, $year, $month, $day, $QUALIFICATIONS,
                 if ( $who == 0 ) {
                     $section_garde = $sections_de_garde[$partie];
                     $who  = select_pid($day, $partie, $section_garde, $PS_ID, $QUALIFICATIONS, $DISPOS);
-                    // ne pas pouvoir re-choisir la même personne
+                    // ne pas pouvoir re-choisir la mÃªme personne
                     //
                     if ( $who > 0 ) {
                         if ( ! isset($INSCRITS[$partie][$who])) {

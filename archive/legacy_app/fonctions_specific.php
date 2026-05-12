@@ -18,17 +18,17 @@
   # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 //=====================================================================
-// fonctions spécifiques de l'application: 
-// peuvent être modifiés par les administrateurs
+// fonctions spÃ©cifiques de l'application: 
+// peuvent Ãªtre modifiÃ©s par les administrateurs
 //=====================================================================
 
 
-// cette fonction est exécutée lors de l'ajout d'une compétence
+// cette fonction est exÃ©cutÃ©e lors de l'ajout d'une compÃ©tence
 function specific_post_insert ($person, $PS_ID) {
     global $cisname, $dbc, $nbmaxlevels;
     if ( intval($person) == 0 ) return;
     
-     // this is specific FNPC. ajouter rôle président (102) si la compétence président (101) est ajoutée
+     // this is specific FNPC. ajouter rÃ´le prÃ©sident (102) si la compÃ©tence prÃ©sident (101) est ajoutÃ©e
      if ( $cisname == 'Protection Civile' and $PS_ID == 101 ) {
         $section = get_section_of($person);
         if ( get_level($section) >= $nbmaxlevels -1 ) $section=get_section_parent($section);
@@ -67,11 +67,11 @@ function specific_post_insert ($person, $PS_ID) {
     return;
 }
 
-// cette fonction est exécutée chaque jour lors de la première connexion au serveur 
+// cette fonction est exÃ©cutÃ©e chaque jour lors de la premiÃ¨re connexion au serveur 
 function specific_maintenance () {
     global $dbc, $cisname, $nbsections;
     
-    // pompiers notifier pour expiration future de compétences, 120 et 30 jours avant.
+    // pompiers notifier pour expiration future de compÃ©tences, 120 et 30 jours avant.
     if ( $nbsections > 0 ) {
         notify_before_expiration(120);
         notify_before_expiration(30);
@@ -99,7 +99,7 @@ function specific_maintenance () {
 
 function notify_before_expiration ($nbdaysbefore=60) {
     global $dbc, $nbsections;
-    // envoyer un mail X jours avant expiration des compétences à chaque personne concernée
+    // envoyer un mail X jours avant expiration des compÃ©tences Ã  chaque personne concernÃ©e
     $query="select p.P_ID, p.P_NOM, p.P_PRENOM , po.DESCRIPTION, e.EQ_NOM,
             date_format(q.q_expiration,'%d-%m-%Y') 'Expire', 
             TO_DAYS(q.q_expiration) - TO_DAYS(NOW()) 'Reste' 
@@ -127,34 +127,34 @@ function notify_before_expiration ($nbdaysbefore=60) {
         $nb++;
         
         if ( $EQ_NOM == 'Vaccinations' ) $t = 'vaccination';
-        else $t = 'compétence';
+        else $t = 'compÃ©tence';
         
         $subject  = "Expiration prochaine de $t - ".fixcharset($DESCRIPTION);
         $message  = "Bonjour ".ucfirst($P_PRENOM).",\n";
         $message .= "Votre $t \"".$DESCRIPTION."\"\n";
-        $message .= "arrivera à expiration dans ".$nbdaysbefore." jours, le ".$Expire.".\n";
+        $message .= "arrivera Ã  expiration dans ".$nbdaysbefore." jours, le ".$Expire.".\n";
         if ( $nbsections > 0 ) {
-            $message .= "Dans le cadre de l'expiration d'une compétence prenez contact avec votre service formation,";
+            $message .= "Dans le cadre de l'expiration d'une compÃ©tence prenez contact avec votre service formation,";
             $message .= " dans tous les autres cas contactez votre secretariat.\n";
         }
-        else $message .= "Veuillez penser à son renouvellement.\n";
+        else $message .= "Veuillez penser Ã  son renouvellement.\n";
         $message .= "Merci d'avance.\n";
         mysendmail("$P_ID" , "$P_ID" , "$subject" , "$message" );
     }
     return $nb;
 }
      
-// cette fonction est exécutée pour interdire les messages contenant certains mots
+// cette fonction est exÃ©cutÃ©e pour interdire les messages contenant certains mots
 function specific_chat_cleanup () {
     global $dbc;
     $query="delete from chat where C_MSG like '%ant.virtuelle%' or C_MSG like '%apcv.users%' or C_MSG like '%proteccivilevirtuel%'";
     $result=mysqli_query($dbc,$query);
 }
 
-// cette fonction est exécutée lors de l'insertion d'une fiche personnel
+// cette fonction est exÃ©cutÃ©e lors de l'insertion d'une fiche personnel
 // on ajoute automatiquement:
-// - une compétence Cotisation qui exire le 1er jour du mois courant
-// - une compétence L.A.T
+// - une compÃ©tence Cotisation qui exire le 1er jour du mois courant
+// - une compÃ©tence L.A.T
 function specific_insert ($P_ID) {
     global $dbc;
      global $cisname;
@@ -172,7 +172,7 @@ function specific_insert ($P_ID) {
 }
 
 
-// fonctions documents spécifiques
+// fonctions documents spÃ©cifiques
 function count_specific_documents($TYPE){
     global $granted_event;
     $c=0;
@@ -200,7 +200,7 @@ function show_specific_documents($TYPE){
             $out .= "<tr><td style='padding-left:4px'>
             <a href='".$fiche."' target='blank'>".get_smaller_icon('pdf')."</a>
              <a style='padding-left:5px' href='".$fiche."' target='blank'>
-             Fiche bilan éditable</a></td>
+             Fiche bilan Ã©ditable</a></td>
             <td class='hide_mobile' colspan=2></td>
             <td align='right'><a class='btn btn-default btn-action' href='#'><i class='fa fa-unlock' style='color:#1bc5bd' title='Vous pouvez voir et imprimer ces documents'></i></a></td>
             </tr>";
@@ -220,7 +220,7 @@ function show_specific_documents($TYPE){
         $out .= "<tr ><td style='padding-left:4px'>
             <a href='pdf_document.php?evenement=".$evenement."&mode=21' target='blank'>".get_smaller_icon('pdf')."</a>
              <a style='padding-left:5px' href='pdf_document.php?evenement=".$evenement."&mode=21' target='blank'>
-            Fiche Bilan PSSP - Centre d'accueil des impliqués</a></td>
+            Fiche Bilan PSSP - Centre d'accueil des impliquÃ©s</a></td>
             <td class='hide_mobile' colspan=2></td>
             <td align='right'><a class='btn btn-default btn-action' href='#'><i class='fa fa-unlock' style='color:#1bc5bd' title='Vous pouvez voir et imprimer ces documents'></i></a></td>
             </tr>";
@@ -231,13 +231,13 @@ function show_specific_documents($TYPE){
             $out .= show_hardcoded_doc(1,"SST Fiche Evaluation Individuelle" , "Evaluation_Individuelle.pdf","pdf");
             $out .= show_hardcoded_doc(1,"SST Notice Evaluation Individuelle" , "fiche_individuelle_eval_.pdf","pdf");
             $out .= show_hardcoded_doc(1,"SST PV de Session" , "PV_Session.pdf","pdf");
-            $out .= show_hardcoded_doc(1,"SST Procédures administratives" , "procedures_administratives.pdf","pdf");
+            $out .= show_hardcoded_doc(1,"SST ProcÃ©dures administratives" , "procedures_administratives.pdf","pdf");
         }
         if ( $TYPE == 'PSC1' ) {
             $out .= show_hardcoded_doc(2,"PSC1 fiche de suivi de groupe" , "Fiche_de_suivi_de_groupe.pdf","pdf");
             $out .= show_hardcoded_doc(2,"PSC1 fiche de suivi individuel" , "Fiche_de_suivi_individuel.pdf","pdf");
-            $out .= show_hardcoded_doc(2,"PSC1 fiche d'évaluation de satisfaction" , "Fiche_evaluation_de_satisfaction.pdf","pdf");
-            $out .= show_hardcoded_doc(2,"PSC1 fiche d'évaluation participant" , "eval_participants_psc1.xls","xls");
+            $out .= show_hardcoded_doc(2,"PSC1 fiche d'Ã©valuation de satisfaction" , "Fiche_evaluation_de_satisfaction.pdf","pdf");
+            $out .= show_hardcoded_doc(2,"PSC1 fiche d'Ã©valuation participant" , "eval_participants_psc1.xls","xls");
         }
     }
     return $out;
@@ -246,7 +246,7 @@ function show_specific_documents($TYPE){
 function print_specific_doc() {
     global $cisname, $application_title;
     if ( $cisname == "Protection Civile" ) {
-        $t="Accéder à l'environnement de test ".$application_title;
+        $t="AccÃ©der Ã  l'environnement de test ".$application_title;
         $logo=get_logo();
         echo "
         <td><a href='https://test.franceprotectioncivile.org' target='_blank'><img src=".$logo." class='img-max-30' border=0></a></td>
@@ -256,12 +256,12 @@ function print_specific_doc() {
 }
 
 function get_specific_outside_role() {
-    // cette fonction permet d'activer l'affichage de personnel d'une autre section, mais enregistré avec un rôle spcécifique
-    // pages concernées: personnel (+excel), compétences (+excel), trombinoscopes
+    // cette fonction permet d'activer l'affichage de personnel d'une autre section, mais enregistrÃ© avec un rÃ´le spcÃ©cifique
+    // pages concernÃ©es: personnel (+excel), compÃ©tences (+excel), trombinoscopes
     global $dbc, $nbsections, $sdis;
     if ( $nbsections > 0 ) return 0;
     else if ( $sdis ==1 ) $query="select GP_ID from groupe where GP_DESCRIPTION = 'Agent double statut'";
-    else $query="select GP_ID from groupe where GP_DESCRIPTION in( 'Adhérent autre ADPC', 'Licencié autre club' )";
+    else $query="select GP_ID from groupe where GP_DESCRIPTION in( 'AdhÃ©rent autre ADPC', 'LicenciÃ© autre club' )";
     $result=mysqli_query($dbc,$query);
     $row=mysqli_fetch_array($result);
     $role = intval(@$row["GP_ID"]);
@@ -281,7 +281,7 @@ function get_asa_query($pid) {
             and YEAR(eh.EH_DATE_DEBUT) >= '".$year."'
             and exists (select 1 from evenement_option eo2, evenement_option_choix eoc2 
                         where eoc2.P_ID=".$pid." and eo2.EO_ID = eoc2.EO_ID 
-                        and eoc2.E_CODE = eo.E_CODE and REPLACE(eo2.EO_TITLE,' ','')='Avez-vousbesoind''unedétache?'
+                        and eoc2.E_CODE = eo.E_CODE and REPLACE(eo2.EO_TITLE,' ','')='Avez-vousbesoind''unedÃ©tache?'
                         and eoc2.EOC_VALUE = (select eod.EOD_ID from evenement_option_dropdown eod where eod.EO_ID = eo2.EO_ID and eod.EOD_TEXTE='OUI'))";
 }
 function get_asa_query2($pid,$evenement) {
@@ -313,7 +313,7 @@ function get_logo_specific($S_ID, $NF_NATIONAL) {
 }
 
 function get_specific_section_option($pid, $his_section, $current) {
-    // cette fonction utilisée dans l'éditeur de notes de frais permet d'afficher une option spéciale dans le choix de la section
+    // cette fonction utilisÃ©e dans l'Ã©diteur de notes de frais permet d'afficher une option spÃ©ciale dans le choix de la section
     global $syndicate,$dbc;
     $out="";
     if ( $syndicate  and is_file('images/user-specific/logo06.png')) {
@@ -339,8 +339,8 @@ function get_specific_section_option($pid, $his_section, $current) {
 function notification_elu_departemental($role, $section, $pid) {
     global $cisname,$dbc,$nbmaxlevels;
     if ( $cisname == 'Protection Civile' ) {
-        if ( $role == 'Président (e)' or $role == 'Secrétaire général' or $role == 'Trésorier (e)' ) {
-            // est ce un département ou une antenne?
+        if ( $role == 'PrÃ©sident (e)' or $role == 'SecrÃ©taire gÃ©nÃ©ral' or $role == 'TrÃ©sorier (e)' ) {
+            // est ce un dÃ©partement ou une antenne?
             $query="select S_CODE, NIV, S_DESCRIPTION from section_flat where S_ID=".intval($section);
             $result=mysqli_query($dbc,$query);
             $row=@mysqli_fetch_array($result);
@@ -348,11 +348,11 @@ function notification_elu_departemental($role, $section, $pid) {
             $S_CODE = $row["S_CODE"];
             $S_DESCRIPTION = $row["S_DESCRIPTION"];
             if ( $NIV < $nbmaxlevels - 1 ) {
-                // notification nationale si changement élu départemental
+                // notification nationale si changement Ã©lu dÃ©partemental
                 $email_national = "direction.siege@protection-civile.org";
                 $subject= "Changement ".$role." pour ".$S_CODE." ".$S_DESCRIPTION;
                 $pour="pour ";
-                if ( $NIV == $nbmaxlevels - 2 ) $pour .= "le département ";
+                if ( $NIV == $nbmaxlevels - 2 ) $pour .= "le dÃ©partement ";
                 $message= my_ucfirst(get_prenom("$pid"))." ".strtoupper(get_nom("$pid"))." est maintenant ".$role."\n".$pour.$S_CODE." ".$S_DESCRIPTION;
                 $SenderName = fixcharset(my_ucfirst($_SESSION['SES_PRENOM']." ".strtoupper($_SESSION['SES_NOM'])));
                 $SenderMail = $_SESSION['SES_EMAIL'];

@@ -28,7 +28,7 @@ $(document).ready(function(){
             }
         }
         if ( ! blnValid) {
-            swal("Le fichier n'est pas valide. Seuls les fichiers en " + _validFileExtensions.join(", ")+" sont autorisés.");
+            swal("Le fichier n'est pas valide. Seuls les fichiers en " + _validFileExtensions.join(", ")+" sont autorisÃ©s.");
             return false;
         }
         if ( f.size > max || f.fileSize > max ) {
@@ -72,7 +72,7 @@ $(document).ready(function(){
         }
         
         img.onerror = function() {
-            swal("Le contenu du fichier ne semble pas correspondre à son extension.");
+            swal("Le contenu du fichier ne semble pas correspondre Ã  son extension.");
             this.value='';
             return false;
         }

@@ -69,7 +69,7 @@ if ( $action == "montrer" and $confirmed == 0 ) {
     $message .= "<p>Envoyer un mail de notification aux participants?";
     $message .= "<p><strong>Mail</strong> <label class='switch'>
                 <input type='checkbox' name='mail' id='mail' class='ml-3 div-decal-left' value='1' checked >
-                <span class='slider round' title='Envoyer un mail de notification pour que le personnel soit informé que le tableau de garde est maintenant visible'></span>
+                <span class='slider round' title='Envoyer un mail de notification pour que le personnel soit informÃ© que le tableau de garde est maintenant visible'></span>
                 </label>";
     
     $message .= "<p><input type='submit' class='btn btn-primary' value='Montrer' onClick=\"this.disabled=true;this.value='attendez';document.form.submit();\"> ";

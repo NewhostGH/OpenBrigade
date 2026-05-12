@@ -39,7 +39,7 @@ else check_all(41);
 
 if ($company <= 0 ) check_all(41);
 
-$evenement=(isset($_GET['evenement'])?intval($_GET['evenement']):""); // Exporter un seul événement
+$evenement=(isset($_GET['evenement'])?intval($_GET['evenement']):""); // Exporter un seul Ã©vÃ©nement
 $ical_perso=(isset($_GET['pid'])?intval($_GET['pid']):""); // Exporter le calendrier perso
 if (isset($_GET['pid']) and ! check_rights($id, 56 )) $ical_perso = $id;
 
@@ -67,7 +67,7 @@ $v->setProperty( 'method', utf8_encode('PUBLISH') );
   // required of some calendar software
 $v->setProperty( "x-wr-calname", utf8_encode("Calendrier $cisname") );
   // required of some calendar software
-$v->setProperty( "X-WR-CALDESC", utf8_encode("$cisname - Gestion des activités") );
+$v->setProperty( "X-WR-CALDESC", utf8_encode("$cisname - Gestion des activitÃ©s") );
   // required of some calendar software
 $v->setProperty( "X-WR-TIMEZONE", utf8_encode("Europe/Paris") );
   // required of some calendar software

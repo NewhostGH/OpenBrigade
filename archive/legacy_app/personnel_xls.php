@@ -190,9 +190,9 @@ $result=mysqli_query($dbc,$query);
 $number=mysqli_num_rows($result);
 
 // columns
-$columns_title=array("Nom","Id","Prénom","2ème Prénom","Nom de naissance","Nationalité","Grade", "Statut", "Rue","Code postal",
-                     "Ville","identifiant","Permission", "Téléphone mobile","Autre Téléphone","Adresse de messagerie","Section",
-                     "Entreprise", "Date début", "Date Fin", "Date naissance", "Lieu naissance", "Personne à prévenir", "Tél personne à prévenir", "Mail personne à prévenir", "Infos masquées");
+$columns_title=array("Nom","Id","PrÃ©nom","2Ã¨me PrÃ©nom","Nom de naissance","NationalitÃ©","Grade", "Statut", "Rue","Code postal",
+                     "Ville","identifiant","Permission", "TÃ©lÃ©phone mobile","Autre TÃ©lÃ©phone","Adresse de messagerie","Section",
+                     "Entreprise", "Date dÃ©but", "Date Fin", "Date naissance", "Lieu naissance", "Personne Ã  prÃ©venir", "TÃ©l personne Ã  prÃ©venir", "Mail personne Ã  prÃ©venir", "Infos masquÃ©es");
 
 $custom=count_entities("custom_field");
 if ( $custom > 0 and $number < 1000) {

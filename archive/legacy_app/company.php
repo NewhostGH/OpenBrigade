@@ -141,7 +141,7 @@ execute_paginator($number);
 // ===============================================
 
 if ( $number == 0 )
-    echo "<div class='col-sm-12' align='center' style='position: absolute;top: 165px;'>Aucune entreprise n'a encore été définie</div>";
+    echo "<div class='col-sm-12' align='center' style='position: absolute;top: 165px;'>Aucune entreprise n'a encore Ã©tÃ© dÃ©finie</div>";
 
 else {
     echo "<div class='col-sm-12'>";

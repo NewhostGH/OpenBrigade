@@ -29,7 +29,7 @@ function impression(){
    this.print();
 }
 function DelCalConfirm(){
-    swal("Etes-vous sûr de vouloir supprimer ce(s) calendrier(s) de vos préférences ?", {addButton : 1, textButton : "Oui", classButton : "swal2-forgot btn-primary"});
+    swal("Etes-vous sÃ»r de vouloir supprimer ce(s) calendrier(s) de vos prÃ©fÃ©rences ?", {addButton : 1, textButton : "Oui", classButton : "swal2-forgot btn-primary"});
     document.getElementsByClassName('font-weight-bold btn-swal swal2-forgot btn-primary')[0].onclick=function() {
         document.getElementById('delCal').value = '1';
         document.formf.submit();

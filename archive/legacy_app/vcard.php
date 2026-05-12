@@ -42,9 +42,9 @@ else {
     $export_name = "Export vcard";
     $select="
         p.p_id,
-        concat( upper(substring(P_PRENOM,1,1)) , substring(P_PRENOM,2)) 'PrÈnom',
+        concat( upper(substring(P_PRENOM,1,1)) , substring(P_PRENOM,2)) 'Pr√©nom',
         upper(p.p_nom) 'Nom',    
-        null  'DeuxiËme prÈnom',
+        null  'Deuxi√®me pr√©nom',
         concat( upper(substring(P_PRENOM,1,1)) , substring(P_PRENOM,2) ,' ',upper(P_NOM)) 'Nom complet',
         p.p_birthdate 'Date de Naissance',
         p.p_address 'Rue (domicile)',
@@ -57,14 +57,14 @@ else {
         when p.p_phone is not null and p.p_hide = 1 and ".$show."=1 then concat(p.p_phone) 
         when p.p_phone is not null and p.p_hide = 0 then concat(p.p_phone) 
         end
-        as 'TÈlÈphone mobile',                
+        as 'T√©l√©phone mobile',                
         case 
         when p.p_phone2 is null then concat('')
         when p.p_phone2 is not null and p.p_hide = 1 and ".$show."=0 then concat('')
         when p.p_phone2 is not null and p.p_hide = 1 and ".$show."=1 then concat(p.p_phone2) 
         when p.p_phone2 is not null and p.p_hide = 0 then concat(p.p_phone2) 
         end
-        as 'TÈlÈphone personnel',        
+        as 'T√©l√©phone personnel',        
         case
         when p.p_email is null then concat('')  
         when p.p_email is not null and p.p_hide = 1 and ".$show."=0 then concat('')
@@ -72,7 +72,7 @@ else {
         when p.p_email is not null and p.p_hide = 0 then concat(p.p_email) 
         end
         as 'Adresse de messagerie',
-        concat('".$cisname." - ',s.s_description)  'SociÈtÈ'";
+        concat('".$cisname." - ',s.s_description)  'Soci√©t√©'";
     $table="pompier p, section s";
     $where = (isset($list)?" p.p_section in(".$list.") AND ":"");
     $where .= " p.p_section = s.s_id ";
@@ -88,8 +88,8 @@ else {
             require_once('vcard_class.php');
             while($row=mysqli_fetch_array($res)){
                 $vc = new vcard();
-                $vc->data['display_name']= $row['Nom'].' '.$row['PrÈnom'];
-                $vc->data['first_name']= $row['PrÈnom'];
+                $vc->data['display_name']= $row['Nom'].' '.$row['Pr√©nom'];
+                $vc->data['first_name']= $row['Pr√©nom'];
                 $vc->data['last_name']= $row['Nom'];
                 $vc->data['additional_name']="";
                 $vc->data['name_prefix']="";
@@ -98,7 +98,7 @@ else {
                 $vc->data['title']="";
                 $vc->data['role']="";
                 $vc->data['department']="";
-                $vc->data['company']=$row['SociÈtÈ'];
+                $vc->data['company']=$row['Soci√©t√©'];
                 $vc->data['work_po_box']="";
                 $vc->data['work_extended_address']="";
                 $vc->data['work_address']="";
@@ -114,8 +114,8 @@ else {
                 $vc->data['home_postal_code']=$row['Code postal (domicile)'];
                 $vc->data['home_country']="";
                 $vc->data['office_tel']="";
-                $vc->data['home_tel']=$row['TÈlÈphone personnel'];
-                $vc->data['cell_tel']=$row['TÈlÈphone mobile'];
+                $vc->data['home_tel']=$row['T√©l√©phone personnel'];
+                $vc->data['cell_tel']=$row['T√©l√©phone mobile'];
                 $vc->data['fax_tel']="";
                 $vc->data['pager_tel']="";
                 $vc->data['email1']=$row['Adresse de messagerie'];
@@ -125,7 +125,7 @@ else {
                     $vc->data['photo']=$row['Photo'];
                 $vc->data['birthday']=($row['Date de Naissance']!=''?$row['Date de Naissance']:'');
                 $vc->data['timezone']="";
-                $vc->data['sort_string']=fixcharset($row['Nom'].' '.$row['PrÈnom']);
+                $vc->data['sort_string']=fixcharset($row['Nom'].' '.$row['Pr√©nom']);
                 $vc->data['note']="";
                 
                 // write vcf file and send it by mail
@@ -133,7 +133,7 @@ else {
                 $fp = fopen($filesdir.'/'.$file, 'w');
                 fwrite($fp, $vc->generateMailMessage());
                 fclose($fp);
-                mysendmail($_SESSION['id'],$_SESSION['id'],"Vcard pour ".$vc->data['sort_string'],"Voici en piËce jointe la carte de visite de ".$row['Nom'].' '.$row['PrÈnom'],$filesdir.'/'.$file);
+                mysendmail($_SESSION['id'],$_SESSION['id'],"Vcard pour ".$vc->data['sort_string'],"Voici en pi√®ce jointe la carte de visite de ".$row['Nom'].' '.$row['Pr√©nom'],$filesdir.'/'.$file);
                 unlink($filesdir.'/'.$file);
                 
                 // download directly

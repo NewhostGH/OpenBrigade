@@ -78,16 +78,16 @@ else {
 }
 if ( isset($_POST["save"])) { 
     if ( $err > 0 ) {
-        if ( $err == 2 ) $msg = "Erreur le paramètre <b>serveur</b> n'est pas renseigné.</b>";
-        else if ( $err == 3 ) $msg = "Erreur le paramètre <b>database</b> n'est pas renseigné.</b>";
-        else if ( $err == 4 ) $msg = "Erreur le paramètre <b>user</b> n'est pas renseigné.</b>";
-        else $msg = "Erreur de connection à la base de données avec les paramètres choisis:<p><b>".$errmsg."</b>";
+        if ( $err == 2 ) $msg = "Erreur le paramÃ¨tre <b>serveur</b> n'est pas renseignÃ©.</b>";
+        else if ( $err == 3 ) $msg = "Erreur le paramÃ¨tre <b>database</b> n'est pas renseignÃ©.</b>";
+        else if ( $err == 4 ) $msg = "Erreur le paramÃ¨tre <b>user</b> n'est pas renseignÃ©.</b>";
+        else $msg = "Erreur de connection Ã  la base de donnÃ©es avec les paramÃ¨tres choisis:<p><b>".$errmsg."</b>";
         echo "<div align='center'><div class='alert alert-danger' role='alert'>".$msg."</div></div><p>";
     }
     else {
         $ret = write_db_config($server,$user,$password,$database);
         if ( $ret == 1 ) {
-            echo "<div align=center><div class='alert alert-danger' role='alert'>Erreur d'écriture du fichier de configuration conf/sql.php.</div></div><p>";
+            echo "<div align=center><div class='alert alert-danger' role='alert'>Erreur d'Ã©criture du fichier de configuration conf/sql.php.</div></div><p>";
            }
     }
 }
@@ -110,20 +110,20 @@ if (! file_exists($config_file)) {
 
 echo "<div class='table-responsive' align=center><table class='noBorder'>
       <tr><td width = 60 ><i class='fa fa-database fa-2x'></i></td><td>
-      <span class='ebrigade-h4'>Configuration Base de données</span></td></tr></table>";
+      <span class='ebrigade-h4'>Configuration Base de donnÃ©es</span></td></tr></table>";
 
 echo "<form method='POST' name='config' action='configuration_db.php'  autocomplete='no'>";
 
 echo "<div class='col-sm-6 col-md-6 col-lg-4 col-xl-3'>
         <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'><strong>Paramètres de connexion à la base de données</strong></div>
+                <div class='card-title'><strong>ParamÃ¨tres de connexion Ã  la base de donnÃ©es</strong></div>
             </div>
             <div class='card-body graycard'>
       <table class='noBorder' cellspacing=0 border=0>";
 
-$help="Le nom ou l'adresse IPv4 du serveur où est installée la base de données. Si la base MySQL n'est pas sur le port standard (3306), alors il est
-       possible de préciser le port en le séparant par ':' Quelques exemples possibles: localhost, 127.0.0.1:3308 , db5000280469.hosting-data.io";
+$help="Le nom ou l'adresse IPv4 du serveur oÃ¹ est installÃ©e la base de donnÃ©es. Si la base MySQL n'est pas sur le port standard (3306), alors il est
+       possible de prÃ©ciser le port en le sÃ©parant par ':' Quelques exemples possibles: localhost, 127.0.0.1:3308 , db5000280469.hosting-data.io";
 
 echo "<tr>
       <td align=right>Server Name 
@@ -132,20 +132,20 @@ echo "<tr>
       <input name='server' type=text value='$server' size=25 class='small-input' autocomplete='no'>"; 
 echo "</tr><tr>
       <td align=right>User
-      <i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom de l'utilisateur qui se connecte à la base de données, par exemple dbo811501582.\"></i>
+      <i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom de l'utilisateur qui se connecte Ã  la base de donnÃ©es, par exemple dbo811501582.\"></i>
       </td>
       <td align=left valign=middle> 
       <input name='user' type=text value='$user' size=25  class='small-input'
       onchange='isValid2(config.user,\"$user\")' autocomplete='no'>"; 
 echo "</tr><tr>
       <td align=right>Password
-      <i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le mot de passe de l'utilisateur qui se connecte à la base de données.\"></i>
+      <i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le mot de passe de l'utilisateur qui se connecte Ã  la base de donnÃ©es.\"></i>
       </td>
       <td align=left valign=middle >
       <input name='password' type=password value='$password' size=25 autocomplete='no' class='small-input'>"; 
 echo "</tr><tr>
       <td align=right>Database name
-      <i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom de la base de données, par exemple db811501582.\"></i>
+      <i class='fa fa-info-circle fa-lg hide_mobile' title=\"Indiquez ici le nom de la base de donnÃ©es, par exemple db811501582.\"></i>
       </td>
       <td align=left valign=middle>
       <input name='database' type=text value='$database' size=25 title='Par exemple db811501582' class='small-input'
@@ -158,7 +158,7 @@ echo "</tr><tr>
 </form></div>";
 }
 else {
-    write_msgbox("Application indisponible",$error_pic,"<p>La base de données n'est pas accessible.<p>Vérifiez que la base soit bien démarrée.<p>Puis vérifiez les paramètres de configuration dans le fichier ".$config_file."<p>
+    write_msgbox("Application indisponible",$error_pic,"<p>La base de donnÃ©es n'est pas accessible.<p>VÃ©rifiez que la base soit bien dÃ©marrÃ©e.<p>Puis vÃ©rifiez les paramÃ¨tres de configuration dans le fichier ".$config_file."<p>
     <input type=submit  class='btn btn-secondary' value='Retour' onclick='javascript:redirect();'></p>",30,30);
 }
 writefoot();

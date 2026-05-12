@@ -90,7 +90,7 @@ echo "<div class='col-sm-10'>
 echo "<table class='newTableAll' cellspacing=0 border=0 >";
  echo "<tr>
             <td style='width:1%'></td>
-            <td><a href=evenement_consommable.php?cid=".$C_ID."&order=E_LIBELLE>Evénement</td>
+            <td><a href=evenement_consommable.php?cid=".$C_ID."&order=E_LIBELLE>EvÃ©nement</td>
             <td><a href=evenement_consommable.php?cid=".$C_ID."&order=S_DESCRIPTION>Organisateur</td>
             <td><a href=evenement_consommable.php?cid=".$C_ID."&order=dtdb>Date</td>
             <td>Horaire</td>

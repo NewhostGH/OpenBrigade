@@ -32,7 +32,7 @@ else if (isset ($_GET['destid'])) $pids = explode(",",($_GET['destid']));
 $query="select P_NOM, P_PRENOM, P_EMAIL from pompier where P_ID in (".implode(",",$pids).")";
 $res = mysqli_query($dbc,$query);
 
-echo "Prénom,Nom,Adresse de messagerie\r\n";
+echo "PrÃ©nom,Nom,Adresse de messagerie\r\n";
 while ( custom_fetch_array($res)) {
    if ( $P_EMAIL <> "" ) echo ucfirst(fixcharset($P_PRENOM)).",".fixcharset(strtoupper($P_NOM)).",".$P_EMAIL."\r\n";
 }

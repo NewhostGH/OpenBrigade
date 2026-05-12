@@ -77,7 +77,7 @@ echo "</head>";
 $html = "<body class='top30'>";
 
 //=====================================================================
-// recupérer infos evenement ou garde
+// recupÃ©rer infos evenement ou garde
 //=====================================================================
 if ( $evenement > 0 ) {
     check_all(41);
@@ -93,7 +93,7 @@ if ( $evenement > 0 ) {
         if (! check_rights($id, 15, "$S_ID")) check_all(24);
     }
     
-    if ( $partie > 1 ) $E_LIBELLE .= ", partie n°".$partie;
+    if ( $partie > 1 ) $E_LIBELLE .= ", partie nÂ°".$partie;
     
     $html .=  "<div align=center><table class='noBorder'>";
     
@@ -118,7 +118,7 @@ if ( $garde > 0 ) {
             check_all(24);
     }
     
-    if ( $partie > 1 ) $EQ_NOM .= " partie n°".$partie;
+    if ( $partie > 1 ) $EQ_NOM .= " partie nÂ°".$partie;
     $html .=  "<div align=center><table class='noBorder'>
           <tr><td>
           <span class='ebrigade-h4'><img src=".$EQ_ICON." height=30> ".$EQ_NOM."</span></td></tr>
@@ -163,7 +163,7 @@ if (isset($_POST["global"])) {
 }
 
 //=====================================================================
-// afficher  compétences
+// afficher  compÃ©tences
 //=====================================================================
 
 if ( $evenement > 0 ) 
@@ -189,7 +189,7 @@ if ( $nbrows > 0 ) {
     $html .= "<tr><td>Nombre de personnes requises</td>";
     if ( $evenement > 0 ) 
         $html .=  "<td align=center>Inscrits</td>";
-    $html .=  "<td align=center>Demandés</td></tr>";
+    $html .=  "<td align=center>DemandÃ©s</td></tr>";
 
     while ( custom_fetch_array($resultm) ) {
         // GLOBAL - seulement pour evenements
@@ -198,7 +198,7 @@ if ( $nbrows > 0 ) {
             if ( $nb == 0 ) $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fggreen;' title='Pas de limite sur le nombre de personnel inscrit'></i>";
             else if ( $inscrits > $nb ) {
                 if ( $TE_CODE == 'GAR' ) $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fgorange;' title='Trop de personnel inscrit'></i>";
-                else $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fgblue;' title='Plus de personnel inscrit que nécessaire '></i>";
+                else $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fgblue;' title='Plus de personnel inscrit que nÃ©cessaire '></i>";
             }
             else if ( $inscrits == $nb ) $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fggreen;' title='Nombre suffisant de personnel inscrit'></i>";
             else $pic="<i class='fa fa-exclamation-circle fa-lg' style='color:$widget_fgred;' title='Pas assez de personnel inscrit'></i>";
@@ -258,9 +258,9 @@ if ( $nbrows > 0 ) {
             if ( $nb > 0 ) {
                 if ( $evenement > 0 ) {
                     $inscrits=get_nb_competences($evenement,$partie,$poste);
-                    if ( $inscrits > $nb + 2 ) $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fgblue;' title='Plus de personnel inscrit que nécessaire pour cette compétence'></i>";
-                    else if ( $inscrits >= $nb ) $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fggreen;' title='Nombre suffisant de personnel inscrit pour cette compétence'></i>";
-                    else $pic="<i class='fa fa-exclamation-circle fa-lg' style='color:$widget_fgred;'  title='Pas assez de personnel inscrit pour cette compétence'></i>";
+                    if ( $inscrits > $nb + 2 ) $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fgblue;' title='Plus de personnel inscrit que nÃ©cessaire pour cette compÃ©tence'></i>";
+                    else if ( $inscrits >= $nb ) $pic="<i class='fa fa-check-circle fa-lg' style='color:$widget_fggreen;' title='Nombre suffisant de personnel inscrit pour cette compÃ©tence'></i>";
+                    else $pic="<i class='fa fa-exclamation-circle fa-lg' style='color:$widget_fgred;'  title='Pas assez de personnel inscrit pour cette compÃ©tence'></i>";
                 }
                 else {
                     $inscrits="";
@@ -284,14 +284,14 @@ if ( $competences == 1 ) {
     if ($evenement > 0 ) $colspan=3;
     else $colspan=2;
     $html .=  "<div class='col-sm-6'>";
-    $html .=  "<table class='newTableAll'><tr><td colspan='".$colspan."'>Ajouter une compétence requise</td></tr>";
+    $html .=  "<table class='newTableAll'><tr><td colspan='".$colspan."'>Ajouter une compÃ©tence requise</td></tr>";
     if ($evenement > 0 ) $colspan=2;
     else $colspan=1;
     $html .=  "<tr><td colspan='".$colspan."'>";
     // very strange BUG if we put the selectpicker class, then the form does no longer work
     //$html .=  "<select name='new_competence' class='selectpicker' data-live-search='true' data-container='body'>";
     $html .=  "<select name='new_competence' class='selectpicker smalldropdown2' data-container='body' data-style='btn btn-default' data-live-search='true'>";
-    $html .=  "<option value='-1'>Choix compétence</option>";
+    $html .=  "<option value='-1'>Choix compÃ©tence</option>";
 
     $querym="select e.EQ_NOM, e.EQ_ID, p.TYPE, p.DESCRIPTION, p.PS_ID 
             from poste p, equipe e

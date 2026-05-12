@@ -122,8 +122,8 @@ if ( isset ($_POST["numcav"])  and ($action=='update' or $action=='insert') and 
     else $CAV_OUVERT=0;
     
     if ( $CAV_NAME == "" ) {
-        $msg="Le nom du centre d'accueil des victimes doit être renseigné ";
-        write_msgbox("erreur de paramètres", $error_pic, $msg."<p align=center><a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
+        $msg="Le nom du centre d'accueil des victimes doit Ãªtre renseignÃ© ";
+        write_msgbox("erreur de paramÃ¨tres", $error_pic, $msg."<p align=center><a href=\"javascript:history.back(1)\"><input type='submit' class='btn btn-default' value='Retour'></a> ",10,0);
         exit;
     }
 
@@ -198,10 +198,10 @@ else if ( $action == 'insert' ) {
     $result=mysqli_query($dbc,$query);
      $row=@mysqli_fetch_array($result);
     $num=intval($row[0]) + 1;
-    $CAV_NAME="Centre n°".$num;
+    $CAV_NAME="Centre nÂ°".$num;
 }
 else {
-     if ( $action <> 'delete' ) echo "Centre accueil victmes non trouvé";
+     if ( $action <> 'delete' ) echo "Centre accueil victmes non trouvÃ©";
     exit;
 }
 
@@ -211,7 +211,7 @@ if ( $CAV_OUVERT == 1 ) {
 }
 else {
     $color='red';
-    $t="Centre d'accueil des victimes fermé";     
+    $t="Centre d'accueil des victimes fermÃ©";     
 }
 
 echo "<form action=cav_edit.php name=formulaire method=POST>";
@@ -228,8 +228,8 @@ echo "<table class='noBorder' cellspacing=0 border=0 style='width:100%'>";
 
 $query3="select EE_NAME from evenement_equipe where E_CODE=".$evenement." order by EE_ORDER, EE_NAME";
 
-echo "<tr><td>Nom ou numéro du centre $asterisk</td>";
-echo "<td><input class='form-control form-control-sm' name='name' id='name' type=text size=30 value=\"".$CAV_NAME."\" $disabled title=\"Saisissez le nom ou un numéro\"></td></tr>";
+echo "<tr><td>Nom ou numÃ©ro du centre $asterisk</td>";
+echo "<td><input class='form-control form-control-sm' name='name' id='name' type=text size=30 value=\"".$CAV_NAME."\" $disabled title=\"Saisissez le nom ou un numÃ©ro\"></td></tr>";
 
 if ( $CAV_OUVERT ) $checked = 'checked';
 else $checked='';
@@ -264,7 +264,7 @@ else $map="";
 
 echo "<tr id='rowAddress'>
             <td><i>Adresse du centre <br>d'accuel des victimes </i>
-          <i class='fa fa-question-circle fa-lg' title=\"si l'adresse renseignée est correcte, alors l'intervention est marquée sur la carte\"></i></td>
+          <i class='fa fa-question-circle fa-lg' title=\"si l'adresse renseignÃ©e est correcte, alors l'intervention est marquÃ©e sur la carte\"></i></td>
             <td colspan=3><input type='text' class='form-control form-control-sm flex' style='width: 92%;' name='address' size=30 value=\"".$CAV_ADDRESS."\" $disabled> ".$map."</td>";        
 echo "</tr>";
 
@@ -275,7 +275,7 @@ echo "<td colspan=3>";
 $evts_not_canceled=get_event_and_renforts($evenement,true);
 
 echo "<select class='form-control select-control' name='responsable' id='responsable' $disabled>";
-echo "<option value='0' selected>............. Non défini .............</option>";
+echo "<option value='0' selected>............. Non dÃ©fini .............</option>";
 
 $query2="select EE_NAME, EE_ID from evenement_equipe where E_CODE=".$evenement." order by EE_ORDER ";
 $result2=mysqli_query($dbc,$query2);
@@ -312,7 +312,7 @@ $query3="select distinct p.P_ID, p.P_NOM, p.P_PRENOM
          order by P_NOM, P_PRENOM";
 $result3=mysqli_query($dbc,$query3);
 if ( @mysqli_num_rows($result3) > 0 )
-    echo "<OPTGROUP LABEL='Non affecté à une équipe' style=\"background-color:$mylightcolor\">";
+    echo "<OPTGROUP LABEL='Non affectÃ© Ã  une Ã©quipe' style=\"background-color:$mylightcolor\">";
 while ($row3=@mysqli_fetch_array($result3)) {
     $_P_ID=$row3["P_ID"];
     $_P_NOM=strtoupper($row3["P_NOM"]);
@@ -334,7 +334,7 @@ if ( $granted_update ) {
     if ( $numcav > 0 ) echo " <input type='button'  class='btn btn-default' value='supprimer' onclick=\"deleteCav('".$numcav."');\">";
 }    
 if ( $from == 'map' ) 
-    echo " <input type='button' value='Retour'   class='btn btn-default' title='Retour à la carte' onclick=\"javascript:history.back(1);\">";
+    echo " <input type='button' value='Retour'   class='btn btn-default' title='Retour Ã  la carte' onclick=\"javascript:history.back(1);\">";
 else
     echo " <input type='button'  class='btn btn-secondary' value='Retour' onclick=\"redirect('".$evenement."');\">";
 

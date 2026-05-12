@@ -101,7 +101,7 @@ if ( $gardes == 1 ) {
     echo "<tr>
             <td>Ordre garde</td>
             <td><select name='ordre' class='selectpicker form-control form-control-sm' data-container='body' data-style='btn btn-default'>";
-    echo "<option value='0' selected>Non défini</option>";
+    echo "<option value='0' selected>Non dÃ©fini</option>";
     for ( $i=1; $i < 10; $i++ ) {
         echo "<option value='".$i."'>".$i."</option>";
     }      
@@ -153,7 +153,7 @@ if ( $nbsections == 0 ) {
     echo "</tr>";
 
     echo "<tr>
-                <td><i>Complément d'adresse</i></td>
+                <td><i>ComplÃ©ment d'adresse</i></td>
                 <td><input class='form-control form-control-sm' type='text' name='address_complement' size='33' value=''></td>";
     echo "</tr>";
 
@@ -188,19 +188,19 @@ if ( $nbsections == 0 ) {
     //=====================================================================
 
     echo "<tr>
-                <td>Téléphone</td>
+                <td>TÃ©lÃ©phone</td>
                 <td>
                 <input class='form-control form-control-sm' type='text' name='phone' size='16' maxlength=16 value='' onchange='checkPhone(form.phone,\"\",\"".$min_numbers_in_phone."\")'>";
     echo "</tr>";
 
     if ( $assoc ) {
         echo "<tr>
-                <td>TPH veille opérationnelle</td>
+                <td>TPH veille opÃ©rationnelle</td>
                 <td>
                 <input class='form-control form-control-sm' type='text' name='phone2' size='16' maxlength=16 value='' onchange='checkPhone(form.phone2,\"\",\"".$min_numbers_in_phone."\")'>";
         echo "</tr>";
         echo "<tr>
-                <td>Téléphone formation</td>
+                <td>TÃ©lÃ©phone formation</td>
                 <td>
                 <input class='form-control form-control-sm' type='text' name='phone3' size='16' maxlength=16 value='' onchange='checkPhone(form.phone3,\"\",\"".$min_numbers_in_phone."\")'>";
         echo "</tr>";
@@ -211,20 +211,20 @@ if ( $nbsections == 0 ) {
                 <input class='form-control form-control-sm' type='text' name='fax' size='16' maxlength=16 value='' onchange='checkPhone(form.fax,\"\",\"".$min_numbers_in_phone."\")'>";
     echo "</tr>";
 
-    if ( $syndicate ) $e="Email président";
-    else $e="Email opérationnel";
+    if ( $syndicate ) $e="Email prÃ©sident";
+    else $e="Email opÃ©rationnel";
 
     echo "<tr>
                 <td>".$e."</font></td>
                 <td>
                 <input class='form-control form-control-sm' type='text' name='email' size='33' value='' onchange='mailCheck(form.email,\"\")'
-                title='Cette adresse est utilisée pour les besoins de la veille opérationnelle.'>";
+                title='Cette adresse est utilisÃ©e pour les besoins de la veille opÃ©rationnelle.'>";
     echo "</tr>";
     echo "<tr>
-                <td>Email secrétariat</font></td>
+                <td>Email secrÃ©tariat</font></td>
                 <td>
                 <input class='form-control form-control-sm' type='text' name='email2' size='33' value='' onchange='mailCheck(form.email2,\"\")'
-                title='Cette adresse email utilisée dans les documents PDF générés, et reçoit toutes les notifications relatives aux événements et au personnel.'>";
+                title='Cette adresse email utilisÃ©e dans les documents PDF gÃ©nÃ©rÃ©s, et reÃ§oit toutes les notifications relatives aux Ã©vÃ©nements et au personnel.'>";
     echo "</tr>";
 
     if ( $syndicate == 0 ) {
@@ -232,7 +232,7 @@ if ( $nbsections == 0 ) {
                     <td>Email formation</font></td>
                     <td>
                     <input class='form-control form-control-sm' type='text' name='email3' size='33' value='' onchange='mailCheck(form.email3,\"\")'
-                    title='Adresse email utilisée pour les contacts liés aux formations.'>";
+                    title='Adresse email utilisÃ©e pour les contacts liÃ©s aux formations.'>";
         echo "</tr>";
     }
     echo "<tr>
@@ -248,8 +248,8 @@ if ( $nbsections == 0 ) {
                     value=''></td>";
         echo "</tr>";
         echo "<tr>
-                  <td>N° Affiliation</td>
-                  <td><input class='form-control form-control-sm' type='text' name='affiliation' size='20' title=\"Numéro d'affiliation l'organisation\" autocomplete='off'
+                  <td>NÂ° Affiliation</td>
+                  <td><input class='form-control form-control-sm' type='text' name='affiliation' size='20' title=\"NumÃ©ro d'affiliation l'organisation\" autocomplete='off'
                     value='' ></td>";
         echo "</tr>";
     }

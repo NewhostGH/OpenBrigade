@@ -64,7 +64,7 @@ if ( $grades == 1 ) {
     array_push($columns_title, "Grade");
     array_push($columns, "D");
 }
-array_push($columns_title,"Nom","Prénom","Email");
+array_push($columns_title,"Nom","PrÃ©nom","Email");
 if ( $nbsections == 0 ) {
     array_push($columns_title, "Section");
     if ( $grades == 1 ) array_push($columns, "E");
@@ -80,7 +80,7 @@ $query2 .= " order by e.EQ_ID, p.PS_ORDER";
 $result2=mysqli_query($dbc,$query2);
 $num_postes = mysqli_num_rows($result2);
 
-// toutes les colonnes possibles Excel de F à AAA
+// toutes les colonnes possibles Excel de F Ã  AAA
 $letters = array(); 
 if ( $grades == 1 and $nbsections == 0 ) $l = 'F';
 else if ( $grades == 1 or $nbsections == 0 ) $l = 'E';

@@ -306,11 +306,11 @@ if ($tab==1){
         <thead>
             <tr class="widget-title">
                 <?php if($type_conso == 'ALL' ): ?>
-                <th title='' data-field="cat" data-sortable="true" data-align="left">Catégorie</th>
+                <th title='' data-field="cat" data-sortable="true" data-align="left">CatÃ©gorie</th>
                 <?php endif ?>
                 <th title='' data-field="type" data-sortable="true" data-align="left">Type</th>
                 <th title='' data-field="stock" data-sortable="true" data-sorter="stockSorter">Stock</th>
-                <th title='Stock minimum, commander si le stock est inférieur' data-field="min" data-sortable="true" class="hide_mobile"> Min.</th>
+                <th title='Stock minimum, commander si le stock est infÃ©rieur' data-field="min" data-sortable="true" class="hide_mobile"> Min.</th>
                 <th title='' data-field="conditionnement" data-sortable="true" data-align="left" class="hide_mobile">Conditionnement</th>
                 <th title='' data-field="section" data-sortable="true" data-align="left" class="hide_mobile">Section</th>
                 <th title='' data-field="desc" data-sortable="true" data-align="left" class="hide_mobile">Description</th>
@@ -552,7 +552,7 @@ if ($tab==2) {
         echo "<table class='newTableAll' cellspacing=0 border=0>";
         echo "<tr>";
         echo "<td align=left ><a href=consommable.php?order=TC_DESCRIPTION&tab=2&dtdb=$dtdb&dtfn=$dtfn >Type</a></td>";
-        echo "<td align=left ><a href=consommable.php?order=E_LIBELLE&tab=2&dtdb=$dtdb&dtfn=$dtfn >Activité</a></td>";
+        echo "<td align=left ><a href=consommable.php?order=E_LIBELLE&tab=2&dtdb=$dtdb&dtfn=$dtfn >ActivitÃ©</a></td>";
         echo "<td align=left style='min-width: 93px;'>Date</td>";
         echo "<td align=left style='min-width: 67px;'>Horaire</td>";
         echo "<td><a href=consommable.php?order=EC_NOMBRE&tab=2&dtdb=$dtdb&dtfn=$dtfn >Nombre</a></td>";
@@ -578,7 +578,7 @@ if ($tab==2) {
         }
         echo "</table>".@$later;
     }
-    else echo "Aucun résultat";
+    else echo "Aucun rÃ©sultat";
 }
 writefoot();
 ?>

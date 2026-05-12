@@ -55,8 +55,8 @@ $query="select GP_DESCRIPTION, TR_SUB_POSSIBLE, TR_ALL_POSSIBLE, TR_WIDGET, GP_U
 $result=mysqli_query($dbc,$query);
 custom_fetch_array($result);
 
-if ( $TR_CONFIG == 1 ) $title="Droit d'accès";
-else if ( $TR_CONFIG == 2 ) $title="Rôle de l'organigramme";
+if ( $TR_CONFIG == 1 ) $title="Droit d'accÃ¨s";
+else if ( $TR_CONFIG == 2 ) $title="RÃ´le de l'organigramme";
 else $title="Permission de l'organigramme";
 
 echo "<div align=center>";
@@ -77,7 +77,7 @@ echo "<div class='row'>";
 echo "<div class='col-sm-6'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Informations du $title n° $GP_ID - $GP_DESCRIPTION</strong></div>
+                <div class='card-title'><strong> Informations du $title nÂ° $GP_ID - $GP_DESCRIPTION</strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder' cellspacing=0 border=0>";
@@ -89,7 +89,7 @@ $disabled="";
 if ($GP_ID == 4) $disabled="disabled";
  
 if ( $GP_ID < 100 )  $tt='groupe';
-else $tt='rôle';
+else $tt='rÃ´le';
 
 $help = write_help_habilitations();
 
@@ -105,7 +105,7 @@ if ( $GP_ID >= 100 ) {
     echo "<tr>
             <td colspan=2 >Membre d'une sous-section possible</td>
             <td align=left colspan=2>
-            <label class='switch'><input type='checkbox' name='sub_possible'  value='1' $checked title=\"Si cette case est cochée, alors un membre d'une sous-section peut avoir le rôle\">
+            <label class='switch'><input type='checkbox' name='sub_possible'  value='1' $checked title=\"Si cette case est cochÃ©e, alors un membre d'une sous-section peut avoir le rÃ´le\">
           <span class='slider round'></span></label></td>";
     echo "</tr>";
     if ( $TR_ALL_POSSIBLE == 1 ) $checked="checked";
@@ -113,7 +113,7 @@ if ( $GP_ID >= 100 ) {
     echo "<tr>
             <td colspan=2 >Membre de n'importe quelle section</td>
             <td align=left colspan=2>
-            <label class='switch'><input type='checkbox' name='all_possible'  value='1' $checked title=\"Si cette case est cochée, alors un membre de n'importe quelle section peut avoir le rôle\">
+            <label class='switch'><input type='checkbox' name='all_possible'  value='1' $checked title=\"Si cette case est cochÃ©e, alors un membre de n'importe quelle section peut avoir le rÃ´le\">
           <span class='slider round'></span></label></td>";
     echo "</tr>";
 
@@ -121,10 +121,10 @@ if ( $GP_ID >= 100 ) {
         if ( $GP_ASTREINTE == 1 ) $checked="checked";
         else $checked="";
         echo "<tr>
-            <td colspan=2 >Peut être attribué pour des astreintes</td>
+            <td colspan=2 >Peut Ãªtre attribuÃ© pour des astreintes</td>
             <td align=left colspan=2>
             <label class='switch'><input type='checkbox' name='gp_astreinte'  value='1' $checked 
-            title=\"Si cette case est cochée, alors ce rôle peut être attribué \nde façon temporaire pour des astreintes.\nATTENTION: Si décoché, les astreintes correspondantes seront supprimées.\">
+            title=\"Si cette case est cochÃ©e, alors ce rÃ´le peut Ãªtre attribuÃ© \nde faÃ§on temporaire pour des astreintes.\nATTENTION: Si dÃ©cochÃ©, les astreintes correspondantes seront supprimÃ©es.\">
           <span class='slider round'></span></label></td>";
         echo "</tr>";
     }
@@ -134,20 +134,20 @@ if ( $GP_ID >= 100 ) {
     if ( $TR_WIDGET == 1 ) $checked="checked";
     else $checked="";
     echo "<tr>
-        <td colspan=2 >Affiché en page d'accueil</td>
+        <td colspan=2 >AffichÃ© en page d'accueil</td>
         <td align=left colspan=2>
         <label class='switch'><input type='checkbox' name='tr_widget' value='1' $checked 
-        title=\"Si cette case est cochée, alors les personnes ayant ce rôle apparaissent sur le widget de page d'accueil du personnel de la section concernée.\">
+        title=\"Si cette case est cochÃ©e, alors les personnes ayant ce rÃ´le apparaissent sur le widget de page d'accueil du personnel de la section concernÃ©e.\">
       <span class='slider round'></span></label></td>";
     echo "</tr>";
     
-    // type rôle ou permission
+    // type rÃ´le ou permission
     echo "<tr>
-            <td colspan=2>Catégorie (rôle ou permission)</td>
+            <td colspan=2>CatÃ©gorie (rÃ´le ou permission)</td>
             <td align=left colspan=2>
             <select class='form-control select-control flex' name='category' style='width: 91%;'>";
     if ( $TR_CONFIG == 2) $selected ='selected'; else $selected='';
-    echo     "<option value='2' $selected>Rôle dans l'organigramme</option>";
+    echo     "<option value='2' $selected>RÃ´le dans l'organigramme</option>";
     if ( $TR_CONFIG == 3) $selected ='selected'; else $selected='';
     echo    "<option value='3' $selected>Permission dans l'organigramme</option>";
     echo " </select> ".$help."
@@ -156,7 +156,7 @@ if ( $GP_ID >= 100 ) {
     
 }
 else {
-    // attribuable à certaines catégories de personnel seulement
+    // attribuable Ã  certaines catÃ©gories de personnel seulement
     echo "<tr>
             <td colspan=2>Utilisable pour le personnel</td>
             <td align=left colspan=2>
@@ -176,7 +176,7 @@ echo "<tr>
           <td colspan=2>Ordre d'affichage</td>
             <td align=left colspan=2>";
           
-if ( $GP_ID >= 100 ) $tt="Si l'ordre choisi est 100, alors le rôle n'apparaît pas dans l'organigramme imprimable avec photos";
+if ( $GP_ID >= 100 ) $tt="Si l'ordre choisi est 100, alors le rÃ´le n'apparaÃ®t pas dans l'organigramme imprimable avec photos";
 else $tt="Choisir l'ordre d'affichage dans le tableau";
 echo "<select class='form-control select-control smalldropdown3-nofont' id='gp_order' name='gp_order' title=\"".$tt."\">";
 for ( $i=1; $i <= 100; $i++ ) {
@@ -211,7 +211,7 @@ print write_modal("membres.php?groupe=".$GP_ID, "liste", "<span class='badge' st
 echo "</tr>";
       
 //=====================================================================
-// ligne fonctionnalités
+// ligne fonctionnalitÃ©s
 //=====================================================================
 $query="select distinct f.F_ID , f.F_TYPE, f.F_LIBELLE, tf.TF_ID, tf.TF_DESCRIPTION, f.F_FLAG,f.F_DESCRIPTION
          from fonctionnalite f, type_fonctionnalite tf
@@ -224,9 +224,9 @@ echo "</table></div></div></div>";
 echo "<div class='col-sm-6'>";
 echo "<table class='newTableAll'>";
 echo "<tr>
-          <td width=20 align=left><a href=upd_habilitations.php?gpid=".$GP_ID."&order=F_ID>N°</a></td>
-          <td width=250 align=left><a href=upd_habilitations.php?gpid=".$GP_ID."&order=F_LIBELLE>Fonctionnalité</a></td>
-          <td width=100 align=left><a href=upd_habilitations.php?gpid=".$GP_ID."&order=TF_ID>Catégorie</a></td>
+          <td width=20 align=left><a href=upd_habilitations.php?gpid=".$GP_ID."&order=F_ID>NÂ°</a></td>
+          <td width=250 align=left><a href=upd_habilitations.php?gpid=".$GP_ID."&order=F_LIBELLE>FonctionnalitÃ©</a></td>
+          <td width=100 align=left><a href=upd_habilitations.php?gpid=".$GP_ID."&order=TF_ID>CatÃ©gorie</a></td>
           <td width=150 align=left>Permission</td>
       </tr>";
 
@@ -280,7 +280,7 @@ if ( $from='astreintes' )
 echo " <input type='button' class='btn btn-secondary' value='Retour' name='annuler' onclick=\"javascript:history.back();\"> ";
 
 if ( $nbsections == 0 ) 
-    echo "<p><small>$asterisk<i> ces fonctionnalités ne sont pas accessibles aux personnes habilitées seulement au niveau antenne</i></small>";
+    echo "<p><small>$asterisk<i> ces fonctionnalitÃ©s ne sont pas accessibles aux personnes habilitÃ©es seulement au niveau antenne</i></small>";
       
 echo "</div>";
 writefoot();

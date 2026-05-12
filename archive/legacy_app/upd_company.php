@@ -101,7 +101,7 @@ if($isIncluded){
 //=====================================================================
 
 if ( $C_CREATED_BY <> '' ) 
-    $author = "<font size=1><i> - créée par ".ucfirst(get_prenom($C_CREATED_BY))." ".strtoupper(get_nom($C_CREATED_BY))."
+    $author = "<font size=1><i> - crÃ©Ã©e par ".ucfirst(get_prenom($C_CREATED_BY))." ".strtoupper(get_nom($C_CREATED_BY))."
                le ". $C_CREATE_DATE."
                 </i></font>";
 else 
@@ -243,7 +243,7 @@ echo " </td>
 //=====================================================================
 
 echo "<tr>
-            <td><b>N° SIRET</b></td>
+            <td><b>NÂ° SIRET</b></td>
             <td  align=left><input type='text' name='C_SIRET' size='30' class='form-control form-control-sm' value=\"$C_SIRET\" onchange='checkNumber(form.C_SIRET,\"$C_SIRET\")' $disabled>";
 echo " </td>
       </tr>";
@@ -282,7 +282,7 @@ echo "</tr>";
 //=====================================================================
 
 echo "<tr>
-            <td  align=right>Téléphone</td>
+            <td  align=right>TÃ©lÃ©phone</td>
             <td  align=left>
             <input type='text' name='phone' size='20' class='form-control form-control-sm' value=\"$C_PHONE\" onchange='checkPhone(form.phone,\"\",\"".$min_numbers_in_phone."\");' $disabled>";
 echo "</tr>";
@@ -305,7 +305,7 @@ echo "<tr>
 echo "</tr>";
       
 //=====================================================================
-// rôles
+// rÃ´les
 //=====================================================================
 
 echo "<tr>
@@ -344,7 +344,7 @@ while ($row=@mysqli_fetch_array($result)) {
             <td  align=right>".$TCR_DESCRIPTION."</td>";
     echo "<td  align=left>";
     if (( $disabled == "") ){
-        print write_modal("upd_company_role.php?C_ID=".$C_ID."&TCR_CODE=".$c, "personne_".$c, "<i class='fa fa-user fa-lg' title='choisir une personne pour ce rôle'></i>");
+        print write_modal("upd_company_role.php?C_ID=".$C_ID."&TCR_CODE=".$c, "personne_".$c, "<i class='fa fa-user fa-lg' title='choisir une personne pour ce rÃ´le'></i>");
     }           
         
     echo "<a href=upd_personnel.php?pompier=".$CURPID.">".strtoupper($CURPNOM)." ".ucfirst($CURPPRENOM)."</a>"; 

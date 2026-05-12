@@ -154,8 +154,8 @@ else $tab = 1;
 
 echo "</head>";
 echo "<body>";
-if ( $id == $pid ) $text = "Mes préférences";
-else $text = "Préférences de ".$P_PRENOM." ".$P_NOM;
+if ( $id == $pid ) $text = "Mes prÃ©fÃ©rences";
+else $text = "PrÃ©fÃ©rences de ".$P_PRENOM." ".$P_NOM;
 echo "<div align=center >";
 
 echo "<div style='background:white;' class='table-responsive table-nav table-tabs'>";
@@ -166,7 +166,7 @@ else $class = '';
 echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'personnel_preferences.php?tab=2&pid=".$pid."' role = 'tab'>
             <i class='fa fa-user-cog'></i>
-            <span>Préférence </span>
+            <span>PrÃ©fÃ©rence </span>
         </a>
     </li>";
 
@@ -194,7 +194,7 @@ echo "</div>";
 function echoChkLign($chkname, $sessionname){
     global $ID, $NAME, $style, $DESCRIPTION, $mycolor;
     $checked = isset($_SESSION[$sessionname]) ? "checked" : "";
-    echo "<tr bgcolor=$mycolor id='row".$ID."' $style><td title='paramètre n°".$ID."' class=''>$NAME </td><td align=left valign=middle>";
+    echo "<tr bgcolor=$mycolor id='row".$ID."' $style><td title='paramÃ¨tre nÂ°".$ID."' class=''>$NAME </td><td align=left valign=middle>";
 
     echo "<label class='switchconfig'>
     <input type='checkbox' id='$chkname' name='$chkname' 
@@ -209,9 +209,9 @@ if ($tab == 2) {
     if ( isset($_GET['saved']) ) {
         $errcode=$_GET['saved'];
         echo "<div id='fadediv' align=center>";
-        if ( $errcode == 'nothing' ) echo "<div class='alert alert-info' role='alert'> Aucun changement à sauver.</div></div><p>";
-        else if ( $errcode == 0 ) echo "<div class='alert alert-success' role='alert'> Préférences utilisateur sauvées.</div></div><p>";
-        else echo "<div class='alert alert-danger' role='alert'> Erreur lors de la sauvegarde des préférences utilisateur.</div></div><p>";
+        if ( $errcode == 'nothing' ) echo "<div class='alert alert-info' role='alert'> Aucun changement Ã  sauver.</div></div><p>";
+        else if ( $errcode == 0 ) echo "<div class='alert alert-success' role='alert'> PrÃ©fÃ©rences utilisateur sauvÃ©es.</div></div><p>";
+        else echo "<div class='alert alert-danger' role='alert'> Erreur lors de la sauvegarde des prÃ©fÃ©rences utilisateur.</div></div><p>";
     }
     
     echo "<form name='config' method=POST action='save_preferences.php'>";
@@ -224,11 +224,11 @@ if ($tab == 2) {
     echo "<div class='col-sm-6' align=center>
             <div class='card hide card-default graycarddefault' align=center >
                 <div class='card-header graycard'>
-                    <div class='widget-title h6'>Général</div>
+                    <div class='widget-title h6'>GÃ©nÃ©ral</div>
                 </div>
                 <div class='graycard'>";
     
-    $h1 = 'Paramètre';
+    $h1 = 'ParamÃ¨tre';
     $h2 = 'Action';
     $style = 'data-original-title title';
     $right_td_style = 'align=left valign=middle';
@@ -270,7 +270,7 @@ if ($tab == 2) {
             echo "<td></td><tr $style><td colspan=2><select id='f$ID' name='f$ID' class='selectpicker smallcontrol2' data-container='body'>";
             if ( $user_preferences[$ID] == 'FR' ) $selected="selected"; 
             else $selected="";
-            echo "<option value='FR' ".$selected.">Français</option>";
+            echo "<option value='FR' ".$selected.">FranÃ§ais</option>";
             if ( $user_preferences[$ID] == 'EN' ) $selected="selected"; 
             else $selected="";
             echo "<option value='EN' ".$selected.">English</option>";
@@ -281,18 +281,18 @@ if ($tab == 2) {
             echo "<td></td><tr $style><td colspan=2><select id='f$ID' name='f$ID' class='selectpicker smallcontrol2' data-container='body'>";
             if ( $user_preferences[$ID] == 'hierarchique' ) $selected="selected"; 
             else $selected="";
-            echo "<option value='hierarchique' ".$selected.">Ordre hiérarchique</option>";
+            echo "<option value='hierarchique' ".$selected.">Ordre hiÃ©rarchique</option>";
             if ( $user_preferences[$ID] == 'alphabetique' ) $selected="selected"; 
             else $selected="";
-            echo "<option value='alphabetique' ".$selected.">Ordre alphabétique</option>";
+            echo "<option value='alphabetique' ".$selected.">Ordre alphabÃ©tique</option>";
             echo "</select></td></tr>";
         }
         
         else if ($ID == 3) {
            echo "<td></td><tr $style><td colspan=2><select id='f$ID' name='f$ID' class='selectpicker smallcontrol2' ".datalive_search()." data-container='body'
-            title=\"choisir la section préférée pour les affichages \">";
+            title=\"choisir la section prÃ©fÃ©rÃ©e pour les affichages \">";
 
-             // pour personnel externe ou sans la pemission n°40 on limite géographiquement la visibilité
+             // pour personnel externe ou sans la pemission nÂ°40 on limite gÃ©ographiquement la visibilitÃ©
             if ( $P_STATUT == 'EXT' or ! check_rights($id,40)) {
                 $_level=get_level("$P_SECTION");
                 echo "<option value='".$P_SECTION."' $class selected>".
@@ -327,8 +327,8 @@ if ($tab == 2) {
         $ID=$row["PP_ID"];
         $NAME=$row["PP_TYPE"];
         $DESCRIPTION = ucfirst(str_replace("Affichage du bouton ", "", $row["PP_DESCRIPTION"]));
-        if($DESCRIPTION == 'activité')
-            $DESCRIPTION = 'Activité';
+        if($DESCRIPTION == 'activitÃ©')
+            $DESCRIPTION = 'ActivitÃ©';
         $mycolor="#F1F1F1F1";
         
         if ( $ID == 13 and $gardes  == 0 )
@@ -379,7 +379,7 @@ if ($tab == 3) {
             mysqli_query($dbc,$query2);
         }
     }
-    //premiere card : stats et nb activités
+    //premiere card : stats et nb activitÃ©s
     $query2="select WU_VISIBLE from widget_user where W_ID=29 and P_ID=".$pid;
     $result=mysqli_query($dbc,$query2);
     if ( mysqli_num_rows($result) == 0 ) $resultstat=1;
@@ -412,7 +412,7 @@ if ($tab == 3) {
         <div class='col-sm-4' style='padding-left:6px;padding-right:10px;'>
             <div class='card hide card-default graycarddefault'>
             <div class='card-header graycard'>
-                <div class='card-title' style=''><strong>Préférences des widgets</strong></div>
+                <div class='card-title' style=''><strong>PrÃ©fÃ©rences des widgets</strong></div>
             </div>
             <div class='card-body graycard'>
                 Afficher statistiques
@@ -422,7 +422,7 @@ if ($tab == 3) {
                                 <span class='slider config round pref'></span>
                 </label>
                 <p>
-                <div style='margin-bottom:10px'>Nombre d'activités 
+                <div style='margin-bottom:10px'>Nombre d'activitÃ©s 
                       <select id='prefCalend' name='prefCalend' title=\"Choisir\" style='height:30px;width:60px;font-size:14px;'>
                          <option value='10' $selected10>10</option>
                          <option value='40' $selected40>40</option>
@@ -441,7 +441,7 @@ echo "<script> $(function(){
 </script>";
 //3 bottom cards
     echo write_boxes($style='configure', $pid);
-    echo "<p><input type='button' class='btn btn-primary' value='Réinitialiser'  title='Supprimer ma configuration personnalisée et remettre la configuration par défaut' name='end' onclick=\"javascript:self.location.href='save_accueil.php?pid=".$pid."&supprimer=1';\">";
+    echo "<p><input type='button' class='btn btn-primary' value='RÃ©initialiser'  title='Supprimer ma configuration personnalisÃ©e et remettre la configuration par dÃ©faut' name='end' onclick=\"javascript:self.location.href='save_accueil.php?pid=".$pid."&supprimer=1';\">";
     echo "<input type='button' class='btn btn-success' value='Sauvegarder'  title='Enregistrer les changements et retour accueil' name='end' onclick=\"javascript:self.location.href='index_d.php';\">";
     
 }

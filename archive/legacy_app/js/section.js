@@ -50,13 +50,13 @@ function fermerfenetre(){
     self.close();
 }
 function suppr_section(section) {
-    if ( confirm ("Attention : vous allez supprimer cette section.\nLe personnel, les véhicules, le matériel\net les événements seront\nréaffectés dans la section supérieure.\nVoulez vous continuer ?" )){
+    if ( confirm ("Attention : vous allez supprimer cette section.\nLe personnel, les vÃ©hicules, le matÃ©riel\net les Ã©vÃ©nements seront\nrÃ©affectÃ©s dans la section supÃ©rieure.\nVoulez vous continuer ?" )){
          cible = "del_section.php?S_ID=" + section;
          self.location.href = cible;
     }
 }
 function radier_section(section) {
-    if ( confirm ("Attention : vous allez rendre cette section inactive.\nLe personnel sera radié.\nVoulez vous continuer ?" )){
+    if ( confirm ("Attention : vous allez rendre cette section inactive.\nLe personnel sera radiÃ©.\nVoulez vous continuer ?" )){
         cible = "radier_section.php?S_ID=" + section;
         self.location.href = cible;
     }

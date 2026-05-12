@@ -79,7 +79,7 @@ $result=mysqli_query($dbc,$query);
 $nb=mysqli_num_rows($result);
 
 if ( $nb == 0 ) {
-    write_msgbox("paramétrage incomplet", $warning_pic, "Aucun <a href=habilitations.php?category=R>rôle</a> de l'organigramme ne supporte les astreintes",10,0);
+    write_msgbox("paramÃ©trage incomplet", $warning_pic, "Aucun <a href=habilitations.php?category=R>rÃ´le</a> de l'organigramme ne supporte les astreintes",10,0);
 }
 else {
     $query="select a.AS_ID, a.S_ID, a.GP_ID, a.P_ID, g.GP_DESCRIPTION,
@@ -214,14 +214,14 @@ else {
         echo "<div class='col-sm-12'>";
        echo "<table class='newTableAll' cellspacing=0 border=0>";
        echo "<tr>
-                <td><a href=astreintes.php?order=AS_DEBUT >Début</a></td>
+                <td><a href=astreintes.php?order=AS_DEBUT >DÃ©but</a></td>
               <td><a href=astreintes.php?order=AS_FIN >Fin</a></td>
               <td></td>
-              <td><a href=astreintes.php?order=GP_DESCRIPTION >Rôle</a></td>
+              <td><a href=astreintes.php?order=GP_DESCRIPTION >RÃ´le</a></td>
               <td class='hide_mobile2'><a href=astreintes.php?order=S_ID >Section</a></td>
                 <td><a href=astreintes.php?order=P_NOM >Nom</a></td>
                 <td class='hide_mobile2'><a href=astreintes.php?order=P_EMAIL >Email</a></td>
-                <td><a href=astreintes.php?order=P_PHONE >Téléphone</a></td>
+                <td><a href=astreintes.php?order=P_PHONE >TÃ©lÃ©phone</a></td>
             </tr>";
 
        while ($row=@mysqli_fetch_array($result)) {
@@ -262,7 +262,7 @@ else {
           
           // chercher les absences
           $absences=count_absences($P_ID, $year1."-".$month1."-".$day1 , $year2."-".$month2."-".$day2);
-          if ( $absences > 0 ) $z="<i class='fa fa-exclamation-circle' style='color:red;' title=\"Attention: cette personne a des absences enregistrées pendant cette astreinte\"></i>";
+          if ( $absences > 0 ) $z="<i class='fa fa-exclamation-circle' style='color:red;' title=\"Attention: cette personne a des absences enregistrÃ©es pendant cette astreinte\"></i>";
           else $z="";
           
           if ( check_rights($id,26))
@@ -287,7 +287,7 @@ else {
        echo "</table>";
     }
     else {
-         echo "<p><b>Aucune astreinte ne correspond aux critères choisis</b>";
+         echo "<p><b>Aucune astreinte ne correspond aux critÃ¨res choisis</b>";
     }
 }
 echo @$later;

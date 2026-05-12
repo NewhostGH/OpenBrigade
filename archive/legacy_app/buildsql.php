@@ -23,6 +23,6 @@ include_once ("fonctions_sql.php");
 check_all(14);
 writehead();
 create_sql_functions();
-write_msgbox("info",$star_pic, "Les fonctions SQL ont été mises à jour <p align=center><input type='button' class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
+write_msgbox("info",$star_pic, "Les fonctions SQL ont Ã©tÃ© mises Ã  jour <p align=center><input type='button' class='btn btn-default' value='Retour' onclick='javascript:history.back(1);'> ",10,0);
 writefoot();
 ?>

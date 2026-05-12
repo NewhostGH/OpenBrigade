@@ -37,7 +37,7 @@ if ( $pid <> $id ) {
     }
 }
 
-// supprimer paramétrage
+// supprimer paramÃ©trage
 if ( isset($_GET["supprimer"]) ) {
     $query = "delete from widget_user where P_ID = ".$pid;
     $result=mysqli_query($dbc,$query);

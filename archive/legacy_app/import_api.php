@@ -95,14 +95,14 @@ else if ( isset($_GET["pid"]) or isset($_GET["number"])) {
 // Display form
 // ===================================
 else {
-    $helptext="L'import de données utilisateurs peut être fait pour une seule fiche, ou pour toutes les fiches retournées par l'API. L'API utilisée est $import_api_url. Dans le cas d'une seule fiche, le numéro doit être fourni, par exemple 421917. Si la fiche existe déjà, alors elle sera mise à jour. Sinon elle sera créée sur $application_title. Pour des situations de tests, on peut lancer l'import de toutes les fiches mais limiter le nombre à 5, 10, 20,100,1000. Cliquer sur le bouton 'Importer' pour lancer l'import. L'import peut aussi être fait en ligne de commande sur le serveur avec scripts/import.sh. Dans ce mode il est possible d'importer un nombre illimité de fiches.";
+    $helptext="L'import de donnÃ©es utilisateurs peut Ãªtre fait pour une seule fiche, ou pour toutes les fiches retournÃ©es par l'API. L'API utilisÃ©e est $import_api_url. Dans le cas d'une seule fiche, le numÃ©ro doit Ãªtre fourni, par exemple 421917. Si la fiche existe dÃ©jÃ , alors elle sera mise Ã  jour. Sinon elle sera crÃ©Ã©e sur $application_title. Pour des situations de tests, on peut lancer l'import de toutes les fiches mais limiter le nombre Ã  5, 10, 20,100,1000. Cliquer sur le bouton 'Importer' pour lancer l'import. L'import peut aussi Ãªtre fait en ligne de commande sur le serveur avec scripts/import.sh. Dans ce mode il est possible d'importer un nombre illimitÃ© de fiches.";
     $helptitle="Information import unitaire";
     $help = " <a href='#'  title=\"".$helptitle." :  ".$helptext."\"><i class='fa fa-question-circle fa-lg' ></i></a>";
     $html .= "<div align=left>
                 <h4><b>Importer fiches</b></h4> ";
-    $html .= "<small>Il y a $nb fiches retournées par l'API</small><p>";
-    $html .= "Nombre de fiches à importer ".$help;
-    $html .= "<br><select name='number' id='number' title='Sélectionnez le nombre de fiches à importer' onchange='changenumber();'
+    $html .= "<small>Il y a $nb fiches retournÃ©es par l'API</small><p>";
+    $html .= "Nombre de fiches Ã  importer ".$help;
+    $html .= "<br><select name='number' id='number' title='SÃ©lectionnez le nombre de fiches Ã  importer' onchange='changenumber();'
                 class='selectpicker bootstrap-select-medium' data-style='btn-default' data-container='body'>
                 <option value='1' selected>Une seule</option>
                 <option value='0'>Toutes</option>
@@ -119,12 +119,12 @@ else {
                 <option value='10000'>10000</option>
               </select>";
               
-    $html .= "<div id='divstart' style='display:none;' >Début à
-                <input type='text' name='start' id='start' value='0' size=6 title='Nombre éléments à partir duquel les données API sont importées' onchange=\"checkNumberNullAllowed(this,'0');\">
+    $html .= "<div id='divstart' style='display:none;' >DÃ©but Ã 
+                <input type='text' name='start' id='start' value='0' size=6 title='Nombre Ã©lÃ©ments Ã  partir duquel les donnÃ©es API sont importÃ©es' onchange=\"checkNumberNullAllowed(this,'0');\">
                </div>";
 
-    $html .= "<div id='divpid' style='display:inline;' >Numéro de la fiche 
-                <input type='text' name='pid' id='pid' value='' size=6 title='Saisir le numéro de la fiche personnel (licencié)' onchange=\"checkNumberNullAllowed(this,'');\">
+    $html .= "<div id='divpid' style='display:inline;' >NumÃ©ro de la fiche 
+                <input type='text' name='pid' id='pid' value='' size=6 title='Saisir le numÃ©ro de la fiche personnel (licenciÃ©)' onchange=\"checkNumberNullAllowed(this,'');\">
                </div>";
     if ( $nb == 0 ) $disabled='disabled';
     else $disabled='';

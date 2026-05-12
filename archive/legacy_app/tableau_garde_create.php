@@ -44,20 +44,20 @@ $txt = "personnel";
 if ( $pompiers ) {
     $nbv = count_entities("pompier","P_STATUT='SPV'");
     if ( $nbv > 0 ) $txt .= " SPV";
-    $txt2="après ajustement des gardes des professionnels ou ";
+    $txt2="aprÃ¨s ajustement des gardes des professionnels ou ";
 }
 else {
     $txt = "personnel";
     $txt2="";
 }
 
-$help="Le $txt peut aussi être ajouté plus tard, $txt2 lorsque toutes les disponibilités sont saisies.
-Pour que le $txt puisse être ajouté automatiquement, les disponibilités et les compétences doivent être renseignées.
-De plus, les compétences requises pour la garde doivent être saisies. Utiliser la compétence secondaire si besoin.
-Exemple un chef d'agrès incendie 2 peut aussi être qualifié équipier incendie, mais il n'occupera normalement pas ce poste, c'est possible en sélectionnant compétence secondaire.
+$help="Le $txt peut aussi Ãªtre ajoutÃ© plus tard, $txt2 lorsque toutes les disponibilitÃ©s sont saisies.
+Pour que le $txt puisse Ãªtre ajoutÃ© automatiquement, les disponibilitÃ©s et les compÃ©tences doivent Ãªtre renseignÃ©es.
+De plus, les compÃ©tences requises pour la garde doivent Ãªtre saisies. Utiliser la compÃ©tence secondaire si besoin.
+Exemple un chef d'agrÃ¨s incendie 2 peut aussi Ãªtre qualifiÃ© Ã©quipier incendie, mais il n'occupera normalement pas ce poste, c'est possible en sÃ©lectionnant compÃ©tence secondaire.
 ";
 
-// demander paramètres du tableau
+// demander paramÃ¨tres du tableau
 if ( ! isset ($_POST["month"])) {
     $month=intval($_GET["month"]);
     $year=intval($_GET["year"]);
@@ -99,7 +99,7 @@ if ( ! isset ($_POST["month"])) {
     writeBreadCrumb("Ajout d'un tableau de garde");
     $message = "<body><form method='POST' name='form' action='tableau_garde_create.php'>";
     $message .= "<table class='noBorder'><tr><td><span class=green16>".@$EQ_NOM." de ".get_section_code($filter)." pour ".moislettres($month)." ".$year."</span></td></tr>";
-    $message .= "<tr><td><i>Veuillez préciser comment ce tableau doit être créé:</i></td></tr>";
+    $message .= "<tr><td><i>Veuillez prÃ©ciser comment ce tableau doit Ãªtre crÃ©Ã©:</i></td></tr>";
     $message .= "<tr><td> <input type='checkbox' value='1' name='g2p' id='g2p' onchange=\"garde_2p('".$defaultpart."');\" $checked> <label for='g2p'>Gardes en 2 parties (jour, nuit)</label> </td></tr>";
     $message .= " <input type='hidden' name='defaultpart' value='".$defaultpart."'>";
     $message .= " <input type='hidden' name='month' value='".$month."'>";
@@ -113,10 +113,10 @@ if ( ! isset ($_POST["month"])) {
     // Partie 1
     // ----------------------------
  
-    $message .= "<tr id='row_header1' $styleheader height=60><td><h4><b>Première partie de la garde: jour</b> <i class='fa fa-sun fa-lg' style='color:yellow;' title='jour'></i></h4></td></tr>";
+    $message .= "<tr id='row_header1' $styleheader height=60><td><h4><b>PremiÃ¨re partie de la garde: jour</b> <i class='fa fa-sun fa-lg' style='color:yellow;' title='jour'></i></h4></td></tr>";
     
     $message .= "<tr id='row_debut1' $stylejour><td>
-        <select id='debut1' name='debut1' title=\"Heure de début de la garde\"
+        <select id='debut1' name='debut1' title=\"Heure de dÃ©but de la garde\"
         onchange=\"EvtCalcDuree(date1,date1,debut1,fin1,duree1);\">";
     for ( $i=0; $i <= 24; $i++ ) {
         $check = $i.":00";
@@ -128,10 +128,10 @@ if ( ! isset ($_POST["month"])) {
         if ( $i < 24 )
         $message .= "<option value=".$i.":30 ".$selected.">".$i.":30</option>\n";
     }
-    $message .= "</select> <i>Heure de début de la garde</i></td></tr>";
+    $message .= "</select> <i>Heure de dÃ©but de la garde</i></td></tr>";
     
     $message .= "<tr id='row_fin1' $stylejour><td>
-        <select id='fin1' name='fin1' title=\"Heure de fin de journée\"
+        <select id='fin1' name='fin1' title=\"Heure de fin de journÃ©e\"
         onchange=\"EvtCalcDuree(date1,date1,debut1,fin1,duree1);\">";
     for ( $i=0; $i <= 24; $i++ ) {
         $check = $i.":00";
@@ -146,25 +146,25 @@ if ( ! isset ($_POST["month"])) {
     $message .= "</select> <i>Heure de fin </i></td></tr>";
     $message .= "<tr id='row_duree1' name='row_duree1' $stylejour>
         <td><input type=text id='duree1' name='duree1' onchange=\"checkNumber(duree1,'".@$EQ_DUREE1."');\"
-            value='".@$EQ_DUREE1."' title=\"Durée garde jour en heures\" size=\"3\" length=3><i> Durée en heures.</i></td></tr>";
+            value='".@$EQ_DUREE1."' title=\"DurÃ©e garde jour en heures\" size=\"3\" length=3><i> DurÃ©e en heures.</i></td></tr>";
     
     $message .= "<tr id='row_personnel1' $stylejour>
         <td><input type=text id='nb1' name='nb1' onchange=\"checkNumber(nb1,'".@$EQ_PERSONNEL1."');\"
         value='".@$EQ_PERSONNEL1."' title=\"Nombre de personnes de garde (au maximum)\" size=\"3\" length=3><i> Nombre de personnes de garde.</i></td></tr>";    
    
-    $message .= "<tr id='row_comp1' $stylejour><td> <i>Compétences demandées </i><br>";
+    $message .= "<tr id='row_comp1' $stylejour><td> <i>CompÃ©tences demandÃ©es </i><br>";
     $comp1 = show_competences($equipe, "1"); 
     $message .=  $comp1;
-    $message .= " <a href='evenement_competences.php?garde=".$equipe."&partie=1'><i class='fa fa-edit fa-lg' title='Modifier les compétences demandées' ></i></a>
+    $message .= " <a href='evenement_competences.php?garde=".$equipe."&partie=1'><i class='fa fa-edit fa-lg' title='Modifier les compÃ©tences demandÃ©es' ></i></a>
         </td></tr>";
     
     // ----------------------------
     // Partie 2
     // ----------------------------
     
-    $message .= "<tr id='row_header2' $styleheader height=60><td><h4><b>Deuxième partie de la garde: nuit</b> <i class='fa fa-moon fa-lg' style='color:black;' title='nuit'></i></h4></td></tr>";
+    $message .= "<tr id='row_header2' $styleheader height=60><td><h4><b>DeuxiÃ¨me partie de la garde: nuit</b> <i class='fa fa-moon fa-lg' style='color:black;' title='nuit'></i></h4></td></tr>";
     $message .= "<tr id='row_debut2' $stylenuit><td>
-        <select id='debut2' name='debut2' title=\"Heure de début nuit\"
+        <select id='debut2' name='debut2' title=\"Heure de dÃ©but nuit\"
         onchange=\"EvtCalcDuree(date1,date2,debut2,fin2,duree2);\">";
     for ( $i=0; $i <= 24; $i++ ) {
         $check = $i.":00";
@@ -176,7 +176,7 @@ if ( ! isset ($_POST["month"])) {
         if ( $i < 24 )
         $message .= "<option value=".$i.":30 ".$selected.">".$i.":30</option>\n";
     }
-    $message .= "</select> <i>Heure de début de la nuit</i></td></tr>";
+    $message .= "</select> <i>Heure de dÃ©but de la nuit</i></td></tr>";
     
     $message .= "<tr id='row_fin2' $stylenuit><td>
         <select id='fin2' name='fin2' title=\"Heure de fin de la nuit de garde\"
@@ -194,53 +194,53 @@ if ( ! isset ($_POST["month"])) {
     $message .= "</select> <i>Heure de fin de la nuit de garde</i></td></tr>";
     $message .= "<tr id='row_duree2' $stylenuit >
         <td><input type=text id='duree2' name='duree2' onchange=\"checkNumber(duree2,'".@$EQ_DUREE2."');\"
-        value='".@$EQ_DUREE2."' title=\"Durée garde nuit en heures\" size=\"3\" length=3><i> Durée en heures<tr>";
+        value='".@$EQ_DUREE2."' title=\"DurÃ©e garde nuit en heures\" size=\"3\" length=3><i> DurÃ©e en heures<tr>";
     $message .= "<tr id='row_personnel2' $stylenuit >
         <td><input type=text id='nb2' name='nb2' onchange=\"checkNumber(nb2,'".@$EQ_PERSONNEL2."');\"
         value='".@$EQ_PERSONNEL2."' title=\"Nombre de personnes de garde (au maximum)\" size=\"3\" length=3><i> Nombre de personnes de garde.</i></td></tr>";
 
-    $message .= "<tr id='row_comp2' $stylenuit><td><i>Compétences demandées </i><br>";
+    $message .= "<tr id='row_comp2' $stylenuit><td><i>CompÃ©tences demandÃ©es </i><br>";
     $comp2 = show_competences($equipe, "2"); 
     $message .=  $comp2;
-    $message .= " <a href='evenement_competences.php?garde=".$equipe."&partie=2'><i class='fa fa-edit fa-lg' title='Modifier les compétences demandées' ></i></a>
+    $message .= " <a href='evenement_competences.php?garde=".$equipe."&partie=2'><i class='fa fa-edit fa-lg' title='Modifier les compÃ©tences demandÃ©es' ></i></a>
         </td></tr>";
         
     // ----------------------------
     // Autres parametres
     // ---------------------------- 
 
-    $message .= "<tr height=60><td><h4><b>Paramètres de création du tableau</b></h4></td></tr>";
+    $message .= "<tr height=60><td><h4><b>ParamÃ¨tres de crÃ©ation du tableau</b></h4></td></tr>";
     
     $message .= " <tr><td><input type='checkbox' value=1 name='alldays' id='alldays' checked 
-        title=\"Si coché, alors le tableau de garde est généré pour tous les jours du mois\">
+        title=\"Si cochÃ©, alors le tableau de garde est gÃ©nÃ©rÃ© pour tous les jours du mois\">
         <label for='alldays'>Tous les jours du mois</label></td></tr>";
     
-    $message .= " <tr><td><i>Les éléments suivants doivent-ils être ajoutés? </i></td></tr>";
+    $message .= " <tr><td><i>Les Ã©lÃ©ments suivants doivent-ils Ãªtre ajoutÃ©s? </i></td></tr>";
     if ( $vehicules == 1 ) {
         if ( @$EQ_VEHICULES == 1 ) $checked='checked';
         else $checked='';
         $message .= " <tr><td><input type='checkbox' value=1 name='V' id='V' $checked 
-        title=\"Si coché, alors les véhicules du centre affectés aux activités de type '".@$EQ_NOM."' sont enregistrés sur les feuilles de garde\">
-        <label for='V'>les véhicules</label></td></tr>";
+        title=\"Si cochÃ©, alors les vÃ©hicules du centre affectÃ©s aux activitÃ©s de type '".@$EQ_NOM."' sont enregistrÃ©s sur les feuilles de garde\">
+        <label for='V'>les vÃ©hicules</label></td></tr>";
     }
     if ( get_regime_travail($equipe) > 0 ) {
         if ( @$EQ_SPP == 1 ) $checked='checked';
         else $checked='';
         $message .= " <tr><td><input type='checkbox' value=1 name='SPP' id='SPP' $checked 
-        title=\"Si coché, alors les professionnels (hors congés et absences) de la section de garde chaque jour sont enregistrés sur la feuille de garde\">
+        title=\"Si cochÃ©, alors les professionnels (hors congÃ©s et absences) de la section de garde chaque jour sont enregistrÃ©s sur la feuille de garde\">
         <label for='SPP'>les professionnels de la section du jour</label> <span class=smallred>enregistrez d'abord les absences</span></td></tr>";
     }
     if ( $comp1 <> "" or $comp2 <> "" ) {
          $message .= " <tr><td><input type='checkbox' value=1 name='SPV' id='SPV' 
-        title=\"Si coché, alors le tableau est automatiquement rempli avec les sapeurs pompiers disponibles, ce remplissage peut aussi être fait après la création du tableau\">
-        <label for='SPV'>Le $txt disponible qualifié</label>
+        title=\"Si cochÃ©, alors le tableau est automatiquement rempli avec les sapeurs pompiers disponibles, ce remplissage peut aussi Ãªtre fait aprÃ¨s la crÃ©ation du tableau\">
+        <label for='SPV'>Le $txt disponible qualifiÃ©</label>
         <a href='#' data-toggle='popover' title='Ajout automatique du $txt' data-trigger='hover' data-content=\"".$help."\"><i class='fa fa-question-circle fa-lg' title='aide'></i></a>
         </td></tr>";
     }
     $message .= " <tr><td>Lieu de la garde<br>
       <input type=text id='lieu' name='lieu' value=\"".@$EQ_LIEU."\" title=\"Lieu de la garde (exemple: caserne)\" size='25' ></td></tr>";
       
-    if ($geolocalize_enabled) $cmt = ", pour géolocalisation";
+    if ($geolocalize_enabled) $cmt = ", pour gÃ©olocalisation";
     else $cmt="";
     $message .= " <tr><td>Adresse de la garde $cmt<br>
       <input type=text id='address' name='address' value=\"".@$EQ_ADDRESS."\" title=\"Adresse de la garde (exemple: adresse de la caserne)\" size='35' ></td></tr>";
@@ -316,7 +316,7 @@ else {
     
     if ( $alldays == 0 and ! isset ($_POST["day_choice"])) {
         // recreate a form with existing POST parameters
-        writeBreadCrumb("Sélection des jours","Garde","tableau_garde.php");
+        writeBreadCrumb("SÃ©lection des jours","Garde","tableau_garde.php");
         $message = "<body><form method='POST' name='dayslist' action='tableau_garde_create.php'>";
         $message .= " <input type='hidden' name='alldays' value='0'>";
         $message .= " <input type='hidden' name='day_choice' value='1'>";
@@ -356,7 +356,7 @@ else {
         $message .= "<table class='noBorder' cellspacing=0>";
         $day=1;
         $message .= "<tr><td>Choisissez les jours. <label for='cxa'>Tout cocher </label>";
-        $message .= " <input type='checkbox' name='cxa' id='cxa' onclick=\"CheckAll(this.form,this.checked);\" title=\"Cliquer pour tout cocher ou décocher\" /></td></tr>";
+        $message .= " <input type='checkbox' name='cxa' id='cxa' onclick=\"CheckAll(this.form,this.checked);\" title=\"Cliquer pour tout cocher ou dÃ©cocher\" /></td></tr>";
         while ( $day <= $d ) {
             $num1=date("w", mktime(0,0,0,$month,$day,$year));
             $num2=date("j", mktime(0,0,0,$month,$day,$year));
@@ -367,7 +367,7 @@ else {
             $day = $day + 1;
         }
         $message .= "</table></div></div>";
-        $message .= "<p><input type='submit' class='btn btn-success' value='Créer' onClick=\"this.disabled=true;this.value='attendez';this.form.submit();\">
+        $message .= "<p><input type='submit' class='btn btn-success' value='CrÃ©er' onClick=\"this.disabled=true;this.value='attendez';this.form.submit();\">
                 <input type=button class='btn btn-secondary' value='Annuler' onclick=\"javascript:history.back(1);\"></div></div></form>";
         print $message;
     }
@@ -394,7 +394,7 @@ else {
         $resultD=mysqli_query($dbc,$query);
         $rowD=@mysqli_fetch_array($resultD);
         if ( $rowD[0] > 0 ) {
-                write_msgbox("Erreur", $error_pic, "Tableau déjà créé, vous ne pouvez pas en créer un deuxième<p><div align=center>
+                write_msgbox("Erreur", $error_pic, "Tableau dÃ©jÃ  crÃ©Ã©, vous ne pouvez pas en crÃ©er un deuxiÃ¨me<p><div align=center>
                     <a href=tableau_garde.php?equipe=".$equipe."&month=".$month."&year=".$year."><input type='submit' class='btn btn-secondary' value='Retour'></a></div>", 30, 30); 
                 exit;
         }
@@ -454,7 +454,7 @@ else {
                     and EH_ID=".$EH_ID;
             $result=mysqli_query($dbc,$query);
 
-            // inscrire véhicules
+            // inscrire vÃ©hicules
             if ( $V ) {
                 $queryk="insert into evenement_vehicule (E_CODE, EE_ID, EH_ID, V_ID)
                     select ".$E_CODE.", V_ID, ".$EH_ID.", V_ID
@@ -490,7 +490,7 @@ else {
                 $query="insert into evenement_competences (E_CODE,EH_ID,PS_ID,NB) values (".$E_CODE.",".$EH_ID.",0,".$nb2.")";
                 $result=mysqli_query($dbc,$query);
                 
-                // inscrire véhicules
+                // inscrire vÃ©hicules
                 if ( $V ) {
                     $queryk="insert into evenement_vehicule (E_CODE, EE_ID, EH_ID, V_ID)
                     select ".$E_CODE.", V_ID, ".$EH_ID.", V_ID
@@ -543,9 +543,9 @@ else {
                     $result = mysqli_query($dbc,$query);
                 }   
             }
-            // création des équipes contenant les véhicules
+            // crÃ©ation des Ã©quipes contenant les vÃ©hicules
             if ( $V ) {
-                // créer une équipe par véhicule
+                // crÃ©er une Ã©quipe par vÃ©hicule
                 $queryk="insert into evenement_equipe (E_CODE, EE_ID, EE_NAME, EE_ICON)
                         select distinct ev.E_CODE, ev.EE_ID,
                         (case 
@@ -575,7 +575,7 @@ else {
             
         echo "<body>";
         $pic="<img src='".$EQ_ICON."' height=25 class='img-max-30'>";
-        write_msgbox("info", $pic, "Tableau créé, ".$i." jours de gardes créés<p><div align=center>
+        write_msgbox("info", $pic, "Tableau crÃ©Ã©, ".$i." jours de gardes crÃ©Ã©s<p><div align=center>
                     <a href=tableau_garde.php?equipe=".$equipe."&month=".$month."&year=".$year.">
                     <input type='submit' class='btn btn-secondary' value='Retour'></a></div>", 30, 30);
     }

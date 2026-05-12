@@ -73,7 +73,7 @@ function changeDisplay2b() {
         document.getElementById('full_day').checked=false;
         document.getElementById('morning').checked=false;
         document.getElementById('rowdatefin').style.display='none';
-        comment.value="Après-midi uniquement";
+        comment.value="AprÃ¨s-midi uniquement";
      }
      else {
         if (! document.getElementById('full_day').checked ) {
@@ -93,7 +93,7 @@ function changeDisplay3() {
         document.getElementById('comment').value='une demi-journee matin';
     }
     else {
-        document.getElementById('comment').value='une demi-journée apres-midi';
+        document.getElementById('comment').value='une demi-journÃ©e apres-midi';
     }
 }
 

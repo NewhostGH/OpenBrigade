@@ -68,7 +68,7 @@ else $statut_participation=0;
 writehead();
 
 //=====================================================================
-// recupérer infos evenement
+// recupÃ©rer infos evenement
 //=====================================================================
 $query="select e.TE_CODE, e.E_LIBELLE, e.E_CLOSED, e.E_CANCELED, e.E_OPEN_TO_EXT, e.S_ID, e.E_PARENT, eh.EH_ID,
         DATE_FORMAT(eh.EH_DATE_DEBUT, '%d-%m-%Y') EH_DATE_DEBUT, DATE_FORMAT(eh.EH_DATE_FIN, '%d-%m-%Y') EH_DATE_FIN,
@@ -185,7 +185,7 @@ if ( $action == 'inscription' and $accept == 0) {
     $form .= "<input type='hidden' name='action' value='inscription'>";
     $endform="</form> ";
     
-    // chiens et véhicules associés?
+    // chiens et vÃ©hicules associÃ©s?
     $query="select p.P_ID, p.P_NOM, p.P_PRENOM 
             from pompier p
             where p.P_OLD_MEMBER=0 
@@ -194,9 +194,9 @@ if ( $action == 'inscription' and $accept == 0) {
     $result=mysqli_query($dbc,$query);
     $form1="";
     if ( mysqli_num_rows($result) > 0 )
-        $form1 .= "<br>Engagement chien en même temps:<br>"; 
+        $form1 .= "<br>Engagement chien en mÃªme temps:<br>"; 
     while ( $row=mysqli_fetch_array($result)) {
-        $form1 .="<input type='checkbox' name='chien_".$row["P_ID"]."' title='inscrire en même temps'> ".strtoupper($row["P_NOM"])." ".my_ucfirst($row["P_PRENOM"]);
+        $form1 .="<input type='checkbox' name='chien_".$row["P_ID"]."' title='inscrire en mÃªme temps'> ".strtoupper($row["P_NOM"])." ".my_ucfirst($row["P_PRENOM"]);
         $form1 .="<br>";
     }
     $query="select v.V_ID, v.TV_CODE, v.V_MODELE, v.V_IMMATRICULATION
@@ -207,9 +207,9 @@ if ( $action == 'inscription' and $accept == 0) {
             and not exists (select 1 from evenement_vehicule ev where ev.E_CODE=".$evenement." and ev.V_ID=v.V_ID)";
     $result=mysqli_query($dbc,$query);
     if ( mysqli_num_rows($result) > 0 )
-        $form1 .= "<br><strong>Engagement véhicule</strong><br>"; 
+        $form1 .= "<br><strong>Engagement vÃ©hicule</strong><br>"; 
     while ( $row=mysqli_fetch_array($result)) {
-        $form1 .="<input type='checkbox' name='vehic_".$row["V_ID"]."' id='vehic_".$row["V_ID"]."' title='inscrire en même temps' style='margin-right:20px;'>
+        $form1 .="<input type='checkbox' name='vehic_".$row["V_ID"]."' id='vehic_".$row["V_ID"]."' title='inscrire en mÃªme temps' style='margin-right:20px;'>
                 <label for='vehic_".$row["V_ID"]."'> ".$row["TV_CODE"]." ".$row["V_MODELE"]." ".$row["V_IMMATRICULATION"]."</label>";
         $form1 .="<br>";
     }
@@ -219,7 +219,7 @@ if ( $action == 'inscription' and $accept == 0) {
     else $tab=2;
     
     $message="<div align=left>";
-    // cas inscription d'un salarié, préciser sous quel statut, bénévole ou salarié
+    // cas inscription d'un salariÃ©, prÃ©ciser sous quel statut, bÃ©nÃ©vole ou salariÃ©
     $cnt=count_entities("statut", "S_STATUT='BEN'");
     if ( $statut_of == 'SAL' and $statut == '' and $cnt == 1 ) {
         if ( $SC ) {
@@ -227,8 +227,8 @@ if ( $action == 'inscription' and $accept == 0) {
             $ss2 = "Service Civique";
         }
         else {
-            $ss1 = "Salarié";
-            $ss2 = "Salarié".$e;
+            $ss1 = "SalariÃ©";
+            $ss2 = "SalariÃ©".$e;
         }
         if ( $id == $P_ID )
             $message .=$prenom.", vous faites partie du personnel ".$ss1.". Vous pouvez choisir votre statut de participation.";
@@ -236,23 +236,23 @@ if ( $action == 'inscription' and $accept == 0) {
             $message .=$prenom." ".$nom." fait partie du personnel ".$ss1.". Vous pouvez choisir son statut de participation.";
         $message .= $form."<br><br><div class='custom-control custom-radio custom-control-inline mb-3'>
                               <input type='radio' id='radioSalarie' name='statut' value='SAL' class='custom-control-input'>
-                              <label class='custom-control-label' for='radioSalarie'>Salarié</label>
+                              <label class='custom-control-label' for='radioSalarie'>SalariÃ©</label>
                             </div>";
         if ( $syndicate == 1 )
             $message .= "<div class='custom-control custom-radio custom-control-inline'>
                               <input type='radio' id='radioBenevole' name='statut' value='ADH' class='custom-control-input' checked>
-                              <label class='custom-control-label' for='radioBenevole' >Adhérent</label>
+                              <label class='custom-control-label' for='radioBenevole' >AdhÃ©rent</label>
                         </div><br>";
         else
             $message .= "<div class='custom-control custom-radio custom-control-inline'>
                               <input type='radio' id='radioBenevole' name='statut' value='BEN' class='custom-control-input' checked>
-                              <label class='custom-control-label' for='radioBenevole' >Bénévole</label>
+                              <label class='custom-control-label' for='radioBenevole' >BÃ©nÃ©vole</label>
                         </div><br>";
 
         for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
             if (isset ($EH_ID[$k])) {
                 $form  .= "<input type='checkbox' id='inscription_partie".$EH_ID[$k]."' name='inscription[]'  value='".$EH_ID[$k]."' onchange='submitCheck();' checked style='margin-right:20px;'>";
-                $form .= "<label for='inscription_partie".$EH_ID[$k]."'><strong>Partie n°".$EH_ID[$k]."</strong><br> du ".$EH_DATE_DEBUT[$k]. " ".$EH_DEBUT[$k]." au ".$EH_DATE_FIN[$k]. " ".$EH_FIN[$k]." </label><br>";
+                $form .= "<label for='inscription_partie".$EH_ID[$k]."'><strong>Partie nÂ°".$EH_ID[$k]."</strong><br> du ".$EH_DATE_DEBUT[$k]. " ".$EH_DEBUT[$k]." au ".$EH_DATE_FIN[$k]. " ".$EH_FIN[$k]." </label><br>";
             }
         }
         $message .= $form."<br><input type='submit' class='btn btn-success' value='Continuer'>";
@@ -260,18 +260,18 @@ if ( $action == 'inscription' and $accept == 0) {
         write_msgbox("Choix statut",$question_pic,$message,30,30);
         exit;
     }
-    // cas du bénévole ou externe qui s'inscrit sur un événement avec consigne
+    // cas du bÃ©nÃ©vole ou externe qui s'inscrit sur un Ã©vÃ©nement avec consigne
     else if ( ($statut_of == 'BEN' or $statut_of == 'EXT') and $P_ID == $id ) {
-        $message .="Vous êtes sur le point de vous inscrire sur cette activité.<p>";
+        $message .="Vous Ãªtes sur le point de vous inscrire sur cette activitÃ©.<p>";
 
         for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
             if (isset ($EH_ID[$k])) {
                 $form  .= "<input type='checkbox' id='inscription_partie".$EH_ID[$k]."' name='inscription[]'  value='".$EH_ID[$k]."' onchange='submitCheck();' checked style='margin-right:20px;'>";
-                $form .= "<label for='inscription_partie".$EH_ID[$k]."'><strong>Partie n°".$EH_ID[$k]."</strong><br> du ".$EH_DATE_DEBUT[$k]. " ".$EH_DEBUT[$k]." au ".$EH_DATE_FIN[$k]. " ".$EH_FIN[$k]." </label><br>";
+                $form .= "<label for='inscription_partie".$EH_ID[$k]."'><strong>Partie nÂ°".$EH_ID[$k]."</strong><br> du ".$EH_DATE_DEBUT[$k]. " ".$EH_DEBUT[$k]." au ".$EH_DATE_FIN[$k]. " ".$EH_FIN[$k]." </label><br>";
             }
         }
         if ( $E_CONSIGNES <> '' )
-            $message .="De plus, les consignes suivantes ont été enregistrées. Vous devez les accepter pour vous inscrire:<p><i>".$E_CONSIGNES."</i><p>";
+            $message .="De plus, les consignes suivantes ont Ã©tÃ© enregistrÃ©es. Vous devez les accepter pour vous inscrire:<p><i>".$E_CONSIGNES."</i><p>";
             
         $message .= $form.$form1."<div align=center><input type='submit' class='btn btn-success' value='Accepter'>".$endform;
         if ( $E_CONSIGNES <> '' )
@@ -281,17 +281,17 @@ if ( $action == 'inscription' and $accept == 0) {
         write_msgbox("Confirmation d'inscription",$question_pic,$message,30,30);
         exit;  
     }
-    // cas plus général ou on inscrit une personne sur un événement non Garde
+    // cas plus gÃ©nÃ©ral ou on inscrit une personne sur un Ã©vÃ©nement non Garde
     else if (! $gardeSP) {
         if ( $id == $P_ID )
-            $message .=$prenom.", vous êtes sur le point de vous inscrire sur cette activité.<p>";
+            $message .=$prenom.", vous Ãªtes sur le point de vous inscrire sur cette activitÃ©.<p>";
         else
-            $message .="Vous êtes sur le point d'inscrire ".$prenom." ".$nom." sur cette activité.<p>";
+            $message .="Vous Ãªtes sur le point d'inscrire ".$prenom." ".$nom." sur cette activitÃ©.<p>";
 
         for ($k=1; $k <= $nbmaxsessionsparevenement; $k++) {
             if (isset ($EH_ID[$k])) {
                 $form  .= "<input type='checkbox' id='inscription_partie".$EH_ID[$k]."' name='inscription[]'  value='".$EH_ID[$k]."' onchange='submitCheck();' checked style='margin-right:20px;'>";
-                $form .= "<label for='inscription_partie".$EH_ID[$k]."'><strong>Partie n°".$EH_ID[$k]."</strong><br> du ".$EH_DATE_DEBUT[$k]. " ".$EH_DEBUT[$k]." au ".$EH_DATE_FIN[$k]. " ".$EH_FIN[$k]." </label><br>";
+                $form .= "<label for='inscription_partie".$EH_ID[$k]."'><strong>Partie nÂ°".$EH_ID[$k]."</strong><br> du ".$EH_DATE_DEBUT[$k]. " ".$EH_DEBUT[$k]." au ".$EH_DATE_FIN[$k]. " ".$EH_FIN[$k]." </label><br>";
             }
         }
         $message .= $form.$form1."<div align=center><input type='submit' class='btn btn-success' value='Continuer'>".$endform." ";
@@ -306,11 +306,11 @@ if ( $action == 'desinscription') {
     else $EC=$evenement;
     if ( $accept == 0 ) {
         $link="evenement_inscription.php?evenement=".$evenement."&EC=".$EC."&action=desinscription&P_ID=".$P_ID."&accept=1";
-        if ( $id == $P_ID ) $message=$prenom.", vous êtes sur le point de vous désinscrire de cette activité.<p>";
-        else $message="Vous êtes sur le point de désinscrire ".$prenom." ".$nom." de cette activité.<p>";
+        if ( $id == $P_ID ) $message=$prenom.", vous Ãªtes sur le point de vous dÃ©sinscrire de cette activitÃ©.<p>";
+        else $message="Vous Ãªtes sur le point de dÃ©sinscrire ".$prenom." ".$nom." de cette activitÃ©.<p>";
         $message .=" <div align=center><a href=".$link." class='btn btn-danger' >Confirmer</a>";
         $message .=" <a href=evenement_display.php?evenement=".$evenement."&tab=2 class='btn btn-secondary' >Annuler</a></div>";
-        write_msgbox("Confirmation de désinscription",$question_pic,$message,30,30);
+        write_msgbox("Confirmation de dÃ©sinscription",$question_pic,$message,30,30);
         exit;
     }
     
@@ -354,7 +354,7 @@ if ( $action == 'desinscription') {
                 where (E_CODE =".$evenement." or E_CODE=".$EC.")
                 and P_ID=".$P_ID;
         $result=mysqli_query($dbc,$query);
-        insert_log('DESINSCP', $P_ID, "désinscription de ".my_ucfirst(get_prenom($P_ID))." ".strtoupper(get_nom($P_ID)), $evenement);
+        insert_log('DESINSCP', $P_ID, "dÃ©sinscription de ".my_ucfirst(get_prenom($P_ID))." ".strtoupper(get_nom($P_ID)), $evenement);
     }
     else
         $query="select 'exception raised'";
@@ -377,7 +377,7 @@ elseif ( $action == 'inscription') {
         
         $insert_done=false;
         if ( $statut_of == 'SPV' and $gardeSP) {
-            // cas gardes SPV, inscrire en fonction de la disponibilité J / N
+            // cas gardes SPV, inscrire en fonction de la disponibilitÃ© J / N
             $queryG="select date_format(EH_DATE_DEBUT, '%d-%m-%Y'),
                 EH_ID,
                 case
@@ -419,7 +419,7 @@ elseif ( $action == 'inscription') {
             }
         }
         
-        // inscrire les chiens associés aux maîtres et les véhicules si nécessaire
+        // inscrire les chiens associÃ©s aux maÃ®tres et les vÃ©hicules si nÃ©cessaire
         foreach ($_POST as $key => $value) {
             if ( substr($key,0,5) == 'chien' ) {
                 $parts = explode("_", $key);
@@ -486,7 +486,7 @@ else {
     elseif (( $action == "detail" ) and ( $granted or $id == $P_ID  or check_rights($id, 10, $section_of))) {
         $km='';
         $updkm="EP_KM = null";
-        $auditkm="km non renseigné";
+        $auditkm="km non renseignÃ©";
         if ( isset($_GET["km"])) {
            $km=$_GET["km"];
            if ($km <> '') {
@@ -583,7 +583,7 @@ else {
                     $resultf=mysqli_query($dbc,$queryf);
                     $rowf=@mysqli_fetch_array($resultf);
                     $EE_NAME=$rowf["EE_NAME"];
-                    if ( $EE_NAME == "" ) $EE_NAME="Pas d'équipe";
+                    if ( $EE_NAME == "" ) $EE_NAME="Pas d'Ã©quipe";
                     insert_log('EEINSCP', $P_ID, $EE_NAME, $evenement);
                 }
             }

@@ -52,10 +52,10 @@ if ( $nbsections == 0 ) {
     echo "</select>";
 }
 
-// choix remplaçant
+// choix remplaÃ§ant
 echo "<select name='substitute' id='substitute' onchange=\"changeParam('".$filter."');\"
         class='selectpicker smalldropdown2' data-live-search='true' data-style='btn-default' data-container='body'>
-        <option value='0'>Tous les remplaçants</option>";
+        <option value='0'>Tous les remplaÃ§ants</option>";
 $query="select distinct p.P_ID, p.P_NOM, p.P_PRENOM, p.P_GRADE , p.P_STATUT from pompier p
         where p.P_OLD_MEMBER = 0 and P_STATUT <> 'EXT'";
 if ( $filter > 0 ) 
@@ -72,10 +72,10 @@ while ($row=mysqli_fetch_array($result)) {
 }
 echo"</select>";
 
-// choix remplaçé
+// choix remplaÃ§Ã©
 echo "<select name='replaced' id='replaced' onchange=\"changeParam('".$filter."');\" 
         class='selectpicker smalldropdown2' data-live-search='true' data-style='btn-default' data-container='body'>
-        <option value='0'>Tous les remplacés</option>";
+        <option value='0'>Tous les remplacÃ©s</option>";
 $query="select distinct p.P_ID, p.P_NOM, p.P_PRENOM, p.P_GRADE , p.P_STATUT from pompier p
         where p.P_OLD_MEMBER = 0 and P_STATUT <> 'EXT'";
 if ( $filter > 0 ) 
@@ -97,13 +97,13 @@ echo "
 if ( $status == 'ALL' ) $selected='selected'; else $selected='';
 echo "<option value='ALL' $selected>Tous les statuts</option>\n";
 if ( $status == 'DEM' ) $selected='selected'; else $selected='';
-echo  "<option value='DEM' $selected>Demandé</option>\n";
+echo  "<option value='DEM' $selected>DemandÃ©</option>\n";
 if ( $status == 'ACC' ) $selected='selected'; else $selected='';
-echo  "<option value='ACC' $selected>Accepté par le remplaçant</option>\n";
+echo  "<option value='ACC' $selected>AcceptÃ© par le remplaÃ§ant</option>\n";
 if ( $status == 'VAL' ) $selected='selected'; else $selected='';
-echo  "<option value='VAL' $selected>Approuvé</option>\n";
+echo  "<option value='VAL' $selected>ApprouvÃ©</option>\n";
 if ( $status == 'REJ' ) $selected='selected'; else $selected='';
-echo  "<option value='REJ' $selected>Rejeté</option>\n";
+echo  "<option value='REJ' $selected>RejetÃ©</option>\n";
 if ( $status == 'ATT' ) $selected='selected'; else $selected='';
 echo  "<option value='ATT' $selected>A approuver</option>\n";
 echo "</select>";

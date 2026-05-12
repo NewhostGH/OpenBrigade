@@ -83,7 +83,7 @@ if ((check_rights($id, 18) && $evenements) || (check_rights($id, 5) && $gardes))
     echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'parametrage.php?tab=2' role = 'tab'>
             <i class='fa fa-clock'></i>
-            <span>Activité </span><i class='ml-1 fas fa-chevron-down fa-xs'></i>
+            <span>ActivitÃ© </span><i class='ml-1 fas fa-chevron-down fa-xs'></i>
         </a>
     </li>";
 }
@@ -172,7 +172,7 @@ if ($tab == 1) {
                 and p.F_ID = f.F_ID";
             $numrows = $dbc->query($query)->fetch_row()[0];
             echo "<li class = 'nav-item'>
-                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=7' role = 'tab'><span>Compétence <span class='badge $typeclass'>$numrows</span></span></span></a>
+                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=7' role = 'tab'><span>CompÃ©tence <span class='badge $typeclass'>$numrows</span></span></span></a>
                 </li>";
                 
             if ($child == 8){
@@ -186,7 +186,7 @@ if ($tab == 1) {
             $query="select Count(*) from equipe e left join poste p on p.EQ_ID = e.EQ_ID group by e.EQ_ID";
             $numrows = $dbc->query($query)->num_rows;
             echo "<li class = 'nav-item'>
-                <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=8' role = 'tab'><span> Type de Compétence <span class='badge $typeclass'>$numrows</span></span></span></a>
+                <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=8' role = 'tab'><span> Type de CompÃ©tence <span class='badge $typeclass'>$numrows</span></span></span></a>
             </li>";
             if ($child == 9){
                 $class = 'active';
@@ -200,13 +200,13 @@ if ($tab == 1) {
             $query="select Count(*) from poste_hierarchie";
             $numrows = $dbc->query($query)->fetch_row()[0];
             echo "<li class = 'nav-item'>
-                <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=9' role = 'tab'><span>Hiérarchie de Compétence <span class='badge $typeclass'>$numrows</span></span></span></a>
+                <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=9' role = 'tab'><span>HiÃ©rarchie de CompÃ©tence <span class='badge $typeclass'>$numrows</span></span></span></a>
             </li>";
         }
     }
 }
 if ($tab == 2) {
-    // Activité 
+    // ActivitÃ© 
     if (check_rights($id, 18)) {
         if ($evenements) {
             if ($child == 0) $child = 5;
@@ -250,7 +250,7 @@ if ($tab == 3) {
                 group by tv.TV_CODE";
             $numrows = $dbc->query($query)->num_rows;
             echo "<li class = 'nav-item'>
-                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=1' role = 'tab'><span>Véhicule <span class='badge $typeclass'>$numrows</span></span></span></a>
+                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=1' role = 'tab'><span>VÃ©hicule <span class='badge $typeclass'>$numrows</span></span></span></a>
                 </li>";
             if ($child == 2){
                 $class = 'active';
@@ -265,7 +265,7 @@ if ($tab == 3) {
             $numrows = $dbc->query($query)->fetch_row()[0];
             if ($evenements)
                 echo "<li class = 'nav-item'>
-                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=2' role = 'tab'><span>Fonction des véhicules <span class='badge $typeclass'>$numrows</span></span></span></a>
+                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=2' role = 'tab'><span>Fonction des vÃ©hicules <span class='badge $typeclass'>$numrows</span></span></span></a>
                 </li>";
         }
         if ($materiel) {
@@ -285,7 +285,7 @@ if ($tab == 3) {
                 where cm.TM_USAGE=tm.TM_USAGE ";
             $numrows = $dbc->query($query)->fetch_row()[0];
             echo "<li class = 'nav-item'>
-                <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=3&order=TM_USAGE&catmateriel=ALL' role = 'tab'><span>Matériel et tenues <span class='badge $typeclass'>$numrows</span></span></span></a>
+                <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=3&order=TM_USAGE&catmateriel=ALL' role = 'tab'><span>MatÃ©riel et tenues <span class='badge $typeclass'>$numrows</span></span></span></a>
             </li>";
         }
         if ($consommables) {
@@ -318,7 +318,7 @@ if ($tab == 4) {
         if ($child == 11) $class = 'active';
         else $class = '';
         echo "<li class = 'nav-item'>
-            <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=11' role = 'tab'><span>Diplôme</span></a>
+            <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=11' role = 'tab'><span>DiplÃ´me</span></a>
         </li>";
     }
     
@@ -336,7 +336,7 @@ if ($tab == 4) {
         if ( $type_element <> 'ALL' ) $where .= " and TEF_CODE='".$type_element."'";
         $numrows =count_entities('element_facturable', $where);
         echo "<li class = 'nav-item'>
-                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=12' role = 'tab'><span>Eléments facturables <span class='badge $typeclass'>$numrows</span></span></a>
+                    <a class = 'nav-link $class' href = 'parametrage.php?tab=".$tab."&child=12' role = 'tab'><span>ElÃ©ments facturables <span class='badge $typeclass'>$numrows</span></span></a>
             </li>";
     }
 }
@@ -402,7 +402,7 @@ if ( isset ($page[$child - 1])) {
     if (check_rights($id, $rights[$child -1]))
         include_once ($page[$child - 1]);
     else
-        echo "Vous n'avez pas les permissions suffisantes (".$rights[$child - 1].") pour modifier ce paramétrage";
+        echo "Vous n'avez pas les permissions suffisantes (".$rights[$child - 1].") pour modifier ce paramÃ©trage";
 }
 echo "</div>";
 writefoot();

@@ -25,7 +25,7 @@ $highestsection=get_highest_section_where_granted($id,53);
 
 get_session_parameters();
 
-// vérifier qu'on a les droits d'afficher pour cette section
+// vÃ©rifier qu'on a les droits d'afficher pour cette section
 $list = preg_split('/,/' , get_family("$highestsection"));
 if (! in_array($filter,$list) and ! check_rights($id, 24)) $filter=$highestsection;
 
@@ -93,7 +93,7 @@ echo "<div class='div-decal-left'><div align=left>";
     echo "</select>";
     
 echo "<form name='forme' id='forme' method=post>"; //<div align=center class='table-responsive'>
-// définir depuis quel compte part le virement
+// dÃ©finir depuis quel compte part le virement
 //echo "<tr><td><span class='left10'><b>Virement depuis</b></span></td><tr>";
 //echo "<tr><td>";
 $query2="select cb.CB_ID, cb.ETABLISSEMENT, cb.GUICHET, cb.COMPTE, cb.CODE_BANQUE, cb.BIC, cb.IBAN, s.S_CODE, s.S_DESCRIPTION
@@ -120,15 +120,15 @@ if ( mysqli_num_rows($result2) > 0 ) {
     echo "</select>";
 }
 else {
-    echo "<i class='fa fa-exclamation-triangle' style='color:orange;'></i> Aucun compte bancaire enregistré, saisissez le <a href='upd_section.php?S_ID=".$filter."&tab=5'>ici</a>";
+    echo "<i class='fa fa-exclamation-triangle' style='color:orange;'></i> Aucun compte bancaire enregistrÃ©, saisissez le <a href='upd_section.php?S_ID=".$filter."&tab=5'>ici</a>";
 }
 echo "</form>";
 
 // inclure les anciens membres
     if ($include_old == 1 ) $checked='checked';
     else $checked='';
-    if ( $syndicate ==1 ) $anciens="Radiés et suspendus ";
-    else $anciens="Archivés";
+    if ( $syndicate ==1 ) $anciens="RadiÃ©s et suspendus ";
+    else $anciens="ArchivÃ©s";
     echo "<div style='display: inline-block; padding-left:10px'><label for='sub2'>$anciens</label>
                 <label class='switch'>
                     <input type='checkbox' name='include_old' id='include_old' $checked class='ml-3 div-decal-left'
@@ -171,13 +171,13 @@ if ( $number3 > 0 ) {
 
     echo "<tr>";
     echo "     <th style='padding: 12px 5px 12px 5px' align=center>
-                <a href=cotisations.php?tab=3&order=P_NOM class='widget-title'>Bénéficiaire</a></th>";
+                <a href=cotisations.php?tab=3&order=P_NOM class='widget-title'>BÃ©nÃ©ficiaire</a></th>";
     if ( $syndicate == 1 ) {
         echo "<th >
              <a href=cotisations.php?tab=3&order=P_PROFESSION class='widget-title'>Prof.</a></th>";
     }    
     echo "<th><a href=cotisations.php?tab=3&order=P_SECTION class='widget-title'>Section</a></th>";
-    echo "<th style='min-width:100px;'><a href=cotisations.php?tab=3&order=P_DATE_ENGAGEMENT class='widget-title'>Entrée</a></th>";
+    echo "<th style='min-width:100px;'><a href=cotisations.php?tab=3&order=P_DATE_ENGAGEMENT class='widget-title'>EntrÃ©e</a></th>";
     echo "<th style='min-width:100px;'><a href=cotisations.php?tab=3&order=P_FIN class='widget-title'>Sortie</a></th>";
     echo "<th style='min-width:100px;'><a href=cotisations.php?tab=3&order=MONTANT class='widget-title'>Montant</a></th>";
     echo "<th style='min-width:100px;'><a href=cotisations.php?tab=3&order=PC_DATE class='widget-title'>Date virement</a></th>";

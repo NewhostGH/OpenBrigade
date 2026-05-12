@@ -1,6 +1,6 @@
 
 function WrongSchedule(champ){
-    swalAlert ("Attention l'heure de fin est avant le debut,\n veuillez corriger la date de fin ou les heures\nde début et de fin.");
+    swalAlert ("Attention l'heure de fin est avant le debut,\n veuillez corriger la date de fin ou les heures\nde dÃ©but et de fin.");
     champ.value = '0';
 }
 
@@ -12,7 +12,7 @@ function verifyDateRange(dtdebut,dtfin) {
     var parts2 = dtfin.value.split("-");
     var date2 = new Date(parts2[1] , parts2[0] , parts2[2]);
     if (date1 > date2) {
-        swalAlert ("ERREUR: La date de fin " + dtfin.value + " doit être égale ou postérieure à la date de début " + dtdebut.value + ".");
+        swalAlert ("ERREUR: La date de fin " + dtfin.value + " doit Ãªtre Ã©gale ou postÃ©rieure Ã  la date de dÃ©but " + dtdebut.value + ".");
         dtfin.value = dtdebut.value;
     }
     return;

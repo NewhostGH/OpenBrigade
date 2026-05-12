@@ -77,7 +77,7 @@ if ( check_rights($id, 5, $filter))
 
 echo "<div align=center class='table-responsive'>";
 if ( $number == 0 ) 
-    echo "<p>Aucun élément paramétré";
+    echo "<p>Aucun Ã©lÃ©ment paramÃ©trÃ©";
 else {
 
     // ===============================================
@@ -98,9 +98,9 @@ else {
     echo  "<td width=40 align=center ><span title='Nombre de personnes requises le jour'>Personnel jour</span></td>";
     echo  "<td width=40 align=center ><span title='Nombre de personnes requises la nuit'>Personnel nuit</span></td>";
     if ( $vehicules) 
-      echo "<td  width=80 align=center >Véhicules</td>";
+      echo "<td  width=80 align=center >VÃ©hicules</td>";
     if ( $pompiers )
-        echo "<td  width=40 align=center ><span title='Les sapeurs pompiers professionnels sont normalement engagés sur ce type de garde'>Pro</span></td>";
+        echo "<td  width=40 align=center ><span title='Les sapeurs pompiers professionnels sont normalement engagÃ©s sur ce type de garde'>Pro</span></td>";
     echo "<td width=40 align=center ><span title='Ordre affichage'>Ordre</span></td>";
     echo "</tr>";
 
@@ -112,7 +112,7 @@ else {
         echo "<tr onclick=\"this.bgColor='#33FF00'; bouton_redirect('parametrage.php?tab=5&child=10&ope=edit&eqid=".$EQ_ID."')\" >";
         echo "<td align=center><img src='".$EQ_ICON."' height=25></td>";
         echo "<td align=left>$EQ_NOM";
-        if ($EQ_DEFAULT == 1) echo "<i class='fa fa-star ml-2' title='Type de garde par défaut'></i>";
+        if ($EQ_DEFAULT == 1) echo "<i class='fa fa-star ml-2' title='Type de garde par dÃ©faut'></i>";
         echo "</td>";
         if ( $EQ_JOUR == 1) $jour="<i class='fa fa-circle fa-lg' style='color:green;' title='actif'></i>";
         else $jour="<i class='fa fa-circle fa-lg' style='color:red;' title='pas actif'></i>";
@@ -130,7 +130,7 @@ else {
             <td align=center><span class='badge' style='color:lightblue;'>$EQ_PERSONNEL2</span></td>";
             
         if ( $EQ_VEHICULES == 1 ) 
-            $showv="<i class='fa fa-check fa-lg' title =\"Les véhicules sont par défaut automatiquement affichés\"></i>";
+            $showv="<i class='fa fa-check fa-lg' title =\"Les vÃ©hicules sont par dÃ©faut automatiquement affichÃ©s\"></i>";
         else 
             $showv="";
             
@@ -140,7 +140,7 @@ else {
             
         if ( $pompiers ) {
             if ( $EQ_SPP == 1 )
-                $showspp="<i class='fa fa-check fa-lg'  title = \"Les sapeurs pompiers professionnels sont par défaut automatiquement engagés sur ce type de garde\"></i>";
+                $showspp="<i class='fa fa-check fa-lg'  title = \"Les sapeurs pompiers professionnels sont par dÃ©faut automatiquement engagÃ©s sur ce type de garde\"></i>";
             else 
                 $showspp="";
             echo "<td align=center>".$showspp."</td> ";

@@ -16,7 +16,7 @@ function time_diff(debut,fin) {
         var minutesDeb = parseInt(hrdbTab[0],10) * 60 + parseInt(hrdbTab[1],10);
         var minutesFin = parseInt(hrfnTab[0],10) * 60 + parseInt(hrfnTab[1],10);
         if ( minutesFin < minutesDeb ) {
-            swalAlert("Erreur: l'heure de fin est avant l'heure de début");
+            swalAlert("Erreur: l'heure de fin est avant l'heure de dÃ©but");
             fin.value="";
             var worked=0;
         }
@@ -33,7 +33,7 @@ function verify_time_order(time1,time2){
     var minutesDeb = parseInt(hrdbTab[0],10) * 60 + parseInt(hrdbTab[1],10);
     var minutesFin = parseInt(hrfnTab[0],10) * 60 + parseInt(hrfnTab[1],10);
     if ( minutesFin < minutesDeb ) {
-        swalAlert("Erreur: l'heure de début de l'apres-midi est avant l'heure de fin du matin");
+        swalAlert("Erreur: l'heure de dÃ©but de l'apres-midi est avant l'heure de fin du matin");
         time2.value=time1.value;
         return 1;
     }
@@ -49,7 +49,7 @@ function calculate(debut1, fin1, debut2, fin2, duree_heures, duree_minutes, dure
     if ( fin1.value != '' ) {
         checkTime(fin1,'12:00');
         if ( debut1.value == '' ) {
-            swalAlert("Erreur: l'heure de début du matin doit etre renseignée, parce que l'heure de fin du matin est renseignée.");
+            swalAlert("Erreur: l'heure de dÃ©but du matin doit etre renseignÃ©e, parce que l'heure de fin du matin est renseignÃ©e.");
             debut1.value = fin1.value;
         }
     }
@@ -59,7 +59,7 @@ function calculate(debut1, fin1, debut2, fin2, duree_heures, duree_minutes, dure
     if ( fin2.value != '' ) {
         checkTime(fin2,'17:00');
         if ( debut2.value == '' ) {
-            swalAlert("Erreur: l'heure de début de l'apres-midi doit être renseignee, parce que l'heure de fin de l'apres-midi est renseignée");
+            swalAlert("Erreur: l'heure de dÃ©but de l'apres-midi doit Ãªtre renseignee, parce que l'heure de fin de l'apres-midi est renseignÃ©e");
             debut2.value = fin2.value;
         }
     }
@@ -108,7 +108,7 @@ function convert_hours_minutes(minutes) {
 
 
 function change_heures_sup(form, form2, defaultvalue, defaultvaluemin, debut1, fin1, debut2, fin2, duree_heures, duree_minutes) {
-     // Cette fonction vérifie le format xxhyy saisi et la validité de l'heure.
+     // Cette fonction vÃ©rifie le format xxhyy saisi et la validitÃ© de l'heure.
      var s = form.value + '0' ;
      var re = /^[0-9]+h[0-9]*$/;
      if (! re.test(s) && s != '0' && s != '00') {

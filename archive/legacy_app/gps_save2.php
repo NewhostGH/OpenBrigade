@@ -21,7 +21,7 @@
 include_once ("config.php");
 check_all(76);
 
-// préféreence affichage carte
+// prÃ©fÃ©reence affichage carte
 if ( isset ($_POST['zoomlevel'])) {
     $_SESSION['zoomlevel'] = intval($_POST['zoomlevel']);
 }

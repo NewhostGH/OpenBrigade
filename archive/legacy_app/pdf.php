@@ -46,7 +46,7 @@ else if (isset($_GET['SelectionMail'])) $badges = multi_secure_int_input($_GET['
 if ( $doc == 'DPS' ) {
     check_all(41);
 }
-// le chef de l'événement a toujours accès à cette fonctionnalité, les autres doivent avoir 29
+// le chef de l'Ã©vÃ©nement a toujours accÃ¨s Ã  cette fonctionnalitÃ©, les autres doivent avoir 29
 else if ( @$devis[0] <> "" ) {
     if ( is_chef_evenement($id, $devis[0]) )
         check_all(0);
@@ -61,7 +61,7 @@ else
     check_all(30);
 
 // =====================================
-//   Création badges
+//   CrÃ©ation badges
 // =====================================
 
 if( $badges <> "" && $doc=="badge") {
@@ -144,7 +144,7 @@ if( $badges <> "" && $doc=="badge") {
             if(file_exists($dirphoto."/".$photo) && $photo!=""){
                     $pdf->Image($dirphoto."/".$photo,$_PosX+$_Width-30,$_PosY+13,25,30);
             }else{
-                    $pdf->Rect($_PosX+$_Width-30,$_PosY+13,25,30); // taille photo identité
+                    $pdf->Rect($_PosX+$_Width-30,$_PosY+13,25,30); // taille photo identitÃ©
             }
             
             if ( $len > 28 ) $addrow= 11;
@@ -171,7 +171,7 @@ if( $badges <> "" && $doc=="badge") {
 }
 
 // =====================================
-//   Création devis / facture / relance
+//   CrÃ©ation devis / facture / relance
 // =====================================
 if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $doc=="facturepayee")){
     require_once("lib/fpdf/fpdi.php");
@@ -237,24 +237,24 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
         
         switch($doc){
         case "devis":
-                $txtdebut = ($txtdebut!=""?$txtdebut:$dciv.", \n\nSuite à votre demande concernant l\'événement ci nommé, vous trouverez ci-dessous notre meilleure offre. ");
-                $txtfin = ($txtfin!=""?$txtfin:"Montant non assujetti à la TVA.\nEspérant que cette proposition retiendra toute votre attention.");
+                $txtdebut = ($txtdebut!=""?$txtdebut:$dciv.", \n\nSuite Ã  votre demande concernant l\'Ã©vÃ©nement ci nommÃ©, vous trouverez ci-dessous notre meilleure offre. ");
+                $txtfin = ($txtfin!=""?$txtfin:"Montant non assujetti Ã  la TVA.\nEspÃ©rant que cette proposition retiendra toute votre attention.");
         break;
         case "facture":
                 if ( $relance )
-                        $txtdebut = ($txtdebut!=""?$txtdebut:$dciv.", \n\nSauf erreur de notre part, la facture suivante n\'a pas encore été payée. Aussi nous vous remercions de procéder rapidement à son règlement. ");        
+                        $txtdebut = ($txtdebut!=""?$txtdebut:$dciv.", \n\nSauf erreur de notre part, la facture suivante n\'a pas encore Ã©tÃ© payÃ©e. Aussi nous vous remercions de procÃ©der rapidement Ã  son rÃ¨glement. ");        
                 else
-                        $txtdebut = ($txtdebut!=""?$txtdebut:$fciv.", \n\nSuite à notre participation à l\'événement ci nommé, veuillez trouver ci dessous la facture");
-                $txtfin = ($txtfin!=""?$txtfin:"Facture non assujettie à la TVA.\nDans l'attente de votre aimable réglement");
+                        $txtdebut = ($txtdebut!=""?$txtdebut:$fciv.", \n\nSuite Ã  notre participation Ã  l\'Ã©vÃ©nement ci nommÃ©, veuillez trouver ci dessous la facture");
+                $txtfin = ($txtfin!=""?$txtfin:"Facture non assujettie Ã  la TVA.\nDans l'attente de votre aimable rÃ©glement");
         break;
         default:
-                $txtdebut = "Evénement inconnu";
+                $txtdebut = "EvÃ©nement inconnu";
                 $txtfin = "";
         }
         $txtdebut = stripslashes($txtdebut);
         $txtfin = stripslashes($txtfin);
         $signataire = (($pdf_signature!="")?$pdf_signature."\n\n":"");
-        $signataire2 = "édité par ".strtoupper(get_prenom($id)." ".get_nom($id));
+        $signataire2 = "Ã©ditÃ© par ".strtoupper(get_prenom($id)." ".get_nom($id));
                 
 
         $sql = "select *, date_format(".$doc."_date, '%d-%m-%Y') date1, date_format(paiement_date, '%d-%m-%Y') date2
@@ -262,7 +262,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
         $res = mysqli_query($dbc,$sql);
         echo (mysqli_errno($dbc)>0?"<p>$sql<br>".mysqli_error($dbc)."</p>":"");
         while($row=mysqli_fetch_array($res)) {
-            if ( $doc == 'facture' && $payee ) $txtfin = stripslashes("Facture payée le ".$row['date2'].". ".$row['paiement_comment']);
+            if ( $doc == 'facture' && $payee ) $txtfin = stripslashes("Facture payÃ©e le ".$row['date2'].". ".$row['paiement_comment']);
             $pdf->addPage('P');
             $docNum = (isset($row[$doc.'_numero'])?($row[$doc.'_numero']!=""?stripslashes($row[$doc.'_numero']):$evt_id):$evt_id);
             $docDate = datesql2txt($row['date1']);
@@ -275,7 +275,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
             $ef_relance_com = stripslashes($row['relance_comment']);
             $acompte=$row[$doc.'_acompte'];
             
-            $pdf->SetXY(120,$pdf->GetY()); // figer l'adresse et la date à 12 cm du bord de page gauche
+            $pdf->SetXY(120,$pdf->GetY()); // figer l'adresse et la date Ã  12 cm du bord de page gauche
             $pdf->MultiCell(0, $hauteurligne, " $adressecomplete"."\n\n"."le ".date('d')." ".date_fran_mois(date('m'))." ".date('Y')."\n",0,"L",false);
             
             $pdf->SetXY($marge_left,$pdf->GetY()+10);
@@ -285,7 +285,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
             $pdf->SetFont('Arial','B',$fontsize+2);
             
             $pdf->SetXY($marge_left,$pdf->GetY());
-            $pdf->MultiCell(210 - 2 * $marge_left, $hauteurligne, strtoupper($doc)." n° $docNum \ndu $docDate ",1,"C",false);
+            $pdf->MultiCell(210 - 2 * $marge_left, $hauteurligne, strtoupper($doc)." nÂ° $docNum \ndu $docDate ",1,"C",false);
             $pdf->Ln();
             $pdf->MultiCell(0, $hauteurligne, " $evt_titre ",0,"C",false);
             $pdf->SetFont('Arial','B',10);        
@@ -311,8 +311,8 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
                     else $displayRem=false;
             
                     $pdf->SetXY($marge_left,$pdf->GetY());
-                    $pdf->Cell($colonnes[0],$hauteurligne,"Libellé",1,0,"L",true);
-                    $pdf->Cell($colonnes[1],$hauteurligne,"Qté",1,0,"R",true);
+                    $pdf->Cell($colonnes[0],$hauteurligne,"LibellÃ©",1,0,"L",true);
+                    $pdf->Cell($colonnes[1],$hauteurligne,"QtÃ©",1,0,"R",true);
                     $pdf->Cell($colonnes[2],$hauteurligne,"PU",1,0,"R",true);
                     if ( $displayRem )
                             $pdf->Cell($colonnes[3],$hauteurligne,"Rem.",1,0,"R",true);
@@ -343,7 +343,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
                         $pdf->MultiCell(0, $hauteurligne, "Remises = - ".number_format($discount, 2, ',', ' ')." ".$default_money_symbol,0,"R",false);
                 }
                 if ( $acompte > 0 and $doc == 'facture' and $payee == false) {
-                        $pdf->MultiCell(0, $hauteurligne, "Acompte déjà versé = - ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"R",false);
+                        $pdf->MultiCell(0, $hauteurligne, "Acompte dÃ©jÃ  versÃ© = - ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"R",false);
                         $TotalDoc = $TotalDoc - $acompte;
                 }
                 $pdf->SetFont('Arial','B',$fontsize+2);
@@ -359,7 +359,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
                          "( ".enlettres($entier)." ".$default_money."s et ".enlettres($decimale)." Cents)",0,"R",false);
                 if ( $acompte > 0 and $doc == 'devis') {
                         $pdf->SetFont('Arial','I',9);
-                        $pdf->MultiCell(0, $hauteurligne, "Acompte à verser à l'acceptation du devis: ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"R",false);
+                        $pdf->MultiCell(0, $hauteurligne, "Acompte Ã  verser Ã  l'acceptation du devis: ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"R",false);
                         $TotalDoc = $TotalDoc - $acompte;
                 }
             }
@@ -368,12 +368,12 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
                 if ( $acompte > 0 and $doc == 'facture' and $payee == false) {
                         $pdf->SetFont('Arial','I',9);
                         $pdf->MultiCell(0, $hauteurligne, "Total facture = ".number_format($TotalDoc, 2, ',', ' ')." ".$default_money_symbol,0,"C",false);
-                        $pdf->MultiCell(0, $hauteurligne, "Acompte déjà versé = - ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"C",false);
+                        $pdf->MultiCell(0, $hauteurligne, "Acompte dÃ©jÃ  versÃ© = - ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"C",false);
                         $TotalDoc = $TotalDoc - $acompte;
                 }
                 $pdf->SetFont('Arial','B',$fontsize+2);
-                if ( $payee ) $t = 'Total payé';
-                else $t = 'Total à payer';
+                if ( $payee ) $t = 'Total payÃ©';
+                else $t = 'Total Ã  payer';
                 $pdf->MultiCell(0, $hauteurligne, $t." = ".number_format($TotalDoc, 2, ',', ' ')." ".$default_money."s",0,"C",false);
                 $pdf->SetFont('Arial','',8);
                 $entier=intval($TotalDoc); 
@@ -386,7 +386,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
                         "( ".enlettres($entier)." ".$default_money."s et ".enlettres($decimale)." Cents )",0,"C",false);
                 if ( $acompte > 0 and $doc == 'devis') {
                         $pdf->SetFont('Arial','I',9);
-                        $pdf->MultiCell(0, $hauteurligne, "Acompte à verser à l'acceptation du devis: ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"C",false);
+                        $pdf->MultiCell(0, $hauteurligne, "Acompte Ã  verser Ã  l'acceptation du devis: ".number_format($acompte, 2, ',', ' ')." ".$default_money_symbol,0,"C",false);
                 }
             }
             
@@ -401,7 +401,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
     $pdf->SetXY($marge_left,$pdf->GetY());
     $pdf->MultiCell(0, $hauteurligne, "$txtfin",0,"L",false);
     $pdf->Ln();
-    if($pdf->GetY()<=197){$pdf->SetXY($marge_left,197);} // placer la signature au minimum à 19.7 cm du haut de la page
+    if($pdf->GetY()<=197){$pdf->SetXY($marge_left,197);} // placer la signature au minimum Ã  19.7 cm du haut de la page
     $pdf->MultiCell(0, $hauteurligne, "$signataire",0,"R",false);
     $pdf->SetFont('Arial','i',$fontsize-2);
     $pdf->MultiCell(0, $hauteurligne, "$signataire2",0,"R",false);
@@ -413,7 +413,7 @@ if(count($devis)>0  && ($doc=="devis" || $doc=="facture" || $doc=="relance" || $
 
 
 // =====================================
-//   Grille d'évaluation des risques
+//   Grille d'Ã©valuation des risques
 // =====================================
 if(count($devis)> 0 && $doc=="DPS"){
         require_once("lib/fpdf/fpdi.php");
@@ -483,7 +483,7 @@ if(count($devis)> 0 && $doc=="DPS"){
     $tplidx = $pdf->importPage(1);
     $pdf->useTemplate($tplidx, 0, $marge_top, 297);
     
-    // ajouter les logos à gauche ET à droite
+    // ajouter les logos Ã  gauche ET Ã  droite
     $logo=get_logo();
     $pdf->Image("$basedir/".$logo,$marge_left,$marge_left,0,23);
     
@@ -578,7 +578,7 @@ if(count($devis)> 0 && $doc=="DPS"){
     $pdf->SetXY($marge_left+140,$posY+30);
     //$pdf->MultiCell(0, $hauteurligne, "$EvtSection",0,"C",false);
     
-    // NOM et signature président
+    // NOM et signature prÃ©sident
     if ( $NIV == $nbmaxlevels -1 ) $S_ID=$PARENT;
     $query1="select p.P_PRENOM, p.P_NOM, p.P_SEXE
             from pompier p, groupe g, section_role sr
@@ -590,8 +590,8 @@ if(count($devis)> 0 && $doc=="DPS"){
     $res1 = mysqli_query($dbc,$query1);
     $row1 = mysqli_fetch_array($res1);
     if ( $row1[1] <> "" ) {
-            if ( $row1[2] == 'M' ) $NOM="Le Président, ";
-            else $NOM="La Présidente, ";
+            if ( $row1[2] == 'M' ) $NOM="Le PrÃ©sident, ";
+            else $NOM="La PrÃ©sidente, ";
             $NOM .= my_ucfirst($row1[0])." ".strtoupper($row1[1]);
             $pdf->SetXY(200,170);
             $pdf->SetFont('Arial','I','10');

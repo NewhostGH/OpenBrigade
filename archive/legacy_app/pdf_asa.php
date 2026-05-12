@@ -21,7 +21,7 @@ include_once ("config.php");
 check_all(0);
 $id=$_SESSION['id'];
 
-$printed_by="imprimé par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y à H:i");
+$printed_by="imprimÃ© par ".my_ucfirst(get_prenom($id))." ".strtoupper(get_nom($id)). " le ".date("d-m-Y Ã  H:i");
 
 if ( isset($_GET["P_ID"])) $pid=intval($_GET["P_ID"]);
 else $pid=0;
@@ -31,7 +31,7 @@ if ( isset($_GET["type"])) $type=$_GET["type"];
 else $type='ASA'; // ASA ou OM
 
 if ( $type == 'OM' ) $type_long='Ordre de Mission';
-else $type_long='Autorisation Spéciale Absence';
+else $type_long='Autorisation SpÃ©ciale Absence';
 
 $his_section = get_section_of($pid);
 
@@ -95,7 +95,7 @@ $query2= get_asa_query2($pid,$evenement);
 $result2=mysqli_query($dbc,$query2);
 custom_fetch_array($result2);
 
-// chercher le chef ou président départemental
+// chercher le chef ou prÃ©sident dÃ©partemental
 $query3="select p.P_PRENOM PRES_PRENOM, p.P_NOM PRES_NOM, g.GP_DESCRIPTION
         from pompier p, groupe g, section_role sr
         where sr.GP_ID = g.GP_ID
@@ -106,13 +106,13 @@ $query3="select p.P_PRENOM PRES_PRENOM, p.P_NOM PRES_NOM, g.GP_DESCRIPTION
 $result3=mysqli_query($dbc,$query3);
 custom_fetch_array($result3);
 
-$txt1="En vertu des dispositions de la loi du 26 janvier 1984, portant sur les droits syndicaux dans la Fonction publique territoriale, je vous prie de bien vouloir accorder une Autorisation Spéciale d’Absence au titre des articles 15 et 16 du décret 85-397 (contingent individuel 10+10) à :";
-$txt3="Avec mes remerciements anticipés, veuillez agréer, Monsieur le Président, l’expression de ma très haute considération.";
+$txt1="En vertu des dispositions de la loi du 26 janvier 1984, portant sur les droits syndicaux dans la Fonction publique territoriale, je vous prie de bien vouloir accorder une Autorisation SpÃ©ciale dâ€™Absence au titre des articles 15 et 16 du dÃ©cret 85-397 (contingent individuel 10+10) Ã  :";
+$txt3="Avec mes remerciements anticipÃ©s, veuillez agrÃ©er, Monsieur le PrÃ©sident, lâ€™expression de ma trÃ¨s haute considÃ©ration.";
 
 if(stristr($E_LIBELLE, 'BE ') <> '' )
-    $txt2="pour participer au Bureau Exécutif de la ".$cisname.".";
+    $txt2="pour participer au Bureau ExÃ©cutif de la ".$cisname.".";
 else
-    $txt2="pour participer au Congrès National de la ".$cisname." réuni en Bureau National.";
+    $txt2="pour participer au CongrÃ¨s National de la ".$cisname." rÃ©uni en Bureau National.";
 
 // ==========================================
 // generate PDF
@@ -133,7 +133,7 @@ function GoDown($returns=1, $ymax = 240) {
         $y = $y + $returns * $GoDown;
 }
 
-$A = "à";
+$A = "Ã ";
 if (substr(strtolower($E_LIEU),0,5) == 'stade') $A="au";
 
 
@@ -150,7 +150,7 @@ if ( $type == 'ASA' ) {
     $pdf->MultiCell(100,7,"Villeneuve-Loubet, le ".date('d-m-Y'),"0","L");
     GoDown(2); 
     $pdf->SetXY($GoX + 80,$y);
-    $pdf->MultiCell(100,7,"Monsieur le Président,","0","L");
+    $pdf->MultiCell(100,7,"Monsieur le PrÃ©sident,","0","L");
     GoDown(2);
     $pdf->SetXY($GoX,$y);
     $pdf->MultiCell(140,5,$txt1);
@@ -181,7 +181,7 @@ if ( $type == 'OM' ) {
     $pdf->SetFont('Times','',11); 
     $pdf->SetTextColor(0,0,0);
     $pdf->SetXY($GoX,$y);
-    $pdf->MultiCell(140,7,"Je soussigné ".my_ucfirst($PRES_PRENOM)." ".strtoupper($PRES_NOM).", ".$GP_DESCRIPTION." Fédéral, donne pour mission à:","0","L");
+    $pdf->MultiCell(140,7,"Je soussignÃ© ".my_ucfirst($PRES_PRENOM)." ".strtoupper($PRES_NOM).", ".$GP_DESCRIPTION." FÃ©dÃ©ral, donne pour mission Ã :","0","L");
     GoDown(3);
     $pdf->SetFont('Times','B',12); 
     $pdf->Text($GoX + 40, $y, $TC_LIBELLE." ".$P_NOM." ".$P_PRENOM);

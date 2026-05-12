@@ -17,7 +17,7 @@
   # You should have received a copy of the GNU General Public License
   # along with this program; if not, write to the Free Software
   # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-header('Content-Type: text/html; charset=windows-1252');//une ligne à ajouter pour résoudre le problème d'encodage avec la BD
+header('Content-Type: text/html; charset=windows-1252');//une ligne Ã  ajouter pour rÃ©soudre le problÃ¨me d'encodage avec la BD
 include_once ("config.php");
 check_all(6);
 $id=$_SESSION['id'];

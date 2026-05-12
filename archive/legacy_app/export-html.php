@@ -30,7 +30,7 @@ function AfficheTableau($tab,$ClassCss,$numcol,$rupture,$somme){
     for($col=0;$col<$numcol;$col++){
         $out .=  "<td align=left style='cursor:pointer'>";
         if($tab[$lig][$col] == 'Evenement')
-            $out .=  'Activité';
+            $out .=  'ActivitÃ©';
         else
             $out .=  $tab[$lig][$col];
         $out .=  "</td>";
@@ -43,7 +43,7 @@ function AfficheTableau($tab,$ClassCss,$numcol,$rupture,$somme){
                 $colRupture=1;
             }
         }
-        // rechercher les colonnes à sommer
+        // rechercher les colonnes Ã  sommer
         if(count($somme)>0){
             if(in_array($tab[$lig][$col],$somme)){
                 $colSomme[$col]=$col;
@@ -123,7 +123,7 @@ function AfficheTableau($tab,$ClassCss,$numcol,$rupture,$somme){
             $out .=  "</tr>"."\n";
         }
         if(count($somme)>0){
-            // Total général
+            // Total gÃ©nÃ©ral
             $out .=  "\n"."<tfoot><tr class=TabTotal><th></th>";
             for($col=0;$col<$numcol;$col++){
                 if($col==min($colSomme)-1){

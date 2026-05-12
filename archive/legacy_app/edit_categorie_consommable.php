@@ -53,7 +53,7 @@ $CC_CODE = '';
 $CC_NAME = '';
 $description = '';
 
-if ($usage <> 'Nouvelle catégorie')
+if ($usage <> 'Nouvelle catÃ©gorie')
   $query = "select CC_IMAGE from categorie_consommable where CC_CODE = '".$usage."'";
 else
   $query = "select CC_IMAGE from categorie_consommable";
@@ -81,7 +81,7 @@ if ($error == 'fill_all')
 echo "<div class='col-sm-6'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Editer une catégorie de consommable </strong></div>
+                <div class='card-title'><strong> Editer une catÃ©gorie de consommable </strong></div>
             </div>
             <div class='card-body graycard'>";
 
@@ -101,7 +101,7 @@ echo "<tr>
 <select class='form-control select-control' id = 'CC_CODE' name = 'CC_CODE' onchange = \"displaymanager(document.getElementById('CC_CODE').value)\">";
 if ($usage <> '') {
     $query2 = "select CC_CODE, CC_NAME from categorie_consommable where CC_CODE = '".$usage."'";
-    if ($usage <> 'Nouvelle catégorie') {
+    if ($usage <> 'Nouvelle catÃ©gorie') {
         $result2 = mysqli_query($dbc,$query2);
         $row = @mysqli_fetch_array($result2);
         $name = $row["CC_NAME"];
@@ -110,9 +110,9 @@ if ($usage <> '') {
         echo "<option>".$usage."</option>";
 } 
 else
-    echo "<option>Choisissez une catégorie</option>";
-if ($usage <> 'Nouvelle catégorie')
-    echo "<option value = 'Nouvelle catégorie' style = 'color:#e02bdd'>Nouvelle catégorie</option>";
+    echo "<option>Choisissez une catÃ©gorie</option>";
+if ($usage <> 'Nouvelle catÃ©gorie')
+    echo "<option value = 'Nouvelle catÃ©gorie' style = 'color:#e02bdd'>Nouvelle catÃ©gorie</option>";
 while ($row = @mysqli_fetch_array($result)) {
     $CC_CODE = $row["CC_CODE"];
     $CC_NAME = $row["CC_NAME"];
@@ -138,25 +138,25 @@ if ($usage <> '') {
     $CC_DESCRIPTION = @$row["CC_DESCRIPTION"];
     echo "<input type = 'hidden' class='form-control form-control-sm' name = 'CC_CODE_PREV' value = \"".$usage."\">";
     echo "<tr>
-    <td>Code de la catégorie $asterisk</td>
+    <td>Code de la catÃ©gorie $asterisk</td>
     <td  align = left><input type = 'text' class='form-control form-control-sm' name = 'CC_CODE' value = \"".$CC_CODE."\" size = 30></td>
     <td align = right></tr>";
     echo "<tr>
-    <td>Nom de la catégorie $asterisk</td>
+    <td>Nom de la catÃ©gorie $asterisk</td>
     <td  align = left><input type = 'text' class='form-control form-control-sm' name = 'CC_NAME' value = \"".$CC_NAME."\" size = 30></td>
     <td  align = right></tr>";
     echo "<tr>
-    <td>Déscription consommable</td>
+    <td>DÃ©scription consommable</td>
     <td align = left><input type = 'text' class='form-control form-control-sm' name = 'CC_DESCRIPTION' value = \"".$CC_DESCRIPTION."\" size = 30></td>
     <td align = right></tr>";
 
     echo "<tr>
-    <td>Icône</td>";
+    <td>IcÃ´ne</td>";
     if ($CC_IMAGE <> '')
         echo "<td  align = left><input type = 'text' class='form-control form-control-sm' name = 'logo' value = \"".$CC_IMAGE."\" onkeyup = 'Get_logo(this.value)' size = 30>";
     else
         echo "<td  align = left><input type = 'text' class='form-control form-control-sm' name = 'logo' value = 'utensils' onkeyup = 'Get_logo(this.value)' size = 30>";
-    echo " <a href='https://fontawesome.com/icons?d=gallery&m=free' target='_blank'  title=\"Choisissez une icone font-awesome puis copier coller le texte sous l'icone choisie dans le champ ci-contre.\"><i class='fa fa-question-circle fa-lg'></i></a>
+    echo " <a href='https://fontawesome.com/icons?d=gallery&m=free' target='_blank'  title=\"ChoisissezÂ uneÂ iconeÂ font-awesome puisÂ copierÂ collerÂ leÂ texteÂ sousÂ l'icone choisieÂ dansÂ leÂ champÂ ci-contre.\"><i class='fa fa-question-circle fa-lg'></i></a>
     <a id = 'show_logo'></a></td>
     <td align = right></td>
     </tr>";

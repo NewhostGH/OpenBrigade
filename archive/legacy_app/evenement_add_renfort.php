@@ -54,27 +54,27 @@ $E_CODE=intval($row["E_CODE"]);
 $errcode=0;
 
 if ( $renfort == 0 ){
-    $msg="Le numéro saisi pour l'activité à rattacher est incorrect, saisir une valeur numérique. Veuillez choisir un autre numéro.";
+    $msg="Le numÃ©ro saisi pour l'activitÃ© Ã  rattacher est incorrect, saisir une valeur numÃ©rique. Veuillez choisir un autre numÃ©ro.";
     $errcode=1;
 }
 else if ( $evenement == $renfort) {
-    $msg="Un événement ne peut pas être rattaché à lui même en tant que ".$renfort_label.". Veuillez choisir un autre numéro.";
+    $msg="Un Ã©vÃ©nement ne peut pas Ãªtre rattachÃ© Ã  lui mÃªme en tant que ".$renfort_label.". Veuillez choisir un autre numÃ©ro.";
     $errcode=1;
 }
 else if ( $E_CODE == 0 ) {
-    $msg="L'événement n°".$renfort." n'a pas été trouvé dans la base. Veuillez choisir un autre numéro.";
+    $msg="L'Ã©vÃ©nement nÂ°".$renfort." n'a pas Ã©tÃ© trouvÃ© dans la base. Veuillez choisir un autre numÃ©ro.";
     $errcode=1;
 }
 else if ( $E_PARENT > 0 ) {
-    $msg="L'événement n°".$renfort." est déjà rattaché en tant que ".$renfort_label." sur un autre événement principal. Veuillez choisir un autre numéro.";
+    $msg="L'Ã©vÃ©nement nÂ°".$renfort." est dÃ©jÃ  rattachÃ© en tant que ".$renfort_label." sur un autre Ã©vÃ©nement principal. Veuillez choisir un autre numÃ©ro.";
     $errcode=1;    
 }
 else if ( $E_CANCELED > 0 ) {
-    $msg="L'événement n°".$renfort." est annulé et ne peut pas être rattaché à la colonne. Veuillez choisir un autre numéro.";
+    $msg="L'Ã©vÃ©nement nÂ°".$renfort." est annulÃ© et ne peut pas Ãªtre rattachÃ© Ã  la colonne. Veuillez choisir un autre numÃ©ro.";
     $errcode=1;
 }
 else if ( $E_COLONNE_RENFORT > 0 ) {
-    $msg="L'événement n°".$renfort." est aussi une colonne de ".$renfort_label."s et ne peut pas être enregistré comme ".$renfort_label.". Veuillez choisir un autre numéro.";
+    $msg="L'Ã©vÃ©nement nÂ°".$renfort." est aussi une colonne de ".$renfort_label."s et ne peut pas Ãªtre enregistrÃ© comme ".$renfort_label.". Veuillez choisir un autre numÃ©ro.";
     $errcode=1;
 }
 else if ( get_nb_sessions($evenement) > 1 ) {
@@ -82,11 +82,11 @@ else if ( get_nb_sessions($evenement) > 1 ) {
     $errcode=1;
 }
 //else if ( get_nb_sessions($renfort) > 1 ) {
-//    $msg="L'événement renfort n°".$renfort." a plusieurs parties. Veuillez changer les horaires avant de rattacher des renforts, il ne doit en avoir que une pour pouvoir être rattaché.";
+//    $msg="L'Ã©vÃ©nement renfort nÂ°".$renfort." a plusieurs parties. Veuillez changer les horaires avant de rattacher des renforts, il ne doit en avoir que une pour pouvoir Ãªtre rattachÃ©.";
 //    $errcode=1;
 //}
 else if (! evenements_overlap( $evenement, $renfort )) {
-    $msg="L'événement renfort n°".$renfort." a des dates qui ne correspondent pas à celles de l'événement principal. Il ne peut donc pas être rattaché.";
+    $msg="L'Ã©vÃ©nement renfort nÂ°".$renfort." a des dates qui ne correspondent pas Ã  celles de l'Ã©vÃ©nement principal. Il ne peut donc pas Ãªtre rattachÃ©.";
     $errcode=1;
 }
 
@@ -104,9 +104,9 @@ else if ( $confirmed == 0 ) {
     $result=mysqli_query($dbc,$query);
     $row=mysqli_fetch_array($result);
     $NB=$row["NB"];
-    $msg = "Vous aller rattacher cet événement en tant que renfort: <p>";
+    $msg = "Vous aller rattacher cet Ã©vÃ©nement en tant que renfort: <p>";
     $msg .= " <img src='images/evenements/".$icon."' height=16 title=\"".$libelle."\"> <b>".get_info_evenement($renfort)."</b>";
-    $msg .= " <b>".$NB."</b> inscrits sur cet événement.";
+    $msg .= " <b>".$NB."</b> inscrits sur cet Ã©vÃ©nement.";
     $msg .= "<br><form method=POST action=evenement_add_renfort.php><input type='hidden' name='evenement' value='".$evenement."'><input type='hidden' name='renfort' value='".$renfort."'><input type='hidden' name='confirmed' value='1'>";
     write_msgbox("CONFIRMATION", $question_pic, $msg."<p align=center> <input type='submit' class='btn btn-primary' value='confirmer'> <input type='button' class='btn btn-default' value='annuler' onclick='javascript:history.back(1);'>",10,0);
      exit;

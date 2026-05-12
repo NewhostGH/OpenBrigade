@@ -2,12 +2,12 @@
 ////////////////////////////////////////////////////
 // PDF_Label 
 //
-// Classe afin d'éditer au format PDF des étiquettes
-// au format Avery ou personnalisé
+// Classe afin d'Ã©diter au format PDF des Ã©tiquettes
+// au format Avery ou personnalisÃ©
 //
 //
 // Copyright (C) 2003 Laurent PASSEBECQ (LPA)
-// Basé sur les fonctions de Steve Dillon : steved@mad.scientist.com
+// BasÃ© sur les fonctions de Steve Dillon : steved@mad.scientist.com
 //
 //-------------------------------------------------------------------
 // VERSIONS :
@@ -41,18 +41,18 @@ require_once('fpdf.php');
 
 class PDF_Label extends FPDF {
 
-    // Propriétés privées
-    var $_Avery_Name    = '';                // Nom du format de l'étiquette
-    var $_Margin_Left    = 0;                // Marge de gauche de l'étiquette
-    var $_Margin_Top    = 0;                // marge en haut de la page avant la première étiquette
-    var $_X_Space         = 0;                // Espace horizontal entre 2 bandes d'étiquettes
-    var $_Y_Space         = 0;                // Espace vertical entre 2 bandes d'étiquettes
-    var $_X_Number         = 0;                // Nombre d'étiquettes sur la largeur de la page
-    var $_Y_Number         = 0;                // Nombre d'étiquettes sur la hauteur de la page
-    var $_Width         = 0;                // Largeur de chaque étiquette
-    var $_Height         = 0;                // Hauteur de chaque étiquette
-    var $_Char_Size        = 10;                // Hauteur des caractères
-    var $_Line_Height    = 10;                // Hauteur par défaut d'une ligne
+    // PropriÃ©tÃ©s privÃ©es
+    var $_Avery_Name    = '';                // Nom du format de l'Ã©tiquette
+    var $_Margin_Left    = 0;                // Marge de gauche de l'Ã©tiquette
+    var $_Margin_Top    = 0;                // marge en haut de la page avant la premiÃ¨re Ã©tiquette
+    var $_X_Space         = 0;                // Espace horizontal entre 2 bandes d'Ã©tiquettes
+    var $_Y_Space         = 0;                // Espace vertical entre 2 bandes d'Ã©tiquettes
+    var $_X_Number         = 0;                // Nombre d'Ã©tiquettes sur la largeur de la page
+    var $_Y_Number         = 0;                // Nombre d'Ã©tiquettes sur la hauteur de la page
+    var $_Width         = 0;                // Largeur de chaque Ã©tiquette
+    var $_Height         = 0;                // Hauteur de chaque Ã©tiquette
+    var $_Char_Size        = 10;                // Hauteur des caractÃ¨res
+    var $_Line_Height    = 10;                // Hauteur par dÃ©faut d'une ligne
     var $_Metric         = 'mm';                // Type of metric for labels.. Will help to calculate good values
     var $_Metric_Doc     = 'mm';                // Type of metric for the document
     var $_Font_Name        = 'Arial';            // Name of the font
@@ -86,7 +86,7 @@ class PDF_Label extends FPDF {
 
     // Give the height for a char size given.
     function _Get_Height_Chars($pt) {
-        // Tableau de concordance entre la hauteur des caractères et de l'espacement entre les lignes
+        // Tableau de concordance entre la hauteur des caractÃ¨res et de l'espacement entre les lignes
         $_Table_Hauteur_Chars = array(6=>2, 7=>2.5, 8=>3, 9=>4, 10=>5, 11=>6, 12=>7, 13=>8, 14=>9, 15=>10);
         if (in_array($pt, array_keys($_Table_Hauteur_Chars))) {
             return $_Table_Hauteur_Chars[$pt];
@@ -115,7 +115,7 @@ class PDF_Label extends FPDF {
             $Tformat = $format;
         } else {
             // Si c'est un format avery on stocke le nom de ce format selon la norme Avery. 
-            // Permettra d'aller récupérer les valeurs dans le tableau _Avery_Labels
+            // Permettra d'aller rÃ©cupÃ©rer les valeurs dans le tableau _Avery_Labels
             $Tformat = $this->_Avery_Labels[$format];
         }
 
@@ -126,7 +126,7 @@ class PDF_Label extends FPDF {
         $this->SetAutoPageBreak(false); 
 
         $this->_Metric_Doc = $unit;
-        // Permet de commencer l'impression à l'étiquette désirée dans le cas où la page a déjà servi
+        // Permet de commencer l'impression Ã  l'Ã©tiquette dÃ©sirÃ©e dans le cas oÃ¹ la page a dÃ©jÃ  servi
         if ($posX > 1) $posX--; else $posX=0;
         if ($posY > 1) $posY--; else $posY=0;
         if ($posX >=  $this->_X_Number) $posX =  $this->_X_Number-1;
@@ -135,7 +135,7 @@ class PDF_Label extends FPDF {
         $this->_COUNTY = $posY;
     }
 
-    // Méthode qui permet de modifier la taille des caractères
+    // MÃ©thode qui permet de modifier la taille des caractÃ¨res
     // Cela modifiera aussi l'espace entre chaque ligne
     function Set_Font_Size($pt) {
         if ($pt > 3) {
@@ -153,7 +153,7 @@ class PDF_Label extends FPDF {
         }
     }
 
-    // On imprime une étiqette
+    // On imprime une Ã©tiqette
     function Add_PDF_Label($texte) {
         // We are in a new page, then we must add a page
         if (($this->_COUNTX ==0) and ($this->_COUNTY==0)) {

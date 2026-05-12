@@ -49,7 +49,7 @@ class PDFEB extends FPDI
             $adr = "";
             if (! isset($no_address)) {
                 if($cursection['PDF_PAGE']=="" and ! isset($special_template) and $nbsections == 0 ){
-                    $adr = "".$cursection['description']."\n".$cursection['address']." ".$cursection['cp_ville']."\nTél. : ".$cursection['phone']." - Email : ".$cursection['email'];
+                    $adr = "".$cursection['description']."\n".$cursection['address']." ".$cursection['cp_ville']."\nTÃ©l. : ".$cursection['phone']." - Email : ".$cursection['email'];
                     $this->SetXY(0,20);
                 }
                 $this->SetFont('Arial','',10);
@@ -149,7 +149,7 @@ class PDFEB extends FPDI
     
     // this function can write big text block and split ist across several pages if needed
     function WriteBigTextBlock($text, $x, $y) {
-        $mrl = 95; // max row length (compte rendu de réunion)
+        $mrl = 95; // max row length (compte rendu de rÃ©union)
         $this->SetXY($x,$y);
         $lines = explode("\n",$text);
         $nblines = count($lines);

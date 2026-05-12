@@ -50,7 +50,7 @@ else $error='';
 $TM_USAGE='';
 $CM_DESCRIPTION='';
 $description='';
-if ($usage <> 'Nouvelle catégorie')
+if ($usage <> 'Nouvelle catÃ©gorie')
     $query="select CM_DESCRIPTION, PICTURE from categorie_materiel where TM_USAGE='".$usage."'";
 else
     $query="select CM_DESCRIPTION, PICTURE from categorie_materiel";
@@ -76,7 +76,7 @@ echo "<div class='table-responsive'>";
 echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault' style='margin-bottom:5px'>
             <div class='card-header graycard'>
-                <div class='card-title'><strong> Informations catégorie de matériel </strong></div>
+                <div class='card-title'><strong> Informations catÃ©gorie de matÃ©riel </strong></div>
             </div>
             <div class='card-body graycard'>";
 
@@ -96,7 +96,7 @@ echo "<tr>
 <select class='form-control select-control' id='TM_USAGE' name='TM_USAGE' onchange=\"displaymanager(document.getElementById('TM_USAGE').value)\">";
 if ($usage <> '') {
     $query2="select CM_DESCRIPTION from categorie_materiel where TM_USAGE='".$usage."'";
-    if ($usage <> 'Nouvelle catégorie') {
+    if ($usage <> 'Nouvelle catÃ©gorie') {
         $result2=mysqli_query($dbc,$query2);
         $row=@mysqli_fetch_array($result2);
         $description=$row["CM_DESCRIPTION"];
@@ -106,9 +106,9 @@ if ($usage <> '') {
         echo "<option>".$usage."</option>";
 } 
 else
-    echo "<option>Choisissez une catégorie</option>";
-if ($usage <> 'Nouvelle catégorie')
-    echo "<option value='Nouvelle catégorie' style='color:#e02bdd'>Nouvelle catégorie</option>";
+    echo "<option>Choisissez une catÃ©gorie</option>";
+if ($usage <> 'Nouvelle catÃ©gorie')
+    echo "<option value='Nouvelle catÃ©gorie' style='color:#e02bdd'>Nouvelle catÃ©gorie</option>";
 while ($row=@mysqli_fetch_array($result)) {
     $TM_USAGE=$row["TM_USAGE"];
     $CM_DESCRIPTION=$row["CM_DESCRIPTION"];
@@ -131,7 +131,7 @@ if ($usage <> '') {
     $CM_DESCRIPTION=$row["CM_DESCRIPTION"];
     echo "<input type='hidden' name='TM_USAGE_PREV' value=\"".$usage."\">";
     echo "<tr>
-    <td><b>Nom de la catégorie </b> $asterisk</td>
+    <td><b>Nom de la catÃ©gorie </b> $asterisk</td>
     <td align=left><input type='text' class='form-control form-control-sm' name='TM_USAGE' value=\"".$TM_USAGE."\" size=30></td>
     <td align=right></tr>";
     echo "<tr>
@@ -140,12 +140,12 @@ if ($usage <> '') {
     <td align=right></tr>";
 
     echo "<tr>
-    <td><b>Icône</b></td>";
+    <td><b>IcÃ´ne</b></td>";
     if ($PICTURE <> '')
         echo "<td align=left><input type='text' class='form-control form-control-sm flex' name='logo' value=\"".$PICTURE."\" onkeyup='Get_logo(this.value)' size=30 style='width: 80%;'>";
     else
         echo "<td align=left><input type='text' class='form-control form-control-sm flex' name='logo' value='cog' onkeyup='Get_logo(this.value)' size=30 style='width: 80%;'>";
-    echo " <a href='https://fontawesome.com/icons?d=gallery&m=free' target='_blank' class='fa fa-question-circle fa-lg' title=\"Choisissez une icone font-awesome puis copier-coller le texte sous l'icone choisie dans le champ ci-contre.\"></a>
+    echo " <a href='https://fontawesome.com/icons?d=gallery&m=free' target='_blank' class='fa fa-question-circle fa-lg' title=\"ChoisissezÂ uneÂ icone font-awesomeÂ puisÂ copier-collerÂ leÂ texteÂ sousÂ l'iconeÂ choisieÂ dansÂ leÂ champÂ ci-contre.\"></a>
     <a id='show_logo'></a></td>
     <td align=right></td>
     </tr>";

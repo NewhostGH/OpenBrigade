@@ -36,7 +36,7 @@ if ($row != null){
     $G_DESCRIPTION=$row["G_DESCRIPTION"];
     $G_ICON=$row["G_ICON"];
     $G_CATEGORY=$row["G_CATEGORY"];
-}else $G_DESCRIPTION = "par défaut";
+}else $G_DESCRIPTION = "par dÃ©faut";
 
 
 
@@ -75,7 +75,7 @@ if (isset($_POST["image"]) && $_GET["operation"] == "update") {
             if ( is_file($uploadfile)) unlink($uploadfile);
             if (move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile)) {
                 $error = "<br>Votre image est un <strong>".$userfile_type." extension ".$file_ext."</strong>
-                    <br>Mais seules les images suivantes sont acceptées <strong>".$image_ext."</strong> sont acceptées<br>";
+                    <br>Mais seules les images suivantes sont acceptÃ©es <strong>".$image_ext."</strong> sont acceptÃ©es<br>";
                 foreach ($allowed_image_types as $mime_type => $ext) {
                     if ( $file_ext==$ext and $userfile_type==$mime_type) {
                         $error = "";
@@ -130,7 +130,7 @@ if (isset($_POST["image"]) && $_GET["operation"] == "update") {
             if ( is_file($uploadfile)) unlink($uploadfile);
             if (move_uploaded_file($_FILES['preUpload']['tmp_name'], $uploadfile)) {
                 $error = "<br>Votre image est un <strong>".$userfile_type." extension ".$file_ext."</strong>
-                    <br>Mais seules les images suivantes sont acceptées <strong>".$image_ext."</strong> sont acceptées<br>";
+                    <br>Mais seules les images suivantes sont acceptÃ©es <strong>".$image_ext."</strong> sont acceptÃ©es<br>";
                 foreach ($allowed_image_types as $mime_type => $ext) {
                     //loop through the specified image types and if they match the extension then break out
                     if ( $file_ext==$ext and $userfile_type==$mime_type) {
@@ -161,7 +161,7 @@ $nomenu=1;
 writehead();
 $alertSize = " Taille maximum des fichiers pour upload ".$MAX_FILE_SIZE_MB." MB";
 $helper="<a href='#' data-toggle='popover' title=\"Icone de grade \" data-trigger='hover' data-placement='bottom'
-            data-content=\"Taille recommandée: environ 48 px de large et 48 px de hauteur. $alertSize\" ><i class='fas fa-info-circle'></i></a>";
+            data-content=\"Taille recommandÃ©e: environ 48 px de large et 48 px de hauteur. $alertSize\" ><i class='fas fa-info-circle'></i></a>";
 write_modal_header("Icone du grade ".$G_DESCRIPTION." ".$helper);
 
 $html = "<script>
@@ -183,15 +183,15 @@ if ( file_exists($G_ICON )) {
     $html .= "<i>Image actuelle</i><p><img src=\"".$G_ICON."\" class='img-max-".$max."' border='0' title='image actuelle'/>";
 }
 elseif($G_ICON == "images/user-specific/DEFAULT.png") {
-    $html .= "<i>Image actuelle</i><p><img src='images/user-specific/DEFAULT.png'  border='0' title='image par défaut'/>";
+    $html .= "<i>Image actuelle</i><p><img src='images/user-specific/DEFAULT.png'  border='0' title='image par dÃ©faut'/>";
 }else
-    $html .= "<i>Lien de l'image cassé: Cliquez sur supprimer</i>";
+    $html .= "<i>Lien de l'image cassÃ©: Cliquez sur supprimer</i>";
 
 if ( $G_ICON != "images/user-specific/DEFAULT.png"  ) {
     $html .= "<form action='configuration_icone_grade.php' method='POST'>";
     $html .= "<input type='hidden' name='action' value='delete' />";
     $html .= "<input type='hidden' name='image' value='".$image."' />";
-    $html .= "<input type='submit' class='btn btn-danger' value='Supprimer' title=\"l'image par défaut sera utilisée\">";
+    $html .= "<input type='submit' class='btn btn-danger' value='Supprimer' title=\"l'image par dÃ©faut sera utilisÃ©e\">";
     $html .= "</form>";
 }
 $html .= "</td> 
@@ -201,7 +201,7 @@ if ( $_GET["operation"] == 'insert'){
     <input type='hidden' name='operation' value='insert' />
     <input type='hidden' name='action' value='preUpload' />
 
-    <label class='btn btn-success btn-file' title='Choisir une nouvelle image personnalisée'>
+    <label class='btn btn-success btn-file' title='Choisir une nouvelle image personnalisÃ©e'>
         <i class='far fa-image fa-lg'></i> Choisir
         <input type='file' id='preUpload' name='preUpload' style='display: none;' onchange=\"javascript:document.getElementById('imageform').submit();\" >
     </label>
@@ -212,7 +212,7 @@ if ( $_GET["operation"] == 'insert'){
     $html.= "<form id='imageform' name='imageform' action='configuration_icone_grade.php' enctype='multipart/form-data' method='POST' >
     <input type='hidden' name='action' value='upload' />
     <input type='hidden' name='image' value='".$image."' />
-    <label class='btn btn-success btn-file' title='Choisir une nouvelle image personnalisée'>
+    <label class='btn btn-success btn-file' title='Choisir une nouvelle image personnalisÃ©e'>
         <i class='far fa-image fa-lg'></i> Choisir
         <input type='file' id='upload' name='upload' style='display: none;' onchange=\"javascript:document.getElementById('imageform').submit();\" >
     </label>

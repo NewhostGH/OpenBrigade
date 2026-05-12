@@ -54,7 +54,7 @@ function checkNumber(element,defaultvalue,max)
     var s = element.value;
     var re = /^([0-9]+)$/;
     if (! re.test(s) || s > max ) {
-          swalAlert("Saisissez un nombre inférieur à "+ max+ ": '"+ s + "' ne convient pas.");
+          swalAlert("Saisissez un nombre infÃ©rieur Ã  "+ max+ ": '"+ s + "' ne convient pas.");
          element.value = defaultvalue;
          return false;
     }
@@ -81,12 +81,12 @@ function changeStatus() {
 </head>
 <?php
 
-$help="Le diplôme doit être imprimé sur une page au format A4 (210 mm x 297 mm), format paysage.
-Le champ 'actif' indique si le champ doit être imprimé.
-La taille de caractère, ainsi que la police et le style peuvent être définis.
-Le champ x correspond à l'abscisse, distance horizontale en mm à partir de la gauche de la feuille. Valeurs de x entre 0 et 297).
-Le champ y correspond à l'ordonnée, distance verticale en mm à partir du haut de la feuille. Valeurs de x entre 0 et 210.
-Si affichage 'personnalisé' est choisi alors les données saisies dans 'Personnalisation' seront imprimées.";
+$help="Le diplÃ´me doit Ãªtre imprimÃ© sur une page au format A4 (210 mm x 297 mm), format paysage.
+Le champ 'actif' indique si le champ doit Ãªtre imprimÃ©.
+La taille de caractÃ¨re, ainsi que la police et le style peuvent Ãªtre dÃ©finis.
+Le champ x correspond Ã  l'abscisse, distance horizontale en mm Ã  partir de la gauche de la feuille. Valeurs de x entre 0 et 297).
+Le champ y correspond Ã  l'ordonnÃ©e, distance verticale en mm Ã  partir du haut de la feuille. Valeurs de x entre 0 et 210.
+Si affichage 'personnalisÃ©' est choisi alors les donnÃ©es saisies dans 'Personnalisation' seront imprimÃ©es.";
 
 echo "<body>";
 echo "<div align=center class='table-responsive'>
@@ -165,16 +165,16 @@ if ($action == "save") {
                    // create upload subdir
                    if (!is_dir($upload_dir)) {
                         if (!mkdir($upload_dir))
-                            die ("Le répertoire d'upload n'existe pas et sa création a échoué.");
+                            die ("Le rÃ©pertoire d'upload n'existe pas et sa crÃ©ation a Ã©chouÃ©.");
                         if (!chmod($upload_dir,0755))
-                            die ("Echec lors de la mise à jour des permissions.");
+                            die ("Echec lors de la mise Ã  jour des permissions.");
                    }
                    if (! $result  =  move_uploaded_file($temp_name, $file_path)) {
                       $msgstring ="Une erreur est apparue lors de l'upload du fichier.";
                       $error=1;
                    }
                    if (!chmod($file_path,0777)) {
-                        $msgstring = "Echec lors de la mise à jour des permissions.";
+                        $msgstring = "Echec lors de la mise Ã  jour des permissions.";
                       $error=1;
                    }
             }
@@ -228,7 +228,7 @@ echo "<select class='selectpicker' data-container='body' data-style='btn btn-def
 display_children2(-1, 0, $filter, $nbmaxlevels -1, $sectionorder);
 echo "</select>";
 
-// filtre compétence
+// filtre compÃ©tence
 echo "<select class='selectpicker' data-container='body' data-style='btn btn-default' id='selectdiplome' name='selectdiplome' class='selectpicker' data-container='body' data-style='btn btn-default' data-style='btn-default' data-container='body'
       onchange=\"redirect(document.getElementById('selectdiplome').value,document.getElementById('filter').value);\">";
 $query="select PS_ID, TYPE, DESCRIPTION, PS_PRINT_IMAGE from poste 
@@ -265,38 +265,38 @@ $btn_class='btn-warning';
 
 if ( file_exists($file)){
     $link=" <a href=showfile.php?diplome=1&file=".str_replace(" ", "",$curtype).".jpg&section=0&evenement=0&message=0
-            title='Télécharger image du diplôme'><img src=".$file." class='img-thumbnail' width='120'></a>";
+            title='TÃ©lÃ©charger image du diplÃ´me'><img src=".$file." class='img-thumbnail' width='120'></a>";
    
     $btn_class='btn-success';
     $t='Choisir une autre image';
 }
 else if ( file_exists($default)) {
-    $link=" <a href='showfile.php?diplome=1&file=diplome.jpg&section=0&evenement=0&message=0' title='Télécharger image du diplôme'><img src=".$default." class='img-thumbnail' width='120'></a>";
-    $t='Choisir une image personnalisée pour ce diplôme';
+    $link=" <a href='showfile.php?diplome=1&file=diplome.jpg&section=0&evenement=0&message=0' title='TÃ©lÃ©charger image du diplÃ´me'><img src=".$default." class='img-thumbnail' width='120'></a>";
+    $t='Choisir une image personnalisÃ©e pour ce diplÃ´me';
 }
 else {
     $link=$curtype;
     $btn_class='btn-danger';
-    $t='Choisir une image pour ce diplôme';
+    $t='Choisir une image pour ce diplÃ´me';
 }
 
-echo "<tr><td><span class='left10'>Image du diplôme </span> <span class='badge' style='background-color:purple;'>".str_replace(" ", "",$curtype)."</span> ".$link."
+echo "<tr><td><span class='left10'>Image du diplÃ´me </span> <span class='badge' style='background-color:purple;'>".str_replace(" ", "",$curtype)."</span> ".$link."
 <a href='#' data-toggle='popover' data-trigger='hover' data-content=\"".$help."\"><i class='fa fa-question-circle fa-lg' ></i></a></td></tr>";
 if ( $filter == 0 ) {
     echo "<tr><td><span class='left10'>Modifier image</span> <label class='btn $btn_class btn-file' title=\"".$t."\">
     <i class='fa fa-image fa-lg'></i><input type='file' id='userfile' name='userfile' style='display:none;' onchange='javascript:changeStatus();'>
     </label></td></tr>";
     if ( $print_image == 1 )
-        $i="<i class='fa fa-check-square fa-lg' style='color:green;' title='Image de diplôme imprimée, voir paramétrage des compétences'></i>";
+        $i="<i class='fa fa-check-square fa-lg' style='color:green;' title='Image de diplÃ´me imprimÃ©e, voir paramÃ©trage des compÃ©tences'></i>";
     else 
-        $i="<i class='fa fa-ban fa-lg' style='color:red;' title='Image de diplôme NON imprimée, voir paramétrage des compétences'></i>";
-    $H="Si l'impresssion de l'image est activée, alors le diplôme sera obligatoirement imprimée sur du papier blanc, pas de papier pré-imprimé possible. Si la case est décochée, 
-        Le diplôme sera imprimée sur du papier pré-imprimé, ou sous forme d'aperçu avant impression sur papier blanc. Cette configuration est possible dans le paramétrage de la compétence.";
+        $i="<i class='fa fa-ban fa-lg' style='color:red;' title='Image de diplÃ´me NON imprimÃ©e, voir paramÃ©trage des compÃ©tences'></i>";
+    $H="Si l'impresssion de l'image est activÃ©e, alors le diplÃ´me sera obligatoirement imprimÃ©e sur du papier blanc, pas de papier prÃ©-imprimÃ© possible. Si la case est dÃ©cochÃ©e, 
+        Le diplÃ´me sera imprimÃ©e sur du papier prÃ©-imprimÃ©, ou sous forme d'aperÃ§u avant impression sur papier blanc. Cette configuration est possible dans le paramÃ©trage de la compÃ©tence.";
     $helper="<a href='#' data-toggle='popover' data-trigger='hover' data-content=\"".$H."\"><i class='fa fa-question-circle fa-lg' ></i></a>";
     echo "<tr><td><span class='left10'>".$i."</span> Imprimer l'image ".$helper."</td></tr>";
 }
 else 
-    echo "<tr><td class=small>La modification de l'image liée à ce diplôme n'est possible que au niveau National</td></tr>";
+    echo "<tr><td class=small>La modification de l'image liÃ©e Ã  ce diplÃ´me n'est possible que au niveau National</td></tr>";
 echo "</table>";
 
 echo "<div class='col-sm-10'>";
@@ -320,7 +320,7 @@ for($i=1; $i <= $numfields_org; $i++) {
     
     echo "<div class='card hide card-default graycarddefault cardtab' style='margin-bottom:15px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'><strong> Impression champ N° $i </strong></div>
+                <div class='card-title'><strong> Impression champ NÂ° $i </strong></div>
             </div>
             <div class='card-body graycard'>";
     echo "<table class='noBorder' cellspacing=0 border=0>";
@@ -408,7 +408,7 @@ echo "<p><input type='hidden' name='action' value='save'>
       <input type='hidden' name='psid' value='".$psid."'>
       <input type='submit'  class='btn btn-success' value='Sauvegarder'>";
 if ( $filter > 0 )
-    echo " <input type='button'  class='btn btn-default' value='Réinitialiser' title='Remplacer ce paramétrage spécifique par le paramétrage national'
+    echo " <input type='button'  class='btn btn-default' value='RÃ©initialiser' title='Remplacer ce paramÃ©trage spÃ©cifique par le paramÃ©trage national'
     onclick='javascript:self.location.href=\"parametrage.php?tab=4&child=11&filter=".$filter."&psid=".$psid."&reinit=1\";'>";
 echo "</form>
 </div>";

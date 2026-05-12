@@ -55,7 +55,7 @@ if ( $order == 'TV_NB' or $order == 'NB') $query .=" desc";
 $result=mysqli_query($dbc,$query);
 $number=mysqli_num_rows($result);
 echo "<div class='dropdown-right' align=right><a class='btn btn-success' value='Ajouter' name='ajouter' 
-        onclick=\"bouton_redirect('parametrage.php?tab=3&child=1&operation=insert&upd=1');\"><i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> Véhicule</span></a></div>";
+        onclick=\"bouton_redirect('parametrage.php?tab=3&child=1&operation=insert&upd=1');\"><i class=\"fas fa-plus-circle\"></i><span class='hide_mobile'> VÃ©hicule</span></a></div>";
 echo "<div align=center class='table-responsive'>";
 
 // ====================================
@@ -75,12 +75,12 @@ if ( $number > 0 ) {
     // ===============================================
 
     echo "<tr>
-        <td class='hide_mobile'><a href=parametrage.php?tab=3&child=1&order=TV_ICON >Icône</a></td>
+        <td class='hide_mobile'><a href=parametrage.php?tab=3&child=1&order=TV_ICON >IcÃ´ne</a></td>
         <td><a href=parametrage.php?tab=3&child=1&order=TV_CODE >Code</a></td>
         <td><a href=parametrage.php?tab=3&child=1&order=TV_LIBELLE >Nom</a></td>
-        <td class='hide_mobile'><a href=parametrage.php?tab=3&child=1&order=TV_USAGE >Catégorie</a></td>
-        <td class='hide_mobile'><a href=parametrage.php?tab=3&child=1&order=TV_NB  title='Nombre de personnels dans le véhicule'>Equipage</a></td>
-        <td><a href=parametrage.php?tab=3&child=1&order=NB  title='Nombre véhicules dans la base (y compris réformés)'>Nombre</a></td>
+        <td class='hide_mobile'><a href=parametrage.php?tab=3&child=1&order=TV_USAGE >CatÃ©gorie</a></td>
+        <td class='hide_mobile'><a href=parametrage.php?tab=3&child=1&order=TV_NB  title='Nombre de personnels dans le vÃ©hicule'>Equipage</a></td>
+        <td><a href=parametrage.php?tab=3&child=1&order=NB  title='Nombre vÃ©hicules dans la base (y compris rÃ©formÃ©s)'>Nombre</a></td>
         </tr>";
 
     // ===============================================

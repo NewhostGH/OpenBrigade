@@ -52,7 +52,7 @@ else if ( $gardeSP and check_rights($id, 6) and $sdis == 0)
     $granted_personnel=true;
 else $granted_personnel=false;
 
-// bloquer les changements dans le passé
+// bloquer les changements dans le passÃ©
 $ended=get_number_days_after_block($evenement);
 $changeallowed=true;
 if ( $ended > 0 ) {
@@ -72,7 +72,7 @@ if ( $changeallowed and ($granted_personnel or $granted_event or $id == $pid)) {
 
 $evts=get_event_and_renforts($evenement);
 
-$query="select p.P_NOM, p.P_PRENOM, p.P_SEXE, p.P_EMAIL, p.P_STATUT, date_format(ep.EP_DATE, '%d-%m-%Y à %H:%i') EP_DATE, ep.EP_FLAG1, ep.EP_ASA, ep.EP_DAS, ep.EP_KM, ep.EP_COMMENT, ep.EP_BY, ep.EP_REMINDER,
+$query="select p.P_NOM, p.P_PRENOM, p.P_SEXE, p.P_EMAIL, p.P_STATUT, date_format(ep.EP_DATE, '%d-%m-%Y Ã  %H:%i') EP_DATE, ep.EP_FLAG1, ep.EP_ASA, ep.EP_DAS, ep.EP_KM, ep.EP_COMMENT, ep.EP_BY, ep.EP_REMINDER,
         p2.P_NOM P_NOM_BY, p2.P_PRENOM P_PRENOM_BY, e.TE_CODE, p.TS_CODE, p.P_GRADE, p.P_PHOTO, g.G_DESCRIPTION
         from pompier p left join grade g on p.P_GRADE = g.G_GRADE,
         evenement_participation ep left join pompier p2 on p2.P_ID = ep.EP_BY, evenement e
@@ -125,13 +125,13 @@ $out =  "<div align=center >
 if ( $P_STATUT == 'SAL' and $TE_CODE <> 'MC' ) {
     $out .= "<tr><td>Statut </td><td>Participation en tant que ";
     if ( $EP_FLAG1 == 1 ) $checked='checked'; else  $checked='';
-    if ( $SC ) $ss = "Service Civique"; else $ss="Salarié".$addgenre;
+    if ( $SC ) $ss = "Service Civique"; else $ss="SalariÃ©".$addgenre;
     $out .= " <label for='EP_FLAG1'>".$ss."</label> <input type='radio' name='EP_FLAG1' id='EP_FLAG1' value='1' $checked $disabled/>";
     if ( $EP_FLAG1 == 0 ) $checked='checked'; else  $checked='';
-    if ( $syndicate == 1 ) $label="Adhérent".$addgenre; else $label="Bénévole";
+    if ( $syndicate == 1 ) $label="AdhÃ©rent".$addgenre; else $label="BÃ©nÃ©vole";
     $out .= " <label for='EP_FLAG2'>".$label."</label> <input type='radio' name='EP_FLAG1' id='EP_FLAG2' value='0' $checked $disabled/></td></tr>";
 }    
-//Partie à supprimer devenue inutile
+//Partie Ã  supprimer devenue inutile
 //else if ( $gardeSP and $P_STATUT == 'SPP' ) {
 //    $out .= "<tr><td>Statut</td><td>Garde en tant que ";
 //    if ( $EP_FLAG1 == 1 ) $checked='checked'; else  $checked='';
@@ -142,36 +142,36 @@ if ( $P_STATUT == 'SAL' and $TE_CODE <> 'MC' ) {
 if ( $cron_allowed == 1 and $P_EMAIL <> "" and $TE_CODE <> 'MC')
     $out .= "<tr><td><i class='fa fa-bell'></i></td>
     <td><input type=checkbox id='reminder' name='reminder' $disabled
-    title=\"Cocher cette case pour activer l'envoi d'un email de rappel la veille de l'activité.\"
+    title=\"Cocher cette case pour activer l'envoi d'un email de rappel la veille de l'activitÃ©.\"
     value='1' $checked_reminder >
-    <label for='reminder'>Envoyer un email de rappel la veille de l'activité</label></td></tr>";
+    <label for='reminder'>Envoyer un email de rappel la veille de l'activitÃ©</label></td></tr>";
 if ( $syndicate == 1 and $TE_CODE <> 'MC') {
     if ( $EP_ASA == 1 ) $checked_asa='checked';
     else $checked_asa='';
     $out .= "<tr><td>ASA</td>
     <td><input type=checkbox id='asa' name='asa' $disabled
-    title=\"Cocher cette case si la participation se fait dans le cadre d'une autorisation spéciale d'absence.\"
+    title=\"Cocher cette case si la participation se fait dans le cadre d'une autorisation spÃ©ciale d'absence.\"
     value='1' $checked_asa >
-    <label for='asa'>Autorisation spéciale d'absence</label></td></tr>";
+    <label for='asa'>Autorisation spÃ©ciale d'absence</label></td></tr>";
     if ( $EP_DAS == 1 ) $checked_das='checked';
     else $checked_das='';
     $out .= "<tr><td>DAS</td>
     <td><input type=checkbox id='das' name='das' $disabled
-    title=\"Cocher cette case si la participation se fait dans le cadre d'une décharge d'activité de service.\"
+    title=\"Cocher cette case si la participation se fait dans le cadre d'une dÃ©charge d'activitÃ© de service.\"
     value='1' $checked_das >
-    <label for='das'>Décharge d'activité de service</label></td></tr>";
+    <label for='das'>DÃ©charge d'activitÃ© de service</label></td></tr>";
 }
 if ( $TE_CODE <> 'MC' ) 
-    $out .= "<tr><td>Kilomètres</td>
+    $out .= "<tr><td>KilomÃ¨tres</td>
         <td><input type=text size=3 $disabled
         name='km' id='km' value='$EP_KM' onchange=\"checkNumberNullAllowed(form.km,'$EP_KM')\"
-        title='saisir ici le nombre de km réalisés avec véhicule personnel'>
-        km réalisés en véhicule personnel </td></tr>";
+        title='saisir ici le nombre de km rÃ©alisÃ©s avec vÃ©hicule personnel'>
+        km rÃ©alisÃ©s en vÃ©hicule personnel </td></tr>";
 
 $out .= "<tr><td>Commentaire</td> 
     <td><textarea style='font-size:10pt; font-family:Arial;' cols=45 rows=3 $disabled
         name='detail' id='detail' value='$EP_COMMENT' 
-        title='saisir ici le commentaire lié à cette inscription'>".$EP_COMMENT."</textarea></td>
+        title='saisir ici le commentaire liÃ© Ã  cette inscription'>".$EP_COMMENT."</textarea></td>
         </tr></table>";
 
 $out .= "<div align=center>";

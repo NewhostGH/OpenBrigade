@@ -63,7 +63,7 @@ function print_report(e,s,r,n,s,v,m,c) {
 
 function CheckAll(checkValue) {
     var dForm = document.rapport;
-    // Parcours des sous sections et mise à jour des cases à cocher
+    // Parcours des sous sections et mise Ã  jour des cases Ã  cocher
     for (i=0;i<dForm.length;i++) {
         var element = dForm[i];
         if (element.type=='checkbox') {
@@ -139,14 +139,14 @@ $html .= "<div class='row'>";
 $html .= "<div class='col-sm-5' align=center style='margin: 15px auto;' >
             <div class='card hide card-default graycarddefault' align=center style=''>
                 <div class='card-header graycard'>
-                    <div class='card-title'><strong>Choix des informations à afficher</strong></div>
+                    <div class='card-title'><strong>Choix des informations Ã  afficher</strong></div>
                 </div>
                 <div class='card-body graycard'>";
                 
 $html .= "<table class='noBorder'>";
 if ( $responsable == 1 ) $checked='checked'; else $checked='';
 $html .= "<tr><td width=30 align=center><input type='checkbox' name='responsable' id='responsable' value=1 $checked></td>
-              <td colspan=2 ><label for='responsable'>Responsable événement</label></td>
+              <td colspan=2 ><label for='responsable'>Responsable Ã©vÃ©nement</label></td>
           </tr>";
 if ( $nombres == 1 ) $checked='checked'; else $checked='';
 $html .= "<tr><td width=30 align=center><input type='checkbox' name='nombres' id='nombres' value=1 $checked></td>
@@ -155,7 +155,7 @@ $html .= "<tr><td width=30 align=center><input type='checkbox' name='nombres' id
 if ( $TE_VICTIMES == 1 ) {
     if ( $statistiques == 1 ) $checked='checked'; else $checked='';
     $html .= "<tr><td align=center><input type='checkbox' name='statistiques' id='statistiques' value=1 $checked></td>
-                  <td colspan=2 ><label for='statistiques'>Statistiques interventions</label><span class=small> - détail nombre d'interventions et de victimes, nombre de malaises ...</span></td>
+                  <td colspan=2 ><label for='statistiques'>Statistiques interventions</label><span class=small> - dÃ©tail nombre d'interventions et de victimes, nombre de malaises ...</span></td>
               </tr>";
     if ( $show_cav == 1 ) $checked='checked'; else $checked='';
     $html .= "<tr><td align=center><input type='checkbox' name='show_cav' id='show_cav' value=1 $checked></td>
@@ -165,13 +165,13 @@ if ( $TE_VICTIMES == 1 ) {
 if ( $TE_VEHICULES == 1 ) {
     if ( $show_vehicules == 1 ) $checked='checked'; else $checked='';
     $html .= "<tr><td align=center><input type='checkbox' name='show_vehicules' id='show_vehicules' value=1 $checked></td>
-                  <td colspan=2 ><label for='show_vehicules'>Véhicules engagés</label></td>
+                  <td colspan=2 ><label for='show_vehicules'>VÃ©hicules engagÃ©s</label></td>
               </tr>";
 }
 if ( $TE_MATERIEL == 1 ) {
     if ( $show_materiel == 1 ) $checked='checked'; else $checked='';
     $html .= "<tr ><td align=center><input type='checkbox' name='show_materiel' id='show_materiel' value=1 $checked></td>
-                  <td colspan=2 ><label for='show_materiel'>Matériel engagé</label></td>
+                  <td colspan=2 ><label for='show_materiel'>MatÃ©riel engagÃ©</label></td>
               </tr>";
 }
 
@@ -186,7 +186,7 @@ write_debugbox( $query );
 
 $html .= "<tr height=30><td colspan=3><strong>Interventions et messages 
     <input type='checkbox' name='yesall' id='yesall' onclick='CheckAll(true)' title=\"tout cocher\" > <label for='yesall'>tout cocher</label>
-    <input type='checkbox' name='noall' id='noall' onclick='CheckAll(false)' title=\"tout décocher\"> <label for='noall'>tout décocher </label>
+    <input type='checkbox' name='noall' id='noall' onclick='CheckAll(false)' title=\"tout dÃ©cocher\"> <label for='noall'>tout dÃ©cocher </label>
     </strong></td></tr>";
 
 if ( @mysqli_num_rows($result) > 0 ) {
@@ -214,7 +214,7 @@ if ( @mysqli_num_rows($result) > 0 ) {
     }
 }
 else {
-    $html .= "<tr><td colspan=3 class=small>Aucun message enregistré</td></tr>";
+    $html .= "<tr><td colspan=3 class=small>Aucun message enregistrÃ©</td></tr>";
 }
 //messages importants renforts
 if(!(intval($E_PARENT)) > 0){
@@ -242,7 +242,7 @@ if(!(intval($E_PARENT)) > 0){
                 </tr>";
         }
     }
-    else $html .= "<tr><td colspan=3 class=small>Aucun message enregistré </td></tr>";
+    else $html .= "<tr><td colspan=3 class=small>Aucun message enregistrÃ© </td></tr>";
 }
 $html .= "</table></div></div></div></div></div>";
 $html .= "<a class='btn btn-primary' href='#' onclick='javascript:rapport.submit();'

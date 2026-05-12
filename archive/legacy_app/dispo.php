@@ -148,7 +148,7 @@ if ($tab == 1 || $onlyTable) {
     echo "<form>";
     
     $blockdispo = false ;
-    // recherche dans tableau garde status si les dispos sont verrouillÈes
+    // recherche dans tableau garde status si les dispos sont verrouill√©es
     if ( $pompiers == 1 ) {
         $show_his_section=" (".get_section_code("$lasection").")";
         $level_section = get_level($lasection);
@@ -217,7 +217,7 @@ if ($tab == 1 || $onlyTable) {
     echo "</form></div>";
     
     //=====================================================================
-    // calcul : quel est le mois prochain et combien de jours possËde t'il
+    // calcul : quel est le mois prochain et combien de jours poss√®de t'il
     //=====================================================================
     //nb de jours du mois
     $d=nbjoursdumois($month, $year);
@@ -229,7 +229,7 @@ if ($tab == 1 || $onlyTable) {
     if ( $person == $id or check_rights($id, 10, $lasection )) {
         // dates futures, dispos ouvertes
         if ((date("n") <= $month  and date("Y") == $year) or date("Y") < $year) $disabled="";
-        // mais si les dispos sont bloquÈes, alors on ne peut plus modifier les dispos
+        // mais si les dispos sont bloqu√©es, alors on ne peut plus modifier les dispos
         if ( $blockdispo and $gardes == 1 ) $disabled='disabled';
         // le responsable du tableau de garde peut toujours changer les dispos
         if ( $admin ) $disabled='';
@@ -274,25 +274,25 @@ if ($tab == 1 || $onlyTable) {
     if ( $gardes == 1 and check_rights($id,5,"$mysection") and $pompiers == 1 ) {
         if ( $nbsections > 0 or get_level("$mysection") > 2 ) {
             if ( $NB2 > 0 ) {
-                echo "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i>La saisie des disponibilitÈs pour ce mois est bloquÈe.<p>";
+                echo "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i>La saisie des disponibilit√©s pour ce mois est bloqu√©e.<p>";
                     
                 echo " <input type='button'  class='btn btn-success' value='Ouvrir' name='ouvrir' 
                         onclick=\"redirect('".$person."','".$month."','".$year."','ouvrir','".$mysection."', '".str_replace("'","",$cmt)."')\"
-                        title=\"Ouvrir la saisie des disponibilitÈs $cmt pour ".moislettres($month)." ".$year."\">";
+                        title=\"Ouvrir la saisie des disponibilit√©s $cmt pour ".moislettres($month)." ".$year."\">";
             }
             else if ( $NB2 == 0 ) {
               echo " <p><input type='button' class='btn btn-danger' value='Bloquer' name='fermer' 
                       onclick=\"redirect('".$person."','".$month."','".$year."','fermer','".$mysection."', '".str_replace("'","",$cmt)."')\"
-                      title=\"Bloquer la saisie des disponibilitÈs $cmt pour ".moislettres($month)." ".$year."\">";
+                      title=\"Bloquer la saisie des disponibilit√©s $cmt pour ".moislettres($month)." ".$year."\">";
             }
         }
     }
     else if ( $NB2 > 0 ) {
          echo "<i class='fa fa-exclamation-triangle fa-lg' style='color:orange;'></i>
-               La saisie des disponibilitÈs pour ce mois est bloquÈe.<p>";
+               La saisie des disponibilit√©s pour ce mois est bloqu√©e.<p>";
     }
     
-    // lÈgende
+    // l√©gende
     echo "<div class='d-flex justify-content-center flex-wrap'>";
     $legende_items_style = "badge p-2 text-dark font-weight-normal mx-1 rounded-lg";
     
@@ -304,7 +304,7 @@ if ($tab == 1 || $onlyTable) {
     }     
     echo "<span class='$legende_items_style' style='background-color: $widget_bgorange !important;'>Absent</span>";
     
-    echo "<span class='$legende_items_style' style='background-color: $week_end !important;'>WE/FÈriÈ</span>";
+    echo "<span class='$legende_items_style' style='background-color: $week_end !important;'>WE/F√©ri√©</span>";
     
     echo "<span class='$legende_items_style border' style='background-color: #FFFFFF !important;'>Semaine</span>";
         
@@ -342,7 +342,7 @@ if ($tab == 1 || $onlyTable) {
     
     while ( $l <= 6 ) { // boucle des semaines
         echo "\n    <tr class='dispoWeeks'>\n";
-        // cases vides en dÈbut de mois
+        // cases vides en d√©but de mois
         while ( $k < $jj ) {
               echo "<td style='background-color: #f5f4f6;' class='dispoEmptyTdBegin'>
                      <table  class='noBorder' 
@@ -352,7 +352,7 @@ if ($tab == 1 || $onlyTable) {
             $k=$k+1;
         }
           
-        // jours de 1 ‡ $d variable $i
+        // jours de 1 √† $d variable $i
         while (( $jj <= 7 ) &&  ($i <= $d)) { // boucle des jours de la semaine
             $checked = array();
             
@@ -385,7 +385,7 @@ if ($tab == 1 || $onlyTable) {
             if ( is_out($person, $year, $month, $i) <> 0 ) $mycolor=$widget_bgorange;
             if ( $DAYDATE < $CURDATE ) $disableddate='disabled';
             else $disableddate='';
-            // teste l'inscription ‡ un ÈvÈnement ce jour l‡ si garde est active
+            // teste l'inscription √† un √©v√©nement ce jour l√† si garde est active
             // si inscrit alors on verouille la dispo
             if ( $blockdispo and ! $admin ) $disabled_cell ='disabled';
             else $disabled_cell='';
@@ -414,7 +414,7 @@ if ($tab == 1 || $onlyTable) {
             }
             if ( $dispo_periodes == 3 ){
                 echo "     <td>M<br><input type='checkbox' name='1_".$i."' value='1' onClick=\"updateTotal(this,total1)\" $disableddate $disabled $disabled_cell $checked[1] title='dispo matin'></td>
-                        <td>AM<br><input type='checkbox' name='2_".$i."' value='1' onClick=\"updateTotal(this,total2)\" $disableddate $disabled $disabled_cell $checked[2] title='dispo aprËs-midi'></td>
+                        <td>AM<br><input type='checkbox' name='2_".$i."' value='1' onClick=\"updateTotal(this,total2)\" $disableddate $disabled $disabled_cell $checked[2] title='dispo apr√®s-midi'></td>
                           <td>N<br><input type='checkbox' name='4_".$i."' value='1' onClick=\"updateTotal(this,total4)\" $disableddate $disabled $disabled_cell $checked[4] title='dispo nuit'>";
                           if ($disabled_cell == 'disabled' and $checked[1] )  echo "<input type=hidden name='save1_".$i."' id='save_1' value='$checked[1]'>";
                           if ($disabled_cell == 'disabled' and $checked[2] )  echo "<input type=hidden name='save2_".$i."' id='save_2' value='$checked[2]'>";
@@ -423,7 +423,7 @@ if ($tab == 1 || $onlyTable) {
             }
             if ( $dispo_periodes == 4 ) {
                 echo "     <td>M<br><input type='checkbox' name='1_".$i."' value='1' onClick=\"updateTotal(this,total1)\" $disableddate $disabled $disabled_cell $checked[1] title='dispo matin'></td>
-                        <td>AM<br><input type='checkbox' name='2_".$i."' value='1' onClick=\"updateTotal(this,total2)\" $disableddate $disabled $disabled_cell $checked[2] title='dispo aprËs-midi'></td>
+                        <td>AM<br><input type='checkbox' name='2_".$i."' value='1' onClick=\"updateTotal(this,total2)\" $disableddate $disabled $disabled_cell $checked[2] title='dispo apr√®s-midi'></td>
                         <td>S<br><input type='checkbox' name='3_".$i."' value='1' onClick=\"updateTotal(this,total3)\" $disableddate $disabled $disabled_cell $checked[3] title='dispo soir'></td>
                           <td>N<br><input type='checkbox' name='4_".$i."' value='1' onClick=\"updateTotal(this,total4)\" $disableddate $disabled_cell $disabled $checked[4] title='dispo nuit'>";
                           if ($disabled_cell == 'disabled' and $checked[1] )  echo "<input type=hidden name='save1_".$i."' id='save_1' value='$checked[1]'>";
@@ -463,10 +463,10 @@ if ($tab == 1 || $onlyTable) {
     $result=mysqli_query($dbc,$query);
     $row=@mysqli_fetch_array($result);
 
-    echo"<tr><span style='font-size:10px;font-style:italic;text-align:left;'>Votre commentaire concernant vos disponibilitÈs du mois:</span><br>
-        <textarea name='msg' style='width:400px;height:70px' title=\"Ce texte sera ajoutÈ au mail de notification envoyÈ quand vous sauvez les disponibilitÈs\">".@$row['DC_COMMENT']."</textarea></tr>";
+    echo"<tr><span style='font-size:10px;font-style:italic;text-align:left;'>Votre commentaire concernant vos disponibilit√©s du mois:</span><br>
+        <textarea name='msg' style='width:400px;height:70px' title=\"Ce texte sera ajout√© au mail de notification envoy√© quand vous sauvez les disponibilit√©s\">".@$row['DC_COMMENT']."</textarea></tr>";
     echo "</table>";
-    // la personne habilitÈe peut valider les dispos
+    // la personne habilit√©e peut valider les dispos
     if ( (! $blockdispo or $admin ) and $disabled == '') {
         echo "<input type='submit'  class='btn btn-success' value='Sauvegarder'>";
     }
@@ -590,12 +590,12 @@ if ($tab == 2) {
     }
     else if ( $dispo_periodes == 3 ) {
         $periodes[1]= 'Matin';
-        $periodes[2]= 'AprËs-midi';
+        $periodes[2]= 'Apr√®s-midi';
         $periodes[3]= 'Nuit';
     }
     else if ( $dispo_periodes == 4 ) {
         $periodes[1]= 'Matin';
-        $periodes[2]= 'AprËs-midi';
+        $periodes[2]= 'Apr√®s-midi';
         $periodes[3]= 'Soir';
         $periodes[4]= 'Nuit';
     }
@@ -638,7 +638,7 @@ if ($tab == 2) {
         if ( $grades == 1 ) {
             echo "<td class='hide_mobile'>Grade</td>";
         }
-        echo "<td>Nom PrÈnom</td>"; 
+        echo "<td>Nom Pr√©nom</td>"; 
         echo "<td align=center>Section</td>";
         foreach ($periodes as $period => $DP_NAME){
             echo "<td align=center>$DP_NAME</td>";
@@ -716,16 +716,16 @@ if ($tab == 2) {
             foreach ($periodes as $period => $DP_NAME){
                 if ( $dispos[$period][$pid] == 1 ) {
                     $c=$widget_bggreen;
-                    $t='personne disponible sur cette pÈriode';
+                    $t='personne disponible sur cette p√©riode';
                 }
                 else if ( $dispos[$period][$pid] == 2 ) {
                     $c=$widget_bgorange;
-                    $t='personne disponible sur cette pÈriode mais dÈj‡ engagÈe';
+                    $t='personne disponible sur cette p√©riode mais d√©j√† engag√©e';
                     if (! $gardes ) $t .= ' ce jour';
                 }
                 else {
                     $c='grey';
-                    $t='personne non disponible sur cette pÈriode';
+                    $t='personne non disponible sur cette p√©riode';
                 }
                 echo "<td bgcolor='$c' style='border:solid #A9A9A9 1px;border-collapse: separate;' title='".$t."'></td>";
             }

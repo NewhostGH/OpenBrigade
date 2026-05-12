@@ -61,8 +61,8 @@ if( check_rights($id, 15, "$organisation") or is_chef_evenement($id,$evenement))
     if($actionPrint=="Modifier"){
         echo "
         <p>Vous pouvez imprimer la grille:<br>
-        - <a href=\"pdf.php?pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">grille complète</a> <br> 
-        - <a href=\"pdf.php?page=1&pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">page 1 seulement</a> <span class=small2>à joindre à la convention</span>
+        - <a href=\"pdf.php?pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">grille complÃ¨te</a> <br> 
+        - <a href=\"pdf.php?page=1&pdf=DPS&id=$evenement\" title=\"imprimer\" target=\"_blank\">page 1 seulement</a> <span class=small2>Ã  joindre Ã  la convention</span>
         </p>
         ";
    }

@@ -154,7 +154,7 @@ function showModeRegul( regularise, typePaiement) {
 
 function changeModeRegul ( type_regularisation, montant ) {
     var observation = document.getElementById('observation');
-    var cmt = montant+ "<?php echo $default_money_symbol; ?> à représenter";
+    var cmt = montant+ "<?php echo $default_money_symbol; ?> Ã  reprÃ©senter";
     if (type_regularisation.value == '3') {
         if ( observation.value == "" ) {
             observation.value = cmt; 
@@ -172,7 +172,7 @@ function clickRepresenter(defaultDate, typePaiement) {
     var representer= document.getElementById('representer');
     var date_regul= document.getElementById('date_regul');
     var observation = document.getElementById('observation');
-    var cmt = montant_rejet.value + "<?php echo $default_money_symbol; ?> au prélèvement suivant";
+    var cmt = montant_rejet.value + "<?php echo $default_money_symbol; ?> au prÃ©lÃ¨vement suivant";
     updateMontant(montant_rejet,montant_regul);
     if ( observation.value == "" ) {
         observation.value = cmt; 
@@ -301,11 +301,11 @@ if ( isset ($_POST["rejet_id"])  and ($action=='update' or $action=='insert')) {
         $result=mysqli_query($dbc,$query);
         
         if ( mysqli_affected_rows($dbc) == 1 and  $MONTANT_REGUL > 0 ) {
-            if ( $REPRESENTER == 1 and $REGULARISE == 0 ) { // incrementer somme à représenter
+            if ( $REPRESENTER == 1 and $REGULARISE == 0 ) { // incrementer somme Ã  reprÃ©senter
                 $query="update pompier set MONTANT_REGUL = ROUND( MONTANT_REGUL + ".$MONTANT_REGUL." , 2 ) where P_ID=".$pid;
                 $result=mysqli_query($dbc,$query);
             }
-            else if ( $REGULARISE == 1 ) { // réduire somme à représenter
+            else if ( $REGULARISE == 1 ) { // rÃ©duire somme Ã  reprÃ©senter
                 $query="update pompier set MONTANT_REGUL = ROUND( MONTANT_REGUL - ".$MONTANT_REGUL." , 2 ) where P_ID=".$pid;
                 $result=mysqli_query($dbc,$query);
                 $query="update pompier set MONTANT_REGUL = 0 where MONTANT_REGUL < 0 and P_ID=".$pid;
@@ -371,7 +371,7 @@ if (  isset ($_POST["paiement_id"])  and ($action=='update' or $action=='insert'
             $result=mysqli_query($dbc,$query);
             $row=@mysqli_fetch_array($result);
             if ( $row[0] == 1 ) {
-                write_msgbox("Erreur", $error_pic, "Il y a déjà eu un paiement pour cette période de $ANNEE<p><input type='button' class='btn btn-default' value='Retour' onclick='goback();'>",30,0);
+                write_msgbox("Erreur", $error_pic, "Il y a dÃ©jÃ  eu un paiement pour cette pÃ©riode de $ANNEE<p><input type='button' class='btn btn-default' value='Retour' onclick='goback();'>",30,0);
                 exit;
             }
         }
@@ -387,16 +387,16 @@ if (  isset ($_POST["paiement_id"])  and ($action=='update' or $action=='insert'
             if ( $note > 0 ) {    
                 $action_link="<a href='upd_personnel.php?id=".$pid."'><input type='submit' class='btn btn-default' value='Retour'></a>";
                 $_SESSION['from_cotisation']=1;
-                write_msgbox("Remboursement Note de frais enregistré", $star_pic, 
+                write_msgbox("Remboursement Note de frais enregistrÃ©", $star_pic, 
                 " Le remboursement de la note de frais pour un montant total de <b>".$MONTANT.$default_money_symbol."</b>".
-                " <br>a été enregistré sur la fiche personnel.<p align=center>".$action_link,10,0);
+                " <br>a Ã©tÃ© enregistrÃ© sur la fiche personnel.<p align=center>".$action_link,10,0);
                 exit;
             }
         }
         else {
             $cmt="Paiement de ".$MONTANT.$default_money_symbol." pour ".$ANNEE;
             insert_log('INSCOT', $pid, $cmt);
-            // cas de la personne en prélèvement, on considère que la régul a été faite.
+            // cas de la personne en prÃ©lÃ¨vement, on considÃ¨re que la rÃ©gul a Ã©tÃ© faite.
             $query="update pompier set MONTANT_REGUL=0 where P_ID=".$pid." and TP_ID=".$TP_ID." and TP_ID = 1";
             $result=mysqli_query($dbc,$query);
         }
@@ -444,7 +444,7 @@ echo "<body><div align='center'>";
 if ( $rejet_id >= 0 ) {
 
 $img="<i class='fa fa-exclamation-circle fa-1x' style='color:red;'></i>";
-$comment='Rejet non régularisé';
+$comment='Rejet non rÃ©gularisÃ©';
 $color=$widget_fgred;
 
 $query="select po.P_NOM, po.P_PRENOM, r.R_ID, r.ANNEE, r.PERIODE_CODE, r.DEFAUT_ID, r.MONTANT_REJET, 
@@ -468,12 +468,12 @@ if ( mysqli_num_rows($result) > 0 ) {
     $P_PRENOM=my_ucfirst($P_PRENOM);
     if ( $REGULARISE == 1 ) {
         $img="<i class='far fa-check-square fa-1x' style='color:green;'></i>";
-        $comment='Rejet régularisé';
+        $comment='Rejet rÃ©gularisÃ©';
         $color=$widget_fggreen;
     }
     else if ( $REPRESENTER == 1 ) {
         $img="<i class='fa fa-exclamation-triangle fa-1x' style='color:orange;'></i>";
-        $comment='Rejet en cours de régularisation';
+        $comment='Rejet en cours de rÃ©gularisation';
         $color=$widget_fgorange;
     }
 }
@@ -505,7 +505,7 @@ else if ( $action == 'insert' ) {
     $PERIODE_CODE=$row2[0];
 }
 else {
-    echo "Rejet non trouvé";
+    echo "Rejet non trouvÃ©";
     exit;
 }
       
@@ -516,17 +516,17 @@ echo "<div class='col-sm-2'></div>";
 echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'><strong> Rejet de prélèvement pour $P_PRENOM $P_NOM </strong></div>
+                <div class='card-title'><strong> Rejet de prÃ©lÃ¨vement pour $P_PRENOM $P_NOM </strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder'>";
 
 print insert_csrf('cotisation');
 
-echo "<tr><td>Année</td>";
+echo "<tr><td>AnnÃ©e</td>";
 echo "<td witdh=200><input class='form-control form-control-sm' name=annee type=text size=4 onchange=\"checkNumber(form.annee,".$ANNEE.");\" value='".$ANNEE."'></td></tr>";
 
-echo "<tr><td>Période</td>";
+echo "<tr><td>PÃ©riode</td>";
 echo "<td>";
 $query2="select P_CODE,P_DESCRIPTION from periode order by P_ORDER";
 $result2=mysqli_query($dbc,$query2);
@@ -547,7 +547,7 @@ echo "<tr>
             <input class='form-control form-control-sm datepicker datepicker2' type='text' name='date_rejet' size='10' value='".$DATE_REJET."' onchange='checkDate2(form.date_rejet)'  data-provide='datepicker' autocomplete='off'>";
 echo "</tr>";
 
-echo "<tr><td>Défaut bancaire</td>";
+echo "<tr><td>DÃ©faut bancaire</td>";
 echo "<td>";
 $query2="select D_ID,D_DESCRIPTION from defaut_bancaire order by D_DESCRIPTION";
 $result2=mysqli_query($dbc,$query2);
@@ -572,43 +572,43 @@ echo "</table></div></div></div>";
 echo "<div class='col-sm-4'>
         <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'><strong> Régularisation pour $P_PRENOM $P_NOM <br>$img<font size=1 color=$color> $comment</font></strong></div>
+                <div class='card-title'><strong> RÃ©gularisation pour $P_PRENOM $P_NOM <br>$img<font size=1 color=$color> $comment</font></strong></div>
             </div>
             <div class='card-body graycard'>";
 echo "<table class='noBorder'>";
 
-// si la personne est en prélèvement, on peut choisir de représenter au prochain prélèvement (en cours de régularisation)
+// si la personne est en prÃ©lÃ¨vement, on peut choisir de reprÃ©senter au prochain prÃ©lÃ¨vement (en cours de rÃ©gularisation)
 if ( $REPRESENTER == 1 or ( $bank_accounts == 1 and $TP_ID == 1)) {
     if ( $REGULARISE == '1') $dis="disabled";
     else $dis="";
     if ( $REPRESENTER == 1 ) $checked="checked";
     else $checked="";
-    echo "<tr><td>A représenter</td>
+    echo "<tr><td>A reprÃ©senter</td>
      <td><label class='switch'>
                     <input type='checkbox' name='representer' id='representer' value='1' $checked $dis
                     onclick=\"clickRepresenter('".date("d-m-Y")."', '".$TP_ID."');\">
                     <span class='slider round'
-                       title=\"Cocher si le le montant rejeté et pas encore régularisé doit être ajouté au prochain prélèvement (régularisation en cours)\">
+                       title=\"Cocher si le le montant rejetÃ© et pas encore rÃ©gularisÃ© doit Ãªtre ajoutÃ© au prochain prÃ©lÃ¨vement (rÃ©gularisation en cours)\">
                     </span>
                 </label>
-            <span class=small2> au prochain prélèvement</span></td></tr>";
+            <span class=small2> au prochain prÃ©lÃ¨vement</span></td></tr>";
 }
 else echo "<input type='hidden' name='representer' id='representer' value='0'>";
 
 if ( $REGULARISE == 1 ) $checked="checked";
 else $checked="";
-echo "<tr><td>Rejet régularisé</td>
+echo "<tr><td>Rejet rÃ©gularisÃ©</td>
      <td><label class='switch'>
                     <input type='checkbox' name='regularise' id='regularise' value='1' $checked 
                     onclick=\"clickRegularise('".date("d-m-Y")."', '".$TP_ID."');\">
-                    <span class='slider round' title=\"Cocher si le rejet a été régularisé\" ></span>
+                    <span class='slider round' title=\"Cocher si le rejet a Ã©tÃ© rÃ©gularisÃ©\" ></span>
                 </label>
       </td></tr>";
 
 if ( $REGULARISE == '1') $style="";
 else  $style="style='display:none'";
 
-echo "<tr  id=modeRegulRow $style><td>Mode régularisation</td>";
+echo "<tr  id=modeRegulRow $style><td>Mode rÃ©gularisation</td>";
     $query2="select TR_ID, TR_DESCRIPTION from type_regularisation";
     if ( $bank_accounts == 0 ) $query2 .=" where ( TR_ID < 3 or TR_ID =".$REGUL_ID.")";
     $query2 .=" order by TR_ID" ;     
@@ -624,11 +624,11 @@ echo "<tr  id=modeRegulRow $style><td>Mode régularisation</td>";
     }
 echo "</select></td>";
     
-echo "<tr><td>Montant Régularisation<br>".$default_money_symbol."</td>";
+echo "<tr><td>Montant RÃ©gularisation<br>".$default_money_symbol."</td>";
 echo "<td><input class='form-control form-control-sm' name=montant_regul id=montant_regul type=text size=4 onchange=\"checkFloat(form.montant_regul,'".$MONTANT_REGUL."');\" value='".$MONTANT_REGUL."'></td></tr>";
 
 echo "<tr>
-            <td>Date régularisation<br><font size=1 class='small'><i>JJ-MM-AAAA</i></font></td>
+            <td>Date rÃ©gularisation<br><font size=1 class='small'><i>JJ-MM-AAAA</i></font></td>
             <td>
             <input class='form-control form-control-sm datepicker datepicker2' type='text' name='date_regul' id='date_regul' size='10' value='".$DATE_REGUL."' onchange='checkDate2(form.date_regul)' data-provide='datepicker' autocomplete='off'>
             </td>";
@@ -738,9 +738,9 @@ else if ( $action == 'insert' ) {
     $BIC=$row2["BIC"];
     if ( $bank_accounts and $IBAN <> "") {
         if ( $REMBOURSEMENT == 1 ) $TP_ID=2; // virement
-        else $TP_ID=1; // prélèvement
+        else $TP_ID=1; // prÃ©lÃ¨vement
     }
-    else $TP_ID=4; // chèque
+    else $TP_ID=4; // chÃ¨que
     
     if ( $periode == "" ) {
         if ( $TP_ID == 1 ) {
@@ -758,7 +758,7 @@ else if ( $action == 'insert' ) {
     $fraction=get_fraction($PERIODE_CODE);
     
     if ( $PERIODE_CODE == 'A' and  ($YEAR_ENGAGEMENT == $ANNEE or $YEAR_FIN == $ANNEE)) {
-        // éventuellement demander cotisation pour année incomplète
+        // Ã©ventuellement demander cotisation pour annÃ©e incomplÃ¨te
         $number_months_to_pay = 12;
         if ( $MONTH_ENGAGEMENT <> "" ) $number_months_to_pay =  $number_months_to_pay - $MONTH_ENGAGEMENT + 1;
         if ( $MONTH_FIN <> "" )  $number_months_to_pay = $number_months_to_pay - ( 12 - $MONTH_FIN );
@@ -771,7 +771,7 @@ else if ( $action == 'insert' ) {
     }
     if ( $REMBOURSEMENT == 1 ) {
         if ( $note > 0 ) {
-            $COMMENTAIRE="Remboursement de la note de frais \nn°".$note;
+            $COMMENTAIRE="Remboursement de la note de frais \nnÂ°".$note;
             $query2="select TOTAL_AMOUNT from note_de_frais where NF_ID=".$note;
             $result2=mysqli_query($dbc,$query2);
             $row2=@mysqli_fetch_array($result2);
@@ -781,27 +781,27 @@ else if ( $action == 'insert' ) {
     }
     
     if ( $PERIODE_CODE == 'COMP' ) {
-        $COMMENTAIRE = "Paiement complémentaire";
+        $COMMENTAIRE = "Paiement complÃ©mentaire";
         $MONTANT="";
     }
 }
 else {
-    echo "Paiement non trouvé";
+    echo "Paiement non trouvÃ©";
     exit;
 }
 
 if ( $COMMENTAIRE == "" and  $number_months_to_pay <> "" and $bank_accounts == 1 and $REMBOURSEMENT == 0 ) $COMMENTAIRE = $number_months_to_pay." mois, soit ".$MONTANT.$default_money_symbol;
 
-// si on prèlève, ajouter la régul
+// si on prÃ¨lÃ¨ve, ajouter la rÃ©gul
 if ( $TP_ID == 1 and $MONTANT_REGUL <> 0 and $REMBOURSEMENT == 0 and $PERIODE_CODE <> 'COMP') {
-    $COMMENTAIRE = $COMMENTAIRE." et régul de ".$MONTANT_REGUL.$default_money_symbol;
+    $COMMENTAIRE = $COMMENTAIRE." et rÃ©gul de ".$MONTANT_REGUL.$default_money_symbol;
     $MONTANT = floatval($MONTANT) + floatval($MONTANT_REGUL);
 }
 
 if ( $REMBOURSEMENT == 0 ) $t="Paiement";
 else $t="Remboursement";
 
-if ( $REMBOURSEMENT == 0 ) $t2="Paiement ou prélèvement pour $P_PRENOM $P_NOM";
+if ( $REMBOURSEMENT == 0 ) $t2="Paiement ou prÃ©lÃ¨vement pour $P_PRENOM $P_NOM";
 else $t2="$t pour $P_PRENOM $P_NOM";
 echo "<form action=cotisation_edit.php method=POST>
         <div class='table-responsive'>
@@ -816,10 +816,10 @@ echo "<form action=cotisation_edit.php method=POST>
 print insert_csrf('cotisation');
 
 if ( $REMBOURSEMENT == 0 ) {
-    echo "<tr><td>Année</td>";
+    echo "<tr><td>AnnÃ©e</td>";
     echo "<td><input name=annee class='form-control form-control-sm maxsize' type=text size=4 onchange=\"javascript:checkNumber(form.annee,'".$ANNEE."');\" value='".$ANNEE."'></td></tr>";
 
-    echo "<tr><td>Période</td>";
+    echo "<tr><td>PÃ©riode</td>";
     echo "<td>";
     $query2="select P_CODE,P_DESCRIPTION from periode order by P_ORDER";
     $result2=mysqli_query($dbc,$query2);
@@ -845,7 +845,7 @@ else {
 echo "<tr><td>Type ".$t."</td>";
 echo "<td>";
 $query2="select TP_ID, TP_DESCRIPTION from type_paiement";
-if ( $REMBOURSEMENT == 1 and $TP_ID <> 1) $query2 .=" where ( TP_ID <> 1 )"; // pas de prélèvement
+if ( $REMBOURSEMENT == 1 and $TP_ID <> 1) $query2 .=" where ( TP_ID <> 1 )"; // pas de prÃ©lÃ¨vement
 $result2=mysqli_query($dbc,$query2);
 echo "<select name='type_paiement' class='form-control select-control maxsize' id='type_paiement' onchange=\"javascript:changedType();\">";
             while ($row2=@mysqli_fetch_array($result2)) {
@@ -860,13 +860,13 @@ echo "</td></tr>";
 
 if ( $TP_ID == '4' ) $style="";
 else  $style="style='display:none'";
-echo "<tr  id=numChequeRow $style><td>Numéro de chèque</td>";
+echo "<tr  id=numChequeRow $style><td>NumÃ©ro de chÃ¨que</td>";
 echo "<td><input class='form-control form-control-sm maxsize' name=num_cheque type=text size=15 value='".$NUM_CHEQUE."'></td></tr>";
 
 if (($TP_ID == '1' or $TP_ID == '2') and $bank_accounts ) $style="";
 else  $style="style='display:none'";
 
-// définir depuis quel compte part le virement
+// dÃ©finir depuis quel compte part le virement
 if ( $REMBOURSEMENT == 1 ) {
     echo "<tr  $style id=fromRow><td>Remboursement par</td>";
     echo "<td>";
@@ -893,23 +893,23 @@ if ( $REMBOURSEMENT == 1 ) {
 }
 
 
-if ( $REMBOURSEMENT == 1 ) $t="crédité";
-else $t="débité";
+if ( $REMBOURSEMENT == 1 ) $t="crÃ©ditÃ©";
+else $t="dÃ©bitÃ©";
 
 echo "<tr  id=ribRow $style><td>Compte ".$t."</td>";
 echo "<td><input name=bic type=text class='form-control form-control-sm maxsize' maxlength=11  value='".$BIC."'>
             <input name=iban type=text class='form-control form-control-sm maxsize' maxlength=34  value='".display_IBAN($IBAN)."' >
         </td></tr>";
 
-if ( $REMBOURSEMENT == 1 ) $t="remboursé";
-else $t="payé";
+if ( $REMBOURSEMENT == 1 ) $t="remboursÃ©";
+else $t="payÃ©";
 echo "<tr><td>Montant ".$t." <br>".$default_money_symbol."</td>";
 if ( $MONTANT == "" ) $DEFMONTANT=0;
 else $DEFMONTANT =  $MONTANT;
 echo "<td><input class='form-control form-control-sm maxsize' name=montant_paiement type=text size=4 onchange=\"checkFloat(form.montant_paiement,".$DEFMONTANT.");\" value='".$MONTANT."'></td></tr>";
 
 if ( $P_DATE_ENGAGEMENT <> "" and $REMBOURSEMENT == 0 ) {
-    echo "<tr><td>Date entrée</td>";
+    echo "<tr><td>Date entrÃ©e</td>";
     echo "<td><input class='form-control form-control-sm maxsize' value='".$P_DATE_ENGAGEMENT."' disabled></td></tr>";
 }
 if ( $P_FIN <> "" and $REMBOURSEMENT == 0) {

@@ -54,7 +54,7 @@ if ( $action == "save" ) {
 
 $nomenu=1;
 writehead();
-write_modal_header("Choix du maître");
+write_modal_header("Choix du maÃ®tre");
 
 ?>
 <STYLE type="text/css">
@@ -67,7 +67,7 @@ write_modal_header("Choix du maître");
 echo "</head>";
 echo "<body style='padding-top:10px'>";
 //=====================================================================
-// recupérer infos animal
+// recupÃ©rer infos animal
 //=====================================================================
 
 $query="select P_NOM, P_PRENOM, P_MAITRE from pompier where P_ID=".$pid;
@@ -92,7 +92,7 @@ echo "<div align=center><table class='noBorder'>
 //=====================================================================
 
 echo "<div align=center>";
-echo "<b>Nom du Maître</b><br>";
+echo "<b>Nom du MaÃ®tre</b><br>";
       
 // liste des personnes
 $sectionfilter=true;
@@ -116,7 +116,7 @@ echo "<select id='newmaitre' name='newmaitre'
         onchange=\"choisirM('".$pid."',document.getElementById('newmaitre').value, '".$civilite."')\">";
 if ( $maitre == '' ) $selected='selected';
 else $selected='';
-echo "<option value='0' $selected>choix maître</option>\n";
+echo "<option value='0' $selected>choix maÃ®tre</option>\n";
 while ($row=@mysqli_fetch_array($result)) {
         $P_NOM=$row["P_NOM"];
         $P_PRENOM=$row["P_PRENOM"];

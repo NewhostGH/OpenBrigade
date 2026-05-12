@@ -50,7 +50,7 @@ if (isset($_GET["full_day"])) $full_day=1;
 else if ($morning > 0 or $afternoon > 0 ) $full_day=2;
 else $full_day=0;
 
-// full day = 1 (que des journées complètes), 2 (une demi_journée), 0 (des heures)
+// full day = 1 (que des journÃ©es complÃ¨tes), 2 (une demi_journÃ©e), 0 (des heures)
 
 if ($full_day == 1) $type_periode = 1 ;
 else if ( $morning == 1 ) {
@@ -71,23 +71,23 @@ $TI_FLAG = intval($TI_FLAG);
 
 if ( $type == "") {
     write_msgbox("Erreur type", $error_pic, 
-    " Le type d'absence doit être renseigné.<p align=center>
+    " Le type d'absence doit Ãªtre renseignÃ©.<p align=center>
     <a href='indispo_choice.php?tab=1&person=$person'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
 }
 else if ( $dc1 == "") {
     write_msgbox("Erreur date", $error_pic, 
-    " La date de début doit être renseignée.<p align=center>
+    " La date de dÃ©but doit Ãªtre renseignÃ©e.<p align=center>
     <a href='javascript:history.back()'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
 }
 else if ( $dc2 == "" and $full_day <> 2 ) {
     write_msgbox("Erreur date", $error_pic, 
-    " La date de fin doit être renseignée.<p align=center>
+    " La date de fin doit Ãªtre renseignÃ©e.<p align=center>
     <a href='indispo_choice.php?tab=1&person=$person'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
 }
 else if (( $statut == 'SPV'  or  $statut == 'BEN' or  $statut == 'ADH' or  $statut == 'JSP')
             and  $TI_FLAG == 1 ) {
-     write_msgbox("Erreur type indisponibilité", $error_pic, 
-    " Les absences de type 'Congés avec circuit de validation' ne sont pas possibles pour le personnel de cette catégorie.<p align=center>
+     write_msgbox("Erreur type indisponibilitÃ©", $error_pic, 
+    " Les absences de type 'CongÃ©s avec circuit de validation' ne sont pas possibles pour le personnel de cette catÃ©gorie.<p align=center>
         <a href='indispo_choice.php?tab=1&person=$person'><input type='submit' class='btn btn-secondary' value='Retour'></a> ",10,0);
 }
 else {
@@ -110,7 +110,7 @@ else {
     $row=@mysqli_fetch_array($result);
     $absence=$row[0];
 
-    // suppression du tableau de garde et des disponibilités
+    // suppression du tableau de garde et des disponibilitÃ©s
     if (  $full_day == 1 ) {
         if ($INDISPO_STATUT=='VAL'){
             $query2=" UPDATE evenement_participation SET EP_REMINDER=0,EP_ABSENT=1,EP_EXCUSE=1 WHERE P_ID = '".$person."'
@@ -124,8 +124,8 @@ else {
     if ($dc1 == $dc2 or $full_day == 2) {
         $period = "du ".$day1."-".$month1."-".$year1;
         if ( $morning == 1 )  $period .= " le matin";
-        else if ( $afternoon == 1 )  $period .= " l'après-midi";
-        else if ( $full_day == 0 ) $period .= " de ".$debut." à ".$fin;
+        else if ( $afternoon == 1 )  $period .= " l'aprÃ¨s-midi";
+        else if ( $full_day == 0 ) $period .= " de ".$debut." Ã  ".$fin;
         //Quand demi absence
        if ($INDISPO_STATUT =='VAL'){
             $query2=" UPDATE evenement_participation SET EP_REMINDER=0,EP_ABSENT=1,EP_EXCUSE=1 WHERE P_ID = '".$person."'
@@ -203,7 +203,7 @@ else {
     // envoi email de notification
     if ($type== 'CP' or $type== 'RTT' ) {
          $destid=$person.",".get_granted(57,"$section",'parent','yes').",".get_granted(13,"$section",'parent','yes');
-        // notifier auss les responsables d'autres sections selon les rôles de l'organigramme de la personne
+        // notifier auss les responsables d'autres sections selon les rÃ´les de l'organigramme de la personne
         $query="select S_ID from section_role where S_ID <> ".$section ."
                 and P_ID = ".$person;
         $result=mysqli_query($dbc,$query);
@@ -217,17 +217,17 @@ else {
         $message="Merci de valider la demande de ".$type." de ".ucfirst($prenom)." ".strtoupper($nom)."\n
          ".$period."\n
     Lien: ".$siteurl;
-        $info="<p>Un email a été envoyé aux personnes suivantes, pour information ou validation:<br><span>".show_names_dest($destid)."</span>";
+        $info="<p>Un email a Ã©tÃ© envoyÃ© aux personnes suivantes, pour information ou validation:<br><span>".show_names_dest($destid)."</span>";
         $nb = mysendmail("$destid" , $id , $subject , "$message" );
     }
     else {
         $info="";
     }
 
-    write_msgbox("demande enregistrée", $star_pic, 
+    write_msgbox("demande enregistrÃ©e", $star_pic, 
     " L'absence (".$type.") de ".strtoupper($nom)." 
     ".ucfirst($prenom)." ".$period.
-    " a été enregistrée.".$info."<p align=center>
+    " a Ã©tÃ© enregistrÃ©e.".$info."<p align=center>
     <a href='upd_personnel.php?pompier=".$person."&tab=18&table=1'><input type='submit' class='btn btn-primary' value=\"Fiche de ".ucfirst($prenom)." ".strtoupper($nom)."\"></a>
     <p align=center>
     <a href='indispo_choice.php?tab=2&statut=ALL&type=ALL&person=ALL&validation=ALL'><input type='submit' class='btn btn-secondary' value='Tableau absences'></a>

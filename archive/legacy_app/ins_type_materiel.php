@@ -41,7 +41,7 @@ echo "</head>";
 echo "<body>";
 
 //=====================================================================
-// affiche la fiche type de matériel
+// affiche la fiche type de matÃ©riel
 //=====================================================================
 
 $query="select CM_DESCRIPTION,PICTURE from categorie_materiel
@@ -60,14 +60,14 @@ echo "<div class='table-responsive'>";
 echo "<div class='col-sm-5'>
         <div class='card hide card-default graycarddefault cardtab' style='margin-bottom:5px'>
             <div class='card-header graycard cardtab'>
-                <div class='card-title'><strong> Nouveau type de matériel </strong></div>
+                <div class='card-title'><strong> Nouveau type de matÃ©riel </strong></div>
             </div>
             <div class='card-body graycard'>";
 
 echo "<table class='noBorder' cellspacing=0 border=0>";
 
 //=====================================================================
-// ligne catégorie
+// ligne catÃ©gorie
 //=====================================================================
 
 $query="select TM_USAGE, CM_DESCRIPTION from categorie_materiel
@@ -75,7 +75,7 @@ $query="select TM_USAGE, CM_DESCRIPTION from categorie_materiel
 $result=mysqli_query($dbc,$query);
 
 echo "<tr>
-            <td>Catégorie $asterisk</td>
+            <td>CatÃ©gorie $asterisk</td>
             <td align=left>
           <select class='form-control form-control-sm' name='TM_USAGE'  id='TM_USAGE' onchange = 'change_type();'>";
                while ($row=@mysqli_fetch_array($result)) {
@@ -84,7 +84,7 @@ echo "<tr>
                   echo "<option value=\"".$row["TM_USAGE"]."\" $selected>".$row["TM_USAGE"]." - ".$row["CM_DESCRIPTION"]."</option>";
             }
 echo "<td align = right>
-      <i class='fa fa-pencil-alt fa-lg' onClick=\"redirect_edit()\"/ title=\"Editer une catégorie de matériel\"></i></td>";
+      <i class='fa fa-pencil-alt fa-lg' onClick=\"redirect_edit()\"/ title=\"Editer une catÃ©gorie de matÃ©riel\"></i></td>";
 echo "</select>";
 echo "</td>
       </tr>";
@@ -134,14 +134,14 @@ echo "<tr id=row_tt $style>
             
       
 //=====================================================================
-// lot de matériel
+// lot de matÃ©riel
 //=====================================================================
 echo "<tr>
-            <td>Lot de matériel</td>
+            <td>Lot de matÃ©riel</td>
             <td align=left>
             <input type='checkbox' name='TM_LOT' value='1'
-            title=\"Cochez la case si ce type définit un lot de matériel\">
-            <font size=1><i>des pièces de matériel peuvent être intégrées dans un lot<i></font>
+            title=\"Cochez la case si ce type dÃ©finit un lot de matÃ©riel\">
+            <font size=1><i>des piÃ¨ces de matÃ©riel peuvent Ãªtre intÃ©grÃ©es dans un lot<i></font>
             <td align = right>";
 echo " </td>
       </tr>";    

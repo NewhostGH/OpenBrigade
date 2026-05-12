@@ -30,7 +30,7 @@ writehead();
 <script language="JavaScript">
 
 function restore(where, what) {
-   if ( confirm ("Vous allez appliquer sur la base de données avec le contenu du fichier " + what +  "?" )) {
+   if ( confirm ("Vous allez appliquer sur la base de donnÃ©es avec le contenu du fichier " + what +  "?" )) {
         self.location = "restore.php?file=" + what;
    }
 }
@@ -69,13 +69,13 @@ if ( $file != "" ) {
     $fullpath = $filesdir."/save/".$filename;
     
     if (! is_readable($fullpath)) {
-        write_msgbox("Erreur fichier", $error_pic, "<p align=center>$filename n'est pas trouvé ou pas accessible <br><p align=center><a href=index_d.php><input type='submit' class='btn btn-default' value='Retour'></a>",10,0);
+        write_msgbox("Erreur fichier", $error_pic, "<p align=center>$filename n'est pas trouvÃ© ou pas accessible <br><p align=center><a href=index_d.php><input type='submit' class='btn btn-default' value='Retour'></a>",10,0);
         exit;
     }
     
     load_sql_file( $fullpath );
     
-    write_msgbox("opération réussie", $star_pic, "<p align=center>$filename rechargé avec succès! <br><p align=center><a href=index_d.php><input type='submit' class='btn btn-default' value='Retour'></a>",10,0);
+    write_msgbox("opÃ©ration rÃ©ussie", $star_pic, "<p align=center>$filename rechargÃ© avec succÃ¨s! <br><p align=center><a href=index_d.php><input type='submit' class='btn btn-default' value='Retour'></a>",10,0);
    
     echo "</div>";
     exit;
@@ -145,7 +145,7 @@ if ($file=="") {
 
     if ( count( $f2_arr ) > 0 ) {
         echo "<tr class='newTabHeader'>
-          <td>Récentes</td>
+          <td>RÃ©centes</td>
           <td align=center>Version</td>
           <td align=center>Size (kB)</td>
           <td align=center>Date</td>

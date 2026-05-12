@@ -29,7 +29,7 @@ if(! defined('STDIN')) {
 // competences arrivant a expiration
 if ( $nbsections == 0 ) {
     notify_before_expiration();
-    // statistiques manquantes 3 jours après la fin du DPS ou de la garde
+    // statistiques manquantes 3 jours aprÃ¨s la fin du DPS ou de la garde
     $query = "select distinct
     e.E_CODE,
     e.TE_CODE,
@@ -55,17 +55,17 @@ if ( $nbsections == 0 ) {
 
         $url=get_plain_url($cisurl);
         $siteurl = "http://".$url."/index.php?evenement=".$E_CODE;
-        $message_desc  = "<a href=".$siteurl." title='cliquer pour voir le détail'>".$t." : ".$E_LIBELLE."</a>.\n\n";
-        $message_desc .= "organisé par..........: ".$S_CODE." - ".$S_DESCRIPTION."\n";
+        $message_desc  = "<a href=".$siteurl." title='cliquer pour voir le dÃ©tail'>".$t." : ".$E_LIBELLE."</a>.\n\n";
+        $message_desc .= "organisÃ© par..........: ".$S_CODE." - ".$S_DESCRIPTION."\n";
         $message_desc .= "lieu..................: ".$E_LIEU.".\n";
-        $message_desc .= "Merci de compléter les statistiques.\n";
+        $message_desc .= "Merci de complÃ©ter les statistiques.\n";
         
         $chefs = get_chefs_evenement($evenement);
         if ( count($chefs) > 0 ) {
             for ( $c = 0; $c < count($chefs); $c++ ) {
                 $P_ID = $chefs[$c] ;
                 $message = "Bonjour,\n
-Vous n'avez pas renseigné les statistiques de l'événement suivant, dont vous êtes le responsable désigné:\n\n";
+Vous n'avez pas renseignÃ© les statistiques de l'Ã©vÃ©nement suivant, dont vous Ãªtes le responsable dÃ©signÃ©:\n\n";
                 $message .= $message_desc;
                 mysendmail("$P_ID","$P_ID","$subject","$message");
             }
@@ -98,17 +98,17 @@ while ( custom_fetch_array($result)) {
     if (( $EH_DATE_FIN <> '' ) and ( $EH_DATE_FIN <> $EH_DATE_DEBUT )) {
         $tmp=explode ( "-",$EH_DATE_FIN); $year2=$tmp[0]; $month2=$tmp[1]; $day2=$tmp[2];
         $date2=mktime(0,0,0,$month2,$day2,$year2);
-        $infos_dates = "dates.................: du ".date_fran($month1, $day1 ,$year1)." ".moislettres($month1)." ".$year1." à ".$EH_DEBUT;
-        $infos_dates .= " au ".date_fran($month2, $day2 ,$year2)." ".moislettres($month2)." ".$year2." à ".$EH_FIN;
+        $infos_dates = "dates.................: du ".date_fran($month1, $day1 ,$year1)." ".moislettres($month1)." ".$year1." Ã  ".$EH_DEBUT;
+        $infos_dates .= " au ".date_fran($month2, $day2 ,$year2)." ".moislettres($month2)." ".$year2." Ã  ".$EH_FIN;
     }
     else {
-        $infos_dates = "date..................: le ".date_fran($month1, $day1 ,$year1)." ".moislettres($month1)." ".$year1." de ".$EH_DEBUT." à ".$EH_FIN;
+        $infos_dates = "date..................: le ".date_fran($month1, $day1 ,$year1)." ".moislettres($month1)." ".$year1." de ".$EH_DEBUT." Ã  ".$EH_FIN;
     }
 
     $subject=$TE_LIBELLE.":  ".$E_LIBELLE;
 
     $message_desc  = $TE_LIBELLE." : ".$E_LIBELLE.".\n";
-    $message_desc .= "organisé par..........: ".$S_CODE." - ".$S_DESCRIPTION."\n";
+    $message_desc .= "organisÃ© par..........: ".$S_CODE." - ".$S_DESCRIPTION."\n";
     $message_desc .= $infos_dates."\n";
 
     $message_desc .= "lieu..................: ".$E_LIEU.".\n";
@@ -121,7 +121,7 @@ while ( custom_fetch_array($result)) {
     $subject="Rappel - ".$subject;
     $user=fixcharset(my_ucfirst($P_PRENOM)." ".strtoupper($P_NOM));
     $message = "Bonjour ".$user.",\n
-Vous êtes inscrit(e) pour participer demain à l'événement suivant:\n\n";
+Vous Ãªtes inscrit(e) pour participer demain Ã  l'Ã©vÃ©nement suivant:\n\n";
     $message .= $message_desc;
     mysendmail("$P_ID","$P_ID","$subject","$message");
     //echo "<pre>".$user." ".$message."<pre>";

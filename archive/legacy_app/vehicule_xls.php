@@ -52,10 +52,10 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 
 // Add the columns heads
 $columns=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U');
-$columns_title=array("Véhicule","Immat","Indicatif","Section","Modèle",
-                     "Commentaire","Statut","Année","N°d'inventaire","Fin assurance",
-                     "Prochain CT","Prochaine révision","Titre d'accès","Mis à disposition","km","Révision à",
-                     "Neige", "Clim.","PA","Attelage","Affecté à");
+$columns_title=array("VÃ©hicule","Immat","Indicatif","Section","ModÃ¨le",
+                     "Commentaire","Statut","AnnÃ©e","NÂ°d'inventaire","Fin assurance",
+                     "Prochain CT","Prochaine rÃ©vision","Titre d'accÃ¨s","Mis Ã  disposition","km","RÃ©vision Ã ",
+                     "Neige", "Clim.","PA","Attelage","AffectÃ© Ã ");
                      
 foreach ($columns as $c => $letter) {
      $objPHPExcel->getActiveSheet()->setCellValue($letter.'1', utf8_encode($columns_title[$c]));
@@ -126,22 +126,22 @@ while (custom_fetch_array($result1)) {
     if ( $VP_OPERATIONNEL == 1) $opcolor="red";
     else if ( my_date_diff(getnow(),$V_ASS_DATE) < 0 ) {
         $opcolor="red";
-        $VP_LIBELLE = "assurance périmée";
+        $VP_LIBELLE = "assurance pÃ©rimÃ©e";
     }
     else if ( my_date_diff(getnow(),$V_TITRE_DATE) < 0 ) {
             $opcolor=$red;
-            $VP_LIBELLE = "titre d'accès périmé";
+            $VP_LIBELLE = "titre d'accÃ¨s pÃ©rimÃ©";
         }
     else if ( my_date_diff(getnow(),$V_CT_DATE) < 0) {
         $opcolor="red";
-        $VP_LIBELLE = "CT périmé";
+        $VP_LIBELLE = "CT pÃ©rimÃ©";
     }
     else if ( $VP_OPERATIONNEL == 2) {
         $opcolor="orange";
     }
     else if (( my_date_diff(getnow(),$V_REV_DATE) < 0 ) and ( $VP_OPERATIONNEL <> 1)) {
         $opcolor="orange";
-        $VP_LIBELLE = "révision à faire";
+        $VP_LIBELLE = "rÃ©vision Ã  faire";
     }  
     else $opcolor="green";
       

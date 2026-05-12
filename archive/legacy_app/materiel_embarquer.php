@@ -51,7 +51,7 @@ else {
 if (isset($_GET['addnew'])) $addnew=intval($_GET['addnew']);
 else $addnew=0;
 if(!$addnew)
-    writeBreadCrumb("Ajouter matÈriel", NULL, NULL);
+    writeBreadCrumb("Ajouter mat√©riel", NULL, NULL);
 
 check_all(17);
 if (! check_rights($id, 17,"$S_ID")) {
@@ -103,7 +103,7 @@ if ( $what == 'materiel' ) {
     onchange=\"filtermateriel2(this.value,'$from','$eid');\">";
     if ( $type == 'ALL' ) $selected='selected';
     else $selected='';
-    echo "<option value='ALL' $selected>Tous types de matÈriel</option>";
+    echo "<option value='ALL' $selected>Tous types de mat√©riel</option>";
     $query2="select TM_ID, TM_CODE,TM_USAGE,TM_DESCRIPTION 
             from type_materiel 
             where TM_USAGE <> 'Habillement'
@@ -143,7 +143,7 @@ if ( $what == 'materiel' ) {
     echo "<tr>";
     echo "<td><select id='addmateriel' name='addmateriel' style='width: 480px' class='selectpicker' data-live-search='true' data-container='body' data-style='btn btn-default'
             onchange=\"javascript:addmateriel('".$where."','".$KID."',this.value);\" >
-        <option value='0' selected class='option-ebrigade'>Choix du matÈriel</option>\n";
+        <option value='0' selected class='option-ebrigade'>Choix du mat√©riel</option>\n";
 
     $prevTM_USAGE="";
     while (custom_fetch_array($result)) {
@@ -158,7 +158,7 @@ if ( $what == 'materiel' ) {
         $prevTM_USAGE=$TM_USAGE;
         if ( $MA_NB > 1 ) $add=" (".$MA_NB.")";
         else $add="";
-        if ( $elements >= 0 ) $add2=" (".$elements." ÈlÈments dans ce lot)";
+        if ( $elements >= 0 ) $add2=" (".$elements." √©l√©ments dans ce lot)";
         else $add2="";
         if ( $MA_NUMERO_SERIE <> "" ) $add.=" ".$MA_NUMERO_SERIE;
         if ( $big_device ) $text = $TM_CODE." - ".$MA_MODELE.$add.$add2.". ".$MA_LIEU_STOCKAGE;

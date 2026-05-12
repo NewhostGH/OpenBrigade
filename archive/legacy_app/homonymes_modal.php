@@ -35,9 +35,9 @@ $query="select P_NOM, P_PRENOM, date_format(P_BIRTHDATE, '%d-%m-%Y') 'P_BIRTHDAT
 $result=mysqli_query($dbc,$query);
 custom_fetch_array($result);
 if ( $P_BIRTHDATE0 <> "" ) {
-    if ( $P_SEXE == 'M' ) $born0 = "né le ".$P_BIRTHDATE0;
-    else $born0 = "née le ".$P_BIRTHDATE0;
-    if ( $P_BIRTHPLACE0 <> "" ) $born0 .=" à ".$P_BIRTHPLACE0;
+    if ( $P_SEXE == 'M' ) $born0 = "nÃ© le ".$P_BIRTHDATE0;
+    else $born0 = "nÃ©e le ".$P_BIRTHDATE0;
+    if ( $P_BIRTHPLACE0 <> "" ) $born0 .=" Ã  ".$P_BIRTHPLACE0;
 }
 else $born0 = "?";
 
@@ -59,7 +59,7 @@ $query=" select p.P_ID, p.P_NOM, p.P_PRENOM, p.P_PRENOM2, p.P_SEXE, p.P_SECTION,
             t.S_DESCRIPTION 'STATUT', p.P_OLD_MEMBER
             from pompier p, section s, statut t
             where p.P_NOM = \"".rtrim($P_NOM)."\"
-            and REPLACE(REPLACE(p.P_PRENOM,'è','e'),'é','e') = \"".rtrim(fixcharset($P_PRENOM))."\"
+            and REPLACE(REPLACE(p.P_PRENOM,'Ã¨','e'),'Ã©','e') = \"".rtrim(fixcharset($P_PRENOM))."\"
             and p.P_SECTION = s.S_ID
             and p.P_STATUT = t.S_STATUT
             and p.P_ID <> ".$pid;
@@ -83,8 +83,8 @@ $out .= "<tr style='background-color:white;'>
             
 while ( custom_fetch_array($result) ) {
     if ( $P_BIRTHDATE <> "" ) {
-        if ( $P_SEXE == 'M' ) $born = "né le ".$P_BIRTHDATE;
-        else $born = "née le ".$P_BIRTHDATE;
+        if ( $P_SEXE == 'M' ) $born = "nÃ© le ".$P_BIRTHDATE;
+        else $born = "nÃ©e le ".$P_BIRTHDATE;
     }
     else $born = "?";
     if ( $P_OLD_MEMBER > 0 ) $P_STATUT = "<span style='background-color:grey;' title='ancien'>".$P_STATUT."</span>";
@@ -97,11 +97,11 @@ while ( custom_fetch_array($result) ) {
     $out .= "<td>".$S_CODE."</td>";
     
     if ( $P_BIRTHDATE0 <> '' and  $P_BIRTHDATE <> '' and $P_BIRTHDATE0 <> $P_BIRTHDATE )
-        $out .= "<td class=small align=center><span title=\"les dates de naissances sont différentes, il s'agit d'un simple homonyme\" >homonyme</span></td>";
+        $out .= "<td class=small align=center><span title=\"les dates de naissances sont diffÃ©rentes, il s'agit d'un simple homonyme\" >homonyme</span></td>";
     else 
         $out .= "<td align=center><a href=homonymes_manage.php?pid=".$pid."&doublon_id=".$P_ID.">
         <i class='far fa-arrow-alt-circle-left fa-lg' style='color:$mydarkcolor;' 
-        title='déplacer les données de ce doublon\ncompétences, formations, participations\nsur la fiche courante et fermer cette fiche'></i></a></td>";
+        title='dÃ©placer les donnÃ©es de ce doublon\ncompÃ©tences, formations, participations\nsur la fiche courante et fermer cette fiche'></i></a></td>";
     $out .= "</tr>";
 }
 
