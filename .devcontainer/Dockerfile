@@ -47,4 +47,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Apply project-specific PHP settings
-COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
+# COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
