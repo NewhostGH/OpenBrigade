@@ -1,14 +1,11 @@
 {
   "name": "OpenBrigade Dev Container",
-  "dockerComposeFile": "../docker-compose.yml",
+  "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/var/www/html",
 
   "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "moby": false
-    }
+    "ghcr.io/devcontainers/features/git:1": {}
   },
 
   "customizations": {
@@ -26,21 +23,22 @@
       ],
       "settings": {
         "php.validate.executablePath": "/usr/local/bin/php",
-        "intelephense.environment.phpVersion": "8.1.0",
+        "intelephense.environment.phpVersion": "8.4.0",
         "editor.formatOnSave": false,
         "files.eol": "\n"
       }
     }
   },
 
-  "forwardPorts": [8080, 8081, "db:3306"],
+  "forwardPorts": [80, 8081, "db:3306"],
   "portsAttributes": {
-    "8080": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
+    "80": { "label": "OpenBrigade App", "onAutoForward": "openBrowser" },
     "8081": { "label": "phpMyAdmin", "onAutoForward": "notify" },
     "db:3306": { "label": "MySQL / MariaDB" }
   },
 
-  "postCreateCommand": "echo 'Dev container ready. App → http://localhost:8080  phpMyAdmin → http://localhost:8081'",
+  "postCreateCommand": "composer install && echo 'Dev container ready. App → http://localhost  phpMyAdmin → http://localhost:8081'",
+  "postStartCommand": "service apache2 start",
 
   "remoteUser": "root"
 }
