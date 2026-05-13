@@ -17,13 +17,23 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): RedirectResponse
+    public function index(Request $request): View
     {
-        return redirect()->to('/index.php/index_d.php');
+        // Get user ID from session
+        $userId = auth()->id() ?? session('id');
+        
+        // Prepare data for widgets
+        $data = [
+            'userId' => $userId,
+            'numberEvents' => $request->query('number_events', 20), // Default to 20 events
+        ];
+        
+        return view('dashboard.index', $data);
     }
 }

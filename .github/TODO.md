@@ -50,8 +50,8 @@ Each menu section follows this repeatable process:
 
 > **Goal:** replace `index_d.php` with a native Laravel dashboard. This is the first page users see after login and anchors all future menu migrations.
 
-- [ ] Inventory legacy dashboard widgets and KPIs (`index_d.php`, `save_accueil.php`)
-- [ ] Create `DashboardController` with Blade view `resources/views/dashboard/index.blade.php`
+- [x] Inventory legacy dashboard widgets and KPIs (`index_d.php`, `save_accueil.php`)
+- [x] Create `DashboardController` with Blade view `resources/views/dashboard/index.blade.php` (commit: feat: create dashboard controller and view)
 - [ ] Migrate each widget as a Blade component (agenda, alerts, quick-stats, on-call summary)
 - [ ] Conserve DB as link source
 - [ ] Wire dashboard route as the post-login landing page

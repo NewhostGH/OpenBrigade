@@ -5,7 +5,7 @@
         <div class="div-scroll">
             <ul class="nav flex-column nav-lateral collapse navbar-collapse noprint" id="navLateral">
                 <a class="navbar-brand nav-logo logo-lateral" href="{{ url('/index_d.php') }}" title="Accueil">
-                    <img style="margin-right:5px;" height="40" width="40" src="{{ asset('legacy-assets/images/logov3.png') }}" onerror="this.style.display='none'">
+                    <img style="margin-right:5px;" height="40" width="40" src="{{ asset('images/logov3.png') }}" onerror="this.style.display='none'">
                     {{ config('app.name') }}
                 </a>
 

@@ -60,4 +60,4 @@ phpunit.xml
 *.cache
 
 # Idea stores
-.idea/
+.idea/*
