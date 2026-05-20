@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose *)",
+      "Bash(curl *)",
+      "Bash(docker exec *)",
+      "Bash(docker run *)",
+      "Bash(echo \"EXIT:$?\")"
+    ]
+  }
+}
