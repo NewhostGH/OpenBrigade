@@ -44,11 +44,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('personnel', PersonnelController::class)
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');
-    Route::get('/dashboard/legacy', function () {
-        return redirect('/index.php/index_d.php');
+    Route::get('/legacy', function () {
+        return redirect('/legacy/index_d.php');
     })->name('dashboard.legacy');
     Route::get('/about', function () {
-        return redirect('/index.php/about.php');
+        return redirect('/legacy/about.php');
     })->name('about');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::match(['GET', 'POST'], '/index.php/logout', [AuthController::class, 'logout'])->name('logout.compat');
@@ -62,6 +62,11 @@ Route::middleware('auth')->group(function () {
         ->where('assetType', 'css|js|images|webfonts')
         ->where('assetPath', '.*')
         ->name('legacy_bridge.asset.compat.pathinfo');
+
+    Route::get('/legacy/{assetType}/{assetPath}', [LegacyBridgeController::class, 'asset'])
+        ->where('assetType', 'css|js|images|webfonts')
+        ->where('assetPath', '.*')
+        ->name('legacy_bridge.asset.legacy');
 
     // Legacy links frequently resolve as /index.php/{file}. Keep compatibility.
     Route::match(['GET', 'POST'], '/index.php/{legacyFile}', [LegacyBridgeController::class, 'show'])

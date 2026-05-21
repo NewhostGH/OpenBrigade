@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Legacy\LegacyBridgeController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'about.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.about');
     Route::match(['GET', 'POST'], 'addons.php', [LegacyBridgeController::class, 'show'])->middleware('permission:78')->name('legacy_bridge.addons');
     Route::match(['GET', 'POST'], 'addons_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:78')->name('legacy_bridge.addons_save');
