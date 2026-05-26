@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,11 +69,13 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid login-shell">
         <div class="row min-vh-100">
             <aside class="col-lg-8 d-flex flex-column justify-content-center align-items-center login-left px-4 py-5">
-                <img src="{{ asset('images/logo.png') }}" alt="OpenBrigade" style="max-height:72px; max-width:90%;" onerror="this.style.display='none'">
+                <img src="{{ asset('images/logo.png') }}" alt="OpenBrigade" style="max-height:72px; max-width:90%;"
+                    onerror="this.style.display='none'">
                 <h1 class="h4 mt-4 text-center fw-semibold">Organisez personnel et activites avec OpenBrigade</h1>
             </aside>
 
@@ -96,16 +99,9 @@
 
                             <div class="mb-3">
                                 <label for="login" class="form-label">Identifiant ou adresse e-mail</label>
-                                <input
-                                    id="login"
-                                    type="text"
-                                    name="login"
+                                <input id="login" type="text" name="login"
                                     class="form-control soft-input @error('login') is-invalid @enderror"
-                                    value="{{ old('login') }}"
-                                    required
-                                    autofocus
-                                    autocomplete="username"
-                                >
+                                    value="{{ old('login') }}" required autofocus autocomplete="username">
                             </div>
 
                             <div class="mb-3">
@@ -113,14 +109,9 @@
                                     <label for="password" class="form-label">Mot de passe</label>
                                     <a href="#" id="showForgot" class="text-decoration-none">Mot de passe oublie ?</a>
                                 </div>
-                                <input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    class="form-control soft-input @error('password') is-invalid @enderror"
-                                    required
-                                    autocomplete="current-password"
-                                >
+                                <input id="password" type="password" name="password"
+                                    class="form-control soft-input @error('password') is-invalid @enderror" required
+                                    autocomplete="current-password">
                             </div>
 
                             <div class="mb-3 form-check">
@@ -135,7 +126,8 @@
                     <div class="forgot-panel">
                         <div class="mb-3">
                             <div class="brand-title">Mot de passe oublie ?</div>
-                            <p class="text-muted mt-2 mb-0">Renseignez votre identifiant ou votre e-mail pour lancer une reinitialisation.</p>
+                            <p class="text-muted mt-2 mb-0">Renseignez votre identifiant ou votre e-mail pour lancer une
+                                reinitialisation.</p>
                         </div>
 
                         <form id="forgotForm">
@@ -191,4 +183,5 @@
         })();
     </script>
 </body>
+
 </html>

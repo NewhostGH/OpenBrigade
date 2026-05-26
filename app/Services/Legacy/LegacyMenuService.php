@@ -96,13 +96,24 @@ class LegacyMenuService
                 $normalizedUrl = '/index.php/' . ltrim($rawUrl, '/');
             }
 
-            $groups[$code]['items'][] = [
+            // Each item URL is unique per group; skip if already added (prevents duplicates
+            // from the LEFT JOIN when a menu item has multiple menu_condition rows).
+            if (isset($groups[$code]['items'][$normalizedUrl])) {
+                continue;
+            }
+
+            $groups[$code]['items'][$normalizedUrl] = [
                 'name' => $name,
                 'icon' => (string) ($row->MI_ICON ?? ''),
                 'url' => $normalizedUrl,
                 'external' => $isExternal,
             ];
         }
+
+        foreach ($groups as &$group) {
+            $group['items'] = array_values($group['items']);
+        }
+        unset($group);
 
         return $groups;
     }

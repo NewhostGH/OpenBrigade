@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,38 +9,55 @@
 
     {{-- Built frontend assets (managed via NPM + Vite) --}}
     @vite(['resources/css/app.css'])
-    <style>@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');</style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+    </style>
 
     @stack('styles')
+    <style>
+        /* Patch: CSS changes pending next npm run build */
+        .col-lateral.collapsed .div-lateral{display:none!important}
+        .col-lateral.collapsed .dropdown-lateral span{display:none}
+        .user-div{padding:.3rem .5rem;display:flex;align-items:center}
+        .user-infos{display:inline-block;margin-right:8px}
+        .user-infos p{display:block;margin:0;padding:0;text-align:right;line-height:1.3em}
+        .user-infos p.name{font-weight:700;font-size:.9em;color:rgb(188,188,207)}
+        .user-picture{display:inline-flex;align-items:center}
+        .profil-picture{height:29px;width:26px;overflow:hidden;border-radius:15px;border:2px solid white;object-fit:cover}
+    </style>
 </head>
+
 <body>
 
-@auth
-    @include('layout.navbar')
-    @include('layout.sidebar')
+    @auth
+        @include('layout.navbar')
+        @include('layout.sidebar')
 
-    <div class="space-left" style="position:relative;top:-2px" id="space-left">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show mx-3 mt-2" role="alert">
-                {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mx-3 mt-2" role="alert">
-                {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-        @endif
+        <div class="space-left" style="position:relative;top:-2px" id="space-left">
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show mx-3 mt-2" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show mx-3 mt-2" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+            @endif
 
+            @yield('content')
+        </div>
+    @else
         @yield('content')
-    </div>
-@else
-    @yield('content')
-@endauth
+    @endauth
 
     {{-- Built frontend JS bundle (imports jQuery/bootstrap and app code) --}}
     @vite(['resources/js/app.js'])
     @stack('scripts')
 </body>
+
 </html>

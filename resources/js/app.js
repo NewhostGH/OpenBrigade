@@ -11,35 +11,34 @@ import 'bootstrap';
 // import 'bootstrap-table';
 // import 'bootstrap-datepicker';
 
-// Migration of the lateral menu collapse/decollapse logic from the Blade
-// Inline script into the compiled frontend bundle so it runs after jQuery
-// and Bootstrap are available.
-$(document).ready(function() {
-    var isCollapsed = sessionStorage.getItem('isCollapsed');
-    if (isCollapsed == 1) {
+// Lateral menu collapse/decollapse.
+// Sub-menu visibility (.div-lateral) is handled via a CSS rule on
+// .col-lateral.collapsed so Bootstrap's own collapse state is preserved
+// across collapse/decollapse cycles — no manual .show()/.hide() on them.
+$(document).ready(function () {
+    if (sessionStorage.getItem('isCollapsed') == 1) {
+        $('.col-lateral').addClass('collapsed');
         $('#space-left').addClass('collapsed');
-        $('.navbar-lateral').css({width: 49, overflow: 'hidden'});
+        $('.navbar-lateral').css({ width: 49, overflow: 'hidden' });
         $('.collapse-menu').hide();
         $('.decollapse-menu').show();
-        $('.dropdown-lateral span').hide();
-        $('.div-lateral').hide();
     }
-    $('.collapse-menu').on('click', function() {
+
+    $('.collapse-menu').on('click', function () {
         sessionStorage.setItem('isCollapsed', 1);
+        $('.col-lateral').addClass('collapsed');
         $('#space-left').addClass('collapsed');
-        $('.navbar-lateral').css({width: 49, overflow: 'hidden'});
+        $('.navbar-lateral').animate({ width: 49 }, 350);
         $('.collapse-menu').hide();
         $('.decollapse-menu').show();
-        $('.dropdown-lateral span').hide();
-        $('.div-lateral').hide();
     });
-    $('.decollapse-menu').on('click', function() {
+
+    $('.decollapse-menu').on('click', function () {
         sessionStorage.setItem('isCollapsed', 0);
+        $('.col-lateral').removeClass('collapsed');
         $('#space-left').removeClass('collapsed');
-        $('.navbar-lateral').css({width: 220, overflow: 'hidden'});
+        $('.navbar-lateral').animate({ width: 220 }, 350);
         $('.decollapse-menu').hide();
         $('.collapse-menu').show();
-        $('.dropdown-lateral span').show();
-        $('.div-lateral').show();
     });
 });
