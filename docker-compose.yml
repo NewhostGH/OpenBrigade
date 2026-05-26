@@ -25,7 +25,7 @@ services:
 
     volumes:
       # Use local source files directly (dev-friendly, no code copy inside running container)
-      - ./:/var/www/html
+      - ./:/var/www/html:Z
 
       # Laravel storage
       - storage_uploads:/var/www/html/storage/app/public/uploads
