@@ -1,0 +1,78 @@
+/* ── Content area offset ───────────────────────────────────────────────── */
+@media (min-width: 922px) {
+    .space-left {
+        margin-left:  215px;
+        margin-right: -5px;
+    }
+
+    .space-left.collapsed {
+        margin-left: 44px;
+    }
+
+    .col-lateral {
+        left: -100px;
+    }
+
+    .col-lateral .navbar-lateral {
+        margin-left: 100px;
+    }
+
+    .nav-border,
+    .nav-border2 {
+        display: none;
+    }
+
+    .nav-center {
+        position:  absolute;
+        top:       50%;
+        left:      50%;
+        transform: translate(-50%, -52%);
+    }
+
+    .nav-text {
+        padding: 3px 15px 4px;
+    }
+}
+
+@media (max-width: 992px) {
+    .space-left {
+        margin-left:  -5px;
+        margin-right: -5px;
+    }
+}
+
+@media (max-width: 920px) {
+    .navbar-lateral {
+        height:     100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .col-lateral {
+        left: -100px;
+    }
+
+    .navbar-lateral {
+        width: 285px;
+        left:  -270px;
+    }
+
+    .col-lateral .nav-lateral {
+        margin-left: 100px;
+    }
+
+    .nav-right {
+        display: none;
+    }
+
+    .nav-center {
+        position:  absolute;
+        top:       50%;
+        left:      58%;
+        transform: translate(-50%, -51%);
+    }
+
+    .collapse-menu {
+        display: none;
+    }
+}

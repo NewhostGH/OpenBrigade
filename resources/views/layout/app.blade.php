@@ -14,17 +14,6 @@
     </style>
 
     @stack('styles')
-    <style>
-        /* Patch: CSS changes pending next npm run build */
-        .col-lateral.collapsed .div-lateral{display:none!important}
-        .col-lateral.collapsed .dropdown-lateral span{display:none}
-        .user-div{padding:.3rem .5rem;display:flex;align-items:center}
-        .user-infos{display:inline-block;margin-right:8px}
-        .user-infos p{display:block;margin:0;padding:0;text-align:right;line-height:1.3em}
-        .user-infos p.name{font-weight:700;font-size:.9em;color:rgb(188,188,207)}
-        .user-picture{display:inline-flex;align-items:center}
-        .profil-picture{height:29px;width:26px;overflow:hidden;border-radius:15px;border:2px solid white;object-fit:cover}
-    </style>
 </head>
 
 <body>

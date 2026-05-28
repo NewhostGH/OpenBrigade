@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\ShortcutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/about', function () {
         return redirect('/legacy/about.php');
     })->name('about');
+    Route::post('/shortcuts/toggle', [ShortcutController::class, 'toggle'])->name('shortcuts.toggle');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::match(['GET', 'POST'], '/index.php/logout', [AuthController::class, 'logout'])->name('logout.compat');
 

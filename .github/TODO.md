@@ -52,9 +52,9 @@ Each menu section follows this repeatable process:
 
 - [x] Inventory legacy dashboard widgets and KPIs (`index_d.php`, `save_accueil.php`)
 - [x] Create `DashboardController` with Blade view `resources/views/dashboard/index.blade.php` (commit: feat: create dashboard controller and view)
-- [ ] Migrate each widget as a Blade component (agenda, alerts, quick-stats, on-call summary)
-- [ ] Conserve DB as link source
-- [ ] Wire dashboard route as the post-login landing page
+- [X] Migrate each widget as a Blade component (agenda, alerts, quick-stats, on-call summary) (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
+- [X] Conserve DB as link source -> replaced with configuration file (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
+- [X] Wire dashboard route as the post-login landing page (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
 - [ ] Add feature tests and check parity against `index_d.php`
 - [ ] Modernize the interface using latest bootstrap css
 - [ ] Retire `index_d.php` from the bridge

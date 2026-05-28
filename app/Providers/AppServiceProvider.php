@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Models\User;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
-use App\Services\Legacy\LegacyMenuService;
+use App\Services\NavigationService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -27,8 +27,8 @@ class AppServiceProvider extends ServiceProvider
             return new BrigadeService();
         });
 
-        $this->app->singleton(LegacyMenuService::class, function ($app) {
-            return new LegacyMenuService();
+        $this->app->singleton(NavigationService::class, function ($app) {
+            return new NavigationService();
         });
     }
 
@@ -54,14 +54,16 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasPermission($fid);
         });
 
-        View::composer(['layout.navbar', 'layout.sidebar'], function ($view): void {
-            /** @var LegacyMenuService $legacyMenu */
-            $legacyMenu = app(LegacyMenuService::class);
-            /** @var User|null $user */
+        View::composer('layout.navbar', function ($view): void {
+            $nav = app(NavigationService::class);
             $user = auth()->user();
+            $view->with('pinnedShortcuts', $nav->getPinnedShortcuts($user));
+        });
 
-            $view->with('legacyTopGroups', $legacyMenu->getTopGroups($user));
-            $view->with('legacyLeftGroups', $legacyMenu->getLeftGroups($user));
+        View::composer('layout.sidebar', function ($view): void {
+            $nav = app(NavigationService::class);
+            $user = auth()->user();
+            $view->with('navGroups', $nav->getNavGroups($user));
         });
     }
 }

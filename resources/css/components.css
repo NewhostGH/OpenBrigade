@@ -1,0 +1,97 @@
+/* ── ob-nav (secondary in-page nav bar) ────────────────────────────────── */
+.ob-nav {
+    background:   linear-gradient(180deg, var(--ob-nav-bg-from) 0%, var(--ob-nav-bg-to) 100%);
+    border-bottom: 1px solid var(--ob-nav-border);
+    box-shadow:   0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+.ob-nav .navbar-brand,
+.ob-nav .nav-link,
+.ob-nav .btn-link.nav-link {
+    color:     var(--ob-nav-text);
+    font-size: var(--font-size-sm);
+}
+
+.ob-nav .nav-link.active {
+    background:    rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-sm);
+}
+
+/* ── ob-toolbar (filter/action bar above tables) ────────────────────────── */
+.ob-toolbar {
+    background:    var(--component-bg);
+    border:        1px solid var(--component-border);
+    border-radius: var(--radius-md);
+    padding:       12px;
+}
+
+.ob-toolbar-title {
+    display:         flex;
+    justify-content: space-between;
+    align-items:     baseline;
+    margin-bottom:   10px;
+}
+
+.ob-toolbar-title h1 {
+    margin:      0;
+    font-size:   1.15rem;
+    font-weight: 700;
+}
+
+.ob-toolbar-title span {
+    color:     var(--text-muted-soft);
+    font-size: var(--font-size-sm);
+}
+
+.ob-filters {
+    display:               grid;
+    grid-template-columns: 1.8fr 1.3fr 1fr 1fr 1fr auto;
+    gap:                   8px;
+}
+
+@media (max-width: 1200px) {
+    .ob-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .ob-filters {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── ob-table (data tables) ────────────────────────────────────────────── */
+.ob-table-wrap {
+    background:    var(--component-bg);
+    border:        1px solid var(--component-border);
+    border-radius: var(--radius-md);
+    overflow:      hidden;
+}
+
+.ob-table thead th {
+    background:  var(--table-header-bg);
+    color:       var(--table-header-text);
+    font-weight: 600;
+    border-bottom: 0;
+    white-space: nowrap;
+}
+
+.ob-table tbody td {
+    vertical-align: middle;
+    font-size:      var(--font-size-sm);
+}
+
+.ob-table tbody tr:nth-child(odd) {
+    background: var(--table-odd-row);
+}
+
+/* ── ob-avatar ─────────────────────────────────────────────────────────── */
+.ob-avatar {
+    width:         44px;
+    height:        44px;
+    border-radius: var(--radius-avatar);
+    object-fit:    cover;
+    border:        1px solid var(--avatar-border);
+    background:    var(--avatar-bg);
+}

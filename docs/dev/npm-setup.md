@@ -1,81 +1,103 @@
-# NPM / Vite Setup and Commands
+# Frontend Assets — CSS, JS, and Vite
 
-This document explains how to install and update frontend dependencies, run the Vite dev server and build production assets — both locally and from Docker.
+This document covers how to edit styles and scripts, how the CSS is organised, and how to build or run the dev server.
 
-## Prerequisites
+---
 
-- Node.js (recommended v18+)
-- npm (comes with Node.js)
+## CSS structure
 
-## Local (developer machine)
+All stylesheets live in `resources/css/`. The entry point `app.css` does nothing but import the others — **add your code to the appropriate file, never directly to `app.css`**.
 
-1. Install dependencies (use `npm ci` in CI or `npm install` for development):
+| File | What goes there |
+|---|---|
+| `app.css` | Import hub only — do not add rules here |
+| `base.css` | `body`, global resets, utility colour variables |
+| `navbar.css` | Top navbar, siglets strip, user menu, navbar dropdowns |
+| `sidebar.css` | Sidebar shell, group/item styles, pin button |
+| `layout.css` | Content offset, responsive breakpoints (`@media`) |
+| `components.css` | Reusable page components: `ob-toolbar`, `ob-table`, `ob-filters`, `ob-avatar`, `ob-nav` |
+
+### Adding new styles
+
+1. Identify which file matches the area you are changing.
+2. Edit that file directly.
+3. Run `npm run build` (see below) — the browser will see the change only after a build.
+
+If you are adding a new distinct UI area (e.g. a calendar widget, a modal-heavy feature), create `resources/css/<area>.css` and add an `@import './‌<area>.css';` line at the bottom of `app.css`.
+
+---
+
+## JS structure
+
+`resources/js/app.js` is the single JS entry point. It imports jQuery and Bootstrap, then contains the sidebar collapse logic and the siglet AJAX pin toggle.
+
+Keep global, layout-level JS in `app.js`. For page-specific JS that should only load on certain views, use `@push('scripts') … @endpush` in the Blade template and add a `@stack('scripts')` in the layout.
+
+---
+
+## Making a change — quick workflow
 
 ```bash
-# first time
-npm install
+# 1. Edit resources/css/<file>.css or resources/js/app.js
 
-# or to install exactly the versions in package-lock.json
-npm ci
+# 2. Rebuild
+npm run build
+
+# 3. Hard-refresh the browser (Ctrl+Shift+R) to bypass the browser cache
 ```
 
-2. Add packages you need from npm (examples used by the app):
+The built files land in `public/build/`. Vite updates `public/build/manifest.json` so the `@vite()` Blade helper picks up the new hashed filenames automatically.
 
-```bash
-npm install --save jquery bootstrap
-# optional frontend libs used by components
-npm install --save bootstrap-select bootstrap-table bootstrap-datepicker
-```
+---
 
-3. Run the Vite dev server (hot reload):
+## Dev server (hot reload)
+
+For rapid iteration, run the Vite dev server instead of rebuilding after every change:
 
 ```bash
 npm run dev
 ```
 
-4. Build production assets:
+Vite will serve assets directly and push updates to the browser without a page reload. **The dev server must be reachable from the browser**, so this only works when running locally (not inside Docker without additional port-forwarding).
+
+> If using Docker, prefer the build workflow above, or configure Vite's `server.host` and expose the HMR port in `docker-compose.yml`.
+
+---
+
+## Full build commands
 
 ```bash
+# Install / update dependencies
+npm install
+
+# Production build (outputs to public/build/)
 npm run build
+
+# Dev server with HMR
+npm run dev
 ```
 
-Built assets are emitted to `public/build/` by Vite and are typically git-ignored.
-
-## From Docker
-
-There are two common approaches depending on whether the `app` container includes Node.js.
-
-### A. If `app` image includes Node.js
-
-Run the commands inside the `app` service:
+### From Docker (no Node on host)
 
 ```bash
+# Build inside the running app container (if it has Node)
 docker compose exec app sh -lc "npm ci && npm run build"
-docker compose exec app php artisan config:clear
 
-# If views were changed, clear compiled views and caches
+# Or spin up a throwaway Node container
+docker run --rm -v "${PWD}:/work" -w /work node:18 sh -lc "npm ci && npm run build"
+
+# Clear compiled Blade views after template changes
 docker compose exec app php artisan view:clear
-docker compose exec app php artisan cache:clear
 ```
 
-### B. If `app` image does NOT include Node.js
+---
 
-Use an ephemeral Node.js container that mounts the project folder and runs the build:
+## Navigation config
 
-```bash
-# run from project root (Linux/macOS)
-docker run --rm -v "$PWD":/work -w /work node:18 sh -lc "npm ci && npm run build"
+Top-level navigation items are defined in **`config/navigation.php`** — not in the database. Each group and item carries an optional `permission` key (integer feature ID). To add a menu entry:
 
-# Windows PowerShell (replace %cd% as appropriate)
-docker run --rm -v "%cd%":/work -w /work node:18 sh -lc "npm ci && npm run build"
+1. Open `config/navigation.php`.
+2. Add an item array inside the appropriate group's `items` array.
+3. No rebuild required — navigation is rendered server-side by `NavigationService`.
 
-# Then clear Laravel config cache if needed
-docker compose exec app php artisan config:clear
-```
-
-## Notes
-
-- The project's Vite entrypoints are `resources/css/app.css` and `resources/js/app.js`.
-- After a successful build, Blade templates should use `@vite()` to reference the compiled bundles; example in `resources/views/layout/app.blade.php`.
-- If you add or remove npm packages, re-run `npm install` (or `npm ci`) and rebuild.
- - After changing Blade templates, run `php artisan view:clear` to remove cached compiled views.
+See inline comments in `config/navigation.php` for the full field reference.

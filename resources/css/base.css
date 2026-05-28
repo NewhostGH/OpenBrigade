@@ -1,0 +1,6 @@
+body {
+    background:   var(--page-bg);
+    color:        var(--page-text);
+    font-family:  var(--font-family);
+    padding-top:  var(--navbar-height);
+}

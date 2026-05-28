@@ -1,0 +1,289 @@
+/* ── Top navbar ────────────────────────────────────────────────────────── */
+.navbar-ebrigade {
+    background-color: var(--brand-bg);
+    color:            var(--brand-text-active);
+    height:           var(--navbar-height);
+    min-height:       var(--navbar-height);
+    padding:          0;
+    border-bottom:    1px solid var(--sidebar-border);
+}
+
+.nodowntoggle::after {
+    display: none;
+}
+
+.custom-toggler {
+    border-color: var(--brand-text-active);
+    margin: 0;
+}
+
+.hover-white:hover {
+    color: var(--brand-text-active);
+}
+
+.navtop-hover:hover {
+    background-color: var(--brand-bg-hover);
+    border-radius:    var(--radius-sm);
+    color:            var(--brand-text-active);
+}
+
+.text-violet {
+    color: var(--brand-text);
+}
+
+.nav-text {
+    color: var(--brand-text);
+}
+
+.nav-text:hover {
+    text-decoration: none;
+}
+
+.nav-left {
+    display:        flex;
+    flex-direction: row;
+    align-items:    center;
+    height:         var(--navbar-height);
+}
+
+.nav-center {
+    display:         flex;
+    justify-content: center;
+    align-items:     center;
+    height:          var(--navbar-height);
+}
+
+.nav-right {
+    display:         flex;
+    align-items:     center;
+    justify-content: flex-end;
+    padding-right:   20px;
+    flex:            0 0 auto; /* override Bootstrap .navbar-collapse { flex-grow: 1 } */
+}
+
+.nav-icon {
+    justify-content: center;
+    display:         flex;
+    height:          24px;
+    align-items:     center;
+}
+
+.margin-li {
+    margin-bottom: 2px;
+    font-size:     var(--font-size-nav);
+}
+
+.logo-small {
+    left:    -5px;
+    padding: 3px 8px;
+}
+
+.logo-small:hover {
+    background-color: var(--brand-bg-hover);
+    border-radius:    var(--radius-sm);
+}
+
+.button-left,
+.button-right {
+    border: none;
+}
+
+.nav-border,
+.nav-border2 {
+    border-left: 1px var(--brand-separator) solid;
+    position:    absolute;
+    right:       4%;
+    width:       30px;
+    height:      27px;
+    top:         23%;
+}
+
+/* ── Siglets (pinned shortcuts) ────────────────────────────────────────── */
+.nav-siglets {
+    display:      flex;
+    align-items:  center;
+    gap:          6px;
+    flex:         1;
+    height:       var(--navbar-height);
+    padding:      0 16px;
+    overflow-x:   auto;
+    scrollbar-width: none;
+}
+
+.nav-siglets::-webkit-scrollbar {
+    display: none;
+}
+
+.siglet {
+    display:         inline-flex;
+    align-items:     center;
+    gap:             6px;
+    padding:         4px 13px;
+    border-radius:   var(--radius-pill);
+    background:      var(--siglet-bg);
+    border:          1px solid var(--siglet-border);
+    color:           var(--brand-text);
+    font-size:       var(--font-size-nav);
+    white-space:     nowrap;
+    text-decoration: none;
+    transition:      background var(--transition-fast), color var(--transition-fast);
+}
+
+.siglet:hover {
+    background:      var(--siglet-bg-hover);
+    color:           var(--brand-text-active);
+    text-decoration: none;
+}
+
+.siglet i {
+    font-size: var(--font-size-xs);
+    opacity:   0.85;
+}
+
+.siglets-hint {
+    font-size:   var(--font-size-xs);
+    color:       var(--siglet-hint-color);
+    font-style:  italic;
+    padding:     0 4px;
+    white-space: nowrap;
+}
+
+.siglet-unpin {
+    display:         none;
+    align-items:     center;
+    justify-content: center;
+    background:      none;
+    border:          none;
+    padding:         0 0 0 2px;
+    margin-left:     1px;
+    color:           var(--brand-text);
+    font-size:       13px;
+    line-height:     1;
+    cursor:          pointer;
+    opacity:         0.6;
+    transition:      opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.siglet:hover .siglet-unpin {
+    display: flex;
+}
+
+.siglet-unpin:hover {
+    opacity: 1;
+    color:   var(--accent);
+}
+
+/* ── User menu ─────────────────────────────────────────────────────────── */
+.user-div {
+    padding:     0.3rem 0.5rem;
+    display:     flex;
+    align-items: center;
+}
+
+.user-infos {
+    display:      inline-block;
+    margin-right: 8px;
+}
+
+.user-infos p {
+    display:      block;
+    margin:       0;
+    padding:      0;
+    text-align:   right;
+    line-height:  1.3em;
+}
+
+.user-infos p.name {
+    font-weight: bold;
+    font-size:   var(--font-size-sm);
+    color:       var(--brand-text);
+}
+
+.user-picture {
+    display:     inline-flex;
+    align-items: center;
+}
+
+.profil-picture {
+    height:        29px;
+    width:         26px;
+    overflow:      hidden;
+    border-radius: var(--radius-avatar-sm);
+    border:        2px var(--brand-text-active) solid;
+    object-fit:    cover;
+}
+
+/* ── Navbar dropdowns ──────────────────────────────────────────────────── */
+.nav-label {
+    margin:    0 4px;
+    font-size: var(--font-size-nav);
+}
+
+.nav-chevron {
+    font-size:  0.6em;
+    opacity:    0.7;
+    transition: transform var(--transition-med);
+}
+
+.nav-item .dropdown-toggle.show .nav-chevron {
+    transform: rotate(180deg);
+}
+
+.nav-link-active {
+    background-color: var(--brand-bg-active);
+    border-radius:    var(--radius-sm);
+    color:            var(--brand-text-active) !important;
+}
+
+.nav-link-active .nav-label,
+.nav-link-active .nav-chevron,
+.nav-link-active i {
+    color: var(--brand-text-active) !important;
+}
+
+.nav-dropdown-menu {
+    background-color: var(--brand-bg);
+    border:           1px solid var(--brand-border);
+    border-radius:    var(--radius-md);
+    padding:          4px 0;
+    min-width:        200px;
+    margin-top:       2px !important;
+}
+
+.nav-dropdown-menu .dropdown-item {
+    color:       var(--brand-text);
+    font-size:   var(--font-size-nav-item);
+    padding:     6px 16px;
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    transition:  background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.nav-dropdown-menu .dropdown-item:hover,
+.nav-dropdown-menu .dropdown-item:focus {
+    background-color: var(--brand-bg-hover);
+    color:            var(--brand-text-active);
+}
+
+.nav-dropdown-menu .dropdown-item.active {
+    background-color: var(--brand-bg-active);
+    color:            var(--brand-text-active);
+    font-weight:      600;
+}
+
+.nav-dropdown-menu .dropdown-divider {
+    border-color: var(--brand-border);
+    margin:       4px 0;
+}
+
+.nav-item-icon {
+    width:      16px;
+    text-align: center;
+    opacity:    0.8;
+}
+
+.nav-dropdown-menu .dropdown-item:hover .nav-item-icon,
+.nav-dropdown-menu .dropdown-item.active .nav-item-icon {
+    opacity: 1;
+}

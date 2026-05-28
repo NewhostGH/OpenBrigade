@@ -1,0 +1,86 @@
+/*
+|--------------------------------------------------------------------------
+| Design tokens
+|--------------------------------------------------------------------------
+|
+| All hardcoded colours, sizes and font values live here.
+| To create a theme, override these in a separate file imported after this
+| one, or via a [data-theme="dark"] selector on <html>.
+|
+*/
+
+:root {
+    /* ── Brand (navbar + dropdowns) ──────────────────────────────────────── */
+    --brand-bg: #2B2350;
+    --brand-bg-hover: rgba(209, 209, 240, 0.20);
+    --brand-bg-hover-strong: rgba(209, 209, 240, 0.28);
+    --brand-bg-active: rgba(209, 209, 240, 0.30);
+    --brand-text: rgb(188, 188, 207);
+    --brand-text-active: #ffffff;
+    --brand-border: rgba(188, 188, 207, 0.20);
+    --brand-separator: #6868b9;
+
+    /* ── Accent (sidebar active bar, pin button) ──────────────────────────── */
+    --accent: #FA7070;
+
+    /* ── Siglets ─────────────────────────────────────────────────────────── */
+    --siglet-bg: rgba(209, 209, 240, 0.22);
+    --siglet-bg-hover: rgba(209, 209, 240, 0.38);
+    --siglet-border: rgba(209, 209, 240, 0.45);
+    --siglet-hint-color: rgba(188, 188, 207, 0.45);
+
+    /* ── Sidebar ─────────────────────────────────────────────────────────── */
+    --sidebar-bg: #fafafa;
+    --sidebar-bg-hover: #f1f1f1;
+    --sidebar-bg-active: #ffffff;
+    --sidebar-border: #D8D8D8;
+    --sidebar-text: #666666;
+    --sidebar-item-text: #808080;
+    --sidebar-item-active: #303030;
+    --sidebar-accent-bar: 4px solid var(--accent);
+
+    /* ── Page / body ─────────────────────────────────────────────────────── */
+    --page-bg: #eef1f5;
+    --page-text: #1f2937;
+
+    /* ── Components (tables, toolbars) ───────────────────────────────────── */
+    --component-bg: #ffffff;
+    --component-border: #d3dae3;
+    --table-header-bg: #495565;
+    --table-header-text: #f8fafc;
+    --table-odd-row: #f9fbfd;
+    --text-muted-soft: #5b6575;
+    --avatar-bg: #e5e7eb;
+    --avatar-border: #c9d3df;
+
+    /* ── ob-nav (in-page secondary nav) ──────────────────────────────────── */
+    --ob-nav-bg-from: #3a4354;
+    --ob-nav-bg-to: #2f3746;
+    --ob-nav-border: #202736;
+    --ob-nav-text: #f4f6f8;
+
+    /* ── Layout sizes ────────────────────────────────────────────────────── */
+    --navbar-height: 44px;
+    --sidebar-width: 220px;
+    --sidebar-collapsed-width: 49px;
+    --sidebar-collapse-btn-height: 40px;
+
+    /* ── Typography ──────────────────────────────────────────────────────── */
+    --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-xs: 11px;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-nav: 12px;
+    --font-size-nav-item: 13px;
+
+    /* ── Radii ───────────────────────────────────────────────────────────── */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-pill: 14px;
+    --radius-avatar: 10px;
+    --radius-avatar-sm: 15px;
+
+    /* ── Transitions ─────────────────────────────────────────────────────── */
+    --transition-fast: 0.15s ease;
+    --transition-med: 0.20s ease;
+}
