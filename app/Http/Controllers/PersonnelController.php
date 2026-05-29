@@ -312,10 +312,13 @@ class PersonnelController extends Controller
             ->orderBy('TP_DESCRIPTION')
             ->get(['TP_ID', 'TP_DESCRIPTION']);
 
+        $gps = DB::table('gps')->where('P_ID', $personnel->P_ID)->first();
+
         return view('personnel.show', [
             'personnel'     => $personnel,
             'postes'        => $postes,
             'typesPaiement' => $typesPaiement,
+            'gps'           => $gps,
         ]);
     }
 

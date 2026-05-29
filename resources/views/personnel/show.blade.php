@@ -576,6 +576,33 @@
                 </div>
             </div>
 
+            {{-- ── GPS ───────────────────────────────────────────────── --}}
+            <p class="section-title d-flex justify-content-between align-items-center">
+                <span>Géolocalisation</span>
+                <a href="{{ route('geolocalisation.index') }}" class="btn btn-sm btn-light noprint"
+                   title="Voir la carte">
+                    <i class="fas fa-map-marked-alt me-1"></i> Carte
+                </a>
+            </p>
+            @if ($gps && $gps->LAT && $gps->LNG)
+                <dl class="info-grid">
+                    <div class="info-item">
+                        <dt>Coordonnées</dt>
+                        <dd>{{ number_format((float)$gps->LAT, 5) }}, {{ number_format((float)$gps->LNG, 5) }}</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt>Adresse</dt>
+                        <dd>{{ $gps->ADDRESS ?: '—' }}</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt>Dernière mise à jour</dt>
+                        <dd>{{ $gps->DATE_LOC ? date('d/m/Y H:i', strtotime($gps->DATE_LOC)) : '—' }}</dd>
+                    </div>
+                </dl>
+            @else
+                <p class="text-muted small">Aucune position GPS enregistrée.</p>
+            @endif
+
             <p class="section-title">Accès</p>
             <dl class="info-grid">
                 <div class="info-item">

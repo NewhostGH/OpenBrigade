@@ -30,7 +30,7 @@ return [
                 ['key' => 'personnel.search',      'label' => 'Recherche',       'url' => '/personnel',                                                       'icon' => 'magnifying-glass', 'permission' => 56],
                 ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications',                                                'icon' => 'certificate',      'permission' => 56],
                 ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/legacy/cotisations.php',                                         'icon' => 'receipt',          'permission' => 53],
-                ['key' => 'personnel.geoloc',      'label' => 'Géolocalisation', 'url' => '/legacy/gps.php',                                                 'icon' => 'map-marker-alt',   'permission' => 76],
+                ['key' => 'personnel.geoloc',      'label' => 'Géolocalisation', 'url' => '/geolocalisation',                                              'icon' => 'map-marker-alt',   'permission' => 76],
             ],
         ],
 

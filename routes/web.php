@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GeolocalisationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\GardeController;
@@ -95,6 +96,11 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.cotisation.update')->middleware('permission:0');
     Route::delete('personnel/{personnel}/cotisations/{pcId}', [PersonnelController::class, 'destroyCotisation'])
         ->name('personnel.cotisation.destroy')->middleware('permission:0');
+    // Géolocalisation
+    Route::get('/geolocalisation', [GeolocalisationController::class, 'index'])
+        ->name('geolocalisation.index')->middleware('permission:0');
+    Route::post('personnel/{personnel}/gps', [GeolocalisationController::class, 'updateGps'])
+        ->name('personnel.gps.update')->middleware('permission:0');
     Route::get('/trombinoscope', [PersonnelController::class, 'trombinoscope'])->name('personnel.trombinoscope')->middleware('permission:0');
     Route::get('/qualifications', [PersonnelController::class, 'qualifications'])->name('personnel.qualifications')->middleware('permission:56');
     Route::get('/clients', [CompanyController::class, 'index'])->name('company.index')->middleware('permission:29');
