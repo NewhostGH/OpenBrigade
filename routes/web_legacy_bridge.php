@@ -79,7 +79,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'departement.php', [LegacyBridgeController::class, 'show'])->middleware('permission:52')->name('legacy_bridge.departement');
     Route::match(['GET', 'POST'], 'destinataires.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.destinataires');
     Route::match(['GET', 'POST'], 'diplome_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:54')->name('legacy_bridge.diplome_edit');
-    Route::match(['GET', 'POST'], 'dispo.php', [LegacyBridgeController::class, 'show'])->middleware('permission:38')->name('legacy_bridge.dispo');
+    Route::match(['GET', 'POST'], 'dispo.php', fn () => redirect()->route('dispo.index'))->name('legacy_bridge.dispo');
     Route::match(['GET', 'POST'], 'document_modal.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.document_modal');
     Route::match(['GET', 'POST'], 'documents.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.documents');
     Route::match(['GET', 'POST'], 'download_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.download_addon');

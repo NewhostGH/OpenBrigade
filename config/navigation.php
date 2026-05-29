@@ -27,7 +27,7 @@ return [
             'icon'  => 'users',
             'items' => [
                 ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',                                                       'icon' => 'list'],
-                ['key' => 'personnel.search',      'label' => 'Recherche',       'url' => '/legacy/search_personnel.php',                                    'icon' => 'magnifying-glass', 'permission' => 56],
+                ['key' => 'personnel.search',      'label' => 'Recherche',       'url' => '/personnel',                                                       'icon' => 'magnifying-glass', 'permission' => 56],
                 ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications',                                                'icon' => 'certificate',      'permission' => 56],
                 ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/legacy/cotisations.php',                                         'icon' => 'receipt',          'permission' => 53],
                 ['key' => 'personnel.geoloc',      'label' => 'Géolocalisation', 'url' => '/legacy/gps.php',                                                 'icon' => 'map-marker-alt',   'permission' => 76],
@@ -65,7 +65,7 @@ return [
             'icon'  => 'calendar-check',
             'items' => [
                 ['key' => 'planning.calendar',    'label' => 'Calendrier',      'url' => '/planning',                                   'icon' => 'calendar'],
-                ['key' => 'planning.dispos',      'label' => 'Disponibilités',  'url' => '/legacy/dispo.php',                           'icon' => 'check-square',   'permission' => 38],
+                ['key' => 'planning.dispos',      'label' => 'Disponibilités',  'url' => '/disponibilites',                             'icon' => 'check-square',   'permission' => 38],
                 ['key' => 'planning.absences',    'label' => 'Absences',        'url' => '/indisponibilites',                           'icon' => 'user-times',     'permission' => 11],
                 ['key' => 'planning.repos',       'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],
                 ['key' => 'planning.remplace',    'label' => 'Remplacements',   'url' => '/remplacements',                              'icon' => 'exchange-alt',   'permission' => 41],
