@@ -344,14 +344,19 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'upd_type_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:5')->name('legacy_bridge.upd_type_garde');
     Route::match(['GET', 'POST'], 'upd_type_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.upd_type_materiel');
     Route::match(['GET', 'POST'], 'upd_type_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.upd_type_vehicule');
-    Route::match(['GET', 'POST'], 'upd_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.upd_vehicule');
+    Route::match(['GET', 'POST'], 'upd_vehicule.php', function (\Illuminate\Http\Request $r) {
+        $vid = (int) ($r->query('vehicule') ?? 0);
+        return $vid > 0
+            ? redirect()->route('vehicule.show', $vid)
+            : redirect()->route('vehicule.index');
+    })->name('legacy_bridge.upd_vehicule');
     Route::match(['GET', 'POST'], 'update_app.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.update_app');
     Route::match(['GET', 'POST'], 'update_page.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.update_page');
     Route::match(['GET', 'POST'], 'upgrade.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.upgrade');
     Route::match(['GET', 'POST'], 'upload.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.upload');
     Route::match(['GET', 'POST'], 'user_info.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.user_info');
     Route::match(['GET', 'POST'], 'vcard.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.vcard');
-    Route::match(['GET', 'POST'], 'vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.vehicule');
+    Route::match(['GET', 'POST'], 'vehicule.php', fn () => redirect()->route('vehicule.index'))->name('legacy_bridge.vehicule');
     Route::match(['GET', 'POST'], 'vehicule_load.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.vehicule_load');
     Route::match(['GET', 'POST'], 'vehicule_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.vehicule_xls');
     Route::match(['GET', 'POST'], 'victimes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.victimes');

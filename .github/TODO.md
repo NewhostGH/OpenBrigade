@@ -136,12 +136,12 @@ Each menu section follows this repeatable process:
 ### Logistique — Vehicles (VEH)
 > Files: `vehicule.php`, `upd_vehicule.php`, `ins_vehicule.php`, `del_vehicule.php`, `vehicule_*.php`, `type_vehicule.php`, …
 
-- [ ] Inventory all VEH legacy files
-- [ ] Migrate vehicle list and detail view/edit
+- [x] Inventory all VEH legacy files
+- [x] Migrate vehicle list and detail view/edit (commit: feat: migrate vehicles — VehiculeController, list/show views, bridge retirements, tests)
 - [ ] Migrate vehicle type management
 - [ ] Migrate vehicle assignment to events
 - [ ] Migrate vehicle exports (XLS)
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate vehicles — VehiculeController, list/show views, bridge retirements, tests)
 
 ### Inventaire — Equipment & Consumables (MAT / CONSO)
 > Files: `materiel.php`, `upd_materiel.php`, `ins_materiel.php`, `del_materiel.php`, `materiel_*.php`, `type_materiel.php`, `consommable.php`, `upd_consommable.php`, `del_consommable.php`, `consommable_*.php`, `type_consommable.php`, …
