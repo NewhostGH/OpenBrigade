@@ -869,37 +869,36 @@ class DashboardService
     }
 
     // ── Open replacement requests (no volunteer yet) ────────────────────────
+    // The remplacement table has no personal P_ID column — it identifies
+    // requests by E_CODE + SUBSTITUTE (0 = nobody has volunteered yet).
 
     public function getReplacementRequests(User $user): array
     {
         $sectionId = (int) $user->P_SECTION;
         $family    = $this->getSectionFamily($sectionId);
 
-        $base = DB::table('remplacement as r')
+        $row = DB::table('remplacement as r')
             ->join('evenement_horaire as eh', function ($j) {
                 $j->on('eh.E_CODE', '=', 'r.E_CODE')->where('eh.EH_ID', 1);
             })
             ->join('evenement as e', 'e.E_CODE', '=', 'r.E_CODE')
-            ->join('pompier as p', 'p.P_ID', '=', 'r.P_ID')
             ->where('r.APPROVED', 0)
             ->where('r.REJECTED', 0)
-            ->where(fn($q) => $q->whereNull('r.SUBSTITUTE')->orWhere('r.SUBSTITUTE', 0))
+            ->where('r.SUBSTITUTE', 0)
             ->whereRaw('eh.EH_DATE_FIN >= NOW()')
-            ->whereIn('e.S_ID', $family);
-
-        $count = (clone $base)->count();
-
-        $rows = (clone $base)
-            ->limit(5)
-            ->orderBy('eh.EH_DATE_DEBUT')
+            ->whereIn('e.S_ID', $family)
             ->select(
-                'e.E_CODE', 'e.E_LIBELLE',
-                'p.P_ID', 'p.P_NOM', 'p.P_PRENOM',
-                DB::raw("DATE_FORMAT(eh.EH_DATE_DEBUT,'%d-%m-%Y') AS FORMDATE")
+                DB::raw('COUNT(1) AS NB'),
+                DB::raw("DATE_FORMAT(MIN(eh.EH_DATE_DEBUT),'%d-%m-%Y') AS DEBUT"),
+                DB::raw("DATE_FORMAT(MAX(eh.EH_DATE_FIN),'%d-%m-%Y') AS FIN")
             )
-            ->get()->toArray();
+            ->first();
 
-        return ['count' => $count, 'rows' => $rows];
+        return [
+            'count' => (int) ($row->NB ?? 0),
+            'debut' => $row->DEBUT ?? null,
+            'fin'   => $row->FIN   ?? null,
+        ];
     }
 
     // ── About / app info ────────────────────────────────────────────────────

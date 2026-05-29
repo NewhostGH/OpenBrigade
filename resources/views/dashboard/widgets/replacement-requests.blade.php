@@ -10,28 +10,21 @@
         </a>
     </div>
     <div class="widget-card-body">
-        @foreach ($replacementRequests['rows'] as $row)
-            <div class="alert-item-row">
-                <div class="alert-item-info">
-                    <div class="alert-item-label">
-                        <a href="{{ url('/legacy/evenement_display.php?evenement=' . $row->E_CODE) }}"
-                           style="color:inherit">{{ $row->E_LIBELLE }}</a>
-                    </div>
-                    <div class="alert-item-sub">
-                        {{ $row->P_PRENOM }} {{ $row->P_NOM }}
-                        &mdash; {{ $row->FORMDATE }}
-                    </div>
+        <div class="alert-item-row">
+            <div class="alert-item-info">
+                <div class="alert-item-label">Recherche de remplaçant</div>
+                <div class="alert-item-sub">
+                    En cours
+                    @if ($replacementRequests['debut'] && $replacementRequests['fin'])
+                        &mdash; du {{ $replacementRequests['debut'] }} au {{ $replacementRequests['fin'] }}
+                    @endif
                 </div>
-                <span class="alert-badge badge-warning">Sans remplaçant</span>
             </div>
-        @endforeach
-
-        @if ($replacementRequests['count'] > count($replacementRequests['rows']))
-            <div class="text-muted text-center" style="font-size:var(--font-size-xs);padding:4px 0">
-                + {{ $replacementRequests['count'] - count($replacementRequests['rows']) }} autre(s)
-                <a href="{{ url('/legacy/remplacements.php?filter=0&replaced=0&substitute=0') }}">Voir tout</a>
-            </div>
-        @endif
+            <a href="{{ url('/legacy/remplacements.php?filter=0&replaced=0&substitute=0') }}"
+               style="text-decoration:none">
+                <span class="alert-badge" style="color:#8950fc">{{ $replacementRequests['count'] }}</span>
+            </a>
+        </div>
     </div>
 </div>
 @endif
