@@ -84,26 +84,23 @@ test('authenticated users can access the personnel list', function () {
     $user = personnelFakeUser();
 
     // Stub Eloquent so no real DB call is made
-    $emptyPage = new LengthAwarePaginator([], 0, 50);
+    $emptyPage = new LengthAwarePaginator([], 0, 100);
     $emptyPage->setPath('/personnel');
 
-    $emptyCollection = Collection::make([]);
-
     // Bind a mock PersonnelController that short-circuits the DB calls
-    app()->bind(\App\Http\Controllers\PersonnelController::class, function () use ($emptyPage, $emptyCollection) {
+    app()->bind(\App\Http\Controllers\PersonnelController::class, function () use ($emptyPage) {
         $ctrl = Mockery::mock(\App\Http\Controllers\PersonnelController::class)->makePartial();
         $ctrl->shouldReceive('index')->andReturn(
             view('personnel.index', [
                 'items'          => $emptyPage,
                 'position'       => 'actif',
                 'search'         => '',
-                'category'       => 'ALL',
+                'category'       => 'INT',
                 'sectionId'      => 0,
                 'order'          => 'P_NOM',
                 'subsections'    => true,
-                'hasSubsections' => false,
-                'sections'       => $emptyCollection,
-                'categories'     => $emptyCollection,
+                'perPage'        => 100,
+                'sectionOptions' => [],
             ])
         );
         return $ctrl;
@@ -113,25 +110,23 @@ test('authenticated users can access the personnel list', function () {
 });
 
 test('personnel index uses the personnel.index template', function () {
-    $user = personnelFakeUser();
-    $emptyPage = new LengthAwarePaginator([], 0, 50);
+    $user      = personnelFakeUser();
+    $emptyPage = new LengthAwarePaginator([], 0, 100);
     $emptyPage->setPath('/personnel');
-    $emptyCollection = Collection::make([]);
 
-    app()->bind(\App\Http\Controllers\PersonnelController::class, function () use ($emptyPage, $emptyCollection) {
+    app()->bind(\App\Http\Controllers\PersonnelController::class, function () use ($emptyPage) {
         $ctrl = Mockery::mock(\App\Http\Controllers\PersonnelController::class)->makePartial();
         $ctrl->shouldReceive('index')->andReturn(
             view('personnel.index', [
                 'items'          => $emptyPage,
                 'position'       => 'actif',
                 'search'         => '',
-                'category'       => 'ALL',
+                'category'       => 'INT',
                 'sectionId'      => 0,
                 'order'          => 'P_NOM',
                 'subsections'    => true,
-                'hasSubsections' => false,
-                'sections'       => $emptyCollection,
-                'categories'     => $emptyCollection,
+                'perPage'        => 100,
+                'sectionOptions' => [],
             ])
         );
         return $ctrl;

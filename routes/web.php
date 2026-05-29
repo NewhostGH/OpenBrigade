@@ -74,6 +74,10 @@ Route::middleware('auth')->group(function () {
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');
+    Route::get('personnel/grade/{grade}', [PersonnelController::class, 'gradeImage'])
+        ->name('personnel.grade_image')
+        ->where('grade', '[A-Z0-9]+')
+        ->middleware('permission:0');
     Route::resource('personnel', PersonnelController::class)
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');

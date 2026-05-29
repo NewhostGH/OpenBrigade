@@ -94,6 +94,12 @@ Each menu section follows this repeatable process:
 - [x] Migrate qualifications and training records (`qualifications.php`, `personnel_formation.php`) (commit: feat: migrate astreintes management and qualifications — views, bridge retirements)
 - [x] Migrate on-call availability and indisponibility management (`indispo*.php`, `dispo.php`) (commit: feat: migrate indisponibilités — IndispoController, view, bridge retirements)
 - [x] Add tests and parity check; retire legacy files (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
+- [ ] Enhance personnel list: full feature parity — bulk-select checkboxes with action buttons (internal email, badge print, mailto, email-list download), grade badge images, hierarchical colour-coded section filter, subsection-include toggle, column-visibility toggle (localStorage), card/table view toggle, configurable page size (12/24/48/100/500), coloured status badges (BEN/EXT/PRES/INT + Actif/Archivé/Bloqué) (commit: ...)
+- [ ] Integrate universal search into personnel list: expand server-side search to all fields (téléphone, adresse, ville, grade) and deprecate the legacy "Recherche" menu entry once this is done (commit: ...)
+- [ ] Complete add/edit personnel form: add all missing fields vs legacy (`P_CIVILITE`, photo upload, login/password management, NPAI flag, suspension flag, notes/comments, licence fields) (commit: ...)
+- [ ] Personnel competences CRUD: add/edit/delete qualifications and training records from the member profile page (commit: ...)
+- [ ] Port cotisations: membership fee list per member, add/edit/delete fee entries, payment tracking (commit: ...)
+- [ ] Port géolocalisation: display and update GPS coordinates for members on an interactive map (commit: ...)
 
 ### Activité — Events & Interventions (ACT)
 > Files: `evenements.php`, `evenement_*.php`, `calendar.php`, `horaires.php`, `export*.php`, …

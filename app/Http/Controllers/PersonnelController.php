@@ -21,7 +21,9 @@ use App\Models\Personnel;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -29,27 +31,36 @@ class PersonnelController extends Controller
 {
     public function index(Request $request): View
     {
-        $position = (string) $request->string('position', 'actif');
-        $search = trim((string) $request->string('q'));
-        $category = (string) $request->string('category', 'ALL');
-        $sectionId = (int) $request->integer('section', 0);
-            $order       = (string) $request->string('order', 'P_NOM');
-            $subsections = (bool) $request->integer('subsections', 1);
+        $position    = (string) $request->string('position', 'actif');
+        $search      = trim((string) $request->string('q'));
+        $category    = (string) $request->string('category', 'INT');
+        $sectionId   = (int) $request->integer('section', 0);
+        $order       = (string) $request->string('order', 'P_NOM');
+        $subsections = (bool) $request->integer('subsections', 1);
+        $perPage     = (int) $request->integer('perPage', 100);
+        if (! in_array($perPage, [12, 24, 48, 100, 500], true)) {
+            $perPage = 100;
+        }
 
         $allowedOrder = [
             'P_NOM', 'P_PRENOM', 'P_CODE', 'P_STATUT', 'P_GRADE',
-            'P_DATE_ENGAGEMENT', 'P_FIN', 'P_PROFESSION', 'P_BIRTHDATE',
+            'P_DATE_ENGAGEMENT', 'P_FIN', 'P_BIRTHDATE',
         ];
         if (! in_array($order, $allowedOrder, true)) {
             $order = 'P_NOM';
         }
 
+        // Load all sections once for hierarchy building + subsection filtering
+        $allSections = Section::query()
+            ->orderBy('S_CODE')
+            ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
+
         $query = Personnel::query()
             ->with(['section'])
             ->select([
                 'P_ID', 'P_PHOTO', 'P_CODE', 'P_PRENOM', 'P_NOM', 'P_STATUT', 'P_GRADE',
-                'P_PROFESSION', 'P_SECTION', 'P_EMAIL', 'P_PHONE', 'P_BIRTHDATE',
-                'P_DATE_ENGAGEMENT', 'P_OLD_MEMBER', 'GP_ID', 'P_FIN',
+                'P_SECTION', 'P_EMAIL', 'P_PHONE', 'P_PHONE2', 'P_CIVILITE',
+                'P_BIRTHDATE', 'P_DATE_ENGAGEMENT', 'P_OLD_MEMBER', 'GP_ID', 'P_FIN',
             ]);
 
         if ($position === 'actif') {
@@ -69,7 +80,12 @@ class PersonnelController extends Controller
         }
 
         if ($sectionId > 0) {
-            $query->where('P_SECTION', $sectionId);
+            if ($subsections) {
+                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
+                $query->whereIn('P_SECTION', array_merge([$sectionId], $descendants));
+            } else {
+                $query->where('P_SECTION', $sectionId);
+            }
         }
 
         if ($search !== '') {
@@ -77,7 +93,10 @@ class PersonnelController extends Controller
                 $inner->where('P_NOM', 'like', "%{$search}%")
                     ->orWhere('P_PRENOM', 'like', "%{$search}%")
                     ->orWhere('P_CODE', 'like', "%{$search}%")
-                    ->orWhere('P_EMAIL', 'like', "%{$search}%");
+                    ->orWhere('P_EMAIL', 'like', "%{$search}%")
+                    ->orWhere('P_PHONE', 'like', "%{$search}%")
+                    ->orWhere('P_PHONE2', 'like', "%{$search}%")
+                    ->orWhere('P_GRADE', 'like', "%{$search}%");
             });
         }
 
@@ -87,35 +106,86 @@ class PersonnelController extends Controller
             $query->orderBy($order);
         }
 
-        $items = $query->paginate(50)->withQueryString();
+        $items = $query->paginate($perPage)->withQueryString();
 
-        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
-
-            // Determine if the selected section has sub-sections
-            $hasSubsections = false;
-            if ($sectionId > 0) {
-                $hasSubsections = Section::where('S_PARENT', $sectionId)->exists();
-            }
-
-        $categories = Personnel::query()
-            ->select('P_STATUT')
-            ->whereNotNull('P_STATUT')
-            ->distinct()
-            ->orderBy('P_STATUT')
-            ->pluck('P_STATUT');
+        // Build hierarchical section options for the filter select
+        $sectionOptions = $this->buildSectionTree($allSections);
 
         return view('personnel.index', [
-            'items' => $items,
-            'position' => $position,
-            'search' => $search,
-            'category' => $category,
-            'sectionId' => $sectionId,
-            'order' => $order,
+            'items'          => $items,
+            'position'       => $position,
+            'search'         => $search,
+            'category'       => $category,
+            'sectionId'      => $sectionId,
+            'order'          => $order,
             'subsections'    => $subsections,
-            'hasSubsections' => $hasSubsections,
-            'sections' => $sections,
-            'categories' => $categories,
+            'perPage'        => $perPage,
+            'sectionOptions' => $sectionOptions,
         ]);
+    }
+
+    /**
+     * Serve grade badge images from the legacy assets directory.
+     */
+    public function gradeImage(string $grade)
+    {
+        $grade = preg_replace('/[^A-Z0-9]/', '', strtoupper($grade));
+
+        $path = base_path("archive/legacy_app/images/grades_sp/{$grade}.png");
+        if (! File::exists($path)) {
+            $path = base_path('archive/legacy_app/images/grades_sp/NR.png');
+        }
+        if (File::exists($path)) {
+            return response()->file($path, ['Cache-Control' => 'public, max-age=86400']);
+        }
+
+        // 1×1 transparent PNG fallback
+        return response(
+            base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='),
+            200,
+            ['Content-Type' => 'image/png']
+        );
+    }
+
+    /**
+     * Build a depth-annotated flat list of sections in DFS (tree) order.
+     * Sections with S_PARENT = 0 are considered top-level (depth 0).
+     */
+    private function buildSectionTree(Collection $sections, int $parentId = 0, int $depth = 0): array
+    {
+        $result = [];
+        foreach ($sections as $section) {
+            if ((int) ($section->S_PARENT ?? 0) === $parentId) {
+                $result[] = [
+                    'S_ID'          => (int) $section->S_ID,
+                    'S_CODE'        => $section->S_CODE,
+                    'S_DESCRIPTION' => $section->S_DESCRIPTION,
+                    'depth'         => $depth,
+                ];
+                array_push($result, ...$this->buildSectionTree($sections, (int) $section->S_ID, $depth + 1));
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Return all descendant section IDs of a given section via BFS.
+     */
+    private function getDescendantSectionIds(Collection $allSections, int $parentId): array
+    {
+        $ids   = [];
+        $queue = [$parentId];
+        while (! empty($queue)) {
+            $current  = array_shift($queue);
+            $children = $allSections
+                ->filter(fn ($s) => (int) ($s->S_PARENT ?? 0) === $current)
+                ->pluck('S_ID');
+            foreach ($children as $childId) {
+                $ids[]   = (int) $childId;
+                $queue[] = (int) $childId;
+            }
+        }
+        return $ids;
     }
 
     /**

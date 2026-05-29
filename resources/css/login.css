@@ -3,10 +3,11 @@
 /* The login page is standalone (no sidebar/navbar), so we redefine the body
    reset here rather than inheriting from base.css. */
 .login-body {
-    background:   var(--page-bg);
-    min-height:   100vh;
-    font-family:  var(--font-family);
-    margin:       0;
+    background: var(--page-bg);
+    min-height: 100vh;
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
 }
 
 /* ── Two-column shell ───────────────────────────────────────────────────── */
@@ -16,19 +17,19 @@
 
 .login-left {
     background: radial-gradient(circle at 15% 20%,
-        color-mix(in srgb, var(--brand-bg) 8%, #fff) 0%,
-        color-mix(in srgb, var(--brand-bg) 14%, #f4f6fb) 38%,
-        color-mix(in srgb, var(--brand-bg) 20%, #e8ecf5) 100%);
+            color-mix(in srgb, var(--brand-bg) 8%, #fff) 0%,
+            color-mix(in srgb, var(--brand-bg) 14%, #f4f6fb) 38%,
+            color-mix(in srgb, var(--brand-bg) 20%, #e8ecf5) 100%);
     min-height: 260px;
 }
 
 .login-left-title {
-    font-size:   1.2rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    color:       var(--page-text);
-    text-align:  center;
-    margin-top:  1rem;
-    max-width:   400px;
+    color: var(--page-text);
+    text-align: center;
+    margin-top: 1rem;
+    max-width: 400px;
 }
 
 /* ── Right panel (the card) ─────────────────────────────────────────────── */
@@ -38,35 +39,35 @@
 
 .login-card {
     max-width: 360px;
-    width:     100%;
+    width: 100%;
 }
 
 .login-brand-title {
     font-weight: 700;
-    font-size:   1.4rem;
-    color:       var(--page-text);
+    font-size: 1.4rem;
+    color: var(--page-text);
 }
 
 .login-brand-sub {
     font-size: var(--font-size-sm);
-    color:     var(--text-muted-soft);
+    color: var(--text-muted-soft);
     margin-top: 2px;
 }
 
 /* ── Inputs ─────────────────────────────────────────────────────────────── */
 .login-input {
-    background:  var(--page-bg);
-    border:      1px solid var(--component-border);
-    box-shadow:  none;
-    padding:     .8rem 1rem;
-    font-size:   var(--font-size-sm);
-    transition:  border-color var(--transition-fast), background var(--transition-fast);
+    background: var(--page-bg);
+    border: 1px solid var(--component-border);
+    box-shadow: none;
+    padding: .8rem 1rem;
+    font-size: var(--font-size-sm);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .login-input:focus {
-    background:  var(--component-bg);
+    background: var(--component-bg);
     border-color: var(--brand-bg);
-    box-shadow:  0 0 0 3px color-mix(in srgb, var(--brand-bg) 15%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-bg) 15%, transparent);
 }
 
 .login-input.is-invalid:focus {
@@ -75,22 +76,22 @@
 
 /* ── Submit button ──────────────────────────────────────────────────────── */
 .btn-login {
-    background:  var(--brand-bg);
-    border:      none;
-    color:       #fff;
-    padding:     .75rem 1.4rem;
+    background: var(--brand-bg);
+    border: none;
+    color: #fff;
+    padding: .75rem 1.4rem;
     font-weight: 600;
-    font-size:   var(--font-size-sm);
+    font-size: var(--font-size-sm);
     border-radius: var(--radius-md);
-    transition:  background var(--transition-fast), box-shadow var(--transition-fast);
-    width:       100%;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+    width: 100%;
 }
 
 .btn-login:hover,
 .btn-login:focus {
     background: color-mix(in srgb, var(--brand-bg) 85%, #000);
-    color:      #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
 
 /* ── Forgot-password toggle ─────────────────────────────────────────────── */
@@ -108,14 +109,14 @@
 
 /* ── Alert overrides for login page ────────────────────────────────────── */
 .login-alert {
-    font-size:     var(--font-size-sm);
+    font-size: var(--font-size-sm);
     border-radius: var(--radius-md);
-    padding:       .6rem 1rem;
+    padding: .6rem 1rem;
 }
 
 /* ── Footer note ────────────────────────────────────────────────────────── */
 .login-footer {
     font-size: var(--font-size-xs);
-    color:     var(--text-muted-soft);
+    color: var(--text-muted-soft);
     margin-top: 1.5rem;
 }
