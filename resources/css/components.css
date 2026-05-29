@@ -1,52 +1,52 @@
 /* ── ob-nav (secondary in-page nav bar) ────────────────────────────────── */
 .ob-nav {
-    background:   linear-gradient(180deg, var(--ob-nav-bg-from) 0%, var(--ob-nav-bg-to) 100%);
+    background: linear-gradient(180deg, var(--ob-nav-bg-from) 0%, var(--ob-nav-bg-to) 100%);
     border-bottom: 1px solid var(--ob-nav-border);
-    box-shadow:   0 1px 0 rgba(255, 255, 255, 0.08) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
 }
 
 .ob-nav .navbar-brand,
 .ob-nav .nav-link,
 .ob-nav .btn-link.nav-link {
-    color:     var(--ob-nav-text);
+    color: var(--ob-nav-text);
     font-size: var(--font-size-sm);
 }
 
 .ob-nav .nav-link.active {
-    background:    rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-sm);
 }
 
 /* ── ob-toolbar (filter/action bar above tables) ────────────────────────── */
 .ob-toolbar {
-    background:    var(--component-bg);
-    border:        1px solid var(--component-border);
+    background: var(--component-bg);
+    border: 1px solid var(--component-border);
     border-radius: var(--radius-md);
-    padding:       12px;
+    padding: 12px;
 }
 
 .ob-toolbar-title {
-    display:         flex;
+    display: flex;
     justify-content: space-between;
-    align-items:     baseline;
-    margin-bottom:   10px;
+    align-items: baseline;
+    margin-bottom: 10px;
 }
 
 .ob-toolbar-title h1 {
-    margin:      0;
-    font-size:   1.15rem;
+    margin: 0;
+    font-size: 1.15rem;
     font-weight: 700;
 }
 
 .ob-toolbar-title span {
-    color:     var(--text-muted-soft);
+    color: var(--ob-nav-text);
     font-size: var(--font-size-sm);
 }
 
 .ob-filters {
-    display:               grid;
+    display: grid;
     grid-template-columns: 1.8fr 1.3fr 1fr 1fr 1fr auto;
-    gap:                   8px;
+    gap: 8px;
 }
 
 @media (max-width: 1200px) {
@@ -63,15 +63,15 @@
 
 /* ── ob-table (data tables) ────────────────────────────────────────────── */
 .ob-table-wrap {
-    background:    var(--component-bg);
-    border:        1px solid var(--component-border);
+    background: var(--component-bg);
+    border: 1px solid var(--component-border);
     border-radius: var(--radius-md);
-    overflow:      hidden;
+    overflow: hidden;
 }
 
 .ob-table thead th {
-    background:  var(--table-header-bg);
-    color:       var(--table-header-text);
+    background: var(--table-header-bg);
+    color: var(--table-header-text);
     font-weight: 600;
     border-bottom: 0;
     white-space: nowrap;
@@ -79,7 +79,7 @@
 
 .ob-table tbody td {
     vertical-align: middle;
-    font-size:      var(--font-size-sm);
+    font-size: var(--font-size-sm);
 }
 
 .ob-table tbody tr:nth-child(odd) {
@@ -88,196 +88,332 @@
 
 /* ── ob-avatar ─────────────────────────────────────────────────────────── */
 .ob-avatar {
-    width:         44px;
-    height:        44px;
+    width: 44px;
+    height: 44px;
     border-radius: var(--radius-avatar);
-    object-fit:    cover;
-    border:        1px solid var(--avatar-border);
-    background:    var(--avatar-bg);
+    object-fit: cover;
+    border: 1px solid var(--avatar-border);
+    background: var(--avatar-bg);
 }
 
 /* Small avatar — list rows */
 .ob-avatar-sm {
-    width:         34px;
-    height:        34px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--radius-sm);
-    object-fit:    cover;
-    border:        1px solid var(--avatar-border);
+    object-fit: cover;
+    border: 1px solid var(--avatar-border);
 }
 
 /* Round avatar — card view */
 .ob-avatar-round {
-    width:         56px;
-    height:        56px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    object-fit:    cover;
+    object-fit: cover;
 }
 
 /* ── Grade badge images ─────────────────────────────────────────────────── */
 .ob-grade-img {
-    height:         26px;
-    width:          auto;
-    border-radius:  3px;
+    height: 26px;
+    width: auto;
+    border-radius: 3px;
     vertical-align: middle;
 }
 
 /* ── Status badges (personnel statut + état) ────────────────────────────── */
 .ob-badge {
-    display:      inline-block;
-    padding:      2px 8px;
+    display: inline-block;
+    padding: 2px 8px;
     border-radius: var(--radius-pill);
-    font-size:    0.70rem;
-    font-weight:  600;
-    white-space:  nowrap;
-    line-height:  1.4;
+    font-size: 0.70rem;
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1.4;
 }
-.ob-badge-ben     { background: #FFCC33; color: #5a4000; }
-.ob-badge-ext     { background: #e2e8f0; color: #475569; }
-.ob-badge-pres    { background: #E8D5F5; color: #6b21a8; }
-.ob-badge-int     { background: #dbeafe; color: #1e40af; }
-.ob-badge-actif   { background: #dcfce7; color: #166534; }
-.ob-badge-archive { background: #f1f5f9; color: #64748b; }
-.ob-badge-bloqued { background: #fee2e2; color: #991b1b; }
+
+.ob-badge-ben {
+    background: #FFCC33;
+    color: #5a4000;
+}
+
+.ob-badge-ext {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.ob-badge-pres {
+    background: #E8D5F5;
+    color: #6b21a8;
+}
+
+.ob-badge-int {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.ob-badge-actif {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.ob-badge-archive {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.ob-badge-bloqued {
+    background: #fee2e2;
+    color: #991b1b;
+}
 
 /* ── Column-visibility toggle helper ───────────────────────────────────── */
-.col-hidden { display: none !important; }
+.col-hidden {
+    display: none !important;
+}
 
 /* ── ob-table card view ─────────────────────────────────────────────────── */
-.ob-table.cards thead { display: none; }
+.ob-table.cards thead {
+    display: none;
+}
 
 .ob-table.cards tbody {
-    display:   flex;
+    display: flex;
     flex-wrap: wrap;
-    gap:       12px;
-    padding:   12px;
+    gap: 12px;
+    padding: 12px;
 }
 
 .ob-table.cards tbody tr {
-    display:        flex;
+    display: flex;
     flex-direction: column;
-    align-items:    center;
-    width:          130px;
-    border:         1px solid var(--component-border);
-    border-radius:  var(--radius-md);
-    padding:        10px 8px 8px;
-    cursor:         pointer;
-    text-align:     center;
-    background:     var(--component-bg);
-    transition:     box-shadow var(--transition-fast);
+    align-items: center;
+    width: 130px;
+    border: 1px solid var(--component-border);
+    border-radius: var(--radius-md);
+    padding: 10px 8px 8px;
+    cursor: pointer;
+    text-align: center;
+    background: var(--component-bg);
+    transition: box-shadow var(--transition-fast);
 }
-.ob-table.cards tbody tr:hover { box-shadow: 0 2px 10px rgba(0, 0, 0, .12); }
-.ob-table.cards tbody td { display: none !important; padding: 2px 0; }
-.ob-table.cards tbody td.card-show { display: block !important; }
+
+.ob-table.cards tbody tr:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .12);
+}
+
+.ob-table.cards tbody td {
+    display: none !important;
+    padding: 2px 0;
+}
+
+.ob-table.cards tbody td.card-show {
+    display: block !important;
+}
 
 /* ── ob-action-bar (bulk-action bar below tables) ───────────────────────── */
 .ob-action-bar {
-    display:      flex;
-    align-items:  center;
-    gap:          6px;
-    flex-wrap:    wrap;
-    padding:      8px 12px;
-    background:   var(--table-odd-row);
-    border-top:   1px solid var(--component-border);
-    font-size:    var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    background: var(--table-odd-row);
+    border-top: 1px solid var(--component-border);
+    font-size: var(--font-size-sm);
 }
 
 /* ── ob-toggle-switch (iOS-style checkbox) ──────────────────────────────── */
 .ob-toggle-switch {
-    display:     flex;
+    display: flex;
     align-items: center;
-    gap:         6px;
-    font-size:   var(--font-size-sm);
+    gap: 6px;
+    font-size: var(--font-size-sm);
     white-space: nowrap;
 }
-.ob-toggle-switch label { margin: 0; cursor: default; }
+
+.ob-toggle-switch label {
+    margin: 0;
+    cursor: default;
+}
 
 .ob-switch {
     position: relative;
-    display:  inline-block;
-    width:    34px;
-    height:   18px;
-    margin:   0;
+    display: inline-block;
+    width: 34px;
+    height: 18px;
+    margin: 0;
 }
-.ob-switch input { opacity: 0; width: 0; height: 0; }
+
+.ob-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
 .ob-switch .slider {
-    position:      absolute;
-    cursor:        pointer;
-    inset:         0;
-    background:    var(--component-border);
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: var(--component-border);
     border-radius: 18px;
-    transition:    background var(--transition-fast);
+    transition: background var(--transition-fast);
 }
+
 .ob-switch .slider::before {
-    content:       "";
-    position:      absolute;
-    height:        12px;
-    width:         12px;
-    left:          3px;
-    bottom:        3px;
-    background:    white;
+    content: "";
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
     border-radius: 50%;
-    transition:    transform var(--transition-fast);
+    transition: transform var(--transition-fast);
 }
-.ob-switch input:checked + .slider { background: var(--accent); }
-.ob-switch input:checked + .slider::before { transform: translateX(16px); }
+
+.ob-switch input:checked+.slider {
+    background: var(--accent);
+}
+
+.ob-switch input:checked+.slider::before {
+    transform: translateX(16px);
+}
 
 /* ── Profile header (show pages) ────────────────────────────────────────── */
 .ob-profile-header {
-    display:     flex;
-    gap:         20px;
+    display: flex;
+    gap: 20px;
     align-items: flex-start;
-    flex-wrap:   wrap;
+    flex-wrap: wrap;
     margin-bottom: 20px;
 }
+
 .ob-profile-photo {
-    width:         96px;
-    height:        96px;
+    width: 96px;
+    height: 96px;
     border-radius: var(--radius-md);
-    object-fit:    cover;
-    border:        2px solid var(--component-border);
-    flex-shrink:   0;
+    object-fit: cover;
+    border: 2px solid var(--component-border);
+    flex-shrink: 0;
 }
-.ob-profile-meta { flex: 1; min-width: 0; }
+
+.ob-profile-meta {
+    flex: 1;
+    min-width: 0;
+}
+
 .ob-profile-name {
-    font-size:   1.25rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    margin:      0 0 2px;
+    margin: 0 0 2px;
 }
+
 .ob-profile-sub {
-    color:     var(--text-muted-soft);
+    color: var(--text-muted-soft);
     font-size: var(--font-size-sm);
-    margin:    0 0 8px;
+    margin: 0 0 8px;
 }
 
 /* ── ob-info-grid (definition list in profile pages) ───────────────────── */
 .ob-info-grid {
-    display:               grid;
+    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap:                   10px 16px;
+    gap: 10px 16px;
 }
+
 .ob-info-item dt {
-    font-size:      0.7rem;
-    font-weight:    600;
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: .04em;
-    color:          var(--text-muted-soft);
-    margin-bottom:  1px;
+    color: var(--text-muted-soft);
+    margin-bottom: 1px;
 }
+
 .ob-info-item dd {
-    font-size:   var(--font-size-sm);
-    margin:      0;
-    word-break:  break-word;
+    font-size: var(--font-size-sm);
+    margin: 0;
+    word-break: break-word;
 }
 
 /* ── ob-section-title (within profile/detail cards) ────────────────────── */
 .ob-section-title {
-    font-size:      var(--font-size-sm);
-    font-weight:    700;
+    font-size: var(--font-size-sm);
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .05em;
-    color:          var(--accent);
-    border-bottom:  1px solid var(--component-border);
+    color: var(--accent);
+    border-bottom: 1px solid var(--component-border);
     padding-bottom: 4px;
-    margin:         20px 0 12px;
+    margin: 20px 0 12px;
 }
-.ob-section-title:first-child { margin-top: 0; }
+
+.ob-section-title:first-child {
+    margin-top: 0;
+}
+
+/* ── Géolocalisation map page ───────────────────────────────────────────── */
+.ob-geo-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--component-border);
+    background: var(--component-bg);
+    flex-wrap: wrap;
+}
+
+.ob-geo-toolbar .form-select {
+    font-size: var(--font-size-sm);
+    height: 30px;
+    padding: 3px 28px 3px 8px;
+    min-width: 120px;
+    max-width: 220px;
+}
+
+.ob-geo-stat {
+    font-size: var(--font-size-xs, 0.75rem);
+    color: var(--text-muted-soft);
+    margin-left: auto;
+}
+
+.ob-geo-map {
+    height: calc(100vh - 130px);
+    min-height: 400px;
+    z-index: 0;
+}
+
+/* Leaflet popup card */
+.ob-geo-popup {
+    font-size: 13px;
+    min-width: 150px;
+}
+
+.ob-geo-popup img {
+    height: 44px;
+    width: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    float: left;
+    margin-right: 8px;
+}
+
+.ob-geo-popup strong {
+    display: block;
+}
+
+.ob-geo-popup small {
+    display: block;
+    color: #666;
+}
+
+.ob-geo-popup a {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+}
+
+.ob-geo-popup .clearfix {
+    clear: both;
+}
