@@ -146,13 +146,13 @@ Each menu section follows this repeatable process:
 ### Inventaire — Equipment & Consumables (MAT / CONSO)
 > Files: `materiel.php`, `upd_materiel.php`, `ins_materiel.php`, `del_materiel.php`, `materiel_*.php`, `type_materiel.php`, `consommable.php`, `upd_consommable.php`, `del_consommable.php`, `consommable_*.php`, `type_consommable.php`, …
 
-- [ ] Inventory all MAT/CONSO legacy files
-- [ ] Migrate equipment list and detail view/edit
+- [x] Inventory all MAT/CONSO legacy files
+- [x] Migrate equipment list and detail view/edit (commit: feat: migrate matériel and consommable lists — controllers, views, bridge retirements, tests)
 - [ ] Migrate equipment type and category management
-- [ ] Migrate consumable stock management
+- [x] Migrate consumable stock management (commit: feat: migrate matériel and consommable lists — controllers, views, bridge retirements, tests)
 - [ ] Migrate embarkation tracking (`materiel_embarquer.php`)
 - [ ] Migrate equipment and consumable exports (XLS)
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate matériel and consommable lists — controllers, views, bridge retirements, tests)
 
 ### Communication (COMM)
 > Files: `mail_*.php`, `mailer.php`, `mailto.php`, `alerte_*.php`, `sms` (fonctions_sms), `chat.php`, `chat_message.php`, `histo_sms.php`, `push_monitor.php`, `rss.php`, …

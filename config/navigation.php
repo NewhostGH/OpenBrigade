@@ -91,8 +91,8 @@ return [
             'icon'  => 'truck',
             'items' => [
                 ['key' => 'logistics.vehicules',    'label' => 'Véhicules',    'url' => '/vehicules',                    'icon' => 'truck',    'permission' => 42],
-                ['key' => 'logistics.materiels',    'label' => 'Matériels',    'url' => '/legacy/materiel.php?page=1',    'icon' => 'toolbox',  'permission' => 42],
-                ['key' => 'logistics.consommables', 'label' => 'Consommables', 'url' => '/legacy/consommable.php?page=1', 'icon' => 'boxes',    'permission' => 42],
+                ['key' => 'logistics.materiels',    'label' => 'Matériels',    'url' => '/materiels',    'icon' => 'toolbox',  'permission' => 42],
+                ['key' => 'logistics.consommables', 'label' => 'Consommables', 'url' => '/consommables', 'icon' => 'boxes',    'permission' => 42],
             ],
         ],
 

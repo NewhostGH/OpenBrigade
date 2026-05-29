@@ -40,7 +40,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'configuration_icone_grade.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.configuration_icone_grade');
     Route::match(['GET', 'POST'], 'configuration_theme.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.configuration_theme');
     Route::match(['GET', 'POST'], 'connected_users.php', [LegacyBridgeController::class, 'show'])->middleware('permission:20')->name('legacy_bridge.connected_users');
-    Route::match(['GET', 'POST'], 'consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.consommable');
+    Route::match(['GET', 'POST'], 'consommable.php', fn () => redirect()->route('consommable.index'))->name('legacy_bridge.consommable');
     Route::match(['GET', 'POST'], 'consommable_load.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.consommable_load');
     Route::match(['GET', 'POST'], 'consommable_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.consommable_xls');
     Route::match(['GET', 'POST'], 'cotisation_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.cotisation_edit');
@@ -196,7 +196,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'mailer.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.mailer');
     Route::match(['GET', 'POST'], 'mailto.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.mailto');
     Route::match(['GET', 'POST'], 'map.php', [LegacyBridgeController::class, 'show'])->middleware('permission:76')->name('legacy_bridge.map');
-    Route::match(['GET', 'POST'], 'materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.materiel');
+    Route::match(['GET', 'POST'], 'materiel.php', fn () => redirect()->route('materiel.index'))->name('legacy_bridge.materiel');
     Route::match(['GET', 'POST'], 'materiel_embarquer.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.materiel_embarquer');
     Route::match(['GET', 'POST'], 'materiel_load.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.materiel_load');
     Route::match(['GET', 'POST'], 'materiel_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.materiel_xls');
