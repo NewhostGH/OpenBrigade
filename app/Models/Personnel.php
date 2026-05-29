@@ -96,4 +96,10 @@ class Personnel extends Model
     {
         return $this->hasMany(Qualification::class, 'P_ID', 'P_ID');
     }
+
+    /** Membership fee records for this person. */
+    public function cotisations(): HasMany
+    {
+        return $this->hasMany(Cotisation::class, 'P_ID', 'P_ID');
+    }
 }

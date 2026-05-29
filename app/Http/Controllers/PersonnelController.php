@@ -17,10 +17,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cotisation;
 use App\Models\Personnel;
 use App\Models\Poste;
 use App\Models\Qualification;
 use App\Models\Section;
+use App\Models\TypePaiement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
@@ -300,15 +302,20 @@ class PersonnelController extends Controller
 
     public function show(Personnel $personnel): View
     {
-        $personnel->load(['section', 'groupe', 'qualifications.poste']);
+        $personnel->load(['section', 'groupe', 'qualifications.poste', 'cotisations.typePaiement']);
 
         $postes = Poste::query()
             ->orderBy('TYPE')
             ->get(['PS_ID', 'TYPE', 'DESCRIPTION', 'PS_EXPIRABLE']);
 
+        $typesPaiement = TypePaiement::query()
+            ->orderBy('TP_DESCRIPTION')
+            ->get(['TP_ID', 'TP_DESCRIPTION']);
+
         return view('personnel.show', [
-            'personnel' => $personnel,
-            'postes'    => $postes,
+            'personnel'     => $personnel,
+            'postes'        => $postes,
+            'typesPaiement' => $typesPaiement,
         ]);
     }
 
@@ -372,6 +379,61 @@ class PersonnelController extends Controller
 
         return redirect()->route('personnel.show', $personnel)
             ->with('success', 'Compétence supprimée.');
+    }
+
+    // ── Cotisations CRUD ─────────────────────────────────────────────────────
+
+    public function storeCotisation(Request $request, Personnel $personnel)
+    {
+        $validated = $request->validate([
+            'ANNEE'        => ['required', 'integer', 'min:1990', 'max:2100'],
+            'PERIODE_CODE' => ['nullable', 'string', 'max:20'],
+            'PC_DATE'      => ['required', 'date'],
+            'MONTANT'      => ['required', 'numeric', 'min:0'],
+            'TP_ID'        => ['nullable', 'integer', 'exists:type_paiement,TP_ID'],
+            'REMBOURSEMENT'=> ['boolean'],
+            'COMMENTAIRE'  => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $validated['P_ID']          = $personnel->P_ID;
+        $validated['REMBOURSEMENT'] = $request->boolean('REMBOURSEMENT') ? 1 : 0;
+
+        Cotisation::create($validated);
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Cotisation enregistrée.');
+    }
+
+    public function updateCotisation(Request $request, Personnel $personnel, int $pcId)
+    {
+        $validated = $request->validate([
+            'ANNEE'        => ['required', 'integer', 'min:1990', 'max:2100'],
+            'PERIODE_CODE' => ['nullable', 'string', 'max:20'],
+            'PC_DATE'      => ['required', 'date'],
+            'MONTANT'      => ['required', 'numeric', 'min:0'],
+            'TP_ID'        => ['nullable', 'integer', 'exists:type_paiement,TP_ID'],
+            'REMBOURSEMENT'=> ['boolean'],
+            'COMMENTAIRE'  => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $validated['REMBOURSEMENT'] = $request->boolean('REMBOURSEMENT') ? 1 : 0;
+
+        Cotisation::where('PC_ID', $pcId)
+            ->where('P_ID', $personnel->P_ID)
+            ->update($validated);
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Cotisation mise à jour.');
+    }
+
+    public function destroyCotisation(Personnel $personnel, int $pcId)
+    {
+        Cotisation::where('PC_ID', $pcId)
+            ->where('P_ID', $personnel->P_ID)
+            ->delete();
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Cotisation supprimée.');
     }
 
     public function edit(Personnel $personnel): View

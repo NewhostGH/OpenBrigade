@@ -97,7 +97,7 @@ Each menu section follows this repeatable process:
 - [ ] Enhance personnel list: full feature parity — bulk-select checkboxes with action buttons (internal email, badge print, mailto, email-list download), grade badge images, hierarchical colour-coded section filter, subsection-include toggle, column-visibility toggle (localStorage), card/table view toggle, configurable page size (12/24/48/100/500), coloured status badges (BEN/EXT/PRES/INT + Actif/Archivé/Bloqué) (commit: ...)
 - [ ] Integrate universal search into personnel list: expand server-side search to all fields (téléphone, adresse, ville, grade) and deprecate the legacy "Recherche" menu entry once this is done (commit: ...)
 - [x] Complete add/edit personnel form: add all missing fields vs legacy (`P_CIVILITE`, photo upload, login/password management, NPAI flag, suspension flag, notes/comments, licence fields) (commit: feat: complete personnel edit form — tabbed layout, photo upload, all missing fields, enhanced show page)
-- [ ] Personnel competences CRUD: add/edit/delete qualifications and training records from the member profile page (commit: ...)
+- [x] Personnel competences CRUD: add/edit/delete qualifications and training records from the member profile page (commit: feat: personnel competences CRUD — add/edit/delete qualifications from member profile)
 - [ ] Port cotisations: membership fee list per member, add/edit/delete fee entries, payment tracking (commit: ...)
 - [ ] Port géolocalisation: display and update GPS coordinates for members on an interactive map (commit: ...)
 

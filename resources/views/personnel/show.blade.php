@@ -406,6 +406,176 @@
                 </div>
             </div>
 
+            {{-- ── Cotisations ────────────────────────────────────────── --}}
+            <p class="section-title d-flex justify-content-between align-items-center">
+                <span>Cotisations</span>
+                <button type="button" class="btn btn-sm btn-success noprint"
+                    data-bs-toggle="modal" data-bs-target="#cotisModal"
+                    onclick="openCotisModal(null)">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </button>
+            </p>
+
+            @php
+                $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
+                $totalNet = $personnel->cotisations
+                    ->sum(fn($c) => $c->REMBOURSEMENT ? -abs((float)$c->MONTANT) : (float)$c->MONTANT);
+            @endphp
+
+            @if ($cotisations->isNotEmpty())
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-1" style="font-size:var(--font-size-sm);">
+                        <thead>
+                            <tr>
+                                <th>Année</th>
+                                <th>Période</th>
+                                <th>Date</th>
+                                <th class="text-end">Montant</th>
+                                <th>Mode</th>
+                                <th>Commentaire</th>
+                                <th class="noprint" style="width:80px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($cotisations as $cotis)
+                                <tr>
+                                    <td>{{ $cotis->ANNEE }}</td>
+                                    <td>{{ $cotis->PERIODE_CODE ?: '—' }}</td>
+                                    <td>{{ $cotis->PC_DATE?->format('d/m/Y') ?? '—' }}</td>
+                                    <td class="text-end {{ $cotis->REMBOURSEMENT ? 'text-danger' : '' }}">
+                                        @if ($cotis->REMBOURSEMENT)
+                                            <small class="badge bg-warning text-dark me-1">Remb.</small>
+                                        @endif
+                                        {{ number_format((float)$cotis->MONTANT, 2, ',', ' ') }} €
+                                    </td>
+                                    <td>{{ $cotis->typePaiement?->TP_DESCRIPTION ?? '—' }}</td>
+                                    <td class="text-muted">{{ $cotis->COMMENTAIRE ?: '' }}</td>
+                                    <td class="text-end noprint">
+                                        <button type="button"
+                                            class="btn btn-xs btn-light py-0 px-1 me-1"
+                                            title="Modifier"
+                                            onclick="openCotisModal({
+                                                pc_id: {{ $cotis->PC_ID }},
+                                                annee: {{ $cotis->ANNEE }},
+                                                periode: {{ json_encode($cotis->PERIODE_CODE ?? '') }},
+                                                date: {{ json_encode($cotis->PC_DATE?->format('Y-m-d') ?? '') }},
+                                                montant: {{ (float)$cotis->MONTANT }},
+                                                tp_id: {{ $cotis->TP_ID ?: 'null' }},
+                                                remb: {{ $cotis->REMBOURSEMENT ? 'true' : 'false' }},
+                                                comment: {{ json_encode($cotis->COMMENTAIRE ?? '') }}
+                                            })">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <form method="POST"
+                                            action="{{ route('personnel.cotisation.destroy', [$personnel, $cotis->PC_ID]) }}"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Supprimer cette cotisation ?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger"
+                                                title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr class="fw-bold">
+                                <td colspan="3" class="text-end text-muted" style="font-size:var(--font-size-xs);">Total net</td>
+                                <td class="text-end {{ $totalNet < 0 ? 'text-danger' : '' }}">
+                                    {{ number_format($totalNet, 2, ',', ' ') }} €
+                                </td>
+                                <td colspan="3"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            @else
+                <p class="text-muted small">Aucune cotisation enregistrée.</p>
+            @endif
+
+            {{-- Add/Edit cotisation modal --}}
+            <div class="modal fade" id="cotisModal" tabindex="-1" aria-labelledby="cotisModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cotisModalLabel" style="font-size:var(--font-size-base);">
+                                Cotisation
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form id="cotisForm" method="POST">
+                            @csrf
+                            <span id="cotisMethodField"></span>
+                            <div class="modal-body">
+                                <div class="row g-2">
+                                    <div class="col-3">
+                                        <label class="form-label" style="font-size:var(--font-size-sm);">
+                                            Année <span class="text-danger">*</span>
+                                        </label>
+                                        <input name="ANNEE" id="cotisAnnee" type="number"
+                                            class="form-control form-control-sm"
+                                            min="1990" max="2100"
+                                            value="{{ date('Y') }}" required>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" style="font-size:var(--font-size-sm);">Période</label>
+                                        <input name="PERIODE_CODE" id="cotisPeriode" type="text"
+                                            class="form-control form-control-sm"
+                                            placeholder="ex. T1">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" style="font-size:var(--font-size-sm);">
+                                            Date <span class="text-danger">*</span>
+                                        </label>
+                                        <input name="PC_DATE" id="cotisDate" type="date"
+                                            class="form-control form-control-sm" required>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" style="font-size:var(--font-size-sm);">
+                                            Montant (€) <span class="text-danger">*</span>
+                                        </label>
+                                        <input name="MONTANT" id="cotisMontant" type="number"
+                                            class="form-control form-control-sm"
+                                            min="0" step="0.01" placeholder="0.00" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" style="font-size:var(--font-size-sm);">Mode de paiement</label>
+                                        <select name="TP_ID" id="cotisMode" class="form-select form-select-sm">
+                                            <option value="">—</option>
+                                            @foreach ($typesPaiement as $tp)
+                                                <option value="{{ $tp->TP_ID }}">{{ $tp->TP_DESCRIPTION }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-6 d-flex align-items-end">
+                                        <div class="form-check mb-1">
+                                            <input type="checkbox" name="REMBOURSEMENT" id="cotisRemb"
+                                                value="1" class="form-check-input">
+                                            <label class="form-check-label" for="cotisRemb"
+                                                style="font-size:var(--font-size-sm);">
+                                                Remboursement
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" style="font-size:var(--font-size-sm);">Commentaire</label>
+                                        <input name="COMMENTAIRE" id="cotisComment" type="text"
+                                            class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer py-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <p class="section-title">Accès</p>
             <dl class="info-grid">
                 <div class="info-item">
@@ -437,6 +607,36 @@
 
 @push('scripts')
 <script>
+function openCotisModal(cotis) {
+    var form     = document.getElementById('cotisForm');
+    var methodEl = document.getElementById('cotisMethodField');
+    var baseRoute = '{{ url('personnel/' . $personnel->P_ID . '/cotisations') }}';
+
+    if (cotis) {
+        form.action          = baseRoute + '/' + cotis.pc_id;
+        methodEl.innerHTML   = '<input type="hidden" name="_method" value="PATCH">';
+        document.getElementById('cotisAnnee').value   = cotis.annee;
+        document.getElementById('cotisPeriode').value = cotis.periode;
+        document.getElementById('cotisDate').value    = cotis.date;
+        document.getElementById('cotisMontant').value = cotis.montant;
+        document.getElementById('cotisMode').value    = cotis.tp_id || '';
+        document.getElementById('cotisRemb').checked  = cotis.remb;
+        document.getElementById('cotisComment').value = cotis.comment;
+        document.getElementById('cotisModalLabel').textContent = 'Modifier la cotisation';
+    } else {
+        form.action          = baseRoute;
+        methodEl.innerHTML   = '';
+        document.getElementById('cotisAnnee').value   = new Date().getFullYear();
+        document.getElementById('cotisPeriode').value = '';
+        document.getElementById('cotisDate').value    = '';
+        document.getElementById('cotisMontant').value = '';
+        document.getElementById('cotisMode').value    = '';
+        document.getElementById('cotisRemb').checked  = false;
+        document.getElementById('cotisComment').value = '';
+        document.getElementById('cotisModalLabel').textContent = 'Ajouter une cotisation';
+    }
+}
+
 function openQualModal(qual) {
     var form       = document.getElementById('qualForm');
     var methodEl   = document.getElementById('qualMethodField');
