@@ -104,13 +104,13 @@ Each menu section follows this repeatable process:
 ### Garde — On-call roster (GAR)
 > Files: `astreintes.php`, `astreinte_*.php`, `auto_garde.php`, `automaticPiquet.php`, `tableau_garde*.php`, `feuille_garde.php`, `repos_*.php`, …
 
-- [ ] Inventory all GAR legacy files
-- [ ] Migrate roster display and assignment
+- [x] Inventory all GAR legacy files
+- [x] Migrate roster display and assignment (commit: feat: migrate garde roster — GardeController, weekly view, bridge retirements, tests)
 - [ ] Migrate automatic piquet/guard generation
 - [ ] Migrate guard sheet and replacement management (`remplacements.php`, `remplacement_edit.php`)
 - [ ] Migrate rest periods (`repos_*.php`)
 - [ ] Migrate guard exports (XLS, PDF)
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate garde roster — GardeController, weekly view, bridge retirements, tests)
 
 ### Planning (PLA)
 > Files: `planning.php`, `planning_xls.php`, `myagenda.php`, `horaires.php`, `horaires_modal.php`, …

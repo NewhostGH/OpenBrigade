@@ -53,8 +53,8 @@ return [
             'label' => 'Garde',
             'icon'  => 'clipboard-list',
             'items' => [
-                ['key' => 'garde.tableau', 'label' => 'Tableau de garde', 'url' => '/legacy/tableau_garde.php',                        'icon' => 'shield-alt', 'permission' => 61],
-                ['key' => 'garde.jour',    'label' => 'Garde du jour',    'url' => '/legacy/feuille_garde.php?evenement=0&from=gardes', 'icon' => 'calendar-day', 'permission' => 61],
+                ['key' => 'garde.tableau', 'label' => 'Tableau de garde', 'url' => '/garde',                                           'icon' => 'shield-alt',   'permission' => 61],
+                ['key' => 'garde.jour',    'label' => 'Garde du jour',    'url' => '/garde',                                           'icon' => 'calendar-day', 'permission' => 61],
             ],
         ],
 
