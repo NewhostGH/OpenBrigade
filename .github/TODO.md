@@ -20,6 +20,12 @@ Each menu section follows this repeatable process:
 
 ---
 
+## UI / UX Improvements
+
+- [x] Sidebar menu search bar — live search across all groups, sub-menus and sub-sub-menus; auto-expands matching groups; restores original collapse state on clear (commit: feat: add sidebar live search bar)
+
+---
+
 ## Platform and Foundations
 - [x] Stabilize Laravel 8.4 runtime and environment configuration (commit: chore: stabilize Laravel 8.4 runtime and environment configuration)
 - [x] Restore and validate the artisan CLI workflow (commit: chore: restore artisan CLI and validate end-to-end Laravel workflow)

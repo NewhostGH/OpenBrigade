@@ -8,6 +8,26 @@
                     <span>{{ config('app.name') }}</span>
                 </a>
 
+                {{-- ── Sidebar search ─────────────────────────────────── --}}
+                <div class="sidebar-search-wrap">
+                    <div class="sidebar-search-inner">
+                        <i class="fas fa-search sidebar-search-icon" aria-hidden="true"></i>
+                        <input type="search"
+                               id="sidebarSearch"
+                               class="sidebar-search-input"
+                               placeholder="Rechercher…"
+                               autocomplete="off"
+                               spellcheck="false"
+                               aria-label="Rechercher dans le menu">
+                        <button type="button"
+                                id="sidebarSearchClear"
+                                class="sidebar-search-clear d-none"
+                                aria-label="Effacer la recherche">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
                 @foreach ($navGroups ?? [] as $group)
                     <li class="nav-item item-lateral mouseMenu">
                         <a class="nav-link dropdown-lateral" href="#menu-{{ $group['code'] }}"

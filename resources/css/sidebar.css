@@ -195,6 +195,99 @@
     color:   var(--accent);
 }
 
+/* ── Sidebar search ─────────────────────────────────────────────────────── */
+.sidebar-search-wrap {
+    padding:       6px 10px 4px;
+    border-bottom: 1px solid var(--sidebar-border);
+    background:    var(--sidebar-bg);
+}
+
+.sidebar-search-inner {
+    display:     flex;
+    align-items: center;
+    background:  var(--sidebar-bg-hover);
+    border:      1px solid var(--sidebar-border);
+    border-radius: var(--radius-pill);
+    padding:     3px 8px;
+    gap:         6px;
+    transition:  border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sidebar-search-inner:focus-within {
+    border-color: var(--accent);
+    box-shadow:   0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.sidebar-search-icon {
+    color:          var(--sidebar-border);
+    font-size:      10px;
+    flex-shrink:    0;
+    pointer-events: none;
+    transition:     color var(--transition-fast);
+}
+
+.sidebar-search-inner:focus-within .sidebar-search-icon {
+    color: var(--accent);
+}
+
+.sidebar-search-input {
+    flex:       1;
+    border:     none;
+    background: transparent;
+    font-size:  var(--font-size-xs);
+    color:      var(--sidebar-item-text);
+    padding:    0;
+    min-width:  0;
+    outline:    none;
+}
+
+.sidebar-search-input::placeholder {
+    color: var(--sidebar-border);
+}
+
+/* Hide browser-native "×" clear button — we provide our own */
+.sidebar-search-input::-webkit-search-cancel-button { display: none; }
+
+.sidebar-search-clear {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    background:      none;
+    border:          none;
+    padding:         0 2px;
+    color:           var(--sidebar-border);
+    font-size:       9px;
+    cursor:          pointer;
+    flex-shrink:     0;
+    transition:      color var(--transition-fast);
+    line-height:     1;
+}
+
+.sidebar-search-clear:hover { color: var(--sidebar-item-active); }
+
+/* Highlight matched text */
+mark.sidebar-match {
+    background:    color-mix(in srgb, var(--accent) 30%, transparent);
+    color:         inherit;
+    border-radius: 2px;
+    padding:       0 1px;
+}
+
+/* Hide search when sidebar is collapsed */
+.col-lateral.collapsed .sidebar-search-wrap {
+    display: none;
+}
+
+/* Empty-state message when no groups match */
+.sidebar-search-empty {
+    display:    none;
+    font-size:  var(--font-size-xs);
+    color:      var(--sidebar-border);
+    font-style: italic;
+    padding:    8px 12px;
+    text-align: center;
+}
+
 /* ── Collapse / de-collapse buttons ────────────────────────────────────── */
 .collapse-menu {
     position:     fixed;
