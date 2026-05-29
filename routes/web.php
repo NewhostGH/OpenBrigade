@@ -45,9 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('personnel', PersonnelController::class)
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');
-    Route::get('/legacy', function () {
-        return redirect('/legacy/index_d.php');
-    })->name('dashboard.legacy');
+    Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {
         return redirect('/legacy/about.php');
     })->name('about');

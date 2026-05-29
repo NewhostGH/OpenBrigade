@@ -55,9 +55,9 @@ Each menu section follows this repeatable process:
 - [X] Migrate each widget as a Blade component (agenda, alerts, quick-stats, on-call summary) (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
 - [X] Conserve DB as link source -> replaced with configuration file (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
 - [X] Wire dashboard route as the post-login landing page (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
-- [ ] Add feature tests and check parity against `index_d.php`
-- [ ] Modernize the interface using latest bootstrap css
-- [ ] Retire `index_d.php` from the bridge
+- [x] Add feature tests and check parity against `index_d.php` (commit: test: add dashboard feature tests and retire index_d.php from the bridge)
+- [x] Modernize the interface using latest bootstrap css (commit: style: modernize dashboard UI — Bootstrap 5 compliance, remove dead imports, widget hover transitions)
+- [x] Retire `index_d.php` from the bridge (commit: test: add dashboard feature tests and retire index_d.php from the bridge)
 
 ---
 
