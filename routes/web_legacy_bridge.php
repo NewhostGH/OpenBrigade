@@ -81,7 +81,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'diplome_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:54')->name('legacy_bridge.diplome_edit');
     Route::match(['GET', 'POST'], 'dispo.php', [LegacyBridgeController::class, 'show'])->middleware('permission:38')->name('legacy_bridge.dispo');
     Route::match(['GET', 'POST'], 'document_modal.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.document_modal');
-    Route::match(['GET', 'POST'], 'documents.php', [LegacyBridgeController::class, 'show'])->middleware('permission:44')->name('legacy_bridge.documents');
+    Route::match(['GET', 'POST'], 'documents.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.documents');
     Route::match(['GET', 'POST'], 'download_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.download_addon');
     Route::match(['GET', 'POST'], 'download_module.php', [LegacyBridgeController::class, 'show'])->middleware('permission:78')->name('legacy_bridge.download_module');
     Route::match(['GET', 'POST'], 'download_package.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.download_package');
@@ -202,7 +202,10 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'materiel_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.materiel_xls');
     Route::match(['GET', 'POST'], 'membres.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.membres');
     Route::match(['GET', 'POST'], 'menu_status_set.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.menu_status_set');
-    Route::match(['GET', 'POST'], 'message.php', [LegacyBridgeController::class, 'show'])->middleware('permission:44')->name('legacy_bridge.message');
+    Route::match(['GET', 'POST'], 'message.php', function (\Illuminate\Http\Request $r) {
+        $cat = $r->query('catmessage', 'consigne');
+        return redirect()->route('message.index', ['category' => $cat]);
+    })->name('legacy_bridge.message');
     Route::match(['GET', 'POST'], 'myagenda.php', fn () => redirect()->route('planning.index'))->name('legacy_bridge.myagenda');
     Route::match(['GET', 'POST'], 'noscript.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.noscript');
     Route::match(['GET', 'POST'], 'note_frais_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:77')->name('legacy_bridge.note_frais_edit');

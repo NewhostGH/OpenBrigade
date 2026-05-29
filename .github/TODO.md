@@ -157,23 +157,23 @@ Each menu section follows this repeatable process:
 ### Communication (COMM)
 > Files: `mail_*.php`, `mailer.php`, `mailto.php`, `alerte_*.php`, `sms` (fonctions_sms), `chat.php`, `chat_message.php`, `histo_sms.php`, `push_monitor.php`, `rss.php`, …
 
-- [ ] Inventory all COMM legacy files
-- [ ] Migrate internal messaging and chat
+- [x] Inventory all COMM legacy files
+- [x] Migrate internal messaging and chat (commit: feat: migrate document library and message board — controllers, views, bridge retirements, tests)
 - [ ] Migrate email composition and send (`mail_create.php`, `mail_send.php`)
 - [ ] Migrate alert creation and sending
 - [ ] Migrate SMS history view
 - [ ] Migrate push notification monitor
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate document library and message board — controllers, views, bridge retirements, tests)
 
 ### Document (DOC)
 > Files: `documents.php`, `upd_document.php`, `upd_folder.php`, `save_documents.php`, `save_folder.php`, `delete_file.php`, `delete_event_file.php`, `showfile.php`, `download_*.php`, `pdf_document.php`, …
 
-- [ ] Inventory all DOC legacy files
-- [ ] Migrate document and folder tree view
+- [x] Inventory all DOC legacy files
+- [x] Migrate document and folder tree view (commit: feat: migrate document library and message board — controllers, views, bridge retirements, tests)
 - [ ] Migrate document upload and edit
 - [ ] Migrate file serving and download
 - [ ] Migrate document exports (PDF)
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate document library and message board — controllers, views, bridge retirements, tests)
 
 ### Statistique (STAT)
 > Files: `bilans.php`, `bilan_participation.php`, `export-*.php`, `export.php`, `report_cotisations.php`, `habilitations_xls.php`, …

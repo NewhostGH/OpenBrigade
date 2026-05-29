@@ -6,6 +6,8 @@ use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\GardeController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\ConsommableController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MaterielController;
 use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
@@ -53,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/vehicules/{vehicule}', [VehiculeController::class, 'show'])->name('vehicule.show')->middleware('permission:42');
     Route::get('/materiels', [MaterielController::class, 'index'])->name('materiel.index')->middleware('permission:42');
     Route::get('/consommables', [ConsommableController::class, 'index'])->name('consommable.index')->middleware('permission:42');
+    Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
+    Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');

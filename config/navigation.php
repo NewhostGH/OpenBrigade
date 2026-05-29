@@ -42,7 +42,7 @@ return [
             'items' => [
                 ['key' => 'activities.list',     'label' => 'Liste',            'url' => '/evenements',                                        'icon' => 'list-ul',    'permission' => 41],
                 ['key' => 'activities.mc',       'label' => 'Main courante',    'url' => '/legacy/evenement_choice.php?ec_mode=MC&page=1',      'icon' => 'ambulance',  'permission' => 52],
-                ['key' => 'activities.news',     'label' => 'Actualités',       'url' => '/legacy/message.php?catmessage=amicale',              'icon' => 'newspaper',  'permission' => 44],
+                ['key' => 'activities.news',     'label' => 'Actualités',       'url' => '/messages?category=amicale',                         'icon' => 'newspaper',  'permission' => 44],
                 ['key' => 'activities.geomap',   'label' => 'Géolocalisation',  'url' => '/legacy/gmaps_evenement.php',                        'icon' => 'map',        'permission' => 76],
             ],
         ],
@@ -115,7 +115,7 @@ return [
             'icon'       => 'folder-open',
             'permission' => 44,
             'items'      => [
-                ['key' => 'docs.library', 'label' => 'Bibliothèque', 'url' => '/legacy/documents.php?td=ALL&page=1&yeardoc=all&dossier=0', 'icon' => 'book', 'permission' => 44],
+                ['key' => 'docs.library', 'label' => 'Bibliothèque', 'url' => '/documents', 'icon' => 'book', 'permission' => 44],
                 ['key' => 'docs.photos',  'label' => 'Album photos',  'url' => '/legacy/spgm/index.php',                                   'icon' => 'images', 'permission' => 44],
             ],
         ],
