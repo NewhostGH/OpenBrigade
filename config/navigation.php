@@ -26,7 +26,7 @@ return [
             'label' => 'Personnel',
             'icon'  => 'users',
             'items' => [
-                ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/legacy/personnel.php?position=actif&category=INT',               'icon' => 'list'],
+                ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',                                                       'icon' => 'list'],
                 ['key' => 'personnel.search',      'label' => 'Recherche',       'url' => '/legacy/search_personnel.php',                                    'icon' => 'magnifying-glass', 'permission' => 56],
                 ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/legacy/qualifications.php?page=1&pompier=0&action_comp=default', 'icon' => 'certificate',      'permission' => 56],
                 ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/legacy/cotisations.php',                                         'icon' => 'receipt',          'permission' => 53],
@@ -40,7 +40,7 @@ return [
             'label' => 'Activités',
             'icon'  => 'calendar-alt',
             'items' => [
-                ['key' => 'activities.list',     'label' => 'Liste',            'url' => '/legacy/evenement_choice.php?ec_mode=default&page=1', 'icon' => 'list-ul',    'permission' => 41],
+                ['key' => 'activities.list',     'label' => 'Liste',            'url' => '/evenements',                                        'icon' => 'list-ul',    'permission' => 41],
                 ['key' => 'activities.mc',       'label' => 'Main courante',    'url' => '/legacy/evenement_choice.php?ec_mode=MC&page=1',      'icon' => 'ambulance',  'permission' => 52],
                 ['key' => 'activities.news',     'label' => 'Actualités',       'url' => '/legacy/message.php?catmessage=amicale',              'icon' => 'newspaper',  'permission' => 44],
                 ['key' => 'activities.geomap',   'label' => 'Géolocalisation',  'url' => '/legacy/gmaps_evenement.php',                        'icon' => 'map',        'permission' => 76],
