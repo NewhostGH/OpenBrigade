@@ -320,36 +320,78 @@ class PersonnelController extends Controller
     public function update(Request $request, Personnel $personnel)
     {
         $validated = $request->validate([
-            'P_CODE' => [
-                'required',
-                'string',
-                'max:20',
+            // Identity
+            'P_CIVILITE'        => 'nullable|integer',
+            'P_CODE'            => [
+                'required', 'string', 'max:20',
                 Rule::unique('pompier', 'P_CODE')->ignore($personnel->P_ID, 'P_ID'),
             ],
-            'P_PRENOM' => 'required|string|max:25',
-            'P_NOM' => 'required|string|max:30',
-            'P_EMAIL' => 'nullable|email|max:60',
-            'P_PHONE' => 'nullable|string|max:20',
-            'P_PHONE2' => 'nullable|string|max:20',
-            'P_STATUT' => 'required|string|max:5',
-            'P_GRADE' => 'required|string|max:6',
-            'P_PROFESSION' => 'required|string|max:6',
-            'P_SECTION' => 'nullable|integer|exists:section,S_ID',
-            'P_BIRTHDATE' => 'nullable|date',
+            'P_PRENOM'          => 'required|string|max:25',
+            'P_PRENOM2'         => 'nullable|string|max:25',
+            'P_NOM'             => 'required|string|max:30',
+            'P_NOM_NAISSANCE'   => 'nullable|string|max:30',
+            'P_SEXE'            => 'nullable|in:M,F',
+            'P_GRADE'           => 'nullable|string|max:6',
+            'P_PROFESSION'      => 'nullable|string|max:6',
+            'P_STATUT'          => 'required|string|max:5',
+            'P_SECTION'         => 'nullable|integer|exists:section,S_ID',
             'P_DATE_ENGAGEMENT' => 'nullable|date',
-            'P_FIN' => 'nullable|date',
-            'P_ADDRESS' => 'nullable|string|max:150',
-            'P_ZIP_CODE' => 'nullable|string|max:6',
-            'P_CITY' => 'nullable|string|max:30',
+            'P_FIN'             => 'nullable|date',
+            // Contact
+            'P_EMAIL'           => 'nullable|email|max:60',
+            'P_PHONE'           => 'nullable|string|max:20',
+            'P_PHONE2'          => 'nullable|string|max:20',
+            'P_ADDRESS'         => 'nullable|string|max:150',
+            'P_ZIP_CODE'        => 'nullable|string|max:6',
+            'P_CITY'            => 'nullable|string|max:30',
+            'P_PAYS'            => 'nullable|string|max:50',
+            // Emergency contact
+            'P_RELATION_PRENOM' => 'nullable|string|max:50',
+            'P_RELATION_NOM'    => 'nullable|string|max:50',
+            'P_RELATION_PHONE'  => 'nullable|string|max:20',
+            'P_RELATION_MAIL'   => 'nullable|email|max:100',
+            // Personal info
+            'P_BIRTHDATE'       => 'nullable|date',
+            'P_BIRTHPLACE'      => 'nullable|string|max:50',
+            'P_BIRTH_DEP'       => 'nullable|string|max:3',
+            // Licence
+            'P_LICENCE'         => 'nullable|string|max:30',
+            'P_LICENCE_DATE'    => 'nullable|date',
+            'P_LICENCE_EXPIRY'  => 'nullable|date',
+            // Notes
+            'OBSERVATION'       => 'nullable|string',
+            // Photo
+            'photo_upload'      => 'nullable|image|max:4096',
         ]);
 
-        $validated['P_HIDE'] = $request->boolean('P_HIDE');
-        $validated['P_NOSPAM'] = $request->boolean('P_NOSPAM');
+        // Boolean flags (unchecked checkboxes are not submitted)
+        $validated['P_HIDE']    = $request->boolean('P_HIDE');
+        $validated['P_NOSPAM']  = $request->boolean('P_NOSPAM');
+        $validated['NPAI']      = $request->boolean('NPAI');
+        $validated['SUSPENDU']  = $request->boolean('SUSPENDU');
+
+        // Handle photo upload
+        if ($request->hasFile('photo_upload') && $request->file('photo_upload')->isValid()) {
+            $file       = $request->file('photo_upload');
+            $extension  = $file->getClientOriginalExtension() ?: 'jpg';
+            $filename   = $personnel->P_ID . '_' . time() . '.' . $extension;
+            $destDir    = public_path('images/user-specific/trombi');
+
+            if (! is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+
+            $file->move($destDir, $filename);
+            $validated['P_PHOTO'] = $filename;
+        }
+
+        // Remove the virtual field before saving
+        unset($validated['photo_upload']);
 
         $personnel->update($validated);
 
         return redirect()
             ->route('personnel.show', $personnel)
-            ->with('success', 'Fiche personnel mise a jour.');
+            ->with('success', 'Fiche personnel mise à jour.');
     }
 }
