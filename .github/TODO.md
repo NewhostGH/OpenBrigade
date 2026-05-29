@@ -92,14 +92,14 @@ Each menu section follows this repeatable process:
 ### Activité — Events & Interventions (ACT)
 > Files: `evenements.php`, `evenement_*.php`, `calendar.php`, `horaires.php`, `export*.php`, …
 
-- [ ] Inventory all ACT legacy files
-- [ ] Migrate event list and detail view
+- [x] Inventory all ACT legacy files
+- [x] Migrate event list and detail view (commit: feat: migrate event list/detail — EvenementController, views, bridge retirements, tests)
 - [ ] Migrate event creation, edit, save, and delete
 - [ ] Migrate participant management (inscription, equipes, renforts)
 - [ ] Migrate event material and vehicle assignment
 - [ ] Migrate calendar view
 - [ ] Migrate event exports (XLS, PDF rapport, iCal)
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate event list/detail — EvenementController, views, bridge retirements, tests)
 
 ### Garde — On-call roster (GAR)
 > Files: `astreintes.php`, `astreinte_*.php`, `auto_garde.php`, `automaticPiquet.php`, `tableau_garde*.php`, `feuille_garde.php`, `repos_*.php`, …

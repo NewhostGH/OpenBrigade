@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ShortcutController;
@@ -39,6 +40,8 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/evenements', [EvenementController::class, 'index'])->name('evenement.index')->middleware('permission:0');
+    Route::get('/evenements/{code}', [EvenementController::class, 'show'])->name('evenement.show')->middleware('permission:0');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');
