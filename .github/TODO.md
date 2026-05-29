@@ -83,7 +83,7 @@ Each menu section follows this repeatable process:
 
 - [x] Inventory all PERSO legacy files (pages, handlers, exports, PDFs)
 - [x] Migrate member list and profile view/edit (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
-- [ ] Migrate trombinoscope and org chart
+- [x] Migrate trombinoscope and org chart (commit: feat: migrate trombinoscope and company list — views, bridge retirements, tests)
 - [ ] Migrate personnel exports (XLS, CSV, vCard, PDF livret/carte)
 - [ ] Migrate qualifications and training records (`qualifications.php`, `personnel_formation.php`)
 - [ ] Migrate on-call availability and indisponibility management (`indispo*.php`, `dispo.php`)
@@ -125,8 +125,8 @@ Each menu section follows this repeatable process:
 ### Client (CLI)
 > Files: `company.php`, `upd_company.php`, `ins_company.php`, `del_company.php`, `company_xls.php`, `cotisations.php`, `cotisation_edit.php`, `save_cotisations.php`, `prelevements.php`, `virements*.php`, `bilans.php`, `pdf_bilans.php`, `pdf_attestation_fiscale.php`, …
 
-- [ ] Inventory all CLI legacy files
-- [ ] Migrate company/client list and detail
+- [x] Inventory all CLI legacy files
+- [x] Migrate company/client list and detail (commit: feat: migrate trombinoscope and company list — views, bridge retirements, tests)
 - [ ] Migrate membership fees (cotisations) management
 - [ ] Migrate direct-debit and wire transfer management
 - [ ] Migrate billing and financial exports

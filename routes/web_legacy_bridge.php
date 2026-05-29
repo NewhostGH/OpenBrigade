@@ -31,7 +31,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'chat.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.chat');
     Route::match(['GET', 'POST'], 'chat_message.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.chat_message');
     Route::match(['GET', 'POST'], 'choice_section_order.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.choice_section_order');
-    Route::match(['GET', 'POST'], 'company.php', [LegacyBridgeController::class, 'show'])->middleware('permission:29')->name('legacy_bridge.company');
+    Route::match(['GET', 'POST'], 'company.php', fn () => redirect()->route('company.index'))->name('legacy_bridge.company');
     Route::match(['GET', 'POST'], 'company_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:29')->name('legacy_bridge.company_xls');
     Route::match(['GET', 'POST'], 'config_doc.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.config_doc');
     Route::match(['GET', 'POST'], 'config_prelevements.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.config_prelevements');
@@ -314,7 +314,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'tableau_garde_create.php', [LegacyBridgeController::class, 'show'])->middleware('permission:5')->name('legacy_bridge.tableau_garde_create');
     Route::match(['GET', 'POST'], 'tableau_garde_status.php', [LegacyBridgeController::class, 'show'])->middleware('permission:5')->name('legacy_bridge.tableau_garde_status');
     Route::match(['GET', 'POST'], 'tableau_garde_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:61')->name('legacy_bridge.tableau_garde_xls');
-    Route::match(['GET', 'POST'], 'trombinoscope.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.trombinoscope');
+    Route::match(['GET', 'POST'], 'trombinoscope.php', fn () => redirect()->route('personnel.trombinoscope'))->name('legacy_bridge.trombinoscope');
     Route::match(['GET', 'POST'], 'type_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.type_consommable');
     Route::match(['GET', 'POST'], 'type_evenement.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.type_evenement');
     Route::match(['GET', 'POST'], 'type_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.type_garde');

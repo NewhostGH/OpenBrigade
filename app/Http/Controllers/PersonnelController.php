@@ -117,6 +117,43 @@ class PersonnelController extends Controller
         ]);
     }
 
+    /**
+     * Photo directory (trombinoscope) — grid view of personnel with photos.
+     */
+    public function trombinoscope(Request $request): View
+    {
+        $search    = trim((string) $request->string('q'));
+        $sectionId = (int) $request->integer('section', 0);
+        $user      = auth()->user();
+        $mySection = (int) $user->P_SECTION;
+
+        $query = Personnel::query()
+            ->with(['section'])
+            ->where('P_OLD_MEMBER', 0)
+            ->where('GP_ID', '<>', -1)
+            ->whereNull('P_FIN')
+            ->where('P_STATUT', '<>', 'EXT')
+            ->select([
+                'P_ID', 'P_PHOTO', 'P_CODE', 'P_PRENOM', 'P_NOM',
+                'P_GRADE', 'P_SECTION', 'P_PHONE', 'P_EMAIL', 'P_CIVILITE',
+            ]);
+
+        $targetSection = $sectionId > 0 ? $sectionId : $mySection;
+        $query->where('P_SECTION', $targetSection);
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search): void {
+                $q->where('P_NOM', 'like', "%{$search}%")
+                  ->orWhere('P_PRENOM', 'like', "%{$search}%");
+            });
+        }
+
+        $items    = $query->orderBy('P_NOM')->orderBy('P_PRENOM')->paginate(48)->withQueryString();
+        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+
+        return view('personnel.trombinoscope', compact('items', 'search', 'sectionId', 'sections'));
+    }
+
     public function photo(Personnel $personnel)
     {
         $filename = trim((string) $personnel->P_PHOTO);

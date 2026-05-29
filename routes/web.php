@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\GardeController;
 use App\Http\Controllers\PlanningController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConsommableController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\OrganisationController;
@@ -67,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('personnel', PersonnelController::class)
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');
+    Route::get('/trombinoscope', [PersonnelController::class, 'trombinoscope'])->name('personnel.trombinoscope')->middleware('permission:0');
+    Route::get('/clients', [CompanyController::class, 'index'])->name('company.index')->middleware('permission:29');
     Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {
         return redirect('/legacy/about.php');

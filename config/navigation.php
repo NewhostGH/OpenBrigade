@@ -80,7 +80,7 @@ return [
             'icon'       => 'user-circle',
             'permission' => 29,
             'items'      => [
-                ['key' => 'clients.list', 'label' => 'Liste', 'url' => '/legacy/company.php?page=1', 'icon' => 'list', 'permission' => 29],
+                ['key' => 'clients.list', 'label' => 'Liste', 'url' => '/clients', 'icon' => 'list', 'permission' => 29],
             ],
         ],
 
