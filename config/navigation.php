@@ -140,7 +140,7 @@ return [
             'icon'       => 'chart-bar',
             'permission' => 27,
             'items'      => [
-                ['key' => 'stats.graphiques', 'label' => 'Graphiques',            'url' => '/legacy/repo_events.php',          'icon' => 'chart-line',  'permission' => 27],
+                ['key' => 'stats.graphiques', 'label' => 'Graphiques',            'url' => '/statistiques',                    'icon' => 'chart-line',  'permission' => 27],
                 ['key' => 'stats.reporting',  'label' => 'Reporting',             'url' => '/legacy/export.php',               'icon' => 'file-export', 'permission' => 27],
                 ['key' => 'stats.cotis',      'label' => 'Cotisations', 'url' => '/legacy/report_cotisations.php',   'icon' => 'coins',       'permission' => 53],
                 ['key' => 'stats.bilans',     'label' => 'Bilans annuels',        'url' => '/legacy/bilans.php',               'icon' => 'chart-pie',   'permission' => 27],

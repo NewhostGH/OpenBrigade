@@ -8,6 +8,7 @@ use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\ConsommableController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\OrganisationController;
+use App\Http\Controllers\StatistiqueController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MaterielController;
 use App\Http\Controllers\VehiculeController;
@@ -59,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
     Route::get('/organisation', [OrganisationController::class, 'index'])->name('organisation.index')->middleware('permission:52');
+    Route::get('/statistiques', [StatistiqueController::class, 'index'])->name('statistique.index')->middleware('permission:27');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');

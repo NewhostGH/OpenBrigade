@@ -178,11 +178,11 @@ Each menu section follows this repeatable process:
 ### Statistique (STAT)
 > Files: `bilans.php`, `bilan_participation.php`, `export-*.php`, `export.php`, `report_cotisations.php`, `habilitations_xls.php`, …
 
-- [ ] Inventory all STAT legacy files
-- [ ] Migrate participation and event statistics
+- [x] Inventory all STAT legacy files
+- [x] Migrate participation and event statistics (commit: feat: migrate statistiques — dashboard with charts, bridge retirement, tests)
 - [ ] Migrate financial reports
 - [ ] Migrate custom exports (XLS, TCD, HTML, TXT, SQL)
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate statistiques — dashboard with charts, bridge retirement, tests)
 
 ### Organisation (ORGA)
 > Files: `section.php`, `upd_section.php`, `ins_section.php`, `del_section.php`, `habilitations.php`, `upd_habilitations.php`, `poste.php`, `upd_poste.php`, `ins_poste.php`, `del_poste.php`, `grades*.php`, `equipe.php`, `upd_equipe.php`, `del_equipe.php`, `organigramme.php`, …
