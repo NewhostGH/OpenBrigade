@@ -198,10 +198,10 @@ Each menu section follows this repeatable process:
 ### Configuration — Admin (ADMIN)
 > Files: `configuration.php`, `save_configuration.php`, `parametrage.php`, `configuration_*.php`, `audit.php`, `backup.php`, `restore.php`, `upgrade.php`, `update_*.php`, `addons.php`, `addons_save.php`, `install_addon.php`, `download_*.php`, …
 
-- [ ] Inventory all ADMIN legacy files
+- [x] Inventory all ADMIN legacy files
 - [ ] Migrate application settings (configuration, parametrage)
 - [ ] Migrate theme and icon configuration
-- [ ] Migrate audit log view
+- [x] Migrate audit log view (commit: feat: migrate admin monitoring, disponibilités, and nav updates)
 - [ ] Migrate backup and restore
 - [ ] Migrate upgrade / SQL migration runner
 - [ ] Migrate add-on / module management

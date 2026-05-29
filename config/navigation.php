@@ -143,7 +143,7 @@ return [
                 ['key' => 'stats.graphiques', 'label' => 'Graphiques',            'url' => '/statistiques',                    'icon' => 'chart-line',  'permission' => 27],
                 ['key' => 'stats.reporting',  'label' => 'Reporting',             'url' => '/legacy/export.php',               'icon' => 'file-export', 'permission' => 27],
                 ['key' => 'stats.cotis',      'label' => 'Cotisations', 'url' => '/legacy/report_cotisations.php',   'icon' => 'coins',       'permission' => 53],
-                ['key' => 'stats.bilans',     'label' => 'Bilans annuels',        'url' => '/legacy/bilans.php',               'icon' => 'chart-pie',   'permission' => 27],
+                ['key' => 'stats.bilans',     'label' => 'Bilans annuels',        'url' => '/statistiques',                    'icon' => 'chart-pie',   'permission' => 27],
             ],
         ],
 
@@ -158,7 +158,7 @@ return [
                 ['key' => 'admin.parametrage',   'label' => 'Paramétrage',   'url' => '/legacy/parametrage.php',      'icon' => 'wrench',     'permission' => 5],
                 null,
                 ['key' => 'admin.habilitations', 'label' => 'Habilitations', 'url' => '/legacy/habilitations.php',    'icon' => 'id-badge',   'permission' => 9],
-                ['key' => 'admin.monitoring',    'label' => 'Monitoring',    'url' => '/legacy/history.php?lccode=U', 'icon' => 'history',    'permission' => 49],
+                ['key' => 'admin.monitoring',    'label' => 'Monitoring',    'url' => '/admin/monitoring',           'icon' => 'history',    'permission' => 49],
                 ['key' => 'admin.sauvegarde',    'label' => 'Sauvegarde',    'url' => '/legacy/restore.php',          'icon' => 'database',   'permission' => 14],
             ],
         ],

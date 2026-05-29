@@ -156,7 +156,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'habilitations_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:40')->name('legacy_bridge.habilitations_xls');
     Route::match(['GET', 'POST'], 'hierarchie_competence.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.hierarchie_competence');
     Route::match(['GET', 'POST'], 'histo_sms.php', [LegacyBridgeController::class, 'show'])->middleware('permission:23')->name('legacy_bridge.histo_sms');
-    Route::match(['GET', 'POST'], 'history.php', [LegacyBridgeController::class, 'show'])->middleware('permission:49')->name('legacy_bridge.history');
+    Route::match(['GET', 'POST'], 'history.php', fn () => redirect()->route('admin.monitoring'))->name('legacy_bridge.history');
     Route::match(['GET', 'POST'], 'homonymes_manage.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.homonymes_manage');
     Route::match(['GET', 'POST'], 'homonymes_modal.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.homonymes_modal');
     Route::match(['GET', 'POST'], 'horaires.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.horaires');
