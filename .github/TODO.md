@@ -99,7 +99,7 @@ Each menu section follows this repeatable process:
 - [x] Complete add/edit personnel form: add all missing fields vs legacy (`P_CIVILITE`, photo upload, login/password management, NPAI flag, suspension flag, notes/comments, licence fields) (commit: feat: complete personnel edit form — tabbed layout, photo upload, all missing fields, enhanced show page)
 - [x] Personnel competences CRUD: add/edit/delete qualifications and training records from the member profile page (commit: feat: personnel competences CRUD — add/edit/delete qualifications from member profile)
 - [x] Port cotisations: membership fee list per member, add/edit/delete fee entries, payment tracking (commit: feat: port cotisations — membership fee CRUD on member profile)
-- [ ] Port géolocalisation: display and update GPS coordinates for members on an interactive map (commit: ...)
+- [x] Port géolocalisation: display and update GPS coordinates for members on an interactive map (commit: feat: port géolocalisation — Leaflet map with GPS markers, member profile GPS section)
 
 ### Activité — Events & Interventions (ACT)
 > Files: `evenements.php`, `evenement_*.php`, `calendar.php`, `horaires.php`, `export*.php`, …
