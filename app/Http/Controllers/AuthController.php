@@ -51,10 +51,13 @@ class AuthController extends Controller
 
         $intended = (string) $request->session()->pull('url.intended', '');
         if ($intended !== '') {
+            // Collapse double index.php prefix produced by some legacy redirects.
             $normalizedIntended = str_replace('/index.php/index.php/', '/index.php/', $intended);
             $normalizedIntended = str_replace('index.php/index.php/', '/index.php/', $normalizedIntended);
-            if ($normalizedIntended === '/index.php/index.php') {
-                $normalizedIntended = '/index.php/index_d.php';
+
+            // Legacy root (was index_d.php) — send straight to the dashboard.
+            if (in_array($normalizedIntended, ['/index.php/index.php', '/index.php/index_d.php', '/legacy/index_d.php'], true)) {
+                return redirect()->route('dashboard');
             }
 
             if (! str_starts_with($normalizedIntended, '/')

@@ -213,8 +213,8 @@ Each menu section follows this repeatable process:
 
 > **Goal:** improve the login experience by leveraging the current Laravel authentication flow and modernizing the login screen.
 
-- [ ] Add tests and check parity with legacy login page
-- [ ] Modernise login screen using latest bootstrap css
+- [x] Add tests and check parity with legacy login page (commit: feat: modernize login screen and add auth feature tests)
+- [x] Modernise login screen using latest bootstrap css (commit: feat: modernize login screen and add auth feature tests)
 
 ---
 
