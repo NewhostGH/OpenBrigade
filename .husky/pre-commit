@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Verify the Vite bundle compiles cleanly before every commit.
+# PHP/Pest tests are Docker-only — run them manually: docker compose exec app php vendor/bin/pest
+npm run build --silent

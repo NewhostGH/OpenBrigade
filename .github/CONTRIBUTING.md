@@ -11,9 +11,11 @@ Thank you for your interest in contributing to **OpenBrigade**! This document ex
 3. [How to Branch](#how-to-branch)
 4. [Setting Up Your Development Environment](#setting-up-your-development-environment)
 5. [Making Changes](#making-changes)
-6. [How to Submit a Pull Request](#how-to-submit-a-pull-request)
-7. [How to Submit an Issue](#how-to-submit-an-issue)
-8. [Coding Guidelines](#coding-guidelines)
+6. [Commit Message Guidelines](#commit-message-guidelines)
+7. [Git Hooks (Husky + Commitlint)](#git-hooks-husky--commitlint)
+8. [How to Submit a Pull Request](#how-to-submit-a-pull-request)
+9. [How to Submit an Issue](#how-to-submit-an-issue)
+10. [Coding Guidelines](#coding-guidelines)
 
 ---
 
@@ -113,20 +115,161 @@ Configure a virtual host pointing to the repository root, create a MySQL databas
 
 1. Write your code on your feature branch.
 2. Keep commits small and focused — one logical change per commit.
-3. Write a clear commit message:
-
-   ```
-   fix: prevent redirect loop on invalid session
-
-   When the session token was missing the application entered an infinite
-   redirect loop. Added a check in lost_session.php to break out early.
-   ```
-
+3. Follow the [Commit Message Guidelines](#commit-message-guidelines) below — the format is enforced automatically by commitlint.
 4. Push your branch to your fork:
 
    ```bash
    git push origin feat/my-awesome-feature
    ```
+
+---
+
+## Commit Message Guidelines
+
+This project follows the **[Conventional Commits](https://www.conventionalcommits.org/)** specification.  
+Commit messages are validated automatically on every `git commit` via commitlint.
+
+### Format
+
+```
+<type>(<optional scope>): <subject>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Types
+
+| Type | When to use |
+|------|-------------|
+| `feat` | A new feature or user-visible behaviour change |
+| `fix` | A bug fix |
+| `docs` | Documentation-only changes (CONTRIBUTING, README, inline comments) |
+| `style` | Formatting, whitespace — no logic change |
+| `refactor` | Code restructuring with no feature or bug change |
+| `perf` | Performance improvement |
+| `test` | Adding or fixing tests |
+| `build` | Build system or external dependency changes (Vite, npm, Composer) |
+| `ci` | CI/CD pipeline changes (GitHub Actions, Docker) |
+| `chore` | Routine maintenance that touches none of the above |
+| `revert` | Reverts a previous commit |
+
+### Scope (optional)
+
+A scope names the subsystem affected. Use the Laravel layer or menu section:
+
+```
+feat(dashboard): add missing "Mes activités" widget
+fix(auth): prevent redirect loop on invalid session
+chore(deps): upgrade leaflet to 1.9.4
+test(personnel): add access-control feature tests
+```
+
+### Subject line rules
+
+- Use the **imperative present tense**: "add feature" not "added feature" or "adds feature".
+- **No period** at the end.
+- Maximum **100 characters**.
+- May be written in **French or English** — no case requirement.
+
+### Body (optional)
+
+Separate from the subject with a blank line.  
+Explain **why** the change was made, not what (the diff shows what).  
+Wrap lines at 100 characters.
+
+### Footer (optional)
+
+Reference issues or breaking changes:
+
+```
+fix(vehicles): handle null VP_ID when no position assigned
+
+Vehicles without an assigned position returned a 500.
+Added a null-safe left join on the vehicule_position table.
+
+Closes #42
+```
+
+Breaking changes must start with `BREAKING CHANGE:`:
+
+```
+refactor(auth)!: remove legacy session-based permission cache
+
+BREAKING CHANGE: GP_ID is no longer cached in $_SESSION.
+All permission checks now query the habilitation table directly.
+```
+
+### Full examples
+
+```
+feat(dashboard): add Note de frais and Demande de remplaçant widgets
+
+Both widgets were present in the legacy index_d.php but missing from
+the Laravel dashboard. Added getExpenses() and getReplacementRequests()
+to DashboardService with graceful try/catch for optional tables.
+```
+
+```
+fix(csp): allow OpenStreetMap tile domains in img-src
+
+Leaflet geo map was blocked by the Content-Security-Policy.
+Added https://*.tile.openstreetmap.org to img-src and connect-src.
+```
+
+```
+chore(deps): replace CDN Leaflet with npm package bundled via Vite
+
+Removed unpkg <script> and <link> CDN tags.
+Created resources/js/geolocalisation.js as a dedicated Vite entry.
+```
+
+---
+
+## Git Hooks (Husky + Commitlint)
+
+The repository ships with two Git hooks managed by **[Husky](https://typicode.github.io/husky/)**.  
+They activate automatically after `npm install`.
+
+| Hook | What it does |
+|------|-------------|
+| `pre-commit` | Runs `npm run build` — verifies the Vite bundle compiles before the commit is recorded |
+| `commit-msg` | Runs `commitlint` — rejects the commit if the message violates the Conventional Commits format |
+
+### First-time setup
+
+After cloning the repository, install Node dependencies:
+
+```bash
+npm install
+```
+
+Husky installs itself via the `prepare` lifecycle script. The hooks are now active.
+
+> **Docker users:** `npm install` inside the Docker container does not install hooks — hooks run on your **host machine**'s Git. Run `npm install` once on the host as well.
+
+### Bypassing hooks (for emergencies only)
+
+```bash
+git commit --no-verify -m "chore: emergency hotfix"
+```
+
+Use `--no-verify` sparingly. Bypassed commits still need a conventional message to pass PR review.
+
+### Disabling hooks locally
+
+```bash
+# Temporarily disable all hooks
+HUSKY=0 git commit -m "..."
+```
+
+### Testing commitlint without committing
+
+```bash
+echo "feat: my message" | npx commitlint
+echo "bad message"      | npx commitlint   # should fail
+```
 
 ---
 
@@ -166,8 +309,23 @@ Before opening an issue, please search existing issues to avoid duplicates.
 
 ## Coding Guidelines
 
-- Follow the existing code style (PHP, HTML, JS) already present in the file you are editing.
+### PHP / Laravel
+
+- Follow the existing code style already present in the file you are editing.
 - Keep PHP files UTF-8 encoded.
-- Avoid introducing new external dependencies without discussion.
-- SQL queries should use parameterised statements (or at minimum properly escape user input with `mysqli_real_escape_string`).
-- Do not commit large binary files or generated assets (uploads, exports, etc.).
+- No raw SQL in controllers — use Eloquent or the Query Builder in a Service class.
+- SQL queries must use parameterised bindings (never string-interpolate user input).
+- Avoid introducing new Composer dependencies without discussion.
+
+### JavaScript / CSS
+
+- All JS and CSS must be managed via **npm** and bundled through **Vite** — no CDN `<script>` or `<link>` tags.
+- Import Leaflet, Bootstrap, FA, etc. from `node_modules`; the bundler handles versioning and hashing.
+- Per-page JS that requires Blade data should expose it via `window.MY_DATA = @json(...)` from a plain (non-module) `<script>` block so the deferred ES module can read it safely.
+
+### Git
+
+- Never commit directly to `main`.
+- Follow the [Commit Message Guidelines](#commit-message-guidelines) — commitlint enforces them automatically.
+- Do not commit generated assets (`public/build/`), secrets (`.env`), or large binary files.
+- `public/build/` is git-ignored; CI rebuilds it.
