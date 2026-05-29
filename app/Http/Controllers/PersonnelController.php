@@ -20,6 +20,7 @@ namespace App\Http\Controllers;
 use App\Models\Personnel;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -152,6 +153,49 @@ class PersonnelController extends Controller
         $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
         return view('personnel.trombinoscope', compact('items', 'search', 'sectionId', 'sections'));
+    }
+
+    /**
+     * Qualifications list for the section (expiry tracking).
+     */
+    public function qualifications(Request $request): View
+    {
+        $user      = auth()->user();
+        $sectionId = (int) $user->P_SECTION;
+
+        $filter = (string) $request->string('filter', 'all'); // all|expiring|expired
+
+        $today   = now()->toDateString();
+        $warn30  = now()->addDays(30)->toDateString();
+
+        $query = DB::table('qualification as q')
+            ->join('pompier as p', 'q.P_ID', '=', 'p.P_ID')
+            ->join('poste as ps', 'q.PS_ID', '=', 'ps.PS_ID')
+            ->where('p.P_SECTION', $sectionId)
+            ->where('p.P_OLD_MEMBER', 0)
+            ->select(
+                'p.P_ID', 'p.P_NOM', 'p.P_PRENOM',
+                'ps.PS_ID', 'ps.TYPE as PS_TYPE',
+                'q.Q_VAL', 'q.Q_EXPIRATION',
+                DB::raw("CASE
+                    WHEN q.Q_EXPIRATION IS NOT NULL AND q.Q_EXPIRATION < '{$today}' THEN 'expired'
+                    WHEN q.Q_EXPIRATION IS NOT NULL AND q.Q_EXPIRATION <= '{$warn30}' THEN 'expiring'
+                    ELSE 'ok'
+                END as status")
+            )
+            ->orderBy('p.P_NOM')
+            ->orderBy('p.P_PRENOM')
+            ->orderBy('ps.TYPE');
+
+        if ($filter === 'expiring') {
+            $query->whereRaw("q.Q_EXPIRATION IS NOT NULL AND q.Q_EXPIRATION > '{$today}' AND q.Q_EXPIRATION <= '{$warn30}'");
+        } elseif ($filter === 'expired') {
+            $query->whereRaw("q.Q_EXPIRATION IS NOT NULL AND q.Q_EXPIRATION < '{$today}'");
+        }
+
+        $items = $query->paginate(50)->withQueryString();
+
+        return view('personnel.qualifications', compact('items', 'filter'));
     }
 
     public function photo(Personnel $personnel)

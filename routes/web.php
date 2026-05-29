@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/evenements', [EvenementController::class, 'index'])->name('evenement.index')->middleware('permission:0');
     Route::get('/evenements/{code}', [EvenementController::class, 'show'])->name('evenement.show')->middleware('permission:0');
     Route::get('/garde', [GardeController::class, 'index'])->name('garde.index')->middleware('permission:61');
+    Route::get('/garde/astreintes', [GardeController::class, 'astreintes'])->name('garde.astreintes')->middleware('permission:52');
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index')->middleware('permission:0');
     Route::get('/vehicules', [VehiculeController::class, 'index'])->name('vehicule.index')->middleware('permission:42');
     Route::get('/vehicules/{vehicule}', [VehiculeController::class, 'show'])->name('vehicule.show')->middleware('permission:42');
@@ -69,6 +70,7 @@ Route::middleware('auth')->group(function () {
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');
     Route::get('/trombinoscope', [PersonnelController::class, 'trombinoscope'])->name('personnel.trombinoscope')->middleware('permission:0');
+    Route::get('/qualifications', [PersonnelController::class, 'qualifications'])->name('personnel.qualifications')->middleware('permission:56');
     Route::get('/clients', [CompanyController::class, 'index'])->name('company.index')->middleware('permission:29');
     Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {

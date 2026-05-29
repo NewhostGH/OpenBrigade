@@ -28,7 +28,7 @@ return [
             'items' => [
                 ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',                                                       'icon' => 'list'],
                 ['key' => 'personnel.search',      'label' => 'Recherche',       'url' => '/legacy/search_personnel.php',                                    'icon' => 'magnifying-glass', 'permission' => 56],
-                ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/legacy/qualifications.php?page=1&pompier=0&action_comp=default', 'icon' => 'certificate',      'permission' => 56],
+                ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications',                                                'icon' => 'certificate',      'permission' => 56],
                 ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/legacy/cotisations.php',                                         'icon' => 'receipt',          'permission' => 53],
                 ['key' => 'personnel.geoloc',      'label' => 'Géolocalisation', 'url' => '/legacy/gps.php',                                                 'icon' => 'map-marker-alt',   'permission' => 76],
             ],
@@ -69,7 +69,7 @@ return [
                 ['key' => 'planning.absences',    'label' => 'Absences',        'url' => '/legacy/indispo_choice.php?tab=2&page=1',     'icon' => 'user-times',     'permission' => 11],
                 ['key' => 'planning.repos',       'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],
                 ['key' => 'planning.remplace',    'label' => 'Remplacements',   'url' => '/legacy/remplacements.php',                   'icon' => 'exchange-alt',   'permission' => 41],
-                ['key' => 'planning.astreintes',  'label' => 'Astreintes',      'url' => '/legacy/astreintes.php',                      'icon' => 'bell',           'permission' => 52],
+                ['key' => 'planning.astreintes',  'label' => 'Astreintes',      'url' => '/garde/astreintes',                           'icon' => 'bell',           'permission' => 52],
             ],
         ],
 

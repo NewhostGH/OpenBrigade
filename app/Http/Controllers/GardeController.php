@@ -85,4 +85,46 @@ class GardeController extends Controller
             'days', 'monday', 'sunday', 'prevWeek', 'nextWeek', 'weekOffset', 'roles'
         ));
     }
+
+    /**
+     * Astreintes management list — admin view for managing on-call slots.
+     */
+    public function astreintes(Request $request): View
+    {
+        $user      = auth()->user();
+        $sectionId = (int) $user->P_SECTION;
+
+        $month     = (int) $request->integer('month', now()->month);
+        $year      = (int) $request->integer('year', now()->year);
+
+        if ($month < 1)  { $month = 12; $year--; }
+        if ($month > 12) { $month = 1;  $year++; }
+
+        $first = \Carbon\Carbon::create($year, $month, 1)->startOfDay();
+        $last  = $first->copy()->endOfMonth();
+
+        $slots = DB::table('astreinte as a')
+            ->join('pompier as p', 'a.P_ID', '=', 'p.P_ID')
+            ->join('groupe as g', 'a.GP_ID', '=', 'g.GP_ID')
+            ->where('a.S_ID', $sectionId)
+            ->whereBetween('a.AS_DEBUT', [$first->toDateTimeString(), $last->toDateTimeString()])
+            ->orderBy('a.AS_DEBUT')
+            ->select(
+                'a.AS_ID', 'a.AS_DEBUT', 'a.AS_FIN',
+                'p.P_ID', 'p.P_NOM', 'p.P_PRENOM',
+                'g.GP_ID', 'g.GP_DESCRIPTION'
+            )
+            ->paginate(50)
+            ->withQueryString();
+
+        $prevMonth = $month === 1  ? 12        : $month - 1;
+        $prevYear  = $month === 1  ? $year - 1 : $year;
+        $nextMonth = $month === 12 ? 1         : $month + 1;
+        $nextYear  = $month === 12 ? $year + 1 : $year;
+
+        return view('garde.astreintes', compact(
+            'slots', 'month', 'year', 'first',
+            'prevMonth', 'prevYear', 'nextMonth', 'nextYear'
+        ));
+    }
 }

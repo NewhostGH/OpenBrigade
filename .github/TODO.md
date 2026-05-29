@@ -85,7 +85,7 @@ Each menu section follows this repeatable process:
 - [x] Migrate member list and profile view/edit (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
 - [x] Migrate trombinoscope and org chart (commit: feat: migrate trombinoscope and company list — views, bridge retirements, tests)
 - [ ] Migrate personnel exports (XLS, CSV, vCard, PDF livret/carte)
-- [ ] Migrate qualifications and training records (`qualifications.php`, `personnel_formation.php`)
+- [x] Migrate qualifications and training records (`qualifications.php`, `personnel_formation.php`) (commit: feat: migrate astreintes management and qualifications — views, bridge retirements)
 - [ ] Migrate on-call availability and indisponibility management (`indispo*.php`, `dispo.php`)
 - [x] Add tests and parity check; retire legacy files (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
 
