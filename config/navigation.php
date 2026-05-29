@@ -66,7 +66,7 @@ return [
             'items' => [
                 ['key' => 'planning.calendar',    'label' => 'Calendrier',      'url' => '/planning',                                   'icon' => 'calendar'],
                 ['key' => 'planning.dispos',      'label' => 'Disponibilités',  'url' => '/legacy/dispo.php',                           'icon' => 'check-square',   'permission' => 38],
-                ['key' => 'planning.absences',    'label' => 'Absences',        'url' => '/legacy/indispo_choice.php?tab=2&page=1',     'icon' => 'user-times',     'permission' => 11],
+                ['key' => 'planning.absences',    'label' => 'Absences',        'url' => '/indisponibilites',                           'icon' => 'user-times',     'permission' => 11],
                 ['key' => 'planning.repos',       'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],
                 ['key' => 'planning.remplace',    'label' => 'Remplacements',   'url' => '/legacy/remplacements.php',                   'icon' => 'exchange-alt',   'permission' => 41],
                 ['key' => 'planning.astreintes',  'label' => 'Astreintes',      'url' => '/garde/astreintes',                           'icon' => 'bell',           'permission' => 52],

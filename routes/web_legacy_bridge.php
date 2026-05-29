@@ -164,7 +164,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'import_api.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.import_api');
     Route::match(['GET', 'POST'], 'index.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.index');
     Route::match(['GET', 'POST'], 'index_d.php', fn () => redirect()->route('dashboard'))->name('legacy_bridge.index_d');
-    Route::match(['GET', 'POST'], 'indispo.php', [LegacyBridgeController::class, 'show'])->middleware('permission:11')->name('legacy_bridge.indispo');
+    Route::match(['GET', 'POST'], 'indispo.php', fn () => redirect()->route('indispo.index'))->name('legacy_bridge.indispo');
     Route::match(['GET', 'POST'], 'indispo_choice.php', [LegacyBridgeController::class, 'show'])->middleware('permission:11')->name('legacy_bridge.indispo_choice');
     Route::match(['GET', 'POST'], 'indispo_display.php', [LegacyBridgeController::class, 'show'])->middleware('permission:11')->name('legacy_bridge.indispo_display');
     Route::match(['GET', 'POST'], 'indispo_list_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:56')->name('legacy_bridge.indispo_list_xls');
