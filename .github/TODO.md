@@ -187,13 +187,13 @@ Each menu section follows this repeatable process:
 ### Organisation (ORGA)
 > Files: `section.php`, `upd_section.php`, `ins_section.php`, `del_section.php`, `habilitations.php`, `upd_habilitations.php`, `poste.php`, `upd_poste.php`, `ins_poste.php`, `del_poste.php`, `grades*.php`, `equipe.php`, `upd_equipe.php`, `del_equipe.php`, `organigramme.php`, …
 
-- [ ] Inventory all ORGA legacy files
-- [ ] Migrate section/unit management
+- [x] Inventory all ORGA legacy files
+- [x] Migrate section/unit management (commit: feat: migrate organisation — hierarchy tree view, bridge retirements, tests)
 - [ ] Migrate group and role (habilitations) management
 - [ ] Migrate rank and grade management
 - [ ] Migrate position (poste) management
 - [ ] Migrate team (equipe) management
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate organisation — hierarchy tree view, bridge retirements, tests)
 
 ### Configuration — Admin (ADMIN)
 > Files: `configuration.php`, `save_configuration.php`, `parametrage.php`, `configuration_*.php`, `audit.php`, `backup.php`, `restore.php`, `upgrade.php`, `update_*.php`, `addons.php`, `addons_save.php`, `install_addon.php`, `download_*.php`, …

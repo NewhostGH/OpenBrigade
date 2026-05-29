@@ -128,7 +128,7 @@ return [
             'permission' => 52,
             'items'      => [
                 ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/legacy/departement.php',   'icon' => 'layer-group',  'permission' => 52],
-                ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/legacy/section.php',       'icon' => 'project-diagram', 'permission' => 52],
+                ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation',             'icon' => 'project-diagram', 'permission' => 52],
                 ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/legacy/jvectormap.php',    'icon' => 'map',          'permission' => 27],
             ],
         ],
