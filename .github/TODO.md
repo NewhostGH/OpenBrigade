@@ -115,12 +115,12 @@ Each menu section follows this repeatable process:
 ### Planning (PLA)
 > Files: `planning.php`, `planning_xls.php`, `myagenda.php`, `horaires.php`, `horaires_modal.php`, …
 
-- [ ] Inventory all PLA legacy files
-- [ ] Migrate weekly/monthly planning view
-- [ ] Migrate personal agenda (`myagenda.php`)
+- [x] Inventory all PLA legacy files
+- [x] Migrate weekly/monthly planning view (commit: feat: migrate planning — PlanningController monthly calendar, bridge retirements, tests)
+- [x] Migrate personal agenda (`myagenda.php`) (commit: feat: migrate planning — PlanningController monthly calendar, bridge retirements, tests)
 - [ ] Migrate schedule (horaires) management
 - [ ] Migrate planning exports
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: migrate planning — PlanningController monthly calendar, bridge retirements, tests)
 
 ### Client (CLI)
 > Files: `company.php`, `upd_company.php`, `ins_company.php`, `del_company.php`, `company_xls.php`, `cotisations.php`, `cotisation_edit.php`, `save_cotisations.php`, `prelevements.php`, `virements*.php`, `bilans.php`, `pdf_bilans.php`, `pdf_attestation_fiscale.php`, …

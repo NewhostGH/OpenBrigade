@@ -24,7 +24,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'browscap.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.browscap');
     Route::match(['GET', 'POST'], 'buildsql.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.buildsql');
     Route::match(['GET', 'POST'], 'buildzipcode.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.buildzipcode');
-    Route::match(['GET', 'POST'], 'calendar.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.calendar');
+    Route::match(['GET', 'POST'], 'calendar.php', fn () => redirect()->route('planning.index'))->name('legacy_bridge.calendar');
     Route::match(['GET', 'POST'], 'cav_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.cav_edit');
     Route::match(['GET', 'POST'], 'change_password.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.change_password');
     Route::match(['GET', 'POST'], 'charte.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.charte');
@@ -203,7 +203,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'membres.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.membres');
     Route::match(['GET', 'POST'], 'menu_status_set.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.menu_status_set');
     Route::match(['GET', 'POST'], 'message.php', [LegacyBridgeController::class, 'show'])->middleware('permission:44')->name('legacy_bridge.message');
-    Route::match(['GET', 'POST'], 'myagenda.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.myagenda');
+    Route::match(['GET', 'POST'], 'myagenda.php', fn () => redirect()->route('planning.index'))->name('legacy_bridge.myagenda');
     Route::match(['GET', 'POST'], 'noscript.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.noscript');
     Route::match(['GET', 'POST'], 'note_frais_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:77')->name('legacy_bridge.note_frais_edit');
     Route::match(['GET', 'POST'], 'note_frais_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:77')->name('legacy_bridge.note_frais_save');

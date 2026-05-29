@@ -64,7 +64,7 @@ return [
             'label' => 'Planning',
             'icon'  => 'calendar-check',
             'items' => [
-                ['key' => 'planning.calendar',    'label' => 'Calendrier',      'url' => '/legacy/calendar.php',                        'icon' => 'calendar'],
+                ['key' => 'planning.calendar',    'label' => 'Calendrier',      'url' => '/planning',                                   'icon' => 'calendar'],
                 ['key' => 'planning.dispos',      'label' => 'Disponibilités',  'url' => '/legacy/dispo.php',                           'icon' => 'check-square',   'permission' => 38],
                 ['key' => 'planning.absences',    'label' => 'Absences',        'url' => '/legacy/indispo_choice.php?tab=2&page=1',     'icon' => 'user-times',     'permission' => 11],
                 ['key' => 'planning.repos',       'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],

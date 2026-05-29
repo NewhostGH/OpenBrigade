@@ -38,7 +38,11 @@ class RequirePermission
         $user = $request->user();
 
         abort_if($user === null, 401);
-        abort_unless($user->hasPermission($fid), 403, 'Permission refusée (F_ID: '.$fid.').');
+
+        // F_ID 0 means "any authenticated user" — no specific permission check needed.
+        if ($fid !== 0) {
+            abort_unless($user->hasPermission($fid), 403, 'Permission refusée (F_ID: '.$fid.').');
+        }
 
         return $next($request);
     }
