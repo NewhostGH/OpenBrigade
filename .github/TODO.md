@@ -107,7 +107,7 @@ Each menu section follows this repeatable process:
 - [x] Inventory all GAR legacy files
 - [x] Migrate roster display and assignment (commit: feat: migrate garde roster — GardeController, weekly view, bridge retirements, tests)
 - [ ] Migrate automatic piquet/guard generation
-- [ ] Migrate guard sheet and replacement management (`remplacements.php`, `remplacement_edit.php`)
+- [x] Migrate guard sheet and replacement management (`remplacements.php`, `remplacement_edit.php`) (commit: feat: migrate remplacements and update nav)
 - [ ] Migrate rest periods (`repos_*.php`)
 - [ ] Migrate guard exports (XLS, PDF)
 - [x] Add tests and parity check; retire legacy files (commit: feat: migrate garde roster — GardeController, weekly view, bridge retirements, tests)
