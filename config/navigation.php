@@ -41,7 +41,7 @@ return [
             'icon'  => 'calendar-alt',
             'items' => [
                 ['key' => 'activities.list',     'label' => 'Liste',            'url' => '/evenements',                                        'icon' => 'list-ul',    'permission' => 41],
-                ['key' => 'activities.mc',       'label' => 'Main courante',    'url' => '/legacy/evenement_choice.php?ec_mode=MC&page=1',      'icon' => 'ambulance',  'permission' => 52],
+                ['key' => 'activities.mc',       'label' => 'Main courante',    'url' => '/evenements?type=MC',                                'icon' => 'ambulance',  'permission' => 52],
                 ['key' => 'activities.news',     'label' => 'Actualités',       'url' => '/messages?category=amicale',                         'icon' => 'newspaper',  'permission' => 44],
                 ['key' => 'activities.geomap',   'label' => 'Géolocalisation',  'url' => '/legacy/gmaps_evenement.php',                        'icon' => 'map',        'permission' => 76],
             ],
@@ -68,7 +68,7 @@ return [
                 ['key' => 'planning.dispos',      'label' => 'Disponibilités',  'url' => '/legacy/dispo.php',                           'icon' => 'check-square',   'permission' => 38],
                 ['key' => 'planning.absences',    'label' => 'Absences',        'url' => '/indisponibilites',                           'icon' => 'user-times',     'permission' => 11],
                 ['key' => 'planning.repos',       'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],
-                ['key' => 'planning.remplace',    'label' => 'Remplacements',   'url' => '/legacy/remplacements.php',                   'icon' => 'exchange-alt',   'permission' => 41],
+                ['key' => 'planning.remplace',    'label' => 'Remplacements',   'url' => '/remplacements',                              'icon' => 'exchange-alt',   'permission' => 41],
                 ['key' => 'planning.astreintes',  'label' => 'Astreintes',      'url' => '/garde/astreintes',                           'icon' => 'bell',           'permission' => 52],
             ],
         ],
@@ -127,7 +127,7 @@ return [
             'icon'       => 'sitemap',
             'permission' => 52,
             'items'      => [
-                ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/legacy/departement.php',   'icon' => 'layer-group',  'permission' => 52],
+                ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/organisation',             'icon' => 'layer-group',  'permission' => 52],
                 ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation',             'icon' => 'project-diagram', 'permission' => 52],
                 ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/legacy/jvectormap.php',    'icon' => 'map',          'permission' => 27],
             ],

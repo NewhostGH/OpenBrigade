@@ -254,7 +254,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'rebuild_section_flat.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.rebuild_section_flat');
     Route::match(['GET', 'POST'], 'reminder.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.reminder');
     Route::match(['GET', 'POST'], 'remplacement_edit.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.remplacement_edit');
-    Route::match(['GET', 'POST'], 'remplacements.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.remplacements');
+    Route::match(['GET', 'POST'], 'remplacements.php', fn () => redirect()->route('remplacement.index'))->name('legacy_bridge.remplacements');
     Route::match(['GET', 'POST'], 'repo_events.php', fn () => redirect()->route('statistique.index'))->name('legacy_bridge.repo_events');
     Route::match(['GET', 'POST'], 'report_cotisations.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.report_cotisations');
     Route::match(['GET', 'POST'], 'repos_saisie.php', [LegacyBridgeController::class, 'show'])->middleware('permission:10')->name('legacy_bridge.repos_saisie');
