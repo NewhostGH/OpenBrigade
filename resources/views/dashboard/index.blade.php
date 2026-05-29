@@ -40,27 +40,32 @@
     {{-- ── 3-column widget grid ──────────────────────────────────────────── --}}
     <div class="dash-columns">
 
-        {{-- Column 1 --}}
+        {{-- Column 1: profil + astreinte + section + plannings + alertes financières --}}
         <div>
             @include('dashboard.widgets.welcome')
-            @include('dashboard.widgets.events')
-        </div>
-
-        {{-- Column 2 --}}
-        <div>
             @include('dashboard.widgets.duty')
-            @include('dashboard.widgets.infos')
-            @include('dashboard.widgets.mc')
             @include('dashboard.widgets.birthdays')
-            @include('dashboard.widgets.remplacements')
+            @include('dashboard.widgets.horaires')
+            @include('dashboard.widgets.unpaid')
+            @include('dashboard.widgets.stats-missing')
         </div>
 
-        {{-- Column 3 --}}
+        {{-- Column 2: activités personnelles + congés + matériel + remplacements + consignes --}}
         <div>
+            @include('dashboard.widgets.mes-activites')
+            @include('dashboard.widgets.cp')
             @include('dashboard.widgets.vehicles')
             @include('dashboard.widgets.consumables')
-            @include('dashboard.widgets.cp')
-            @include('dashboard.widgets.horaires')
+            @include('dashboard.widgets.remplacements')
+            @include('dashboard.widgets.replacement-requests')
+            @include('dashboard.widgets.infos')
+        </div>
+
+        {{-- Column 3: main courante + frais + calendrier + formation + à propos --}}
+        <div>
+            @include('dashboard.widgets.mc')
+            @include('dashboard.widgets.expenses')
+            @include('dashboard.widgets.events')
             @include('dashboard.widgets.training')
             @include('dashboard.widgets.about')
         </div>

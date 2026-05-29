@@ -238,12 +238,19 @@ class DashboardService
         $missingFields = [];
         if ($user->P_STATUT !== 'EXT') {
             $checks = [
-                'P_PHONE'      => 'Téléphone',
-                'P_EMAIL'      => 'Adresse mail',
-                'P_ADDRESS'    => 'Adresse',
-                'P_CITY'       => 'Ville',
-                'P_ZIP_CODE'   => 'Code postal',
-                'P_BIRTHDATE'  => 'Date de naissance',
+                'P_PHOTO'            => 'Photo',
+                'P_PRENOM2'          => 'Deuxième prénom',
+                'P_PHONE'            => 'Téléphone',
+                'P_EMAIL'            => 'Adresse mail',
+                'P_ADDRESS'          => 'Adresse',
+                'P_CITY'             => 'Ville',
+                'P_ZIP_CODE'         => 'Code postal',
+                'P_BIRTHDATE'        => 'Date de naissance',
+                'P_BIRTHPLACE'       => 'Lieu de naissance',
+                'P_BIRTH_DEP'        => 'Département de naissance',
+                'P_RELATION_NOM'     => 'Nom – contact urgence',
+                'P_RELATION_PRENOM'  => 'Prénom – contact urgence',
+                'P_RELATION_PHONE'   => 'Téléphone – contact urgence',
             ];
             foreach ($checks as $field => $label) {
                 $val = $user->$field ?? '';
@@ -711,6 +718,188 @@ class DashboardService
 
         $whatsappBase = config('brigade.whatsapp_url', 'https://chat.whatsapp.com');
         return ['links' => $links, 'whatsappBase' => $whatsappBase];
+    }
+
+    // ── My personal upcoming events ────────────────────────────────────────
+
+    public function getMyActivities(User $user): array
+    {
+        $pid = (int) $user->P_ID;
+
+        $events = DB::table('evenement as e')
+            ->join('type_evenement as te', 'e.TE_CODE', '=', 'te.TE_CODE')
+            ->join('evenement_participation as ep', function ($j) use ($pid) {
+                $j->on('ep.E_CODE', '=', 'e.E_CODE')->where('ep.P_ID', $pid);
+            })
+            ->join('evenement_horaire as eh', function ($j) {
+                $j->on('ep.E_CODE', '=', 'eh.E_CODE')->on('ep.EH_ID', '=', 'eh.EH_ID');
+            })
+            ->where('e.E_CANCELED', 0)
+            ->where('ep.EP_ABSENT', 0)
+            ->where('e.TE_CODE', '<>', 'MC')
+            ->whereRaw('eh.EH_DATE_FIN >= CURDATE()')
+            ->orderBy('eh.EH_DATE_DEBUT')
+            ->select(
+                'e.E_CODE', 'e.E_LIBELLE', 'e.E_LIEU', 'e.E_CLOSED',
+                'te.TE_LIBELLE',
+                DB::raw("DATE_FORMAT(eh.EH_DATE_DEBUT,'%d-%m-%Y') AS FORMDATE"),
+                DB::raw("DATE_FORMAT(eh.EH_DEBUT,'%H:%i') AS DEBUTDATE"),
+                DB::raw("DATE_FORMAT(eh.EH_FIN,'%H:%i') AS FINDATE"),
+                'ep.EH_ID', 'ep.EP_ASTREINTE'
+            )
+            ->get()->toArray();
+
+        return ['events' => $events];
+    }
+
+    // ── Unpaid / un-invoiced activities ────────────────────────────────────
+
+    public function getUnpaidActivities(User $user): array
+    {
+        // Requires billing permission (55) and evenement_facturation table
+        if (!$user->hasPermission(55)) {
+            return ['rows' => []];
+        }
+
+        try {
+            $sectionId = (int) $user->P_SECTION;
+            $family    = $this->getSectionFamily($sectionId);
+
+            $rows = DB::table('evenement as e')
+                ->join('evenement_facturation as ef', 'ef.e_id', '=', 'e.E_CODE')
+                ->join('evenement_horaire as eh', function ($j) {
+                    $j->on('eh.e_code', '=', 'e.E_CODE')->where('eh.EH_ID', 1);
+                })
+                ->whereIn('e.S_ID', $family)
+                ->where('e.E_CANCELED', 0)
+                ->where('e.TE_CODE', '<>', 'MC')
+                ->whereNull('ef.paiement_date')
+                ->whereRaw('(ef.devis_montant > 0 OR ef.facture_montant > 0)')
+                ->whereRaw('eh.EH_DATE_FIN < NOW()')
+                ->orderBy('eh.EH_DATE_DEBUT', 'desc')
+                ->select(
+                    'e.E_CODE', 'e.E_LIBELLE', 'e.TE_CODE',
+                    'ef.facture_montant', 'ef.devis_montant',
+                    'ef.facture_date', 'ef.relance_date',
+                    DB::raw("DATE_FORMAT(eh.EH_DATE_DEBUT,'%d-%m-%Y') AS FORMDATE"),
+                    DB::raw("DATEDIFF(NOW(), eh.EH_DATE_FIN) AS TERMINE_DEPUIS")
+                )
+                ->get()->toArray();
+
+            return ['rows' => $rows];
+        } catch (\Exception $e) {
+            return ['rows' => []];
+        }
+    }
+
+    // ── Events missing statistics bilan ────────────────────────────────────
+
+    public function getMissingStats(User $user): array
+    {
+        try {
+            $sectionId = (int) $user->P_SECTION;
+            $family    = $this->getSectionFamily($sectionId);
+
+            $rows = DB::table('evenement as e')
+                ->join('type_evenement as te', 'e.TE_CODE', '=', 'te.TE_CODE')
+                ->join('evenement_horaire as eh', function ($j) {
+                    $j->on('eh.e_code', '=', 'e.E_CODE')->where('eh.EH_ID', 1);
+                })
+                ->whereIn('e.S_ID', $family)
+                ->where('e.E_CANCELED', 0)
+                ->where('e.TE_CODE', '<>', 'MC')
+                ->where('te.TE_MAIN_COURANTE', 1)
+                ->whereRaw('eh.EH_DATE_FIN <= NOW()')
+                ->whereRaw("DATEDIFF(NOW(), eh.EH_DATE_FIN) < 30")
+                ->whereExists(fn($q) => $q->select(DB::raw(1))
+                    ->from('type_bilan as tb')->whereColumn('tb.TE_CODE', 'e.TE_CODE'))
+                ->whereNotExists(fn($q) => $q->select(DB::raw(1))
+                    ->from('bilan_evenement as be')->whereColumn('be.E_CODE', 'e.E_CODE'))
+                ->whereNull('e.E_PARENT')
+                ->orderBy('eh.EH_DATE_FIN', 'desc')
+                ->select(
+                    'e.E_CODE', 'e.E_LIBELLE', 'e.E_LIEU', 'te.TE_LIBELLE',
+                    DB::raw("DATE_FORMAT(eh.EH_DATE_FIN,'%d-%m-%Y') AS FORMDATE"),
+                    DB::raw("DATEDIFF(NOW(), eh.EH_DATE_FIN) AS TERMINE_DEPUIS")
+                )
+                ->get()->toArray();
+
+            return ['rows' => $rows];
+        } catch (\Exception $e) {
+            return ['rows' => []];
+        }
+    }
+
+    // ── Expense reports (notes de frais) ────────────────────────────────────
+
+    public function getExpenses(User $user): array
+    {
+        $isManager = $user->hasPermission(73) || $user->hasPermission(74) || $user->hasPermission(75);
+
+        try {
+            if ($isManager) {
+                $sectionId = (int) $user->P_SECTION;
+                $family    = $this->getSectionFamily($sectionId);
+
+                $rows = DB::table('note_de_frais as n')
+                    ->join('pompier as p', 'p.P_ID', '=', 'n.P_ID')
+                    ->whereIn('n.S_ID', $family)
+                    ->whereIn('n.FS_CODE', ['ATTV', 'VAL', 'VAL1', 'VAL2'])
+                    ->orderByDesc('n.NF_CREATE_DATE')
+                    ->limit(10)
+                    ->select(
+                        'n.NF_ID', 'n.NF_CREATE_DATE', 'n.FS_CODE', 'n.TOTAL_AMOUNT',
+                        'p.P_NOM', 'p.P_PRENOM'
+                    )
+                    ->get()->toArray();
+            } else {
+                $rows = DB::table('note_de_frais as n')
+                    ->where('n.P_ID', (int) $user->P_ID)
+                    ->whereIn('n.FS_CODE', ['ATTV', 'VAL', 'VAL1', 'VAL2'])
+                    ->orderByDesc('n.NF_CREATE_DATE')
+                    ->limit(5)
+                    ->select('n.NF_ID', 'n.NF_CREATE_DATE', 'n.FS_CODE', 'n.TOTAL_AMOUNT')
+                    ->get()->toArray();
+            }
+
+            return ['rows' => $rows, 'isManager' => $isManager];
+        } catch (\Exception $e) {
+            return ['rows' => [], 'isManager' => $isManager];
+        }
+    }
+
+    // ── Open replacement requests (no volunteer yet) ────────────────────────
+
+    public function getReplacementRequests(User $user): array
+    {
+        $sectionId = (int) $user->P_SECTION;
+        $family    = $this->getSectionFamily($sectionId);
+
+        $base = DB::table('remplacement as r')
+            ->join('evenement_horaire as eh', function ($j) {
+                $j->on('eh.E_CODE', '=', 'r.E_CODE')->where('eh.EH_ID', 1);
+            })
+            ->join('evenement as e', 'e.E_CODE', '=', 'r.E_CODE')
+            ->join('pompier as p', 'p.P_ID', '=', 'r.P_ID')
+            ->where('r.APPROVED', 0)
+            ->where('r.REJECTED', 0)
+            ->where(fn($q) => $q->whereNull('r.SUBSTITUTE')->orWhere('r.SUBSTITUTE', 0))
+            ->whereRaw('eh.EH_DATE_FIN >= NOW()')
+            ->whereIn('e.S_ID', $family);
+
+        $count = (clone $base)->count();
+
+        $rows = (clone $base)
+            ->limit(5)
+            ->orderBy('eh.EH_DATE_DEBUT')
+            ->select(
+                'e.E_CODE', 'e.E_LIBELLE',
+                'p.P_ID', 'p.P_NOM', 'p.P_PRENOM',
+                DB::raw("DATE_FORMAT(eh.EH_DATE_DEBUT,'%d-%m-%Y') AS FORMDATE")
+            )
+            ->get()->toArray();
+
+        return ['count' => $count, 'rows' => $rows];
     }
 
     // ── About / app info ────────────────────────────────────────────────────
