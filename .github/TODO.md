@@ -81,13 +81,13 @@ Each menu section follows this repeatable process:
 ### Personnel (PERSO)
 > Files: `personnel.php`, `upd_personnel.php`, `ins_personnel.php`, `del_personnel.php`, `personnel_*.php`, `trombinoscope.php`, `organigramme.php`, `search_personnel*.php`, `export*.php`, `pdf_*.php`, `vcard*.php`, …
 
-- [ ] Inventory all PERSO legacy files (pages, handlers, exports, PDFs)
-- [ ] Migrate member list and profile view/edit
+- [x] Inventory all PERSO legacy files (pages, handlers, exports, PDFs)
+- [x] Migrate member list and profile view/edit (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
 - [ ] Migrate trombinoscope and org chart
 - [ ] Migrate personnel exports (XLS, CSV, vCard, PDF livret/carte)
 - [ ] Migrate qualifications and training records (`qualifications.php`, `personnel_formation.php`)
 - [ ] Migrate on-call availability and indisponibility management (`indispo*.php`, `dispo.php`)
-- [ ] Add tests and parity check; retire legacy files
+- [x] Add tests and parity check; retire legacy files (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
 
 ### Activité — Events & Interventions (ACT)
 > Files: `evenements.php`, `evenement_*.php`, `calendar.php`, `horaires.php`, `export*.php`, …
