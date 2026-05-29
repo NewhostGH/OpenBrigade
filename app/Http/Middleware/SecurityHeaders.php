@@ -42,9 +42,10 @@ class SecurityHeaders
 
         // CSP: allow self, Bootstrap/FA CDN fallback, no inline scripts except those using nonce
         // Kept permissive for legacy-migrated pages that may use inline JS; tighten per-domain during migration.
+        // img-src / connect-src include OpenStreetMap tile servers used by the Leaflet map (géolocalisation page).
         $response->headers->set(
             'Content-Security-Policy',
-            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; object-src 'none'; frame-ancestors 'self';"
+            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.tile.openstreetmap.org; font-src 'self' data:; connect-src 'self' https://*.tile.openstreetmap.org; object-src 'none'; frame-ancestors 'self';"
         );
 
         return $response;
