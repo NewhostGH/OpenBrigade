@@ -18,6 +18,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Personnel;
+use App\Models\Poste;
+use App\Models\Qualification;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -298,11 +300,78 @@ class PersonnelController extends Controller
 
     public function show(Personnel $personnel): View
     {
-        $personnel->load(['section', 'groupe']);
+        $personnel->load(['section', 'groupe', 'qualifications.poste']);
+
+        $postes = Poste::query()
+            ->orderBy('TYPE')
+            ->get(['PS_ID', 'TYPE', 'DESCRIPTION', 'PS_EXPIRABLE']);
 
         return view('personnel.show', [
             'personnel' => $personnel,
+            'postes'    => $postes,
         ]);
+    }
+
+    // ── Qualifications (competences) CRUD ────────────────────────────────────
+
+    public function storeQualification(Request $request, Personnel $personnel)
+    {
+        $validated = $request->validate([
+            'PS_ID'        => ['required', 'integer', 'exists:poste,PS_ID'],
+            'Q_VAL'        => ['nullable', 'string', 'max:100'],
+            'Q_EXPIRATION' => ['nullable', 'date'],
+        ]);
+
+        $existing = Qualification::where('P_ID', $personnel->P_ID)
+            ->where('PS_ID', $validated['PS_ID'])
+            ->exists();
+
+        if ($existing) {
+            return redirect()->route('personnel.show', $personnel)
+                ->with('error', 'Cette compétence est déjà enregistrée pour ce membre.');
+        }
+
+        Qualification::create([
+            'P_ID'          => $personnel->P_ID,
+            'PS_ID'         => $validated['PS_ID'],
+            'Q_VAL'         => $validated['Q_VAL'] ?: null,
+            'Q_EXPIRATION'  => $validated['Q_EXPIRATION'] ?: null,
+            'Q_UPDATED_BY'  => auth()->id(),
+            'Q_UPDATE_DATE' => now(),
+        ]);
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Compétence ajoutée.');
+    }
+
+    public function updateQualification(Request $request, Personnel $personnel, int $psId)
+    {
+        $validated = $request->validate([
+            'Q_VAL'        => ['nullable', 'string', 'max:100'],
+            'Q_EXPIRATION' => ['nullable', 'date'],
+        ]);
+
+        Qualification::where('P_ID', $personnel->P_ID)
+            ->where('PS_ID', $psId)
+            ->update([
+                'Q_VAL'         => $validated['Q_VAL'] ?: null,
+                'Q_EXPIRATION'  => $validated['Q_EXPIRATION'] ?: null,
+                'Q_UPDATED_BY'  => auth()->id(),
+                'Q_UPDATE_DATE' => now(),
+            ]);
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Compétence mise à jour.');
+    }
+
+    public function destroyQualification(Personnel $personnel, int $psId)
+    {
+        Qualification::where('P_ID', $personnel->P_ID)
+            ->where('PS_ID', $psId)
+            ->delete();
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Compétence supprimée.');
     }
 
     public function edit(Personnel $personnel): View

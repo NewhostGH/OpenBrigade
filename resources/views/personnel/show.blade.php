@@ -254,6 +254,158 @@
                 <p style="font-size:var(--font-size-sm);white-space:pre-wrap;">{{ $personnel->OBSERVATION }}</p>
             @endif
 
+            {{-- ── Compétences ───────────────────────────────────────── --}}
+            @php
+                $today   = now()->toDateString();
+                $warn30  = now()->addDays(30)->toDateString();
+            @endphp
+
+            <p class="section-title d-flex justify-content-between align-items-center">
+                <span>Compétences</span>
+                <button type="button" class="btn btn-sm btn-success noprint"
+                    data-bs-toggle="modal" data-bs-target="#qualModal"
+                    onclick="openQualModal(null)">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </button>
+            </p>
+
+            @if ($personnel->qualifications->isNotEmpty())
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover" style="font-size:var(--font-size-sm);">
+                        <thead>
+                            <tr>
+                                <th>Compétence</th>
+                                <th>Valeur</th>
+                                <th>Expiration</th>
+                                <th class="noprint" style="width:80px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($personnel->qualifications->sortBy('poste.TYPE') as $qual)
+                                @php
+                                    $exp = $qual->Q_EXPIRATION?->toDateString();
+                                    $status = match(true) {
+                                        $exp !== null && $exp < $today  => 'expired',
+                                        $exp !== null && $exp <= $warn30 => 'expiring',
+                                        default => 'ok',
+                                    };
+                                @endphp
+                                <tr>
+                                    <td>
+                                        {{ $qual->poste?->TYPE ?? '?' }}
+                                        @if ($qual->poste?->DESCRIPTION)
+                                            <small class="text-muted">— {{ $qual->poste->DESCRIPTION }}</small>
+                                        @endif
+                                    </td>
+                                    <td>{{ $qual->Q_VAL ?: '—' }}</td>
+                                    <td>
+                                        @if ($qual->Q_EXPIRATION)
+                                            @php
+                                                $cls = match($status) {
+                                                    'expired'  => 'text-danger fw-bold',
+                                                    'expiring' => 'text-warning fw-bold',
+                                                    default    => '',
+                                                };
+                                            @endphp
+                                            <span class="{{ $cls }}">
+                                                {{ $qual->Q_EXPIRATION->format('d/m/Y') }}
+                                                @if ($status === 'expired') <i class="fas fa-exclamation-triangle ms-1" title="Expirée"></i>
+                                                @elseif ($status === 'expiring') <i class="fas fa-clock ms-1" title="Expiration proche"></i>
+                                                @endif
+                                            </span>
+                                        @else
+                                            <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end noprint">
+                                        <button type="button"
+                                            class="btn btn-xs btn-light py-0 px-1 me-1"
+                                            title="Modifier"
+                                            onclick="openQualModal({
+                                                ps_id: {{ $qual->PS_ID }},
+                                                q_val: {{ json_encode($qual->Q_VAL ?? '') }},
+                                                q_exp: {{ json_encode($qual->Q_EXPIRATION?->format('Y-m-d') ?? '') }},
+                                                label: {{ json_encode(($qual->poste?->TYPE ?? '') . (($qual->poste?->DESCRIPTION) ? ' — ' . $qual->poste->DESCRIPTION : '')) }}
+                                            })">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <form method="POST"
+                                            action="{{ route('personnel.qualification.destroy', [$personnel, $qual->PS_ID]) }}"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Supprimer cette compétence ?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger"
+                                                title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <p class="text-muted small">Aucune compétence enregistrée.</p>
+            @endif
+
+            {{-- Add/Edit qualification modal --}}
+            <div class="modal fade" id="qualModal" tabindex="-1" aria-labelledby="qualModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="qualModalLabel" style="font-size:var(--font-size-base);">
+                                Compétence
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form id="qualForm" method="POST">
+                            @csrf
+                            <span id="qualMethodField"></span>
+                            <div class="modal-body">
+                                <div class="mb-2" id="qualPosteWrap">
+                                    <label class="form-label" for="qualPosteSelect" style="font-size:var(--font-size-sm);">
+                                        Compétence <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="qualPosteSelect" name="PS_ID" class="form-select form-select-sm" required>
+                                        <option value="">— choisir —</option>
+                                        @foreach ($postes as $poste)
+                                            <option value="{{ $poste->PS_ID }}">
+                                                {{ $poste->TYPE }}{{ $poste->DESCRIPTION ? ' — ' . $poste->DESCRIPTION : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div id="qualPosteLabel" class="mb-2" style="display:none;">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Compétence</label>
+                                    <p class="mb-0" id="qualPosteLabelText" style="font-size:var(--font-size-sm);"></p>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label" for="qualVal" style="font-size:var(--font-size-sm);">
+                                        Valeur / résultat
+                                    </label>
+                                    <input id="qualVal" name="Q_VAL" type="text" class="form-control form-control-sm"
+                                        placeholder="ex. Obtenu, 15/20…">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label" for="qualExp" style="font-size:var(--font-size-sm);">
+                                        Date d'expiration
+                                    </label>
+                                    <input id="qualExp" name="Q_EXPIRATION" type="date" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                            <div class="modal-footer py-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-sm btn-primary" id="qualSubmitBtn">
+                                    Enregistrer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <p class="section-title">Accès</p>
             <dl class="info-grid">
                 <div class="info-item">
@@ -282,3 +434,42 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function openQualModal(qual) {
+    var form       = document.getElementById('qualForm');
+    var methodEl   = document.getElementById('qualMethodField');
+    var posteWrap  = document.getElementById('qualPosteWrap');
+    var posteLbl   = document.getElementById('qualPosteLabel');
+    var posteLblTx = document.getElementById('qualPosteLabelText');
+    var valInput   = document.getElementById('qualVal');
+    var expInput   = document.getElementById('qualExp');
+    var modalTitle = document.getElementById('qualModalLabel');
+    var submitBtn  = document.getElementById('qualSubmitBtn');
+
+    if (qual) {
+        // ── Edit mode ──────────────────────────────────────────────
+        var baseUrl = '{{ route('personnel.show', $personnel) }}';
+        form.action = baseUrl.replace(/\/[^\/]+$/, '') + '/{{ $personnel->P_ID }}/qualifications/' + qual.ps_id;
+        methodEl.innerHTML = '<input type="hidden" name="_method" value="PATCH">';
+        posteWrap.style.display = 'none';
+        posteLbl.style.display  = '';
+        posteLblTx.textContent  = qual.label;
+        valInput.value          = qual.q_val || '';
+        expInput.value          = qual.q_exp || '';
+        modalTitle.textContent  = 'Modifier la compétence';
+    } else {
+        // ── Add mode ───────────────────────────────────────────────
+        form.action = '{{ route('personnel.qualification.store', $personnel) }}';
+        methodEl.innerHTML = '';
+        posteWrap.style.display = '';
+        posteLbl.style.display  = 'none';
+        document.getElementById('qualPosteSelect').value = '';
+        valInput.value = '';
+        expInput.value = '';
+        modalTitle.textContent = 'Ajouter une compétence';
+    }
+}
+</script>
+@endpush

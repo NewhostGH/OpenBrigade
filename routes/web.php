@@ -81,6 +81,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('personnel', PersonnelController::class)
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');
+    // Qualifications (competences) CRUD — nested under personnel
+    Route::post('personnel/{personnel}/qualifications', [PersonnelController::class, 'storeQualification'])
+        ->name('personnel.qualification.store')->middleware('permission:0');
+    Route::patch('personnel/{personnel}/qualifications/{psId}', [PersonnelController::class, 'updateQualification'])
+        ->name('personnel.qualification.update')->middleware('permission:0');
+    Route::delete('personnel/{personnel}/qualifications/{psId}', [PersonnelController::class, 'destroyQualification'])
+        ->name('personnel.qualification.destroy')->middleware('permission:0');
     Route::get('/trombinoscope', [PersonnelController::class, 'trombinoscope'])->name('personnel.trombinoscope')->middleware('permission:0');
     Route::get('/qualifications', [PersonnelController::class, 'qualifications'])->name('personnel.qualifications')->middleware('permission:56');
     Route::get('/clients', [CompanyController::class, 'index'])->name('company.index')->middleware('permission:29');
