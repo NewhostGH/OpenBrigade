@@ -19,7 +19,7 @@
                 <option value="ALL" @selected($ltCode === 'ALL')>Tous les types</option>
                 @foreach($logTypes as $t)
                     <option value="{{ $t->LT_CODE }}" @selected($ltCode === $t->LT_CODE)>
-                        {{ $t->LT_LIBELLE }}
+                        {{ $t->LT_DESCRIPTION }}
                     </option>
                 @endforeach
             </select>
@@ -53,7 +53,7 @@
                         </td>
                         <td style="font-size:var(--font-size-sm)">{{ $log->actor ?? '—' }}</td>
                         <td style="font-size:var(--font-size-xs)">
-                            <span class="badge bg-secondary">{{ $log->LT_LIBELLE ?? $log->LT_CODE }}</span>
+                            <span class="badge bg-secondary">{{ $log->LT_DESCRIPTION ?? $log->LT_CODE }}</span>
                         </td>
                         <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                             {{ $log->LH_COMPLEMENT ?? '' }}
