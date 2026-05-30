@@ -495,8 +495,13 @@
                         </div>
                         <div class="col-3">
                             <label class="form-label" style="font-size:var(--font-size-sm);">Période</label>
-                            <input name="PERIODE_CODE" id="cotisPeriode" type="text"
-                                   class="form-control form-control-sm" placeholder="ex. T1">
+                            <select name="PERIODE_CODE" id="cotisPeriode" class="form-select form-select-sm">
+                                @foreach ($periodes as $p)
+                                    <option value="{{ $p->P_CODE }}" {{ $p->P_CODE === 'A' ? 'selected' : '' }}>
+                                        {{ ucfirst($p->P_DESCRIPTION) }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-3">
                             <label class="form-label" style="font-size:var(--font-size-sm);">Date *</label>
@@ -564,7 +569,7 @@ function openCotisModal(cotis) {
         form.action        = baseRoute;
         methodEl.innerHTML = '';
         document.getElementById('cotisAnnee').value   = new Date().getFullYear();
-        document.getElementById('cotisPeriode').value = '';
+        document.getElementById('cotisPeriode').value = 'A';
         document.getElementById('cotisDate').value    = '';
         document.getElementById('cotisMontant').value = '';
         document.getElementById('cotisMode').value    = '';

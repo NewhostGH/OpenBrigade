@@ -19,6 +19,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MaterielController;
 use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
+use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ShortcutController;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/remplacements', [RemplacementController::class, 'index'])->name('remplacement.index')->middleware('permission:0');
     Route::get('/disponibilites', [DispoController::class, 'index'])->name('dispo.index')->middleware('permission:38');
     Route::get('/admin/monitoring', [AdminController::class, 'monitoring'])->name('admin.monitoring')->middleware('permission:49');
+    Route::get('/cotisations', [CotisationController::class, 'index'])->name('cotisations.index')->middleware('permission:53');
+    Route::post('/cotisations', [CotisationController::class, 'batchSave'])->name('cotisations.save')->middleware('permission:53');
+    Route::get('/cotisations/export', [CotisationController::class, 'export'])->name('cotisations.export')->middleware('permission:53');
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index')->middleware('permission:0');
     Route::get('/vehicules', [VehiculeController::class, 'index'])->name('vehicule.index')->middleware('permission:42');
     Route::get('/vehicules/{vehicule}', [VehiculeController::class, 'show'])->name('vehicule.show')->middleware('permission:42');

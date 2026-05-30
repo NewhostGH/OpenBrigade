@@ -312,12 +312,15 @@ class PersonnelController extends Controller
             ->orderBy('TP_DESCRIPTION')
             ->get(['TP_ID', 'TP_DESCRIPTION']);
 
+        $periodes = DB::table('periode')->orderBy('P_ORDER')->get(['P_CODE', 'P_DESCRIPTION']);
+
         $gps = DB::table('gps')->where('P_ID', $personnel->P_ID)->first();
 
         return view('personnel.show', [
             'personnel'     => $personnel,
             'postes'        => $postes,
             'typesPaiement' => $typesPaiement,
+            'periodes'      => $periodes,
             'gps'           => $gps,
         ]);
     }
@@ -400,6 +403,7 @@ class PersonnelController extends Controller
 
         $validated['P_ID']          = $personnel->P_ID;
         $validated['REMBOURSEMENT'] = $request->boolean('REMBOURSEMENT') ? 1 : 0;
+        $validated['TP_ID']         = $validated['TP_ID'] ?? 0;
 
         Cotisation::create($validated);
 
@@ -420,6 +424,7 @@ class PersonnelController extends Controller
         ]);
 
         $validated['REMBOURSEMENT'] = $request->boolean('REMBOURSEMENT') ? 1 : 0;
+        $validated['TP_ID']         = $validated['TP_ID'] ?? 0;
 
         Cotisation::where('PC_ID', $pcId)
             ->where('P_ID', $personnel->P_ID)
