@@ -29,7 +29,7 @@ return [
                 ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',                                                       'icon' => 'list'],
                 ['key' => 'personnel.search',      'label' => 'Recherche',       'url' => '/personnel',                                                       'icon' => 'magnifying-glass', 'permission' => 56],
                 ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications',                                                'icon' => 'certificate',      'permission' => 56],
-                ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/legacy/cotisations.php',                                         'icon' => 'receipt',          'permission' => 53],
+                ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/cotisations',                                                    'icon' => 'receipt',          'permission' => 53],
                 ['key' => 'personnel.geoloc',      'label' => 'Géolocalisation', 'url' => '/geolocalisation',                                              'icon' => 'map-marker-alt',   'permission' => 76],
             ],
         ],
@@ -127,7 +127,7 @@ return [
             'icon'       => 'sitemap',
             'permission' => 52,
             'items'      => [
-                ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/organisation',             'icon' => 'layer-group',  'permission' => 52],
+                ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/legacy/departement.php',             'icon' => 'layer-group',  'permission' => 52],
                 ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation',             'icon' => 'project-diagram', 'permission' => 52],
                 ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/legacy/jvectormap.php',    'icon' => 'map',          'permission' => 27],
             ],

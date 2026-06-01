@@ -22,7 +22,7 @@ class AdminController extends Controller
             ->leftJoin('log_type as lt', 'lh.LT_CODE', '=', 'lt.LT_CODE')
             ->select(
                 'lh.LH_ID', 'lh.LH_STAMP', 'lh.LH_COMPLEMENT', 'lh.LT_CODE',
-                'lt.LT_LIBELLE',
+                'lt.LT_DESCRIPTION',
                 DB::raw("CONCAT(p.P_PRENOM, ' ', p.P_NOM) as actor")
             )
             ->orderByDesc('lh.LH_STAMP');
@@ -43,7 +43,7 @@ class AdminController extends Controller
         }
 
         $items    = $query->paginate(50)->withQueryString();
-        $logTypes = DB::table('log_type')->orderBy('LT_LIBELLE')->get(['LT_CODE', 'LT_LIBELLE']);
+        $logTypes = DB::table('log_type')->orderBy('LT_DESCRIPTION')->get(['LT_CODE', 'LT_DESCRIPTION']);
 
         return view('admin.monitoring', compact('items', 'search', 'ltCode', 'logTypes'));
     }

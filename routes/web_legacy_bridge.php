@@ -44,9 +44,9 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'consommable_load.php', fn () => redirect()->route('consommable.index'))->name('legacy_bridge.consommable_load');
     Route::match(['GET', 'POST'], 'consommable_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.consommable_xls');
     Route::match(['GET', 'POST'], 'cotisation_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.cotisation_edit');
-    Route::match(['GET', 'POST'], 'cotisations.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.cotisations');
+    Route::get('cotisations.php', fn () => redirect()->route('cotisations.index'))->name('legacy_bridge.cotisations');
     Route::match(['GET', 'POST'], 'cotisations_extract.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.cotisations_extract');
-    Route::match(['GET', 'POST'], 'cotisations_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.cotisations_xls');
+    Route::get('cotisations_xls.php', fn () => redirect()->route('cotisations.export', request()->query()))->name('legacy_bridge.cotisations_xls');
     Route::match(['GET', 'POST'], 'database_maintenance.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.database_maintenance');
     Route::match(['GET', 'POST'], 'debug_data.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.debug_data');
     Route::match(['GET', 'POST'], 'decrypt.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.decrypt');
@@ -276,7 +276,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_company.php', [LegacyBridgeController::class, 'show'])->middleware('permission:29')->name('legacy_bridge.save_company');
     Route::match(['GET', 'POST'], 'save_configuration.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.save_configuration');
     Route::match(['GET', 'POST'], 'save_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_consommable');
-    Route::match(['GET', 'POST'], 'save_cotisations.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.save_cotisations');
+    Route::get('save_cotisations.php', fn () => redirect()->route('cotisations.index'))->name('legacy_bridge.save_cotisations');
     Route::match(['GET', 'POST'], 'save_detail_facture.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_detail_facture');
     Route::match(['GET', 'POST'], 'save_dispo.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_dispo');
     Route::match(['GET', 'POST'], 'save_documents.php', [LegacyBridgeController::class, 'show'])->middleware('permission:47')->name('legacy_bridge.save_documents');
