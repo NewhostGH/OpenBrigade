@@ -114,7 +114,14 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'evenement_diplome.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_diplome');
     Route::match(['GET', 'POST'], 'evenement_display.php', fn () => redirect()->route('evenement.index'))->name('legacy_bridge.evenement_display');
     Route::match(['GET', 'POST'], 'evenement_duplicate.php', [LegacyBridgeController::class, 'show'])->middleware('permission:15')->name('legacy_bridge.evenement_duplicate');
-    Route::match(['GET', 'POST'], 'evenement_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_edit');
+    Route::match(['GET', 'POST'], 'evenement_edit.php', function (\Illuminate\Http\Request $r) {
+        $evt    = $r->query('evenement') ?: $r->input('evenement');
+        $action = $r->query('action') ?: $r->input('action', 'create');
+        if ($action === 'create' || ! $evt) {
+            return redirect()->route('evenement.create');
+        }
+        return redirect()->route('evenement.edit', (int) $evt);
+    })->middleware('permission:15')->name('legacy_bridge.evenement_edit');
     Route::match(['GET', 'POST'], 'evenement_equipes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.evenement_equipes');
     Route::match(['GET', 'POST'], 'evenement_facturation.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_facturation');
     Route::match(['GET', 'POST'], 'evenement_facturation_detail.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_facturation_detail');
@@ -138,7 +145,10 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
         $ev = $r->query('evenement');
         return $ev ? redirect()->route('evenement.show', $ev) : redirect()->route('evenement.index');
     })->name('legacy_bridge.evenement_rapport');
-    Route::match(['GET', 'POST'], 'evenement_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_save');
+    Route::match(['GET', 'POST'], 'evenement_save.php', function (\Illuminate\Http\Request $r) {
+        $evt = $r->input('evenement') ?: $r->query('evenement');
+        return $evt ? redirect()->route('evenement.show', (int) $evt) : redirect()->route('evenement.index');
+    })->name('legacy_bridge.evenement_save');
     Route::match(['GET', 'POST'], 'evenement_tarif.php', [LegacyBridgeController::class, 'show'])->middleware('permission:15')->name('legacy_bridge.evenement_tarif');
     Route::match(['GET', 'POST'], 'evenement_tarif_formation.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.evenement_tarif_formation');
     Route::match(['GET', 'POST'], 'evenement_trombinoscope.php', [LegacyBridgeController::class, 'show'])->middleware('permission:44')->name('legacy_bridge.evenement_trombinoscope');

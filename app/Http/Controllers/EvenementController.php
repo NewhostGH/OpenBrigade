@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evenement;
+use App\Models\Personnel;
 use App\Models\Section;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -145,10 +148,175 @@ class EvenementController extends Controller
             $vehicules = DB::table('evenement_vehicule as ev')
                 ->join('vehicule as v', 'ev.V_ID', '=', 'v.V_ID')
                 ->where('ev.E_CODE', $code)
-                ->select('v.V_ID', 'v.V_IMMAT', 'v.V_LIBELLE', 'ev.EV_KM')
+                ->select('v.V_ID', 'v.V_IMMATRICULATION', 'v.V_INDICATIF', 'ev.EV_KM')
                 ->get();
         }
 
         return view('evenement.show', compact('event', 'tab', 'participants', 'vehicules'));
+    }
+
+    // ── Create ────────────────────────────────────────────────────────────────
+
+    public function create(): View
+    {
+        $types    = DB::table('type_evenement')->orderBy('TE_LIBELLE')->get(['TE_CODE', 'TE_LIBELLE', 'TE_ICON']);
+        $sections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+        $chefs    = Personnel::where('P_OLD_MEMBER', 0)
+            ->where('P_STATUT', '!=', 'EXT')
+            ->orderBy('P_NOM')
+            ->orderBy('P_PRENOM')
+            ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_SECTION']);
+
+        return view('evenement.form', [
+            'event'    => null,
+            'horaire'  => null,
+            'types'    => $types,
+            'sections' => $sections,
+            'chefs'    => $chefs,
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $this->validateEventRequest($request, isCreate: true);
+
+        $code = DB::transaction(function () use ($validated, $request) {
+            $code = (int) DB::table('evenement')->max('E_CODE') + 1;
+
+            DB::table('evenement')->insert([
+                'E_CODE'         => $code,
+                'TE_CODE'        => $validated['TE_CODE'],
+                'S_ID'           => $validated['S_ID'],
+                'E_LIBELLE'      => $validated['E_LIBELLE'],
+                'E_LIEU'         => $validated['E_LIEU'] ?? '',
+                'E_NB'           => $validated['E_NB'] ?? 0,
+                'E_CHEF'         => $validated['E_CHEF'] ?? null,
+                'E_COMMENT'      => $validated['E_COMMENT'] ?? '',
+                'E_CLOSED'       => 0,
+                'E_CANCELED'     => 0,
+                'E_EQUIPE'       => 0,
+                'E_ANOMALIE'     => 0,
+                'E_FLAG1'        => 0,
+                'E_OPEN_TO_EXT'  => (int) $request->boolean('E_OPEN_TO_EXT'),
+                'E_CREATED_BY'   => auth()->id(),
+                'E_CREATE_DATE'  => now(),
+            ]);
+
+            $dateDebut = Carbon::parse($validated['EH_DATE_DEBUT'])->toDateString();
+            $dateFin   = $validated['EH_DATE_FIN']
+                ? Carbon::parse($validated['EH_DATE_FIN'])->toDateString()
+                : $dateDebut;
+
+            DB::table('evenement_horaire')->insert([
+                'E_CODE'        => $code,
+                'EH_ID'         => 1,
+                'EH_DATE_DEBUT' => $dateDebut,
+                'EH_DATE_FIN'   => $dateFin,
+                'EH_DEBUT'      => $validated['EH_DEBUT'] ?? null,
+                'EH_FIN'        => $validated['EH_FIN']   ?? null,
+                'EH_DESCRIPTION'=> '',
+            ]);
+
+            return $code;
+        });
+
+        return redirect()->route('evenement.show', $code)
+            ->with('success', 'Activité créée avec succès.');
+    }
+
+    // ── Edit / Update ─────────────────────────────────────────────────────────
+
+    public function edit(string $code): View
+    {
+        $event   = Evenement::with(['horaires'])->findOrFail($code);
+        $horaire = $event->horaires->first();
+
+        $types    = DB::table('type_evenement')->orderBy('TE_LIBELLE')->get(['TE_CODE', 'TE_LIBELLE', 'TE_ICON']);
+        $sections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+        $chefs    = Personnel::where('P_OLD_MEMBER', 0)
+            ->where('P_STATUT', '!=', 'EXT')
+            ->orderBy('P_NOM')
+            ->orderBy('P_PRENOM')
+            ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_SECTION']);
+
+        return view('evenement.form', compact('event', 'horaire', 'types', 'sections', 'chefs'));
+    }
+
+    public function update(Request $request, string $code): RedirectResponse
+    {
+        $event     = Evenement::findOrFail($code);
+        $validated = $this->validateEventRequest($request, isCreate: false);
+
+        DB::transaction(function () use ($event, $validated, $request) {
+            $event->update([
+                'TE_CODE'        => $validated['TE_CODE'],
+                'S_ID'           => $validated['S_ID'],
+                'E_LIBELLE'      => $validated['E_LIBELLE'],
+                'E_LIEU'         => $validated['E_LIEU'] ?? '',
+                'E_NB'           => $validated['E_NB'] ?? 0,
+                'E_CHEF'         => $validated['E_CHEF'] ?? null,
+                'E_COMMENT'      => $validated['E_COMMENT'] ?? '',
+                'E_CLOSED'       => (int) $request->boolean('E_CLOSED'),
+                'E_CANCELED'     => (int) $request->boolean('E_CANCELED'),
+                'E_OPEN_TO_EXT'  => (int) $request->boolean('E_OPEN_TO_EXT'),
+            ]);
+
+            $dateDebut = Carbon::parse($validated['EH_DATE_DEBUT'])->toDateString();
+            $dateFin   = $validated['EH_DATE_FIN']
+                ? Carbon::parse($validated['EH_DATE_FIN'])->toDateString()
+                : $dateDebut;
+
+            DB::table('evenement_horaire')->updateOrInsert(
+                ['E_CODE' => $event->E_CODE, 'EH_ID' => 1],
+                [
+                    'EH_DATE_DEBUT' => $dateDebut,
+                    'EH_DATE_FIN'   => $dateFin,
+                    'EH_DEBUT'      => $validated['EH_DEBUT'] ?? null,
+                    'EH_FIN'        => $validated['EH_FIN']   ?? null,
+                ]
+            );
+        });
+
+        return redirect()->route('evenement.show', $code)
+            ->with('success', 'Activité mise à jour.');
+    }
+
+    // ── Delete ────────────────────────────────────────────────────────────────
+
+    public function destroy(string $code): RedirectResponse
+    {
+        $event = Evenement::findOrFail($code);
+
+        DB::transaction(function () use ($event) {
+            $c = $event->E_CODE;
+            DB::table('evenement_participation')->where('E_CODE', $c)->delete();
+            DB::table('evenement_vehicule')->where('E_CODE', $c)->delete();
+            DB::table('evenement_materiel')->where('E_CODE', $c)->delete();
+            DB::table('evenement_chef')->where('E_CODE', $c)->delete();
+            DB::table('evenement_horaire')->where('E_CODE', $c)->delete();
+            $event->delete();
+        });
+
+        return redirect()->route('evenement.index')
+            ->with('success', 'Activité supprimée.');
+    }
+
+    // ── Shared validation ────────────────────────────────────────────────────
+
+    private function validateEventRequest(Request $request, bool $isCreate): array
+    {
+        return $request->validate([
+            'TE_CODE'       => ['required', 'string', 'max:10'],
+            'E_LIBELLE'     => ['required', 'string', 'max:255'],
+            'E_LIEU'        => ['nullable', 'string', 'max:255'],
+            'S_ID'          => ['required', 'integer'],
+            'E_NB'          => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'E_CHEF'        => ['nullable', 'integer'],
+            'EH_DATE_DEBUT' => ['required', 'date'],
+            'EH_DATE_FIN'   => ['nullable', 'date', 'after_or_equal:EH_DATE_DEBUT'],
+            'EH_DEBUT'      => ['nullable', 'date_format:H:i'],
+            'EH_FIN'        => ['nullable', 'date_format:H:i'],
+            'E_COMMENT'     => ['nullable', 'string', 'max:5000'],
+        ]);
     }
 }

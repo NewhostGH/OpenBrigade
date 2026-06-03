@@ -27,7 +27,7 @@
             </div>
             <div class="d-flex gap-2">
                 @if(auth()->user()->hasPermission(15))
-                    <a href="{{ url('/legacy/evenement_edit.php?action=update&evenement=' . $event->E_CODE) }}"
+                    <a href="{{ route('evenement.edit', $event->E_CODE) }}"
                        class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-edit me-1"></i> Modifier
                     </a>

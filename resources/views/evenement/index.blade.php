@@ -18,7 +18,7 @@
     table-id="evenementTable">
 
     @if(auth()->user()->hasPermission(15))
-        <a href="{{ url('/legacy/evenement_edit.php?action=create') }}" class="btn btn-sm btn-primary">
+        <a href="{{ route('evenement.create') }}" class="btn btn-sm btn-primary">
             <i class="fas fa-plus me-1"></i> Nouvelle activité
         </a>
     @endif

@@ -57,7 +57,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/evenements', [EvenementController::class, 'index'])->name('evenement.index')->middleware('permission:0');
+    Route::get('/evenements/create', [EvenementController::class, 'create'])->name('evenement.create')->middleware('permission:15');
+    Route::post('/evenements', [EvenementController::class, 'store'])->name('evenement.store')->middleware('permission:15');
     Route::get('/evenements/{code}', [EvenementController::class, 'show'])->name('evenement.show')->middleware('permission:0');
+    Route::get('/evenements/{code}/edit', [EvenementController::class, 'edit'])->name('evenement.edit')->middleware('permission:15');
+    Route::put('/evenements/{code}', [EvenementController::class, 'update'])->name('evenement.update')->middleware('permission:15');
+    Route::delete('/evenements/{code}', [EvenementController::class, 'destroy'])->name('evenement.destroy')->middleware('permission:19');
     Route::get('/garde', [GardeController::class, 'index'])->name('garde.index')->middleware('permission:61');
     Route::get('/garde/astreintes', [GardeController::class, 'astreintes'])->name('garde.astreintes')->middleware('permission:52');
     Route::get('/indisponibilites', [IndispoController::class, 'index'])->name('indispo.index')->middleware('permission:11');
