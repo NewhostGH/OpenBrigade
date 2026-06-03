@@ -4,6 +4,11 @@
 
 @section('content')
 
+<x-ob-breadcrumb :items="[
+    ['label' => 'Véhicules', 'url' => route('vehicule.index')],
+    ['label' => $vehicule->V_IMMAT],
+]"/>
+
 <div class="mx-3 mt-3">
     <div class="widget-card mb-3">
         <div class="widget-card-header">
