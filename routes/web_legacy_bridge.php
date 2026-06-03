@@ -255,7 +255,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'planning.php', [LegacyBridgeController::class, 'show'])->middleware('permission:56')->name('legacy_bridge.planning');
     Route::match(['GET', 'POST'], 'planning_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:56')->name('legacy_bridge.planning_xls');
     Route::match(['GET', 'POST'], 'poste.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.poste');
-    Route::match(['GET', 'POST'], 'prelevements.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.prelevements');
+    Route::match(['GET', 'POST'], 'prelevements.php', fn () => redirect()->route('cotisations.prelevements'))->name('legacy_bridge.prelevements');
     Route::match(['GET', 'POST'], 'push_monitor.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.push_monitor');
     Route::match(['GET', 'POST'], 'qrcode.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.qrcode');
     Route::match(['GET', 'POST'], 'qrcode_pic.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.qrcode_pic');
@@ -300,7 +300,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_piquet.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.save_piquet');
     Route::match(['GET', 'POST'], 'save_poste.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_poste');
     Route::match(['GET', 'POST'], 'save_preferences.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_preferences');
-    Route::match(['GET', 'POST'], 'save_prelevements.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.save_prelevements');
+    Route::match(['GET', 'POST'], 'save_prelevements.php', fn () => redirect()->route('cotisations.prelevements'))->name('legacy_bridge.save_prelevements');
     Route::match(['GET', 'POST'], 'save_qualif.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_qualif');
     Route::match(['GET', 'POST'], 'save_qualif2.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_qualif2');
     Route::match(['GET', 'POST'], 'save_section.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_section');
@@ -374,8 +374,8 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'vehicule_load.php', fn () => redirect()->route('vehicule.index'))->name('legacy_bridge.vehicule_load');
     Route::match(['GET', 'POST'], 'vehicule_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.vehicule_xls');
     Route::match(['GET', 'POST'], 'victimes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.victimes');
-    Route::match(['GET', 'POST'], 'virements.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.virements');
-    Route::match(['GET', 'POST'], 'virements_extract.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.virements_extract');
+    Route::match(['GET', 'POST'], 'virements.php', fn () => redirect()->route('cotisations.virements'))->name('legacy_bridge.virements');
+    Route::match(['GET', 'POST'], 'virements_extract.php', fn () => redirect()->route('cotisations.virements'))->name('legacy_bridge.virements_extract');
     Route::match(['GET', 'POST'], 'wizard.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.wizard');
     Route::match(['GET', 'POST'], 'zipcode.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.zipcode');
 });

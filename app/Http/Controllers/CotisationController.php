@@ -160,6 +160,222 @@ class CotisationController extends Controller
         );
     }
 
+    // ── Prélèvements (Tab 2) ─────────────────────────────────────────────────
+
+    /**
+     * List active members who pay by direct debit (TP_ID = 1).
+     * Shows pending (no cotisation yet) vs already-saved counts + batch save form.
+     */
+    public function prelevements(Request $request)
+    {
+        $year        = (int) $request->integer('year', now()->year);
+        $periodeCode = (string) $request->string('periode', 'A');
+        $sectionId   = (int) $request->integer('section', 0);
+        $subsections = (bool) $request->integer('subsections', 1);
+
+        $allSections    = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
+        $periodes       = DB::table('periode')->orderBy('P_ORDER')->get();
+        $periode        = $periodes->firstWhere('P_CODE', $periodeCode);
+        $sectionOptions = $this->buildSectionTree($allSections);
+
+        // Base: TP_ID=1 (direct debit), active, non-EXT, non-admin
+        $base = DB::table('pompier as p')
+            ->join('section as s', 'p.P_SECTION', '=', 's.S_ID')
+            ->leftJoin('personnel_cotisation as pc', function ($join) use ($year, $periodeCode) {
+                $join->on('pc.P_ID', '=', 'p.P_ID')
+                     ->where('pc.ANNEE', $year)
+                     ->where('pc.PERIODE_CODE', $periodeCode)
+                     ->where('pc.REMBOURSEMENT', 0);
+            })
+            ->where('p.TP_ID', 1)
+            ->where('p.P_NOM', '!=', 'admin')
+            ->where('p.P_STATUT', '!=', 'EXT')
+            ->where('p.P_OLD_MEMBER', 0)
+            ->where('p.SUSPENDU', 0);
+
+        if ($sectionId > 0) {
+            if ($subsections) {
+                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
+                $base->whereIn('p.P_SECTION', array_merge([$sectionId], $descendants));
+            } else {
+                $base->where('p.P_SECTION', $sectionId);
+            }
+        }
+
+        if ($periode) {
+            $this->applyPeriodFilter($base, $periode, $year);
+        }
+
+        $pending = (clone $base)
+            ->whereNull('pc.PC_DATE')
+            ->select(['p.P_ID', 'p.P_NOM', 'p.P_PRENOM', 'p.MONTANT_REGUL', 's.S_CODE'])
+            ->orderBy('p.P_NOM')
+            ->get();
+
+        $paid = (clone $base)
+            ->whereNotNull('pc.PC_DATE')
+            ->select(['p.P_ID', 'p.P_NOM', 'p.P_PRENOM', 'pc.MONTANT', 'pc.PC_DATE', 's.S_CODE'])
+            ->orderBy('p.P_NOM')
+            ->get();
+
+        $totalPending = $pending->sum(fn ($r) => (float) ($r->MONTANT_REGUL ?? 0));
+        $totalPaid    = $paid->sum(fn ($r) => (float) ($r->MONTANT ?? 0));
+
+        return view('cotisations.prelevements', [
+            'pending'        => $pending,
+            'paid'           => $paid,
+            'totalPending'   => $totalPending,
+            'totalPaid'      => $totalPaid,
+            'year'           => $year,
+            'currentYear'    => now()->year,
+            'periodeCode'    => $periodeCode,
+            'sectionId'      => $sectionId,
+            'subsections'    => $subsections,
+            'periodes'       => $periodes,
+            'sectionOptions' => $sectionOptions,
+        ]);
+    }
+
+    /**
+     * Batch-save direct-debit cotisations for all pending members.
+     */
+    public function savePrelevements(Request $request)
+    {
+        $request->validate([
+            'year'        => ['required', 'integer', 'min:2000', 'max:2100'],
+            'periode'     => ['required', 'string', 'max:10'],
+            'date_prelev' => ['required', 'date'],
+        ]);
+
+        $year        = (int) $request->input('year');
+        $periodeCode = (string) $request->input('periode');
+        $datePrelev  = Carbon::parse($request->input('date_prelev'))->toDateString();
+        $pids        = array_filter(array_map('intval', (array) $request->input('pids', [])));
+
+        $num   = 0;
+        $total = 0.0;
+
+        foreach ($pids as $pid) {
+            if ($pid <= 0) {
+                continue;
+            }
+
+            $montant = (float) $request->input("montant.{$pid}", 0);
+
+            // Skip if already paid for this period
+            $exists = DB::table('personnel_cotisation')
+                ->where('P_ID', $pid)
+                ->where('ANNEE', $year)
+                ->where('PERIODE_CODE', $periodeCode)
+                ->where('REMBOURSEMENT', 0)
+                ->whereNotNull('PC_DATE')
+                ->exists();
+
+            if (! $exists) {
+                DB::table('personnel_cotisation')->insert([
+                    'P_ID'          => $pid,
+                    'ANNEE'         => $year,
+                    'PERIODE_CODE'  => $periodeCode,
+                    'PC_DATE'       => $datePrelev,
+                    'MONTANT'       => $montant,
+                    'TP_ID'         => 1,
+                    'COMMENTAIRE'   => '',
+                    'REMBOURSEMENT' => 0,
+                ]);
+                $num++;
+                $total += $montant;
+            }
+        }
+
+        $filters = $request->only(['year', 'periode', 'section', 'subsections']);
+
+        return redirect()->route('cotisations.prelevements', $filters)
+            ->with('success', "Prélèvements enregistrés pour {$num} personne(s). Total : " . number_format($total, 2, ',', ' ') . ' €');
+    }
+
+    // ── Virements (Tab 3) ─────────────────────────────────────────────────────
+
+    /**
+     * List reimbursement / bank-transfer entries (REMBOURSEMENT=1, TP_ID=2).
+     * Filterable by section, date range, and include-old toggle.
+     */
+    public function virements(Request $request)
+    {
+        $sectionId   = (int) $request->integer('section', 0);
+        $subsections = (bool) $request->integer('subsections', 1);
+        $includeOld  = (bool) $request->integer('include_old', 0);
+        $dateFrom    = trim((string) $request->string('date_from', ''));
+        $dateTo      = trim((string) $request->string('date_to', ''));
+        $order       = (string) $request->string('order', 'PC_DATE');
+
+        $allowedOrders = ['P_NOM', 'P_DATE_ENGAGEMENT', 'P_FIN', 'MONTANT', 'PC_DATE'];
+        if (! in_array($order, $allowedOrders, true)) {
+            $order = 'PC_DATE';
+        }
+
+        $allSections    = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
+        $sectionOptions = $this->buildSectionTree($allSections);
+
+        $query = DB::table('personnel_cotisation as pc')
+            ->join('pompier as p', 'p.P_ID', '=', 'pc.P_ID')
+            ->join('section as s', 'p.P_SECTION', '=', 's.S_ID')
+            ->where('pc.REMBOURSEMENT', 1)
+            ->where('pc.TP_ID', 2)
+            ->select([
+                'p.P_ID', 'p.P_NOM', 'p.P_PRENOM',
+                's.S_CODE', 's.S_ID as S_SID',
+                'p.P_DATE_ENGAGEMENT', 'p.P_FIN',
+                'pc.PC_ID', 'pc.PC_DATE', 'pc.MONTANT', 'pc.COMMENTAIRE',
+            ]);
+
+        if ($sectionId > 0) {
+            if ($subsections) {
+                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
+                $query->whereIn('p.P_SECTION', array_merge([$sectionId], $descendants));
+            } else {
+                $query->where('p.P_SECTION', $sectionId);
+            }
+        }
+
+        if (! $includeOld) {
+            $query->where('p.P_OLD_MEMBER', 0)->where('p.SUSPENDU', 0);
+        }
+
+        if ($dateFrom !== '') {
+            try {
+                $query->where('pc.PC_DATE', '>=', Carbon::parse($dateFrom)->toDateString());
+            } catch (\Exception) {
+            }
+        }
+        if ($dateTo !== '') {
+            try {
+                $query->where('pc.PC_DATE', '<=', Carbon::parse($dateTo)->toDateString());
+            } catch (\Exception) {
+            }
+        }
+
+        $descOrders = ['P_DATE_ENGAGEMENT', 'P_FIN', 'PC_DATE', 'MONTANT'];
+        if (in_array($order, $descOrders, true)) {
+            $alias = in_array($order, ['P_DATE_ENGAGEMENT', 'P_FIN']) ? 'p' : 'pc';
+            $query->orderByDesc("{$alias}.{$order}");
+        } else {
+            $query->orderBy("p.{$order}");
+        }
+
+        $items = $query->paginate(50)->withQueryString();
+
+        return view('cotisations.virements', [
+            'items'          => $items,
+            'sectionId'      => $sectionId,
+            'subsections'    => $subsections,
+            'includeOld'     => $includeOld,
+            'dateFrom'       => $dateFrom,
+            'dateTo'         => $dateTo,
+            'order'          => $order,
+            'sectionOptions' => $sectionOptions,
+        ]);
+    }
+
     // ── Private helpers ───────────────────────────────────────────────────────
 
     private function parseFilters(Request $request): array

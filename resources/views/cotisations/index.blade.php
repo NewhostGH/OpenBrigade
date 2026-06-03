@@ -18,6 +18,8 @@
     ['label' => 'Cotisations'],
 ]"/>
 
+@include('cotisations._tabs')
+
 {{-- ── Toolbar ─────────────────────────────────────────────────────────────── --}}
 <x-ob-toolbar
     title="Cotisations"
