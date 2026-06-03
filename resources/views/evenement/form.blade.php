@@ -5,25 +5,26 @@
 @section('content')
 
 @php
-    $isEdit     = $event !== null;
-    $formAction = $isEdit ? route('evenement.update', $event->E_CODE) : route('evenement.store');
-    $user       = auth()->user();
+    $isEdit      = $event !== null;
+    $formAction  = $isEdit ? route('evenement.update', $event->E_CODE) : route('evenement.store');
+    $user        = auth()->user();
     $userSection = (int) $user->P_SECTION;
 
     // Pre-fill values from existing event or defaults
-    $val = fn(string $field, $default = '') => old($field, $isEdit ? ($event->$field ?? $default) : $default);
+    $val    = fn(string $field, $default = '') => old($field, $isEdit ? ($event->$field ?? $default) : $default);
     $horVal = fn(string $field, $default = '') => old($field, $horaire ? ($horaire->$field ?? $default) : $default);
+
+    // Breadcrumb items computed here — @if cannot live inside a PHP expression
+    $breadcrumb = [['label' => 'Activités', 'url' => route('evenement.index')]];
+    if ($isEdit) {
+        $breadcrumb[] = ['label' => $event->E_LIBELLE ?? $event->E_CODE, 'url' => route('evenement.show', $event->E_CODE)];
+        $breadcrumb[] = ['label' => 'Modifier'];
+    } else {
+        $breadcrumb[] = ['label' => 'Nouvelle activité'];
+    }
 @endphp
 
-<x-ob-breadcrumb :items="[
-    ['label' => 'Activités', 'url' => route('evenement.index')],
-    @if ($isEdit)
-        ['label' => $event->E_LIBELLE ?? $event->E_CODE, 'url' => route('evenement.show', $event->E_CODE)],
-        ['label' => 'Modifier'],
-    @else
-        ['label' => 'Nouvelle activité'],
-    @endif
-]"/>
+<x-ob-breadcrumb :items="$breadcrumb"/>
 
 <div class="mx-3 mt-3" style="max-width:760px;">
 
