@@ -20,50 +20,22 @@ Each menu section follows this repeatable process:
 
 ---
 
-## UI / UX Improvements
-
-- [x] Sidebar menu search bar — live search across all groups, sub-menus and sub-sub-menus; auto-expands matching groups; restores original collapse state on clear (commit: feat: add sidebar live search bar)
-
----
-
-## Platform and Foundations
-- [x] Stabilize Laravel 8.4 runtime and environment configuration (commit: chore: stabilize Laravel 8.4 runtime and environment configuration)
-- [x] Restore and validate the artisan CLI workflow (commit: chore: restore artisan CLI and validate end-to-end Laravel workflow)
-- [x] Define shared app structure (config, services, middleware, error handling) (commit: chore: define shared app structure with middleware, services, and error handling)
-- [x] Set up baseline CI checks (lint, tests, static analysis) (commit: chore: setup baseline CI checks for lint, tests, and static analysis)
-
-## Data and Persistence
-- [x] Port legacy schema to Laravel migrations (commit: chore: port legacy schema to Laravel migrations)
-- [x] Create and wire Eloquent models and core relationships (commit: feat: create and wire Eloquent models and core relationships)
-- [x] Add seeders/factories for required development data (commit: feat: add seeders and factories for required development data)
-- [x] Plan and validate data migration from legacy tables (commit: feat: add legacy data migration validation command and parity workflow)
-
-## Security and Access
-- [x] Implement authentication flow (login, logout, session lifecycle) (commit: feat: implement laravel authentication flow with login logout and session lifecycle)
-- [x] Implement authorization model (roles, permissions, policies) (commit: feat: implement authorization model with legacy permission gates and RequirePermission middleware)
-- [x] Replace inline legacy access checks with centralized guards/middleware (commit: feat: replace inline legacy access checks with EnsureUserIsActive and RequirePermission middleware)
-- [x] Apply security hardening (XSS, SQLi, CSRF, session settings) (commit: feat: apply security hardening with SecurityHeaders middleware and session hardening)
-
-## Legacy Bridge Stabilization
-- [x] Convert all legacy files to UTF-8 encoding (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
-- [x] Eliminate legacy DB redirect loop (configuration_db.php) (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
-- [x] Fix double /index.php URL prefix in bridge and dashboard (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
-- [x] Harden Docker storage/logs permissions (commit: feat: stabilize legacy bridge foundation — UTF-8 encoding, DB redirect elimination, permission hardening)
-
----
-
 ## Phase 1 — Dashboard
 
 > **Goal:** replace `index_d.php` with a native Laravel dashboard. This is the first page users see after login and anchors all future menu migrations.
 
-- [x] Inventory legacy dashboard widgets and KPIs (`index_d.php`, `save_accueil.php`)
-- [x] Create `DashboardController` with Blade view `resources/views/dashboard/index.blade.php` (commit: feat: create dashboard controller and view)
-- [X] Migrate each widget as a Blade component (agenda, alerts, quick-stats, on-call summary) (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
-- [X] Conserve DB as link source -> replaced with configuration file (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
-- [X] Wire dashboard route as the post-login landing page (commit: feat: migrate dashboard widgets and polish sidebar/navbar UI)
-- [x] Add feature tests and check parity against `index_d.php` (commit: test: add dashboard feature tests and retire index_d.php from the bridge)
-- [x] Modernize the interface using latest bootstrap css (commit: style: modernize dashboard UI — Bootstrap 5 compliance, remove dead imports, widget hover transitions)
-- [x] Retire `index_d.php` from the bridge (commit: test: add dashboard feature tests and retire index_d.php from the bridge)
+DONE
+
+---
+
+## Cross-cutting UI architecture
+
+- [x] Universal component system — `ob-breadcrumb`, `ob-toolbar`, `ob-table`, `ob-commandbar`, `ob-badge`, `ob-avatar`, `ob-toggle`; one CSS + JS file per module in `resources/css/` and `resources/js/`; `ObTable` ES6 class driven by `data-*` attributes; col-toggle and export buttons wired globally via `data-for-table`; `overflow:clip` fix so dropdowns are never clipped by the table card (commit: feat: universal ob-component system — ob-table/toolbar/commandbar/breadcrumb with per-module CSS/JS)
+- [x] `TableExportService` — replaces duplicated PhpSpreadsheet boilerplate in controllers; type-aware getters (date auto-format, badge label resolution); `toXlsx()` and `toCsv()` via `response()->streamDownload()`; `?cols=` param for column-aware export matching localStorage visibility state (commit: feat: TableExportService — universal XLS/CSV export, column-aware export URLs)
+- [x] Migrate all list pages to `ob-table` + `ob-toolbar` + `ob-commandbar` + `ob-breadcrumb`: evenement, vehicule, matériel, consommable, company, astreintes, indispo, remplacement, monitoring, qualifications (10 pages); breadcrumb-only on 14 further pages; fix test stubs to include `columns => []` (commit: feat: migrate all list pages to universal ob-component system; add breadcrumb to all pages)
+- [x] Migrate cotisations global page to `ob-toolbar` + `ob-commandbar`; add `action` and `showSelCount` props to `ob-commandbar`; keep per-row editable inputs; statut badges use `ob-badge-*` classes (commit: feat: migrate cotisations page to ob-toolbar/ob-commandbar)
+- [x] Fix `FPDF` anonymous class property type error: remove `int` type annotations from `$y` and `$goDown` — PHP 8 forbids adding a type to an inherited untyped property (commit: fix: FPDF anonymous class property type declarations incompatible with PHP 8)
+- [x] Fix `VehiculeController` wrong column names: `V_IMMAT` → `V_IMMATRICULATION`, `V_LIBELLE` → `V_INDICATIF`; add `TV_CODE`, `V_MODELE`, `V_ANNEE` to select and columns; enrich `vehiculeColumns()` with revision and carte-grise columns (commit: fix: VehiculeController wrong column names — V_IMMATRICULATION, V_INDICATIF; add model/year/revision/titre columns)
 
 ---
 
@@ -90,7 +62,7 @@ Each menu section follows this repeatable process:
 - [x] Inventory all PERSO legacy files (pages, handlers, exports, PDFs)
 - [x] Migrate member list and profile view/edit (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
 - [x] Migrate trombinoscope and org chart (commit: feat: migrate trombinoscope and company list — views, bridge retirements, tests)
-- [ ] Migrate personnel exports (XLS, CSV, vCard, PDF livret/carte)
+- [x] Migrate personnel exports (XLS, CSV, vCard, PDF livret/carte) (commit: feat: migrate personnel exports — XLS/CSV list export, vCard, PDF livret, PDF carte adhérent)
 - [x] Migrate qualifications and training records (`qualifications.php`, `personnel_formation.php`) (commit: feat: migrate astreintes management and qualifications — views, bridge retirements)
 - [x] Migrate on-call availability and indisponibility management (`indispo*.php`, `dispo.php`) (commit: feat: migrate indisponibilités — IndispoController, view, bridge retirements)
 - [x] Add tests and parity check; retire legacy files (commit: feat: retire personnel.php and upd_personnel.php bridges; add personnel feature tests)
