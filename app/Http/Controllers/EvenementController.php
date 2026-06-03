@@ -92,7 +92,18 @@ class EvenementController extends Controller
 
         return view('evenement.index', compact(
             'items', 'period', 'search', 'type', 'filtSect', 'types', 'sections'
-        ));
+        ) + ['columns' => $this->evenementColumns()]);
+    }
+
+    private function evenementColumns(): array
+    {
+        return [
+            ['key'=>'icon','label'=>'','type'=>'html','value'=>fn($e) => '<i class="fas fa-'.($e->TE_ICON ?? 'calendar').'" style="color:var(--text-muted-soft)" title="'.e($e->TE_LIBELLE ?? '').'"></i>','alwaysVisible'=>true,'exportable'=>false,'mobile'=>true],
+            ['key'=>'activite','label'=>'Activité','type'=>'html','value'=>fn($e)=>'<a href="'.route('evenement.show',$e->E_CODE).'" class="text-decoration-none fw-semibold">'.e($e->E_LIBELLE ?? $e->E_CODE).'</a>','alwaysVisible'=>true,'exportable'=>true,'exportValue'=>fn($e)=>$e->E_LIBELLE ?? $e->E_CODE,'sortField'=>'E_INTITULE','mobile'=>true],
+            ['key'=>'lieu','label'=>'Lieu','type'=>'text','value'=>fn($e)=>$e->E_LIEU ?? '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($e)=>$e->E_LIEU ?? ''],
+            ['key'=>'date','label'=>'Date','type'=>'html','value'=>fn($e)=>$e->first_date ? \Carbon\Carbon::parse($e->first_date)->locale('fr')->isoFormat('ddd D MMM YYYY').($e->first_time ? ' <span class="text-muted">'.substr($e->first_time,0,5).'</span>' : '') : '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($e)=>$e->first_date?\Carbon\Carbon::parse($e->first_date)->format('d/m/Y'):''],
+            ['key'=>'statut','label'=>'Statut','type'=>'badge','value'=>fn($e)=>$e->E_CANCELED ? 'ANNULEE' : ($e->E_CLOSED ? 'CLOSE' : 'OPEN'),'badgeMap'=>['ANNULEE'=>['Annulée','ob-badge-bloqued'],'CLOSE'=>['Clôturée','ob-badge-archive'],'OPEN'=>['Ouverte','ob-badge-actif']],'exportable'=>true,'exportValue'=>fn($e)=>$e->E_CANCELED ? 'Annulée' : ($e->E_CLOSED ? 'Clôturée' : 'Ouverte'),'mobile'=>false],
+        ];
     }
 
     // ── Event detail ──────────────────────────────────────────────────────────

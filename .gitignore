@@ -50,7 +50,6 @@ index.nginx-debian.html
 /public/hot
 /public/storage
 /public/build
-/storage/
 bootstrap/cache/*.php
 _ide_helper.php
 _ide_helper_models.php
@@ -61,3 +60,8 @@ phpunit.xml
 
 # Idea stores
 .idea/*
+
+# User storage
+storage/framework
+storage/public
+storage/logs

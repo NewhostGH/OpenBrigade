@@ -93,6 +93,7 @@ test('authenticated users can access the personnel list', function () {
         $ctrl->shouldReceive('index')->andReturn(
             view('personnel.index', [
                 'items'          => $emptyPage,
+                'columns'        => [],
                 'position'       => 'actif',
                 'search'         => '',
                 'category'       => 'INT',
@@ -119,6 +120,7 @@ test('personnel index uses the personnel.index template', function () {
         $ctrl->shouldReceive('index')->andReturn(
             view('personnel.index', [
                 'items'          => $emptyPage,
+                'columns'        => [],
                 'position'       => 'actif',
                 'search'         => '',
                 'category'       => 'INT',

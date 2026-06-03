@@ -23,7 +23,10 @@ use App\Models\Poste;
 use App\Models\Qualification;
 use App\Models\Section;
 use App\Models\TypePaiement;
+use App\Services\PersonnelExportService;
+use App\Services\TableExportService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -46,77 +49,28 @@ class PersonnelController extends Controller
             $perPage = 100;
         }
 
-        $allowedOrder = [
-            'P_NOM', 'P_PRENOM', 'P_CODE', 'P_STATUT', 'P_GRADE',
-            'P_DATE_ENGAGEMENT', 'P_FIN', 'P_BIRTHDATE',
-        ];
-        if (! in_array($order, $allowedOrder, true)) {
-            $order = 'P_NOM';
-        }
-
-        // Load all sections once for hierarchy building + subsection filtering
+        // Load all sections once for hierarchy building + section options
         $allSections = Section::query()
             ->orderBy('S_CODE')
             ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
 
-        $query = Personnel::query()
+        $items = $this->buildFilteredQuery($request)
             ->with(['section'])
             ->select([
                 'P_ID', 'P_PHOTO', 'P_CODE', 'P_PRENOM', 'P_NOM', 'P_STATUT', 'P_GRADE',
                 'P_SECTION', 'P_EMAIL', 'P_PHONE', 'P_PHONE2', 'P_CIVILITE',
                 'P_BIRTHDATE', 'P_DATE_ENGAGEMENT', 'P_OLD_MEMBER', 'GP_ID', 'P_FIN',
-            ]);
+                'P_CITY', 'P_ADDRESS', 'P_ZIP_CODE', 'P_PROFESSION', 'P_SEXE',
+                'P_LICENCE', 'P_LICENCE_EXPIRY',
+            ])
+            ->paginate($perPage)
+            ->withQueryString();
 
-        if ($position === 'actif') {
-            $query->where('P_OLD_MEMBER', 0)->where('GP_ID', '<>', -1);
-        } elseif ($position === 'archive') {
-            $query->where('P_OLD_MEMBER', '>', 0);
-        } elseif ($position === 'bloqued') {
-            $query->where('GP_ID', -1)->where('P_OLD_MEMBER', 0);
-        }
-
-        if ($category !== '' && $category !== 'ALL') {
-            if ($category === 'INT') {
-                $query->where('P_STATUT', '<>', 'EXT');
-            } else {
-                $query->where('P_STATUT', $category);
-            }
-        }
-
-        if ($sectionId > 0) {
-            if ($subsections) {
-                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
-                $query->whereIn('P_SECTION', array_merge([$sectionId], $descendants));
-            } else {
-                $query->where('P_SECTION', $sectionId);
-            }
-        }
-
-        if ($search !== '') {
-            $query->where(function ($inner) use ($search): void {
-                $inner->where('P_NOM', 'like', "%{$search}%")
-                    ->orWhere('P_PRENOM', 'like', "%{$search}%")
-                    ->orWhere('P_CODE', 'like', "%{$search}%")
-                    ->orWhere('P_EMAIL', 'like', "%{$search}%")
-                    ->orWhere('P_PHONE', 'like', "%{$search}%")
-                    ->orWhere('P_PHONE2', 'like', "%{$search}%")
-                    ->orWhere('P_GRADE', 'like', "%{$search}%");
-            });
-        }
-
-        if (in_array($order, ['P_FIN', 'P_DATE_ENGAGEMENT'], true)) {
-            $query->orderByDesc($order);
-        } else {
-            $query->orderBy($order);
-        }
-
-        $items = $query->paginate($perPage)->withQueryString();
-
-        // Build hierarchical section options for the filter select
         $sectionOptions = $this->buildSectionTree($allSections);
 
         return view('personnel.index', [
             'items'          => $items,
+            'columns'        => $this->personnelColumns(),
             'position'       => $position,
             'search'         => $search,
             'category'       => $category,
@@ -126,6 +80,221 @@ class PersonnelController extends Controller
             'perPage'        => $perPage,
             'sectionOptions' => $sectionOptions,
         ]);
+    }
+
+    /**
+     * Single source of truth for personnel list columns — used by both
+     * the index view (via <x-ob-table>) and the XLS/CSV export.
+     */
+    private function personnelColumns(): array
+    {
+        static $statutMap = [
+            'BEN'  => ['Bénévole',    'ob-badge-ben'],
+            'EXT'  => ['Externe',     'ob-badge-ext'],
+            'PRES' => ['Prestataire', 'ob-badge-pres'],
+            'INT'  => ['Interne',     'ob-badge-int'],
+        ];
+
+        return [
+            // ── Always-on columns ──────────────────────────────────────────
+            [
+                'key'          => 'photo',
+                'label'        => 'Photo',
+                'type'         => 'avatar',
+                'value'        => fn($p) => route('personnel.photo', $p),
+                'imageClass'   => 'ob-avatar-sm',
+                'cardShow'     => true,
+                'mobile'       => true,
+                'default'      => true,
+                'exportable'   => false,
+            ],
+            [
+                'key'          => 'grade',
+                'label'        => 'Grade',
+                'type'         => 'image',
+                'value'        => fn($p) => route('personnel.grade_image', ['grade' => $p->P_GRADE ?: 'NR']),
+                'imageAlt'     => fn($p) => $p->P_GRADE ?: '',
+                'imageClass'   => 'ob-grade-img',
+                'imageError'   => "this.outerHTML='<small class=\"text-muted\">' + this.alt + '</small>'",
+                'imageLazy'    => false,
+                'mobile'       => true,
+                'default'      => true,
+                'exportable'   => true,
+                'exportValue'  => fn($p) => $p->P_GRADE ?? '',
+            ],
+            [
+                'key'          => 'name',
+                'label'        => 'Nom Prénom',
+                'type'         => 'html',
+                'value'        => fn($p) => '<strong style="font-size:var(--font-size-sm);">'
+                                          . e(strtoupper($p->P_NOM)) . ' '
+                                          . e(ucfirst(mb_strtolower($p->P_PRENOM)))
+                                          . '</strong>',
+                'cardShow'     => true,
+                'mobile'       => true,
+                'alwaysVisible'=> true,
+                'exportable'   => false, // nom + prénom are always exported separately as two columns
+                'sortField'    => 'P_NOM',
+            ],
+            // ── Default-visible optional columns ──────────────────────────
+            [
+                'key'          => 'birthdate',
+                'label'        => 'Date naissance',
+                'type'         => 'date',
+                'value'        => fn($p) => $p->P_BIRTHDATE,
+                'mobile'       => false,
+                'default'      => true,
+                'exportable'   => true,
+                'sortField'    => 'P_BIRTHDATE',
+            ],
+            [
+                'key'          => 'phone',
+                'label'        => 'Téléphone',
+                'type'         => 'html',
+                'value'        => fn($p) => implode('<br>', array_filter([$p->P_PHONE, $p->P_PHONE2])) ?: '—',
+                'mobile'       => false,
+                'default'      => true,
+                'exportable'   => true,
+                'exportValue'  => fn($p) => $p->P_PHONE ?? '',
+            ],
+            [
+                'key'          => 'code',
+                'label'        => 'Matricule',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->P_CODE,
+                'mobile'       => false,
+                'default'      => true,
+                'exportable'   => true,
+                'sortField'    => 'P_CODE',
+            ],
+            [
+                'key'          => 'section',
+                'label'        => 'Section',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->section?->S_CODE ?: '—',
+                'mobile'       => false,
+                'default'      => true,
+                'exportable'   => true,
+                'exportValue'  => fn($p) => $p->section?->S_CODE ?? '',
+            ],
+            [
+                'key'          => 'entree',
+                'label'        => "Date d'entrée",
+                'type'         => 'date',
+                'value'        => fn($p) => $p->P_DATE_ENGAGEMENT,
+                'mobile'       => false,
+                'default'      => true,
+                'exportable'   => true,
+                'sortField'    => 'P_DATE_ENGAGEMENT',
+            ],
+            [
+                'key'          => 'statut',
+                'label'        => 'Statut',
+                'type'         => 'badge',
+                'value'        => fn($p) => $p->P_STATUT,
+                'badgeMap'     => $statutMap,
+                'cardShow'     => true,
+                'mobile'       => false,
+                'default'      => true,
+                'exportable'   => true,
+                'exportValue'  => fn($p) => $statutMap[$p->P_STATUT][0] ?? $p->P_STATUT,
+            ],
+            [
+                'key'          => 'etat',
+                'label'        => 'Position',
+                'type'         => 'badge',
+                'value'        => fn($p) => (int) $p->GP_ID === -1
+                    ? 'Bloqué'
+                    : ((int) $p->P_OLD_MEMBER > 0 ? 'Archivé' : 'Actif'),
+                'badgeMap'     => [
+                    'Actif'   => ['Actif',   'ob-badge-actif'],
+                    'Archivé' => ['Archivé', 'ob-badge-archive'],
+                    'Bloqué'  => ['Bloqué',  'ob-badge-bloqued'],
+                ],
+                'mobile'       => false,
+                'default'      => true,
+                'exportable'   => true,
+            ],
+            // ── Hidden-by-default optional columns ────────────────────────
+            [
+                'key'          => 'email',
+                'label'        => 'Email',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->P_EMAIL ?? '',
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+            ],
+            [
+                'key'          => 'phone2',
+                'label'        => 'Tél. 2',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->P_PHONE2 ?? '',
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+            ],
+            [
+                'key'          => 'city',
+                'label'        => 'Ville',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->P_CITY ?? '',
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+                'exportValue'  => fn($p) => trim(implode(' ', array_filter([
+                    $p->P_ADDRESS ?? '',
+                    ($p->P_ZIP_CODE ?? '') . ' ' . ($p->P_CITY ?? ''),
+                ]))),
+            ],
+            [
+                'key'          => 'profession',
+                'label'        => 'Profession',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->P_PROFESSION ?? '',
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+            ],
+            [
+                'key'          => 'sexe',
+                'label'        => 'Sexe',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->P_SEXE ?? '',
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+                'thWidth'      => '50px',
+            ],
+            [
+                'key'          => 'fin',
+                'label'        => 'Date de fin',
+                'type'         => 'date',
+                'value'        => fn($p) => $p->P_FIN,
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+                'sortField'    => 'P_FIN',
+            ],
+            [
+                'key'          => 'licence',
+                'label'        => 'Permis',
+                'type'         => 'text',
+                'value'        => fn($p) => $p->P_LICENCE ?? '',
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+            ],
+            [
+                'key'          => 'licenceExpiry',
+                'label'        => 'Exp. permis',
+                'type'         => 'date',
+                'value'        => fn($p) => $p->P_LICENCE_EXPIRY,
+                'mobile'       => false,
+                'default'      => false,
+                'exportable'   => true,
+            ],
+        ];
     }
 
     /**
@@ -269,7 +438,19 @@ class PersonnelController extends Controller
 
         $items = $query->paginate(50)->withQueryString();
 
-        return view('personnel.qualifications', compact('items', 'filter'));
+        return view('personnel.qualifications', compact('items', 'filter')
+            + ['columns' => $this->qualificationsColumns()]);
+    }
+
+    private function qualificationsColumns(): array
+    {
+        return [
+            ['key'=>'personnel','label'=>'Personnel','type'=>'html','value'=>fn($q)=>'<a href="'.route('personnel.show',$q->P_ID).'" class="text-decoration-none">'.e($q->P_PRENOM.' '.strtoupper($q->P_NOM)).'</a>','alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($q)=>$q->P_PRENOM.' '.$q->P_NOM],
+            ['key'=>'type','label'=>'Type','type'=>'text','value'=>fn($q)=>$q->PS_TYPE ?? '—','alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($q)=>$q->PS_TYPE ?? ''],
+            ['key'=>'valeur','label'=>'Valeur','type'=>'text','value'=>fn($q)=>$q->Q_VAL ?? '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($q)=>$q->Q_VAL ?? ''],
+            ['key'=>'expiration','label'=>'Expiration','type'=>'date','value'=>fn($q)=>$q->Q_EXPIRATION,'mobile'=>false,'exportable'=>true,'exportValue'=>fn($q)=>$q->Q_EXPIRATION?\Carbon\Carbon::parse($q->Q_EXPIRATION)->format('d/m/Y'):''],
+            ['key'=>'statut','label'=>'Statut','type'=>'badge','value'=>fn($q)=>$q->status ?? 'ok','badgeMap'=>['expired'=>['Expirée','ob-badge-bloqued'],'expiring'=>['Expire bientôt','ob-badge-ben'],'ok'=>['Valide','ob-badge-actif']],'exportable'=>true,'exportValue'=>fn($q)=>$q->status === 'expired' ? 'Expirée' : ($q->status === 'expiring' ? 'Expire bientôt' : 'Valide'),'mobile'=>true],
+        ];
     }
 
     public function photo(Personnel $personnel)
@@ -442,6 +623,153 @@ class PersonnelController extends Controller
 
         return redirect()->route('personnel.show', $personnel)
             ->with('success', 'Cotisation supprimée.');
+    }
+
+    // ── Exports ─────────────────────────────────────────────────────────────────
+
+    public function exportXls(Request $request)
+    {
+        $service = new TableExportService();
+        $columns = $service->resolveColumns($this->personnelColumns(), $request, [
+            ['Nom',    fn($p) => strtoupper($p->P_NOM)],
+            ['Prénom', fn($p) => ucfirst(mb_strtolower($p->P_PRENOM))],
+        ]);
+        $items = $this->buildFilteredQuery($request)->with(['section'])->get($this->exportSelectFields());
+
+        return $service->toXlsx($columns, $items, 'Personnel_' . date('Ymd'), ['sheetTitle' => 'Personnel']);
+    }
+
+    public function exportCsv(Request $request)
+    {
+        $service = new TableExportService();
+        $columns = $service->resolveColumns($this->personnelColumns(), $request, [
+            ['Nom',    fn($p) => strtoupper($p->P_NOM)],
+            ['Prénom', fn($p) => ucfirst(mb_strtolower($p->P_PRENOM))],
+        ]);
+        $items = $this->buildFilteredQuery($request)->with(['section'])->get($this->exportSelectFields());
+
+        return $service->toCsv($columns, $items, 'Personnel_' . date('Ymd'));
+    }
+
+    private function exportSelectFields(): array
+    {
+        return [
+            'P_CODE', 'P_NOM', 'P_PRENOM', 'P_STATUT', 'P_GRADE',
+            'P_SECTION', 'P_EMAIL', 'P_PHONE', 'P_PHONE2',
+            'P_BIRTHDATE', 'P_DATE_ENGAGEMENT', 'P_OLD_MEMBER', 'GP_ID', 'P_FIN',
+            'P_CITY', 'P_ADDRESS', 'P_ZIP_CODE', 'P_PROFESSION', 'P_SEXE',
+            'P_LICENCE', 'P_LICENCE_EXPIRY',
+        ];
+    }
+
+    public function exportVcard(Personnel $personnel)
+    {
+        $personnel->load('section');
+        $service = new PersonnelExportService();
+        $vcf     = $service->buildVcard($personnel);
+
+        $filename = Str::ascii(strtoupper($personnel->P_NOM) . '_' . $personnel->P_PRENOM) . '.vcf';
+
+        return response($vcf, 200, [
+            'Content-Type'        => 'text/vcard; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
+
+    public function exportLivret(Personnel $personnel)
+    {
+        $personnel->load('section');
+        $service = new PersonnelExportService();
+        $pdf     = $service->buildLivret($personnel);
+
+        $filename = Str::ascii('Livret_' . strtoupper($personnel->P_NOM) . '_' . $personnel->P_PRENOM) . '.pdf';
+
+        return response($pdf, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"{$filename}\"",
+        ]);
+    }
+
+    public function exportCarte(Personnel $personnel)
+    {
+        $personnel->load('section');
+        $service = new PersonnelExportService();
+        $pdf     = $service->buildCarte($personnel);
+
+        $filename = Str::ascii('Carte_' . strtoupper($personnel->P_NOM) . '_' . $personnel->P_PRENOM) . '.pdf';
+
+        return response($pdf, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => "inline; filename=\"{$filename}\"",
+        ]);
+    }
+
+    // ── Shared query builder (used by index() and the XLS/CSV exports) ─────────
+
+    private function buildFilteredQuery(Request $request)
+    {
+        $position    = (string) $request->string('position', 'actif');
+        $search      = trim((string) $request->string('q'));
+        $category    = (string) $request->string('category', 'INT');
+        $sectionId   = (int) $request->integer('section', 0);
+        $order       = (string) $request->string('order', 'P_NOM');
+        $subsections = (bool) $request->integer('subsections', 1);
+
+        $allowedOrder = [
+            'P_NOM', 'P_PRENOM', 'P_CODE', 'P_STATUT', 'P_GRADE',
+            'P_DATE_ENGAGEMENT', 'P_FIN', 'P_BIRTHDATE',
+        ];
+        if (! in_array($order, $allowedOrder, true)) {
+            $order = 'P_NOM';
+        }
+
+        $query = Personnel::query();
+
+        if ($position === 'actif') {
+            $query->where('P_OLD_MEMBER', 0)->where('GP_ID', '<>', -1);
+        } elseif ($position === 'archive') {
+            $query->where('P_OLD_MEMBER', '>', 0);
+        } elseif ($position === 'bloqued') {
+            $query->where('GP_ID', -1)->where('P_OLD_MEMBER', 0);
+        }
+
+        if ($category !== '' && $category !== 'ALL') {
+            if ($category === 'INT') {
+                $query->where('P_STATUT', '<>', 'EXT');
+            } else {
+                $query->where('P_STATUT', $category);
+            }
+        }
+
+        if ($sectionId > 0) {
+            if ($subsections) {
+                $allSections = Section::query()->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
+                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
+                $query->whereIn('P_SECTION', array_merge([$sectionId], $descendants));
+            } else {
+                $query->where('P_SECTION', $sectionId);
+            }
+        }
+
+        if ($search !== '') {
+            $query->where(function ($inner) use ($search): void {
+                $inner->where('P_NOM', 'like', "%{$search}%")
+                    ->orWhere('P_PRENOM', 'like', "%{$search}%")
+                    ->orWhere('P_CODE', 'like', "%{$search}%")
+                    ->orWhere('P_EMAIL', 'like', "%{$search}%")
+                    ->orWhere('P_PHONE', 'like', "%{$search}%")
+                    ->orWhere('P_PHONE2', 'like', "%{$search}%")
+                    ->orWhere('P_GRADE', 'like', "%{$search}%");
+            });
+        }
+
+        if (in_array($order, ['P_FIN', 'P_DATE_ENGAGEMENT'], true)) {
+            $query->orderByDesc($order);
+        } else {
+            $query->orderBy($order);
+        }
+
+        return $query;
     }
 
     public function edit(Personnel $personnel): View

@@ -79,7 +79,7 @@ test('authenticated users can access the company list', function () {
         $page->setPath('/clients');
         $ctrl->shouldReceive('index')->andReturn(
             view('company.index', [
-                'items' => $page, 'search' => '', 'type' => 'ALL',
+                'items' => $page, 'columns' => [], 'search' => '', 'type' => 'ALL',
                 'types' => Collection::make([]),
             ])
         );

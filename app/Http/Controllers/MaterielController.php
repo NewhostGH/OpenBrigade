@@ -42,6 +42,19 @@ class MaterielController extends Controller
         $items    = $query->paginate(50)->withQueryString();
         $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
-        return view('materiel.index', compact('items', 'search', 'filtSect', 'sections'));
+        return view('materiel.index', compact('items', 'search', 'filtSect', 'sections')
+            + ['columns' => $this->materielColumns()]);
+    }
+
+    private function materielColumns(): array
+    {
+        return [
+            ['key'=>'type','label'=>'Type','type'=>'text','value'=>fn($m)=>$m->TM_LIBELLE ?? '—','alwaysVisible'=>true,'mobile'=>true],
+            ['key'=>'modele','label'=>'Modèle','type'=>'text','value'=>fn($m)=>$m->MA_MODELE ?: '—','alwaysVisible'=>true,'mobile'=>true],
+            ['key'=>'serie','label'=>'N° série','type'=>'text','value'=>fn($m)=>$m->MA_NUMERO_SERIE ?: '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($m)=>$m->MA_NUMERO_SERIE ?? ''],
+            ['key'=>'lieu','label'=>'Lieu','type'=>'text','value'=>fn($m)=>$m->MA_LIEU_STOCKAGE ?: '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($m)=>$m->MA_LIEU_STOCKAGE ?? ''],
+            ['key'=>'revision','label'=>'Révision','type'=>'html','value'=>fn($m)=>$m->MA_REV_DATE ? ((\Carbon\Carbon::parse($m->MA_REV_DATE)->lte(now()->addDays(30)))?'<i class="fas fa-exclamation-triangle text-warning me-1" title="Révision prochaine"></i>':'').e(\Carbon\Carbon::parse($m->MA_REV_DATE)->format('d/m/Y')) : '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($m)=>$m->MA_REV_DATE?\Carbon\Carbon::parse($m->MA_REV_DATE)->format('d/m/Y'):''],
+            ['key'=>'qte','label'=>'Qté','type'=>'text','value'=>fn($m)=>$m->MA_NB ?? 1,'mobile'=>false,'exportable'=>true,'exportValue'=>fn($m)=>$m->MA_NB ?? 1],
+        ];
     }
 }

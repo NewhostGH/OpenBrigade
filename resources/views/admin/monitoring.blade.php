@@ -4,66 +4,45 @@
 
 @section('content')
 
-<div class="ob-toolbar mx-3 mt-3">
-    <div class="ob-toolbar-title">
-        <h1>Journal d'activité</h1>
-    </div>
+<x-ob-breadcrumb :items="[
+    ['label' => 'Administration'],
+    ['label' => 'Monitoring'],
+]"/>
 
-    <form method="GET" action="{{ route('admin.monitoring') }}" class="ob-filters">
-        <div>
-            <input type="text" name="q" value="{{ $search }}"
-                   class="form-control form-control-sm" placeholder="Rechercher…">
-        </div>
-        <div>
-            <select name="type" class="form-select form-select-sm">
-                <option value="ALL" @selected($ltCode === 'ALL')>Tous les types</option>
-                @foreach($logTypes as $t)
-                    <option value="{{ $t->LT_CODE }}" @selected($ltCode === $t->LT_CODE)>
-                        {{ $t->LT_DESCRIPTION }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-sm btn-secondary w-100">
-                <i class="fas fa-filter me-1"></i> Filtrer
-            </button>
-        </div>
-    </form>
-</div>
+<x-ob-toolbar
+    title="Journal d'activité"
+    :total="$items->total()"
+    filter-action="{{ route('admin.monitoring') }}"
+    filter-id="filterForm"
+    filter-cols="2fr 1fr"
+    :columns="$columns"
+    table-id="monitoringTable">
 
-<div class="mx-3 mt-3">
-    @if($items->isEmpty())
-        <div class="text-muted fst-italic p-3">Aucune entrée dans le journal.</div>
-    @else
-        <table class="table table-sm table-hover align-middle">
-            <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
-                <tr>
-                    <th>Date</th>
-                    <th>Utilisateur</th>
-                    <th>Action</th>
-                    <th>Détail</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($items as $log)
-                    <tr>
-                        <td style="font-size:var(--font-size-xs);white-space:nowrap;color:var(--text-muted-soft)">
-                            {{ $log->LH_STAMP ? \Carbon\Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i') : '—' }}
-                        </td>
-                        <td style="font-size:var(--font-size-sm)">{{ $log->actor ?? '—' }}</td>
-                        <td style="font-size:var(--font-size-xs)">
-                            <span class="badge bg-secondary">{{ $log->LT_DESCRIPTION ?? $log->LT_CODE }}</span>
-                        </td>
-                        <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
-                            {{ $log->LH_COMPLEMENT ?? '' }}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="mt-2">{{ $items->links() }}</div>
-    @endif
-</div>
+    <x-slot:filters>
+        <input type="text" name="q" value="{{ $search }}"
+               class="form-control form-control-sm"
+               placeholder="Rechercher…"
+               data-ob-search="filterForm">
+        <select name="type" class="form-select form-select-sm">
+            <option value="ALL" @selected($ltCode === 'ALL')>Tous les types</option>
+            @foreach($logTypes as $t)
+                <option value="{{ $t->LT_CODE }}" @selected($ltCode === $t->LT_CODE)>
+                    {{ $t->LT_DESCRIPTION }}
+                </option>
+            @endforeach
+        </select>
+    </x-slot:filters>
+</x-ob-toolbar>
+
+<x-ob-commandbar table-id="monitoringTable" :total="$items->total()" total-label="entrée">
+    <x-ob-table
+        :columns="$columns"
+        :items="$items"
+        storage-key="monitoringColsV2"
+        :show-select="false"
+        table-id="monitoringTable"
+    />
+    <x-slot:pagination>{{ $items->links() }}</x-slot:pagination>
+</x-ob-commandbar>
 
 @endsection

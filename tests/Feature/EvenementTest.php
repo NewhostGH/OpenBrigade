@@ -86,6 +86,7 @@ test('authenticated users can access the event list', function () {
         $ctrl->shouldReceive('index')->andReturn(
             view('evenement.index', [
                 'items'    => $emptyPage,
+                'columns'  => [],
                 'period'   => 'upcoming',
                 'search'   => '',
                 'type'     => 'ALL',
@@ -111,6 +112,7 @@ test('event list uses the evenement.index template', function () {
         $ctrl->shouldReceive('index')->andReturn(
             view('evenement.index', [
                 'items'    => $emptyPage,
+                'columns'  => [],
                 'period'   => 'upcoming',
                 'search'   => '',
                 'type'     => 'ALL',
@@ -136,6 +138,7 @@ test('event list passes all required view variables', function () {
         $ctrl->shouldReceive('index')->andReturn(
             view('evenement.index', [
                 'items'    => $emptyPage,
+                'columns'  => [],
                 'period'   => 'upcoming',
                 'search'   => '',
                 'type'     => 'ALL',

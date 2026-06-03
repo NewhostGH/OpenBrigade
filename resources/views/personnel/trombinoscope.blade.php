@@ -38,6 +38,11 @@
 
 @section('content')
 
+<x-ob-breadcrumb :items="[
+    ['label' => 'Personnel', 'url' => route('personnel.index')],
+    ['label' => 'Trombinoscope'],
+]"/>
+
 <div class="ob-toolbar mx-3 mt-3">
     <div class="ob-toolbar-title">
         <h1>Trombinoscope</h1>

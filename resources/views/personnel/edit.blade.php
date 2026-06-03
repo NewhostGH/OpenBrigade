@@ -3,19 +3,14 @@
 @section('title', 'Édition — ' . $personnel->P_NOM . ' ' . $personnel->P_PRENOM . ' — ' . config('app.name'))
 
 @section('content')
-<div class="container-fluid px-3 py-3" style="max-width: 960px;">
 
-    {{-- Breadcrumb --}}
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('personnel.index') }}">Personnel</a></li>
-            <li class="breadcrumb-item">
-                <a href="{{ route('personnel.show', $personnel) }}">{{ $personnel->P_NOM }} {{ $personnel->P_PRENOM }}</a>
-            </li>
-            <li class="breadcrumb-item active">Édition</li>
-        </ol>
-    </nav>
+<x-ob-breadcrumb :items="[
+    ['label' => 'Personnel', 'url' => route('personnel.index')],
+    ['label' => $personnel->P_NOM . ' ' . $personnel->P_PRENOM, 'url' => route('personnel.show', $personnel)],
+    ['label' => 'Modifier'],
+]"/>
+
+<div class="container-fluid px-3 py-3" style="max-width: 960px;">
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show">

@@ -4,6 +4,10 @@
 
 @section('content')
 
+<x-ob-breadcrumb :items="[
+    ['label' => 'Garde'],
+]"/>
+
 <div class="ob-toolbar mx-3 mt-3">
     <div class="ob-toolbar-title">
         <h1>Tableau de garde</h1>

@@ -45,6 +45,17 @@ class AdminController extends Controller
         $items    = $query->paginate(50)->withQueryString();
         $logTypes = DB::table('log_type')->orderBy('LT_DESCRIPTION')->get(['LT_CODE', 'LT_DESCRIPTION']);
 
-        return view('admin.monitoring', compact('items', 'search', 'ltCode', 'logTypes'));
+        return view('admin.monitoring', compact('items', 'search', 'ltCode', 'logTypes')
+            + ['columns' => $this->monitoringColumns()]);
+    }
+
+    private function monitoringColumns(): array
+    {
+        return [
+            ['key'=>'date','label'=>'Date','type'=>'html','value'=>fn($log)=>$log->LH_STAMP ? '<span style="white-space:nowrap">'.e(\Carbon\Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i')).'</span>' : '—','alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($log)=>$log->LH_STAMP?\Carbon\Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i'):''],
+            ['key'=>'utilisateur','label'=>'Utilisateur','type'=>'text','value'=>fn($log)=>$log->actor ?? '—','alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($log)=>$log->actor ?? ''],
+            ['key'=>'action','label'=>'Action','type'=>'badge','value'=>fn($log)=>$log->LT_CODE ?? 'OTHER','badgeMap'=>['LOGIN'=>['Connexion','ob-badge-int'],'LOGOUT'=>['Déconnexion','ob-badge-archive'],'UPDATE'=>['Modification','ob-badge-ben'],'DELETE'=>['Suppression','ob-badge-bloqued'],'OTHER'=>['Action','ob-badge-ext']],'exportable'=>true,'exportValue'=>fn($log)=>$log->LT_DESCRIPTION ?? $log->LT_CODE ?? '','mobile'=>true],
+            ['key'=>'detail','label'=>'Détail','type'=>'text','value'=>fn($log)=>$log->LH_COMPLEMENT ?? '','mobile'=>false,'default'=>false,'exportable'=>true,'exportValue'=>fn($log)=>$log->LH_COMPLEMENT ?? ''],
+        ];
     }
 }

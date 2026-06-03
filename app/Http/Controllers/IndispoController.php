@@ -54,6 +54,19 @@ class IndispoController extends Controller
 
         $items = $query->paginate(30)->withQueryString();
 
-        return view('indispo.index', compact('items', 'tab', 'status'));
+        return view('indispo.index', compact('items', 'tab', 'status')
+            + ['columns' => $this->indispoColumns()]);
+    }
+
+    private function indispoColumns(): array
+    {
+        return [
+            ['key'=>'personnel','label'=>'Personnel','type'=>'text','value'=>fn($i)=>$i->person_name ?? '—','alwaysVisible'=>true,'mobile'=>true],
+            ['key'=>'type','label'=>'Type','type'=>'text','value'=>fn($i)=>$i->TI_LIBELLE ?? '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($i)=>$i->TI_LIBELLE ?? ''],
+            ['key'=>'debut','label'=>'Début','type'=>'date','value'=>fn($i)=>$i->I_DEBUT,'alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($i)=>$i->I_DEBUT?\Carbon\Carbon::parse($i->I_DEBUT)->format('d/m/Y'):''],
+            ['key'=>'fin','label'=>'Fin','type'=>'date','value'=>fn($i)=>$i->I_FIN,'mobile'=>false,'exportable'=>true,'exportValue'=>fn($i)=>$i->I_FIN?\Carbon\Carbon::parse($i->I_FIN)->format('d/m/Y'):''],
+            ['key'=>'statut','label'=>'Statut','type'=>'badge','value'=>fn($i)=>$i->I_ACCEPT == 1 ? 'ACCEPTED' : ($i->I_ACCEPT === null || $i->I_ACCEPT == 0 ? 'PENDING' : 'REJECTED'),'badgeMap'=>['ACCEPTED'=>['Acceptée','ob-badge-actif'],'REJECTED'=>['Refusée','ob-badge-bloqued'],'PENDING'=>['En attente','ob-badge-ben']],'exportable'=>true,'exportValue'=>fn($i)=>$i->I_ACCEPT == 1 ? 'Acceptée' : ($i->I_ACCEPT === null || $i->I_ACCEPT == 0 ? 'En attente' : 'Refusée'),'mobile'=>true],
+            ['key'=>'commentaire','label'=>'Commentaire','type'=>'text','value'=>fn($i)=>$i->I_COMMENT ?: '','mobile'=>false,'default'=>false,'exportable'=>true,'exportValue'=>fn($i)=>$i->I_COMMENT ?? ''],
+        ];
     }
 }

@@ -125,6 +125,16 @@ class GardeController extends Controller
         return view('garde.astreintes', compact(
             'slots', 'month', 'year', 'first',
             'prevMonth', 'prevYear', 'nextMonth', 'nextYear'
-        ));
+        ) + ['columns' => $this->astreintesColumns()]);
+    }
+
+    private function astreintesColumns(): array
+    {
+        return [
+            ['key'=>'debut','label'=>'Début','type'=>'html','value'=>fn($s)=>\Carbon\Carbon::parse($s->AS_DEBUT)->locale('fr')->isoFormat('ddd D MMM, HH:mm'),'alwaysVisible'=>true,'mobile'=>true],
+            ['key'=>'fin','label'=>'Fin','type'=>'text','value'=>fn($s)=>\Carbon\Carbon::parse($s->AS_FIN)->locale('fr')->isoFormat('ddd D MMM, HH:mm'),'mobile'=>false,'exportable'=>true,'exportValue'=>fn($s)=>\Carbon\Carbon::parse($s->AS_FIN)->format('d/m/Y H:i')],
+            ['key'=>'personnel','label'=>'Personnel','type'=>'text','value'=>fn($s)=>$s->P_PRENOM.' '.strtoupper($s->P_NOM),'alwaysVisible'=>true,'mobile'=>true],
+            ['key'=>'role','label'=>'Rôle','type'=>'text','value'=>fn($s)=>$s->GP_DESCRIPTION ?? '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($s)=>$s->GP_DESCRIPTION ?? ''],
+        ];
     }
 }

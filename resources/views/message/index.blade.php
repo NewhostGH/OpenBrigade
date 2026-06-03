@@ -4,14 +4,13 @@
 
 @section('content')
 
+<x-ob-breadcrumb :items="[
+    ['label' => "Tableau d'affichage"],
+]"/>
+
 <div class="ob-toolbar mx-3 mt-3">
     <div class="ob-toolbar-title">
         <h1>Tableau d'affichage</h1>
-        @if(auth()->user()->hasPermission(44))
-            <a href="{{ url('/legacy/mail_create.php') }}" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus me-1"></i> Nouveau message
-            </a>
-        @endif
     </div>
 
     {{-- Category tabs --}}
@@ -28,6 +27,11 @@
            class="btn btn-sm {{ $category === 'all' ? 'btn-primary' : 'btn-outline-secondary' }}">
             Tous
         </a>
+        @if(auth()->user()->hasPermission(44))
+            <a href="{{ url('/legacy/mail_create.php') }}" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i> Nouveau message
+            </a>
+        @endif
     </div>
 </div>
 

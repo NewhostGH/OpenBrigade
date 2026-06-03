@@ -83,6 +83,11 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.grade_image')
         ->where('grade', '[A-Z0-9]+')
         ->middleware('permission:0');
+    // Personnel list exports (static segments before resource wildcard)
+    Route::get('personnel/export/xls', [PersonnelController::class, 'exportXls'])
+        ->name('personnel.export.xls')->middleware('permission:0');
+    Route::get('personnel/export/csv', [PersonnelController::class, 'exportCsv'])
+        ->name('personnel.export.csv')->middleware('permission:0');
     Route::resource('personnel', PersonnelController::class)
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');
@@ -100,6 +105,13 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.cotisation.update')->middleware('permission:0');
     Route::delete('personnel/{personnel}/cotisations/{pcId}', [PersonnelController::class, 'destroyCotisation'])
         ->name('personnel.cotisation.destroy')->middleware('permission:0');
+    // Per-member exports
+    Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
+        ->name('personnel.vcard')->middleware('permission:0');
+    Route::get('personnel/{personnel}/livret', [PersonnelController::class, 'exportLivret'])
+        ->name('personnel.livret')->middleware('permission:0');
+    Route::get('personnel/{personnel}/carte', [PersonnelController::class, 'exportCarte'])
+        ->name('personnel.carte')->middleware('permission:0');
     // Géolocalisation
     Route::get('/geolocalisation', [GeolocalisationController::class, 'index'])
         ->name('geolocalisation.index')->middleware('permission:0');

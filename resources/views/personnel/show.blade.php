@@ -3,16 +3,13 @@
 @section('title', $personnel->P_NOM . ' ' . $personnel->P_PRENOM . ' — Personnel — ' . config('app.name'))
 
 @section('content')
-<div class="container-fluid px-3 py-3" style="max-width: 900px;">
 
-    {{-- Breadcrumb --}}
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('personnel.index') }}">Personnel</a></li>
-            <li class="breadcrumb-item active">{{ $personnel->P_NOM }} {{ $personnel->P_PRENOM }}</li>
-        </ol>
-    </nav>
+<x-ob-breadcrumb :items="[
+    ['label' => 'Personnel', 'url' => route('personnel.index')],
+    ['label' => $personnel->P_NOM . ' ' . $personnel->P_PRENOM],
+]"/>
+
+<div class="container-fluid px-3 py-3" style="max-width: 900px;">
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show">
@@ -85,6 +82,31 @@
                     <a href="{{ route('personnel.edit', $personnel) }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit me-1"></i> Modifier
                     </a>
+                    {{-- Export dropdown --}}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                title="Exporter">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('personnel.vcard', $personnel) }}">
+                                    <i class="fas fa-address-card me-2 text-muted"></i> vCard (.vcf)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('personnel.livret', $personnel) }}" target="_blank">
+                                    <i class="fas fa-file-pdf me-2 text-danger"></i> Livret / Passeport (PDF)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('personnel.carte', $personnel) }}" target="_blank">
+                                    <i class="fas fa-id-card me-2 text-danger"></i> Carte adhérent (PDF)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <a href="{{ route('personnel.index') }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-arrow-left"></i>
                     </a>

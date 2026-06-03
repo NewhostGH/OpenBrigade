@@ -35,6 +35,7 @@ function vehiculeStubIndex(User $user): void
         $ctrl->shouldReceive('index')->andReturn(
             view('vehicule.index', [
                 'items'    => $page,
+                'columns'  => [],
                 'search'   => '',
                 'filtSect' => 0,
                 'status'   => 'all',

@@ -8,20 +8,9 @@
 
 @section('content')
 
-{{-- Breadcrumb --}}
-<div style="padding:4px 12px;border-bottom:1px solid var(--card-border);background:var(--bg-base);">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item">
-                <a href="{{ route('dashboard') }}" style="color:#666;font-size:0.87rem;font-weight:bold;">Accueil</a>
-            </li>
-            <li class="breadcrumb-item" style="font-size:0.87rem;font-weight:bold;color:#666;">Personnel</li>
-            <li class="breadcrumb-item active" style="color:#2b224f;font-size:0.87rem;font-weight:bold;">
-                Géolocalisation
-            </li>
-        </ol>
-    </nav>
-</div>
+<x-ob-breadcrumb :items="[
+    ['label' => 'Géolocalisation'],
+]"/>
 
 {{-- Toolbar --}}
 <div class="ob-geo-toolbar noprint">

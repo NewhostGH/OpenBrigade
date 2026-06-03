@@ -4,6 +4,11 @@
 
 @section('content')
 
+<x-ob-breadcrumb :items="[
+    ['label' => 'Activités', 'url' => route('evenement.index')],
+    ['label' => $event->E_LIBELLE ?? $event->E_CODE ?? ''],
+]"/>
+
 <div class="mx-3 mt-3">
 
     {{-- ── Header card ───────────────────────────────────────────────────── --}}
