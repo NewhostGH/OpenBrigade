@@ -5,38 +5,39 @@
 @section('content')
 
 @php
-    $today = now()->format('Y-m-d');
+    $today       = now()->format('Y-m-d');
     $paidCount   = $items->whereNotNull('PC_DATE')->count();
     $unpaidCount = $items->whereNull('PC_DATE')->count();
     $totalPaid   = $items->whereNotNull('PC_DATE')->sum('MONTANT');
+
+    $sortUrl = fn(string $field) => route('cotisations.index', array_merge(request()->query(), ['order' => $field]));
+    $sortIcon = fn(string $field) => '<i class="fas fa-sort' . ($order === $field ? '-down active' : '') . ' sort-icon ms-1"></i>';
 @endphp
 
-{{-- ── Toolbar ───────────────────────────────────────────────────── --}}
-<div class="ob-toolbar mx-3 mt-3">
+<x-ob-breadcrumb :items="[
+    ['label' => 'Cotisations'],
+]"/>
 
-    <div class="ob-toolbar-title">
-        <h1>
-            Cotisations
-            <span class="text-muted fw-normal" style="font-size:var(--font-size-sm);">
-                {{ $items->count() }} membres
-            </span>
-        </h1>
-        <div class="d-flex gap-2 align-items-center noprint">
-            <button class="btn btn-sm btn-light" onclick="window.print()" title="Imprimer">
-                <i class="fas fa-print"></i>
-            </button>
-            <a class="btn btn-sm btn-light"
-               href="{{ route('cotisations.export', request()->query()) }}"
-               title="Exporter Excel">
-                <i class="far fa-file-excel" style="color:#1d6f42;"></i>
-            </a>
-        </div>
-    </div>
+{{-- ── Toolbar ─────────────────────────────────────────────────────────────── --}}
+<x-ob-toolbar
+    title="Cotisations"
+    :total="$items->count()"
+    total-label="membre"
+    filter-action="{{ route('cotisations.index') }}"
+    filter-cols="2fr 1.2fr 1.2fr 1fr 1fr auto">
+
+    {{-- Actions: print + export --}}
+    <button class="btn btn-sm btn-light" onclick="window.print()" title="Imprimer">
+        <i class="fas fa-print"></i>
+    </button>
+    <a class="btn btn-sm btn-light"
+       href="{{ route('cotisations.export', request()->query()) }}"
+       title="Exporter Excel">
+        <i class="far fa-file-excel" style="color:#1d6f42;"></i>
+    </a>
 
     {{-- Filters --}}
-    <form class="ob-filters" id="filterForm" method="GET" action="{{ route('cotisations.index') }}"
-          style="grid-template-columns: 2fr 1.2fr 1.2fr 1fr 1fr auto">
-
+    <x-slot:filters>
         <div>
             <select name="section" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="0" {{ $sectionId === 0 ? 'selected' : '' }}>Toutes sections</option>
@@ -46,15 +47,15 @@
                         $bgs   = ['#FFCC33','#FFFF99','#B7D8FB','#D4F1C0','#F0E6FF'];
                         $bg    = $bgs[min($depth, count($bgs) - 1)];
                         $pad   = round(1.2 + $depth * 0.5, 1);
-                        $label = $opt['S_CODE'];
+                        $lbl   = $opt['S_CODE'];
                         if ($opt['S_DESCRIPTION']) {
-                            $label .= ' — ' . \Illuminate\Support\Str::limit($opt['S_DESCRIPTION'], 22);
+                            $lbl .= ' — ' . \Illuminate\Support\Str::limit($opt['S_DESCRIPTION'], 22);
                         }
                     @endphp
                     <option value="{{ $opt['S_ID'] }}"
                             style="padding-left:{{ $pad }}rem; background:{{ $bg }};"
                             {{ $sectionId === $opt['S_ID'] ? 'selected' : '' }}>
-                        {{ $label }}
+                        {{ $lbl }}
                     </option>
                 @endforeach
             </select>
@@ -103,14 +104,13 @@
             </button>
         </div>
 
-        <input type="hidden" name="subsections"   value="{{ $subsections ? 1 : 0 }}">
-        <input type="hidden" name="include_old"   value="{{ $includeOld ? 1 : 0 }}">
-        <input type="hidden" name="order"         value="{{ $order }}">
-    </form>
+        <input type="hidden" name="subsections" value="{{ $subsections ? 1 : 0 }}">
+        <input type="hidden" name="include_old" value="{{ $includeOld ? 1 : 0 }}">
+        <input type="hidden" name="order"       value="{{ $order }}">
+    </x-slot:filters>
 
-    {{-- Secondary controls --}}
-    <div class="d-flex align-items-center gap-3 mt-2 flex-wrap noprint">
-
+    {{-- Secondary: toggles + stats --}}
+    <x-slot:secondary>
         @if ($sectionId > 0)
             <div class="ob-toggle-switch">
                 <label for="subsToggle">Sous-sections</label>
@@ -133,7 +133,7 @@
 
         @if ($items->count() > 0)
             <span style="color:var(--component-border)">|</span>
-            <span style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
+            <span style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">
                 <span class="badge bg-success">{{ $paidCount }} payé(s)</span>
                 <span class="badge bg-secondary ms-1">{{ $unpaidCount }} en attente</span>
                 @if ($totalPaid > 0)
@@ -141,21 +141,19 @@
                 @endif
             </span>
         @endif
-    </div>
+    </x-slot:secondary>
 
-</div>
+</x-ob-toolbar>
 
-{{-- ── Table ─────────────────────────────────────────────────────── --}}
-<div class="mx-3 mt-3">
+{{-- ── Table card ──────────────────────────────────────────────────────────── --}}
+<x-ob-commandbar
+    table-id="cotisationsTable"
+    :total="$items->count()"
+    total-label="membre"
+    action="{{ route('cotisations.save') }}"
+    :show-sel-count="false">
 
-@if ($items->isEmpty())
-    <div class="text-muted fst-italic p-3">Aucun membre trouvé pour ces critères.</div>
-@else
-
-<form id="cotisForm" method="POST" action="{{ route('cotisations.save') }}">
-    @csrf
-
-    {{-- Carry filter params for redirect-back --}}
+    {{-- Hidden filter params so the save redirect goes back to the same view --}}
     <input type="hidden" name="year"          value="{{ $year }}">
     <input type="hidden" name="periode"       value="{{ $periodeCode }}">
     <input type="hidden" name="section"       value="{{ $sectionId }}">
@@ -168,69 +166,92 @@
         <input type="hidden" name="people[]" value="{{ $row->P_ID }}">
     @endforeach
 
-    <div class="d-flex align-items-center gap-3 mb-2 noprint">
-        <div class="form-check">
-            <input type="checkbox" id="checkAllBox" class="form-check-input"
-                   onchange="toggleCheckAll(this)">
-            <label for="checkAllBox" class="form-check-label" style="font-size:var(--font-size-sm);">
-                Tout cocher comme payé
-            </label>
-        </div>
-        <span id="paidCounter" class="badge bg-success">
-            {{ $paidCount }} payé(s)
-        </span>
-        <button type="submit" class="btn btn-sm btn-success ms-auto">
-            <i class="fas fa-save me-1"></i> Enregistrer
-        </button>
-    </div>
-
+    @if ($items->isEmpty())
+        <div class="ob-table-empty p-4">Aucun membre trouvé pour ces critères.</div>
+    @else
     <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle ob-table-cotisations">
-            <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
+        <table class="ob-table" id="cotisationsTable">
+            <thead>
                 <tr>
-                    <th><a href="{{ route('cotisations.index', array_merge(request()->query(), ['order' => 'P_NOM'])) }}" class="text-reset text-decoration-none">Nom Prénom</a></th>
-                    <th class="d-none d-md-table-cell"><a href="{{ route('cotisations.index', array_merge(request()->query(), ['order' => 'P_STATUT'])) }}" class="text-reset text-decoration-none">Statut</a></th>
-                    <th class="d-none d-lg-table-cell"><a href="{{ route('cotisations.index', array_merge(request()->query(), ['order' => 'P_SECTION'])) }}" class="text-reset text-decoration-none">Section</a></th>
-                    <th class="d-none d-lg-table-cell"><a href="{{ route('cotisations.index', array_merge(request()->query(), ['order' => 'P_DATE_ENGAGEMENT'])) }}" class="text-reset text-decoration-none">Entrée</a></th>
-                    <th class="d-none d-lg-table-cell"><a href="{{ route('cotisations.index', array_merge(request()->query(), ['order' => 'P_FIN'])) }}" class="text-reset text-decoration-none">Sortie</a></th>
-                    <th style="text-align:center"><a href="{{ route('cotisations.index', array_merge(request()->query(), ['order' => 'PC_ID'])) }}" class="text-reset text-decoration-none">Payé</a></th>
-                    <th style="text-align:center">Montant</th>
-                    <th style="text-align:center"><a href="{{ route('cotisations.index', array_merge(request()->query(), ['order' => 'PC_DATE'])) }}" class="text-reset text-decoration-none">Date payé</a></th>
+                    <th>
+                        <a href="{{ $sortUrl('P_NOM') }}" class="text-reset text-decoration-none">
+                            Nom Prénom {!! $sortIcon('P_NOM') !!}
+                        </a>
+                    </th>
+                    <th class="d-none d-md-table-cell">
+                        <a href="{{ $sortUrl('P_STATUT') }}" class="text-reset text-decoration-none">
+                            Statut {!! $sortIcon('P_STATUT') !!}
+                        </a>
+                    </th>
+                    <th class="d-none d-lg-table-cell">
+                        <a href="{{ $sortUrl('P_SECTION') }}" class="text-reset text-decoration-none">
+                            Section {!! $sortIcon('P_SECTION') !!}
+                        </a>
+                    </th>
+                    <th class="d-none d-lg-table-cell">
+                        <a href="{{ $sortUrl('P_DATE_ENGAGEMENT') }}" class="text-reset text-decoration-none">
+                            Entrée {!! $sortIcon('P_DATE_ENGAGEMENT') !!}
+                        </a>
+                    </th>
+                    <th class="d-none d-lg-table-cell">
+                        <a href="{{ $sortUrl('P_FIN') }}" class="text-reset text-decoration-none">
+                            Sortie {!! $sortIcon('P_FIN') !!}
+                        </a>
+                    </th>
+                    <th style="text-align:center;">
+                        <a href="{{ $sortUrl('PC_ID') }}" class="text-reset text-decoration-none">
+                            Payé {!! $sortIcon('PC_ID') !!}
+                        </a>
+                    </th>
+                    <th style="text-align:center;width:90px;">Montant</th>
+                    <th style="text-align:center;">
+                        <a href="{{ $sortUrl('PC_DATE') }}" class="text-reset text-decoration-none">
+                            Date payé {!! $sortIcon('PC_DATE') !!}
+                        </a>
+                    </th>
                     <th class="d-none d-xl-table-cell">Commentaire</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($items as $row)
                     @php
-                        $isPaid    = ! is_null($row->PC_DATE);
-                        $rowClass  = $isPaid ? '' : 'table-light';
-                        $amtColor  = $isPaid ? 'color:var(--bs-success)' : 'color:var(--bs-secondary)';
+                        $isPaid   = ! is_null($row->PC_DATE);
+                        $amtColor = $isPaid ? 'color:var(--bs-success)' : 'color:var(--bs-secondary)';
                     @endphp
-                    <tr class="{{ $rowClass }}" id="row-{{ $row->P_ID }}">
+                    <tr id="row-{{ $row->P_ID }}" class="{{ $isPaid ? '' : 'table-light' }}">
+
+                        {{-- Name --}}
                         <td>
                             <a href="{{ route('personnel.show', $row->P_ID) }}"
                                style="font-size:var(--font-size-sm);">
                                 {{ strtoupper($row->P_NOM) }} {{ ucfirst(strtolower($row->P_PRENOM)) }}
                             </a>
                         </td>
+
+                        {{-- Statut badge --}}
                         <td class="d-none d-md-table-cell">
-                            <span class="badge
-                                @if($row->P_STATUT === 'BEN') bg-primary
-                                @elseif($row->P_STATUT === 'PRES') bg-warning text-dark
-                                @else bg-secondary
-                                @endif
-                            " style="font-size:var(--font-size-xs);">{{ $row->P_STATUT }}</span>
+                            <span class="ob-badge @if($row->P_STATUT === 'BEN') ob-badge-ben @elseif($row->P_STATUT === 'PRES') ob-badge-pres @elseif($row->P_STATUT === 'EXT') ob-badge-ext @else ob-badge-int @endif">
+                                {{ $row->P_STATUT }}
+                            </span>
                         </td>
-                        <td class="d-none d-lg-table-cell" style="font-size:var(--font-size-xs);">{{ $row->S_CODE }}</td>
+
+                        {{-- Section --}}
+                        <td class="d-none d-lg-table-cell" style="font-size:var(--font-size-xs);">
+                            {{ $row->S_CODE }}
+                        </td>
+
+                        {{-- Entrée --}}
                         <td class="d-none d-lg-table-cell" style="font-size:var(--font-size-xs);white-space:nowrap;">
                             {{ $row->P_DATE_ENGAGEMENT ? \Carbon\Carbon::parse($row->P_DATE_ENGAGEMENT)->format('d/m/Y') : '—' }}
                         </td>
+
+                        {{-- Sortie --}}
                         <td class="d-none d-lg-table-cell" style="font-size:var(--font-size-xs);white-space:nowrap;">
                             {{ $row->P_FIN ? \Carbon\Carbon::parse($row->P_FIN)->format('d/m/Y') : '—' }}
                         </td>
 
-                        {{-- Paid toggle --}}
-                        <td style="text-align:center">
+                        {{-- Paid checkbox --}}
+                        <td style="text-align:center;" onclick="event.stopPropagation()">
                             <div class="form-check d-flex justify-content-center">
                                 <input type="checkbox"
                                        class="form-check-input paid-check"
@@ -245,7 +266,7 @@
                         </td>
 
                         {{-- Amount --}}
-                        <td style="text-align:center">
+                        <td style="text-align:center;" onclick="event.stopPropagation()">
                             <input type="number" step="0.01" min="0"
                                    class="form-control form-control-sm text-end"
                                    style="{{ $amtColor }};width:80px;"
@@ -257,7 +278,7 @@
                         </td>
 
                         {{-- Date paid --}}
-                        <td style="text-align:center">
+                        <td style="text-align:center;" onclick="event.stopPropagation()">
                             <input type="date"
                                    class="form-control form-control-sm"
                                    style="width:140px;"
@@ -268,23 +289,39 @@
                         </td>
 
                         {{-- Comment --}}
-                        <td class="d-none d-xl-table-cell">
+                        <td class="d-none d-xl-table-cell" onclick="event.stopPropagation()">
                             <input type="text" maxlength="100"
                                    class="form-control form-control-sm"
                                    name="commentaire[{{ $row->P_ID }}]"
                                    value="{{ $row->COMMENTAIRE ?? '' }}"
                                    placeholder="Commentaire…">
                         </td>
+
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+    @endif
 
+    {{-- Footer actions --}}
+    <x-slot:actions>
+        <div class="form-check d-flex align-items-center gap-2 noprint">
+            <input type="checkbox" id="checkAllBox" class="form-check-input"
+                   onchange="toggleCheckAll(this)">
+            <label for="checkAllBox" class="form-check-label" style="font-size:var(--font-size-sm);">
+                Tout cocher
+            </label>
+        </div>
+        <span id="paidCounter" class="badge bg-success ms-1">{{ $paidCount }} payé(s)</span>
+        @if (!$items->isEmpty())
+        <button type="submit" class="btn btn-sm btn-success">
+            <i class="fas fa-save me-1"></i> Enregistrer
+        </button>
+        @endif
+    </x-slot:actions>
 
-</form>
-@endif
-</div>
+</x-ob-commandbar>
 
 @push('scripts')
 <script>
@@ -292,24 +329,25 @@
     let paidCount = {{ $paidCount }};
 
     function updateCounter() {
-        document.getElementById('paidCounter').textContent = paidCount + ' payé(s)';
+        const el = document.getElementById('paidCounter');
+        if (el) el.textContent = paidCount + ' payé(s)';
     }
 
     window.onPaidToggle = function (checkbox) {
-        const pid   = checkbox.dataset.pid;
-        const today = checkbox.dataset.today;
+        const pid         = checkbox.dataset.pid;
+        const today       = checkbox.dataset.today;
         const dateField   = document.getElementById('date-'    + pid);
         const amountField = document.getElementById('montant-' + pid);
         const row         = document.getElementById('row-'     + pid);
 
         if (checkbox.checked) {
             paidCount++;
-            if (dateField && ! dateField.value) dateField.value = today;
+            if (dateField   && !dateField.value) dateField.value = today;
             if (amountField) amountField.style.color = 'var(--bs-success)';
             if (row) row.classList.remove('table-light');
         } else {
             paidCount = Math.max(0, paidCount - 1);
-            if (dateField) dateField.value = '';
+            if (dateField)   dateField.value = '';
             if (amountField) amountField.style.color = 'var(--bs-secondary)';
             if (row) row.classList.add('table-light');
         }
@@ -318,7 +356,7 @@
 
     window.onAmountChange = function (input, pid) {
         const check = document.getElementById('paid-' + pid);
-        if (check && ! check.checked && input.value > 0) {
+        if (check && !check.checked && parseFloat(input.value) > 0) {
             check.checked = true;
             check.dispatchEvent(new Event('change'));
         }
@@ -326,26 +364,19 @@
 
     window.onDateChange = function (input, pid) {
         const check = document.getElementById('paid-' + pid);
-        if (check && ! check.checked && input.value) {
+        if (check && !check.checked && input.value) {
             check.checked = true;
             check.dispatchEvent(new Event('change'));
         }
     };
 
     window.toggleCheckAll = function (masterCheckbox) {
-        const checks = document.querySelectorAll('.paid-check');
-        checks.forEach(function (c) {
+        document.querySelectorAll('.paid-check').forEach(function (c) {
             if (c.checked !== masterCheckbox.checked) {
                 c.checked = masterCheckbox.checked;
                 c.dispatchEvent(new Event('change'));
             }
         });
-    };
-
-    window.updateParam = function (name, value) {
-        const url = new URL(window.location.href);
-        url.searchParams.set(name, value);
-        window.location.href = url.toString();
     };
 })();
 </script>
