@@ -7,5 +7,15 @@
 @import './sidebar.css';
 @import './layout.css';
 @import './components.css';
+
+/* ── OB UI components (one file per module) ───────────────────────── */
+@import './ob-breadcrumb.css';
+@import './ob-toolbar.css';
+@import './ob-table.css';
+@import './ob-commandbar.css';
+@import './ob-badge.css';
+@import './ob-avatar.css';
+@import './ob-toggle.css';
+
 @import './dashboard.css';
 @import './login.css';

@@ -1,0 +1,100 @@
+/* =============================================================================
+   ob-toolbar.css  —  Filter / action bar above list pages
+   ============================================================================= */
+
+.ob-toolbar {
+    background: var(--component-bg);
+    border: 1px solid var(--component-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+}
+
+/* ── Header row: title left, actions right ──────────────────────────────── */
+
+.ob-toolbar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ob-toolbar-title {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+}
+
+.ob-toolbar-heading {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--page-text);
+    white-space: nowrap;
+}
+
+.ob-toolbar-count {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted-soft);
+    font-weight: 400;
+}
+
+.ob-toolbar-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* ── Filter form grid ───────────────────────────────────────────────────── */
+
+.ob-toolbar-filters {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+/* ── Secondary row ──────────────────────────────────────────────────────── */
+
+.ob-toolbar-secondary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--component-border);
+    font-size: var(--font-size-sm);
+}
+
+/* Table controls auto-group — pushed to the right when secondary content exists */
+.ob-toolbar-table-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 992px) {
+    .ob-toolbar-header { flex-wrap: wrap; }
+    .ob-toolbar-filters { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (max-width: 576px) {
+    .ob-toolbar { padding: 10px 12px; }
+    .ob-toolbar-filters { grid-template-columns: 1fr !important; }
+    .ob-toolbar-actions { flex-wrap: wrap; }
+    .ob-toolbar-table-controls { margin-left: 0; }
+}
+
+/* ── Print ──────────────────────────────────────────────────────────────── */
+
+@media print {
+    .ob-toolbar { box-shadow: none; margin: 0 0 8px; }
+}

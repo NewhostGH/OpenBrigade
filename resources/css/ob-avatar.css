@@ -1,0 +1,41 @@
+/* =============================================================================
+   ob-avatar.css  —  User photos and grade badge images
+   ============================================================================= */
+
+/* ── Avatar sizes ───────────────────────────────────────────────────────── */
+
+.ob-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-avatar);
+    object-fit: cover;
+    border: 1px solid var(--avatar-border);
+    background: var(--avatar-bg);
+}
+
+/* Small — list rows */
+.ob-avatar-sm {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    border: 1px solid var(--avatar-border);
+    background: var(--avatar-bg);
+}
+
+/* Round — card view */
+.ob-avatar-round {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ── Grade badge image ──────────────────────────────────────────────────── */
+
+.ob-grade-img {
+    height: 26px;
+    width: auto;
+    border-radius: 3px;
+    vertical-align: middle;
+}

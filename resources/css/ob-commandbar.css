@@ -1,0 +1,64 @@
+/* =============================================================================
+   ob-commandbar.css  —  Table card wrapper + footer action/pagination bar
+   ============================================================================= */
+
+/* ── Outer card (replaces the old ob-table-wrap) ────────────────────────── */
+
+.ob-commandbar-wrap {
+    background: var(--component-bg);
+    border: 1px solid var(--component-border);
+    border-radius: 10px;
+    /* overflow:clip clips painted overflows (rounds table corners) but does  */
+    /* NOT create a new stacking context, so position:sticky still works.     */
+    overflow: clip;
+    margin: 8px 12px 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+}
+
+/* ── Footer bar (selection count + bulk actions + pagination) ───────────── */
+
+.ob-commandbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    border-top: 1px solid var(--component-border);
+    background: #f8fafc;
+    font-size: var(--font-size-sm);
+}
+
+.ob-commandbar-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ob-commandbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ob-commandbar-count {
+    color: var(--text-muted-soft);
+    white-space: nowrap;
+    font-size: var(--font-size-sm);
+}
+
+/* ── Print ──────────────────────────────────────────────────────────────── */
+
+@media print {
+    .ob-commandbar {
+        display: none !important;
+    }
+
+    .ob-commandbar-wrap {
+        box-shadow: none;
+        margin: 0;
+        border: 1px solid #ccc;
+    }
+}

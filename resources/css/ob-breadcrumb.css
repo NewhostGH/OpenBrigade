@@ -1,0 +1,62 @@
+/* =============================================================================
+   ob-breadcrumb.css  —  Page path navigation
+   ============================================================================= */
+
+.ob-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 6px 12px;
+    margin: 8px 12px 0;
+    font-size: 0.75rem;
+    color: var(--text-muted-soft);
+    list-style: none;
+}
+
+.ob-breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Ancestor links */
+.ob-breadcrumb-item a {
+    color: var(--text-muted-soft);
+    text-decoration: none;
+    padding: 2px 4px;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.ob-breadcrumb-item a:hover {
+    color: var(--page-text);
+    background: rgba(0, 0, 0, .05);
+    text-decoration: none;
+}
+
+/* Separator */
+.ob-breadcrumb-sep {
+    color: var(--component-border);
+    user-select: none;
+    font-size: 0.65rem;
+    padding: 0 1px;
+}
+
+/* Current page (last item) */
+.ob-breadcrumb-item.ob-breadcrumb-current {
+    color: var(--page-text);
+    font-weight: 500;
+    max-width: 260px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Print ──────────────────────────────────────────────────────────────── */
+
+@media print {
+    .ob-breadcrumb {
+        display: none;
+    }
+}

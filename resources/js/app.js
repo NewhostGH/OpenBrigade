@@ -5,3 +5,7 @@ import 'bootstrap';
 
 import './sidebar.js';
 import './shortcuts.js';
+
+/* ── OB UI components ─────────────────────────────────────────────── */
+import './ob-toolbar.js';
+import './ob-table.js';
