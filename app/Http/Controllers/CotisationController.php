@@ -19,13 +19,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Section;
 use App\Models\TypePaiement;
+use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class CotisationController extends Controller
 {
@@ -142,49 +140,24 @@ class CotisationController extends Controller
 
         $rows = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order, $allSections)->get();
 
-        $spreadsheet = new Spreadsheet();
-        $sheet       = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Cotisations');
+        $columns = [
+            ['Nom Prénom',  fn($r) => strtoupper($r->P_NOM) . ' ' . ucfirst(strtolower($r->P_PRENOM))],
+            ['Statut',      fn($r) => $r->P_STATUT],
+            ['Section',     fn($r) => $r->S_CODE],
+            ['Entrée',      fn($r) => $r->P_DATE_ENGAGEMENT ? Carbon::parse($r->P_DATE_ENGAGEMENT)->format('d/m/Y') : ''],
+            ['Sortie',      fn($r) => $r->P_FIN ? Carbon::parse($r->P_FIN)->format('d/m/Y') : ''],
+            ['Payé',        fn($r) => $r->PC_DATE ? 'Oui' : 'Non'],
+            ['Montant',     fn($r) => $r->MONTANT ?? ''],
+            ['Date payé',   fn($r) => $r->PC_DATE ? Carbon::parse($r->PC_DATE)->format('d/m/Y') : ''],
+            ['Commentaire', fn($r) => $r->COMMENTAIRE ?? ''],
+        ];
 
-        $headers = ['Nom Prénom', 'Statut', 'Section', 'Entrée', 'Sortie', 'Payé', 'Montant', 'Date payé', 'Commentaire'];
-        $cols    = range('A', 'I');
-
-        foreach ($cols as $i => $col) {
-            $sheet->setCellValue("{$col}1", $headers[$i]);
-            $sheet->getColumnDimension($col)->setAutoSize(true);
-            $sheet->getStyle("{$col}1")->getFont()->setBold(true);
-        }
-
-        $sheet->getStyle('A1:I1')
-            ->getFill()
-            ->setFillType(Fill::FILL_SOLID)
-            ->getStartColor()->setRGB('FFCC33');
-
-        $sheet->freezePane('A2');
-        $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
-        $sheet->getSheetView()->setZoomScale(85);
-
-        $row = 2;
-        foreach ($rows as $r) {
-            $sheet->setCellValue("A{$row}", strtoupper($r->P_NOM) . ' ' . ucfirst(strtolower($r->P_PRENOM)));
-            $sheet->setCellValue("B{$row}", $r->P_STATUT);
-            $sheet->setCellValue("C{$row}", $r->S_CODE);
-            $sheet->setCellValue("D{$row}", $r->P_DATE_ENGAGEMENT ? Carbon::parse($r->P_DATE_ENGAGEMENT)->format('d/m/Y') : '');
-            $sheet->setCellValue("E{$row}", $r->P_FIN ? Carbon::parse($r->P_FIN)->format('d/m/Y') : '');
-            $sheet->setCellValue("F{$row}", $r->PC_DATE ? 'Oui' : 'Non');
-            $sheet->setCellValue("G{$row}", $r->MONTANT ?? '');
-            $sheet->setCellValue("H{$row}", $r->PC_DATE ? Carbon::parse($r->PC_DATE)->format('d/m/Y') : '');
-            $sheet->setCellValue("I{$row}", $r->COMMENTAIRE ?? '');
-            $row++;
-        }
-
-        $filename = "Cotisations_{$year}_{$periodeCode}.xlsx";
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment; filename=\"{$filename}\"");
-        header('Cache-Control: max-age=0');
-
-        IOFactory::createWriter($spreadsheet, 'Xlsx')->save('php://output');
-        exit;
+        return (new TableExportService())->toXlsx(
+            $columns,
+            $rows,
+            "Cotisations_{$year}_{$periodeCode}",
+            ['sheetTitle' => 'Cotisations', 'headerRgb' => 'FFCC33', 'freezeHeader' => true, 'zoomScale' => 85, 'repeatHeader' => true]
+        );
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
