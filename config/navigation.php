@@ -26,9 +26,8 @@ return [
             'label' => 'Personnel',
             'icon'  => 'users',
             'items' => [
-                ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',                                                       'icon' => 'list'],
-                ['key' => 'personnel.search',      'label' => 'Recherche',       'url' => '/personnel',                                                       'icon' => 'magnifying-glass', 'permission' => 56],
-                ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications',                                                'icon' => 'certificate',      'permission' => 56],
+                ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',      'icon' => 'list'],
+                ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications', 'icon' => 'certificate',      'permission' => 56],
                 ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/cotisations',                                                    'icon' => 'receipt',          'permission' => 53],
                 ['key' => 'personnel.geoloc',      'label' => 'Géolocalisation', 'url' => '/geolocalisation',                                              'icon' => 'map-marker-alt',   'permission' => 76],
             ],

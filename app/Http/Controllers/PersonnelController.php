@@ -759,7 +759,10 @@ class PersonnelController extends Controller
                     ->orWhere('P_EMAIL', 'like', "%{$search}%")
                     ->orWhere('P_PHONE', 'like', "%{$search}%")
                     ->orWhere('P_PHONE2', 'like', "%{$search}%")
-                    ->orWhere('P_GRADE', 'like', "%{$search}%");
+                    ->orWhere('P_GRADE', 'like', "%{$search}%")
+                    ->orWhere('P_ADDRESS', 'like', "%{$search}%")
+                    ->orWhere('P_ZIP_CODE', 'like', "%{$search}%")
+                    ->orWhere('P_CITY', 'like', "%{$search}%");
             });
         }
 
