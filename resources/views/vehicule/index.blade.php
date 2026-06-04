@@ -18,7 +18,7 @@
     table-id="vehiculeTable">
 
     @if(auth()->user()->hasPermission(17))
-        <a href="{{ url('/legacy/ins_vehicule.php') }}" class="btn btn-sm btn-primary">
+        <a href="{{ route('vehicule.create') }}" class="btn btn-sm btn-primary">
             <i class="fas fa-plus me-1"></i> Nouveau véhicule
         </a>
     @endif

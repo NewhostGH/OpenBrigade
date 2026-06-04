@@ -69,7 +69,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'del_type_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:5')->name('legacy_bridge.del_type_garde');
     Route::match(['GET', 'POST'], 'del_type_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.del_type_materiel');
     Route::match(['GET', 'POST'], 'del_type_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.del_type_vehicule');
-    Route::match(['GET', 'POST'], 'del_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:19')->name('legacy_bridge.del_vehicule');
+    Route::match(['GET', 'POST'], 'del_vehicule.php', fn () => redirect()->route('vehicule.index'))->name('legacy_bridge.del_vehicule');
     Route::match(['GET', 'POST'], 'delete_event_file.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.delete_event_file');
     Route::match(['GET', 'POST'], 'delete_file.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.delete_file');
     Route::match(['GET', 'POST'], 'delete_message.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.delete_message');
@@ -198,7 +198,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'ins_poste.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.ins_poste');
     Route::match(['GET', 'POST'], 'ins_section.php', [LegacyBridgeController::class, 'show'])->middleware('permission:55')->name('legacy_bridge.ins_section');
     Route::match(['GET', 'POST'], 'ins_type_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.ins_type_materiel');
-    Route::match(['GET', 'POST'], 'ins_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:17')->name('legacy_bridge.ins_vehicule');
+    Route::match(['GET', 'POST'], 'ins_vehicule.php', fn () => redirect()->route('vehicule.create'))->name('legacy_bridge.ins_vehicule');
     Route::match(['GET', 'POST'], 'install_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.install_addon');
     Route::match(['GET', 'POST'], 'intervention_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.intervention_edit');
     Route::match(['GET', 'POST'], 'jvectormap.php', [LegacyBridgeController::class, 'show'])->middleware('permission:27')->name('legacy_bridge.jvectormap');
@@ -319,7 +319,10 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_type_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_type_garde');
     Route::match(['GET', 'POST'], 'save_type_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_type_materiel');
     Route::match(['GET', 'POST'], 'save_type_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_type_vehicule');
-    Route::match(['GET', 'POST'], 'save_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_vehicule');
+    Route::match(['GET', 'POST'], 'save_vehicule.php', function (\Illuminate\Http\Request $r) {
+        $vid = (int) ($r->query('V_ID') ?: $r->input('V_ID', 0));
+        return $vid ? redirect()->route('vehicule.show', $vid) : redirect()->route('vehicule.index');
+    })->name('legacy_bridge.save_vehicule');
     Route::match(['GET', 'POST'], 'scan_victime.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.scan_victime');
     Route::match(['GET', 'POST'], 'search_personnel.php', fn () => redirect()->route('personnel.index'))->name('legacy_bridge.search_personnel');
     Route::match(['GET', 'POST'], 'search_personnel_result.php', fn () => redirect()->route('personnel.index'))->name('legacy_bridge.search_personnel_result');

@@ -125,6 +125,7 @@ DONE
 
 - [x] Inventory all VEH legacy files
 - [x] Migrate vehicle list and detail view/edit (commit: feat: migrate vehicles — VehiculeController, list/show views, bridge retirements, tests)
+- [x] Migrate vehicle CRUD: create/edit/delete form; fix V_IMMAT/V_LIBELLE column names in show view (commit: feat: vehicle CRUD — create/edit/delete form, fix wrong column names in show view)
 - [ ] Migrate vehicle type management
 - [ ] Migrate vehicle assignment to events
 - [ ] Migrate vehicle exports (XLS)

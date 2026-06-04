@@ -77,7 +77,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/cotisations/virements', [CotisationController::class, 'virements'])->name('cotisations.virements')->middleware('permission:53');
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index')->middleware('permission:0');
     Route::get('/vehicules', [VehiculeController::class, 'index'])->name('vehicule.index')->middleware('permission:42');
+    Route::get('/vehicules/create', [VehiculeController::class, 'create'])->name('vehicule.create')->middleware('permission:17');
+    Route::post('/vehicules', [VehiculeController::class, 'store'])->name('vehicule.store')->middleware('permission:17');
     Route::get('/vehicules/{vehicule}', [VehiculeController::class, 'show'])->name('vehicule.show')->middleware('permission:42');
+    Route::get('/vehicules/{vehicule}/edit', [VehiculeController::class, 'edit'])->name('vehicule.edit')->middleware('permission:17');
+    Route::put('/vehicules/{vehicule}', [VehiculeController::class, 'update'])->name('vehicule.update')->middleware('permission:17');
+    Route::delete('/vehicules/{vehicule}', [VehiculeController::class, 'destroy'])->name('vehicule.destroy')->middleware('permission:19');
     Route::get('/materiels', [MaterielController::class, 'index'])->name('materiel.index')->middleware('permission:42');
     Route::get('/consommables', [ConsommableController::class, 'index'])->name('consommable.index')->middleware('permission:42');
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
