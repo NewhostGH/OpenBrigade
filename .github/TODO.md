@@ -88,10 +88,11 @@ DONE
 - [x] **Bug fixed:** `DashboardService` duty + birthday widgets no longer build avatars inline with the broken `/trombinoscope/<file>` path — they call `Personnel::avatarUrl(...)`, same SSOT as `getAvatarUrl()`.
 
 ### B. SSOT — duplicated maps & logic (rule 1)
-- [ ] Define the personnel **status badge map** (`BEN/EXT/PRES/INT` → label+class) once — as a `Personnel` constant or `config/personnel.php`. Remove the copies in `PersonnelController::personnelColumns()` and `personnel/show.blade.php:21-26`.
-- [ ] Move the **état** rule (`Actif`/`Archivé`/`Bloqué`) to a `Personnel::getEtat()` accessor. Remove the copy in `show.blade.php:14-20`; reuse it in the controller's `etat` column.
-- [ ] Move `cotisNet` (net cotisation total) out of `show.blade.php:29-30` into a model accessor or the controller.
-- [ ] Move the civility map (`civMap`) to a single definition (constant/config) and reuse on show + edit.
+- [x] Created `config/personnel.php` (labels once in `statuts`; `statut_badge_class` + `statuts_assignable` reference codes; `etat_badges`; `civilites`). Personnel helpers `statutBadge()` / `statutBadgeMap()` / `etatBadge()` / `civiliteLabel()` zip them. Removed inline maps from `PersonnelController::personnelColumns()`, `personnel/show.blade.php`, and the `edit.blade.php` statut + civilité dropdowns.
+- [x] **État** rule moved to `Personnel::getEtatAttribute()` (`$personnel->etat`); reused by the controller `etat` column and show view.
+- [x] **cotisNet** moved to `Personnel::getCotisNetAttribute()` (`$personnel->cotis_net`); removed from `show.blade.php`.
+- [x] **Civility map** centralised in `config('personnel.civilites')`; reused on show (`civiliteLabel()`) and edit (dropdown `@foreach`).
+- Note: `index.blade.php` *category filter* (ALL/INT/BEN/EXT/PRES with plural UI labels) is a distinct concern, intentionally left as-is.
 
 ### C. Excessive PHP in Blade (rule 3)
 - [ ] `personnel/show.blade.php:12-51` — move the badge maps, état, totals, and `$sideNav` array out of the 50-line `@php` block into the controller (pass as view data) or a view model.

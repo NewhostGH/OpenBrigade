@@ -90,12 +90,7 @@ class PersonnelController extends Controller
      */
     private function personnelColumns(): array
     {
-        static $statutMap = [
-            'BEN'  => ['Bénévole',    'ob-badge-ben'],
-            'EXT'  => ['Externe',     'ob-badge-ext'],
-            'PRES' => ['Prestataire', 'ob-badge-pres'],
-            'INT'  => ['Interne',     'ob-badge-int'],
-        ];
+        $statutMap = Personnel::statutBadgeMap();
 
         return [
             // ── Always-on columns ──────────────────────────────────────────
@@ -205,14 +200,8 @@ class PersonnelController extends Controller
                 'key'          => 'etat',
                 'label'        => 'Position',
                 'type'         => 'badge',
-                'value'        => fn($p) => (int) $p->GP_ID === -1
-                    ? 'Bloqué'
-                    : ((int) $p->P_OLD_MEMBER > 0 ? 'Archivé' : 'Actif'),
-                'badgeMap'     => [
-                    'Actif'   => ['Actif',   'ob-badge-actif'],
-                    'Archivé' => ['Archivé', 'ob-badge-archive'],
-                    'Bloqué'  => ['Bloqué',  'ob-badge-bloqued'],
-                ],
+                'value'        => fn($p) => $p->etat,
+                'badgeMap'     => config('personnel.etat_badges'),
                 'mobile'       => false,
                 'default'      => true,
                 'exportable'   => true,

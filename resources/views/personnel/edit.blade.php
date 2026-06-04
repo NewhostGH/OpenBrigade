@@ -98,10 +98,9 @@
                                 <select id="P_CIVILITE" name="P_CIVILITE"
                                         class="form-select form-select-sm @error('P_CIVILITE') is-invalid @enderror">
                                     <option value="">—</option>
-                                    <option value="1" @selected((string)old('P_CIVILITE',$personnel->P_CIVILITE)==='1')>M.</option>
-                                    <option value="2" @selected((string)old('P_CIVILITE',$personnel->P_CIVILITE)==='2')>Mme</option>
-                                    <option value="3" @selected((string)old('P_CIVILITE',$personnel->P_CIVILITE)==='3')>Dr.</option>
-                                    <option value="4" @selected((string)old('P_CIVILITE',$personnel->P_CIVILITE)==='4')>Pr.</option>
+                                    @foreach (config('personnel.civilites') as $code => $label)
+                                        <option value="{{ $code }}" @selected((string)old('P_CIVILITE',$personnel->P_CIVILITE)===(string)$code)>{{ $label }}</option>
+                                    @endforeach
                                 </select>
                                 @error('P_CIVILITE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
@@ -192,8 +191,8 @@
                                 <label class="form-label form-label-sm" for="P_STATUT">Statut *</label>
                                 <select id="P_STATUT" name="P_STATUT"
                                         class="form-select form-select-sm @error('P_STATUT') is-invalid @enderror" required>
-                                    @foreach (['BEN' => 'Bénévole', 'EXT' => 'Externe', 'PRES' => 'Prestataire', 'SAL' => 'Salarié', 'ADH' => 'Adhérent'] as $val => $lbl)
-                                        <option value="{{ $val }}" @selected(old('P_STATUT',$personnel->P_STATUT)===$val)>{{ $lbl }}</option>
+                                    @foreach (config('personnel.statuts_assignable') as $val)
+                                        <option value="{{ $val }}" @selected(old('P_STATUT',$personnel->P_STATUT)===$val)>{{ config('personnel.statuts')[$val] }}</option>
                                     @endforeach
                                 </select>
                                 @error('P_STATUT')<div class="invalid-feedback">{{ $message }}</div>@enderror

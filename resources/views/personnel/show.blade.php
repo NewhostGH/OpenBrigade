@@ -10,24 +10,10 @@
 ]"/>
 
 @php
-    $civMap = [1 => 'M.', 2 => 'Mme', 3 => 'Dr.', 4 => 'Pr.'];
-    $etat = (int) $personnel->GP_ID === -1 ? 'Bloqué'
-          : ((int) $personnel->P_OLD_MEMBER > 0 ? 'Archivé' : 'Actif');
-    $etatClass = match($etat) {
-        'Actif'   => 'ob-badge-actif',
-        'Archivé' => 'ob-badge-archive',
-        default   => 'ob-badge-bloqued',
-    };
-    $statutMap = [
-        'BEN'  => ['Bénévole',    'ob-badge-ben'],
-        'EXT'  => ['Externe',     'ob-badge-ext'],
-        'PRES' => ['Prestataire', 'ob-badge-pres'],
-    ];
-    [$statutLbl, $statutCls] = $statutMap[$personnel->P_STATUT] ?? [$personnel->P_STATUT, 'ob-badge-int'];
+    [$statutLbl, $statutCls] = $personnel->statutBadge();
+    [$etatLbl,   $etatCls]   = $personnel->etatBadge();
     $today  = now()->toDateString();
     $warn30 = now()->addDays(30)->toDateString();
-    $cotisNet = $personnel->cotisations
-        ->sum(fn($c) => $c->REMBOURSEMENT ? -abs((float)$c->MONTANT) : (float)$c->MONTANT);
     $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
 
     $sideNav = [
@@ -56,8 +42,8 @@
     <div class="widget-card mb-3">
         <div class="widget-card-header">
             <div class="widget-card-title">
-                @if ($personnel->P_CIVILITE && isset($civMap[$personnel->P_CIVILITE]))
-                    <span class="fw-normal text-muted">{{ $civMap[$personnel->P_CIVILITE] }}</span>
+                @if ($personnel->civiliteLabel())
+                    <span class="fw-normal text-muted">{{ $personnel->civiliteLabel() }}</span>
                 @endif
                 {{ strtoupper($personnel->P_NOM) }} {{ $personnel->P_PRENOM }}
                 @if ($personnel->P_ABBREGE)
@@ -137,7 +123,7 @@
                         <dt class="text-muted fw-normal">Statut</dt>
                         <dd class="mb-0">
                             <span class="ob-badge {{ $statutCls }}">{{ $statutLbl }}</span>
-                            <span class="ob-badge {{ $etatClass }} ms-1">{{ $etat }}</span>
+                            <span class="ob-badge {{ $etatCls }} ms-1">{{ $etatLbl }}</span>
                         </dd>
 
                         @if ($personnel->P_DATE_ENGAGEMENT)
@@ -171,9 +157,9 @@
                                 ['icon' => 'fas fa-certificate', 'label' => 'Compétences',
                                  'value' => $personnel->qualifications->count(), 'color' => '#7c3aed', 'bg' => '#f5f3ff'],
                                 ['icon' => 'fas fa-euro-sign', 'label' => 'Cotisations (net)',
-                                 'value' => number_format($cotisNet, 2, ',', ' ') . ' €',
-                                 'color' => $cotisNet < 0 ? '#dc2626' : '#16a34a',
-                                 'bg'    => $cotisNet < 0 ? '#fff1f2' : '#f0fdf4'],
+                                 'value' => number_format($personnel->cotis_net, 2, ',', ' ') . ' €',
+                                 'color' => $personnel->cotis_net < 0 ? '#dc2626' : '#16a34a',
+                                 'bg'    => $personnel->cotis_net < 0 ? '#fff1f2' : '#f0fdf4'],
                                 ['icon' => 'fas fa-clock', 'label' => 'Dernière connexion',
                                  'value' => $personnel->P_LAST_CONNECT?->format('d/m/Y') ?? 'jamais',
                                  'color' => '#64748b', 'bg' => '#f8fafc'],
@@ -534,8 +520,8 @@
                                     <tr class="fw-bold">
                                         <td colspan="3" class="text-end ps-3"
                                             style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">Total net</td>
-                                        <td class="text-end {{ $cotisNet < 0 ? 'text-danger' : '' }}">
-                                            {{ number_format($cotisNet, 2, ',', ' ') }} €
+                                        <td class="text-end {{ $personnel->cotis_net < 0 ? 'text-danger' : '' }}">
+                                            {{ number_format($personnel->cotis_net, 2, ',', ' ') }} €
                                         </td>
                                         <td colspan="3"></td>
                                     </tr>

@@ -18,6 +18,8 @@
 .ob-badge-ext  { background: #f1f5f9; color: #475569; }
 .ob-badge-pres { background: #f3e8ff; color: #6b21a8; }
 .ob-badge-int  { background: #dbeafe; color: #1e40af; }
+.ob-badge-sal  { background: #ccfbf1; color: #115e59; }
+.ob-badge-adh  { background: #fed7aa; color: #9a3412; }
 
 /* ── Personnel position ─────────────────────────────────────────────────── */
 .ob-badge-actif   { background: #dcfce7; color: #166534; }

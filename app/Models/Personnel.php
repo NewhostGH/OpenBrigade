@@ -110,4 +110,62 @@ class Personnel extends Model
     {
         return $this->hasMany(Cotisation::class, 'P_ID', 'P_ID');
     }
+
+    // ── Derived attributes & lookups (SSOT) ──────────────────────────────────
+
+    /** Membership état: Bloqué (GP_ID -1) > Archivé (old member) > Actif. */
+    public function getEtatAttribute(): string
+    {
+        if ((int) $this->GP_ID === -1) {
+            return 'Bloqué';
+        }
+
+        return (int) $this->P_OLD_MEMBER > 0 ? 'Archivé' : 'Actif';
+    }
+
+    /** Net cotisation total (reimbursements counted negative). */
+    public function getCotisNetAttribute(): float
+    {
+        return (float) $this->cotisations->sum(
+            fn ($c) => $c->REMBOURSEMENT ? -abs((float) $c->MONTANT) : (float) $c->MONTANT
+        );
+    }
+
+    /** [label, css-class] for this person's statut badge (config-driven). */
+    public function statutBadge(): array
+    {
+        $labels  = config('personnel.statuts');
+        $classes = config('personnel.statut_badge_class');
+        $code    = $this->P_STATUT;
+
+        return [$labels[$code] ?? $code, $classes[$code] ?? $classes['INT']];
+    }
+
+    /**
+     * value => [label, class] map for every styled statut, as expected by
+     * <x-ob-table>'s badgeMap. Built from the config labels + classes so
+     * labels are never restated.
+     */
+    public static function statutBadgeMap(): array
+    {
+        $labels  = config('personnel.statuts');
+        $map     = [];
+        foreach (config('personnel.statut_badge_class') as $code => $class) {
+            $map[$code] = [$labels[$code] ?? $code, $class];
+        }
+
+        return $map;
+    }
+
+    /** [label, css-class] for this person's état badge (config-driven). */
+    public function etatBadge(): array
+    {
+        return config('personnel.etat_badges')[$this->etat];
+    }
+
+    /** Civility display prefix (M. / Mme / …), or empty string. */
+    public function civiliteLabel(): string
+    {
+        return config('personnel.civilites')[(int) $this->P_CIVILITE] ?? '';
+    }
 }
