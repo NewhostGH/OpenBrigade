@@ -131,6 +131,11 @@ class Personnel extends Model
         );
     }
 
+    public function statutBadgeLabel(): string { return $this->statutBadge()[0]; }
+    public function statutBadgeClass(): string { return $this->statutBadge()[1]; }
+    public function etatBadgeLabel(): string   { return $this->etatBadge()[0]; }
+    public function etatBadgeClass(): string   { return $this->etatBadge()[1]; }
+
     /** [label, css-class] for this person's statut badge (config-driven). */
     public function statutBadge(): array
     {

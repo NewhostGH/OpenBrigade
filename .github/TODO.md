@@ -95,8 +95,14 @@ DONE
 - Note: `index.blade.php` *category filter* (ALL/INT/BEN/EXT/PRES with plural UI labels) is a distinct concern, intentionally left as-is.
 
 ### C. Excessive PHP in Blade (rule 3)
-- [ ] `personnel/show.blade.php:12-51` — move the badge maps, état, totals, and `$sideNav` array out of the 50-line `@php` block into the controller (pass as view data) or a view model.
-- [ ] Remove inline `<style>` / `@push('styles')` CSS from `personnel/show`, `personnel/edit`, `vehicule/form`, `personnel/geolocalisation`, `organisation/index`, `planning/index`; relocate to module CSS files.
+- [x] `personnel/show.blade.php` `@php` block eliminated: `$cotisations`, `$today`, `$warn30`, `$sideNav` moved to `PersonnelController::show()` as view data; badge variables removed entirely — replaced with zero-PHP model method calls (`$personnel->statutBadgeLabel()`, `->statutBadgeClass()`, `->etatBadgeLabel()`, `->etatBadgeClass()`).
+- [x] Removed all inline `<style>` / `@push('styles')` CSS from 6 views:
+  - `personnel/show` → `ob-personnel.css` (new)
+  - `personnel/edit` + `vehicule/form` → unified as `.ob-form-label` in `components.css` (was two identical inline declarations)
+  - `organisation/index` → `ob-organisation.css` (new)
+  - `planning/index` → `ob-planning.css` (new)
+  - `personnel/geolocalisation` → `@vite` moved from `@push('styles')` to `@push('scripts')` (was misplaced; no CSS was inline)
+- [x] All 3 new module CSS files wired into `app.css`.
 
 ### D. CSS prefix consistency (rule 4)
 - [ ] Rename custom classes/ids in `dashboard.css`, `navbar.css`, `login.css`, `sidebar.css` and the inline `pers-*` classes to the `ob-` prefix with module sub-namespace (`ob-dash-*`, `ob-nav-*`, `ob-login-*`, `ob-pers-*`). Update all referencing Blade/JS. (Large mechanical change — do per module, one commit each, verify rendering after each.)

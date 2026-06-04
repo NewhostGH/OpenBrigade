@@ -2,10 +2,6 @@
 
 @section('title', 'Géolocalisation — ' . config('app.name'))
 
-@push('styles')
-    @vite('resources/js/geolocalisation.js')
-@endpush
-
 @section('content')
 
 <x-ob-breadcrumb :items="[
@@ -34,6 +30,7 @@
 @endsection
 
 @push('scripts')
+@vite('resources/js/geolocalisation.js')
 {{--
     Pass server-side data to the Vite module (geolocalisation.js).
     This plain <script> executes synchronously; the deferred ES module reads

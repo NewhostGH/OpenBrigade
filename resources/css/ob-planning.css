@@ -1,0 +1,49 @@
+/* =============================================================================
+   ob-planning.css  —  Planning calendar grid
+   ============================================================================= */
+
+.cal-grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+.cal-grid th {
+    background: var(--table-header-bg);
+    color: var(--table-header-text);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    padding: 5px 4px;
+    text-align: center;
+}
+
+.cal-cell {
+    border: 1px solid var(--component-border);
+    vertical-align: top;
+    padding: 4px;
+    min-height: 80px;
+    background: var(--component-bg);
+}
+
+.cal-cell.outside { background: var(--page-bg); }
+
+.cal-cell.today { background: color-mix(in srgb, var(--brand-bg) 5%, #fff); }
+
+.cal-day-num {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--text-muted-soft);
+    margin-bottom: 2px;
+}
+
+.cal-day-num.today-num { color: var(--brand-bg); font-size: var(--font-size-sm); }
+
+.cal-event {
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cal-event-ev  { background: rgba(41,128,185,0.15); color: #1a5f87; }
+.cal-event-abs { background: rgba(230,126,34,0.15); color: #a0530a; }
+.cal-event-abs-pend { background: rgba(220,53,69,0.12); color: #842029; }

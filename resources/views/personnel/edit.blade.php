@@ -384,7 +384,7 @@
                             </div>
 
                             <div class="col-12">
-                                <p class="pers-section-label">Licence</p>
+                                <p class="ob-form-label">Licence</p>
                             </div>
 
                             <div class="col-md-4">
@@ -410,7 +410,7 @@
                             </div>
 
                             <div class="col-12">
-                                <p class="pers-section-label">Notes</p>
+                                <p class="ob-form-label">Notes</p>
                             </div>
 
                             <div class="col-12">
@@ -422,7 +422,7 @@
                             </div>
 
                             <div class="col-12">
-                                <p class="pers-section-label">Paramètres</p>
+                                <p class="ob-form-label">Paramètres</p>
                             </div>
 
                             <div class="col-6 col-md-3">
@@ -577,22 +577,6 @@
 </div>{{-- /mx-3 mt-3 --}}
 
 @endsection
-
-@push('styles')
-<style>
-.pers-section-label {
-    font-size: var(--font-size-xs);
-    font-weight: 700;
-    color: var(--text-muted-soft);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    border-bottom: 1px solid var(--component-border);
-    padding-bottom: 5px;
-    margin: 20px 0 12px;
-}
-.pers-section-label:first-child { margin-top: 0; }
-</style>
-@endpush
 
 @push('scripts')
 <script>

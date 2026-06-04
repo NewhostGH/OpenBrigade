@@ -83,7 +83,7 @@
                 <div class="col-lg-7">
 
                     {{-- Section label --}}
-                    <p class="veh-section-label">
+                    <p class="ob-form-label">
                         <i class="fas fa-id-card me-1"></i> Identification
                     </p>
 
@@ -119,7 +119,7 @@
                     </div>
 
                     {{-- Section label --}}
-                    <p class="veh-section-label">
+                    <p class="ob-form-label">
                         <i class="fas fa-truck me-1"></i> Caractéristiques
                     </p>
 
@@ -215,7 +215,7 @@
                 <div class="col-lg-5">
 
                     {{-- Section label --}}
-                    <p class="veh-section-label">
+                    <p class="ob-form-label">
                         <i class="fas fa-calendar-alt me-1"></i> Dates d'expiration
                     </p>
 
@@ -254,7 +254,7 @@
                     </div>
 
                     {{-- Section label --}}
-                    <p class="veh-section-label">
+                    <p class="ob-form-label">
                         <i class="fas fa-cogs me-1"></i> Équipement
                     </p>
 
@@ -302,7 +302,7 @@
                     </div>
 
                     {{-- Section label --}}
-                    <p class="veh-section-label">
+                    <p class="ob-form-label">
                         <i class="fas fa-comment-alt me-1"></i> Commentaire
                     </p>
 
@@ -357,21 +357,6 @@
 
 </div>
 
-@push('styles')
-<style>
-.veh-section-label {
-    font-size: var(--font-size-xs);
-    font-weight: 700;
-    color: var(--text-muted-soft);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    border-bottom: 1px solid var(--component-border);
-    padding-bottom: 5px;
-    margin-bottom: 12px;
-    margin-top: 0;
-}
-</style>
-@endpush
 
 @push('scripts')
 <script>

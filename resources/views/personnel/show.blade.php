@@ -9,32 +9,6 @@
     ['label' => $personnel->P_NOM . ' ' . $personnel->P_PRENOM],
 ]"/>
 
-@php
-    [$statutLbl, $statutCls] = $personnel->statutBadge();
-    [$etatLbl,   $etatCls]   = $personnel->etatBadge();
-    $today  = now()->toDateString();
-    $warn30 = now()->addDays(30)->toDateString();
-    $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
-
-    $sideNav = [
-        ['id' => 'section-info',          'icon' => 'fas fa-user',         'label' => 'Information'],
-        ['id' => 'section-competences',   'icon' => 'fas fa-certificate',  'label' => 'Compétences',
-         'badge' => $personnel->qualifications->count() ?: null],
-        ['id' => 'section-cotisations',   'icon' => 'fas fa-euro-sign',    'label' => 'Cotisations',
-         'badge' => $cotisations->count() ?: null],
-        ['id' => 'section-participation', 'icon' => 'fas fa-calendar-check','label' => 'Participation',
-         'badge' => $participation->count() ?: null],
-        ['id' => 'section-dotation',      'icon' => 'fas fa-box',          'label' => 'Dotation'],
-        ['id' => 'section-documents',     'icon' => 'fas fa-file-alt',     'label' => 'Documents'],
-        ['id' => 'section-notedfrais',    'icon' => 'fas fa-receipt',      'label' => 'Notes de frais'],
-        ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day', 'label' => 'Disponibilité'],
-        ['id' => 'section-calendrier',    'icon' => 'fas fa-calendar',     'label' => 'Calendrier'],
-        ['id' => 'section-absences',      'icon' => 'fas fa-user-times',   'label' => 'Absences'],
-        ['id' => 'section-historique',    'icon' => 'fas fa-history',      'label' => 'Historique'],
-        ['id' => 'section-geo',           'icon' => 'fas fa-map-marker-alt','label' => 'Géolocalisation'],
-        ['id' => 'section-acces',         'icon' => 'fas fa-shield-alt',   'label' => 'Accès'],
-    ];
-@endphp
 
 <div class="mx-3 mt-3">
 
@@ -122,8 +96,8 @@
 
                         <dt class="text-muted fw-normal">Statut</dt>
                         <dd class="mb-0">
-                            <span class="ob-badge {{ $statutCls }}">{{ $statutLbl }}</span>
-                            <span class="ob-badge {{ $etatCls }} ms-1">{{ $etatLbl }}</span>
+                            <span class="ob-badge {{ $personnel->statutBadgeClass() }}">{{ $personnel->statutBadgeLabel() }}</span>
+                            <span class="ob-badge {{ $personnel->etatBadgeClass() }} ms-1">{{ $personnel->etatBadgeLabel() }}</span>
                         </dd>
 
                         @if ($personnel->P_DATE_ENGAGEMENT)
@@ -910,42 +884,6 @@
 </div>
 
 @endsection
-
-@push('styles')
-<style>
-.pers-sidenav-wrap {
-    flex: 0 0 170px;
-    position: sticky;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-}
-.pers-sidenav-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary, #374151);
-    text-decoration: none;
-    border-left: 3px solid transparent;
-    white-space: nowrap;
-    transition: color .15s, background .15s, border-color .15s;
-}
-.pers-sidenav-link:hover {
-    color: var(--accent);
-    background: var(--table-hover-bg, rgba(0,0,0,.03));
-    border-left-color: var(--component-border);
-}
-.pers-sidenav-link.active {
-    color: var(--accent);
-    background: var(--table-hover-bg, rgba(0,0,0,.03));
-    border-left-color: var(--accent);
-    font-weight: 600;
-}
-.pers-sidenav-link .ob-badge { margin-left: auto; }
-</style>
-@endpush
 
 @push('scripts')
 <script>

@@ -19,3 +19,8 @@
 
 @import './dashboard.css';
 @import './login.css';
+
+/* ── Feature module CSS (one file per section) ────────────────────── */
+@import './ob-personnel.css';
+@import './ob-organisation.css';
+@import './ob-planning.css';

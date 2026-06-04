@@ -105,6 +105,24 @@
     margin-top: 0;
 }
 
+/* ── ob-form-label (muted section divider inside edit/form cards) ─────────── */
+/* Intentionally gray (text-muted-soft), unlike ob-section-title (accent blue).
+   Use this for grouping fields within a form; ob-section-title for read-only
+   profile/detail sections. */
+
+.ob-form-label {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--text-muted-soft);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    border-bottom: 1px solid var(--component-border);
+    padding-bottom: 5px;
+    margin: 20px 0 12px;
+}
+
+.ob-form-label:first-child { margin-top: 0; }
+
 /* ── Géolocalisation map page ───────────────────────────────────────────── */
 
 .ob-geo-toolbar {

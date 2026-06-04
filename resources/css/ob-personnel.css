@@ -1,0 +1,40 @@
+/* =============================================================================
+   ob-personnel.css  —  Personnel profile page components
+   ============================================================================= */
+
+/* ── Profile sidebar navigation ─────────────────────────────────────────── */
+.pers-sidenav-wrap {
+    flex: 0 0 170px;
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+}
+
+.pers-sidenav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary, #374151);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, background .15s, border-color .15s;
+}
+
+.pers-sidenav-link:hover {
+    color: var(--accent);
+    background: var(--table-hover-bg, rgba(0,0,0,.03));
+    border-left-color: var(--component-border);
+}
+
+.pers-sidenav-link.active {
+    color: var(--accent);
+    background: var(--table-hover-bg, rgba(0,0,0,.03));
+    border-left-color: var(--accent);
+    font-weight: 600;
+}
+
+.pers-sidenav-link .ob-badge { margin-left: auto; }

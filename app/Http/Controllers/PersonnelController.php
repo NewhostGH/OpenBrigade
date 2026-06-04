@@ -479,6 +479,29 @@ class PersonnelController extends Controller
 
         $gps = DB::table('gps')->where('P_ID', $personnel->P_ID)->first();
 
+        $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
+        $today       = now()->toDateString();
+        $warn30      = now()->addDays(30)->toDateString();
+
+        $sideNav = [
+            ['id' => 'section-info',          'icon' => 'fas fa-user',          'label' => 'Information'],
+            ['id' => 'section-competences',   'icon' => 'fas fa-certificate',   'label' => 'Compétences',
+             'badge' => $personnel->qualifications->count() ?: null],
+            ['id' => 'section-cotisations',   'icon' => 'fas fa-euro-sign',     'label' => 'Cotisations',
+             'badge' => $cotisations->count() ?: null],
+            ['id' => 'section-participation', 'icon' => 'fas fa-calendar-check','label' => 'Participation',
+             'badge' => $participation->count() ?: null],
+            ['id' => 'section-dotation',      'icon' => 'fas fa-box',           'label' => 'Dotation'],
+            ['id' => 'section-documents',     'icon' => 'fas fa-file-alt',      'label' => 'Documents'],
+            ['id' => 'section-notedfrais',    'icon' => 'fas fa-receipt',       'label' => 'Notes de frais'],
+            ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day',  'label' => 'Disponibilité'],
+            ['id' => 'section-calendrier',    'icon' => 'fas fa-calendar',      'label' => 'Calendrier'],
+            ['id' => 'section-absences',      'icon' => 'fas fa-user-times',    'label' => 'Absences'],
+            ['id' => 'section-historique',    'icon' => 'fas fa-history',       'label' => 'Historique'],
+            ['id' => 'section-geo',           'icon' => 'fas fa-map-marker-alt','label' => 'Géolocalisation'],
+            ['id' => 'section-acces',         'icon' => 'fas fa-shield-alt',    'label' => 'Accès'],
+        ];
+
         return view('personnel.show', [
             'personnel'     => $personnel,
             'groupe2'       => $personnel->groupe2,
@@ -488,6 +511,10 @@ class PersonnelController extends Controller
             'typesPaiement' => $typesPaiement,
             'periodes'      => $periodes,
             'gps'           => $gps,
+            'cotisations'   => $cotisations,
+            'today'         => $today,
+            'warn30'        => $warn30,
+            'sideNav'       => $sideNav,
         ]);
     }
 
