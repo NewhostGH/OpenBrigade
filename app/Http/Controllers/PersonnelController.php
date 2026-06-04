@@ -18,7 +18,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cotisation;
+use App\Models\Groupe;
 use App\Models\Personnel;
+use App\Models\User;
 use App\Models\Poste;
 use App\Models\Qualification;
 use App\Models\Section;
@@ -101,7 +103,7 @@ class PersonnelController extends Controller
                 'key'          => 'photo',
                 'label'        => 'Photo',
                 'type'         => 'avatar',
-                'value'        => fn($p) => route('personnel.photo', $p),
+                'value'        => fn($p) => route('personnel.photo', $p) . '?v=' . substr(md5($p->P_PHOTO ?? ''), 0, 8),
                 'imageClass'   => 'ob-avatar-sm',
                 'cardShow'     => true,
                 'mobile'       => true,
@@ -362,43 +364,6 @@ class PersonnelController extends Controller
     }
 
     /**
-     * Photo directory (trombinoscope) — grid view of personnel with photos.
-     */
-    public function trombinoscope(Request $request): View
-    {
-        $search    = trim((string) $request->string('q'));
-        $sectionId = (int) $request->integer('section', 0);
-        $user      = auth()->user();
-        $mySection = (int) $user->P_SECTION;
-
-        $query = Personnel::query()
-            ->with(['section'])
-            ->where('P_OLD_MEMBER', 0)
-            ->where('GP_ID', '<>', -1)
-            ->whereNull('P_FIN')
-            ->where('P_STATUT', '<>', 'EXT')
-            ->select([
-                'P_ID', 'P_PHOTO', 'P_CODE', 'P_PRENOM', 'P_NOM',
-                'P_GRADE', 'P_SECTION', 'P_PHONE', 'P_EMAIL', 'P_CIVILITE',
-            ]);
-
-        $targetSection = $sectionId > 0 ? $sectionId : $mySection;
-        $query->where('P_SECTION', $targetSection);
-
-        if ($search !== '') {
-            $query->where(function ($q) use ($search): void {
-                $q->where('P_NOM', 'like', "%{$search}%")
-                  ->orWhere('P_PRENOM', 'like', "%{$search}%");
-            });
-        }
-
-        $items    = $query->orderBy('P_NOM')->orderBy('P_PRENOM')->paginate(48)->withQueryString();
-        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
-
-        return view('personnel.trombinoscope', compact('items', 'search', 'sectionId', 'sections'));
-    }
-
-    /**
      * Qualifications list for the section (expiry tracking).
      */
     public function qualifications(Request $request): View
@@ -457,6 +422,12 @@ class PersonnelController extends Controller
     {
         $filename = trim((string) $personnel->P_PHOTO);
 
+        $noCache = [
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma'        => 'no-cache',
+            'Expires'       => '0',
+        ];
+
         if ($filename !== '') {
             $filename = basename($filename);
             $paths = [
@@ -466,24 +437,46 @@ class PersonnelController extends Controller
 
             foreach ($paths as $path) {
                 if (File::exists($path)) {
-                    return response()->file($path);
+                    return response()->file($path, $noCache);
                 }
             }
         }
 
         $defaultPath = base_path('archive/legacy_app/images/user-specific/DEFAULT.png');
         if (File::exists($defaultPath)) {
-            return response()->file($defaultPath);
+            return response()->file($defaultPath, $noCache);
         }
 
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#e2e8f0"/><circle cx="32" cy="24" r="12" fill="#94a3b8"/><rect x="14" y="40" width="36" height="18" rx="9" fill="#94a3b8"/></svg>';
 
-        return response($svg, 200)->header('Content-Type', 'image/svg+xml');
+        return response($svg, 200)->withHeaders($noCache)->header('Content-Type', 'image/svg+xml');
     }
 
     public function show(Personnel $personnel): View
     {
-        $personnel->load(['section', 'groupe', 'qualifications.poste', 'cotisations.typePaiement']);
+        $personnel->load(['section', 'groupe', 'groupe2', 'qualifications.poste', 'cotisations.typePaiement']);
+
+        // Linked company
+        $company = $personnel->C_ID
+            ? DB::table('company')->where('C_ID', $personnel->C_ID)->first(['C_ID', 'C_NAME'])
+            : null;
+
+        // Participation — last 50 events (dates come from evenement_horaire)
+        $participation = DB::table('evenement_participation as ep')
+            ->join('evenement as e', 'ep.E_CODE', '=', 'e.E_CODE')
+            ->leftJoin(
+                DB::raw('(SELECT E_CODE, MIN(EH_DATE_DEBUT) as first_date FROM evenement_horaire GROUP BY E_CODE) as eh'),
+                'e.E_CODE', '=', 'eh.E_CODE'
+            )
+            ->where('ep.P_ID', $personnel->P_ID)
+            ->select(
+                'e.E_CODE', 'e.E_LIBELLE',
+                'eh.first_date as E_DATE_DEBUT',
+                'ep.EP_DUREE', 'ep.EP_ABSENT', 'ep.EP_EXCUSE', 'ep.EP_KM'
+            )
+            ->orderByDesc('eh.first_date')
+            ->limit(50)
+            ->get();
 
         $postes = Poste::query()
             ->orderBy('TYPE')
@@ -499,6 +492,9 @@ class PersonnelController extends Controller
 
         return view('personnel.show', [
             'personnel'     => $personnel,
+            'groupe2'       => $personnel->groupe2,
+            'company'       => $company,
+            'participation' => $participation,
             'postes'        => $postes,
             'typesPaiement' => $typesPaiement,
             'periodes'      => $periodes,
@@ -781,9 +777,20 @@ class PersonnelController extends Controller
             ->orderBy('S_CODE')
             ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
+        $groupes = Groupe::query()
+            ->where('GP_ID', '>=', 0)
+            ->orderBy('GP_DESCRIPTION')
+            ->get(['GP_ID', 'GP_DESCRIPTION']);
+
+        $companies = DB::table('company')
+            ->orderBy('C_NAME')
+            ->get(['C_ID', 'C_NAME']);
+
         return view('personnel.edit', [
             'personnel' => $personnel,
-            'sections' => $sections,
+            'sections'  => $sections,
+            'groupes'   => $groupes,
+            'companies' => $companies,
         ]);
     }
 
@@ -807,6 +814,7 @@ class PersonnelController extends Controller
             'P_SECTION'         => 'nullable|integer|exists:section,S_ID',
             'P_DATE_ENGAGEMENT' => 'nullable|date',
             'P_FIN'             => 'nullable|date',
+            'P_ABBREGE'         => 'nullable|string|max:20',
             // Contact
             'P_EMAIL'           => 'nullable|email|max:60',
             'P_PHONE'           => 'nullable|string|max:20',
@@ -828,6 +836,12 @@ class PersonnelController extends Controller
             'P_LICENCE'         => 'nullable|string|max:30',
             'P_LICENCE_DATE'    => 'nullable|date',
             'P_LICENCE_EXPIRY'  => 'nullable|date',
+            // Access / organisation
+            'GP_ID'             => 'nullable|integer',
+            'GP_ID2'            => 'nullable|integer',
+            'C_ID'              => 'nullable|integer|exists:company,C_ID',
+            // NPAI
+            'DATE_NPAI'         => 'nullable|date',
             // Notes
             'OBSERVATION'       => 'nullable|string',
             // Photo

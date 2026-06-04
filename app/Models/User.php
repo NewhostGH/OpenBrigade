@@ -95,4 +95,22 @@ class User extends Authenticatable
     {
         return $this->hasPermission(52); // 52 = habilitations management
     }
+
+    /**
+    * Returns the URL of the user's avatar, or a default image if not set.
+    */
+    public function getAvatarUrl(): string
+    {
+        $userPhoto    = auth()->user()->P_PHOTO ?? '';
+        $userCivilite = (int) (auth()->user()->P_CIVILITE ?? 1);
+        if ($userPhoto !== '') {
+            $avatarSrc = route('personnel.photo', auth()->user())
+                        . '?v=' . substr(md5($userPhoto), 0, 8);
+        } elseif ($userCivilite === 2) {
+            $avatarSrc = asset('images/girl.png');
+        } else {
+            $avatarSrc = asset('images/boy.png');
+        }
+        return $avatarSrc;
+    }
 }

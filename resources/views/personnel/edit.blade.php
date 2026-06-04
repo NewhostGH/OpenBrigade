@@ -10,14 +10,20 @@
     ['label' => 'Modifier'],
 ]"/>
 
-<div class="container-fluid px-3 py-3" style="max-width: 960px;">
+<div class="mx-3 mt-3">
+<div class="widget-card">
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show">
-            <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="widget-card-header">
+        <div class="widget-card-title">
+            <i class="fas fa-edit"></i>
+            Modifier — {{ strtoupper($personnel->P_NOM) }} {{ $personnel->P_PRENOM }}
         </div>
-    @endif
+        <a href="{{ route('personnel.show', $personnel) }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-eye me-1"></i> Voir la fiche
+        </a>
+    </div>
+
+    <div class="widget-card-body">
 
     <form method="POST" action="{{ route('personnel.update', $personnel) }}"
           enctype="multipart/form-data" id="editForm">
@@ -33,7 +39,7 @@
                             background:var(--table-odd-row);"
                      onclick="document.getElementById('photo_upload').click()">
                     <img id="photoPreview"
-                         src="{{ route('personnel.photo', $personnel) }}"
+                         src="{{ route('personnel.photo', $personnel) }}?v={{ substr(md5($personnel->P_PHOTO ?? ''), 0, 8) }}"
                          alt="Photo"
                          style="width:100%; height:100%; object-fit:cover; display:block;">
                     <div id="photoOverlay"
@@ -58,34 +64,30 @@
             <div style="flex: 1 1 500px; min-width: 0;">
 
                 {{-- Tabs --}}
-                <ul class="nav nav-tabs" id="editTabs" role="tablist">
-                    <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="tab"
-                                data-bs-target="#tab-identite" type="button">
-                            <i class="fas fa-user me-1"></i> Identité
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab"
-                                data-bs-target="#tab-contact" type="button">
-                            <i class="fas fa-address-card me-1"></i> Contact
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab"
-                                data-bs-target="#tab-urgence" type="button">
-                            <i class="fas fa-phone-alt me-1"></i> Urgence
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab"
-                                data-bs-target="#tab-autres" type="button">
-                            <i class="fas fa-info-circle me-1"></i> Autres
-                        </button>
-                    </li>
-                </ul>
+                <nav class="ob-subnav" role="tablist">
+                    <button class="ob-subnav-tab active" data-bs-toggle="tab"
+                            data-bs-target="#tab-identite" type="button" role="tab">
+                        <i class="fas fa-user me-1"></i> Identité
+                    </button>
+                    <button class="ob-subnav-tab" data-bs-toggle="tab"
+                            data-bs-target="#tab-contact" type="button" role="tab">
+                        <i class="fas fa-address-card me-1"></i> Contact
+                    </button>
+                    <button class="ob-subnav-tab" data-bs-toggle="tab"
+                            data-bs-target="#tab-urgence" type="button" role="tab">
+                        <i class="fas fa-phone-alt me-1"></i> Urgence
+                    </button>
+                    <button class="ob-subnav-tab" data-bs-toggle="tab"
+                            data-bs-target="#tab-autres" type="button" role="tab">
+                        <i class="fas fa-info-circle me-1"></i> Autres
+                    </button>
+                    <button class="ob-subnav-tab" data-bs-toggle="tab"
+                            data-bs-target="#tab-acces" type="button" role="tab">
+                        <i class="fas fa-shield-alt me-1"></i> Accès
+                    </button>
+                </nav>
 
-                <div class="tab-content pt-3" id="editTabContent">
+                <div class="tab-content pt-3">
 
                     {{-- ── Tab: Identité ─────────────────────────── --}}
                     <div class="tab-pane fade show active" id="tab-identite">
@@ -157,9 +159,32 @@
 
                             <div class="col-md-3">
                                 <label class="form-label form-label-sm" for="P_GRADE">Grade</label>
-                                <input id="P_GRADE" name="P_GRADE" type="text"
-                                       class="form-control form-control-sm @error('P_GRADE') is-invalid @enderror"
-                                       value="{{ old('P_GRADE', $personnel->P_GRADE) }}">
+                                @php
+                                    $gradeList = ['ADC','ADJ','AMB','AS','ASP','CCH','CD','CDT','CE','CG1',
+                                                  'COL','CPL','CPT','CS','CSAN1','CSAN2','CSANSU','EQ',
+                                                  'INF','ISP','ISPC','ISPE','ISPP','JSP1','JSP2','JSP3',
+                                                  'JSP4','JSPB','LCL','LTN','MAJ','MASP','MCDT','MCOL',
+                                                  'MCPT','MED','MLCL','MLTN','NR','PHCDT','PHCOL','PHCPT',
+                                                  'PHLCL','SAP1','SAP2','SCH','SGT','SLT','SP',
+                                                  'VETCDT','VETCOL','VETCPT','VETLCL'];
+                                    $curGrade = old('P_GRADE', $personnel->P_GRADE);
+                                    if ($curGrade && !in_array($curGrade, $gradeList)) $gradeList[] = $curGrade;
+                                    sort($gradeList);
+                                @endphp
+                                <div class="d-flex align-items-center gap-2">
+                                    <select id="P_GRADE" name="P_GRADE"
+                                            class="form-select form-select-sm @error('P_GRADE') is-invalid @enderror"
+                                            onchange="updateGradePreview(this.value)">
+                                        <option value="">— aucun —</option>
+                                        @foreach ($gradeList as $g)
+                                            <option value="{{ $g }}" @selected($curGrade === $g)>{{ $g }}</option>
+                                        @endforeach
+                                    </select>
+                                    <img id="gradePreview"
+                                         src="{{ $curGrade ? route('personnel.grade_image', ['grade' => $curGrade]) : '' }}"
+                                         alt="" style="height:28px; {{ $curGrade ? '' : 'display:none;' }}"
+                                         onerror="this.style.display='none'">
+                                </div>
                                 @error('P_GRADE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
@@ -211,6 +236,18 @@
                                        class="form-control form-control-sm @error('P_FIN') is-invalid @enderror"
                                        value="{{ old('P_FIN', $personnel->P_FIN?->format('Y-m-d')) }}">
                                 @error('P_FIN')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label form-label-sm" for="P_ABBREGE">
+                                    Abrégé
+                                    <span class="text-muted fw-normal" style="font-size:0.7rem;">(indicatif radio)</span>
+                                </label>
+                                <input id="P_ABBREGE" name="P_ABBREGE" type="text"
+                                       class="form-control form-control-sm @error('P_ABBREGE') is-invalid @enderror"
+                                       maxlength="20" placeholder="ex. SP123"
+                                       value="{{ old('P_ABBREGE', $personnel->P_ABBREGE) }}">
+                                @error('P_ABBREGE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
                         </div>
@@ -348,7 +385,7 @@
                             </div>
 
                             <div class="col-12">
-                                <p class="ob-section-title mb-2">Licence</p>
+                                <p class="pers-section-label">Licence</p>
                             </div>
 
                             <div class="col-md-4">
@@ -374,7 +411,7 @@
                             </div>
 
                             <div class="col-12">
-                                <p class="ob-section-title mb-2">Notes</p>
+                                <p class="pers-section-label">Notes</p>
                             </div>
 
                             <div class="col-12">
@@ -386,7 +423,7 @@
                             </div>
 
                             <div class="col-12">
-                                <p class="ob-section-title mb-2">Paramètres</p>
+                                <p class="pers-section-label">Paramètres</p>
                             </div>
 
                             <div class="col-6 col-md-3">
@@ -409,7 +446,8 @@
                                 <div class="form-check">
                                     <input id="NPAI" name="NPAI" type="checkbox" value="1"
                                            class="form-check-input"
-                                           @checked((bool)old('NPAI',$personnel->NPAI))>
+                                           @checked((bool)old('NPAI',$personnel->NPAI))
+                                           onchange="document.getElementById('npaiDateWrap').style.display=this.checked?'':'none'">
                                     <label class="form-check-label form-label-sm" for="NPAI">
                                         NPAI <small class="text-muted">(adresse invalide)</small>
                                     </label>
@@ -423,6 +461,93 @@
                                     <label class="form-check-label form-label-sm" for="SUSPENDU">Suspendu</label>
                                 </div>
                             </div>
+                            <div class="col-12" id="npaiDateWrap" style="{{ (bool)old('NPAI',$personnel->NPAI) ? '' : 'display:none;' }}">
+                                <div style="max-width:200px;">
+                                    <label class="form-label form-label-sm" for="DATE_NPAI">Date NPAI</label>
+                                    <input id="DATE_NPAI" name="DATE_NPAI" type="date"
+                                           class="form-control form-control-sm @error('DATE_NPAI') is-invalid @enderror"
+                                           value="{{ old('DATE_NPAI', isset($personnel->DATE_NPAI) ? \Carbon\Carbon::parse($personnel->DATE_NPAI)->format('Y-m-d') : '') }}">
+                                    @error('DATE_NPAI')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {{-- ── Tab: Accès ──────────────────────────────── --}}
+                    <div class="tab-pane fade" id="tab-acces">
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Droits d'accès et affiliation organisationnelle.
+                        </p>
+                        <div class="row g-2">
+
+                            <div class="col-md-6">
+                                <label class="form-label form-label-sm" for="GP_ID">Droit d'accès (principal)</label>
+                                <select id="GP_ID" name="GP_ID"
+                                        class="form-select form-select-sm @error('GP_ID') is-invalid @enderror">
+                                    <option value="">— aucun —</option>
+                                    @foreach ($groupes as $g)
+                                        <option value="{{ $g->GP_ID }}"
+                                                @selected((string)old('GP_ID',$personnel->GP_ID)===(string)$g->GP_ID)>
+                                            {{ $g->GP_DESCRIPTION }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('GP_ID')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label form-label-sm" for="GP_ID2">Droit d'accès 2</label>
+                                <select id="GP_ID2" name="GP_ID2"
+                                        class="form-select form-select-sm @error('GP_ID2') is-invalid @enderror">
+                                    <option value="">— aucun —</option>
+                                    @foreach ($groupes as $g)
+                                        <option value="{{ $g->GP_ID }}"
+                                                @selected((string)old('GP_ID2',$personnel->GP_ID2)===(string)$g->GP_ID)>
+                                            {{ $g->GP_DESCRIPTION }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('GP_ID2')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="form-label form-label-sm" for="C_ID">Entreprise</label>
+                                <select id="C_ID" name="C_ID"
+                                        class="form-select form-select-sm @error('C_ID') is-invalid @enderror">
+                                    <option value="">— aucune —</option>
+                                    @foreach ($companies as $co)
+                                        <option value="{{ $co->C_ID }}"
+                                                @selected((string)old('C_ID',$personnel->C_ID)===(string)$co->C_ID)>
+                                            {{ $co->C_NAME }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('C_ID')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            @if ($personnel->P_ACCEPT_DATE || $personnel->P_ACCEPT_DATE2)
+                                <div class="col-12">
+                                    <p class="ob-section-title mb-1 mt-2">Charte d'utilisation</p>
+                                </div>
+                                @if ($personnel->P_ACCEPT_DATE)
+                                    <div class="col-md-5">
+                                        <label class="form-label form-label-sm text-muted">Charte acceptée le</label>
+                                        <p class="mb-0" style="font-size:var(--font-size-sm);">
+                                            {{ $personnel->P_ACCEPT_DATE->format('d/m/Y H:i') }}
+                                        </p>
+                                    </div>
+                                @endif
+                                @if ($personnel->P_ACCEPT_DATE2)
+                                    <div class="col-md-5">
+                                        <label class="form-label form-label-sm text-muted">Charte 2 acceptée le</label>
+                                        <p class="mb-0" style="font-size:var(--font-size-sm);">
+                                            {{ $personnel->P_ACCEPT_DATE2->format('d/m/Y H:i') }}
+                                        </p>
+                                    </div>
+                                @endif
+                            @endif
 
                         </div>
                     </div>
@@ -447,12 +572,41 @@
             </div>{{-- /form column --}}
         </div>{{-- /flex row --}}
     </form>
-</div>
+
+    </div>{{-- /widget-card-body --}}
+</div>{{-- /widget-card --}}
+</div>{{-- /mx-3 mt-3 --}}
 
 @endsection
 
+@push('styles')
+<style>
+.pers-section-label {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--text-muted-soft);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    border-bottom: 1px solid var(--component-border);
+    padding-bottom: 5px;
+    margin: 20px 0 12px;
+}
+.pers-section-label:first-child { margin-top: 0; }
+</style>
+@endpush
+
 @push('scripts')
 <script>
+function updateGradePreview(val) {
+    var img = document.getElementById('gradePreview');
+    if (val) {
+        img.src = '{{ route('personnel.grade_image', ['grade' => 'PLACEHOLDER']) }}'.replace('PLACEHOLDER', val);
+        img.style.display = 'block';
+    } else {
+        img.style.display = 'none';
+    }
+}
+
 function previewPhoto(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -472,11 +626,13 @@ function previewPhoto(input) {
         wrap.addEventListener('mouseleave', function () { overlay.style.opacity = '0'; });
     }
 
-    // Restore active tab from sessionStorage
+    // Restore active tab from sessionStorage — use click() so Bootstrap's
+    // data-API handles the switch without needing the global `bootstrap` object
+    // (Vite modules are deferred and may not have run yet).
     var saved = sessionStorage.getItem('personnelEditTab');
     if (saved) {
         var btn = document.querySelector('[data-bs-target="' + saved + '"]');
-        if (btn) new bootstrap.Tab(btn).show();
+        if (btn) btn.click();
     }
     document.querySelectorAll('[data-bs-toggle="tab"]').forEach(function (btn) {
         btn.addEventListener('shown.bs.tab', function (e) {
@@ -489,7 +645,7 @@ function previewPhoto(input) {
         var pane = el.closest('.tab-pane');
         if (pane) {
             var tab = document.querySelector('[data-bs-target="#' + pane.id + '"]');
-            if (tab) tab.classList.add('text-danger');
+            if (tab) tab.style.color = 'var(--bs-danger, #dc3545)';
         }
     });
 }());

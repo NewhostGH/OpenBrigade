@@ -45,18 +45,6 @@ class DashboardService
         return $ids;
     }
 
-    // ── Avatar URL ──────────────────────────────────────────────────────────
-
-    public function getAvatarUrl(User $user): string
-    {
-        if (!empty($user->P_PHOTO)) {
-            return '/trombinoscope/' . $user->P_PHOTO;
-        }
-        return (int) ($user->P_CIVILITE ?? 1) === 2
-            ? asset('images/girl.png')
-            : asset('images/boy.png');
-    }
-
     // ── Brigade configuration (from DB) ────────────────────────────────────
 
     private function config(string $key, mixed $default = null): mixed
@@ -263,7 +251,7 @@ class DashboardService
         return [
             'user'          => $user,
             'section'       => $section,
-            'avatarSrc'     => $this->getAvatarUrl($user),
+            'avatarSrc'     => $user->getAvatarUrl(),
             'avatarFallback' => asset('images/autre.png'),
             'missingFields' => $missingFields,
         ];

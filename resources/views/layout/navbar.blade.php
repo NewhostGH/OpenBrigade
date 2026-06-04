@@ -106,15 +106,8 @@
 
                 {{-- User/profile --}}
                 @php
-                    $userPhoto    = auth()->user()->P_PHOTO ?? '';
-                    $userCivilite = (int) (auth()->user()->P_CIVILITE ?? 1);
-                    if ($userPhoto !== '') {
-                        $avatarSrc = '/trombinoscope/' . $userPhoto;
-                    } elseif ($userCivilite === 2) {
-                        $avatarSrc = asset('images/girl.png');
-                    } else {
-                        $avatarSrc = asset('images/boy.png');
-                    }
+                    $user = auth()->user();
+                    $avatarSrc = $user->getAvatarUrl();
                     $avatarFallback = asset('images/autre.png');
                 @endphp
                 <li class="nav-item dropdown nav-top-item navtop-hover margin-li">

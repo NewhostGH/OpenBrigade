@@ -65,3 +65,4 @@ phpunit.xml
 storage/framework
 storage/public
 storage/logs
+public/images/user-specific

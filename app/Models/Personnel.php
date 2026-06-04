@@ -71,6 +71,12 @@ class Personnel extends Model
         return $this->belongsTo(Groupe::class, 'GP_ID', 'GP_ID');
     }
 
+    /** The secondary permission group of this person (GP_ID2). */
+    public function groupe2(): BelongsTo
+    {
+        return $this->belongsTo(Groupe::class, 'GP_ID2', 'GP_ID');
+    }
+
     /** All sections this person holds a role in. */
     public function sectionRoles(): BelongsToMany
     {

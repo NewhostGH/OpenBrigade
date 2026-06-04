@@ -9,447 +9,806 @@
     ['label' => $personnel->P_NOM . ' ' . $personnel->P_PRENOM],
 ]"/>
 
-<div class="container-fluid px-3 py-3" style="max-width: 900px;">
+@php
+    $civMap = [1 => 'M.', 2 => 'Mme', 3 => 'Dr.', 4 => 'Pr.'];
+    $etat = (int) $personnel->GP_ID === -1 ? 'Bloqué'
+          : ((int) $personnel->P_OLD_MEMBER > 0 ? 'Archivé' : 'Actif');
+    $etatClass = match($etat) {
+        'Actif'   => 'ob-badge-actif',
+        'Archivé' => 'ob-badge-archive',
+        default   => 'ob-badge-bloqued',
+    };
+    $statutMap = [
+        'BEN'  => ['Bénévole',    'ob-badge-ben'],
+        'EXT'  => ['Externe',     'ob-badge-ext'],
+        'PRES' => ['Prestataire', 'ob-badge-pres'],
+    ];
+    [$statutLbl, $statutCls] = $statutMap[$personnel->P_STATUT] ?? [$personnel->P_STATUT, 'ob-badge-int'];
+    $today  = now()->toDateString();
+    $warn30 = now()->addDays(30)->toDateString();
+    $cotisNet = $personnel->cotisations
+        ->sum(fn($c) => $c->REMBOURSEMENT ? -abs((float)$c->MONTANT) : (float)$c->MONTANT);
+    $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show">
-            <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show">
-            <i class="fas fa-exclamation-circle me-1"></i> {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+    $sideNav = [
+        ['id' => 'section-info',          'icon' => 'fas fa-user',         'label' => 'Information'],
+        ['id' => 'section-competences',   'icon' => 'fas fa-certificate',  'label' => 'Compétences',
+         'badge' => $personnel->qualifications->count() ?: null],
+        ['id' => 'section-cotisations',   'icon' => 'fas fa-euro-sign',    'label' => 'Cotisations',
+         'badge' => $cotisations->count() ?: null],
+        ['id' => 'section-participation', 'icon' => 'fas fa-calendar-check','label' => 'Participation',
+         'badge' => $participation->count() ?: null],
+        ['id' => 'section-dotation',      'icon' => 'fas fa-box',          'label' => 'Dotation'],
+        ['id' => 'section-documents',     'icon' => 'fas fa-file-alt',     'label' => 'Documents'],
+        ['id' => 'section-notedfrais',    'icon' => 'fas fa-receipt',      'label' => 'Notes de frais'],
+        ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day', 'label' => 'Disponibilité'],
+        ['id' => 'section-calendrier',    'icon' => 'fas fa-calendar',     'label' => 'Calendrier'],
+        ['id' => 'section-absences',      'icon' => 'fas fa-user-times',   'label' => 'Absences'],
+        ['id' => 'section-historique',    'icon' => 'fas fa-history',      'label' => 'Historique'],
+        ['id' => 'section-geo',           'icon' => 'fas fa-map-marker-alt','label' => 'Géolocalisation'],
+        ['id' => 'section-acces',         'icon' => 'fas fa-shield-alt',   'label' => 'Accès'],
+    ];
+@endphp
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+<div class="mx-3 mt-3">
 
-            {{-- ── Header ─────────────────────────────────────── --}}
-            <div class="ob-profile-header">
-                <img src="{{ route('personnel.photo', $personnel) }}"
-                     alt="Photo {{ $personnel->P_NOM }}"
-                     class="ob-profile-photo">
-
-                <div class="ob-profile-meta">
-                    @php $civMap = [1 => 'M.', 2 => 'Mme', 3 => 'Dr.', 4 => 'Pr.']; @endphp
-                    <p class="ob-profile-name">
-                        @if ($personnel->P_CIVILITE && isset($civMap[$personnel->P_CIVILITE]))
-                            <span class="fw-normal text-muted">{{ $civMap[$personnel->P_CIVILITE] }}</span>
-                        @endif
-                        {{ $personnel->P_NOM }}
-                        @if ($personnel->P_NOM_NAISSANCE && $personnel->P_NOM_NAISSANCE !== $personnel->P_NOM)
-                            <small class="text-muted fw-normal">(née {{ $personnel->P_NOM_NAISSANCE }})</small>
-                        @endif
-                        {{ $personnel->P_PRENOM }}
-                        @if ($personnel->P_PRENOM2)
-                            <span class="fw-normal text-muted">{{ $personnel->P_PRENOM2 }}</span>
-                        @endif
-                    </p>
-                    <p class="ob-profile-sub">
-                        {{ $personnel->P_CODE }}
-                        @if ($personnel->section)&nbsp;·&nbsp; {{ $personnel->section->S_CODE }}@endif
-                    </p>
-                    <div class="d-flex gap-2 flex-wrap align-items-center">
-                        @php
-                            $etat = (int) $personnel->GP_ID === -1 ? 'Bloqué'
-                                  : ((int) $personnel->P_OLD_MEMBER > 0 ? 'Archivé' : 'Actif');
-                            $etatClass = match($etat) {
-                                'Actif' => 'ob-badge-actif', 'Archivé' => 'ob-badge-archive',
-                                default => 'ob-badge-bloqued'
-                            };
-                            $statutMap = [
-                                'BEN'  => ['Personnel bénévole', 'ob-badge-ben'],
-                                'EXT'  => ['Personnel externe',  'ob-badge-ext'],
-                                'PRES' => ['Prestataire',        'ob-badge-pres'],
-                            ];
-                            [$statutLbl, $statutCls] = $statutMap[$personnel->P_STATUT] ?? [$personnel->P_STATUT, 'ob-badge-int'];
-                        @endphp
-                        <span class="ob-badge {{ $statutCls }}">{{ $statutLbl }}</span>
-                        <span class="ob-badge {{ $etatClass }}">{{ $etat }}</span>
-                        @if ($personnel->P_GRADE)
-                            <img src="{{ route('personnel.grade_image', ['grade' => $personnel->P_GRADE]) }}"
-                                 alt="{{ $personnel->P_GRADE }}" title="{{ $personnel->P_GRADE }}"
-                                 class="ob-grade-img"
-                                 onerror="this.outerHTML='<small>' + '{{ e($personnel->P_GRADE) }}' + '</small>'">
-                        @endif
-                    </div>
-                </div>
-
-                <div class="d-flex gap-2 flex-shrink-0 noprint">
-                    <a href="{{ route('personnel.edit', $personnel) }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-edit me-1"></i> Modifier
-                    </a>
-                    {{-- Export dropdown --}}
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false"
-                                title="Exporter">
-                            <i class="fas fa-download"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('personnel.vcard', $personnel) }}">
-                                    <i class="fas fa-address-card me-2 text-muted"></i> vCard (.vcf)
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('personnel.livret', $personnel) }}" target="_blank">
-                                    <i class="fas fa-file-pdf me-2 text-danger"></i> Livret / Passeport (PDF)
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('personnel.carte', $personnel) }}" target="_blank">
-                                    <i class="fas fa-id-card me-2 text-danger"></i> Carte adhérent (PDF)
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <a href="{{ route('personnel.index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
-
-            {{-- ── Coordonnées ─────────────────────────────────── --}}
-            <p class="ob-section-title">Coordonnées</p>
-            <dl class="ob-info-grid">
-                <div class="ob-info-item">
-                    <dt>Email</dt>
-                    <dd>
-                        @if ($personnel->P_EMAIL)
-                            <a href="mailto:{{ $personnel->P_EMAIL }}">{{ $personnel->P_EMAIL }}</a>
-                        @else —
-                        @endif
-                    </dd>
-                </div>
-                <div class="ob-info-item">
-                    <dt>Téléphone</dt>
-                    <dd>{{ $personnel->P_PHONE ?: '—' }}</dd>
-                </div>
-                <div class="ob-info-item">
-                    <dt>Portable</dt>
-                    <dd>{{ $personnel->P_PHONE2 ?: '—' }}</dd>
-                </div>
-                <div class="ob-info-item">
-                    <dt>Adresse</dt>
-                    <dd>
-                        @if ($personnel->P_ADDRESS || $personnel->P_ZIP_CODE || $personnel->P_CITY)
-                            {{ $personnel->P_ADDRESS }}<br>
-                            {{ $personnel->P_ZIP_CODE }} {{ $personnel->P_CITY }}
-                            @if ($personnel->P_PAYS)<br>{{ $personnel->P_PAYS }}@endif
-                        @else —
-                        @endif
-                    </dd>
-                </div>
-            </dl>
-
-            {{-- ── Informations personnelles ───────────────────── --}}
-            <p class="ob-section-title">Informations personnelles</p>
-            <dl class="ob-info-grid">
-                <div class="ob-info-item">
-                    <dt>Date de naissance</dt>
-                    <dd>
-                        {{ $personnel->P_BIRTHDATE?->format('d/m/Y') ?? '—' }}
-                        @if ($personnel->P_BIRTHDATE)
-                            <small class="text-muted">({{ $personnel->P_BIRTHDATE->diffInYears(now()) }} ans)</small>
-                        @endif
-                    </dd>
-                </div>
-                <div class="ob-info-item">
-                    <dt>Lieu de naissance</dt>
-                    <dd>
-                        {{ $personnel->P_BIRTHPLACE ?: '—' }}
-                        @if ($personnel->P_BIRTH_DEP)
-                            <span class="text-muted">({{ $personnel->P_BIRTH_DEP }})</span>
-                        @endif
-                    </dd>
-                </div>
-                <div class="ob-info-item">
-                    <dt>Date d'entrée</dt>
-                    <dd>{{ $personnel->P_DATE_ENGAGEMENT?->format('d/m/Y') ?? '—' }}</dd>
-                </div>
-                @if ($personnel->P_FIN)
-                    <div class="ob-info-item">
-                        <dt>Date de fin</dt>
-                        <dd>{{ $personnel->P_FIN->format('d/m/Y') }}</dd>
-                    </div>
+    {{-- ── Profile header card ─────────────────────────────────────────────── --}}
+    <div class="widget-card mb-3">
+        <div class="widget-card-header">
+            <div class="widget-card-title">
+                @if ($personnel->P_CIVILITE && isset($civMap[$personnel->P_CIVILITE]))
+                    <span class="fw-normal text-muted">{{ $civMap[$personnel->P_CIVILITE] }}</span>
                 @endif
-                @if ($personnel->P_LICENCE)
-                    <div class="ob-info-item">
-                        <dt>Licence</dt>
-                        <dd>
-                            {{ $personnel->P_LICENCE }}
-                            @if ($personnel->P_LICENCE_EXPIRY)
-                                <br><small class="text-muted">Exp. {{ $personnel->P_LICENCE_EXPIRY->format('d/m/Y') }}</small>
+                {{ strtoupper($personnel->P_NOM) }} {{ $personnel->P_PRENOM }}
+                @if ($personnel->P_ABBREGE)
+                    <span class="text-muted fw-normal" style="font-size:var(--font-size-sm);">· {{ $personnel->P_ABBREGE }}</span>
+                @endif
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('personnel.edit', $personnel) }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-edit me-1"></i> Modifier
+                </a>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" title="Exporter">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('personnel.vcard', $personnel) }}">
+                                <i class="fas fa-address-card me-2 text-muted"></i> vCard (.vcf)
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('personnel.livret', $personnel) }}" target="_blank">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i> Livret (PDF)
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('personnel.carte', $personnel) }}" target="_blank">
+                                <i class="fas fa-id-card me-2 text-danger"></i> Carte adhérent (PDF)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <a href="{{ route('personnel.index') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="widget-card-body">
+            <div class="row g-4 align-items-start">
+
+                {{-- ── Photo ───────────────────────────────────────────── --}}
+                <div class="col-auto" style="flex:0 0 auto;">
+                    <img src="{{ route('personnel.photo', $personnel) }}?v={{ substr(md5($personnel->P_PHOTO ?? ''), 0, 8) }}"
+                         alt="Photo {{ $personnel->P_NOM }}"
+                         style="width:96px; height:96px; object-fit:cover; border-radius:var(--radius-md);
+                                border:2px solid var(--component-border);">
+                </div>
+
+                {{-- ── Identity dl ─────────────────────────────────────── --}}
+                <div class="col">
+                    <dl class="mb-0" style="display:grid; grid-template-columns:auto 1fr; gap:5px 16px;
+                                            font-size:var(--font-size-sm); align-items:baseline;">
+                        <dt class="text-muted fw-normal">Matricule</dt>
+                        <dd class="mb-0 fw-semibold">{{ $personnel->P_CODE }}</dd>
+
+                        <dt class="text-muted fw-normal">Section</dt>
+                        <dd class="mb-0">{{ $personnel->section?->S_CODE ?: '—' }}
+                            @if($personnel->section?->S_DESCRIPTION)
+                                <span class="text-muted">— {{ $personnel->section->S_DESCRIPTION }}</span>
                             @endif
                         </dd>
-                    </div>
-                @endif
-                <div class="ob-info-item">
-                    <dt>Profession</dt>
-                    <dd>{{ $personnel->P_PROFESSION ?: '—' }}</dd>
-                </div>
-            </dl>
 
-            {{-- ── Contact d'urgence ───────────────────────────── --}}
-            @if ($personnel->P_RELATION_NOM || $personnel->P_RELATION_PRENOM || $personnel->P_RELATION_PHONE)
-                <p class="ob-section-title">Contact d'urgence</p>
-                <dl class="ob-info-grid">
-                    <div class="ob-info-item">
-                        <dt>Nom</dt>
-                        <dd>{{ trim($personnel->P_RELATION_PRENOM . ' ' . $personnel->P_RELATION_NOM) ?: '—' }}</dd>
-                    </div>
-                    <div class="ob-info-item">
-                        <dt>Téléphone</dt>
-                        <dd>{{ $personnel->P_RELATION_PHONE ?: '—' }}</dd>
-                    </div>
-                    @if ($personnel->P_RELATION_MAIL)
-                        <div class="ob-info-item">
-                            <dt>Email</dt>
-                            <dd><a href="mailto:{{ $personnel->P_RELATION_MAIL }}">{{ $personnel->P_RELATION_MAIL }}</a></dd>
-                        </div>
-                    @endif
-                </dl>
-            @endif
+                        <dt class="text-muted fw-normal">Grade</dt>
+                        <dd class="mb-0">
+                            @if ($personnel->P_GRADE)
+                                <img src="{{ route('personnel.grade_image', ['grade' => $personnel->P_GRADE]) }}"
+                                     alt="{{ $personnel->P_GRADE }}" title="{{ $personnel->P_GRADE }}"
+                                     class="ob-grade-img"
+                                     onerror="this.outerHTML='<span>{{ e($personnel->P_GRADE) }}</span>'">
+                            @else
+                                <span class="text-muted">—</span>
+                            @endif
+                        </dd>
 
-            @if ($personnel->OBSERVATION)
-                <p class="ob-section-title">Notes</p>
-                <p style="font-size:var(--font-size-sm); white-space:pre-wrap;">{{ $personnel->OBSERVATION }}</p>
-            @endif
+                        <dt class="text-muted fw-normal">Statut</dt>
+                        <dd class="mb-0">
+                            <span class="ob-badge {{ $statutCls }}">{{ $statutLbl }}</span>
+                            <span class="ob-badge {{ $etatClass }} ms-1">{{ $etat }}</span>
+                        </dd>
 
-            {{-- ── Compétences ─────────────────────────────────── --}}
-            @php $today = now()->toDateString(); $warn30 = now()->addDays(30)->toDateString(); @endphp
-
-            <p class="ob-section-title d-flex justify-content-between align-items-center">
-                <span>Compétences</span>
-                <button type="button" class="btn btn-sm btn-success noprint"
-                        data-bs-toggle="modal" data-bs-target="#qualModal"
-                        onclick="openQualModal(null)">
-                    <i class="fas fa-plus me-1"></i> Ajouter
-                </button>
-            </p>
-
-            @if ($personnel->qualifications->isNotEmpty())
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover align-middle" style="font-size:var(--font-size-sm);">
-                        <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
-                            <tr>
-                                <th>Compétence</th>
-                                <th>Valeur</th>
-                                <th>Expiration</th>
-                                <th class="noprint" style="width:80px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($personnel->qualifications->sortBy('poste.TYPE') as $qual)
-                                @php
-                                    $exp    = $qual->Q_EXPIRATION?->toDateString();
-                                    $status = match(true) {
-                                        $exp !== null && $exp < $today   => 'expired',
-                                        $exp !== null && $exp <= $warn30 => 'expiring',
-                                        default => 'ok',
-                                    };
-                                @endphp
-                                <tr>
-                                    <td>
-                                        {{ $qual->poste?->TYPE ?? '?' }}
-                                        @if ($qual->poste?->DESCRIPTION)
-                                            <small class="text-muted">— {{ $qual->poste->DESCRIPTION }}</small>
-                                        @endif
-                                    </td>
-                                    <td>{{ $qual->Q_VAL ?: '—' }}</td>
-                                    <td>
-                                        @if ($qual->Q_EXPIRATION)
-                                            @php $cls = match($status) { 'expired' => 'text-danger fw-bold', 'expiring' => 'text-warning fw-bold', default => '' }; @endphp
-                                            <span class="{{ $cls }}">
-                                                {{ $qual->Q_EXPIRATION->format('d/m/Y') }}
-                                                @if ($status === 'expired') <i class="fas fa-exclamation-triangle ms-1"></i>
-                                                @elseif ($status === 'expiring') <i class="fas fa-clock ms-1"></i>
-                                                @endif
-                                            </span>
-                                        @else <span class="text-muted">—</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-end noprint">
-                                        <button type="button" class="btn btn-xs btn-light py-0 px-1 me-1"
-                                                title="Modifier"
-                                                onclick="openQualModal({
-                                                    ps_id: {{ $qual->PS_ID }},
-                                                    q_val: {{ json_encode($qual->Q_VAL ?? '') }},
-                                                    q_exp: {{ json_encode($qual->Q_EXPIRATION?->format('Y-m-d') ?? '') }},
-                                                    label: {{ json_encode(($qual->poste?->TYPE ?? '') . ($qual->poste?->DESCRIPTION ? ' — ' . $qual->poste->DESCRIPTION : '')) }}
-                                                })">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <form method="POST"
-                                              action="{{ route('personnel.qualification.destroy', [$personnel, $qual->PS_ID]) }}"
-                                              class="d-inline"
-                                              onsubmit="return confirm('Supprimer cette compétence ?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger"
-                                                    title="Supprimer">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p class="text-muted small">Aucune compétence enregistrée.</p>
-            @endif
-
-            {{-- ── Cotisations ─────────────────────────────────── --}}
-            @php
-                $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
-                $totalNet = $personnel->cotisations
-                    ->sum(fn($c) => $c->REMBOURSEMENT ? -abs((float)$c->MONTANT) : (float)$c->MONTANT);
-            @endphp
-
-            <p class="ob-section-title d-flex justify-content-between align-items-center">
-                <span>Cotisations</span>
-                <button type="button" class="btn btn-sm btn-success noprint"
-                        data-bs-toggle="modal" data-bs-target="#cotisModal"
-                        onclick="openCotisModal(null)">
-                    <i class="fas fa-plus me-1"></i> Ajouter
-                </button>
-            </p>
-
-            @if ($cotisations->isNotEmpty())
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover align-middle mb-1" style="font-size:var(--font-size-sm);">
-                        <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
-                            <tr>
-                                <th>Année</th>
-                                <th>Période</th>
-                                <th>Date</th>
-                                <th class="text-end">Montant</th>
-                                <th>Mode</th>
-                                <th>Commentaire</th>
-                                <th class="noprint" style="width:80px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($cotisations as $cotis)
-                                <tr>
-                                    <td>{{ $cotis->ANNEE }}</td>
-                                    <td>{{ $cotis->PERIODE_CODE ?: '—' }}</td>
-                                    <td>{{ $cotis->PC_DATE?->format('d/m/Y') ?? '—' }}</td>
-                                    <td class="text-end {{ $cotis->REMBOURSEMENT ? 'text-danger' : '' }}">
-                                        @if ($cotis->REMBOURSEMENT)
-                                            <span class="badge bg-warning text-dark me-1">Remb.</span>
-                                        @endif
-                                        {{ number_format((float)$cotis->MONTANT, 2, ',', ' ') }} €
-                                    </td>
-                                    <td>{{ $cotis->typePaiement?->TP_DESCRIPTION ?? '—' }}</td>
-                                    <td class="text-muted">{{ $cotis->COMMENTAIRE ?: '' }}</td>
-                                    <td class="text-end noprint">
-                                        <button type="button" class="btn btn-xs btn-light py-0 px-1 me-1"
-                                                onclick="openCotisModal({
-                                                    pc_id: {{ $cotis->PC_ID }},
-                                                    annee: {{ $cotis->ANNEE }},
-                                                    periode: {{ json_encode($cotis->PERIODE_CODE ?? '') }},
-                                                    date: {{ json_encode($cotis->PC_DATE?->format('Y-m-d') ?? '') }},
-                                                    montant: {{ (float)$cotis->MONTANT }},
-                                                    tp_id: {{ $cotis->TP_ID ?: 'null' }},
-                                                    remb: {{ $cotis->REMBOURSEMENT ? 'true' : 'false' }},
-                                                    comment: {{ json_encode($cotis->COMMENTAIRE ?? '') }}
-                                                })">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <form method="POST"
-                                              action="{{ route('personnel.cotisation.destroy', [$personnel, $cotis->PC_ID]) }}"
-                                              class="d-inline"
-                                              onsubmit="return confirm('Supprimer cette cotisation ?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr class="fw-bold">
-                                <td colspan="3" class="text-end"
-                                    style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">
-                                    Total net
-                                </td>
-                                <td class="text-end {{ $totalNet < 0 ? 'text-danger' : '' }}">
-                                    {{ number_format($totalNet, 2, ',', ' ') }} €
-                                </td>
-                                <td colspan="3"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            @else
-                <p class="text-muted small">Aucune cotisation enregistrée.</p>
-            @endif
-
-            {{-- ── Géolocalisation ─────────────────────────────── --}}
-            <p class="ob-section-title d-flex justify-content-between align-items-center">
-                <span>Géolocalisation</span>
-                <a href="{{ route('geolocalisation.index') }}" class="btn btn-sm btn-light noprint"
-                   title="Voir la carte">
-                    <i class="fas fa-map-marked-alt me-1"></i> Carte
-                </a>
-            </p>
-            @if ($gps && $gps->LAT && $gps->LNG)
-                <dl class="ob-info-grid">
-                    <div class="ob-info-item">
-                        <dt>Coordonnées</dt>
-                        <dd>{{ number_format((float)$gps->LAT, 5) }}, {{ number_format((float)$gps->LNG, 5) }}</dd>
-                    </div>
-                    <div class="ob-info-item">
-                        <dt>Adresse</dt>
-                        <dd>{{ $gps->ADDRESS ?: '—' }}</dd>
-                    </div>
-                    <div class="ob-info-item">
-                        <dt>Dernière mise à jour</dt>
-                        <dd>{{ $gps->DATE_LOC ? date('d/m/Y H:i', strtotime($gps->DATE_LOC)) : '—' }}</dd>
-                    </div>
-                </dl>
-            @else
-                <p class="text-muted small">Aucune position GPS enregistrée.</p>
-            @endif
-
-            {{-- ── Accès ───────────────────────────────────────── --}}
-            <p class="ob-section-title">Accès</p>
-            <dl class="ob-info-grid">
-                <div class="ob-info-item">
-                    <dt>Dernière connexion</dt>
-                    <dd>{{ $personnel->P_LAST_CONNECT?->format('d/m/Y H:i') ?? 'jamais' }}</dd>
-                </div>
-                <div class="ob-info-item">
-                    <dt>Groupe</dt>
-                    <dd>{{ $personnel->groupe?->GP_DESCRIPTION ?? '—' }}</dd>
-                </div>
-                <div class="ob-info-item">
-                    <dt>Indicateurs</dt>
-                    <dd>
-                        @if ($personnel->P_HIDE)   <span class="badge bg-secondary me-1">Masqué</span> @endif
-                        @if ($personnel->P_NOSPAM) <span class="badge bg-secondary me-1">No spam</span> @endif
-                        @if ($personnel->NPAI)     <span class="badge bg-warning text-dark me-1">NPAI</span> @endif
-                        @if ($personnel->SUSPENDU) <span class="badge bg-danger me-1">Suspendu</span> @endif
-                        @if (! $personnel->P_HIDE && ! $personnel->P_NOSPAM && ! $personnel->NPAI && ! $personnel->SUSPENDU)
-                            <span class="text-muted">—</span>
+                        @if ($personnel->P_DATE_ENGAGEMENT)
+                        <dt class="text-muted fw-normal">Engagement</dt>
+                        <dd class="mb-0">{{ $personnel->P_DATE_ENGAGEMENT->format('d/m/Y') }}</dd>
                         @endif
-                    </dd>
-                </div>
-            </dl>
 
+                        @if ($company)
+                        <dt class="text-muted fw-normal">Entreprise</dt>
+                        <dd class="mb-0">{{ $company->C_NAME }}</dd>
+                        @endif
+                    </dl>
+
+                    @if ($personnel->P_HIDE || $personnel->P_NOSPAM || $personnel->NPAI || $personnel->SUSPENDU)
+                    <div class="d-flex flex-wrap gap-1 mt-2">
+                        @if ($personnel->P_HIDE)   <span class="ob-badge ob-badge-archive">Masqué</span> @endif
+                        @if ($personnel->P_NOSPAM) <span class="ob-badge ob-badge-archive">No spam</span> @endif
+                        @if ($personnel->NPAI)     <span class="ob-badge ob-badge-ben">NPAI</span> @endif
+                        @if ($personnel->SUSPENDU) <span class="ob-badge ob-badge-bloqued">Suspendu</span> @endif
+                    </div>
+                    @endif
+                </div>
+
+                {{-- ── Quick-stat cards ────────────────────────────────── --}}
+                <div class="col-md-5">
+                    <div class="row g-2">
+                        @php
+                            $stats = [
+                                ['icon' => 'fas fa-calendar-check', 'label' => 'Activités',
+                                 'value' => $participation->count(), 'color' => '#2563eb', 'bg' => '#eff6ff'],
+                                ['icon' => 'fas fa-certificate', 'label' => 'Compétences',
+                                 'value' => $personnel->qualifications->count(), 'color' => '#7c3aed', 'bg' => '#f5f3ff'],
+                                ['icon' => 'fas fa-euro-sign', 'label' => 'Cotisations (net)',
+                                 'value' => number_format($cotisNet, 2, ',', ' ') . ' €',
+                                 'color' => $cotisNet < 0 ? '#dc2626' : '#16a34a',
+                                 'bg'    => $cotisNet < 0 ? '#fff1f2' : '#f0fdf4'],
+                                ['icon' => 'fas fa-clock', 'label' => 'Dernière connexion',
+                                 'value' => $personnel->P_LAST_CONNECT?->format('d/m/Y') ?? 'jamais',
+                                 'color' => '#64748b', 'bg' => '#f8fafc'],
+                            ];
+                        @endphp
+                        @foreach ($stats as $stat)
+                        <div class="col-6">
+                            <div style="border-left:3px solid {{ $stat['color'] }};
+                                        background:{{ $stat['bg'] }};
+                                        border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+                                        padding:10px 14px;">
+                                <div style="font-size:var(--font-size-xs); color:{{ $stat['color'] }}; font-weight:600; margin-bottom:3px;">
+                                    <i class="{{ $stat['icon'] }} me-1"></i>{{ $stat['label'] }}
+                                </div>
+                                <div style="font-size:1rem; font-weight:700; color:{{ $stat['color'] }}; letter-spacing:.01em;">
+                                    {{ $stat['value'] }}
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
+
+    {{-- ── Sidebar + content layout ─────────────────────────────────────────── --}}
+    <div class="d-flex gap-3 align-items-start">
+
+        {{-- ── Left sidebar nav ────────────────────────────────────────────── --}}
+        <div class="pers-sidenav-wrap noprint">
+            <div class="widget-card">
+                <div class="widget-card-body p-0">
+                    <nav>
+                        @foreach ($sideNav as $item)
+                        <a href="#{{ $item['id'] }}" class="pers-sidenav-link{{ $loop->first ? ' active' : '' }}">
+                            <i class="{{ $item['icon'] }}" style="width:14px; text-align:center;"></i>
+                            {{ $item['label'] }}
+                            @if (!empty($item['badge']))
+                                <span class="ob-badge ob-badge-archive" style="margin-left:auto;">{{ $item['badge'] }}</span>
+                            @endif
+                        </a>
+                        @endforeach
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── Main content ────────────────────────────────────────────────── --}}
+        <div style="flex:1; min-width:0;">
+
+            {{-- ▸ Information ─────────────────────────────────────────────── --}}
+            <div id="section-info" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-address-book"></i> Coordonnées</div>
+                    </div>
+                    <div class="widget-card-body">
+                        <dl class="ob-info-grid mb-0">
+                            <div class="ob-info-item">
+                                <dt>Email</dt>
+                                <dd>
+                                    @if ($personnel->P_EMAIL)
+                                        <a href="mailto:{{ $personnel->P_EMAIL }}">{{ $personnel->P_EMAIL }}</a>
+                                    @else —
+                                    @endif
+                                </dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Téléphone</dt>
+                                <dd>{{ $personnel->P_PHONE ?: '—' }}</dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Portable</dt>
+                                <dd>{{ $personnel->P_PHONE2 ?: '—' }}</dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Adresse</dt>
+                                <dd>
+                                    @if ($personnel->P_ADDRESS || $personnel->P_ZIP_CODE || $personnel->P_CITY)
+                                        {{ $personnel->P_ADDRESS }}<br>
+                                        {{ $personnel->P_ZIP_CODE }} {{ $personnel->P_CITY }}
+                                        @if ($personnel->P_PAYS)<br>{{ $personnel->P_PAYS }}@endif
+                                    @else —
+                                    @endif
+                                </dd>
+                            </div>
+                            @if ($personnel->NPAI)
+                            <div class="ob-info-item">
+                                <dt>NPAI</dt>
+                                <dd>
+                                    <span class="ob-badge ob-badge-bloqued">Adresse invalide</span>
+                                    @if (!empty($personnel->DATE_NPAI))
+                                        <small class="text-muted ms-1">depuis le {{ \Carbon\Carbon::parse($personnel->DATE_NPAI)->format('d/m/Y') }}</small>
+                                    @endif
+                                </dd>
+                            </div>
+                            @endif
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-id-badge"></i> Informations personnelles</div>
+                    </div>
+                    <div class="widget-card-body">
+                        <dl class="ob-info-grid mb-0">
+                            <div class="ob-info-item">
+                                <dt>Date de naissance</dt>
+                                <dd>
+                                    {{ $personnel->P_BIRTHDATE?->format('d/m/Y') ?? '—' }}
+                                    @if ($personnel->P_BIRTHDATE)
+                                        <small class="text-muted">({{ $personnel->P_BIRTHDATE->diffInYears(now()) }} ans)</small>
+                                    @endif
+                                </dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Lieu de naissance</dt>
+                                <dd>
+                                    {{ $personnel->P_BIRTHPLACE ?: '—' }}
+                                    @if ($personnel->P_BIRTH_DEP)
+                                        <span class="text-muted">({{ $personnel->P_BIRTH_DEP }})</span>
+                                    @endif
+                                </dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Nom de naissance</dt>
+                                <dd>{{ $personnel->P_NOM_NAISSANCE ?: '—' }}</dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Date de fin</dt>
+                                <dd>{{ $personnel->P_FIN?->format('d/m/Y') ?? '—' }}</dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Profession</dt>
+                                <dd>{{ $personnel->P_PROFESSION ?: '—' }}</dd>
+                            </div>
+                            @if ($personnel->P_LICENCE)
+                            <div class="ob-info-item">
+                                <dt>Licence / permis</dt>
+                                <dd>
+                                    {{ $personnel->P_LICENCE }}
+                                    @if ($personnel->P_LICENCE_DATE)
+                                        <small class="text-muted">du {{ $personnel->P_LICENCE_DATE->format('d/m/Y') }}</small>
+                                    @endif
+                                    @if ($personnel->P_LICENCE_EXPIRY)
+                                        <br><small class="{{ $personnel->P_LICENCE_EXPIRY->isPast() ? 'text-danger fw-bold' : 'text-muted' }}">
+                                            Exp. {{ $personnel->P_LICENCE_EXPIRY->format('d/m/Y') }}
+                                        </small>
+                                    @endif
+                                </dd>
+                            </div>
+                            @endif
+                        </dl>
+                    </div>
+                </div>
+
+                @if ($personnel->P_RELATION_NOM || $personnel->P_RELATION_PRENOM || $personnel->P_RELATION_PHONE)
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-phone-alt"></i> Contact d'urgence</div>
+                    </div>
+                    <div class="widget-card-body">
+                        <dl class="ob-info-grid mb-0">
+                            <div class="ob-info-item">
+                                <dt>Nom</dt>
+                                <dd>{{ trim($personnel->P_RELATION_PRENOM . ' ' . $personnel->P_RELATION_NOM) ?: '—' }}</dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Téléphone</dt>
+                                <dd>{{ $personnel->P_RELATION_PHONE ?: '—' }}</dd>
+                            </div>
+                            @if ($personnel->P_RELATION_MAIL)
+                            <div class="ob-info-item">
+                                <dt>Email</dt>
+                                <dd><a href="mailto:{{ $personnel->P_RELATION_MAIL }}">{{ $personnel->P_RELATION_MAIL }}</a></dd>
+                            </div>
+                            @endif
+                        </dl>
+                    </div>
+                </div>
+                @endif
+
+                @if ($personnel->OBSERVATION)
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-sticky-note"></i> Notes</div>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="mb-0" style="font-size:var(--font-size-sm); white-space:pre-wrap;">{{ $personnel->OBSERVATION }}</p>
+                    </div>
+                </div>
+                @endif
+            </div>{{-- /section-info --}}
+
+            {{-- ▸ Compétences ─────────────────────────────────────────────── --}}
+            <div id="section-competences" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title">
+                            <i class="fas fa-certificate"></i> Compétences
+                            @if($personnel->qualifications->isNotEmpty())
+                                <span class="ob-badge ob-badge-archive ms-1">{{ $personnel->qualifications->count() }}</span>
+                            @endif
+                        </div>
+                        <button type="button" class="btn btn-sm btn-success noprint"
+                                data-bs-toggle="modal" data-bs-target="#qualModal"
+                                onclick="openQualModal(null)">
+                            <i class="fas fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="widget-card-body p-0">
+                        @if ($personnel->qualifications->isNotEmpty())
+                            <table class="table table-sm table-hover align-middle mb-0" style="font-size:var(--font-size-sm);">
+                                <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
+                                    <tr>
+                                        <th class="ps-3">Compétence</th>
+                                        <th>Valeur</th>
+                                        <th>Expiration</th>
+                                        <th class="noprint" style="width:80px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($personnel->qualifications->sortBy('poste.TYPE') as $qual)
+                                        @php
+                                            $exp    = $qual->Q_EXPIRATION?->toDateString();
+                                            $status = match(true) {
+                                                $exp !== null && $exp < $today   => 'expired',
+                                                $exp !== null && $exp <= $warn30 => 'expiring',
+                                                default => 'ok',
+                                            };
+                                        @endphp
+                                        <tr>
+                                            <td class="ps-3">
+                                                {{ $qual->poste?->TYPE ?? '?' }}
+                                                @if ($qual->poste?->DESCRIPTION)
+                                                    <small class="text-muted">— {{ $qual->poste->DESCRIPTION }}</small>
+                                                @endif
+                                            </td>
+                                            <td>{{ $qual->Q_VAL ?: '—' }}</td>
+                                            <td>
+                                                @if ($qual->Q_EXPIRATION)
+                                                    @php $cls = match($status) { 'expired' => 'text-danger fw-bold', 'expiring' => 'text-warning fw-bold', default => '' }; @endphp
+                                                    <span class="{{ $cls }}">
+                                                        {{ $qual->Q_EXPIRATION->format('d/m/Y') }}
+                                                        @if ($status === 'expired') <i class="fas fa-exclamation-triangle ms-1"></i>
+                                                        @elseif ($status === 'expiring') <i class="fas fa-clock ms-1"></i>
+                                                        @endif
+                                                    </span>
+                                                @else <span class="text-muted">—</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-end pe-3 noprint">
+                                                <button type="button" class="btn btn-xs btn-light py-0 px-1 me-1"
+                                                        onclick="openQualModal({
+                                                            ps_id: {{ $qual->PS_ID }},
+                                                            q_val: {{ json_encode($qual->Q_VAL ?? '') }},
+                                                            q_exp: {{ json_encode($qual->Q_EXPIRATION?->format('Y-m-d') ?? '') }},
+                                                            label: {{ json_encode(($qual->poste?->TYPE ?? '') . ($qual->poste?->DESCRIPTION ? ' — ' . $qual->poste->DESCRIPTION : '')) }}
+                                                        })">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <form method="POST"
+                                                      action="{{ route('personnel.qualification.destroy', [$personnel, $qual->PS_ID]) }}"
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Supprimer cette compétence ?')">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <p class="widget-empty p-3">Aucune compétence enregistrée.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>{{-- /section-competences --}}
+
+            {{-- ▸ Cotisations ────────────────────────────────────────────── --}}
+            <div id="section-cotisations" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title">
+                            <i class="fas fa-euro-sign"></i> Cotisations
+                            @if($cotisations->isNotEmpty())
+                                <span class="ob-badge ob-badge-archive ms-1">{{ $cotisations->count() }}</span>
+                            @endif
+                        </div>
+                        <button type="button" class="btn btn-sm btn-success noprint"
+                                data-bs-toggle="modal" data-bs-target="#cotisModal"
+                                onclick="openCotisModal(null)">
+                            <i class="fas fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="widget-card-body p-0">
+                        @if ($cotisations->isNotEmpty())
+                            <table class="table table-sm table-hover align-middle mb-0" style="font-size:var(--font-size-sm);">
+                                <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
+                                    <tr>
+                                        <th class="ps-3">Année</th>
+                                        <th>Période</th>
+                                        <th>Date</th>
+                                        <th class="text-end">Montant</th>
+                                        <th>Mode</th>
+                                        <th>Commentaire</th>
+                                        <th class="noprint" style="width:80px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($cotisations as $cotis)
+                                        <tr>
+                                            <td class="ps-3">{{ $cotis->ANNEE }}</td>
+                                            <td>{{ $cotis->PERIODE_CODE ?: '—' }}</td>
+                                            <td>{{ $cotis->PC_DATE?->format('d/m/Y') ?? '—' }}</td>
+                                            <td class="text-end {{ $cotis->REMBOURSEMENT ? 'text-danger' : '' }}">
+                                                @if ($cotis->REMBOURSEMENT)
+                                                    <span class="badge bg-warning text-dark me-1">Remb.</span>
+                                                @endif
+                                                {{ number_format((float)$cotis->MONTANT, 2, ',', ' ') }} €
+                                            </td>
+                                            <td>{{ $cotis->typePaiement?->TP_DESCRIPTION ?? '—' }}</td>
+                                            <td class="text-muted">{{ $cotis->COMMENTAIRE ?: '' }}</td>
+                                            <td class="text-end pe-3 noprint">
+                                                <button type="button" class="btn btn-xs btn-light py-0 px-1 me-1"
+                                                        onclick="openCotisModal({
+                                                            pc_id: {{ $cotis->PC_ID }},
+                                                            annee: {{ $cotis->ANNEE }},
+                                                            periode: {{ json_encode($cotis->PERIODE_CODE ?? '') }},
+                                                            date: {{ json_encode($cotis->PC_DATE?->format('Y-m-d') ?? '') }},
+                                                            montant: {{ (float)$cotis->MONTANT }},
+                                                            tp_id: {{ $cotis->TP_ID ?: 'null' }},
+                                                            remb: {{ $cotis->REMBOURSEMENT ? 'true' : 'false' }},
+                                                            comment: {{ json_encode($cotis->COMMENTAIRE ?? '') }}
+                                                        })">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <form method="POST"
+                                                      action="{{ route('personnel.cotisation.destroy', [$personnel, $cotis->PC_ID]) }}"
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Supprimer cette cotisation ?')">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr class="fw-bold">
+                                        <td colspan="3" class="text-end ps-3"
+                                            style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">Total net</td>
+                                        <td class="text-end {{ $cotisNet < 0 ? 'text-danger' : '' }}">
+                                            {{ number_format($cotisNet, 2, ',', ' ') }} €
+                                        </td>
+                                        <td colspan="3"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        @else
+                            <p class="widget-empty p-3">Aucune cotisation enregistrée.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>{{-- /section-cotisations --}}
+
+            {{-- ▸ Participation ───────────────────────────────────────────── --}}
+            <div id="section-participation" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title">
+                            <i class="fas fa-calendar-check"></i> Participation aux activités
+                            @if($participation->isNotEmpty())
+                                <span class="ob-badge ob-badge-archive ms-1">{{ $participation->count() }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="widget-card-body p-0">
+                        @if ($participation->isNotEmpty())
+                            <table class="table table-sm table-hover align-middle mb-0" style="font-size:var(--font-size-sm);">
+                                <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
+                                    <tr>
+                                        <th class="ps-3">Activité</th>
+                                        <th>Date</th>
+                                        <th class="text-end">Durée</th>
+                                        <th class="text-end">Km</th>
+                                        <th>Présence</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($participation as $ep)
+                                        @php
+                                            $presClass = match(true) {
+                                                (bool) $ep->EP_ABSENT && !(bool) $ep->EP_EXCUSE => 'ob-badge-bloqued',
+                                                (bool) $ep->EP_ABSENT && (bool) $ep->EP_EXCUSE  => 'ob-badge-ben',
+                                                default => 'ob-badge-actif',
+                                            };
+                                            $presLbl = match(true) {
+                                                (bool) $ep->EP_ABSENT && !(bool) $ep->EP_EXCUSE => 'Absent',
+                                                (bool) $ep->EP_ABSENT && (bool) $ep->EP_EXCUSE  => 'Excusé',
+                                                default => 'Présent',
+                                            };
+                                        @endphp
+                                        <tr>
+                                            <td class="ps-3">
+                                                <a href="{{ route('evenement.show', $ep->E_CODE) }}" class="text-decoration-none">
+                                                    {{ $ep->E_LIBELLE ?: $ep->E_CODE }}
+                                                </a>
+                                            </td>
+                                            <td style="color:var(--text-muted-soft)">
+                                                {{ $ep->E_DATE_DEBUT ? \Carbon\Carbon::parse($ep->E_DATE_DEBUT)->format('d/m/Y') : '—' }}
+                                            </td>
+                                            <td class="text-end" style="color:var(--text-muted-soft)">
+                                                {{ $ep->EP_DUREE ? number_format((float) $ep->EP_DUREE, 1) . ' h' : '—' }}
+                                            </td>
+                                            <td class="text-end" style="color:var(--text-muted-soft)">
+                                                {{ $ep->EP_KM ? $ep->EP_KM . ' km' : '—' }}
+                                            </td>
+                                            <td><span class="ob-badge {{ $presClass }}">{{ $presLbl }}</span></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @if ($participation->count() >= 50)
+                                <p class="p-3 mb-0 text-muted" style="font-size:var(--font-size-xs);">
+                                    Affichage limité aux 50 dernières participations.
+                                </p>
+                            @endif
+                        @else
+                            <p class="widget-empty p-3">Aucune participation enregistrée.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>{{-- /section-participation --}}
+
+            {{-- ▸ Dotation ───────────────────────────────────────────────── --}}
+            <div id="section-dotation" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-box"></i> Dotation</div>
+                        <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
+                            <i class="fas fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="widget-empty mb-0">Aucune dotation enregistrée.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-dotation --}}
+
+            {{-- ▸ Documents ──────────────────────────────────────────────── --}}
+            <div id="section-documents" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-file-alt"></i> Documents</div>
+                        <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
+                            <i class="fas fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="widget-empty mb-0">Aucun document enregistré.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-documents --}}
+
+            {{-- ▸ Notes de frais ─────────────────────────────────────────── --}}
+            <div id="section-notedfrais" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-receipt"></i> Notes de frais</div>
+                        <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
+                            <i class="fas fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="widget-empty mb-0">Aucune note de frais enregistrée.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-notedfrais --}}
+
+            {{-- ▸ Disponibilité ──────────────────────────────────────────── --}}
+            <div id="section-disponibilite" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-calendar-day"></i> Disponibilité</div>
+                        <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
+                            <i class="fas fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="widget-empty mb-0">Aucune disponibilité enregistrée.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-disponibilite --}}
+
+            {{-- ▸ Calendrier ─────────────────────────────────────────────── --}}
+            <div id="section-calendrier" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-calendar"></i> Calendrier</div>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="widget-empty mb-0">Aucune entrée de calendrier.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-calendrier --}}
+
+            {{-- ▸ Absences ───────────────────────────────────────────────── --}}
+            <div id="section-absences" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-user-times"></i> Absences</div>
+                        <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
+                            <i class="fas fa-plus me-1"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="widget-empty mb-0">Aucune absence enregistrée.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-absences --}}
+
+            {{-- ▸ Historique ─────────────────────────────────────────────── --}}
+            <div id="section-historique" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-history"></i> Historique</div>
+                    </div>
+                    <div class="widget-card-body">
+                        <p class="widget-empty mb-0">Aucun historique disponible.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-historique --}}
+
+            {{-- ▸ Géolocalisation ────────────────────────────────────────── --}}
+            <div id="section-geo" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-map-marker-alt"></i> Géolocalisation</div>
+                        <a href="{{ route('geolocalisation.index') }}" class="btn btn-sm btn-light noprint">
+                            <i class="fas fa-map-marked-alt me-1"></i> Carte globale
+                        </a>
+                    </div>
+                    <div class="widget-card-body">
+                        @if ($gps && $gps->LAT && $gps->LNG)
+                            <dl class="ob-info-grid mb-0">
+                                <div class="ob-info-item">
+                                    <dt>Coordonnées</dt>
+                                    <dd>{{ number_format((float)$gps->LAT, 5) }}, {{ number_format((float)$gps->LNG, 5) }}</dd>
+                                </div>
+                                <div class="ob-info-item">
+                                    <dt>Adresse</dt>
+                                    <dd>{{ $gps->ADDRESS ?: '—' }}</dd>
+                                </div>
+                                <div class="ob-info-item">
+                                    <dt>Dernière mise à jour</dt>
+                                    <dd>{{ $gps->DATE_LOC ? date('d/m/Y H:i', strtotime($gps->DATE_LOC)) : '—' }}</dd>
+                                </div>
+                            </dl>
+                        @else
+                            <p class="widget-empty mb-0">Aucune position GPS enregistrée.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>{{-- /section-geo --}}
+
+            {{-- ▸ Accès ─────────────────────────────────────────────────── --}}
+            <div id="section-acces" data-pers-section>
+                <div class="widget-card mb-3">
+                    <div class="widget-card-header">
+                        <div class="widget-card-title"><i class="fas fa-shield-alt"></i> Droits d'accès</div>
+                    </div>
+                    <div class="widget-card-body">
+                        <dl class="ob-info-grid mb-0">
+                            <div class="ob-info-item">
+                                <dt>Groupe principal</dt>
+                                <dd>{{ $personnel->groupe?->GP_DESCRIPTION ?? '—' }}</dd>
+                            </div>
+                            @if ($groupe2)
+                            <div class="ob-info-item">
+                                <dt>Groupe 2</dt>
+                                <dd>{{ $groupe2->GP_DESCRIPTION }}</dd>
+                            </div>
+                            @endif
+                            <div class="ob-info-item">
+                                <dt>Dernière connexion</dt>
+                                <dd>{{ $personnel->P_LAST_CONNECT?->format('d/m/Y H:i') ?? 'jamais' }}</dd>
+                            </div>
+                            <div class="ob-info-item">
+                                <dt>Connexions</dt>
+                                <dd>{{ $personnel->P_NB_CONNECT ?? '0' }}</dd>
+                            </div>
+                            @if ($personnel->P_ACCEPT_DATE)
+                            <div class="ob-info-item">
+                                <dt>Charte acceptée</dt>
+                                <dd>{{ $personnel->P_ACCEPT_DATE->format('d/m/Y H:i') }}</dd>
+                            </div>
+                            @endif
+                            @if ($personnel->P_ACCEPT_DATE2)
+                            <div class="ob-info-item">
+                                <dt>Charte 2 acceptée</dt>
+                                <dd>{{ $personnel->P_ACCEPT_DATE2->format('d/m/Y H:i') }}</dd>
+                            </div>
+                            @endif
+                            <div class="ob-info-item">
+                                <dt>Indicateurs</dt>
+                                <dd>
+                                    @if ($personnel->P_HIDE)   <span class="ob-badge ob-badge-archive me-1">Masqué</span> @endif
+                                    @if ($personnel->P_NOSPAM) <span class="ob-badge ob-badge-archive me-1">No spam</span> @endif
+                                    @if ($personnel->NPAI)     <span class="ob-badge ob-badge-ben me-1">NPAI</span> @endif
+                                    @if ($personnel->SUSPENDU) <span class="ob-badge ob-badge-bloqued me-1">Suspendu</span> @endif
+                                    @if (!$personnel->P_HIDE && !$personnel->P_NOSPAM && !$personnel->NPAI && !$personnel->SUSPENDU)
+                                        <span class="text-muted">—</span>
+                                    @endif
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>{{-- /section-acces --}}
+
+        </div>{{-- /content --}}
+    </div>{{-- /sidebar layout --}}
+
 </div>
 
-{{-- ── Qualification modal ─────────────────────────────────────── --}}
+{{-- ── Qualification modal ─────────────────────────────────────────────────── --}}
 <div class="modal fade" id="qualModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -497,7 +856,7 @@
     </div>
 </div>
 
-{{-- ── Cotisation modal ────────────────────────────────────────── --}}
+{{-- ── Cotisation modal ─────────────────────────────────────────────────────── --}}
 <div class="modal fade" id="cotisModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -527,8 +886,7 @@
                         </div>
                         <div class="col-3">
                             <label class="form-label" style="font-size:var(--font-size-sm);">Date *</label>
-                            <input name="PC_DATE" id="cotisDate" type="date"
-                                   class="form-control form-control-sm" required>
+                            <input name="PC_DATE" id="cotisDate" type="date" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-3">
                             <label class="form-label" style="font-size:var(--font-size-sm);">Montant (€) *</label>
@@ -546,16 +904,13 @@
                         </div>
                         <div class="col-6 d-flex align-items-end">
                             <div class="form-check mb-1">
-                                <input type="checkbox" name="REMBOURSEMENT" id="cotisRemb"
-                                       value="1" class="form-check-input">
-                                <label class="form-check-label" for="cotisRemb"
-                                       style="font-size:var(--font-size-sm);">Remboursement</label>
+                                <input type="checkbox" name="REMBOURSEMENT" id="cotisRemb" value="1" class="form-check-input">
+                                <label class="form-check-label" for="cotisRemb" style="font-size:var(--font-size-sm);">Remboursement</label>
                             </div>
                         </div>
                         <div class="col-12">
                             <label class="form-label" style="font-size:var(--font-size-sm);">Commentaire</label>
-                            <input name="COMMENTAIRE" id="cotisComment" type="text"
-                                   class="form-control form-control-sm">
+                            <input name="COMMENTAIRE" id="cotisComment" type="text" class="form-control form-control-sm">
                         </div>
                     </div>
                 </div>
@@ -570,8 +925,73 @@
 
 @endsection
 
+@push('styles')
+<style>
+.pers-sidenav-wrap {
+    flex: 0 0 170px;
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+}
+.pers-sidenav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary, #374151);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, background .15s, border-color .15s;
+}
+.pers-sidenav-link:hover {
+    color: var(--accent);
+    background: var(--table-hover-bg, rgba(0,0,0,.03));
+    border-left-color: var(--component-border);
+}
+.pers-sidenav-link.active {
+    color: var(--accent);
+    background: var(--table-hover-bg, rgba(0,0,0,.03));
+    border-left-color: var(--accent);
+    font-weight: 600;
+}
+.pers-sidenav-link .ob-badge { margin-left: auto; }
+</style>
+@endpush
+
 @push('scripts')
 <script>
+(function () {
+    var links    = document.querySelectorAll('.pers-sidenav-link');
+    var sections = document.querySelectorAll('[data-pers-section]');
+
+    function activate(id) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var active = document.querySelector('.pers-sidenav-link[href="#' + id + '"]');
+        if (active) active.classList.add('active');
+    }
+
+    // Activate on click immediately (don't wait for scroll observer)
+    links.forEach(function (l) {
+        l.addEventListener('click', function () {
+            activate(this.getAttribute('href').slice(1));
+        });
+    });
+
+    // Scroll-driven activation via IntersectionObserver
+    if ('IntersectionObserver' in window && sections.length) {
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) activate(entry.target.id);
+            });
+        }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+        sections.forEach(function (s) { observer.observe(s); });
+    }
+})();
+
 function openCotisModal(cotis) {
     var form     = document.getElementById('cotisForm');
     var methodEl = document.getElementById('cotisMethodField');
@@ -609,8 +1029,8 @@ function openQualModal(qual) {
     var posteLblTx = document.getElementById('qualPosteLabelText');
     var baseUrl    = '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}';
     if (qual) {
-        form.action          = baseUrl + '/' + qual.ps_id;
-        methodEl.innerHTML   = '<input type="hidden" name="_method" value="PATCH">';
+        form.action             = baseUrl + '/' + qual.ps_id;
+        methodEl.innerHTML      = '<input type="hidden" name="_method" value="PATCH">';
         posteWrap.style.display = 'none';
         posteLbl.style.display  = '';
         posteLblTx.textContent  = qual.label;
