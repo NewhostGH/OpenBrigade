@@ -102,7 +102,7 @@
 
                 {{-- ── Photo ───────────────────────────────────────────── --}}
                 <div class="col-auto" style="flex:0 0 auto;">
-                    <img src="{{ route('personnel.photo', $personnel) }}?v={{ substr(md5($personnel->P_PHOTO ?? ''), 0, 8) }}"
+                    <img src="{{ $personnel->getAvatarUrl() }}"
                          alt="Photo {{ $personnel->P_NOM }}"
                          style="width:96px; height:96px; object-fit:cover; border-radius:var(--radius-md);
                                 border:2px solid var(--component-border);">

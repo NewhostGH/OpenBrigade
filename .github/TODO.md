@@ -4,6 +4,47 @@ When implementing a TODO, cross out the checkbox and add the commit name. If nec
 
 ---
 
+## Engineering Conventions (read before writing code)
+
+> These are binding rules for all migrated code. They exist so the codebase stays maintainable as legacy pages are ported. Both human contributors and AI assistants MUST follow them. When you touch a file that breaks a rule, fix it or add a remediation entry under "Cleanup & Remediation Plan" below.
+
+### 1. Single Source of Truth (SSOT)
+
+A value or rule must be defined in exactly **one** place. Never copy logic between a controller, a service, and a Blade view.
+
+- **Derived values** (anything computed from a model's fields — avatar URL, full name, état/status label, age, net total) → a **method or accessor on the Eloquent model** (e.g. `Personnel::getAvatarUrl()`). Views and controllers call the method; they never reconstruct the value inline.
+- **Lookup / label / badge maps** (status → label+class, civility → prefix, etc.) → defined **once** in a `config/` file (e.g. `config/personnel.php`). Reference it everywhere; never re-declare the array per page.
+- **External URLs** (third-party services, CDNs, map tiles, API endpoints, doc links) → defined **once** in `config/` (e.g. `config/services.php` or `config/links.php`) and read via `config('...')`. Never hardcode an external URL in a controller, service, Blade view, or JS file.
+- **Business logic** (sums, filters, eligibility rules, query shaping) → a **service** (`app/Services/`) or the model. **Never** in a Blade view.
+- **Raw DB rows are not exempt.** If a query builder / `DB::table()` returns `stdClass` rows that need a derived value, either (a) return Eloquent models so the accessor is available, or (b) put the derivation in a **shared helper/service method** and call it from both the model accessor and the raw-row path. Do not inline a second copy.
+- **Column/field definitions** (list columns, export field lists) → one definition reused by list view and export.
+
+### 2. Models
+
+- One model per table is the goal. Where two models intentionally map to the same table (`User` = auth concerns, `Personnel` = domain concerns, both on `pompier`), **shared behaviour MUST live in a trait** (e.g. `app/Models/Concerns/HasAvatar.php`) used by both — never copy-pasted. Document the split at the top of each model.
+- Casts, accessors, and shared scopes that apply to the underlying table belong in the shared trait, not in only one of the two models.
+
+### 3. Blade views
+
+- **Minimal PHP.** No business logic, no DB access, no array/map declarations in `@php` blocks. Presentation data (nav arrays, badge maps) comes from the controller or a dedicated view model / view composer.
+- **No `<style>` blocks and no `@push('styles')` with inline CSS.** All CSS lives in `resources/css/<module>.css` and is bundled by Vite.
+- A `@php` block, if unavoidable, should be a couple of trivial presentation lines — not logic.
+
+### 4. CSS / JS naming
+
+- **Every custom class and id uses the `ob-` prefix**, with a module sub-namespace: `ob-dash-card`, `ob-nav-siglet`, `ob-login-card`, `ob-pers-sidenav`. Bootstrap utility classes are used as-is; only *our* classes get the prefix.
+- One CSS file and one JS file per module under `resources/css/` and `resources/js/`. No inline `<script>` with logic where a module file fits.
+
+### 5. Legacy references must be flagged
+
+- Any link, asset path, or redirect pointing at the legacy app (`/legacy/...`, `*.php?...`, `/trombinoscope/...`, hardcoded `archive/legacy_app/...`) MUST carry a marker comment on the same or preceding line:
+  - Blade: `{{-- TODO: Migrate code --}}`
+  - PHP/JS: `// TODO: Migrate code`
+- This makes every remaining legacy coupling greppable (`grep -rn "TODO: Migrate code"`) and is the input list for Phase 4 decommission.
+- A legacy URL with **no** `/legacy/` prefix is a bug, not a bridge — fix the route, don't just mark it.
+
+---
+
 ## File Migration Strategy (apply to every menu section below)
 
 Each menu section follows this repeatable process:
@@ -36,6 +77,36 @@ DONE
 - [x] Migrate cotisations global page to `ob-toolbar` + `ob-commandbar`; add `action` and `showSelCount` props to `ob-commandbar`; keep per-row editable inputs; statut badges use `ob-badge-*` classes (commit: feat: migrate cotisations page to ob-toolbar/ob-commandbar)
 - [x] Fix `FPDF` anonymous class property type error: remove `int` type annotations from `$y` and `$goDown` — PHP 8 forbids adding a type to an inherited untyped property (commit: fix: FPDF anonymous class property type declarations incompatible with PHP 8)
 - [x] Fix `VehiculeController` wrong column names: `V_IMMAT` → `V_IMMATRICULATION`, `V_LIBELLE` → `V_INDICATIF`; add `TV_CODE`, `V_MODELE`, `V_ANNEE` to select and columns; enrich `vehiculeColumns()` with revision and carte-grise columns (commit: fix: VehiculeController wrong column names — V_IMMATRICULATION, V_INDICATIF; add model/year/revision/titre columns)
+---
+
+## Cleanup & Remediation Plan
+
+> Findings from the 2026-06-04 conventions audit. Each item references the [Engineering Conventions](#engineering-conventions-read-before-writing-code) rule it restores. Do these before porting more pages — they define the patterns every later migration will copy.
+
+### A. SSOT — avatar URL (rule 1)
+- [x] Extract avatar logic into a shared trait `app/Models/Concerns/HasAvatar.php` exposing `getAvatarUrl()` (instance) + `avatarUrl($id, $photo, $civilite)` (static, for raw rows); used by both `Personnel` and `User`; duplicate method bodies deleted.
+- [x] **Bug fixed:** `DashboardService` duty + birthday widgets no longer build avatars inline with the broken `/trombinoscope/<file>` path — they call `Personnel::avatarUrl(...)`, same SSOT as `getAvatarUrl()`.
+
+### B. SSOT — duplicated maps & logic (rule 1)
+- [ ] Define the personnel **status badge map** (`BEN/EXT/PRES/INT` → label+class) once — as a `Personnel` constant or `config/personnel.php`. Remove the copies in `PersonnelController::personnelColumns()` and `personnel/show.blade.php:21-26`.
+- [ ] Move the **état** rule (`Actif`/`Archivé`/`Bloqué`) to a `Personnel::getEtat()` accessor. Remove the copy in `show.blade.php:14-20`; reuse it in the controller's `etat` column.
+- [ ] Move `cotisNet` (net cotisation total) out of `show.blade.php:29-30` into a model accessor or the controller.
+- [ ] Move the civility map (`civMap`) to a single definition (constant/config) and reuse on show + edit.
+
+### C. Excessive PHP in Blade (rule 3)
+- [ ] `personnel/show.blade.php:12-51` — move the badge maps, état, totals, and `$sideNav` array out of the 50-line `@php` block into the controller (pass as view data) or a view model.
+- [ ] Remove inline `<style>` / `@push('styles')` CSS from `personnel/show`, `personnel/edit`, `vehicule/form`, `personnel/geolocalisation`, `organisation/index`, `planning/index`; relocate to module CSS files.
+
+### D. CSS prefix consistency (rule 4)
+- [ ] Rename custom classes/ids in `dashboard.css`, `navbar.css`, `login.css`, `sidebar.css` and the inline `pers-*` classes to the `ob-` prefix with module sub-namespace (`ob-dash-*`, `ob-nav-*`, `ob-login-*`, `ob-pers-*`). Update all referencing Blade/JS. (Large mechanical change — do per module, one commit each, verify rendering after each.)
+
+### E. Legacy reference flagging (rule 5)
+- [ ] Add `{{-- TODO: Migrate code --}}` / `// TODO: Migrate code` to every legacy `/legacy/*.php`, `*.php?...`, and `/trombinoscope/...` reference across views, controllers, services, and JS (~60+ sites; see `grep -rn "/legacy/\|\.php?"`).
+- [ ] **Bug:** `navbar.blade.php:62-93` quick-add menu links to `url('/ins_personnel.php...')` etc. **without** the `/legacy/` prefix — these don't route. Fix to the correct bridge route (or native route once it exists).
+
+### F. Convention enforcement (prevent regression)
+- [ ] Document these conventions in `docs/dev/ARCHITECTURE.md` (or a new `docs/dev/CONVENTIONS.md`) and link from `.github/CONTRIBUTING.md`.
+- [ ] Add a CI/grep guard (or a test) that fails on: inline `<style>` in Blade, unprefixed custom CSS classes, and un-flagged `/legacy/` references in migrated files.
 
 ---
 

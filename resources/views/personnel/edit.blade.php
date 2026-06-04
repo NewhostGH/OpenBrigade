@@ -39,7 +39,7 @@
                             background:var(--table-odd-row);"
                      onclick="document.getElementById('photo_upload').click()">
                     <img id="photoPreview"
-                         src="{{ route('personnel.photo', $personnel) }}?v={{ substr(md5($personnel->P_PHOTO ?? ''), 0, 8) }}"
+                         src="{{ $personnel->getAvatarUrl() }}"
                          alt="Photo"
                          style="width:100%; height:100%; object-fit:cover; display:block;">
                     <div id="photoOverlay"

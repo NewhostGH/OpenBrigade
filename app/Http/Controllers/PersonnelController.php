@@ -103,7 +103,7 @@ class PersonnelController extends Controller
                 'key'          => 'photo',
                 'label'        => 'Photo',
                 'type'         => 'avatar',
-                'value'        => fn($p) => route('personnel.photo', $p) . '?v=' . substr(md5($p->P_PHOTO ?? ''), 0, 8),
+                'value'        => fn($p) => $p->getAvatarUrl(),
                 'imageClass'   => 'ob-avatar-sm',
                 'cardShow'     => true,
                 'mobile'       => true,

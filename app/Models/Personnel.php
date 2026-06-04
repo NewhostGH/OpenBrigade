@@ -17,6 +17,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasAvatar;
 use App\Models\Pivots\EvenementParticipation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Personnel extends Model
 {
+    use HasAvatar;
     use HasFactory;
 
     protected $table = 'pompier';

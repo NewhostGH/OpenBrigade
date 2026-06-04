@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Personnel;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -319,9 +320,7 @@ class DashboardService
             ->get()->toArray();
 
         foreach ($rows as &$row) {
-            $row->avatarSrc = !empty($row->P_PHOTO)
-                ? '/trombinoscope/' . $row->P_PHOTO
-                : (((int) $row->P_CIVILITE === 2) ? asset('images/girl.png') : asset('images/boy.png'));
+            $row->avatarSrc = Personnel::avatarUrl($row->P_ID, $row->P_PHOTO, $row->P_CIVILITE);
         }
         unset($row);
 
@@ -390,9 +389,7 @@ class DashboardService
                 ->get()->toArray();
 
             foreach ($rows as &$r) {
-                $r->avatarSrc = !empty($r->P_PHOTO)
-                    ? '/trombinoscope/' . $r->P_PHOTO
-                    : (((int) $r->P_CIVILITE === 2) ? asset('images/girl.png') : asset('images/boy.png'));
+                $r->avatarSrc = Personnel::avatarUrl($r->P_ID, $r->P_PHOTO, $r->P_CIVILITE);
             }
             unset($r);
 
