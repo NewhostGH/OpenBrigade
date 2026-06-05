@@ -63,6 +63,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/evenements/{code}/edit', [EvenementController::class, 'edit'])->name('evenement.edit')->middleware('permission:15');
     Route::put('/evenements/{code}', [EvenementController::class, 'update'])->name('evenement.update')->middleware('permission:15');
     Route::delete('/evenements/{code}', [EvenementController::class, 'destroy'])->name('evenement.destroy')->middleware('permission:19');
+    // Participant management — inscription, fonction, équipe (permission 10 = inscrire)
+    Route::post('/evenements/{code}/participants', [EvenementController::class, 'participantStore'])->name('evenement.participant.store')->middleware('permission:10');
+    Route::patch('/evenements/{code}/participants/{pid}', [EvenementController::class, 'participantUpdate'])->name('evenement.participant.update')->middleware('permission:10');
+    Route::delete('/evenements/{code}/participants/{pid}', [EvenementController::class, 'participantDestroy'])->name('evenement.participant.destroy')->middleware('permission:10');
+    // Équipes CRUD — teams within an event (permission 15 = gérer activité)
+    Route::post('/evenements/{code}/equipes', [EvenementController::class, 'equipeStore'])->name('evenement.equipe.store')->middleware('permission:15');
+    Route::put('/evenements/{code}/equipes/{ee}', [EvenementController::class, 'equipeUpdate'])->name('evenement.equipe.update')->middleware('permission:15');
+    Route::delete('/evenements/{code}/equipes/{ee}', [EvenementController::class, 'equipeDestroy'])->name('evenement.equipe.destroy')->middleware('permission:15');
+    // Renforts — attach/detach reinforcement sub-events (permission 15)
+    Route::post('/evenements/{code}/renforts', [EvenementController::class, 'renfortAttach'])->name('evenement.renfort.attach')->middleware('permission:15');
+    Route::delete('/evenements/{code}/renforts/{renfort}', [EvenementController::class, 'renfortDetach'])->name('evenement.renfort.detach')->middleware('permission:15');
+    // Véhicules — attach/detach vehicles (permission 15)
+    Route::post('/evenements/{code}/vehicules', [EvenementController::class, 'vehiculeAttach'])->name('evenement.vehicule.attach')->middleware('permission:15');
+    Route::delete('/evenements/{code}/vehicules/{vehicule}', [EvenementController::class, 'vehiculeDetach'])->name('evenement.vehicule.detach')->middleware('permission:15');
     Route::get('/garde', [GardeController::class, 'index'])->name('garde.index')->middleware('permission:61');
     Route::get('/garde/astreintes', [GardeController::class, 'astreintes'])->name('garde.astreintes')->middleware('permission:52');
     Route::get('/indisponibilites', [IndispoController::class, 'index'])->name('indispo.index')->middleware('permission:11');

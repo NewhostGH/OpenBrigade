@@ -170,17 +170,26 @@
                             </select>
                         </div>
                         <div class="col-sm-6">
-                            <label class="form-label fw-semibold" for="VP_ID">Statut / Position</label>
+                            <label class="form-label fw-semibold" for="VP_ID">
+                                Statut / Position <span class="text-danger">*</span>
+                            </label>
                             <select id="VP_ID" name="VP_ID"
-                                    class="form-select form-select-sm @error('VP_ID') is-invalid @enderror">
+                                    class="form-select form-select-sm @error('VP_ID') is-invalid @enderror"
+                                    required>
                                 <option value="">— Choisir —</option>
                                 @foreach ($positions as $p)
+                                    @php
+                                        $selected = $val('VP_ID') === $p->VP_ID || (!$isEdit && $p->VP_OPERATIONNEL && $loop->first);
+                                    @endphp
                                     <option value="{{ $p->VP_ID }}"
-                                            {{ $val('VP_ID') === $p->VP_ID ? 'selected' : '' }}>
+                                            {{ $selected ? 'selected' : '' }}>
                                         {{ $p->VP_LIBELLE }}
                                     </option>
                                 @endforeach
                             </select>
+                            @error('VP_ID')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 

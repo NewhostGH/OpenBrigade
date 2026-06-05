@@ -174,7 +174,7 @@ DONE
 - [x] Inventory all ACT legacy files
 - [x] Migrate event list and detail view (commit: feat: migrate event list/detail — EvenementController, views, bridge retirements, tests)
 - [x] Migrate event creation, edit, save, and delete (commit: feat: event CRUD — create/edit/delete form, fix V_IMMAT in show, redirect legacy bridges)
-- [ ] Migrate participant management (inscription, equipes, renforts)
+- [x] Migrate participant management (inscription, equipes, renforts)
 - [ ] Migrate event material and vehicle assignment
 - [ ] Migrate calendar view
 - [ ] Migrate event exports (XLS, PDF rapport, iCal)

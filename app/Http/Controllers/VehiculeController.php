@@ -312,7 +312,7 @@ class VehiculeController extends Controller
             'V_INDICATIF'      => ['nullable', 'string', 'max:50'],
             'V_MODELE'         => ['nullable', 'string', 'max:50'],
             'V_ANNEE'          => ['nullable', 'integer', 'min:1900', 'max:2100'],
-            'VP_ID'            => ['nullable', 'string', 'max:5'],
+            'VP_ID'            => ['required', 'string', 'max:5'],
             'S_ID'             => ['required', 'integer'],
             'V_KM'             => ['nullable', 'integer', 'min:0'],
             'V_KM_REVISION'    => ['nullable', 'integer', 'min:0'],
