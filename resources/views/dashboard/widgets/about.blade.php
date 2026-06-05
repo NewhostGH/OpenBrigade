@@ -34,6 +34,7 @@
         </a>
         @endif
 
+        {{-- TODO: Migrate code --}}
         <a class="ob-dash-about-row" href="{{ $about['canAdmin'] ? url('/legacy/configuration.php?tab=conf7') : route('about') }}">
             <div class="ob-dash-about-icon ob-dash-stat-icon-orange">
                 <i class="fas fa-info"></i>

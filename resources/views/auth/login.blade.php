@@ -101,6 +101,7 @@
                         <div class="ob-login-brand-title">Mot de passe oublié ?</div>
                         <p class="ob-login-brand-sub mt-1 mb-0">
                             Contactez votre administrateur pour réinitialiser votre mot de passe,
+                            {{-- TODO: Migrate code --}}
                             ou utilisez la page <a href="{{ url('/legacy/change_password.php') }}">Changer mon mot de passe</a>
                             si vous êtes déjà connecté.
                         </p>

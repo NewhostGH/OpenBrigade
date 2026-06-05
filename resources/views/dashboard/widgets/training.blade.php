@@ -10,7 +10,7 @@
             <i class="fas fa-graduation-cap"></i> Formations {{ $training['year'] }}
         </div>
         <a class="ob-widget-card-link"
-           href="{{ url('/legacy/upd_personnel.php?pompier=' . auth()->user()->P_ID . '&tab=2&child=2') }}">
+           href="{{ route('personnel.qualifications', auth()->user()->P_ID) }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>

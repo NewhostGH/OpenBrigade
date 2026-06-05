@@ -426,37 +426,40 @@ class DashboardService
         $base = DB::table('vehicule as v')->join('vehicule_position as vp', 'vp.VP_ID', '=', 'v.VP_ID')
             ->whereIn('v.S_ID', $family)->where('vp.VP_OPERATIONNEL', '>=', 0);
 
+        // TODO: Migrate code — vehicule.index has no filter/sort params yet; link to index for now
+        $vehiculeUrl = route('vehicule.index');
+
         // Unavailable
         $nb = (clone $base)->where('vp.VP_OPERATIONNEL', '<', 2)->count();
-        if ($nb) $items[] = ['label' => 'Véhicules indisponibles', 'sub' => '', 'count' => $nb, 'level' => 'danger', 'url' => '/legacy/vehicule.php?order=VP_OPERATIONNEL'];
+        if ($nb) $items[] = ['label' => 'Véhicules indisponibles', 'sub' => '', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
 
         // Expired insurance
         $nb = (clone $base)->whereRaw("v.V_ASS_DATE < NOW()")->count();
-        if ($nb) $items[] = ['label' => 'Assurances', 'sub' => 'Périmées', 'count' => $nb, 'level' => 'danger', 'url' => '/legacy/vehicule.php?order=DT_ASS'];
+        if ($nb) $items[] = ['label' => 'Assurances', 'sub' => 'Périmées', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
 
         // Expiring insurance ≤30 days
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_ASS_DATE,'$today') BETWEEN 1 AND 30")->count();
-        if ($nb) $items[] = ['label' => 'Assurances', 'sub' => 'Bientôt périmées', 'count' => $nb, 'level' => 'warning', 'url' => '/legacy/vehicule.php?order=DT_ASS'];
+        if ($nb) $items[] = ['label' => 'Assurances', 'sub' => 'Bientôt périmées', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
 
         // Expired CT
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_CT_DATE,'$today') <= 0")->count();
-        if ($nb) $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => '/legacy/vehicule.php?order=DT_CT'];
+        if ($nb) $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
 
         // Expiring CT ≤60 days
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_CT_DATE,'$today') BETWEEN 1 AND 60")->count();
-        if ($nb) $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => '/legacy/vehicule.php?order=DT_CT'];
+        if ($nb) $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
 
         // Expired access titles
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_TITRE_DATE,'$today') <= 0")->count();
-        if ($nb) $items[] = ['label' => "Titres d'accès", 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => '/legacy/vehicule.php?order=DT_TITRE'];
+        if ($nb) $items[] = ['label' => "Titres d'accès", 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
 
         // Expiring access titles ≤60 days
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_TITRE_DATE,'$today') BETWEEN 1 AND 60")->count();
-        if ($nb) $items[] = ['label' => "Titres d'accès", 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => '/legacy/vehicule.php?order=DT_TITRE'];
+        if ($nb) $items[] = ['label' => "Titres d'accès", 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
 
         // Revisions due
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_REV_DATE,'$today') <= 0")->count();
-        if ($nb) $items[] = ['label' => 'Révisions', 'sub' => 'À faire', 'count' => $nb, 'level' => 'warning', 'url' => '/legacy/vehicule.php?order=DT_REV'];
+        if ($nb) $items[] = ['label' => 'Révisions', 'sub' => 'À faire', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
 
         return ['items' => $items];
     }

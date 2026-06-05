@@ -4,6 +4,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-umbrella-beach"></i> Congés à valider
         </div>
+        {{-- TODO: Migrate code --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/indispo_choice.php?tab=2&page=1') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
@@ -11,6 +12,7 @@
     <div class="ob-widget-card-body">
         @foreach ($cp['items'] as $item)
             <a class="ob-dash-alert-item-row"
+               {{-- TODO: Migrate code --}}
                href="{{ url('/legacy/indispo_choice.php?tab=2&validation=ATT&person=ALL') }}">
                 <div class="ob-dash-alert-item-info">
                     <div class="ob-dash-alert-item-label">

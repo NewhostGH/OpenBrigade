@@ -8,6 +8,7 @@
     <div class="ob-toolbar-title">
         <h1>Bibliothèque de documents</h1>
         @if(auth()->user()->hasPermission(47))
+            {{-- TODO: Migrate code --}}
             <a href="{{ url('/legacy/upd_document.php?action=insert') }}" class="btn btn-sm btn-primary">
                 <i class="fas fa-upload me-1"></i> Ajouter un document
             </a>
@@ -126,6 +127,7 @@
                                         {{ $doc->D_CREATED_DATE ? \Carbon\Carbon::parse($doc->D_CREATED_DATE)->format('d/m/Y') : '—' }}
                                     </td>
                                     <td>
+                                        {{-- TODO: Migrate code --}}
                                         <a href="{{ url('/legacy/showfile.php?id=' . $doc->D_ID) }}"
                                            class="btn btn-sm btn-outline-secondary"
                                            title="Télécharger">

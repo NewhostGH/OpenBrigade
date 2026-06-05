@@ -4,7 +4,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-exchange-alt"></i> Remplacements
         </div>
-        <a class="ob-widget-card-link" href="{{ url('/legacy/remplacements.php') }}">
+        <a class="ob-widget-card-link" href="{{ route('remplacement.index') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>

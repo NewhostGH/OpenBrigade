@@ -28,6 +28,7 @@
             Tous
         </a>
         @if(auth()->user()->hasPermission(44))
+            {{-- TODO: Migrate code --}}
             <a href="{{ url('/legacy/mail_create.php') }}" class="btn btn-sm btn-primary">
                 <i class="fas fa-plus me-1"></i> Nouveau message
             </a>

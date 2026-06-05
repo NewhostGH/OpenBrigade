@@ -58,8 +58,9 @@
                         <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
                             @if (auth()->user()->hasPermission(1))
                                 <li>
+                                    {{-- TODO: Migrate code — ins_personnel.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ url('/ins_personnel.php?category=INT&suggestedcompany=-1') }}">
+                                        href="{{ url('/legacy/ins_personnel.php?category=INT&suggestedcompany=-1') }}">
                                         <i class="fas fa-user-plus fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Personnel
                                     </a>
                                 </li>
@@ -67,30 +68,32 @@
                             @if (auth()->user()->hasPermission(15))
                                 <li>
                                     <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ url('/evenement_edit.php?action=create') }}">
+                                        href="{{ route('evenement.create') }}">
                                         <i class="fas fa-calendar-plus fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Activité
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(17))
                                 <li>
-                                    <a class="dropdown-item dropdown-item-profil" href="{{ url('/ins_vehicule.php') }}">
+                                    <a class="dropdown-item dropdown-item-profil" href="{{ route('vehicule.create') }}">
                                         <i class="fas fa-truck fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Véhicule
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(70))
                                 <li>
+                                    {{-- TODO: Migrate code — ins_materiel.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ url('/ins_materiel.php?usage=ALL&type=ALL') }}">
+                                        href="{{ url('/legacy/ins_materiel.php?usage=ALL&type=ALL') }}">
                                         <i class="fas fa-toolbox fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Matériel
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(71))
                                 <li>
+                                    {{-- TODO: Migrate code — upd_consommable.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ url('/upd_consommable.php?action=insert&type_conso=ALL') }}">
+                                        href="{{ url('/legacy/upd_consommable.php?action=insert&type_conso=ALL') }}">
                                         <i class="fas fa-boxes fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Consommable
                                     </a>
                                 </li>
@@ -133,18 +136,21 @@
                         </li>
                         <li>
                             <a class="dropdown-item dropdown-item-profil"
+                                {{-- TODO: Migrate code — change_password.php has no native route yet --}}
                                 href="{{ url('/legacy/change_password.php') }}">
                                 <i class="fas fa-key fa-fw ob-nav-item-icon"></i> Mot de passe
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item dropdown-item-profil"
+                                {{-- TODO: Migrate code — preferences.php has no native route yet --}}
                                 href="{{ url('/legacy/preferences.php') }}">
                                 <i class="fas fa-sliders-h fa-fw ob-nav-item-icon"></i> Mes préférences
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item dropdown-item-profil"
+                                {{-- TODO: Migrate code — upd_section.php has no native route yet --}}
                                 href="{{ url('/legacy/upd_section.php?S_ID=' . (auth()->user()->P_SECTION ?? 0)) }}">
                                 <i class="fas fa-building fa-fw ob-nav-item-icon"></i> Ma section
                             </a>

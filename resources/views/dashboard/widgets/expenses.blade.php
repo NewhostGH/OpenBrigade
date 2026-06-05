@@ -13,6 +13,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-receipt"></i> Notes de frais
         </div>
+        {{-- TODO: Migrate code --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/note_frais_edit.php') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
@@ -30,6 +31,7 @@
                         </div>
                     @endif
                     <div class="ob-dash-alert-item-sub">
+                        {{-- TODO: Migrate code --}}
                         <a href="{{ url('/legacy/note_frais_edit.php?action=update&nfid=' . $row->NF_ID) }}"
                            style="color:inherit">Note #{{ $row->NF_ID }}</a>
                         &mdash;
@@ -52,6 +54,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-receipt"></i> Notes de frais
         </div>
+        {{-- TODO: Migrate code --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/note_frais_edit.php') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>

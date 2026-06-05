@@ -1,6 +1,7 @@
 <ul>
     @foreach($nodes as $node)
         <li class="org-node">
+            {{-- TODO: Migrate code --}}
             <a href="{{ url('/legacy/upd_section.php?S_ID=' . $node['section']->S_ID) }}"
                class="org-node-card {{ $node['section']->S_ID == $currentSectionId ? 'current' : '' }}">
                 <i class="fas fa-layer-group fa-xs" style="color:var(--text-muted-soft)"></i>

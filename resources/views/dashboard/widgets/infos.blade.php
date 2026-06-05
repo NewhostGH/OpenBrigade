@@ -4,7 +4,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-bullhorn"></i> Consignes opérationnelles
         </div>
-        <a class="ob-widget-card-link" href="{{ url('/legacy/tableau_garde.php?tab=2&mode_garde=1') }}">
+        <a class="ob-widget-card-link" href="{{ route('garde.index') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>
@@ -31,7 +31,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-newspaper"></i> Actualités
         </div>
-        <a class="ob-widget-card-link" href="{{ url('/legacy/message.php?catmessage=amicale') }}">
+        <a class="ob-widget-card-link" href="{{ route('message.index') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>

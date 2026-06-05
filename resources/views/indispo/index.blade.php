@@ -34,6 +34,7 @@
     :columns="$columns"
     table-id="indispoTable">
 
+    {{-- TODO: Migrate code --}}
     <a href="{{ url('/legacy/indispo_choice.php') }}" class="btn btn-sm btn-primary">
         <i class="fas fa-plus me-1"></i> Déclarer une absence
     </a>

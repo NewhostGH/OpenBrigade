@@ -26,6 +26,7 @@
         <i class="fas fa-print"></i>
     </button>
     <a class="btn btn-sm btn-success"
+       {{-- TODO: Migrate code --}}
        href="{{ route('dashboard.legacy') }}?redirect={{ urlencode('ins_personnel.php?category=INT&suggestedcompany=-1') }}"
        title="Ajouter du personnel">
         <i class="fa fa-user-plus"></i>
@@ -186,8 +187,10 @@
 
         const form = document.getElementById('personnelTable_form');
         form.action = {
+            {{-- TODO: Migrate code --}}
             badge:      '/legacy/pdf.php?pdf=badge',
             listemails: '/legacy/listemails.php',
+        {{-- TODO: Migrate code --}}
         }[action] || '/legacy/mail_create.php';
         form.submit();
     };

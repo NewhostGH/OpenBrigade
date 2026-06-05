@@ -4,7 +4,7 @@
             <i class="fas fa-calendar-check"></i> Activités à venir
         </div>
         <a class="ob-widget-card-link"
-           href="{{ url('/legacy/evenement_choice.php?ec_mode=default&page=1&filter=' . $events['sectionId']) }}">
+           href="{{ route('evenement.index') }}">
             {{ $events['sectionName'] }} <i class="fas fa-external-link-alt ms-1"></i>
         </a>
     </div>
@@ -20,7 +20,7 @@
                 <div class="ob-dash-event-status">{!! $openIcon !!}</div>
                 <div class="ob-dash-event-info">
                     <a class="ob-dash-event-title"
-                       href="{{ url('/legacy/evenement_display.php?evenement=' . $e->E_CODE . '&from=scroller') }}">
+                       href="{{ route('evenement.show', $e->E_CODE) }}">
                         {{ $e->E_LIBELLE }}{{ $sess }}
                     </a>
                     <div class="ob-dash-event-meta">{{ $e->TE_LIBELLE }}@if($e->E_LIEU) &mdash; {{ $e->E_LIEU }}@endif</div>

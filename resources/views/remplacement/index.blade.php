@@ -26,6 +26,7 @@
     :columns="$columns"
     table-id="remplacementTable">
 
+    {{-- TODO: Migrate code --}}
     <a href="{{ url('/legacy/remplacement_edit.php') }}" class="btn btn-sm btn-primary">
         <i class="fas fa-plus me-1"></i> Demander un remplacement
     </a>

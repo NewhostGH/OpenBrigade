@@ -170,6 +170,7 @@ class PersonnelExportService
         // Photo
         $photoPath = '';
         foreach ([
+            // TODO: Migrate code — trombi photos live in archive/legacy_app; move to storage/ after decommission
             base_path('archive/legacy_app/images/user-specific/trombi/' . $personnel->P_PHOTO),
             public_path('images/user-specific/trombi/' . $personnel->P_PHOTO),
         ] as $p) {
@@ -467,6 +468,7 @@ class PersonnelExportService
         // Photo
         $photoPath = '';
         foreach ([
+            // TODO: Migrate code — trombi photos live in archive/legacy_app; move to storage/ after decommission
             base_path('archive/legacy_app/images/user-specific/trombi/' . $personnel->P_PHOTO),
             public_path('images/user-specific/trombi/' . $personnel->P_PHOTO),
         ] as $p) {

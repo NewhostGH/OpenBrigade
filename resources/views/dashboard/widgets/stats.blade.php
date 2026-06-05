@@ -2,7 +2,7 @@
 
     {{-- My participations --}}
     <a class="ob-dash-stat-tile"
-       href="{{ url('/legacy/upd_personnel.php?from=inscriptions&tab=4&pompier=' . $stats['pid'] . '&type_evenement=ALL') }}">
+       href="{{ route('personnel.show', $stats['pid']) }}">
         <div class="ob-dash-stat-tile-header">
             <div class="ob-dash-stat-tile-icon ob-dash-stat-icon-blue">
                 <i class="fas fa-user"></i>
@@ -26,7 +26,7 @@
 
     {{-- Section activities --}}
     <a class="ob-dash-stat-tile"
-       href="{{ url('/legacy/evenement_choice.php?ec_mode=default&page=1') }}">
+       href="{{ route('evenement.index') }}">
         <div class="ob-dash-stat-tile-header">
             <div class="ob-dash-stat-tile-icon ob-dash-stat-icon-green">
                 <i class="fas fa-calendar-alt"></i>
@@ -50,7 +50,7 @@
 
     {{-- New members --}}
     <a class="ob-dash-stat-tile"
-       href="{{ url('/legacy/personnel.php?position=actif&category=INT&order=P_DATE_ENGAGEMENT') }}">
+       href="{{ route('personnel.index') }}">
         <div class="ob-dash-stat-tile-header">
             <div class="ob-dash-stat-tile-icon ob-dash-stat-icon-orange">
                 <i class="fas fa-user-plus"></i>

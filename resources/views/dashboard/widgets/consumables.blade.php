@@ -4,7 +4,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-boxes"></i> Consommables
         </div>
-        <a class="ob-widget-card-link" href="{{ url('/legacy/consommable.php?page=1') }}">
+        <a class="ob-widget-card-link" href="{{ route('consommable.index') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>
@@ -17,7 +17,7 @@
                         <div class="ob-dash-alert-item-sub">{{ $item['sub'] }}</div>
                     @endif
                 </div>
-                <span class="ob-dash-alert-badge badge-{{ $item['level'] }}">{{ $item['count'] }}</span>
+                <span class="ob-dash-alert-badge ob-dash-badge-{{ $item['level'] }}">{{ $item['count'] }}</span>
             </div>
         @endforeach
     </div>

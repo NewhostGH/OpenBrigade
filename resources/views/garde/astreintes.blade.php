@@ -11,6 +11,7 @@
 
 <div class="mx-3 mt-3 d-flex align-items-center gap-3">
     @if(auth()->user()->hasPermission(26))
+        {{-- TODO: Migrate code --}}
         <a href="{{ url('/legacy/astreinte_edit.php') }}" class="btn btn-sm btn-primary">
             <i class="fas fa-plus me-1"></i> Nouvelle astreinte
         </a>
@@ -34,6 +35,7 @@
         :items="$slots"
         storage-key="astreintesColsV2"
         :row-actions="[
+            {{-- TODO: Migrate code --}}
             ['url' => '/legacy/astreinte_edit.php?astreinte={AS_ID}', 'icon' => 'fas fa-edit', 'title' => 'Modifier'],
         ]"
         :show-select="false"

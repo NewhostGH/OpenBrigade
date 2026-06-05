@@ -12,6 +12,7 @@
     <div class="ob-toolbar-title">
         <h1>Organisation</h1>
         @if(auth()->user()->hasPermission(55))
+            {{-- TODO: Migrate code --}}
             <a href="{{ url('/legacy/ins_section.php') }}" class="btn btn-sm btn-primary">
                 <i class="fas fa-plus me-1"></i> Nouvelle section
             </a>

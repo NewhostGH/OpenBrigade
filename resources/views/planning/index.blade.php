@@ -13,6 +13,7 @@
         <h1>Mon planning</h1>
         <div class="d-flex gap-2">
             @if(auth()->user()->hasPermission(11))
+                {{-- TODO: Migrate code --}}
                 <a href="{{ url('/legacy/indispo_choice.php') }}" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-user-times me-1"></i> Déclarer une absence
                 </a>

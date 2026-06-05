@@ -18,6 +18,7 @@
                 Votre mot de passe expire dans <strong>{{ $passwordExpiry['days'] }} jours</strong>
                 (le {{ $passwordExpiry['expiry'] }}).
             @endif
+            {{-- TODO: Migrate code — change_password.php has no native route yet --}}
             <a href="{{ url('/legacy/change_password.php') }}" class="ms-2">Changer maintenant</a>
         </div>
     @endif
@@ -31,7 +32,7 @@
                 ({{ $c->Q_EXPIRATION }})@if (!$loop->last), @endif
             @endforeach
             &mdash;
-            <a href="{{ url('/legacy/upd_personnel.php?pompier=' . auth()->user()->P_ID . '&tab=2') }}">
+            <a href="{{ route('personnel.qualifications', auth()->user()->P_ID) }}">
                 Voir le détail
             </a>
         </div>

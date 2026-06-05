@@ -4,7 +4,7 @@
             <i class="fas fa-calendar-user"></i> Mes activités
         </div>
         <a class="ob-widget-card-link"
-           href="{{ url('/legacy/upd_personnel.php?self=1&from=default&tab=4&type_evenement=ALL') }}">
+           href="{{ route('personnel.show', auth()->id()) }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>
@@ -25,7 +25,7 @@
                 </div>
                 <div class="ob-dash-event-info">
                     <a class="ob-dash-event-title"
-                       href="{{ url('/legacy/evenement_display.php?evenement=' . $e->E_CODE . '&from=scroller') }}">
+                       href="{{ route('evenement.show', $e->E_CODE) }}">
                         {{ $e->E_LIBELLE }}{{ $sess }}
                     </a>
                     <div class="ob-dash-event-meta">

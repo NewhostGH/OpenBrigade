@@ -114,8 +114,11 @@ DONE
 - [x] **dashboard** — `dashboard.css` (91 classes) + 33 files (20 dashboard widgets + 13 other feature views). Three-tier rename: `widget-card*`/`widget-empty` → `ob-widget-*` (reusable card, 13 feature views); `duty-*` → `ob-duty-*` (row pattern shared by dispo + garde + dashboard); everything else → `ob-dash-*`. `badge-danger/warning/info/success` (text-color only, dashboard alert widget) → `ob-dash-badge-*`, distinct from `ob-badge-*` pill badges. No collisions — Perl lookbehind/lookahead; `npm run build` ✓.
 
 ### E. Legacy reference flagging (rule 5)
-- [ ] Add `{{-- TODO: Migrate code --}}` / `// TODO: Migrate code` to every legacy `/legacy/*.php`, `*.php?...`, and `/trombinoscope/...` reference across views, controllers, services, and JS (~60+ sites; see `grep -rn "/legacy/\|\.php?"`).
-- [ ] **Bug:** `navbar.blade.php:62-93` quick-add menu links to `url('/ins_personnel.php...')` etc. **without** the `/legacy/` prefix — these don't route. Fix to the correct bridge route (or native route once it exists).
+- [x] All legacy `/legacy/*.php` references across 19 views, 2 PHP files, and 1 service flagged with `{{-- TODO: Migrate code --}}` / `// TODO: Migrate code`. Grep-able: `grep -rn "TODO: Migrate code"`.
+- [x] **Routes already native → replaced:** `evenement.show`, `evenement.index`, `vehicule.index`, `consommable.index`, `remplacement.index`, `personnel.show`, `personnel.index`, `personnel.qualifications`, `garde.index`, `message.index` — direct legacy `url()` calls swapped to `route()` in dashboard widgets, DashboardService URLs for vehicule alerts.
+- [x] **Dynamic badge class fixed:** `badge-{{ $item['level'] }}` in vehicles/consumables widgets → `ob-dash-badge-{{ $item['level'] }}` (escaped the Perl migration because Perl can't see PHP template expressions).
+- [x] **Bug fixed:** `navbar.blade.php` quick-add links now have `/legacy/` prefix and TODO markers; previously missing prefix was a routing bug.
+- [x] **Filesystem paths flagged:** `archive/legacy_app/images/...` in `PersonnelController` (grade images, trombi photos) and `PersonnelExportService` (trombi for PDF livret/carte) flagged — these depend on the legacy file layout and must move to `storage/` when the legacy app is decommissioned.
 
 ### F. Convention enforcement (prevent regression)
 - [ ] Document these conventions in `docs/dev/ARCHITECTURE.md` (or a new `docs/dev/CONVENTIONS.md`) and link from `.github/CONTRIBUTING.md`.

@@ -143,9 +143,11 @@
 
     {{-- Link to full reporting --}}
     <div class="mt-3 d-flex gap-2">
+        {{-- TODO: Migrate code --}}
         <a href="{{ url('/legacy/export.php') }}" class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-file-export me-1"></i> Export personnalisé
         </a>
+        {{-- TODO: Migrate code --}}
         <a href="{{ url('/legacy/bilans.php') }}" class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-chart-pie me-1"></i> Bilans annuels
         </a>

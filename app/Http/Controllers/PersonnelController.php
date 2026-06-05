@@ -295,6 +295,7 @@ class PersonnelController extends Controller
     {
         $grade = preg_replace('/[^A-Z0-9]/', '', strtoupper($grade));
 
+        // TODO: Migrate code — grade images live in archive/legacy_app; move to storage/ after decommission
         $path = base_path("archive/legacy_app/images/grades_sp/{$grade}.png");
         if (! File::exists($path)) {
             $path = base_path('archive/legacy_app/images/grades_sp/NR.png');
@@ -419,6 +420,7 @@ class PersonnelController extends Controller
 
         if ($filename !== '') {
             $filename = basename($filename);
+            // TODO: Migrate code — trombi photos live in archive/legacy_app; move to storage/ after decommission
             $paths = [
                 base_path('archive/legacy_app/images/user-specific/trombi/'.$filename),
                 public_path('images/user-specific/trombi/'.$filename),
@@ -431,6 +433,7 @@ class PersonnelController extends Controller
             }
         }
 
+        // TODO: Migrate code — DEFAULT.png lives in archive/legacy_app; move to storage/ after decommission
         $defaultPath = base_path('archive/legacy_app/images/user-specific/DEFAULT.png');
         if (File::exists($defaultPath)) {
             return response()->file($defaultPath, $noCache);

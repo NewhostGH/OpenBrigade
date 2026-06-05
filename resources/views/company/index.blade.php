@@ -18,6 +18,7 @@
     table-id="companyTable">
 
     @if(auth()->user()->hasPermission(29))
+        {{-- TODO: Migrate code --}}
         <a href="{{ url('/legacy/ins_company.php') }}" class="btn btn-sm btn-primary">
             <i class="fas fa-plus me-1"></i> Nouveau client
         </a>
@@ -46,6 +47,7 @@
         storage-key="companyColsV2"
         :current-order="request('order')"
         :row-actions="[
+            {{-- TODO: Migrate code --}}
             ['url' => '/legacy/upd_company.php?company={C_ID}', 'icon' => 'fas fa-edit', 'title' => 'Modifier'],
         ]"
         :show-select="false"
