@@ -26,8 +26,7 @@
         <i class="fas fa-print"></i>
     </button>
     <a class="btn btn-sm btn-success"
-       {{-- TODO: Migrate code --}}
-       href="{{ route('dashboard.legacy') }}?redirect={{ urlencode('ins_personnel.php?category=INT&suggestedcompany=-1') }}"
+       href="{{ route('personnel.create') }}"
        title="Ajouter du personnel">
         <i class="fa fa-user-plus"></i>
         <span class="d-none d-sm-inline ms-1">Ajouter</span>

@@ -101,6 +101,10 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.export.xls')->middleware('permission:0');
     Route::get('personnel/export/csv', [PersonnelController::class, 'exportCsv'])
         ->name('personnel.export.csv')->middleware('permission:0');
+    Route::get('personnel/create', [PersonnelController::class, 'create'])
+        ->name('personnel.create')->middleware('permission:1');
+    Route::post('personnel', [PersonnelController::class, 'store'])
+        ->name('personnel.store')->middleware('permission:1');
     Route::resource('personnel', PersonnelController::class)
         ->only(['index', 'show', 'edit', 'update'])
         ->middleware('permission:0');

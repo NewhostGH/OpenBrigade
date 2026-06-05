@@ -58,9 +58,8 @@
                         <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
                             @if (auth()->user()->hasPermission(1))
                                 <li>
-                                    {{-- TODO: Migrate code — ins_personnel.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ url('/legacy/ins_personnel.php?category=INT&suggestedcompany=-1') }}">
+                                        href="{{ route('personnel.create') }}">
                                         <i class="fas fa-user-plus fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Personnel
                                     </a>
                                 </li>

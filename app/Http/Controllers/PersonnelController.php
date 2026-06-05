@@ -790,6 +790,91 @@ class PersonnelController extends Controller
         return $query;
     }
 
+    public function create(): View
+    {
+        $sections  = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+        $groupes   = Groupe::query()->where('GP_ID', '>=', 0)->orderBy('GP_DESCRIPTION')->get(['GP_ID', 'GP_DESCRIPTION']);
+        $companies = DB::table('company')->orderBy('C_NAME')->get(['C_ID', 'C_NAME']);
+
+        return view('personnel.form', [
+            'personnel' => null,
+            'sections'  => $sections,
+            'groupes'   => $groupes,
+            'companies' => $companies,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'P_CIVILITE'        => 'nullable|integer',
+            'P_CODE'            => 'required|string|max:20|unique:pompier,P_CODE',
+            'P_PRENOM'          => 'required|string|max:25',
+            'P_PRENOM2'         => 'nullable|string|max:25',
+            'P_NOM'             => 'required|string|max:30',
+            'P_NOM_NAISSANCE'   => 'nullable|string|max:30',
+            'P_SEXE'            => 'nullable|in:M,F',
+            'P_GRADE'           => 'nullable|string|max:6',
+            'P_PROFESSION'      => 'nullable|string|max:6',
+            'P_STATUT'          => 'required|string|max:5',
+            'P_SECTION'         => 'nullable|integer|exists:section,S_ID',
+            'P_DATE_ENGAGEMENT' => 'nullable|date',
+            'P_FIN'             => 'nullable|date',
+            'P_ABBREGE'         => 'nullable|string|max:20',
+            'P_EMAIL'           => 'nullable|email|max:60',
+            'P_PHONE'           => 'nullable|string|max:20',
+            'P_PHONE2'          => 'nullable|string|max:20',
+            'P_ADDRESS'         => 'nullable|string|max:150',
+            'P_ZIP_CODE'        => 'nullable|string|max:6',
+            'P_CITY'            => 'nullable|string|max:30',
+            'P_PAYS'            => 'nullable|string|max:50',
+            'P_RELATION_PRENOM' => 'nullable|string|max:50',
+            'P_RELATION_NOM'    => 'nullable|string|max:50',
+            'P_RELATION_PHONE'  => 'nullable|string|max:20',
+            'P_RELATION_MAIL'   => 'nullable|email|max:100',
+            'P_BIRTHDATE'       => 'nullable|date',
+            'P_BIRTHPLACE'      => 'nullable|string|max:50',
+            'P_BIRTH_DEP'       => 'nullable|string|max:3',
+            'P_LICENCE'         => 'nullable|string|max:30',
+            'P_LICENCE_DATE'    => 'nullable|date',
+            'P_LICENCE_EXPIRY'  => 'nullable|date',
+            'GP_ID'             => 'nullable|integer',
+            'GP_ID2'            => 'nullable|integer',
+            'C_ID'              => 'nullable|integer|exists:company,C_ID',
+            'DATE_NPAI'         => 'nullable|date',
+            'OBSERVATION'       => 'nullable|string',
+            'photo_upload'      => 'nullable|image|max:4096',
+        ]);
+
+        $validated['P_HIDE']   = $request->boolean('P_HIDE');
+        $validated['P_NOSPAM'] = $request->boolean('P_NOSPAM');
+        $validated['NPAI']     = $request->boolean('NPAI');
+        $validated['SUSPENDU'] = $request->boolean('SUSPENDU');
+        $validated['P_OLD_MEMBER'] = 0;
+
+        unset($validated['photo_upload']);
+
+        $personnel = Personnel::create($validated);
+
+        if ($request->hasFile('photo_upload') && $request->file('photo_upload')->isValid()) {
+            $file      = $request->file('photo_upload');
+            $extension = $file->getClientOriginalExtension() ?: 'jpg';
+            $filename  = $personnel->P_ID . '_' . time() . '.' . $extension;
+            $destDir   = public_path('images/user-specific/trombi');
+
+            if (! is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+
+            $file->move($destDir, $filename);
+            $personnel->update(['P_PHOTO' => $filename]);
+        }
+
+        return redirect()
+            ->route('personnel.show', $personnel)
+            ->with('success', 'Personnel créé avec succès.');
+    }
+
     public function edit(Personnel $personnel): View
     {
         $sections = Section::query()
@@ -805,7 +890,7 @@ class PersonnelController extends Controller
             ->orderBy('C_NAME')
             ->get(['C_ID', 'C_NAME']);
 
-        return view('personnel.edit', [
+        return view('personnel.form', [
             'personnel' => $personnel,
             'sections'  => $sections,
             'groupes'   => $groupes,
