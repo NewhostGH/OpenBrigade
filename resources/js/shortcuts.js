@@ -8,29 +8,29 @@ function toggleShortcut(key, onDone) {
 }
 
 function addSiglet(key, label, url, icon) {
-    $('#navSiglets .siglets-hint').remove();
+    $('#navSiglets .ob-siglets-hint').remove();
     const $siglet = $(
-        `<a class="siglet" href="${url}" title="${label}" data-key="${key}">` +
+        `<a class="ob-siglet" href="${url}" title="${label}" data-key="${key}">` +
         (icon ? `<i class="fas fa-${icon}"></i> ` : '') +
         `<span>${label}</span>` +
-        `<button class="siglet-unpin" data-key="${key}" title="Désépingler" aria-label="Désépingler">×</button>` +
+        `<button class="ob-siglet-unpin" data-key="${key}" title="Désépingler" aria-label="Désépingler">×</button>` +
         `</a>`
     );
     $('#navSiglets').append($siglet);
 }
 
 function removeSiglet(key) {
-    $(`#navSiglets .siglet[data-key="${key}"]`).remove();
-    if ($('#navSiglets .siglet').length === 0) {
+    $(`#navSiglets .ob-siglet[data-key="${key}"]`).remove();
+    if ($('#navSiglets .ob-siglet').length === 0) {
         $('#navSiglets').append(
-            '<span class="siglets-hint">Épinglez des raccourcis depuis le menu latéral <i class="fas fa-thumbtack fa-xs"></i></span>'
+            '<span class="ob-siglets-hint">Épinglez des raccourcis depuis le menu latéral <i class="fas fa-thumbtack fa-xs"></i></span>'
         );
     }
 }
 
 $(document).ready(function () {
     // Pin an item from the sidebar
-    $(document).on('click', '.sidebar-pin-btn', function (e) {
+    $(document).on('click', '.ob-sidebar-pin-btn', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -43,11 +43,11 @@ $(document).ready(function () {
             $btn.attr('title', pinned ? 'Retirer du raccourci' : 'Épingler dans la barre');
 
             if (pinned) {
-                const $row  = $btn.closest('.sidebar-item-row');
-                const icon  = $row.find('.sidebar-item-icon').attr('class')
+                const $row  = $btn.closest('.ob-sidebar-item-row');
+                const icon  = $row.find('.ob-sidebar-item-icon').attr('class')
                     ?.match(/fa-([a-z0-9-]+)\s/)?.[1] ?? '';
-                const label = $row.find('.link-lateral').text().trim();
-                const url   = $row.find('.link-lateral').attr('href');
+                const label = $row.find('.ob-link-lateral').text().trim();
+                const url   = $row.find('.ob-link-lateral').attr('href');
                 addSiglet(key, label, url, icon);
             } else {
                 removeSiglet(key);
@@ -56,7 +56,7 @@ $(document).ready(function () {
     });
 
     // Unpin from the navbar × button
-    $(document).on('click', '.siglet-unpin', function (e) {
+    $(document).on('click', '.ob-siglet-unpin', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -64,7 +64,7 @@ $(document).ready(function () {
 
         toggleShortcut(key, function () {
             removeSiglet(key);
-            $(`.sidebar-pin-btn[data-key="${key}"]`)
+            $(`.ob-sidebar-pin-btn[data-key="${key}"]`)
                 .removeClass('pinned')
                 .attr('title', 'Épingler dans la barre');
         });

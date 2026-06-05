@@ -26,13 +26,13 @@
 
         {{-- ── Activities per month ─────────────────────────────────────── --}}
         <div class="col-lg-6">
-            <div class="widget-card">
-                <div class="widget-card-header">
-                    <div class="widget-card-title">
+            <div class="ob-widget-card">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title">
                         <i class="fas fa-chart-bar"></i> Activités par mois — {{ $year }}
                     </div>
                 </div>
-                <div class="widget-card-body">
+                <div class="ob-widget-card-body">
                     @php
                         $monthLabels = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
                         $maxEv = max(array_merge($eventsData, [1]));
@@ -53,13 +53,13 @@
 
         {{-- ── Participants per month ───────────────────────────────────── --}}
         <div class="col-lg-6">
-            <div class="widget-card">
-                <div class="widget-card-header">
-                    <div class="widget-card-title">
+            <div class="ob-widget-card">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title">
                         <i class="fas fa-users"></i> Participants par mois — {{ $year }}
                     </div>
                 </div>
-                <div class="widget-card-body">
+                <div class="ob-widget-card-body">
                     @php $maxPart = max(array_merge($participantData, [1])); @endphp
                     <div class="d-flex align-items-end gap-1" style="height:120px">
                         @foreach($participantData as $i => $val)
@@ -77,13 +77,13 @@
 
         {{-- ── New members per year ─────────────────────────────────────── --}}
         <div class="col-lg-6">
-            <div class="widget-card">
-                <div class="widget-card-header">
-                    <div class="widget-card-title"><i class="fas fa-user-plus"></i> Nouveaux membres (5 ans)</div>
+            <div class="ob-widget-card">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title"><i class="fas fa-user-plus"></i> Nouveaux membres (5 ans)</div>
                 </div>
-                <div class="widget-card-body">
+                <div class="ob-widget-card-body">
                     @if(empty($newMembersByYear))
-                        <span class="widget-empty">Aucune donnée.</span>
+                        <span class="ob-widget-empty">Aucune donnée.</span>
                     @else
                         <table class="table table-sm mb-0">
                             <tbody>
@@ -107,13 +107,13 @@
 
         {{-- ── Top participants ─────────────────────────────────────────── --}}
         <div class="col-lg-6">
-            <div class="widget-card">
-                <div class="widget-card-header">
-                    <div class="widget-card-title"><i class="fas fa-trophy"></i> Top participants — {{ $year }}</div>
+            <div class="ob-widget-card">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title"><i class="fas fa-trophy"></i> Top participants — {{ $year }}</div>
                 </div>
-                <div class="widget-card-body p-0">
+                <div class="ob-widget-card-body p-0">
                     @if($topParticipants->isEmpty())
-                        <p class="widget-empty p-3">Aucune donnée.</p>
+                        <p class="ob-widget-empty p-3">Aucune donnée.</p>
                     @else
                         <table class="table table-sm mb-0">
                             <tbody>

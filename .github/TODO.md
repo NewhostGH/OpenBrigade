@@ -105,7 +105,13 @@ DONE
 - [x] All 3 new module CSS files wired into `app.css`.
 
 ### D. CSS prefix consistency (rule 4)
-- [ ] Rename custom classes/ids in `dashboard.css`, `navbar.css`, `login.css`, `sidebar.css` and the inline `pers-*` classes to the `ob-` prefix with module sub-namespace (`ob-dash-*`, `ob-nav-*`, `ob-login-*`, `ob-pers-*`). Update all referencing Blade/JS. (Large mechanical change — do per module, one commit each, verify rendering after each.)
+> Method: collision-safe Perl rename `s/(?<![\w-])(TOKEN|...)(?![\w-])/ob-$1/g` over CSS+Blade+JS per module. Lookbehind/lookahead prevents double-prefixing and protects CSS design tokens (`--sidebar-*`, `--siglet-*`) and prefix-overlapping names. Bootstrap classes (`nav-item`, `nav-link`, `badge`, `dropdown-*`) are excluded.
+> **Caveat:** the lookbehind does NOT exclude `$`, so a JS variable sharing a token name (e.g. jQuery `$siglet`) gets wrongly renamed to an invalid identifier (`$ob-siglet`). Always run `npm run build` after a module — Vite catches these. Fix by reverting just the variable name (class strings stay prefixed).
+> Verified per module: no `ob-ob-`, no bare classes, `view:cache` compiles, `npm run build` passes.
+- [x] **login** — `login.css` + `auth/login.blade.php` (15 classes → `ob-login-*`).
+- [x] **sidebar** — `sidebar.css`, `layout.css`, `sidebar.js`, `shortcuts.js`, `layout/sidebar.blade.php` (24 classes → `ob-*`; `--sidebar-*` design tokens preserved).
+- [x] **navbar** — `navbar.css`, `layout.css`, `shortcuts.js`, `layout/navbar.blade.php` (30 classes → `ob-*`; BS `nav-item` preserved; generic `name` → `ob-user-name`).
+- [x] **dashboard** — `dashboard.css` (91 classes) + 33 files (20 dashboard widgets + 13 other feature views). Three-tier rename: `widget-card*`/`widget-empty` → `ob-widget-*` (reusable card, 13 feature views); `duty-*` → `ob-duty-*` (row pattern shared by dispo + garde + dashboard); everything else → `ob-dash-*`. `badge-danger/warning/info/success` (text-color only, dashboard alert widget) → `ob-dash-badge-*`, distinct from `ob-badge-*` pill badges. No collisions — Perl lookbehind/lookahead; `npm run build` ✓.
 
 ### E. Legacy reference flagging (rule 5)
 - [ ] Add `{{-- TODO: Migrate code --}}` / `// TODO: Migrate code` to every legacy `/legacy/*.php`, `*.php?...`, and `/trombinoscope/...` reference across views, controllers, services, and JS (~60+ sites; see `grep -rn "/legacy/\|\.php?"`).

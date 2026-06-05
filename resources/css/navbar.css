@@ -1,5 +1,5 @@
 /* ── Top navbar ────────────────────────────────────────────────────────── */
-.navbar-ebrigade {
+.ob-navbar-ebrigade {
     background-color: var(--brand-bg);
     color:            var(--brand-text-active);
     height:           var(--navbar-height);
@@ -8,52 +8,52 @@
     border-bottom:    1px solid var(--sidebar-border);
 }
 
-.nodowntoggle::after {
+.ob-nodowntoggle::after {
     display: none;
 }
 
-.custom-toggler {
+.ob-custom-toggler {
     border-color: var(--brand-text-active);
     margin: 0;
 }
 
-.hover-white:hover {
+.ob-hover-white:hover {
     color: var(--brand-text-active);
 }
 
-.navtop-hover:hover {
+.ob-navtop-hover:hover {
     background-color: var(--brand-bg-hover);
     border-radius:    var(--radius-sm);
     color:            var(--brand-text-active);
 }
 
-.text-violet {
+.ob-text-violet {
     color: var(--brand-text);
 }
 
-.nav-text {
+.ob-nav-text {
     color: var(--brand-text);
 }
 
-.nav-text:hover {
+.ob-nav-text:hover {
     text-decoration: none;
 }
 
-.nav-left {
+.ob-nav-left {
     display:        flex;
     flex-direction: row;
     align-items:    center;
     height:         var(--navbar-height);
 }
 
-.nav-center {
+.ob-nav-center {
     display:         flex;
     justify-content: center;
     align-items:     center;
     height:          var(--navbar-height);
 }
 
-.nav-right {
+.ob-nav-right {
     display:         flex;
     align-items:     center;
     justify-content: flex-end;
@@ -61,35 +61,35 @@
     flex:            0 0 auto; /* override Bootstrap .navbar-collapse { flex-grow: 1 } */
 }
 
-.nav-icon {
+.ob-nav-icon {
     justify-content: center;
     display:         flex;
     height:          24px;
     align-items:     center;
 }
 
-.margin-li {
+.ob-margin-li {
     margin-bottom: 2px;
     font-size:     var(--font-size-nav);
 }
 
-.logo-small {
+.ob-logo-small {
     left:    -5px;
     padding: 3px 8px;
 }
 
-.logo-small:hover {
+.ob-logo-small:hover {
     background-color: var(--brand-bg-hover);
     border-radius:    var(--radius-sm);
 }
 
-.button-left,
-.button-right {
+.ob-button-left,
+.ob-button-right {
     border: none;
 }
 
-.nav-border,
-.nav-border2 {
+.ob-nav-border,
+.ob-nav-border2 {
     border-left: 1px var(--brand-separator) solid;
     position:    absolute;
     right:       4%;
@@ -99,7 +99,7 @@
 }
 
 /* ── Siglets (pinned shortcuts) ────────────────────────────────────────── */
-.nav-siglets {
+.ob-nav-siglets {
     display:      flex;
     align-items:  center;
     gap:          6px;
@@ -110,11 +110,11 @@
     scrollbar-width: none;
 }
 
-.nav-siglets::-webkit-scrollbar {
+.ob-nav-siglets::-webkit-scrollbar {
     display: none;
 }
 
-.siglet {
+.ob-siglet {
     display:         inline-flex;
     align-items:     center;
     gap:             6px;
@@ -129,18 +129,18 @@
     transition:      background var(--transition-fast), color var(--transition-fast);
 }
 
-.siglet:hover {
+.ob-siglet:hover {
     background:      var(--siglet-bg-hover);
     color:           var(--brand-text-active);
     text-decoration: none;
 }
 
-.siglet i {
+.ob-siglet i {
     font-size: var(--font-size-xs);
     opacity:   0.85;
 }
 
-.siglets-hint {
+.ob-siglets-hint {
     font-size:   var(--font-size-xs);
     color:       var(--siglet-hint-color);
     font-style:  italic;
@@ -148,7 +148,7 @@
     white-space: nowrap;
 }
 
-.siglet-unpin {
+.ob-siglet-unpin {
     display:         none;
     align-items:     center;
     justify-content: center;
@@ -164,28 +164,28 @@
     transition:      opacity var(--transition-fast), color var(--transition-fast);
 }
 
-.siglet:hover .siglet-unpin {
+.ob-siglet:hover .ob-siglet-unpin {
     display: flex;
 }
 
-.siglet-unpin:hover {
+.ob-siglet-unpin:hover {
     opacity: 1;
     color:   var(--accent);
 }
 
 /* ── User menu ─────────────────────────────────────────────────────────── */
-.user-div {
+.ob-user-div {
     padding:     0.3rem 0.5rem;
     display:     flex;
     align-items: center;
 }
 
-.user-infos {
+.ob-user-infos {
     display:      inline-block;
     margin-right: 8px;
 }
 
-.user-infos p {
+.ob-user-infos p {
     display:      block;
     margin:       0;
     padding:      0;
@@ -193,18 +193,18 @@
     line-height:  1.3em;
 }
 
-.user-infos p.name {
+.ob-user-infos p.ob-user-name {
     font-weight: bold;
     font-size:   var(--font-size-sm);
     color:       var(--brand-text);
 }
 
-.user-picture {
+.ob-user-picture {
     display:     inline-flex;
     align-items: center;
 }
 
-.profil-picture {
+.ob-profil-picture {
     height:        29px;
     width:         26px;
     overflow:      hidden;
@@ -214,34 +214,34 @@
 }
 
 /* ── Navbar dropdowns ──────────────────────────────────────────────────── */
-.nav-label {
+.ob-nav-label {
     margin:    0 4px;
     font-size: var(--font-size-nav);
 }
 
-.nav-chevron {
+.ob-nav-chevron {
     font-size:  0.6em;
     opacity:    0.7;
     transition: transform var(--transition-med);
 }
 
-.nav-item .dropdown-toggle.show .nav-chevron {
+.nav-item .dropdown-toggle.show .ob-nav-chevron {
     transform: rotate(180deg);
 }
 
-.nav-link-active {
+.ob-nav-link-active {
     background-color: var(--brand-bg-active);
     border-radius:    var(--radius-sm);
     color:            var(--brand-text-active) !important;
 }
 
-.nav-link-active .nav-label,
-.nav-link-active .nav-chevron,
-.nav-link-active i {
+.ob-nav-link-active .ob-nav-label,
+.ob-nav-link-active .ob-nav-chevron,
+.ob-nav-link-active i {
     color: var(--brand-text-active) !important;
 }
 
-.nav-dropdown-menu {
+.ob-nav-dropdown-menu {
     background-color: var(--brand-bg);
     border:           1px solid var(--brand-border);
     border-radius:    var(--radius-md);
@@ -250,7 +250,7 @@
     margin-top:       2px !important;
 }
 
-.nav-dropdown-menu .dropdown-item {
+.ob-nav-dropdown-menu .dropdown-item {
     color:       var(--brand-text);
     font-size:   var(--font-size-nav-item);
     padding:     6px 16px;
@@ -260,30 +260,30 @@
     transition:  background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.nav-dropdown-menu .dropdown-item:hover,
-.nav-dropdown-menu .dropdown-item:focus {
+.ob-nav-dropdown-menu .dropdown-item:hover,
+.ob-nav-dropdown-menu .dropdown-item:focus {
     background-color: var(--brand-bg-hover);
     color:            var(--brand-text-active);
 }
 
-.nav-dropdown-menu .dropdown-item.active {
+.ob-nav-dropdown-menu .dropdown-item.active {
     background-color: var(--brand-bg-active);
     color:            var(--brand-text-active);
     font-weight:      600;
 }
 
-.nav-dropdown-menu .dropdown-divider {
+.ob-nav-dropdown-menu .dropdown-divider {
     border-color: var(--brand-border);
     margin:       4px 0;
 }
 
-.nav-item-icon {
+.ob-nav-item-icon {
     width:      16px;
     text-align: center;
     opacity:    0.8;
 }
 
-.nav-dropdown-menu .dropdown-item:hover .nav-item-icon,
-.nav-dropdown-menu .dropdown-item.active .nav-item-icon {
+.ob-nav-dropdown-menu .dropdown-item:hover .ob-nav-item-icon,
+.ob-nav-dropdown-menu .dropdown-item.active .ob-nav-item-icon {
     opacity: 1;
 }

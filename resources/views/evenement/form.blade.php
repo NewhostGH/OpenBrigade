@@ -28,15 +28,15 @@
 
 <div class="mx-3 mt-3" style="max-width:760px;">
 
-    <div class="widget-card">
-        <div class="widget-card-header">
-            <div class="widget-card-title">
+    <div class="ob-widget-card">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
                 <i class="fas fa-{{ $isEdit ? 'edit' : 'plus' }} me-1"></i>
                 {{ $isEdit ? 'Modifier l\'activité' : 'Nouvelle activité' }}
             </div>
         </div>
 
-        <div class="widget-card-body">
+        <div class="ob-widget-card-body">
 
             @if ($errors->any())
                 <div class="alert alert-danger py-2 mb-3">
@@ -235,18 +235,18 @@
                 </div>
 
             </form>
-        </div>{{-- end widget-card-body --}}
-    </div>{{-- end widget-card --}}
+        </div>{{-- end ob-widget-card-body --}}
+    </div>{{-- end ob-widget-card --}}
 
     {{-- ── Delete (edit only) ────────────────────────────────────────────────── --}}
     @if ($isEdit && auth()->user()->hasPermission(19))
-        <div class="widget-card mt-3 border-danger" style="border-color:var(--bs-danger) !important;">
-            <div class="widget-card-header text-danger">
-                <div class="widget-card-title">
+        <div class="ob-widget-card mt-3 border-danger" style="border-color:var(--bs-danger) !important;">
+            <div class="ob-widget-card-header text-danger">
+                <div class="ob-widget-card-title">
                     <i class="fas fa-trash me-1"></i> Zone dangereuse
                 </div>
             </div>
-            <div class="widget-card-body">
+            <div class="ob-widget-card-body">
                 <p class="text-muted small mb-2">
                     La suppression est définitive et retire également les participations, véhicules et matériels associés.
                 </p>

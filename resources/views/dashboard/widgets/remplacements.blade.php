@@ -1,20 +1,20 @@
 @if ($remplacements['count'] > 0)
-<div class="widget-card">
-    <div class="widget-card-header">
-        <div class="widget-card-title">
+<div class="ob-widget-card">
+    <div class="ob-widget-card-header">
+        <div class="ob-widget-card-title">
             <i class="fas fa-exchange-alt"></i> Remplacements
         </div>
-        <a class="widget-card-link" href="{{ url('/legacy/remplacements.php') }}">
+        <a class="ob-widget-card-link" href="{{ url('/legacy/remplacements.php') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>
-    <div class="widget-card-body">
-        <div class="alert-item-row">
-            <div class="alert-item-info">
-                <div class="alert-item-label">Remplacements de garde</div>
-                <div class="alert-item-sub">{{ $remplacements['type'] }}</div>
+    <div class="ob-widget-card-body">
+        <div class="ob-dash-alert-item-row">
+            <div class="ob-dash-alert-item-info">
+                <div class="ob-dash-alert-item-label">Remplacements de garde</div>
+                <div class="ob-dash-alert-item-sub">{{ $remplacements['type'] }}</div>
             </div>
-            <span class="alert-badge badge-warning">{{ $remplacements['count'] }}</span>
+            <span class="ob-dash-alert-badge ob-dash-badge-warning">{{ $remplacements['count'] }}</span>
         </div>
     </div>
 </div>

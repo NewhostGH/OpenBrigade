@@ -3,14 +3,14 @@
 @section('title', 'Tableau de bord – ' . config('app.name'))
 
 @section('content')
-<div class="dashboard-wrap">
+<div class="ob-dash-wrap">
 
     {{-- ── Stats KPI bar ─────────────────────────────────────────────────── --}}
     @include('dashboard.widgets.stats')
 
     {{-- ── Alert banners ────────────────────────────────────────────────── --}}
     @if ($passwordExpiry)
-        <div class="dash-alert {{ $passwordExpiry['expired'] ? 'dash-alert-danger' : 'dash-alert-warning' }}">
+        <div class="ob-dash-alert {{ $passwordExpiry['expired'] ? 'ob-dash-alert-danger' : 'ob-dash-alert-warning' }}">
             <i class="fas fa-key"></i>
             @if ($passwordExpiry['expired'])
                 Votre mot de passe a <strong>expiré</strong>.
@@ -23,7 +23,7 @@
     @endif
 
     @if (!empty($competenceAlerts))
-        <div class="dash-alert dash-alert-warning">
+        <div class="ob-dash-alert ob-dash-alert-warning">
             <i class="fas fa-certificate"></i>
             Expiration prochaine de vos compétences :
             @foreach ($competenceAlerts as $c)
@@ -38,7 +38,7 @@
     @endif
 
     {{-- ── 3-column widget grid ──────────────────────────────────────────── --}}
-    <div class="dash-columns">
+    <div class="ob-dash-columns">
 
         {{-- Column 1: profil + astreinte + section + plannings + alertes financières --}}
         <div>

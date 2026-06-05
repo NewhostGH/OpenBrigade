@@ -9,38 +9,38 @@
     @vite('resources/css/app.css')
 </head>
 
-<body class="login-body">
-<div class="container-fluid login-shell">
+<body class="ob-login-body">
+<div class="container-fluid ob-login-shell">
     <div class="row min-vh-100">
 
         {{-- ── Left branding panel ─────────────────────────────────────────── --}}
-        <aside class="col-lg-8 d-flex flex-column justify-content-center align-items-center login-left px-4 py-5">
+        <aside class="col-lg-8 d-flex flex-column justify-content-center align-items-center ob-login-left px-4 py-5">
             <img src="{{ asset('images/logo.png') }}"
                  alt="{{ config('app.name') }}"
                  style="max-height:80px; max-width:90%;"
                  onerror="this.style.display='none'">
-            <p class="login-left-title mt-4">
+            <p class="ob-login-left-title mt-4">
                 Organisez le personnel et les activités avec {{ config('app.name') }}
             </p>
         </aside>
 
         {{-- ── Right sign-in panel ─────────────────────────────────────────── --}}
-        <section class="col-lg-4 d-flex align-items-center justify-content-center px-4 py-5 login-right">
-            <div id="authBox" class="login-card">
+        <section class="col-lg-4 d-flex align-items-center justify-content-center px-4 py-5 ob-login-right">
+            <div id="authBox" class="ob-login-card">
 
                 {{-- Sign-in form --}}
-                <div class="signin-panel">
+                <div class="ob-login-signin-panel">
                     <div class="mb-4">
-                        <div class="login-brand-title">Bienvenue</div>
-                        <div class="login-brand-sub">Connectez-vous à {{ config('app.name') }}</div>
+                        <div class="ob-login-brand-title">Bienvenue</div>
+                        <div class="ob-login-brand-sub">Connectez-vous à {{ config('app.name') }}</div>
                     </div>
 
                     @if (session('success'))
-                        <div class="alert alert-success login-alert mb-3">{{ session('success') }}</div>
+                        <div class="alert alert-success ob-login-alert mb-3">{{ session('success') }}</div>
                     @endif
 
                     @if ($errors->has('login'))
-                        <div class="alert alert-danger login-alert mb-3" role="alert">
+                        <div class="alert alert-danger ob-login-alert mb-3" role="alert">
                             <i class="fas fa-exclamation-circle me-1"></i>
                             {{ $errors->first('login') }}
                         </div>
@@ -52,7 +52,7 @@
                         <div class="mb-3">
                             <label for="login" class="form-label">Identifiant ou adresse e-mail</label>
                             <input id="login" type="text" name="login"
-                                class="form-control login-input @error('login') is-invalid @enderror"
+                                class="form-control ob-login-input @error('login') is-invalid @enderror"
                                 value="{{ old('login') }}"
                                 required autofocus autocomplete="username">
                             @error('login')
@@ -70,7 +70,7 @@
                                 </a>
                             </div>
                             <input id="password" type="password" name="password"
-                                class="form-control login-input mt-1 @error('password') is-invalid @enderror"
+                                class="form-control ob-login-input mt-1 @error('password') is-invalid @enderror"
                                 required autocomplete="current-password">
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -86,20 +86,20 @@
                         </div>
 
                         {{-- Inline validation message (shown by JS without page reload) --}}
-                        <div id="signinError" class="alert alert-danger login-alert mb-3 d-none" role="alert">
+                        <div id="signinError" class="alert alert-danger ob-login-alert mb-3 d-none" role="alert">
                             <i class="fas fa-exclamation-circle me-1"></i>
                             Veuillez remplir l'identifiant et le mot de passe.
                         </div>
 
-                        <button type="submit" class="btn btn-login">Se connecter</button>
+                        <button type="submit" class="btn ob-login-btn">Se connecter</button>
                     </form>
                 </div>
 
                 {{-- Forgot-password panel --}}
-                <div class="forgot-panel">
+                <div class="ob-login-forgot-panel">
                     <div class="mb-3">
-                        <div class="login-brand-title">Mot de passe oublié ?</div>
-                        <p class="login-brand-sub mt-1 mb-0">
+                        <div class="ob-login-brand-title">Mot de passe oublié ?</div>
+                        <p class="ob-login-brand-sub mt-1 mb-0">
                             Contactez votre administrateur pour réinitialiser votre mot de passe,
                             ou utilisez la page <a href="{{ url('/legacy/change_password.php') }}">Changer mon mot de passe</a>
                             si vous êtes déjà connecté.
@@ -111,7 +111,7 @@
                     </button>
                 </div>
 
-                <div class="login-footer">
+                <div class="ob-login-footer">
                     {{ date('Y') }} — {{ config('app.name') }}
                 </div>
 
@@ -131,11 +131,11 @@
 
     showForgot.addEventListener('click', function (e) {
         e.preventDefault();
-        authBox.classList.add('forgot-on');
+        authBox.classList.add('ob-login-forgot-on');
     });
 
     showSignin.addEventListener('click', function () {
-        authBox.classList.remove('forgot-on');
+        authBox.classList.remove('ob-login-forgot-on');
     });
 
     signinForm.addEventListener('submit', function (e) {

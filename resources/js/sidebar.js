@@ -1,34 +1,93 @@
 import $ from 'jquery';
 
 // ── Sidebar collapse / de-collapse ──────────────────────────────────────────
-// Sub-menu visibility (.div-lateral) is handled by a CSS rule on
-// .col-lateral.collapsed — Bootstrap's own collapse state is preserved
+// Sub-menu visibility (.ob-div-lateral) is handled by a CSS rule on
+// .ob-col-lateral.collapsed — Bootstrap's own collapse state is preserved
 // across cycles so no manual .show()/.hide() on sub-menus is needed.
 $(document).ready(function () {
     if (sessionStorage.getItem('isCollapsed') == 1) {
-        $('.col-lateral').addClass('collapsed');
+        $('.ob-col-lateral').addClass('collapsed');
         $('#space-left').addClass('collapsed');
-        $('.navbar-lateral').css({ width: 49, overflow: 'hidden' });
-        $('.collapse-menu').hide();
-        $('.decollapse-menu').show();
+        $('.ob-navbar-lateral').css({ width: 49, overflow: 'hidden' });
+        $('.ob-collapse-menu').hide();
+        $('.ob-decollapse-menu').show();
     }
 
-    $('.collapse-menu').on('click', function () {
+    $('.ob-collapse-menu').on('click', function () {
         sessionStorage.setItem('isCollapsed', 1);
-        $('.col-lateral').addClass('collapsed');
+        $('.ob-col-lateral').addClass('collapsed');
         $('#space-left').addClass('collapsed');
-        $('.navbar-lateral').animate({ width: 49 }, 350);
-        $('.collapse-menu').hide();
-        $('.decollapse-menu').show();
+        $('.ob-navbar-lateral').animate({ width: 49 }, 350);
+        $('.ob-collapse-menu').hide();
+        $('.ob-decollapse-menu').show();
     });
 
-    $('.decollapse-menu').on('click', function () {
+    $('.ob-decollapse-menu').on('click', function () {
         sessionStorage.setItem('isCollapsed', 0);
-        $('.col-lateral').removeClass('collapsed');
+        $('.ob-col-lateral').removeClass('collapsed');
         $('#space-left').removeClass('collapsed');
-        $('.navbar-lateral').animate({ width: 220 }, 350);
-        $('.decollapse-menu').hide();
-        $('.collapse-menu').show();
+        $('.ob-navbar-lateral').animate({ width: 220 }, 350);
+        $('.ob-decollapse-menu').hide();
+        $('.ob-collapse-menu').show();
+    });
+
+    // ── Flyout sub-menus when collapsed ──────────────────────────────────────
+    // Hovering a group icon floats its sub-menu out to the right. The sidebar
+    // clips its overflow, so the panel escapes via position:fixed (top/left set
+    // here). The panel stays a DOM descendant of the group <li>, so moving onto
+    // it does not trigger the group's mouseleave.
+    const colLateral = document.querySelector('.ob-col-lateral');
+    const navLateral = document.querySelector('.ob-navbar-lateral');
+
+    function sidebarCollapsed() {
+        return colLateral !== null && colLateral.classList.contains('collapsed');
+    }
+
+    document.querySelectorAll('.ob-item-lateral').forEach(function (group) {
+        const submenu = group.querySelector('.ob-div-lateral');
+        if (!submenu) return;
+
+        group.addEventListener('mouseenter', function () {
+            if (!sidebarCollapsed()) return;
+            // Anchor to the *visible* sidebar (.ob-navbar-lateral). The parent
+            // .ob-col-lateral is shifted -100px off-screen with the nav pushed
+            // +100px back (see layout.css), so its rect is not the visible edge.
+            const bar    = navLateral.getBoundingClientRect();
+            const row    = group.getBoundingClientRect();
+            const margin = 8;
+
+            // Reveal first so we can measure the menu's natural height.
+            submenu.style.left      = bar.right + 'px';
+            submenu.style.height    = 'auto';
+            submenu.style.maxHeight = '';
+            submenu.style.setProperty('display', 'block', 'important');
+            submenu.classList.add('ob-flyout');
+
+            const fullHeight = submenu.offsetHeight;
+            const available  = window.innerHeight - margin * 2;
+
+            if (fullHeight > available) {
+                // Taller than the viewport — pin to top and scroll inside.
+                submenu.style.top       = margin + 'px';
+                submenu.style.maxHeight = available + 'px';
+            } else {
+                // Fits — align with the icon, nudged up if it would overflow bottom.
+                let top = row.top;
+                if (top + fullHeight + margin > window.innerHeight) {
+                    top = window.innerHeight - fullHeight - margin;
+                }
+                submenu.style.top = Math.max(margin, top) + 'px';
+            }
+        });
+
+        group.addEventListener('mouseleave', function () {
+            submenu.classList.remove('ob-flyout');
+            submenu.style.removeProperty('display');
+            submenu.style.top       = '';
+            submenu.style.left      = '';
+            submenu.style.height    = '';
+            submenu.style.maxHeight = '';
+        });
     });
 });
 
@@ -64,11 +123,11 @@ $(document).ready(function () {
     // Capture original label text and Bootstrap show-state ONCE, before any
     // search mutation. Stored on the element itself to avoid stale closures.
 
-    const groups = Array.from(document.querySelectorAll('.item-lateral'));
+    const groups = Array.from(document.querySelectorAll('.ob-item-lateral'));
 
     groups.forEach(function (group) {
-        const collapseEl = group.querySelector('.div-lateral');
-        const labelEl    = group.querySelector('.dropdown-lateral > span');
+        const collapseEl = group.querySelector('.ob-div-lateral');
+        const labelEl    = group.querySelector('.ob-dropdown-lateral > span');
 
         // Save original group label text (so we can restore highlights)
         if (labelEl) {
@@ -79,8 +138,8 @@ $(document).ready(function () {
         group._wasOpen = collapseEl ? collapseEl.classList.contains('show') : false;
 
         // Save each item's original label text
-        group.querySelectorAll('.sidebar-item-row').forEach(function (row) {
-            const link = row.querySelector('.link-lateral');
+        group.querySelectorAll('.ob-sidebar-item-row').forEach(function (row) {
+            const link = row.querySelector('.ob-link-lateral');
             if (link) {
                 // Store only the text nodes (ignore the icon HTML)
                 row._originalLabel = link.textContent.trim();
@@ -91,7 +150,7 @@ $(document).ready(function () {
     // ── Inject empty-state placeholder ──────────────────────────────────────
     const navList = document.querySelector('#navLateral');
     const emptyEl = document.createElement('li');
-    emptyEl.className = 'sidebar-search-empty';
+    emptyEl.className = 'ob-sidebar-search-empty';
     emptyEl.textContent = 'Aucun résultat';
     navList.appendChild(emptyEl);
 
@@ -108,8 +167,8 @@ $(document).ready(function () {
             // ── Restore everything to its original state ────────────────────
             emptyEl.style.display = 'none';
             groups.forEach(function (group) {
-                const collapseEl = group.querySelector('.div-lateral');
-                const labelEl    = group.querySelector('.dropdown-lateral > span');
+                const collapseEl = group.querySelector('.ob-div-lateral');
+                const labelEl    = group.querySelector('.ob-dropdown-lateral > span');
 
                 // Remove visibility overrides
                 group.style.display = '';
@@ -120,9 +179,9 @@ $(document).ready(function () {
                 }
 
                 // Restore each item
-                group.querySelectorAll('.sidebar-item-row').forEach(function (row) {
+                group.querySelectorAll('.ob-sidebar-item-row').forEach(function (row) {
                     row.style.display = '';
-                    const link = row.querySelector('.link-lateral');
+                    const link = row.querySelector('.ob-link-lateral');
                     if (link && row._originalLabel !== undefined) {
                         // Reconstruct link: preserve icon element, restore text node
                         const icon = link.querySelector('i');
@@ -150,22 +209,22 @@ $(document).ready(function () {
         let   anyGroupShown = false;
 
         groups.forEach(function (group) {
-            const collapseEl  = group.querySelector('.div-lateral');
-            const labelEl     = group.querySelector('.dropdown-lateral > span');
+            const collapseEl  = group.querySelector('.ob-div-lateral');
+            const labelEl     = group.querySelector('.ob-dropdown-lateral > span');
             const groupLabel  = (group._originalLabel || '').toLowerCase();
             const groupMatches = groupLabel.includes(q);
 
             let anyItemShown = false;
 
             // Filter individual items
-            group.querySelectorAll('.sidebar-item-row').forEach(function (row) {
+            group.querySelectorAll('.ob-sidebar-item-row').forEach(function (row) {
                 const itemLabel   = (row._originalLabel || '').toLowerCase();
                 const itemMatches = groupMatches || itemLabel.includes(q);
 
                 row.style.display = itemMatches ? '' : 'none';
 
                 // Highlight matched text in item label
-                const link = row.querySelector('.link-lateral');
+                const link = row.querySelector('.ob-link-lateral');
                 if (link && row._originalLabel !== undefined) {
                     const icon = link.querySelector('i') ? link.querySelector('i').cloneNode(true) : null;
                     link.innerHTML = '';
@@ -228,7 +287,7 @@ $(document).ready(function () {
 
     // If the sidebar is collapsed when the user focuses the search, expand it
     searchInput.addEventListener('focus', function () {
-        const decollapseBtn = document.querySelector('.decollapse-menu');
+        const decollapseBtn = document.querySelector('.ob-decollapse-menu');
         if (decollapseBtn && decollapseBtn.style.display !== 'none') {
             decollapseBtn.click();
         }

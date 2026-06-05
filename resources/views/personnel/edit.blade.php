@@ -11,10 +11,10 @@
 ]"/>
 
 <div class="mx-3 mt-3">
-<div class="widget-card">
+<div class="ob-widget-card">
 
-    <div class="widget-card-header">
-        <div class="widget-card-title">
+    <div class="ob-widget-card-header">
+        <div class="ob-widget-card-title">
             <i class="fas fa-edit"></i>
             Modifier — {{ strtoupper($personnel->P_NOM) }} {{ $personnel->P_PRENOM }}
         </div>
@@ -23,7 +23,7 @@
         </a>
     </div>
 
-    <div class="widget-card-body">
+    <div class="ob-widget-card-body">
 
     <form method="POST" action="{{ route('personnel.update', $personnel) }}"
           enctype="multipart/form-data" id="editForm">
@@ -572,8 +572,8 @@
         </div>{{-- /flex row --}}
     </form>
 
-    </div>{{-- /widget-card-body --}}
-</div>{{-- /widget-card --}}
+    </div>{{-- /ob-widget-card-body --}}
+</div>{{-- /ob-widget-card --}}
 </div>{{-- /mx-3 mt-3 --}}
 
 @endsection

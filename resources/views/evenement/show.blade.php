@@ -12,9 +12,9 @@
 <div class="mx-3 mt-3">
 
     {{-- ── Header card ───────────────────────────────────────────────────── --}}
-    <div class="widget-card mb-3">
-        <div class="widget-card-header">
-            <div class="widget-card-title">
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
                 <i class="fas fa-calendar-alt"></i>
                 {{ $event->E_LIBELLE ?? $event->E_CODE }}
                 @if($event->E_CANCELED)
@@ -37,7 +37,7 @@
                 </a>
             </div>
         </div>
-        <div class="widget-card-body">
+        <div class="ob-widget-card-body">
             <div class="row g-3">
                 <div class="col-sm-6">
                     <dl class="row mb-0" style="font-size:var(--font-size-sm)">
@@ -104,16 +104,16 @@
 
     {{-- ── Tab: Participants ──────────────────────────────────────────────── --}}
     @if($tab === 'personnel')
-        <div class="widget-card">
-            <div class="widget-card-header">
-                <div class="widget-card-title"><i class="fas fa-users"></i> Participants</div>
+        <div class="ob-widget-card">
+            <div class="ob-widget-card-header">
+                <div class="ob-widget-card-title"><i class="fas fa-users"></i> Participants</div>
                 <span style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                     {{ count($participants) }} inscrits
                 </span>
             </div>
-            <div class="widget-card-body p-0">
+            <div class="ob-widget-card-body p-0">
                 @if(count($participants) === 0)
-                    <p class="widget-empty p-3">Aucun participant.</p>
+                    <p class="ob-widget-empty p-3">Aucun participant.</p>
                 @else
                     <table class="table table-sm table-hover mb-0 align-middle">
                         <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
@@ -161,13 +161,13 @@
 
     {{-- ── Tab: Véhicules ────────────────────────────────────────────────── --}}
     @if($tab === 'vehicule')
-        <div class="widget-card">
-            <div class="widget-card-header">
-                <div class="widget-card-title"><i class="fas fa-truck"></i> Véhicules</div>
+        <div class="ob-widget-card">
+            <div class="ob-widget-card-header">
+                <div class="ob-widget-card-title"><i class="fas fa-truck"></i> Véhicules</div>
             </div>
-            <div class="widget-card-body p-0">
+            <div class="ob-widget-card-body p-0">
                 @if(count($vehicules) === 0)
-                    <p class="widget-empty p-3">Aucun véhicule assigné.</p>
+                    <p class="ob-widget-empty p-3">Aucun véhicule assigné.</p>
                 @else
                     <table class="table table-sm table-hover mb-0 align-middle">
                         <thead style="background:var(--table-header-bg);color:var(--table-header-text)">

@@ -1,33 +1,33 @@
-<div class="widget-card">
-    <div class="widget-card-header">
-        <div class="widget-card-title">
+<div class="ob-widget-card">
+    <div class="ob-widget-card-header">
+        <div class="ob-widget-card-title">
             <i class="fas fa-shield-alt"></i> Service / Astreinte
         </div>
     </div>
-    <div class="widget-card-body">
+    <div class="ob-widget-card-body">
         @forelse ($duty['duty'] as $p)
-            <div class="duty-row">
+            <div class="ob-duty-row">
                 <a href="{{ url('/legacy/upd_personnel.php?pompier=' . $p->P_ID) }}">
-                    <img src="{{ $p->avatarSrc }}" class="duty-avatar"
+                    <img src="{{ $p->avatarSrc }}" class="ob-duty-avatar"
                          onerror="this.src='{{ asset('images/autre.png') }}'">
                 </a>
-                <div class="duty-info">
-                    <div class="duty-name">
+                <div class="ob-duty-info">
+                    <div class="ob-duty-name">
                         <a href="{{ url('/legacy/upd_personnel.php?pompier=' . $p->P_ID) }}"
                            style="color:inherit;text-decoration:none;">
                             {{ ucfirst(strtolower($p->P_PRENOM)) }} {{ strtoupper($p->P_NOM) }}
                         </a>
                     </div>
-                    <div class="duty-role">{{ $p->GP_DESCRIPTION }} &mdash; {{ $p->S_DESCRIPTION }}</div>
+                    <div class="ob-duty-role">{{ $p->GP_DESCRIPTION }} &mdash; {{ $p->S_DESCRIPTION }}</div>
                 </div>
                 @if (!empty($p->P_PHONE))
-                    <a class="duty-phone" href="tel:{{ preg_replace('/\s/', '', $p->P_PHONE) }}">
+                    <a class="ob-duty-phone" href="tel:{{ preg_replace('/\s/', '', $p->P_PHONE) }}">
                         {{ $p->P_PHONE }}
                     </a>
                 @endif
             </div>
         @empty
-            <p class="widget-empty">Aucun personnel de service.</p>
+            <p class="ob-widget-empty">Aucun personnel de service.</p>
         @endforelse
     </div>
 </div>

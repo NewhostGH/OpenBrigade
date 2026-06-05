@@ -42,10 +42,10 @@
 <x-ob-breadcrumb :items="$breadcrumb"/>
 
 <div class="mx-3 mt-3">
-<div class="widget-card">
+<div class="ob-widget-card">
 
-    <div class="widget-card-header">
-        <div class="widget-card-title">
+    <div class="ob-widget-card-header">
+        <div class="ob-widget-card-title">
             <i class="fas fa-{{ $isEdit ? 'edit' : 'plus-circle' }}"></i>
             {{ $isEdit
                 ? 'Modifier — ' . ($vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF)
@@ -59,7 +59,7 @@
         @endif
     </div>
 
-    <div class="widget-card-body">
+    <div class="ob-widget-card-body">
 
         @if ($errors->any())
             <div class="alert alert-danger py-2 mb-4">
@@ -333,13 +333,13 @@
 
 {{-- ── Danger zone ─────────────────────────────────────────────────────────── --}}
 @if ($isEdit && auth()->user()->hasPermission(19))
-    <div class="widget-card mt-3" style="border-color:#fca5a5 !important;">
-        <div class="widget-card-header" style="background:#fff1f2;">
-            <div class="widget-card-title" style="color:#991b1b;">
+    <div class="ob-widget-card mt-3" style="border-color:#fca5a5 !important;">
+        <div class="ob-widget-card-header" style="background:#fff1f2;">
+            <div class="ob-widget-card-title" style="color:#991b1b;">
                 <i class="fas fa-trash"></i> Zone dangereuse
             </div>
         </div>
-        <div class="widget-card-body d-flex align-items-center gap-4">
+        <div class="ob-widget-card-body d-flex align-items-center gap-4">
             <p class="mb-0 text-muted" style="font-size:var(--font-size-sm); flex:1;">
                 Supprime définitivement ce véhicule et toutes ses affectations à des activités.
             </p>

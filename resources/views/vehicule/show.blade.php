@@ -78,9 +78,9 @@
 <div class="mx-3 mt-3">
 
     {{-- ── Main info card ─────────────────────────────────────────────────────── --}}
-    <div class="widget-card mb-3">
-        <div class="widget-card-header">
-            <div class="widget-card-title">
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
                 <i class="{{ $tvIcon }}" title="{{ $typeVehicule->TV_LIBELLE ?? $vehicule->TV_CODE }}"></i>
                 <span>{{ $vehicule->V_IMMATRICULATION ?: '—' }}</span>
                 @if($vehicule->V_INDICATIF)
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <div class="widget-card-body">
+        <div class="ob-widget-card-body">
             <div class="row g-4">
 
                 {{-- ── Identity column ─────────────────────────────────────── --}}
@@ -215,13 +215,13 @@
     </div>
 
     {{-- ── Recent events ────────────────────────────────────────────────────── --}}
-    <div class="widget-card mb-3">
-        <div class="widget-card-header">
-            <div class="widget-card-title"><i class="fas fa-history"></i> Dernières activités</div>
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title"><i class="fas fa-history"></i> Dernières activités</div>
         </div>
-        <div class="widget-card-body p-0">
+        <div class="ob-widget-card-body p-0">
             @if($recentEvents->isEmpty())
-                <p class="widget-empty p-3">Aucune activité enregistrée.</p>
+                <p class="ob-widget-empty p-3">Aucune activité enregistrée.</p>
             @else
                 <table class="table table-sm table-hover mb-0">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
@@ -254,18 +254,18 @@
     </div>
 
     {{-- ── Matériel embarqué ────────────────────────────────────────────────── --}}
-    <div class="widget-card mb-3">
-        <div class="widget-card-header">
-            <div class="widget-card-title">
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
                 <i class="fas fa-boxes"></i> Matériel embarqué
                 @if($materiels->isNotEmpty())
                     <span class="ob-badge ob-badge-archive ms-1">{{ $materiels->count() }}</span>
                 @endif
             </div>
         </div>
-        <div class="widget-card-body p-0">
+        <div class="ob-widget-card-body p-0">
             @if($materiels->isEmpty())
-                <p class="widget-empty p-3">Aucun matériel assigné à ce véhicule.</p>
+                <p class="ob-widget-empty p-3">Aucun matériel assigné à ce véhicule.</p>
             @else
                 <table class="table table-sm table-hover mb-0">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
@@ -294,18 +294,18 @@
     </div>
 
     {{-- ── Documents ────────────────────────────────────────────────────────── --}}
-    <div class="widget-card mb-3">
-        <div class="widget-card-header">
-            <div class="widget-card-title">
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
                 <i class="fas fa-file-alt"></i> Documents
                 @if($documents->isNotEmpty())
                     <span class="ob-badge ob-badge-archive ms-1">{{ $documents->count() }}</span>
                 @endif
             </div>
         </div>
-        <div class="widget-card-body p-0">
+        <div class="ob-widget-card-body p-0">
             @if($documents->isEmpty())
-                <p class="widget-empty p-3">Aucun document associé à ce véhicule.</p>
+                <p class="ob-widget-empty p-3">Aucun document associé à ce véhicule.</p>
             @else
                 <table class="table table-sm table-hover mb-0">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">

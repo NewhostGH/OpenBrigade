@@ -52,41 +52,41 @@
         <div class="row g-2">
             @foreach($days as $day)
                 <div class="col-xl col-lg-4 col-md-6 col-12">
-                    <div class="widget-card {{ $day['isToday'] ? 'border-primary' : '' }}">
-                        <div class="widget-card-header"
+                    <div class="ob-widget-card {{ $day['isToday'] ? 'border-primary' : '' }}">
+                        <div class="ob-widget-card-header"
                              style="{{ $day['isToday'] ? 'background:color-mix(in srgb, var(--brand-bg) 8%, #fff)' : '' }}">
-                            <div class="widget-card-title">
+                            <div class="ob-widget-card-title">
                                 {{ $day['label'] }}
                             </div>
                             @if($day['isToday'])
                                 <span class="badge bg-primary" style="font-size:var(--font-size-xs)">Aujourd'hui</span>
                             @endif
                         </div>
-                        <div class="widget-card-body p-0">
+                        <div class="ob-widget-card-body p-0">
                             @if($day['slots']->isEmpty())
-                                <p class="widget-empty p-2">Aucune astreinte</p>
+                                <p class="ob-widget-empty p-2">Aucune astreinte</p>
                             @else
                                 @foreach($day['slots'] as $slot)
-                                    <div class="duty-row px-2">
+                                    <div class="ob-duty-row px-2">
                                         <img src="{{ route('personnel.photo', $slot->P_ID) }}"
                                              width="32" height="32"
-                                             class="duty-avatar"
+                                             class="ob-duty-avatar"
                                              onerror="this.src='{{ asset('images/autre.png') }}'">
-                                        <div class="duty-info">
-                                            <div class="duty-name">
+                                        <div class="ob-duty-info">
+                                            <div class="ob-duty-name">
                                                 <a href="{{ route('personnel.show', $slot->P_ID) }}"
                                                    class="text-decoration-none"
                                                    style="color:inherit">
                                                     {{ $slot->P_PRENOM }} {{ strtoupper($slot->P_NOM) }}
                                                 </a>
                                             </div>
-                                            <div class="duty-role">
+                                            <div class="ob-duty-role">
                                                 {{ $slot->GP_DESCRIPTION }}
                                                 &mdash;
                                                 {{ substr($slot->AS_DEBUT, 11, 5) }}–{{ substr($slot->AS_FIN, 11, 5) }}
                                             </div>
                                             @if($slot->P_PHONE)
-                                                <a href="tel:{{ $slot->P_PHONE }}" class="duty-phone">
+                                                <a href="tel:{{ $slot->P_PHONE }}" class="ob-duty-phone">
                                                     <i class="fas fa-phone fa-xs me-1"></i>{{ $slot->P_PHONE }}
                                                 </a>
                                             @endif

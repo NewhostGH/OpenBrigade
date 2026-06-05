@@ -40,9 +40,9 @@
         <div class="text-muted fst-italic p-3">Aucun message.</div>
     @else
         @foreach($items as $msg)
-            <div class="widget-card mb-3">
-                <div class="widget-card-header">
-                    <div class="widget-card-title">
+            <div class="ob-widget-card mb-3">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title">
                         <i class="fas {{ $msg->M_TYPE === 'consigne' ? 'fa-clipboard-list' : 'fa-newspaper' }} fa-sm"></i>
                         {{ $msg->M_OBJET ?: '(sans objet)' }}
                     </div>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 @if($msg->M_TEXTE)
-                    <div class="widget-card-body" style="font-size:var(--font-size-sm)">
+                    <div class="ob-widget-card-body" style="font-size:var(--font-size-sm)">
                         {!! nl2br(e($msg->M_TEXTE)) !!}
                     </div>
                 @endif

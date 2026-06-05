@@ -19,11 +19,11 @@
 
     {{-- ── Folder tree (left panel) ─────────────────────────────────────────── --}}
     <div class="col-lg-3">
-        <div class="widget-card">
-            <div class="widget-card-header">
-                <div class="widget-card-title"><i class="fas fa-folder-open"></i> Dossiers</div>
+        <div class="ob-widget-card">
+            <div class="ob-widget-card-header">
+                <div class="ob-widget-card-title"><i class="fas fa-folder-open"></i> Dossiers</div>
             </div>
-            <div class="widget-card-body p-0">
+            <div class="ob-widget-card-body p-0">
                 <a href="{{ route('document.index') }}"
                    class="d-block px-3 py-2 text-decoration-none {{ $folderId === 0 ? 'fw-semibold' : '' }}"
                    style="font-size:var(--font-size-sm);border-bottom:1px solid var(--component-border)">
@@ -99,8 +99,8 @@
         @if($documents->isEmpty())
             <div class="text-muted fst-italic p-3">Aucun document dans ce dossier.</div>
         @else
-            <div class="widget-card">
-                <div class="widget-card-body p-0">
+            <div class="ob-widget-card">
+                <div class="ob-widget-card-body p-0">
                     <table class="table table-sm table-hover mb-0 align-middle">
                         <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
                             <tr>

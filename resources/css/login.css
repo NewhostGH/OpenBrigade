@@ -2,7 +2,7 @@
 
 /* The login page is standalone (no sidebar/navbar), so we redefine the body
    reset here rather than inheriting from base.css. */
-.login-body {
+.ob-login-body {
     background: var(--page-bg);
     min-height: 100vh;
     font-family: var(--font-family);
@@ -11,11 +11,11 @@
 }
 
 /* ── Two-column shell ───────────────────────────────────────────────────── */
-.login-shell {
+.ob-login-shell {
     min-height: 100vh;
 }
 
-.login-left {
+.ob-login-left {
     background: radial-gradient(circle at 15% 20%,
             color-mix(in srgb, var(--brand-bg) 8%, #fff) 0%,
             color-mix(in srgb, var(--brand-bg) 14%, #f4f6fb) 38%,
@@ -23,7 +23,7 @@
     min-height: 260px;
 }
 
-.login-left-title {
+.ob-login-left-title {
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--page-text);
@@ -33,29 +33,29 @@
 }
 
 /* ── Right panel (the card) ─────────────────────────────────────────────── */
-.login-right {
+.ob-login-right {
     background: var(--component-bg);
 }
 
-.login-card {
+.ob-login-card {
     max-width: 360px;
     width: 100%;
 }
 
-.login-brand-title {
+.ob-login-brand-title {
     font-weight: 700;
     font-size: 1.4rem;
     color: var(--page-text);
 }
 
-.login-brand-sub {
+.ob-login-brand-sub {
     font-size: var(--font-size-sm);
     color: var(--text-muted-soft);
     margin-top: 2px;
 }
 
 /* ── Inputs ─────────────────────────────────────────────────────────────── */
-.login-input {
+.ob-login-input {
     background: var(--page-bg);
     border: 1px solid var(--component-border);
     box-shadow: none;
@@ -64,18 +64,18 @@
     transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 
-.login-input:focus {
+.ob-login-input:focus {
     background: var(--component-bg);
     border-color: var(--brand-bg);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-bg) 15%, transparent);
 }
 
-.login-input.is-invalid:focus {
+.ob-login-input.is-invalid:focus {
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
 }
 
 /* ── Submit button ──────────────────────────────────────────────────────── */
-.btn-login {
+.ob-login-btn {
     background: var(--brand-bg);
     border: none;
     color: #fff;
@@ -87,35 +87,35 @@
     width: 100%;
 }
 
-.btn-login:hover,
-.btn-login:focus {
+.ob-login-btn:hover,
+.ob-login-btn:focus {
     background: color-mix(in srgb, var(--brand-bg) 85%, #000);
     color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
 
 /* ── Forgot-password toggle ─────────────────────────────────────────────── */
-.forgot-panel {
+.ob-login-forgot-panel {
     display: none;
 }
 
-.forgot-on .signin-panel {
+.ob-login-forgot-on .ob-login-signin-panel {
     display: none;
 }
 
-.forgot-on .forgot-panel {
+.ob-login-forgot-on .ob-login-forgot-panel {
     display: block;
 }
 
 /* ── Alert overrides for login page ────────────────────────────────────── */
-.login-alert {
+.ob-login-alert {
     font-size: var(--font-size-sm);
     border-radius: var(--radius-md);
     padding: .6rem 1rem;
 }
 
 /* ── Footer note ────────────────────────────────────────────────────────── */
-.login-footer {
+.ob-login-footer {
     font-size: var(--font-size-xs);
     color: var(--text-muted-soft);
     margin-top: 1.5rem;

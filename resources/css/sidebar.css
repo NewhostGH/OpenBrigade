@@ -1,5 +1,5 @@
 /* ── Sidebar shell ─────────────────────────────────────────────────────── */
-.col-lateral {
+.ob-col-lateral {
     text-align:       left;
     background-color: var(--sidebar-bg-hover);
     position:         fixed;
@@ -14,27 +14,51 @@
     z-index:          50;
 }
 
-.col-lateral.collapsed {
+.ob-col-lateral.collapsed {
     width: var(--sidebar-collapsed-width);
 }
 
 /* When collapsed, hide sub-menus and group labels — Bootstrap's own
    collapse state is preserved so expanding works after de-collapse. */
-.col-lateral.collapsed .div-lateral {
+.ob-col-lateral.collapsed .ob-div-lateral {
     display: none !important;
 }
 
-.col-lateral.collapsed .dropdown-lateral span {
+.ob-col-lateral.collapsed .ob-dropdown-lateral span {
     display: none;
 }
 
-.navbar-lateral {
+/* Collapsed flyout: when the sidebar is collapsed, hovering a group icon
+   floats its sub-menu out to the right. The sidebar clips its own overflow,
+   so the panel must escape via position:fixed — sidebar.js sets top/left and
+   toggles display; this class supplies the panel styling. */
+.ob-div-lateral.ob-flyout {
+    position:      fixed;
+    width:         var(--sidebar-width);
+    height:        auto;
+    overflow-x:    hidden;
+    overflow-y:    auto;
+    background:    var(--sidebar-bg);
+    border:        1px solid var(--sidebar-border);
+    border-left:   2px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    box-shadow:    4px 6px 16px rgba(0, 0, 0, 0.18);
+    padding:       6px 0;
+    z-index:       1000;
+}
+
+/* Sub-menu links sit flush-left in the flyout (no collapsed-icon indent). */
+.ob-div-lateral.ob-flyout .ob-link-lateral {
+    padding-left: 16px;
+}
+
+.ob-navbar-lateral {
     height:   100%;
     width:    var(--sidebar-width);
     overflow: hidden;
 }
 
-.div-scroll {
+.ob-div-scroll {
     height:           100%;
     width:            100%;
     overflow-y:       auto;
@@ -45,11 +69,11 @@
     scrollbar-width:  none;
 }
 
-.div-scroll::-webkit-scrollbar {
+.ob-div-scroll::-webkit-scrollbar {
     display: none;
 }
 
-.nav-lateral {
+.ob-nav-lateral {
     width:            var(--sidebar-width);
     background-color: var(--sidebar-bg);
     padding-top:      10px;
@@ -60,11 +84,11 @@
 }
 
 /* ── Sidebar brand ─────────────────────────────────────────────────────── */
-.nav-logo {
+.ob-nav-logo {
     align-self: flex-start;
 }
 
-.logo-lateral {
+.ob-logo-lateral {
     display:     flex;
     align-items: center;
     gap:         8px;
@@ -72,97 +96,97 @@
     font-size:   var(--font-size-sm);
     font-weight: bold;
     width:       var(--sidebar-width);
-    padding:     0.45rem 1rem; /* match .dropdown-lateral */
+    padding:     0.45rem 1rem; /* match .ob-dropdown-lateral */
 }
 
-.logo-lateral:hover {
+.ob-logo-lateral:hover {
     color:            var(--sidebar-item-active);
     background-color: var(--sidebar-bg-hover);
 }
 
 /* ── Sidebar groups ────────────────────────────────────────────────────── */
-.item-lateral {
+.ob-item-lateral {
     width:          var(--sidebar-width);
     flex-direction: row;
     line-height:    24px;
 }
 
-.item-lateral [aria-expanded=true] {
+.ob-item-lateral [aria-expanded=true] {
     background-color: var(--sidebar-bg-active);
     box-shadow:       inset var(--sidebar-accent-bar) 0 0;
 }
 
-.dropdown-lateral {
+.ob-dropdown-lateral {
     color:    var(--sidebar-text);
     font-size: var(--font-size-base);
     padding:  0.45rem 1rem !important;
 }
 
-.dropdown-lateral:hover {
+.ob-dropdown-lateral:hover {
     text-decoration: none;
 }
 
-.icon-lateral {
+.ob-icon-lateral {
     height:        20px;
     padding-right: 20px;
     width:         30px;
 }
 
-.div-lateral {
+.ob-div-lateral {
     box-shadow: inset var(--sidebar-accent-bar) 0 0;
     padding-top: 0;
 }
 
 /* ── Sidebar items ─────────────────────────────────────────────────────── */
-.link-lateral {
+.ob-link-lateral {
     color:       var(--sidebar-item-text);
     font-size:   var(--font-size-sm);
     line-height: 1.1rem;
     padding-left: 40px;
 }
 
-.link-lateral:hover {
+.ob-link-lateral:hover {
     background-color: var(--sidebar-bg-hover);
     color:            var(--sidebar-item-active);
     box-shadow:       inset var(--sidebar-accent-bar) 0 0;
 }
 
-.link-lateral-active {
+.ob-link-lateral-active {
     background-color: var(--sidebar-bg-hover);
     color:            var(--sidebar-item-active);
     font-weight:      600;
     box-shadow:       inset var(--sidebar-accent-bar) 0 0;
 }
 
-.sidebar-item-icon {
+.ob-sidebar-item-icon {
     width:      16px;
     text-align: center;
     margin-right: 6px;
     opacity:    0.65;
 }
 
-.link-lateral:hover .sidebar-item-icon,
-.link-lateral-active .sidebar-item-icon {
+.ob-link-lateral:hover .ob-sidebar-item-icon,
+.ob-link-lateral-active .ob-sidebar-item-icon {
     opacity: 1;
 }
 
-.sidebar-divider {
+.ob-sidebar-divider {
     margin:       4px 16px;
     border-color: var(--sidebar-border);
 }
 
 /* ── Pin button ────────────────────────────────────────────────────────── */
-.sidebar-item-row {
+.ob-sidebar-item-row {
     position: relative;
     width:    var(--sidebar-width);
     overflow: hidden;
 }
 
-.sidebar-item-row .link-lateral {
+.ob-sidebar-item-row .ob-link-lateral {
     padding-right: 24px; /* reserve space so text doesn't hide under the button */
 }
 
-.sidebar-pin-btn {
+.ob-sidebar-pin-btn {
     position:    absolute;
     right:       6px;
     top:         50%;
@@ -179,30 +203,30 @@
     line-height: 1;
 }
 
-.sidebar-pin-btn.pinned {
+.ob-sidebar-pin-btn.pinned {
     color:     var(--accent);
     opacity:   1;
     transform: translateY(-50%) rotate(0deg);
 }
 
-.sidebar-item-row:hover .sidebar-pin-btn {
+.ob-sidebar-item-row:hover .ob-sidebar-pin-btn {
     opacity: 0.55;
 }
 
-.sidebar-item-row:hover .sidebar-pin-btn.pinned,
-.sidebar-pin-btn:hover {
+.ob-sidebar-item-row:hover .ob-sidebar-pin-btn.pinned,
+.ob-sidebar-pin-btn:hover {
     opacity: 1;
     color:   var(--accent);
 }
 
 /* ── Sidebar search ─────────────────────────────────────────────────────── */
-.sidebar-search-wrap {
+.ob-sidebar-search-wrap {
     padding:       6px 10px 4px;
     border-bottom: 1px solid var(--sidebar-border);
     background:    var(--sidebar-bg);
 }
 
-.sidebar-search-inner {
+.ob-sidebar-search-inner {
     display:     flex;
     align-items: center;
     background:  var(--sidebar-bg-hover);
@@ -213,12 +237,12 @@
     transition:  border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.sidebar-search-inner:focus-within {
+.ob-sidebar-search-inner:focus-within {
     border-color: var(--accent);
     box-shadow:   0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
-.sidebar-search-icon {
+.ob-sidebar-search-icon {
     color:          var(--sidebar-border);
     font-size:      10px;
     flex-shrink:    0;
@@ -226,11 +250,11 @@
     transition:     color var(--transition-fast);
 }
 
-.sidebar-search-inner:focus-within .sidebar-search-icon {
+.ob-sidebar-search-inner:focus-within .ob-sidebar-search-icon {
     color: var(--accent);
 }
 
-.sidebar-search-input {
+.ob-sidebar-search-input {
     flex:       1;
     border:     none;
     background: transparent;
@@ -241,14 +265,14 @@
     outline:    none;
 }
 
-.sidebar-search-input::placeholder {
+.ob-sidebar-search-input::placeholder {
     color: var(--sidebar-border);
 }
 
 /* Hide browser-native "×" clear button — we provide our own */
-.sidebar-search-input::-webkit-search-cancel-button { display: none; }
+.ob-sidebar-search-input::-webkit-search-cancel-button { display: none; }
 
-.sidebar-search-clear {
+.ob-sidebar-search-clear {
     display:         flex;
     align-items:     center;
     justify-content: center;
@@ -263,7 +287,7 @@
     line-height:     1;
 }
 
-.sidebar-search-clear:hover { color: var(--sidebar-item-active); }
+.ob-sidebar-search-clear:hover { color: var(--sidebar-item-active); }
 
 /* Highlight matched text */
 mark.sidebar-match {
@@ -274,12 +298,12 @@ mark.sidebar-match {
 }
 
 /* Hide search when sidebar is collapsed */
-.col-lateral.collapsed .sidebar-search-wrap {
+.ob-col-lateral.collapsed .ob-sidebar-search-wrap {
     display: none;
 }
 
 /* Empty-state message when no groups match */
-.sidebar-search-empty {
+.ob-sidebar-search-empty {
     display:    none;
     font-size:  var(--font-size-xs);
     color:      var(--sidebar-border);
@@ -289,7 +313,7 @@ mark.sidebar-match {
 }
 
 /* ── Collapse / de-collapse buttons ────────────────────────────────────── */
-.collapse-menu {
+.ob-collapse-menu {
     position:     fixed;
     bottom:       0;
     left:         0;
@@ -305,11 +329,11 @@ mark.sidebar-match {
     border-top:   1px var(--sidebar-border) solid;
 }
 
-.collapse-menu:hover {
+.ob-collapse-menu:hover {
     background: var(--sidebar-bg-hover);
 }
 
-.decollapse-menu {
+.ob-decollapse-menu {
     position:     fixed;
     bottom:       0;
     left:         0;
@@ -325,11 +349,11 @@ mark.sidebar-match {
     border-top:   1px var(--sidebar-border) solid;
 }
 
-.decollapse-menu:hover {
+.ob-decollapse-menu:hover {
     background: var(--sidebar-bg-hover);
 }
 
-.icon-collapse {
+.ob-icon-collapse {
     position: absolute;
     left:     32%;
     top:      28%;

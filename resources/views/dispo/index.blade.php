@@ -18,9 +18,9 @@
 
     {{-- ── 4-week availability grid ─────────────────────────────────────── --}}
     <div class="col-lg-8">
-        <div class="widget-card">
-            <div class="widget-card-header">
-                <div class="widget-card-title">
+        <div class="ob-widget-card">
+            <div class="ob-widget-card-header">
+                <div class="ob-widget-card-title">
                     <i class="fas fa-calendar-check"></i> Planning 4 semaines
                 </div>
                 <div style="font-size:var(--font-size-xs)">
@@ -32,7 +32,7 @@
                     @endforeach
                 </div>
             </div>
-            <div class="widget-card-body p-0">
+            <div class="ob-widget-card-body p-0">
                 <table class="table table-sm mb-0" style="table-layout:fixed">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
                         <tr>
@@ -68,23 +68,23 @@
 
     {{-- ── Absences / indisponibilités ─────────────────────────────────── --}}
     <div class="col-lg-4">
-        <div class="widget-card">
-            <div class="widget-card-header">
-                <div class="widget-card-title">
+        <div class="ob-widget-card">
+            <div class="ob-widget-card-header">
+                <div class="ob-widget-card-title">
                     <i class="fas fa-user-times"></i> Mes absences à venir
                 </div>
                 <a href="{{ route('indispo.index', ['tab' => 'mine']) }}"
-                   class="widget-card-link">Toutes</a>
+                   class="ob-widget-card-link">Toutes</a>
             </div>
-            <div class="widget-card-body p-0">
+            <div class="ob-widget-card-body p-0">
                 @if($absences->isEmpty())
-                    <p class="widget-empty p-3">Aucune absence.</p>
+                    <p class="ob-widget-empty p-3">Aucune absence.</p>
                 @else
                     @foreach($absences as $abs)
-                        <div class="duty-row px-3">
-                            <div class="duty-info">
-                                <div class="duty-name">{{ $abs->TI_LIBELLE ?? 'Absence' }}</div>
-                                <div class="duty-role">
+                        <div class="ob-duty-row px-3">
+                            <div class="ob-duty-info">
+                                <div class="ob-duty-name">{{ $abs->TI_LIBELLE ?? 'Absence' }}</div>
+                                <div class="ob-duty-role">
                                     {{ $abs->I_DEBUT ? \Carbon\Carbon::parse($abs->I_DEBUT)->format('d/m/Y') : '?' }}
                                     —
                                     {{ $abs->I_FIN ? \Carbon\Carbon::parse($abs->I_FIN)->format('d/m/Y') : '?' }}

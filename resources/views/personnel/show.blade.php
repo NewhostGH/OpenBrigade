@@ -13,9 +13,9 @@
 <div class="mx-3 mt-3">
 
     {{-- ── Profile header card ─────────────────────────────────────────────── --}}
-    <div class="widget-card mb-3">
-        <div class="widget-card-header">
-            <div class="widget-card-title">
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
                 @if ($personnel->civiliteLabel())
                     <span class="fw-normal text-muted">{{ $personnel->civiliteLabel() }}</span>
                 @endif
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div class="widget-card-body">
+        <div class="ob-widget-card-body">
             <div class="row g-4 align-items-start">
 
                 {{-- ── Photo ───────────────────────────────────────────── --}}
@@ -166,8 +166,8 @@
 
         {{-- ── Left sidebar nav ────────────────────────────────────────────── --}}
         <div class="pers-sidenav-wrap noprint">
-            <div class="widget-card">
-                <div class="widget-card-body p-0">
+            <div class="ob-widget-card">
+                <div class="ob-widget-card-body p-0">
                     <nav>
                         @foreach ($sideNav as $item)
                         <a href="#{{ $item['id'] }}" class="pers-sidenav-link{{ $loop->first ? ' active' : '' }}">
@@ -188,11 +188,11 @@
 
             {{-- ▸ Information ─────────────────────────────────────────────── --}}
             <div id="section-info" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-address-book"></i> Coordonnées</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-address-book"></i> Coordonnées</div>
                     </div>
-                    <div class="widget-card-body">
+                    <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
                             <div class="ob-info-item">
                                 <dt>Email</dt>
@@ -237,11 +237,11 @@
                     </div>
                 </div>
 
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-id-badge"></i> Informations personnelles</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-id-badge"></i> Informations personnelles</div>
                     </div>
-                    <div class="widget-card-body">
+                    <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
                             <div class="ob-info-item">
                                 <dt>Date de naissance</dt>
@@ -294,11 +294,11 @@
                 </div>
 
                 @if ($personnel->P_RELATION_NOM || $personnel->P_RELATION_PRENOM || $personnel->P_RELATION_PHONE)
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-phone-alt"></i> Contact d'urgence</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-phone-alt"></i> Contact d'urgence</div>
                     </div>
-                    <div class="widget-card-body">
+                    <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
                             <div class="ob-info-item">
                                 <dt>Nom</dt>
@@ -320,11 +320,11 @@
                 @endif
 
                 @if ($personnel->OBSERVATION)
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-sticky-note"></i> Notes</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-sticky-note"></i> Notes</div>
                     </div>
-                    <div class="widget-card-body">
+                    <div class="ob-widget-card-body">
                         <p class="mb-0" style="font-size:var(--font-size-sm); white-space:pre-wrap;">{{ $personnel->OBSERVATION }}</p>
                     </div>
                 </div>
@@ -333,9 +333,9 @@
 
             {{-- ▸ Compétences ─────────────────────────────────────────────── --}}
             <div id="section-competences" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title">
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title">
                             <i class="fas fa-certificate"></i> Compétences
                             @if($personnel->qualifications->isNotEmpty())
                                 <span class="ob-badge ob-badge-archive ms-1">{{ $personnel->qualifications->count() }}</span>
@@ -347,7 +347,7 @@
                             <i class="fas fa-plus me-1"></i> Ajouter
                         </button>
                     </div>
-                    <div class="widget-card-body p-0">
+                    <div class="ob-widget-card-body p-0">
                         @if ($personnel->qualifications->isNotEmpty())
                             <table class="table table-sm table-hover align-middle mb-0" style="font-size:var(--font-size-sm);">
                                 <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
@@ -413,7 +413,7 @@
                                 </tbody>
                             </table>
                         @else
-                            <p class="widget-empty p-3">Aucune compétence enregistrée.</p>
+                            <p class="ob-widget-empty p-3">Aucune compétence enregistrée.</p>
                         @endif
                     </div>
                 </div>
@@ -421,9 +421,9 @@
 
             {{-- ▸ Cotisations ────────────────────────────────────────────── --}}
             <div id="section-cotisations" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title">
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title">
                             <i class="fas fa-euro-sign"></i> Cotisations
                             @if($cotisations->isNotEmpty())
                                 <span class="ob-badge ob-badge-archive ms-1">{{ $cotisations->count() }}</span>
@@ -435,7 +435,7 @@
                             <i class="fas fa-plus me-1"></i> Ajouter
                         </button>
                     </div>
-                    <div class="widget-card-body p-0">
+                    <div class="ob-widget-card-body p-0">
                         @if ($cotisations->isNotEmpty())
                             <table class="table table-sm table-hover align-middle mb-0" style="font-size:var(--font-size-sm);">
                                 <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
@@ -502,7 +502,7 @@
                                 </tfoot>
                             </table>
                         @else
-                            <p class="widget-empty p-3">Aucune cotisation enregistrée.</p>
+                            <p class="ob-widget-empty p-3">Aucune cotisation enregistrée.</p>
                         @endif
                     </div>
                 </div>
@@ -510,16 +510,16 @@
 
             {{-- ▸ Participation ───────────────────────────────────────────── --}}
             <div id="section-participation" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title">
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title">
                             <i class="fas fa-calendar-check"></i> Participation aux activités
                             @if($participation->isNotEmpty())
                                 <span class="ob-badge ob-badge-archive ms-1">{{ $participation->count() }}</span>
                             @endif
                         </div>
                     </div>
-                    <div class="widget-card-body p-0">
+                    <div class="ob-widget-card-body p-0">
                         @if ($participation->isNotEmpty())
                             <table class="table table-sm table-hover align-middle mb-0" style="font-size:var(--font-size-sm);">
                                 <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
@@ -571,7 +571,7 @@
                                 </p>
                             @endif
                         @else
-                            <p class="widget-empty p-3">Aucune participation enregistrée.</p>
+                            <p class="ob-widget-empty p-3">Aucune participation enregistrée.</p>
                         @endif
                     </div>
                 </div>
@@ -579,113 +579,113 @@
 
             {{-- ▸ Dotation ───────────────────────────────────────────────── --}}
             <div id="section-dotation" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-box"></i> Dotation</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-box"></i> Dotation</div>
                         <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
                             <i class="fas fa-plus me-1"></i> Ajouter
                         </button>
                     </div>
-                    <div class="widget-card-body">
-                        <p class="widget-empty mb-0">Aucune dotation enregistrée.</p>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucune dotation enregistrée.</p>
                     </div>
                 </div>
             </div>{{-- /section-dotation --}}
 
             {{-- ▸ Documents ──────────────────────────────────────────────── --}}
             <div id="section-documents" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-file-alt"></i> Documents</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-file-alt"></i> Documents</div>
                         <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
                             <i class="fas fa-plus me-1"></i> Ajouter
                         </button>
                     </div>
-                    <div class="widget-card-body">
-                        <p class="widget-empty mb-0">Aucun document enregistré.</p>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucun document enregistré.</p>
                     </div>
                 </div>
             </div>{{-- /section-documents --}}
 
             {{-- ▸ Notes de frais ─────────────────────────────────────────── --}}
             <div id="section-notedfrais" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-receipt"></i> Notes de frais</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-receipt"></i> Notes de frais</div>
                         <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
                             <i class="fas fa-plus me-1"></i> Ajouter
                         </button>
                     </div>
-                    <div class="widget-card-body">
-                        <p class="widget-empty mb-0">Aucune note de frais enregistrée.</p>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucune note de frais enregistrée.</p>
                     </div>
                 </div>
             </div>{{-- /section-notedfrais --}}
 
             {{-- ▸ Disponibilité ──────────────────────────────────────────── --}}
             <div id="section-disponibilite" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-calendar-day"></i> Disponibilité</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-calendar-day"></i> Disponibilité</div>
                         <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
                             <i class="fas fa-plus me-1"></i> Ajouter
                         </button>
                     </div>
-                    <div class="widget-card-body">
-                        <p class="widget-empty mb-0">Aucune disponibilité enregistrée.</p>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucune disponibilité enregistrée.</p>
                     </div>
                 </div>
             </div>{{-- /section-disponibilite --}}
 
             {{-- ▸ Calendrier ─────────────────────────────────────────────── --}}
             <div id="section-calendrier" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-calendar"></i> Calendrier</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-calendar"></i> Calendrier</div>
                     </div>
-                    <div class="widget-card-body">
-                        <p class="widget-empty mb-0">Aucune entrée de calendrier.</p>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucune entrée de calendrier.</p>
                     </div>
                 </div>
             </div>{{-- /section-calendrier --}}
 
             {{-- ▸ Absences ───────────────────────────────────────────────── --}}
             <div id="section-absences" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-user-times"></i> Absences</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-user-times"></i> Absences</div>
                         <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
                             <i class="fas fa-plus me-1"></i> Ajouter
                         </button>
                     </div>
-                    <div class="widget-card-body">
-                        <p class="widget-empty mb-0">Aucune absence enregistrée.</p>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucune absence enregistrée.</p>
                     </div>
                 </div>
             </div>{{-- /section-absences --}}
 
             {{-- ▸ Historique ─────────────────────────────────────────────── --}}
             <div id="section-historique" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-history"></i> Historique</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-history"></i> Historique</div>
                     </div>
-                    <div class="widget-card-body">
-                        <p class="widget-empty mb-0">Aucun historique disponible.</p>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucun historique disponible.</p>
                     </div>
                 </div>
             </div>{{-- /section-historique --}}
 
             {{-- ▸ Géolocalisation ────────────────────────────────────────── --}}
             <div id="section-geo" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-map-marker-alt"></i> Géolocalisation</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-map-marker-alt"></i> Géolocalisation</div>
                         <a href="{{ route('geolocalisation.index') }}" class="btn btn-sm btn-light noprint">
                             <i class="fas fa-map-marked-alt me-1"></i> Carte globale
                         </a>
                     </div>
-                    <div class="widget-card-body">
+                    <div class="ob-widget-card-body">
                         @if ($gps && $gps->LAT && $gps->LNG)
                             <dl class="ob-info-grid mb-0">
                                 <div class="ob-info-item">
@@ -702,7 +702,7 @@
                                 </div>
                             </dl>
                         @else
-                            <p class="widget-empty mb-0">Aucune position GPS enregistrée.</p>
+                            <p class="ob-widget-empty mb-0">Aucune position GPS enregistrée.</p>
                         @endif
                     </div>
                 </div>
@@ -710,11 +710,11 @@
 
             {{-- ▸ Accès ─────────────────────────────────────────────────── --}}
             <div id="section-acces" data-pers-section>
-                <div class="widget-card mb-3">
-                    <div class="widget-card-header">
-                        <div class="widget-card-title"><i class="fas fa-shield-alt"></i> Droits d'accès</div>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-shield-alt"></i> Droits d'accès</div>
                     </div>
-                    <div class="widget-card-body">
+                    <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
                             <div class="ob-info-item">
                                 <dt>Groupe principal</dt>
