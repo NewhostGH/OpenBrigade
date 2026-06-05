@@ -121,8 +121,12 @@ DONE
 - [x] **Filesystem paths flagged:** `archive/legacy_app/images/...` in `PersonnelController` (grade images, trombi photos) and `PersonnelExportService` (trombi for PDF livret/carte) flagged — these depend on the legacy file layout and must move to `storage/` when the legacy app is decommissioned.
 
 ### F. Convention enforcement (prevent regression)
-- [ ] Document these conventions in `docs/dev/ARCHITECTURE.md` (or a new `docs/dev/CONVENTIONS.md`) and link from `.github/CONTRIBUTING.md`.
-- [ ] Add a CI/grep guard (or a test) that fails on: inline `<style>` in Blade, unprefixed custom CSS classes, and un-flagged `/legacy/` references in migrated files.
+- [x] Created `docs/dev/CONVENTIONS.md` with the 5 binding rules (SSOT, Models, Blade, CSS/JS naming, Legacy flagging) plus a quick-reference table of native routes. Linked from `.github/CONTRIBUTING.md` Coding Guidelines section.
+- [x] Added `tests/Feature/ConventionsTest.php` (3 Pest tests, no DB/HTTP required):
+  1. **No inline `<style>` blocks** in any Blade view — all CSS must go through Vite.
+  2. **All `/legacy/` and `archive/legacy_app/` refs flagged** — every occurrence must have `TODO: Migrate code` within 5 preceding non-blank lines; `LegacyBridgeController` and `AuthController` redirect-detection are excluded.
+  3. **No `/legacy/` prefix missing** — catches the navbar quick-add class of bug where `url('/ins_foo.php')` routes to nowhere.
+  All 3 tests pass (`php artisan test --filter ConventionsTest`).
 
 ---
 

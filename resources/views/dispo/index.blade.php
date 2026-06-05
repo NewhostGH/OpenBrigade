@@ -102,6 +102,7 @@
         </div>
 
         <div class="mt-2">
+            {{-- TODO: Migrate code — indispo_choice.php has no native route yet --}}
             <a href="{{ url('/legacy/indispo_choice.php') }}" class="btn btn-sm btn-outline-secondary w-100">
                 <i class="fas fa-plus me-1"></i> Déclarer une absence
             </a>

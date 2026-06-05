@@ -309,6 +309,8 @@ Before opening an issue, please search existing issues to avoid duplicates.
 
 ## Coding Guidelines
 
+> For the full set of binding rules on SSOT, model design, Blade views, CSS/JS naming, and legacy flagging, see **[docs/dev/CONVENTIONS.md](../docs/dev/CONVENTIONS.md)**. The summary below covers the basics; the conventions document covers everything the CI test enforces.
+
 ### PHP / Laravel
 
 - Follow the existing code style already present in the file you are editing.

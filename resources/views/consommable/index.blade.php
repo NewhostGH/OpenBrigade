@@ -18,6 +18,7 @@
     table-id="consommableTable">
 
     @if(auth()->user()->hasPermission(71))
+        {{-- TODO: Migrate code — upd_consommable.php has no native create route yet --}}
         <a href="{{ url('/legacy/upd_consommable.php?action=insert') }}" class="btn btn-sm btn-primary">
             <i class="fas fa-plus me-1"></i> Nouveau consommable
         </a>
