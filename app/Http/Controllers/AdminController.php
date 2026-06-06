@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -47,6 +48,45 @@ class AdminController extends Controller
 
         return view('admin.monitoring', compact('items', 'search', 'ltCode', 'logTypes')
             + ['columns' => $this->monitoringColumns()]);
+    }
+
+    // ── Application settings ──────────────────────────────────────────────────
+
+    public function settings(): View
+    {
+        $rows = DB::table('configuration')
+            ->where('HIDDEN', 0)
+            ->orderBy('TAB')
+            ->orderBy('ORDERING')
+            ->get();
+
+        $tabs = [
+            1 => ['label' => 'Fonctionnalités', 'icon' => 'toggle-on'],
+            2 => ['label' => 'Options',          'icon' => 'sliders-h'],
+            3 => ['label' => 'Sécurité',         'icon' => 'shield-alt'],
+            4 => ['label' => 'Organisation',      'icon' => 'building'],
+            5 => ['label' => 'Avancé',            'icon' => 'wrench'],
+            6 => ['label' => 'Modules',           'icon' => 'puzzle-piece'],
+        ];
+
+        $grouped = $rows->groupBy('TAB');
+
+        return view('admin.settings', compact('grouped', 'tabs'));
+    }
+
+    public function saveSetting(Request $request, int $id): RedirectResponse
+    {
+        abort_if(! DB::table('configuration')->where('ID', $id)->exists(), 404);
+
+        $value = $request->boolean('toggle')
+            ? ($request->input('VALUE', '0') === '1' ? '1' : '0')
+            : $request->input('VALUE', '');
+
+        DB::table('configuration')
+            ->where('ID', $id)
+            ->update(['VALUE' => $value]);
+
+        return back()->with('success', 'Paramètre mis à jour.');
     }
 
     private function monitoringColumns(): array

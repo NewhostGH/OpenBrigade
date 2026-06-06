@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/remplacements', [RemplacementController::class, 'index'])->name('remplacement.index')->middleware('permission:0');
     Route::get('/disponibilites', [DispoController::class, 'index'])->name('dispo.index')->middleware('permission:38');
     Route::get('/admin/monitoring', [AdminController::class, 'monitoring'])->name('admin.monitoring')->middleware('permission:49');
+    Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
+    Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::get('/cotisations', [CotisationController::class, 'index'])->name('cotisations.index')->middleware('permission:53');
     Route::post('/cotisations', [CotisationController::class, 'batchSave'])->name('cotisations.save')->middleware('permission:53');
     Route::get('/cotisations/export', [CotisationController::class, 'export'])->name('cotisations.export')->middleware('permission:53');
