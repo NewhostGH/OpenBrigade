@@ -165,7 +165,7 @@
                             <span class="ob-badge ob-badge-int"><i class="fas fa-snowflake me-1"></i>Neige</span>
                         @endif
                         @if($vehicule->V_FLAG2)
-                            <span class="ob-badge" style="background:#e0f2fe;color:#0369a1;"><i class="fas fa-wind me-1"></i>Climatisation</span>
+                            <span class="ob-badge" style="background:var(--badge-info-bg);color:var(--badge-info-color);"><i class="fas fa-wind me-1"></i>Climatisation</span>
                         @endif
                         @if($vehicule->V_FLAG3)
                             <span class="ob-badge ob-badge-ben"><i class="fas fa-bullhorn me-1"></i>Public Address</span>

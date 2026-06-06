@@ -52,7 +52,7 @@
                                         </div>
                                         @if($cell['periodId'])
                                             @php $pi = $periods->firstWhere('PERIOD_ID', $cell['periodId']); @endphp
-                                            <div style="font-size:9px;color:#27ae60;font-weight:600">
+                                            <div style="font-size:9px;color:var(--color-success-icon);font-weight:600">
                                                 {{ $pi?->P_LIBELLE ?? '✓' }}
                                             </div>
                                         @endif

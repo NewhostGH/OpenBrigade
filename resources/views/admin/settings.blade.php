@@ -4,11 +4,20 @@
 
 @push('scripts')
 <script>
-document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
-    el.addEventListener('change', function () {
-        this.closest('form').submit();
+(function () {
+    var active = '{{ $activeTab }}';
+    document.addEventListener('DOMContentLoaded', function () {
+        if (active) {
+            var btn = document.getElementById('tab-' + active + '-btn');
+            if (btn) btn.click();
+        }
+        document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
+            el.addEventListener('change', function () {
+                this.closest('form').submit();
+            });
+        });
     });
-});
+})();
 </script>
 @endpush
 
@@ -58,6 +67,7 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
                                             <form method="POST"
                                                   action="{{ route('admin.settings.save', $row->ID) }}">
                                                 @csrf @method('PATCH')
+                                                <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                 <input type="hidden" name="toggle" value="1">
                                                 <input type="hidden" name="VALUE" value="{{ $row->VALUE == '1' ? '0' : '1' }}">
                                                 <button type="submit"
@@ -88,9 +98,18 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
                                         $label = strip_tags($label);
                                     @endphp
                                     <tr>
-                                        <td style="width:55%;vertical-align:middle;font-size:var(--font-size-sm);">
+                                        <td style="width:40%;vertical-align:middle;font-size:var(--font-size-sm);">
                                             <span title="{{ $row->DESCRIPTION ?? '' }}">{{ $label }}</span>
-                                            @if($row->DESCRIPTION)
+                                            @if(isset($annotations[$row->ID]))
+                                                @php $ann = $annotations[$row->ID]; @endphp
+                                                <span class="ms-1 ob-badge {{ $ann['type'] === 'obsolete' ? 'ob-badge-archive' : 'ob-badge-ext' }}"
+                                                      style="font-size:10px;" title="{{ $ann['note'] }}">
+                                                    {{ $ann['type'] === 'obsolete' ? 'Obsolète' : 'Non implémenté' }}
+                                                </span>
+                                                <div style="font-size:var(--font-size-xs);color:var(--text-muted-soft);margin-top:2px;">
+                                                    <i class="fas fa-info-circle me-1"></i>{{ $ann['note'] }}
+                                                </div>
+                                            @elseif($row->DESCRIPTION)
                                                 <div class="text-muted" style="font-size:var(--font-size-xs);">
                                                     {{ Str::limit($row->DESCRIPTION, 120) }}
                                                 </div>
@@ -102,24 +121,43 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
                                                 <span class="ob-badge ob-badge-int">{{ $row->VALUE }}</span>
 
                                             @elseif($row->IS_FILE)
-                                                {{-- File setting: show current, text-edit --}}
-                                                <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"
-                                                      class="d-flex gap-2 align-items-center">
-                                                    @csrf @method('PATCH')
-                                                    <input type="text" name="VALUE"
-                                                           value="{{ $row->VALUE }}"
-                                                           class="form-control form-control-sm"
-                                                           style="max-width:280px;"
-                                                           placeholder="Chemin du fichier">
-                                                    <button type="submit" class="btn btn-sm btn-primary">
-                                                        <i class="fas fa-save"></i>
-                                                    </button>
-                                                </form>
+                                                {{-- Image upload --}}
+                                                @php
+                                                    $hasImg = $row->VALUE && str_starts_with($row->VALUE, 'theme/') && Storage::disk('public')->exists($row->VALUE);
+                                                    $imgUrl = $hasImg ? Storage::url($row->VALUE) : null;
+                                                @endphp
+                                                <div class="d-flex align-items-center gap-3 flex-wrap">
+                                                    @if($imgUrl)
+                                                        <img src="{{ $imgUrl }}" alt="{{ $label }}"
+                                                             style="max-height:48px;max-width:120px;object-fit:contain;border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:2px;">
+                                                        <form method="POST" action="{{ route('admin.settings.delete-file', $row->ID) }}">
+                                                            @csrf @method('DELETE')
+                                                            <input type="hidden" name="_tab" value="{{ $tabId }}">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                                    onclick="return confirm('Supprimer cette image ?')">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <span class="text-muted fst-italic" style="font-size:var(--font-size-xs);">Aucune image</span>
+                                                    @endif
+                                                    <form method="POST" action="{{ route('admin.settings.upload', $row->ID) }}"
+                                                          enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+                                                        @csrf
+                                                        <input type="hidden" name="_tab" value="{{ $tabId }}">
+                                                        <input type="file" name="file" class="form-control form-control-sm"
+                                                               accept="image/*" style="max-width:220px;">
+                                                        <button type="submit" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-upload"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
 
                                             @elseif($row->YESNO)
                                                 {{-- Toggle --}}
                                                 <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}">
                                                     @csrf @method('PATCH')
+                                                    <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                     <input type="hidden" name="toggle" value="1">
                                                     <div class="form-check form-switch">
                                                         <input class="form-check-input ob-setting-toggle"
@@ -135,6 +173,7 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
                                                 <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"
                                                       class="d-flex gap-2 align-items-center">
                                                     @csrf @method('PATCH')
+                                                    <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                     <select name="VALUE" class="form-select form-select-sm" style="max-width:220px;">
                                                         <option value="0" @selected($row->VALUE=='0')>Aucune</option>
                                                         <option value="1" @selected($row->VALUE=='1')>Erreurs seulement</option>
@@ -151,6 +190,7 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
                                                 <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"
                                                       class="d-flex gap-2 align-items-center">
                                                     @csrf @method('PATCH')
+                                                    <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                     <select name="VALUE" class="form-select form-select-sm" style="max-width:160px;">
                                                         <option value="md5"    @selected($row->VALUE=='md5')>MD5</option>
                                                         <option value="pbkdf2" @selected($row->VALUE=='pbkdf2')>PBKDF2</option>
@@ -165,6 +205,7 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
                                                 <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"
                                                       class="d-flex gap-2 align-items-center">
                                                     @csrf @method('PATCH')
+                                                    <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                     <select name="VALUE" class="form-select form-select-sm" style="max-width:200px;">
                                                         <option value="0" @selected($row->VALUE=='0')>Aucune restriction</option>
                                                         <option value="1" @selected($row->VALUE=='1')>Minimum (longueur)</option>
@@ -180,6 +221,7 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
                                                 <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"
                                                       class="d-flex gap-2 align-items-center">
                                                     @csrf @method('PATCH')
+                                                    <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                     <input type="text" name="VALUE"
                                                            value="{{ $row->VALUE }}"
                                                            class="form-control form-control-sm"

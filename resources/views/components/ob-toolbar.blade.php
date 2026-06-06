@@ -151,7 +151,7 @@
                href="{{ $exportXlsUrl }}"
                class="btn btn-sm btn-light"
                title="Exporter Excel (.xlsx) — colonnes visibles">
-                <i class="far fa-file-excel" style="color:#1d6f42;"></i>
+                <i class="far fa-file-excel" style="color:var(--color-excel);"></i>
             </a>
             @endif
 
@@ -163,7 +163,7 @@
                href="{{ $exportCsvUrl }}"
                class="btn btn-sm btn-light"
                title="Exporter CSV — colonnes visibles">
-                <i class="fas fa-file-csv" style="color:#555;"></i>
+                <i class="fas fa-file-csv" style="color:var(--text-muted-soft);"></i>
             </a>
             @endif
 

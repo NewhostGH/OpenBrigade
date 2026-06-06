@@ -33,11 +33,11 @@
         {{-- WhatsApp groups --}}
         @if (!empty($sectionLinks['links']))
             <p style="font-size:var(--font-size-xs);font-weight:600;color:var(--text-muted-soft);margin:12px 0 6px;">
-                <i class="fab fa-whatsapp me-1" style="color:#25d366;"></i> Mes groupes WhatsApp
+                <i class="fab fa-whatsapp me-1" style="color:var(--color-whatsapp);"></i> Mes groupes WhatsApp
             </p>
             @foreach ($sectionLinks['links'] as $link)
                 <div class="ob-dash-about-row" style="padding:5px 0;">
-                    <div class="ob-dash-about-icon" style="background:rgba(37,211,102,0.12);color:#1da851;">
+                    <div class="ob-dash-about-icon" style="background:var(--color-whatsapp-bg);color:var(--color-whatsapp-dark);">
                         <i class="fab fa-whatsapp"></i>
                     </div>
                     <span class="ob-dash-about-text">{{ $link['label'] }}</span>

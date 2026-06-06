@@ -4,7 +4,7 @@
         {{-- Left: brand + sidebar toggle --}}
         <div class="ob-nav-left">
             <a class="navbar-brand ob-logo-small" href="{{ route('dashboard') }}" title="Accueil">
-                <i class="fas fa-home fa-lg" style="color: rgb(188, 188, 207);"></i>
+                <i class="fas fa-home fa-lg" style="color:var(--brand-text);"></i>
             </a>
             <button class="navbar-toggler button-open noboxshadow" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navLateral" aria-controls="navLateral" aria-expanded="false">
@@ -60,7 +60,7 @@
                                 <li>
                                     <a class="dropdown-item dropdown-item-profil"
                                         href="{{ route('personnel.create') }}">
-                                        <i class="fas fa-user-plus fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Personnel
+                                        <i class="fas fa-user-plus fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Personnel
                                     </a>
                                 </li>
                             @endif
@@ -68,14 +68,14 @@
                                 <li>
                                     <a class="dropdown-item dropdown-item-profil"
                                         href="{{ route('evenement.create') }}">
-                                        <i class="fas fa-calendar-plus fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Activité
+                                        <i class="fas fa-calendar-plus fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Activité
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(17))
                                 <li>
                                     <a class="dropdown-item dropdown-item-profil" href="{{ route('vehicule.create') }}">
-                                        <i class="fas fa-truck fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Véhicule
+                                        <i class="fas fa-truck fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Véhicule
                                     </a>
                                 </li>
                             @endif
@@ -84,7 +84,7 @@
                                     {{-- TODO: Migrate code — ins_materiel.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
                                         href="{{ url('/legacy/ins_materiel.php?usage=ALL&type=ALL') }}">
-                                        <i class="fas fa-toolbox fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Matériel
+                                        <i class="fas fa-toolbox fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Matériel
                                     </a>
                                 </li>
                             @endif
@@ -93,7 +93,7 @@
                                     {{-- TODO: Migrate code — upd_consommable.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
                                         href="{{ url('/legacy/upd_consommable.php?action=insert&type_conso=ALL') }}">
-                                        <i class="fas fa-boxes fa-fw ob-nav-item-icon" style="color:#28A745;"></i> Consommable
+                                        <i class="fas fa-boxes fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Consommable
                                     </a>
                                 </li>
                             @endif

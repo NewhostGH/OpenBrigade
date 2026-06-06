@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ParametrageController extends Controller
@@ -14,11 +15,12 @@ class ParametrageController extends Controller
     public function index(): View
     {
         $counts = [
-            'type_evenement'    => DB::table('type_evenement')->count(),
+            'type_evenement'     => DB::table('type_evenement')->count(),
             'type_participation' => DB::table('type_participation')->count(),
-            'type_materiel'     => DB::table('type_materiel')->count(),
-            'type_consommable'  => DB::table('type_consommable')->count(),
-            'categorie_evenement' => DB::table('categorie_evenement')->count(),
+            'type_materiel'      => DB::table('type_materiel')->count(),
+            'type_consommable'   => DB::table('type_consommable')->count(),
+            'categorie_evenement'=> DB::table('categorie_evenement')->count(),
+            'grade'              => DB::table('grade')->count(),
         ];
 
         return view('admin.parametrage.index', compact('counts'));
@@ -362,5 +364,63 @@ class ParametrageController extends Controller
 
         return redirect()->route('admin.parametrage.type-vehicule')
             ->with('success', 'Type de véhicule supprimé.');
+    }
+
+    // ── Grade icons ───────────────────────────────────────────────────────────
+
+    public function gradeIndex(): View
+    {
+        $grades = DB::table('grade as g')
+            ->leftJoin('categorie_grade as cg', 'cg.CG_CODE', '=', 'g.G_CATEGORY')
+            ->orderBy('g.G_CATEGORY')
+            ->orderBy('g.G_LEVEL')
+            ->select('g.G_GRADE', 'g.G_DESCRIPTION', 'g.G_LEVEL', 'g.G_ICON',
+                     'g.G_CATEGORY', 'cg.CG_DESCRIPTION as cat_label')
+            ->get();
+
+        return view('admin.parametrage.grade', compact('grades'));
+    }
+
+    public function gradeIconUpload(Request $request, string $grade): RedirectResponse
+    {
+        $row = DB::table('grade')->where('G_GRADE', $grade)->first();
+        abort_if($row === null, 404);
+
+        $request->validate([
+            'icon' => ['required', 'file', 'mimes:png,jpg,jpeg,gif,webp', 'max:512'],
+        ]);
+
+        // Remove old icon from storage if it's in our managed path
+        $old = $row->G_ICON ?? '';
+        if ($old && str_starts_with($old, 'grades/') && Storage::disk('public')->exists($old)) {
+            Storage::disk('public')->delete($old);
+        }
+
+        $path = $request->file('icon')->storeAs(
+            'grades',
+            strtoupper($grade) . '.' . $request->file('icon')->extension(),
+            'public'
+        );
+
+        DB::table('grade')->where('G_GRADE', $grade)->update(['G_ICON' => $path]);
+
+        return redirect()->route('admin.parametrage.grade')
+            ->with('success', "Icône mise à jour pour {$grade}.");
+    }
+
+    public function gradeIconDestroy(string $grade): RedirectResponse
+    {
+        $row = DB::table('grade')->where('G_GRADE', $grade)->first();
+        abort_if($row === null, 404);
+
+        $path = $row->G_ICON ?? '';
+        if ($path && str_starts_with($path, 'grades/') && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        DB::table('grade')->where('G_GRADE', $grade)->update(['G_ICON' => null]);
+
+        return redirect()->route('admin.parametrage.grade')
+            ->with('success', "Icône supprimée pour {$grade}.");
     }
 }

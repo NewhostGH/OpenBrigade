@@ -85,4 +85,25 @@
     /* ── Transitions ─────────────────────────────────────────────────────── */
     --transition-fast: 0.15s ease;
     --transition-med: 0.20s ease;
+
+    /* ── Semantic icon / badge colours ──────────────────────────────────── */
+    --color-success-icon: #16a34a;
+    --color-folder: #e67e22;
+    --color-excel: #1d6f42;
+    --color-whatsapp: #25d366;
+    --color-whatsapp-dark: #1da851;
+    --color-whatsapp-bg: rgba(37, 211, 102, 0.12);
+    --color-purple: #76448a;
+    --color-purple-dark: #8950fc;
+    --color-purple-bg: rgba(142, 68, 173, 0.12);
+    --color-nav-add: #28A745;
+
+    /* ── Danger card (delete zones, destructive actions) ─────────────────── */
+    --card-danger-border: #fca5a5;
+    --card-danger-bg: #fff1f2;
+    --card-danger-title: #991b1b;
+
+    /* ── Info badge ──────────────────────────────────────────────────────── */
+    --badge-info-bg: #e0f2fe;
+    --badge-info-color: #0369a1;
 }

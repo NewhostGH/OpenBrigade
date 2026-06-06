@@ -181,7 +181,7 @@
 {{-- ── Pending members list ────────────────────────────────────────────────── --}}
 @if ($pending->count() > 0)
 <div class="ob-commandbar-wrap mx-3 mt-2">
-    <div class="px-3 py-2 border-bottom" style="background:#f1f5f9;">
+    <div class="px-3 py-2 border-bottom" style="background:var(--card-subheader-bg);">
         <span class="fw-semibold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:.04em;">
             À enregistrer ({{ $pending->count() }})
         </span>
@@ -214,7 +214,7 @@
 {{-- ── Already-paid list ───────────────────────────────────────────────────── --}}
 @if ($paid->count() > 0)
 <div class="ob-commandbar-wrap mx-3 mt-2 mb-3">
-    <div class="px-3 py-2 border-bottom" style="background:#f1f5f9;">
+    <div class="px-3 py-2 border-bottom" style="background:var(--card-subheader-bg);">
         <span class="fw-semibold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:.04em;">
             Déjà enregistrés ({{ $paid->count() }}) — Total : {{ number_format($totalPaid, 2, ',', ' ') }} €
         </span>

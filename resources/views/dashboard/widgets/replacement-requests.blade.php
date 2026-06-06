@@ -22,7 +22,7 @@
             </div>
             <a href="{{ route('remplacement.index') }}"
                style="text-decoration:none">
-                <span class="ob-dash-alert-badge" style="color:#8950fc">{{ $replacementRequests['count'] }}</span>
+                <span class="ob-dash-alert-badge" style="color:var(--color-purple-dark)">{{ $replacementRequests['count'] }}</span>
             </a>
         </div>
     </div>

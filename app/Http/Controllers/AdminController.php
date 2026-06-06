@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    /**
-     * Activity monitoring — recent actions in the audit log.
-     */
     public function monitoring(Request $request): View
     {
         $search   = trim((string) $request->string('q'));
@@ -69,14 +67,29 @@ class AdminController extends Controller
             6 => ['label' => 'Modules',           'icon' => 'puzzle-piece'],
         ];
 
-        $grouped = $rows->groupBy('TAB');
+        $grouped   = $rows->groupBy('TAB');
+        $activeTab = (int) session('_settings_tab', 0);
 
-        return view('admin.settings', compact('grouped', 'tabs'));
+        // Settings whose behaviour has changed or is not yet wired in Laravel.
+        // ID => ['type' => 'obsolete'|'todo', 'note' => '...']
+        $annotations = [
+            44 => ['type' => 'obsolete', 'note' => 'Laravel utilise bcrypt automatiquement. Les anciens hachages MD5 sont migrés à la prochaine connexion. Ce réglage n\'a plus d\'effet.'],
+            54 => ['type' => 'obsolete', 'note' => 'L\'affichage des erreurs est contrôlé par APP_DEBUG dans .env. Ce réglage n\'a plus d\'effet.'],
+            15 => ['type' => 'todo',     'note' => 'La validation de la complexité du mot de passe n\'est pas encore implémentée dans Laravel.'],
+            69 => ['type' => 'todo',     'note' => 'Le message de première connexion référence specific_info.php qui n\'existe pas encore dans Laravel.'],
+            67 => ['type' => 'obsolete', 'note' => 'Le verrou de crontab de mailing est géré par Laravel Queue. Ce réglage n\'a plus d\'effet.'],
+            70 => ['type' => 'todo',     'note' => 'L\'expiration des mots de passe n\'est pas encore implémentée dans Laravel.'],
+        ];
+
+        return view('admin.settings', compact('grouped', 'tabs', 'activeTab', 'annotations'));
     }
 
     public function saveSetting(Request $request, int $id): RedirectResponse
     {
-        abort_if(! DB::table('configuration')->where('ID', $id)->exists(), 404);
+        $row = DB::table('configuration')->where('ID', $id)->first();
+        abort_if($row === null, 404);
+
+        $tab = (int) $request->input('_tab', $row->TAB ?? 0);
 
         $value = $request->boolean('toggle')
             ? ($request->input('VALUE', '0') === '1' ? '1' : '0')
@@ -86,7 +99,54 @@ class AdminController extends Controller
             ->where('ID', $id)
             ->update(['VALUE' => $value]);
 
-        return back()->with('success', 'Paramètre mis à jour.');
+        return redirect()->route('admin.settings')
+            ->with('success', 'Paramètre mis à jour.')
+            ->with('_settings_tab', $tab);
+    }
+
+    public function uploadSetting(Request $request, int $id): RedirectResponse
+    {
+        $row = DB::table('configuration')->where('ID', $id)->where('IS_FILE', 1)->first();
+        abort_if($row === null, 404);
+
+        $tab = (int) $request->input('_tab', $row->TAB ?? 0);
+
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:jpeg,png,gif,ico,webp', 'max:4096'],
+        ]);
+
+        // Remove old file from storage
+        $old = $row->VALUE ?? '';
+        if ($old && str_starts_with($old, 'theme/') && Storage::disk('public')->exists($old)) {
+            Storage::disk('public')->delete($old);
+        }
+
+        $path = $request->file('file')->store('theme', 'public');
+
+        DB::table('configuration')->where('ID', $id)->update(['VALUE' => $path]);
+
+        return redirect()->route('admin.settings')
+            ->with('success', 'Image mise à jour.')
+            ->with('_settings_tab', $tab);
+    }
+
+    public function deleteSetting(Request $request, int $id): RedirectResponse
+    {
+        $row = DB::table('configuration')->where('ID', $id)->where('IS_FILE', 1)->first();
+        abort_if($row === null, 404);
+
+        $tab = (int) $request->input('_tab', $row->TAB ?? 0);
+
+        $path = $row->VALUE ?? '';
+        if ($path && str_starts_with($path, 'theme/') && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        DB::table('configuration')->where('ID', $id)->update(['VALUE' => '']);
+
+        return redirect()->route('admin.settings')
+            ->with('success', 'Image supprimée.')
+            ->with('_settings_tab', $tab);
     }
 
     private function monitoringColumns(): array

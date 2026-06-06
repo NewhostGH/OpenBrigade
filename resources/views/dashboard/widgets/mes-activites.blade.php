@@ -20,7 +20,7 @@
                     @elseif ($e->E_CLOSED)
                         <i class="fas fa-lock ob-dash-event-closed" title="Inscriptions fermées"></i>
                     @else
-                        <i class="fas fa-check-circle" style="color:#16a34a" title="Inscrit"></i>
+                        <i class="fas fa-check-circle" style="color:var(--color-success-icon)" title="Inscrit"></i>
                     @endif
                 </div>
                 <div class="ob-dash-event-info">

@@ -349,9 +349,9 @@
 
 {{-- ── Danger zone ─────────────────────────────────────────────────────────── --}}
 @if ($isEdit && auth()->user()->hasPermission(19))
-    <div class="ob-widget-card mt-3" style="border-color:#fca5a5 !important;">
-        <div class="ob-widget-card-header" style="background:#fff1f2;">
-            <div class="ob-widget-card-title" style="color:#991b1b;">
+    <div class="ob-widget-card mt-3" style="border-color:var(--card-danger-border) !important;">
+        <div class="ob-widget-card-header" style="background:var(--card-danger-bg);">
+            <div class="ob-widget-card-title" style="color:var(--card-danger-title);">
                 <i class="fas fa-trash"></i> Zone dangereuse
             </div>
         </div>

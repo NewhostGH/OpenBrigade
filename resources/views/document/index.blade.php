@@ -34,7 +34,7 @@
                     <a href="{{ route('document.index', ['folder' => $folder->DF_ID]) }}"
                        class="d-block px-3 py-2 text-decoration-none {{ $folderId === $folder->DF_ID ? 'fw-semibold' : '' }}"
                        style="font-size:var(--font-size-sm);border-bottom:1px solid var(--component-border)">
-                        <i class="fas fa-folder fa-xs me-2" style="color:#e67e22"></i>
+                        <i class="fas fa-folder fa-xs me-2" style="color:var(--color-folder)"></i>
                         {{ $folder->DF_NAME }}
                     </a>
                 @endforeach
@@ -73,7 +73,7 @@
                 @foreach($subFolders as $sf)
                     <a href="{{ route('document.index', ['folder' => $sf->DF_ID]) }}"
                        class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-folder me-1" style="color:#e67e22"></i>
+                        <i class="fas fa-folder me-1" style="color:var(--color-folder)"></i>
                         {{ $sf->DF_NAME }}
                     </a>
                 @endforeach

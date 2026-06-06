@@ -35,7 +35,7 @@
     <a class="btn btn-sm btn-light"
        href="{{ route('cotisations.export', request()->query()) }}"
        title="Exporter Excel">
-        <i class="far fa-file-excel" style="color:#1d6f42;"></i>
+        <i class="far fa-file-excel" style="color:var(--color-excel);"></i>
     </a>
 
     {{-- Filters --}}

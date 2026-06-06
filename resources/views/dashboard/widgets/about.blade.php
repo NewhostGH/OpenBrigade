@@ -17,7 +17,7 @@
         </a>
 
         <a class="ob-dash-about-row" href="{{ config('brigade.community_url', 'https://community.ebrigade.app') }}" target="_blank" rel="noopener">
-            <div class="ob-dash-about-icon" style="background:rgba(142,68,173,0.12);color:#76448a;">
+            <div class="ob-dash-about-icon" style="background:var(--color-purple-bg);color:var(--color-purple);">
                 <i class="fas fa-hands-helping"></i>
             </div>
             <span class="ob-dash-about-text">Communauté eBrigade</span>

@@ -18,6 +18,7 @@
             ['route' => 'admin.parametrage.type-materiel',     'icon' => 'toolbox',        'label' => 'Types de matériel',    'count' => $counts['type_materiel'],     'desc' => 'EPI, outillage…'],
             ['route' => 'admin.parametrage.type-consommable',  'icon' => 'boxes',          'label' => 'Types de consommable', 'count' => $counts['type_consommable'],  'desc' => 'Carburant, médicaments…'],
             ['route' => 'admin.parametrage.type-vehicule',     'icon' => 'truck',          'label' => 'Types de véhicule',    'count' => 0,                            'desc' => 'VSAV, FPT, VL…'],
+            ['route' => 'admin.parametrage.grade',             'icon' => 'medal',          'label' => 'Icônes de grades',     'count' => $counts['grade'],             'desc' => 'Images associées à chaque grade'],
         ];
         @endphp
         @foreach($sections as $s)

@@ -66,7 +66,7 @@
                             @php $pct = $maxPart > 0 ? round($val / $maxPart * 100) : 0; @endphp
                             <div class="d-flex flex-column align-items-center flex-fill">
                                 <div style="font-size:9px;color:var(--text-muted-soft)">{{ $val ?: '' }}</div>
-                                <div style="background:#27ae60;opacity:0.7;width:100%;height:{{ max($pct, 4) }}%;border-radius:2px 2px 0 0"></div>
+                                <div style="background:var(--color-success-icon);opacity:0.7;width:100%;height:{{ max($pct, 4) }}%;border-radius:2px 2px 0 0"></div>
                                 <div style="font-size:9px;color:var(--text-muted-soft);margin-top:2px">{{ $monthLabels[$i] }}</div>
                             </div>
                         @endforeach
