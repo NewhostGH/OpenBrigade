@@ -276,7 +276,8 @@ class VehiculeController extends Controller
     private function formLookups(): array
     {
         $types = DB::table('type_vehicule')
-            ->orderBy('TV_LIBELLE')
+            ->orderBy('TV_USAGE')
+            ->orderBy('TV_CODE')
             ->get(['TV_CODE', 'TV_LIBELLE', 'TV_USAGE']);
 
         $positions = DB::table('vehicule_position')
@@ -307,7 +308,7 @@ class VehiculeController extends Controller
         ]);
 
         $raw = $request->validate([
-            'TV_CODE'          => ['nullable', 'string', 'max:20'],
+            'TV_CODE'          => ['required', 'string', 'max:20'],
             'V_IMMATRICULATION'=> ['required', 'string', 'max:20'],
             'V_INDICATIF'      => ['nullable', 'string', 'max:50'],
             'V_MODELE'         => ['nullable', 'string', 'max:50'],

@@ -8,6 +8,9 @@ use App\Models\Section;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use App\Services\ICalExportService;
+use App\Services\TableExportService;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -204,6 +207,19 @@ class EvenementController extends Controller
             ->orderBy('V_INDICATIF')
             ->get(['V_ID', 'V_IMMATRICULATION', 'V_INDICATIF']);
 
+        // Materials assigned to this event.
+        $materiels = DB::table('evenement_materiel as em')
+            ->join('materiel as m', 'em.MA_ID', '=', 'm.MA_ID')
+            ->where('em.E_CODE', $code)
+            ->orderBy('m.MA_MODELE')
+            ->select('m.MA_ID', 'm.MA_MODELE', 'm.MA_NUMERO_SERIE', 'em.EM_NB', 'em.EE_ID')
+            ->get();
+
+        // All materials (for the assign modal).
+        $allMateriels = DB::table('materiel')
+            ->orderBy('MA_MODELE')
+            ->get(['MA_ID', 'MA_MODELE', 'MA_NUMERO_SERIE']);
+
         // Reinforcement sub-events.
         $renforts = DB::table('evenement as e')
             ->leftJoin('evenement_participation as ep', function ($j) {
@@ -220,7 +236,7 @@ class EvenementController extends Controller
 
         return view('evenement.show', compact(
             'event', 'typeLabel', 'participants', 'candidates', 'vehicules', 'allVehicles',
-            'functions', 'equipes', 'renforts'
+            'functions', 'equipes', 'renforts', 'materiels', 'allMateriels'
         ));
     }
 
@@ -686,6 +702,204 @@ class EvenementController extends Controller
             ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_SECTION']);
 
         return [$groupedTypes, $sections, $chefs];
+    }
+
+    // ── Equipe member / material management ──────────────────────────────────
+
+    public function equipeAddParticipant(Request $request, string $code, int $ee): RedirectResponse
+    {
+        Evenement::findOrFail($code);
+
+        $validated = $request->validate(['P_ID' => ['required', 'integer', 'exists:pompier,P_ID']]);
+
+        DB::table('evenement_participation')
+            ->where('E_CODE', $code)
+            ->where('P_ID', $validated['P_ID'])
+            ->update(['EE_ID' => $ee]);
+
+        return back()->with('success', 'Participant ajouté à l\'équipe.');
+    }
+
+    public function equipeAddMateriel(Request $request, string $code, int $ee): RedirectResponse
+    {
+        Evenement::findOrFail($code);
+
+        $validated = $request->validate([
+            'MA_ID' => ['required', 'integer', 'exists:materiel,MA_ID'],
+            'EM_NB' => ['nullable', 'integer', 'min:1', 'max:9999'],
+        ]);
+
+        $existing = DB::table('evenement_materiel')
+            ->where('E_CODE', $code)
+            ->where('MA_ID', $validated['MA_ID'])
+            ->first();
+
+        if ($existing) {
+            DB::table('evenement_materiel')
+                ->where('E_CODE', $code)
+                ->where('MA_ID', $validated['MA_ID'])
+                ->update(['EE_ID' => $ee, 'EM_NB' => $validated['EM_NB'] ?? $existing->EM_NB]);
+        } else {
+            DB::table('evenement_materiel')->insert([
+                'E_CODE' => $code,
+                'MA_ID'  => $validated['MA_ID'],
+                'EM_NB'  => $validated['EM_NB'] ?? 1,
+                'EE_ID'  => $ee,
+            ]);
+        }
+
+        return back()->with('success', 'Matériel ajouté à l\'équipe.');
+    }
+
+    // ── Participant team quick-assign ────────────────────────────────────────
+
+    public function participantTeam(Request $request, string $code, int $pid): RedirectResponse
+    {
+        Evenement::findOrFail($code);
+
+        $validated = $request->validate(['EE_ID' => ['nullable', 'integer']]);
+
+        DB::table('evenement_participation')
+            ->where('E_CODE', $code)
+            ->where('P_ID', $pid)
+            ->update(['EE_ID' => $validated['EE_ID'] ?: null]);
+
+        return back()->with('success', 'Équipe mise à jour.');
+    }
+
+    // ── Matériel assignment ───────────────────────────────────────────────────
+
+    public function materielAttach(Request $request, string $code): RedirectResponse
+    {
+        Evenement::findOrFail($code);
+
+        $validated = $request->validate([
+            'MA_ID' => ['required', 'integer', 'exists:materiel,MA_ID'],
+            'EM_NB' => ['nullable', 'integer', 'min:1', 'max:9999'],
+            'EE_ID' => ['nullable', 'integer'],
+        ]);
+
+        $already = DB::table('evenement_materiel')
+            ->where('E_CODE', $code)
+            ->where('MA_ID', $validated['MA_ID'])
+            ->exists();
+
+        if ($already) {
+            return back()->with('error', 'Ce matériel est déjà assigné à cette activité.');
+        }
+
+        DB::table('evenement_materiel')->insert([
+            'E_CODE' => $code,
+            'MA_ID'  => $validated['MA_ID'],
+            'EM_NB'  => $validated['EM_NB'] ?? 1,
+            'EE_ID'  => $validated['EE_ID'] ?: null,
+        ]);
+
+        return back()->with('success', 'Matériel assigné.');
+    }
+
+    public function materielUpdateQty(Request $request, string $code, int $ma): RedirectResponse
+    {
+        Evenement::findOrFail($code);
+
+        $validated = $request->validate(['EM_NB' => ['required', 'integer', 'min:1', 'max:9999']]);
+
+        DB::table('evenement_materiel')
+            ->where('E_CODE', $code)
+            ->where('MA_ID', $ma)
+            ->update(['EM_NB' => $validated['EM_NB']]);
+
+        return back()->with('success', 'Quantité mise à jour.');
+    }
+
+    public function materielDetach(string $code, int $ma): RedirectResponse
+    {
+        Evenement::findOrFail($code);
+
+        DB::table('evenement_materiel')
+            ->where('E_CODE', $code)
+            ->where('MA_ID', $ma)
+            ->delete();
+
+        return back()->with('success', 'Matériel retiré.');
+    }
+
+    // ── Exports ───────────────────────────────────────────────────────────────
+
+    public function exportParticipants(string $code)
+    {
+        $event = Evenement::findOrFail($code);
+
+        $participants = DB::table('evenement_participation as ep')
+            ->join('pompier as p', 'ep.P_ID', '=', 'p.P_ID')
+            ->leftJoin('type_participation as tp', 'tp.TP_ID', '=', 'ep.TP_ID')
+            ->leftJoin('evenement_equipe as ee', function ($j) use ($code) {
+                $j->on('ee.EE_ID', '=', 'ep.EE_ID')->where('ee.E_CODE', '=', $code);
+            })
+            ->where('ep.E_CODE', $code)
+            ->orderBy('p.P_NOM')
+            ->orderBy('p.P_PRENOM')
+            ->select(
+                'p.P_NOM', 'p.P_PRENOM', 'p.P_GRADE',
+                'tp.TP_LIBELLE', 'ee.EE_NAME',
+                'ep.EP_COMMENT', 'ep.EP_ABSENT'
+            )
+            ->get();
+
+        $columns = [
+            ['Nom',         fn($p) => strtoupper($p->P_NOM)],
+            ['Prénom',      fn($p) => ucfirst(mb_strtolower($p->P_PRENOM))],
+            ['Grade',       fn($p) => $p->P_GRADE ?? ''],
+            ['Fonction',    fn($p) => $p->TP_LIBELLE ?? ''],
+            ['Équipe',      fn($p) => $p->EE_NAME ?? ''],
+            ['Commentaire', fn($p) => $p->EP_COMMENT ?? ''],
+            ['Absent',      fn($p) => $p->EP_ABSENT ? 'Oui' : ''],
+        ];
+
+        return (new TableExportService())->toXlsx(
+            $columns,
+            $participants,
+            'Activite_' . $event->E_CODE . '_Participants_' . date('Ymd'),
+            ['sheetTitle' => 'Participants', 'freezeHeader' => true]
+        );
+    }
+
+    public function exportIcal(string $code): Response
+    {
+        $event = Evenement::with('horaires')->findOrFail($code);
+
+        $vevents = [];
+        foreach ($event->horaires as $h) {
+            $startDate = Carbon::parse($h->EH_DATE_DEBUT);
+            $endDate   = Carbon::parse($h->EH_DATE_FIN ?? $h->EH_DATE_DEBUT);
+
+            $hasTime = $h->EH_DEBUT && substr((string) $h->EH_DEBUT, 0, 5) !== '00:00';
+
+            if ($hasTime) {
+                [$sh, $sm] = explode(':', substr((string) $h->EH_DEBUT, 0, 5));
+                $startDate->setTime((int) $sh, (int) $sm)->timezone('Europe/Paris');
+                if ($h->EH_FIN) {
+                    [$eh, $em] = explode(':', substr((string) $h->EH_FIN, 0, 5));
+                    $endDate->setTime((int) $eh, (int) $em)->timezone('Europe/Paris');
+                }
+            }
+
+            $vevents[] = [
+                'summary'     => $event->E_LIBELLE ?? $event->E_CODE,
+                'location'    => $event->E_LIEU ?? '',
+                'description' => $event->E_COMMENT ?? '',
+                'uid'         => 'ob-evt-' . $event->E_CODE . '-' . $h->EH_ID . '@' . request()->getHost(),
+                'allDay'      => !$hasTime,
+                'dtstart'     => $startDate,
+                'dtend'       => $hasTime ? $endDate : $endDate->addDay(),
+            ];
+        }
+
+        return (new ICalExportService())->toResponse(
+            config('app.name'),
+            $vevents,
+            'activite-' . $event->E_CODE
+        );
     }
 
     // ── Shared validation ────────────────────────────────────────────────────

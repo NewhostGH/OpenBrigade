@@ -56,6 +56,12 @@ perl -i -pe 's/(?<![a-zA-Z0-9_\-])(OLD_CLASS)(?![a-zA-Z0-9_\-])/ob-new-class/g' 
 
 The lookbehind/lookahead prevents double-prefixing (`ob-ob-*`) and protects CSS design tokens. **Always run `npm run build` after each module** — Vite catches JS variable name collisions (e.g. `$siglet` becoming `$ob-siglet`).
 
+## 6. Exports
+
+- **XLSX / CSV exports** MUST use `App\Services\TableExportService` (`toXlsx()` / `toCsv()`). Never instantiate `PhpSpreadsheet` directly in a controller.
+- **iCal exports** MUST use `App\Services\ICalExportService` (`toResponse()`). Never instantiate `Sabre\VObject\Component\VCalendar` directly in a controller.
+- Export column definitions follow the flat `[[label, getter], ...]` format understood by `TableExportService`. Define columns once; reuse for both the list view and the export.
+
 ## 5. Legacy references must be flagged
 
 Any link, asset path, or redirect pointing at the legacy app (`/legacy/...`, `*.php?...`, `/trombinoscope/...`, `archive/legacy_app/...`) **MUST** carry a marker comment on the same or preceding line:

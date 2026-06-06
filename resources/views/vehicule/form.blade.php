@@ -125,16 +125,23 @@
 
                     <div class="row g-3 mb-3">
                         <div class="col-sm-5">
-                            <label class="form-label fw-semibold" for="TV_CODE">Type</label>
-                            <select id="TV_CODE" name="TV_CODE"
+                            <label class="form-label fw-semibold" for="TV_CODE">Type <span class="text-danger">*</span></label>
+                            <select id="TV_CODE" name="TV_CODE" required
                                     class="form-select form-select-sm @error('TV_CODE') is-invalid @enderror">
                                 <option value="">— Choisir —</option>
+                                @php $currentUsage = null; @endphp
                                 @foreach ($types as $t)
+                                    @if($t->TV_USAGE !== $currentUsage)
+                                        @if($currentUsage !== null) </optgroup> @endif
+                                        @if($t->TV_USAGE) <optgroup label="{{ $t->TV_USAGE }}"> @endif
+                                        @php $currentUsage = $t->TV_USAGE; @endphp
+                                    @endif
                                     <option value="{{ $t->TV_CODE }}"
                                             {{ $val('TV_CODE') === $t->TV_CODE ? 'selected' : '' }}>
-                                        {{ $t->TV_LIBELLE }}
+                                        {{ $t->TV_CODE }}{{ $t->TV_LIBELLE ? ' — ' . $t->TV_LIBELLE : '' }}
                                     </option>
                                 @endforeach
+                                @if($currentUsage !== null) </optgroup> @endif
                             </select>
                         </div>
                         <div class="col-sm-4">

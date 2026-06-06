@@ -26,6 +26,14 @@
                 @endif
             </div>
             <div class="d-flex gap-2">
+                <a href="{{ route('evenement.export.participants', $event->E_CODE) }}"
+                   class="btn btn-sm btn-outline-secondary" title="Exporter la liste des participants">
+                    <i class="fas fa-file-excel me-1"></i> XLS
+                </a>
+                <a href="{{ route('evenement.ical', $event->E_CODE) }}"
+                   class="btn btn-sm btn-outline-secondary" title="Télécharger en iCal">
+                    <i class="fas fa-calendar-plus me-1"></i> iCal
+                </a>
                 @if(auth()->user()->hasPermission(15))
                     <a href="{{ route('evenement.edit', $event->E_CODE) }}"
                        class="btn btn-sm btn-outline-secondary">
@@ -165,40 +173,8 @@
         </div>
     </div>
 
-    {{-- ── Sidebar + content layout ───────────────────────────────────────── --}}
-    <div class="d-flex gap-3 align-items-start">
-
-        {{-- ── Left sidebar nav ──────────────────────────────────────────── --}}
-        <div class="noprint" style="flex:0 0 auto; width:160px;">
-            <div class="ob-widget-card">
-                <div class="ob-widget-card-body p-0">
-                    <nav>
-                        <a href="#section-participants" class="ob-pers-sidenav-link active">
-                            <i class="fas fa-users" style="width:14px; text-align:center;"></i>
-                            Participants
-                            <span class="ob-badge ob-badge-archive" style="margin-left:auto;">{{ count($participants) }}</span>
-                        </a>
-                        <a href="#section-equipes" class="ob-pers-sidenav-link">
-                            <i class="fas fa-layer-group" style="width:14px; text-align:center;"></i>
-                            Équipes
-                            <span class="ob-badge ob-badge-archive" style="margin-left:auto;">{{ count($equipes) }}</span>
-                        </a>
-                        <a href="#section-vehicules" class="ob-pers-sidenav-link">
-                            <i class="fas fa-truck" style="width:14px; text-align:center;"></i>
-                            Véhicules
-                        </a>
-                        <a href="#section-renforts" class="ob-pers-sidenav-link">
-                            <i class="fas fa-plus-circle" style="width:14px; text-align:center;"></i>
-                            Renforts
-                            <span class="ob-badge ob-badge-archive" style="margin-left:auto;">{{ count($renforts) }}</span>
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
-
-        {{-- ── Main content ──────────────────────────────────────────────── --}}
-        <div style="flex:1; min-width:0;">
+    {{-- ── Content sections ───────────────────────────────────────────────── --}}
+    <div>
 
     {{-- ── Section: Participants ───────────────────────────────────────────── --}}
     <div id="section-participants" data-evt-section class="ob-widget-card mb-3">
@@ -254,9 +230,30 @@
                                 <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                                     {{ $p->TP_LIBELLE ?? '—' }}
                                 </td>
-                                <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
-                                    {{ $p->EE_NAME ?? '—' }}
-                                </td>
+                                @if(auth()->user()->hasPermission(10) && $equipes->count() > 0 && !$event->E_CLOSED && !$event->E_CANCELED)
+                                    <td style="font-size:var(--font-size-xs);">
+                                        <form method="POST"
+                                              action="{{ route('evenement.participant.team', [$event->E_CODE, $p->P_ID]) }}"
+                                              class="d-inline">
+                                            @csrf @method('PATCH')
+                                            <select name="EE_ID" onchange="this.form.submit()"
+                                                    class="form-select form-select-sm"
+                                                    style="font-size:var(--font-size-xs);padding:1px 20px 1px 4px;min-width:90px;">
+                                                <option value="">— aucune —</option>
+                                                @foreach($equipes as $eq)
+                                                    <option value="{{ $eq->EE_ID }}"
+                                                            {{ (int)$p->EE_ID === (int)$eq->EE_ID ? 'selected' : '' }}>
+                                                        {{ $eq->EE_NAME }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </form>
+                                    </td>
+                                @else
+                                    <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
+                                        {{ $p->EE_NAME ?? '—' }}
+                                    </td>
+                                @endif
                                 @if(auth()->user()->hasPermission(10))
                                     <td class="text-end pe-2">
                                         <button type="button"
@@ -264,7 +261,7 @@
                                                 onclick="openEditParticipant({{ json_encode([
                                                     'p_id'       => $p->P_ID,
                                                     'tp_id'      => $p->TP_ID ?? 0,
-                                                    'ee_id'      => $p->EE_ID ?? '',
+                                                    'ee_id'      => $p->EE_ID,
                                                     'ep_comment' => $p->EP_COMMENT ?? '',
                                                 ]) }})">
                                             <i class="fas fa-edit"></i>
@@ -308,55 +305,171 @@
             @if(count($equipes) === 0)
                 <p class="ob-widget-empty p-3">Aucune équipe définie pour cette activité.</p>
             @else
-                <table class="table table-sm table-hover mb-0 align-middle">
-                    <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
-                        <tr>
-                            <th>Nom</th>
-                            <th>Description</th>
-                            <th>ID Radio</th>
-                            <th class="text-center" style="width:50px"><i class="fas fa-user" title="Membres"></i></th>
-                            <th class="text-center" style="width:50px"><i class="fas fa-truck" title="Véhicules"></i></th>
+                @php
+                    $participantsByTeam = $participants->groupBy('EE_ID');
+                    $materielsByTeam    = $materiels->groupBy('EE_ID');
+                    $unassignedP = $participantsByTeam->get(null, collect())->merge($participantsByTeam->get(0, collect()));
+                    $canManage   = auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED;
+                    $canEnroll   = auth()->user()->hasPermission(10)  && !$event->E_CLOSED && !$event->E_CANCELED;
+                @endphp
+                <div class="p-3 d-flex flex-wrap gap-3 align-items-start">
+                @foreach($equipes as $eq)
+                    @php
+                        $teamMembers   = $participantsByTeam->get($eq->EE_ID, collect());
+                        $teamMateriels = $materielsByTeam->get($eq->EE_ID, collect());
+                    @endphp
+                    <div style="min-width:220px; flex:1; background:var(--sidebar-bg); border-radius:var(--radius-md);">
+                        {{-- Team header --}}
+                        <div class="d-flex align-items-center gap-2 px-2 py-1"
+                             style="background:var(--card-subheader-bg); border-bottom:1px solid var(--card-subheader-border); border-radius:var(--radius-md) var(--radius-md) 0 0;">
+                            <span class="fw-semibold" style="font-size:var(--font-size-sm); flex:1;">
+                                {{ $eq->EE_NAME }}
+                                @if($eq->EE_ID_RADIO)
+                                    <span class="text-muted fw-normal ms-1" style="font-size:var(--font-size-xs)">
+                                        <i class="fas fa-broadcast-tower"></i> {{ $eq->EE_ID_RADIO }}
+                                    </span>
+                                @endif
+                            </span>
                             @if(auth()->user()->hasPermission(15))
-                                <th style="width:72px"></th>
+                                <button type="button"
+                                        class="btn btn-xs btn-light py-0 px-1"
+                                        onclick="openEditEquipe({{ json_encode([
+                                            'ee_id'    => $eq->EE_ID,
+                                            'ee_name'  => $eq->EE_NAME,
+                                            'ee_order' => $eq->EE_ORDER,
+                                            'ee_desc'  => $eq->EE_DESCRIPTION ?? '',
+                                            'ee_radio' => $eq->EE_ID_RADIO ?? '',
+                                        ]) }})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form method="POST"
+                                      action="{{ route('evenement.equipe.destroy', [$event->E_CODE, $eq->EE_ID]) }}"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Supprimer l\'équipe « {{ addslashes($eq->EE_NAME) }} » ?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             @endif
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($equipes as $eq)
-                            <tr>
-                                <td class="fw-semibold" style="font-size:var(--font-size-sm)">{{ $eq->EE_NAME }}</td>
-                                <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">{{ $eq->EE_DESCRIPTION ?: '—' }}</td>
-                                <td style="font-size:var(--font-size-xs)">{{ $eq->EE_ID_RADIO ?: '—' }}</td>
-                                <td class="text-center" style="font-size:var(--font-size-sm)">{{ $eq->member_count }}</td>
-                                <td class="text-center" style="font-size:var(--font-size-sm)">{{ $eq->vehicle_count }}</td>
-                                @if(auth()->user()->hasPermission(15))
-                                    <td class="text-end pe-2">
-                                        <button type="button"
-                                                class="btn btn-xs btn-light py-0 px-1 me-1"
-                                                onclick="openEditEquipe({{ json_encode([
-                                                    'ee_id'    => $eq->EE_ID,
-                                                    'ee_name'  => $eq->EE_NAME,
-                                                    'ee_order' => $eq->EE_ORDER,
-                                                    'ee_desc'  => $eq->EE_DESCRIPTION ?? '',
-                                                    'ee_radio' => $eq->EE_ID_RADIO ?? '',
-                                                ]) }})">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
+                        </div>
+                        @if($eq->EE_DESCRIPTION)
+                            <div class="px-2 pt-1" style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">
+                                {{ $eq->EE_DESCRIPTION }}
+                            </div>
+                        @endif
+
+                        {{-- Personnel --}}
+                        <div class="px-2 pt-2 pb-1">
+                            <div class="mb-1" style="font-size:var(--font-size-xs);font-weight:600;color:var(--text-muted-soft);text-transform:uppercase;letter-spacing:.04em;">
+                                <i class="fas fa-users me-1"></i>Personnel ({{ $teamMembers->count() }})
+                            </div>
+                            @foreach($teamMembers as $tm)
+                                <div class="d-flex align-items-center gap-1 mb-1">
+                                    <img src="{{ route('personnel.photo', $tm->P_ID) }}"
+                                         width="20" height="20"
+                                         style="border-radius:4px;object-fit:cover;flex-shrink:0;"
+                                         onerror="this.src='{{ asset('images/autre.png') }}'">
+                                    <span style="font-size:var(--font-size-xs);flex:1;min-width:0;">
+                                        <a href="{{ route('personnel.show', $tm->P_ID) }}" class="text-decoration-none">
+                                            {{ $tm->P_PRENOM }} {{ strtoupper($tm->P_NOM) }}
+                                        </a>
+                                        @if($tm->TP_LIBELLE)
+                                            <span class="text-muted">— {{ $tm->TP_LIBELLE }}</span>
+                                        @endif
+                                    </span>
+                                    @if($canEnroll)
                                         <form method="POST"
-                                              action="{{ route('evenement.equipe.destroy', [$event->E_CODE, $eq->EE_ID]) }}"
-                                              class="d-inline"
-                                              onsubmit="return confirm('Supprimer l\'équipe « {{ addslashes($eq->EE_NAME) }} » ?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
-                                                <i class="fas fa-trash"></i>
+                                              action="{{ route('evenement.participant.team', [$event->E_CODE, $tm->P_ID]) }}"
+                                              class="d-inline flex-shrink-0">
+                                            @csrf @method('PATCH')
+                                            <input type="hidden" name="EE_ID" value="">
+                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-muted"
+                                                    title="Retirer de l'équipe">
+                                                <i class="fas fa-times"></i>
                                             </button>
                                         </form>
-                                    </td>
-                                @endif
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                    @endif
+                                </div>
+                            @endforeach
+                            @if($canEnroll && $unassignedP->count() > 0)
+                                <form method="POST"
+                                      action="{{ route('evenement.equipe.participant.add', [$event->E_CODE, $eq->EE_ID]) }}"
+                                      class="d-flex gap-1 mt-1">
+                                    @csrf
+                                    <select name="P_ID" class="form-select form-select-sm"
+                                            style="font-size:var(--font-size-xs);flex:1;">
+                                        <option value="">+ Ajouter…</option>
+                                        @foreach($unassignedP as $up)
+                                            <option value="{{ $up->P_ID }}">
+                                                {{ strtoupper($up->P_NOM) }} {{ $up->P_PRENOM }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-xs btn-success flex-shrink-0">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+
+                        {{-- Matériel --}}
+                        <div class="px-2 pt-1 pb-2">
+                            <div class="mb-1" style="font-size:var(--font-size-xs);font-weight:600;color:var(--text-muted-soft);text-transform:uppercase;letter-spacing:.04em;">
+                                <i class="fas fa-box me-1"></i>Matériel ({{ $teamMateriels->count() }})
+                            </div>
+                            @foreach($teamMateriels as $tm)
+                                <div class="d-flex align-items-center gap-1 mb-1">
+                                    <span style="font-size:var(--font-size-xs);flex:1;">
+                                        {{ $tm->EM_NB }}× {{ $tm->MA_MODELE }}
+                                    </span>
+                                    @if($canManage)
+                                        <form method="POST"
+                                              action="{{ route('evenement.materiel.detach', [$event->E_CODE, $tm->MA_ID]) }}"
+                                              class="d-inline flex-shrink-0"
+                                              onsubmit="return confirm('Retirer {{ addslashes($tm->MA_MODELE) }} ?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-muted"
+                                                    title="Retirer">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            @endforeach
+                            @if($canManage && $allMateriels->count() > 0)
+                                <form method="POST"
+                                      action="{{ route('evenement.equipe.materiel.add', [$event->E_CODE, $eq->EE_ID]) }}"
+                                      class="d-flex gap-1 mt-1">
+                                    @csrf
+                                    <select name="MA_ID" class="form-select form-select-sm"
+                                            style="font-size:var(--font-size-xs);flex:1;">
+                                        <option value="">+ Ajouter…</option>
+                                        @foreach($allMateriels as $am)
+                                            <option value="{{ $am->MA_ID }}">
+                                                {{ $am->MA_MODELE }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <input type="number" name="EM_NB" value="1" min="1" max="9999"
+                                           class="form-control form-control-sm flex-shrink-0"
+                                           style="width:50px;font-size:var(--font-size-xs);">
+                                    <button type="submit" class="btn btn-xs btn-success flex-shrink-0">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+                </div>
+                @if($unassignedP->count() > 0)
+                    <div class="px-3 pb-3">
+                        <span style="font-size:var(--font-size-xs);color:var(--text-muted-soft);font-style:italic;">
+                            {{ $unassignedP->count() }} participant(s) sans équipe
+                        </span>
+                    </div>
+                @endif
             @endif
         </div>
     </div>
@@ -405,6 +518,83 @@
                                               action="{{ route('evenement.vehicule.detach', [$event->E_CODE, $v->V_ID]) }}"
                                               class="d-inline"
                                               onsubmit="return confirm('Désassigner ce véhicule ?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
+                                                <i class="fas fa-unlink"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                @endif
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    </div>
+
+    {{-- ── Section: Matériel ─────────────────────────────────────────────── --}}
+    <div id="section-materiels" data-evt-section class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
+                <i class="fas fa-box"></i> Matériel
+                @if(count($materiels) > 0)
+                    <span class="ob-badge ob-badge-archive ms-1">{{ count($materiels) }}</span>
+                @endif
+            </div>
+            @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
+                <button type="button" class="btn btn-sm btn-success"
+                        data-bs-toggle="modal" data-bs-target="#assignMaterielModal">
+                    <i class="fas fa-plus me-1"></i> Assigner
+                </button>
+            @endif
+        </div>
+        <div class="ob-widget-card-body p-0">
+            @if(count($materiels) === 0)
+                <p class="ob-widget-empty p-3">Aucun matériel assigné à cette activité.</p>
+            @else
+                <table class="table table-sm table-hover mb-0 align-middle">
+                    <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
+                        <tr>
+                            <th>Désignation</th>
+                            <th>Référence</th>
+                            <th class="text-center" style="width:80px">Qté</th>
+                            @if(auth()->user()->hasPermission(15))
+                                <th style="width:50px"></th>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($materiels as $m)
+                            <tr>
+                                <td class="fw-semibold" style="font-size:var(--font-size-sm)">
+                                    {{ $m->MA_MODELE }}
+                                </td>
+                                <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
+                                    {{ $m->MA_NUMERO_SERIE ?: '—' }}
+                                </td>
+                                <td class="text-center" style="font-size:var(--font-size-sm)">
+                                    @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
+                                        <form method="POST"
+                                              action="{{ route('evenement.materiel.qty', [$event->E_CODE, $m->MA_ID]) }}"
+                                              class="d-inline">
+                                            @csrf @method('PATCH')
+                                            <input type="number" name="EM_NB" value="{{ $m->EM_NB }}"
+                                                   min="1" max="9999"
+                                                   class="form-control form-control-sm text-center d-inline-block"
+                                                   style="width:60px;font-size:var(--font-size-xs);"
+                                                   onchange="this.form.submit()">
+                                        </form>
+                                    @else
+                                        {{ $m->EM_NB }}
+                                    @endif
+                                </td>
+                                @if(auth()->user()->hasPermission(15))
+                                    <td class="text-end pe-2">
+                                        <form method="POST"
+                                              action="{{ route('evenement.materiel.detach', [$event->E_CODE, $m->MA_ID]) }}"
+                                              class="d-inline"
+                                              onsubmit="return confirm('Retirer {{ addslashes($m->MA_MODELE) }} ?')">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
                                                 <i class="fas fa-unlink"></i>
@@ -495,14 +685,65 @@
         </div>
     </div>
 
-        </div>  {{-- close main content --}}
-    </div>  {{-- close sidebar + content layout --}}
+    </div>  {{-- close content sections --}}
 
 </div>  {{-- close mx-3 mt-3 --}}
 
 {{-- ══════════════════════════════════════════════════════════════════════════
      MODALS
 ════════════════════════════════════════════════════════════════════════════ --}}
+
+{{-- Assign matériel --}}
+@if(auth()->user()->hasPermission(15))
+<div class="modal fade" id="assignMaterielModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Assigner du matériel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('evenement.materiel.attach', $event->E_CODE) }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">
+                            Matériel <span class="text-danger">*</span>
+                        </label>
+                        <select name="MA_ID" class="form-select form-select-sm" required>
+                            <option value="">— choisir —</option>
+                            @foreach($allMateriels as $m)
+                                <option value="{{ $m->MA_ID }}">
+                                    {{ $m->MA_MODELE }}{{ $m->MA_NUMERO_SERIE ? ' (' . $m->MA_NUMERO_SERIE . ')' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Quantité</label>
+                        <input name="EM_NB" type="number" min="1" max="9999" value="1"
+                               class="form-control form-control-sm" style="width:80px;">
+                    </div>
+                    @if($equipes->count() > 0)
+                        <div>
+                            <label class="form-label" style="font-size:var(--font-size-sm)">Équipe</label>
+                            <select name="EE_ID" class="form-select form-select-sm">
+                                <option value="">— toutes —</option>
+                                @foreach($equipes as $eq)
+                                    <option value="{{ $eq->EE_ID }}">{{ $eq->EE_NAME }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Assigner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
 
 {{-- Assign vehicle --}}
 @if(auth()->user()->hasPermission(15))

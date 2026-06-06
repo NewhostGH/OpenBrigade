@@ -155,7 +155,7 @@
                     <p class="ob-form-label"><i class="fas fa-people-carry me-1"></i> Organisation</p>
 
                     <div class="row g-3 mb-4">
-                        <div class="col-sm-7">
+                        <div class="col-sm">
                             <label class="form-label fw-semibold" for="E_CHEF">Responsable</label>
                             <select id="E_CHEF" name="E_CHEF"
                                     class="form-select form-select-sm @error('E_CHEF') is-invalid @enderror">
@@ -174,8 +174,8 @@
                                    class="form-control form-control-sm"
                                    value="{{ $val('E_TEL') }}" maxlength="15">
                         </div>
-                        <div class="col-sm-2">
-                            <label class="form-label" for="E_NB">Effectif requis</label>
+                        <div class="col-auto" style="max-width:90px;">
+                            <label class="form-label" for="E_NB">Effectif</label>
                             <input type="number" id="E_NB" name="E_NB"
                                    class="form-control form-control-sm"
                                    value="{{ $val('E_NB', 0) }}" min="0" max="9999">

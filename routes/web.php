@@ -66,17 +66,27 @@ Route::middleware('auth')->group(function () {
     // Participant management — inscription, fonction, équipe (permission 10 = inscrire)
     Route::post('/evenements/{code}/participants', [EvenementController::class, 'participantStore'])->name('evenement.participant.store')->middleware('permission:10');
     Route::patch('/evenements/{code}/participants/{pid}', [EvenementController::class, 'participantUpdate'])->name('evenement.participant.update')->middleware('permission:10');
+    Route::patch('/evenements/{code}/participants/{pid}/equipe', [EvenementController::class, 'participantTeam'])->name('evenement.participant.team')->middleware('permission:10');
     Route::delete('/evenements/{code}/participants/{pid}', [EvenementController::class, 'participantDestroy'])->name('evenement.participant.destroy')->middleware('permission:10');
     // Équipes CRUD — teams within an event (permission 15 = gérer activité)
     Route::post('/evenements/{code}/equipes', [EvenementController::class, 'equipeStore'])->name('evenement.equipe.store')->middleware('permission:15');
     Route::put('/evenements/{code}/equipes/{ee}', [EvenementController::class, 'equipeUpdate'])->name('evenement.equipe.update')->middleware('permission:15');
     Route::delete('/evenements/{code}/equipes/{ee}', [EvenementController::class, 'equipeDestroy'])->name('evenement.equipe.destroy')->middleware('permission:15');
+    Route::post('/evenements/{code}/equipes/{ee}/participants', [EvenementController::class, 'equipeAddParticipant'])->name('evenement.equipe.participant.add')->middleware('permission:10');
+    Route::post('/evenements/{code}/equipes/{ee}/materiels', [EvenementController::class, 'equipeAddMateriel'])->name('evenement.equipe.materiel.add')->middleware('permission:15');
     // Renforts — attach/detach reinforcement sub-events (permission 15)
     Route::post('/evenements/{code}/renforts', [EvenementController::class, 'renfortAttach'])->name('evenement.renfort.attach')->middleware('permission:15');
     Route::delete('/evenements/{code}/renforts/{renfort}', [EvenementController::class, 'renfortDetach'])->name('evenement.renfort.detach')->middleware('permission:15');
     // Véhicules — attach/detach vehicles (permission 15)
     Route::post('/evenements/{code}/vehicules', [EvenementController::class, 'vehiculeAttach'])->name('evenement.vehicule.attach')->middleware('permission:15');
     Route::delete('/evenements/{code}/vehicules/{vehicule}', [EvenementController::class, 'vehiculeDetach'])->name('evenement.vehicule.detach')->middleware('permission:15');
+    // Matériel — assign/update-qty/detach equipment (permission 15)
+    Route::post('/evenements/{code}/materiels', [EvenementController::class, 'materielAttach'])->name('evenement.materiel.attach')->middleware('permission:15');
+    Route::patch('/evenements/{code}/materiels/{ma}', [EvenementController::class, 'materielUpdateQty'])->name('evenement.materiel.qty')->middleware('permission:15');
+    Route::delete('/evenements/{code}/materiels/{ma}', [EvenementController::class, 'materielDetach'])->name('evenement.materiel.detach')->middleware('permission:15');
+    // Exports
+    Route::get('/evenements/{code}/export/participants', [EvenementController::class, 'exportParticipants'])->name('evenement.export.participants')->middleware('permission:0');
+    Route::get('/evenements/{code}/ical', [EvenementController::class, 'exportIcal'])->name('evenement.ical')->middleware('permission:0');
     Route::get('/garde', [GardeController::class, 'index'])->name('garde.index')->middleware('permission:61');
     Route::get('/garde/astreintes', [GardeController::class, 'astreintes'])->name('garde.astreintes')->middleware('permission:52');
     Route::get('/indisponibilites', [IndispoController::class, 'index'])->name('indispo.index')->middleware('permission:11');

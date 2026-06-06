@@ -175,10 +175,12 @@ DONE
 - [x] Migrate event list and detail view (commit: feat: migrate event list/detail — EvenementController, views, bridge retirements, tests)
 - [x] Migrate event creation, edit, save, and delete (commit: feat: event CRUD — create/edit/delete form, fix V_IMMAT in show, redirect legacy bridges)
 - [x] Migrate participant management (inscription, equipes, renforts)
-- [ ] Migrate event material and vehicle assignment
-- [ ] Migrate calendar view
-- [ ] Migrate event exports (XLS, PDF rapport, iCal)
+- [x] Migrate event material and vehicle assignment
+- [x] Migrate calendar view
+- [x] Migrate event exports (XLS + iCal; PDF rapport pending)
 - [x] Add tests and parity check; retire legacy files (commit: feat: migrate event list/detail — EvenementController, views, bridge retirements, tests)
+- [ ] Add the possibility to modify the pdf for conventions
+- [ ] Add Main courrante
 
 ### Garde — On-call roster (GAR)
 > Files: `astreintes.php`, `astreinte_*.php`, `auto_garde.php`, `automaticPiquet.php`, `tableau_garde*.php`, `feuille_garde.php`, `repos_*.php`, …
@@ -302,7 +304,7 @@ DONE
 
 - [ ] Inventory legacy `api/` endpoints and their consumers
 - [ ] Rewrite or proxy each endpoint as a versioned Laravel API route
-- [ ] Migrate iCal export (`evenement_ical.php`)
+- [x] Migrate iCal export (`evenement_ical.php`)
 - [ ] Migrate QR-code generation (`qrcode.php`, `qrcode_pic.php`)
 - [ ] Migrate geolocation helpers (`geolocalize_all_persons.php`, `gmaps_*.php`)
 - [ ] Add API tests and parity check; retire legacy API files

@@ -33,9 +33,9 @@
         form.action = (cfg.participantsUrl || '') + '/' + data.p_id;
 
         var tp = document.getElementById('editTpId');
-        if (tp) tp.value = data.tp_id || '';
+        if (tp) tp.value = data.tp_id == null ? '' : data.tp_id;
         var ee = document.getElementById('editEeId');
-        if (ee) ee.value = data.ee_id || '';
+        if (ee) ee.value = data.ee_id == null ? '' : data.ee_id;
         var comment = document.getElementById('editComment');
         if (comment) comment.value = data.ep_comment || '';
 
