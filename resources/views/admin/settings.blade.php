@@ -20,13 +20,6 @@ document.querySelectorAll('.ob-setting-toggle').forEach(function (el) {
 ]"/>
 
 <div class="mx-3 mt-3">
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show mb-3 py-2" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title"><i class="fas fa-cog me-2"></i>Configuration de l'application</div>

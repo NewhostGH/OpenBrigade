@@ -10,6 +10,7 @@ use App\Http\Controllers\IndispoController;
 use App\Http\Controllers\RemplacementController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ParametrageController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConsommableController;
 use App\Http\Controllers\DocumentController;
@@ -95,6 +96,34 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/monitoring', [AdminController::class, 'monitoring'])->name('admin.monitoring')->middleware('permission:49');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
+
+    // ── Paramétrage — reference table CRUD ────────────────────────────────────
+    Route::get('/admin/parametrage', [ParametrageController::class, 'index'])->name('admin.parametrage')->middleware('permission:5');
+    // Type événement
+    Route::get('/admin/parametrage/type-evenement', [ParametrageController::class, 'typeEvenementIndex'])->name('admin.parametrage.type-evenement')->middleware('permission:5');
+    Route::post('/admin/parametrage/type-evenement', [ParametrageController::class, 'typeEvenementStore'])->name('admin.parametrage.type-evenement.store')->middleware('permission:5');
+    Route::patch('/admin/parametrage/type-evenement/{code}', [ParametrageController::class, 'typeEvenementUpdate'])->name('admin.parametrage.type-evenement.update')->middleware('permission:5');
+    Route::delete('/admin/parametrage/type-evenement/{code}', [ParametrageController::class, 'typeEvenementDestroy'])->name('admin.parametrage.type-evenement.destroy')->middleware('permission:5');
+    // Type participation
+    Route::get('/admin/parametrage/type-participation', [ParametrageController::class, 'typeParticipationIndex'])->name('admin.parametrage.type-participation')->middleware('permission:5');
+    Route::post('/admin/parametrage/type-participation', [ParametrageController::class, 'typeParticipationStore'])->name('admin.parametrage.type-participation.store')->middleware('permission:5');
+    Route::patch('/admin/parametrage/type-participation/{id}', [ParametrageController::class, 'typeParticipationUpdate'])->name('admin.parametrage.type-participation.update')->middleware('permission:5');
+    Route::delete('/admin/parametrage/type-participation/{id}', [ParametrageController::class, 'typeParticipationDestroy'])->name('admin.parametrage.type-participation.destroy')->middleware('permission:5');
+    // Type matériel
+    Route::get('/admin/parametrage/type-materiel', [ParametrageController::class, 'typeMaterielIndex'])->name('admin.parametrage.type-materiel')->middleware('permission:5');
+    Route::post('/admin/parametrage/type-materiel', [ParametrageController::class, 'typeMaterielStore'])->name('admin.parametrage.type-materiel.store')->middleware('permission:5');
+    Route::patch('/admin/parametrage/type-materiel/{id}', [ParametrageController::class, 'typeMaterielUpdate'])->name('admin.parametrage.type-materiel.update')->middleware('permission:5');
+    Route::delete('/admin/parametrage/type-materiel/{id}', [ParametrageController::class, 'typeMaterielDestroy'])->name('admin.parametrage.type-materiel.destroy')->middleware('permission:5');
+    // Type consommable
+    Route::get('/admin/parametrage/type-consommable', [ParametrageController::class, 'typeConsommableIndex'])->name('admin.parametrage.type-consommable')->middleware('permission:5');
+    Route::post('/admin/parametrage/type-consommable', [ParametrageController::class, 'typeConsommableStore'])->name('admin.parametrage.type-consommable.store')->middleware('permission:5');
+    Route::patch('/admin/parametrage/type-consommable/{id}', [ParametrageController::class, 'typeConsommableUpdate'])->name('admin.parametrage.type-consommable.update')->middleware('permission:5');
+    Route::delete('/admin/parametrage/type-consommable/{id}', [ParametrageController::class, 'typeConsommableDestroy'])->name('admin.parametrage.type-consommable.destroy')->middleware('permission:5');
+    // Type véhicule
+    Route::get('/admin/parametrage/type-vehicule', [ParametrageController::class, 'typeVehiculeIndex'])->name('admin.parametrage.type-vehicule')->middleware('permission:5');
+    Route::post('/admin/parametrage/type-vehicule', [ParametrageController::class, 'typeVehiculeStore'])->name('admin.parametrage.type-vehicule.store')->middleware('permission:5');
+    Route::patch('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeUpdate'])->name('admin.parametrage.type-vehicule.update')->middleware('permission:5');
+    Route::delete('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeDestroy'])->name('admin.parametrage.type-vehicule.destroy')->middleware('permission:5');
     Route::get('/cotisations', [CotisationController::class, 'index'])->name('cotisations.index')->middleware('permission:53');
     Route::post('/cotisations', [CotisationController::class, 'batchSave'])->name('cotisations.save')->middleware('permission:53');
     Route::get('/cotisations/export', [CotisationController::class, 'export'])->name('cotisations.export')->middleware('permission:53');

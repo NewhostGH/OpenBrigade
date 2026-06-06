@@ -154,7 +154,7 @@ return [
             'permission' => 5,
             'items'      => [
                 ['key' => 'admin.configuration', 'label' => 'Général',       'url' => '/admin/settings',              'icon' => 'sliders-h',  'permission' => 14],
-                ['key' => 'admin.parametrage',   'label' => 'Paramétrage',   'url' => '/legacy/parametrage.php',      'icon' => 'wrench',     'permission' => 5],
+                ['key' => 'admin.parametrage',   'label' => 'Paramétrage',   'url' => '/admin/parametrage',           'icon' => 'wrench',     'permission' => 5],
                 null,
                 ['key' => 'admin.habilitations', 'label' => 'Habilitations', 'url' => '/legacy/habilitations.php',    'icon' => 'id-badge',   'permission' => 9],
                 ['key' => 'admin.monitoring',    'label' => 'Monitoring',    'url' => '/admin/monitoring',           'icon' => 'history',    'permission' => 49],

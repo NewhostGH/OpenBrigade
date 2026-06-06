@@ -220,7 +220,7 @@ DONE
 - [x] Inventory all VEH legacy files
 - [x] Migrate vehicle list and detail view/edit (commit: feat: migrate vehicles — VehiculeController, list/show views, bridge retirements, tests)
 - [x] Migrate vehicle CRUD: create/edit/delete form; fix V_IMMAT/V_LIBELLE column names in show view (commit: feat: vehicle CRUD — create/edit/delete form, fix wrong column names in show view)
-- [ ] Migrate vehicle type management
+- [x] Migrate vehicle type management (commit: feat(claude): parametrage type-vehicule CRUD)
 - [ ] Migrate vehicle assignment to events
 - [ ] Migrate vehicle exports (XLS)
 - [x] Add tests and parity check; retire legacy files (commit: feat: migrate vehicles — VehiculeController, list/show views, bridge retirements, tests)
@@ -281,7 +281,7 @@ DONE
 > Files: `configuration.php`, `save_configuration.php`, `parametrage.php`, `configuration_*.php`, `audit.php`, `backup.php`, `restore.php`, `upgrade.php`, `update_*.php`, `addons.php`, `addons_save.php`, `install_addon.php`, `download_*.php`, …
 
 - [x] Inventory all ADMIN legacy files
-- [ ] Migrate application settings (configuration, parametrage)
+- [x] Migrate application settings — configuration CRUD (commit: feat(claude): admin settings — configuration table CRUD with tabbed UI, toggle/select/file controls); parametrage reference tables CRUD (commit: feat(claude): parametrage — type-evenement, type-participation, type-materiel, type-consommable, type-vehicule CRUD; fix duplicate flash message in settings)
 - [ ] Migrate theme and icon configuration
 - [x] Migrate audit log view (commit: feat: migrate admin monitoring, disponibilités, and nav updates)
 - [ ] Migrate backup and restore
