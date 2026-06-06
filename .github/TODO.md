@@ -293,7 +293,7 @@ DONE
 - [x] Migrate backup and restore — mysqldump to storage/app/backups/, list/download/delete/restore with confirm modal; prune to 30 files (commit: feat(claude): backup/restore — BackupController, mysqldump, restore modal; Maintenance page replaces upgrade.php)
 - [x] Migrate upgrade / SQL migration runner — superseded by `php artisan migrate`; Maintenance page shows system info + migration status from DB (commit: feat(claude): backup/restore — BackupController, mysqldump, restore modal; Maintenance page replaces upgrade.php)
 - [ ] Migrate add-on / module management — module toggles already in Configuration > Modules (TAB 6); install/download addon from ebrigade.app server not applicable to OpenBrigade fork; nav.modules.list still points to legacy addons.php
-- [ ] Migrate habilitations (permissions/roles) — `habilitations.php`, `upd_habilitations.php`; currently nav.admin.habilitations points to legacy; manage GP_ID permission groups per member
+- [x] Migrate habilitations (permissions/roles) — `habilitations.php`, `upd_habilitations.php`; group × permission matrix; add/edit/delete access groups; system groups protected (commit: feat(claude): habilitations — group × permission matrix, CRUD for access groups)
 - [ ] Add tests and parity check; retire legacy files
 
 ---

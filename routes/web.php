@@ -24,6 +24,7 @@ use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
 use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\HabilitationController;
 use App\Http\Controllers\ShortcutController;
 use Illuminate\Support\Facades\Route;
 
@@ -136,6 +137,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/parametrage/type-vehicule', [ParametrageController::class, 'typeVehiculeStore'])->name('admin.parametrage.type-vehicule.store')->middleware('permission:5');
     Route::patch('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeUpdate'])->name('admin.parametrage.type-vehicule.update')->middleware('permission:5');
     Route::delete('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeDestroy'])->name('admin.parametrage.type-vehicule.destroy')->middleware('permission:5');
+    // Habilitations — group × permission matrix
+    Route::get('/admin/habilitations', [HabilitationController::class, 'index'])->name('admin.habilitations')->middleware('permission:9');
+    Route::post('/admin/habilitations/toggle', [HabilitationController::class, 'toggle'])->name('admin.habilitations.toggle')->middleware('permission:9');
+    Route::post('/admin/habilitations/groupe', [HabilitationController::class, 'groupStore'])->name('admin.habilitations.group.store')->middleware('permission:9');
+    Route::patch('/admin/habilitations/groupe/{gpId}', [HabilitationController::class, 'groupUpdate'])->name('admin.habilitations.group.update')->middleware('permission:9');
+    Route::delete('/admin/habilitations/groupe/{gpId}', [HabilitationController::class, 'groupDestroy'])->name('admin.habilitations.group.destroy')->middleware('permission:9');
     // Grade icons
     Route::get('/admin/parametrage/grade', [ParametrageController::class, 'gradeIndex'])->name('admin.parametrage.grade')->middleware('permission:5');
     Route::post('/admin/parametrage/grade/{grade}/icon', [ParametrageController::class, 'gradeIconUpload'])->name('admin.parametrage.grade.icon.upload')->middleware('permission:5');
