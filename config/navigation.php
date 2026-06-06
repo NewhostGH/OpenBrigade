@@ -157,8 +157,9 @@ return [
                 ['key' => 'admin.parametrage',   'label' => 'Paramétrage',   'url' => '/admin/parametrage',           'icon' => 'wrench',     'permission' => 5],
                 null,
                 ['key' => 'admin.habilitations', 'label' => 'Habilitations', 'url' => '/legacy/habilitations.php',    'icon' => 'id-badge',   'permission' => 9],
-                ['key' => 'admin.monitoring',    'label' => 'Monitoring',    'url' => '/admin/monitoring',           'icon' => 'history',    'permission' => 49],
-                ['key' => 'admin.sauvegarde',    'label' => 'Sauvegarde',    'url' => '/legacy/restore.php',          'icon' => 'database',   'permission' => 14],
+                ['key' => 'admin.monitoring',    'label' => 'Monitoring',    'url' => '/admin/monitoring',            'icon' => 'history',    'permission' => 49],
+                ['key' => 'admin.sauvegarde',    'label' => 'Sauvegarde',    'url' => '/admin/sauvegarde',            'icon' => 'database',   'permission' => 14],
+                ['key' => 'admin.maintenance',   'label' => 'Maintenance',   'url' => '/admin/maintenance',           'icon' => 'tools',      'permission' => 14],
             ],
         ],
 

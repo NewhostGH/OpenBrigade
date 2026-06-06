@@ -10,6 +10,8 @@ use App\Http\Controllers\IndispoController;
 use App\Http\Controllers\RemplacementController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BackupController;
+use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ParametrageController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConsommableController;
@@ -94,6 +96,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/remplacements', [RemplacementController::class, 'index'])->name('remplacement.index')->middleware('permission:0');
     Route::get('/disponibilites', [DispoController::class, 'index'])->name('dispo.index')->middleware('permission:38');
     Route::get('/admin/monitoring', [AdminController::class, 'monitoring'])->name('admin.monitoring')->middleware('permission:49');
+    // Backup & restore
+    Route::get('/admin/sauvegarde', [BackupController::class, 'index'])->name('admin.backup')->middleware('permission:14');
+    Route::post('/admin/sauvegarde', [BackupController::class, 'store'])->name('admin.backup.store')->middleware('permission:14');
+    Route::get('/admin/sauvegarde/{filename}/download', [BackupController::class, 'download'])->name('admin.backup.download')->middleware('permission:14');
+    Route::delete('/admin/sauvegarde/{filename}', [BackupController::class, 'destroy'])->name('admin.backup.destroy')->middleware('permission:14');
+    Route::post('/admin/sauvegarde/restore', [BackupController::class, 'restore'])->name('admin.backup.restore')->middleware('permission:14');
+    // Maintenance (upgrade.php superseded by artisan migrate)
+    Route::get('/admin/maintenance', [MaintenanceController::class, 'index'])->name('admin.maintenance')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');

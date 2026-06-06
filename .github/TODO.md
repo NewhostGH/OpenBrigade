@@ -290,9 +290,9 @@ DONE
 - [x] Migrate application settings — configuration CRUD (commit: feat(claude): admin settings — configuration table CRUD with tabbed UI, toggle/select/file controls); parametrage reference tables CRUD (commit: feat(claude): parametrage — type-evenement, type-participation, type-materiel, type-consommable, type-vehicule CRUD; fix duplicate flash message in settings)
 - [x] Migrate theme and icon configuration — IS_FILE image upload (logo, favicon, apple_icon, splash_screen) + grade icon management per grade (commit: feat(claude): settings tab persistence, IS_FILE image upload, grade icon management)
 - [x] Migrate audit log view (commit: feat: migrate admin monitoring, disponibilités, and nav updates)
-- [ ] Migrate backup and restore — use mysqldump/mysql CLI; list, download, delete, restore SQL dumps; store in storage/app/backups/
-- [ ] Migrate upgrade / SQL migration runner — **superseded by `php artisan migrate`**; implement a Maintenance page that shows migration status and pending migrations
-- [ ] Migrate add-on / module management — module toggles are in Configuration > Modules (TAB 6); install/download addon from ebrigade.app server is not applicable to OpenBrigade fork; design native module extension point
+- [x] Migrate backup and restore — mysqldump to storage/app/backups/, list/download/delete/restore with confirm modal; prune to 30 files (commit: feat(claude): backup/restore — BackupController, mysqldump, restore modal; Maintenance page replaces upgrade.php)
+- [x] Migrate upgrade / SQL migration runner — superseded by `php artisan migrate`; Maintenance page shows system info + migration status from DB (commit: feat(claude): backup/restore — BackupController, mysqldump, restore modal; Maintenance page replaces upgrade.php)
+- [ ] Migrate add-on / module management — module toggles already in Configuration > Modules (TAB 6); install/download addon from ebrigade.app server not applicable to OpenBrigade fork; nav.modules.list still points to legacy addons.php
 - [ ] Migrate habilitations (permissions/roles) — `habilitations.php`, `upd_habilitations.php`; currently nav.admin.habilitations points to legacy; manage GP_ID permission groups per member
 - [ ] Add tests and parity check; retire legacy files
 
