@@ -1,11 +1,10 @@
 /* ── Content area offset ───────────────────────────────────────────────── */
 @media (min-width: 922px) {
-    .space-left {
-        margin-left:  215px;
-        margin-right: -5px;
+    .ob-space-left {
+        margin-left: 215px;
     }
 
-    .space-left.collapsed {
+    .ob-space-left.collapsed {
         margin-left: 44px;
     }
 
@@ -34,12 +33,6 @@
     }
 }
 
-@media (max-width: 992px) {
-    .space-left {
-        margin-left:  -5px;
-        margin-right: -5px;
-    }
-}
 
 @media (max-width: 920px) {
     .ob-navbar-lateral {

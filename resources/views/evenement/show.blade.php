@@ -173,21 +173,21 @@
             <div class="ob-widget-card">
                 <div class="ob-widget-card-body p-0">
                     <nav>
-                        <a href="#section-participants" class="pers-sidenav-link active">
+                        <a href="#section-participants" class="ob-pers-sidenav-link active">
                             <i class="fas fa-users" style="width:14px; text-align:center;"></i>
                             Participants
                             <span class="ob-badge ob-badge-archive" style="margin-left:auto;">{{ count($participants) }}</span>
                         </a>
-                        <a href="#section-equipes" class="pers-sidenav-link">
+                        <a href="#section-equipes" class="ob-pers-sidenav-link">
                             <i class="fas fa-layer-group" style="width:14px; text-align:center;"></i>
                             Équipes
                             <span class="ob-badge ob-badge-archive" style="margin-left:auto;">{{ count($equipes) }}</span>
                         </a>
-                        <a href="#section-vehicules" class="pers-sidenav-link">
+                        <a href="#section-vehicules" class="ob-pers-sidenav-link">
                             <i class="fas fa-truck" style="width:14px; text-align:center;"></i>
                             Véhicules
                         </a>
-                        <a href="#section-renforts" class="pers-sidenav-link">
+                        <a href="#section-renforts" class="ob-pers-sidenav-link">
                             <i class="fas fa-plus-circle" style="width:14px; text-align:center;"></i>
                             Renforts
                             <span class="ob-badge ob-badge-archive" style="margin-left:auto;">{{ count($renforts) }}</span>
@@ -776,63 +776,6 @@
 @endsection
 
 @push('scripts')
-<script>
-(function () {
-    // ── Sidebar active link on scroll ────────────────────────────────────────
-    var links    = document.querySelectorAll('.pers-sidenav-link');
-    var sections = document.querySelectorAll('[data-evt-section]');
-
-    function activate(id) {
-        links.forEach(function (l) { l.classList.remove('active'); });
-        var link = document.querySelector('.pers-sidenav-link[href="#' + id + '"]');
-        if (link) link.classList.add('active');
-    }
-
-    links.forEach(function (l) {
-        l.addEventListener('click', function () {
-            activate(this.getAttribute('href').slice(1));
-        });
-    });
-
-    if ('IntersectionObserver' in window && sections.length) {
-        var obs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) activate(e.target.id);
-            });
-        }, { rootMargin: '-40% 0px -55% 0px' });
-        sections.forEach(function (s) { obs.observe(s); });
-        activate(sections[0].id);
-    }
-
-    // ── Edit participant modal ────────────────────────────────────────────────
-    window.openEditParticipant = function (data) {
-        var form = document.getElementById('editParticipantForm');
-        if (!form) return;
-        form.action = '{{ url('/evenements/' . $event->E_CODE . '/participants') }}/' + data.p_id;
-
-        var tp = document.getElementById('editTpId');
-        if (tp) tp.value = data.tp_id || '';
-        var ee = document.getElementById('editEeId');
-        if (ee) ee.value = data.ee_id || '';
-        var comment = document.getElementById('editComment');
-        if (comment) comment.value = data.ep_comment || '';
-
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('editParticipantModal')).show();
-    };
-
-    // ── Edit équipe modal ────────────────────────────────────────────────────
-    window.openEditEquipe = function (data) {
-        var form = document.getElementById('editEquipeForm');
-        if (!form) return;
-        form.action = '{{ url('/evenements/' . $event->E_CODE . '/equipes') }}/' + data.ee_id;
-
-        document.getElementById('editEeName').value  = data.ee_name  || '';
-        document.getElementById('editEeOrder').value = data.ee_order || 1;
-        document.getElementById('editEeRadio').value = data.ee_radio || '';
-        document.getElementById('editEeDesc').value  = data.ee_desc  || '';
-
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('editEquipeModal')).show();
-    };
-})();
-</script>
+<script>window.EVT_SHOW_CONFIG = { participantsUrl: '{{ url('/evenements/' . $event->E_CODE . '/participants') }}', equipesUrl: '{{ url('/evenements/' . $event->E_CODE . '/equipes') }}' };</script>
+@vite('resources/js/ob-evenement-show.js')
 @endpush

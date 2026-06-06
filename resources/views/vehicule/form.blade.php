@@ -287,7 +287,7 @@
                                               transition:border-color .15s, background .15s;
                                               font-size:var(--font-size-sm);">
                                     <input type="checkbox" id="{{ $flag['key'] }}" name="{{ $flag['key'] }}" value="1"
-                                           class="form-check-input flex-shrink-0 mb-0 veh-flag-cb"
+                                           class="form-check-input flex-shrink-0 mb-0 ob-veh-flag-cb"
                                            data-color="{{ $flag['color'] }}" data-bg="{{ $flag['bg'] }}"
                                            {{ $checked ? 'checked' : '' }}>
                                     <i class="{{ $flag['icon'] }}" style="color:{{ $flag['color'] }}; width:14px; text-align:center;"></i>
@@ -368,17 +368,7 @@
 
 
 @push('scripts')
-<script>
-document.querySelectorAll('.veh-flag-cb').forEach(function (cb) {
-    cb.addEventListener('change', function () {
-        var label  = this.closest('label');
-        var color  = this.dataset.color;
-        var bg     = this.dataset.bg;
-        label.style.borderColor = this.checked ? color : 'var(--component-border)';
-        label.style.background  = this.checked ? bg    : 'transparent';
-    });
-});
-</script>
+@vite('resources/js/ob-vehicule-form.js')
 @endpush
 
 @endsection

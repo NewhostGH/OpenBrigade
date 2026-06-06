@@ -13,6 +13,12 @@ L.Icon.Default.mergeOptions({
     shadowUrl:     markerShadow,
 });
 
+window.updateParam = function (key, value) {
+    var url = new URL(window.location.href);
+    url.searchParams.set(key, value);
+    window.location.href = url.toString();
+};
+
 // ── Map initialisation ──────────────────────────────────────────────────────
 // Markers are injected by the Blade template into window.GEO_MARKERS before
 // this deferred module executes.
@@ -22,12 +28,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var markers = window.GEO_MARKERS || [];
 
-    var defaultCenter = [46.5, 2.5]; // centre of France
-    var defaultZoom   = 6;
+    var cfg = window.GEO_CONFIG || {};
+    var defaultCenter = cfg.center || [46.5, 2.5]; // centre of France
+    var defaultZoom   = cfg.zoom   || 6;
 
     if (markers.length > 0) {
         defaultCenter = [markers[0].lat, markers[0].lng];
-        defaultZoom   = 8;
+        defaultZoom   = cfg.zoomFit || 8;
     }
 
     var map = L.map('geoMap').setView(defaultCenter, defaultZoom);

@@ -80,7 +80,7 @@
                 <label class="ob-switch">
                     <input type="checkbox" id="subsToggle" {{ $subsections ? 'checked' : '' }}
                            onchange="updateParam('subsections', this.checked ? 1 : 0)">
-                    <span class="slider"></span>
+                    <span class="ob-switch-slider"></span>
                 </label>
             </div>
             <span class="text-muted">|</span>
@@ -91,7 +91,7 @@
             <label class="ob-switch">
                 <input type="checkbox" id="oldToggle" {{ $includeOld ? 'checked' : '' }}
                        onchange="updateParam('include_old', this.checked ? 1 : 0)">
-                <span class="slider"></span>
+                <span class="ob-switch-slider"></span>
             </label>
         </div>
 
@@ -174,8 +174,3 @@
 
 @endsection
 
-@push('scripts')
-<script>
-// Row click (data-href) handled by ob-table.js
-</script>
-@endpush

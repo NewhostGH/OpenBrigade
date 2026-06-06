@@ -77,7 +77,7 @@
                 <label class="ob-switch">
                     <input type="checkbox" id="subsToggle" {{ $subsections ? 'checked' : '' }}
                            onchange="updateParam('subsections', this.checked ? 1 : 0)">
-                    <span class="slider"></span>
+                    <span class="ob-switch-slider"></span>
                 </label>
             </div>
             <span class="text-muted">|</span>

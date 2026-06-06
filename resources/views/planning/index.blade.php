@@ -46,7 +46,7 @@
 </div>
 
 <div class="mx-3 mt-3">
-    <table class="cal-grid">
+    <table class="ob-cal-grid">
         <thead>
             <tr>
                 @foreach(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'] as $dayLabel)
@@ -58,14 +58,14 @@
             @foreach($weeks as $week)
                 <tr>
                     @foreach($week as $cell)
-                        <td class="cal-cell {{ !$cell['inMonth'] ? 'outside' : '' }} {{ $cell['isToday'] ? 'today' : '' }}">
-                            <div class="cal-day-num {{ $cell['isToday'] ? 'today-num' : '' }}">
+                        <td class="ob-cal-cell {{ !$cell['inMonth'] ? 'ob-cal-outside' : '' }} {{ $cell['isToday'] ? 'ob-cal-today' : '' }}">
+                            <div class="ob-cal-day-num {{ $cell['isToday'] ? 'ob-cal-today-num' : '' }}">
                                 {{ $cell['date']->format('j') }}
                             </div>
 
                             @foreach($cell['events'] as $ev)
                                 <a href="{{ route('evenement.show', $ev->E_CODE) }}"
-                                   class="cal-event cal-event-ev d-block text-decoration-none"
+                                   class="ob-cal-event ob-cal-event-ev d-block text-decoration-none"
                                    title="{{ $ev->E_LIBELLE ?? $ev->E_CODE }}">
                                     @if($ev->event_time)
                                         <span class="me-1">{{ $ev->event_time }}</span>
@@ -77,7 +77,7 @@
 
                             @foreach($cell['absences'] as $abs)
                                 @php $pending = $abs->I_ACCEPT === null || $abs->I_ACCEPT == 0; @endphp
-                                <div class="cal-event {{ $pending ? 'cal-event-abs-pend' : 'cal-event-abs' }}"
+                                <div class="ob-cal-event {{ $pending ? 'ob-cal-event-abs-pend' : 'ob-cal-event-abs' }}"
                                      title="{{ $abs->TI_LIBELLE ?? 'Absence' }}{{ $abs->I_COMMENT ? ' — '.$abs->I_COMMENT : '' }}">
                                     <i class="fas fa-user-times fa-xs me-1"></i>
                                     {{ $abs->TI_LIBELLE ?? 'Absence' }}
@@ -93,9 +93,9 @@
 
     {{-- Legend --}}
     <div class="d-flex gap-3 mt-2" style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
-        <span class="cal-event cal-event-ev px-2">Activité</span>
-        <span class="cal-event cal-event-abs px-2">Absence acceptée</span>
-        <span class="cal-event cal-event-abs-pend px-2">Absence en attente</span>
+        <span class="ob-cal-event ob-cal-event-ev px-2">Activité</span>
+        <span class="ob-cal-event ob-cal-event-abs px-2">Absence acceptée</span>
+        <span class="ob-cal-event ob-cal-event-abs-pend px-2">Absence en attente</span>
     </div>
 </div>
 

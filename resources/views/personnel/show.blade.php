@@ -165,12 +165,12 @@
     <div class="d-flex gap-3 align-items-start">
 
         {{-- ── Left sidebar nav ────────────────────────────────────────────── --}}
-        <div class="pers-sidenav-wrap noprint">
+        <div class="ob-pers-sidenav-wrap noprint">
             <div class="ob-widget-card">
                 <div class="ob-widget-card-body p-0">
                     <nav>
                         @foreach ($sideNav as $item)
-                        <a href="#{{ $item['id'] }}" class="pers-sidenav-link{{ $loop->first ? ' active' : '' }}">
+                        <a href="#{{ $item['id'] }}" class="ob-pers-sidenav-link{{ $loop->first ? ' active' : '' }}">
                             <i class="{{ $item['icon'] }}" style="width:14px; text-align:center;"></i>
                             {{ $item['label'] }}
                             @if (!empty($item['badge']))
@@ -886,91 +886,6 @@
 @endsection
 
 @push('scripts')
-<script>
-(function () {
-    var links    = document.querySelectorAll('.pers-sidenav-link');
-    var sections = document.querySelectorAll('[data-pers-section]');
-
-    function activate(id) {
-        links.forEach(function (l) { l.classList.remove('active'); });
-        var active = document.querySelector('.pers-sidenav-link[href="#' + id + '"]');
-        if (active) active.classList.add('active');
-    }
-
-    // Activate on click immediately (don't wait for scroll observer)
-    links.forEach(function (l) {
-        l.addEventListener('click', function () {
-            activate(this.getAttribute('href').slice(1));
-        });
-    });
-
-    // Scroll-driven activation via IntersectionObserver
-    if ('IntersectionObserver' in window && sections.length) {
-        var observer = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (entry.isIntersecting) activate(entry.target.id);
-            });
-        }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
-
-        sections.forEach(function (s) { observer.observe(s); });
-    }
-})();
-
-function openCotisModal(cotis) {
-    var form     = document.getElementById('cotisForm');
-    var methodEl = document.getElementById('cotisMethodField');
-    var baseRoute = '{{ url('personnel/' . $personnel->P_ID . '/cotisations') }}';
-    if (cotis) {
-        form.action        = baseRoute + '/' + cotis.pc_id;
-        methodEl.innerHTML = '<input type="hidden" name="_method" value="PATCH">';
-        document.getElementById('cotisAnnee').value   = cotis.annee;
-        document.getElementById('cotisPeriode').value = cotis.periode;
-        document.getElementById('cotisDate').value    = cotis.date;
-        document.getElementById('cotisMontant').value = cotis.montant;
-        document.getElementById('cotisMode').value    = cotis.tp_id || '';
-        document.getElementById('cotisRemb').checked  = cotis.remb;
-        document.getElementById('cotisComment').value = cotis.comment;
-        document.getElementById('cotisModalLabel').textContent = 'Modifier la cotisation';
-    } else {
-        form.action        = baseRoute;
-        methodEl.innerHTML = '';
-        document.getElementById('cotisAnnee').value   = new Date().getFullYear();
-        document.getElementById('cotisPeriode').value = 'A';
-        document.getElementById('cotisDate').value    = '';
-        document.getElementById('cotisMontant').value = '';
-        document.getElementById('cotisMode').value    = '';
-        document.getElementById('cotisRemb').checked  = false;
-        document.getElementById('cotisComment').value = '';
-        document.getElementById('cotisModalLabel').textContent = 'Ajouter une cotisation';
-    }
-}
-
-function openQualModal(qual) {
-    var form       = document.getElementById('qualForm');
-    var methodEl   = document.getElementById('qualMethodField');
-    var posteWrap  = document.getElementById('qualPosteWrap');
-    var posteLbl   = document.getElementById('qualPosteLabel');
-    var posteLblTx = document.getElementById('qualPosteLabelText');
-    var baseUrl    = '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}';
-    if (qual) {
-        form.action             = baseUrl + '/' + qual.ps_id;
-        methodEl.innerHTML      = '<input type="hidden" name="_method" value="PATCH">';
-        posteWrap.style.display = 'none';
-        posteLbl.style.display  = '';
-        posteLblTx.textContent  = qual.label;
-        document.getElementById('qualVal').value = qual.q_val || '';
-        document.getElementById('qualExp').value = qual.q_exp || '';
-        document.getElementById('qualModalLabel').textContent = 'Modifier la compétence';
-    } else {
-        form.action             = baseUrl;
-        methodEl.innerHTML      = '';
-        posteWrap.style.display = '';
-        posteLbl.style.display  = 'none';
-        document.getElementById('qualPosteSelect').value = '';
-        document.getElementById('qualVal').value = '';
-        document.getElementById('qualExp').value = '';
-        document.getElementById('qualModalLabel').textContent = 'Ajouter une compétence';
-    }
-}
-</script>
+<script>window.PERS_SHOW_CONFIG = { cotisUrl: '{{ url('personnel/' . $personnel->P_ID . '/cotisations') }}', qualUrl: '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}' };</script>
+@vite('resources/js/ob-personnel-show.js')
 @endpush

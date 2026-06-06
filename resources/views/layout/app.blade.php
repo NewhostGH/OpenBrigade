@@ -20,7 +20,7 @@
         @include('layout.navbar')
         @include('layout.sidebar')
 
-        <div class="space-left" id="space-left">
+        <div class="ob-space-left" id="ob-space-left">
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show mx-3 mt-2" role="alert">
                     {{ session('success') }}

@@ -290,7 +290,7 @@
 .ob-sidebar-search-clear:hover { color: var(--sidebar-item-active); }
 
 /* Highlight matched text */
-mark.sidebar-match {
+mark.ob-sidebar-match {
     background:    color-mix(in srgb, var(--accent) 30%, transparent);
     color:         inherit;
     border-radius: 2px;

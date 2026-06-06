@@ -30,19 +30,11 @@
 @endsection
 
 @push('scripts')
-@vite('resources/js/geolocalisation.js')
 {{--
-    Pass server-side data to the Vite module (geolocalisation.js).
+    Pass server-side data to the Vite module (ob-geolocalisation.js).
     This plain <script> executes synchronously; the deferred ES module reads
     window.GEO_MARKERS only after DOMContentLoaded, so the order is guaranteed.
 --}}
-<script>
-    window.GEO_MARKERS = @json($markers);
-
-    function updateParam(key, value) {
-        var url = new URL(window.location.href);
-        url.searchParams.set(key, value);
-        window.location.href = url.toString();
-    }
-</script>
+<script>window.GEO_MARKERS = @json($markers); window.GEO_CONFIG = @json(config('brigade.geo'));</script>
+@vite('resources/js/ob-geolocalisation.js')
 @endpush

@@ -119,7 +119,7 @@
                 <label class="ob-switch">
                     <input type="checkbox" id="subsToggle" {{ $subsections ? 'checked' : '' }}
                            onchange="updateParam('subsections', this.checked ? 1 : 0)">
-                    <span class="slider"></span>
+                    <span class="ob-switch-slider"></span>
                 </label>
             </div>
         @endif
@@ -129,7 +129,7 @@
             <label class="ob-switch">
                 <input type="checkbox" id="oldToggle" {{ $includeOld ? 'checked' : '' }}
                        onchange="updateParam('include_old', this.checked ? 1 : 0)">
-                <span class="slider"></span>
+                <span class="ob-switch-slider"></span>
             </label>
         </div>
 
@@ -326,62 +326,8 @@
 </x-ob-commandbar>
 
 @push('scripts')
-<script>
-(function () {
-    let paidCount = {{ $paidCount }};
-
-    function updateCounter() {
-        const el = document.getElementById('paidCounter');
-        if (el) el.textContent = paidCount + ' payé(s)';
-    }
-
-    window.onPaidToggle = function (checkbox) {
-        const pid         = checkbox.dataset.pid;
-        const today       = checkbox.dataset.today;
-        const dateField   = document.getElementById('date-'    + pid);
-        const amountField = document.getElementById('montant-' + pid);
-        const row         = document.getElementById('row-'     + pid);
-
-        if (checkbox.checked) {
-            paidCount++;
-            if (dateField   && !dateField.value) dateField.value = today;
-            if (amountField) amountField.style.color = 'var(--bs-success)';
-            if (row) row.classList.remove('table-light');
-        } else {
-            paidCount = Math.max(0, paidCount - 1);
-            if (dateField)   dateField.value = '';
-            if (amountField) amountField.style.color = 'var(--bs-secondary)';
-            if (row) row.classList.add('table-light');
-        }
-        updateCounter();
-    };
-
-    window.onAmountChange = function (input, pid) {
-        const check = document.getElementById('paid-' + pid);
-        if (check && !check.checked && parseFloat(input.value) > 0) {
-            check.checked = true;
-            check.dispatchEvent(new Event('change'));
-        }
-    };
-
-    window.onDateChange = function (input, pid) {
-        const check = document.getElementById('paid-' + pid);
-        if (check && !check.checked && input.value) {
-            check.checked = true;
-            check.dispatchEvent(new Event('change'));
-        }
-    };
-
-    window.toggleCheckAll = function (masterCheckbox) {
-        document.querySelectorAll('.paid-check').forEach(function (c) {
-            if (c.checked !== masterCheckbox.checked) {
-                c.checked = masterCheckbox.checked;
-                c.dispatchEvent(new Event('change'));
-            }
-        });
-    };
-})();
-</script>
+<script>window.COTIS_PAID_COUNT = {{ $paidCount }};</script>
+@vite('resources/js/ob-cotisations-index.js')
 @endpush
 
 @endsection

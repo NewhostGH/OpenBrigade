@@ -91,7 +91,7 @@
                 <label class="ob-switch">
                     <input type="checkbox" id="subsToggle" {{ $subsections ? 'checked' : '' }}
                            onchange="updateParam('subsections', this.checked ? 1 : 0)">
-                    <span class="slider"></span>
+                    <span class="ob-switch-slider"></span>
                 </label>
             </div>
             <span class="text-muted">|</span>
@@ -169,40 +169,5 @@
 @endsection
 
 @push('scripts')
-<script>
-(function () {
-    'use strict';
-
-    // ── Personnel-specific bulk action handlers ──────────────────────────────
-
-    window.personnelAction = function (action) {
-        const ids = Array.from(
-            document.querySelectorAll('.personnelTable-row-check:checked')
-        ).map(cb => cb.value);
-
-        if (!ids.length) { alert('Veuillez sélectionner au moins une personne.'); return; }
-
-        document.getElementById('SelectionMail').value = ids.join(',');
-
-        const form = document.getElementById('personnelTable_form');
-        form.action = {
-            {{-- TODO: Migrate code --}}
-            badge:      '/legacy/pdf.php?pdf=badge',
-            listemails: '/legacy/listemails.php',
-        {{-- TODO: Migrate code --}}
-        }[action] || '/legacy/mail_create.php';
-        form.submit();
-    };
-
-    window.personnelMailto = function () {
-        const emails = Array.from(
-            document.querySelectorAll('.personnelTable-row-check:checked')
-        ).map(cb => cb.dataset.email).filter(Boolean);
-
-        if (!emails.length) { alert('Veuillez sélectionner au moins un destinataire avec un email.'); return; }
-        window.location.href = 'mailto:' + emails.join(',');
-    };
-
-}());
-</script>
+@vite('resources/js/ob-personnel-index.js')
 @endpush

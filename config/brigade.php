@@ -27,6 +27,18 @@ return [
     'max_list_rows' => (int) env('MAX_LIST_ROWS', 500),
 
     /*
+     * Geolocation map defaults (Leaflet).
+     * center: [lat, lng] fallback when no markers are present.
+     * zoom: initial zoom when using center fallback.
+     * zoom_fit: zoom used when centering on the first marker before fitBounds.
+     */
+    'geo' => [
+        'center'   => [46.5, 2.5],
+        'zoom'     => 6,
+        'zoom_fit' => 8,
+    ],
+
+    /*
      * Available organisation type pre-configurations.
      * Index 0 is "no pre-configuration" and must remain first.
      */

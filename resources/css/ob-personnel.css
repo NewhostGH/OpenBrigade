@@ -3,7 +3,7 @@
    ============================================================================= */
 
 /* ── Profile sidebar navigation ─────────────────────────────────────────── */
-.pers-sidenav-wrap {
+.ob-pers-sidenav-wrap {
     flex: 0 0 170px;
     position: sticky;
     top: 1rem;
@@ -11,7 +11,7 @@
     overflow-y: auto;
 }
 
-.pers-sidenav-link {
+.ob-pers-sidenav-link {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -24,17 +24,17 @@
     transition: color .15s, background .15s, border-color .15s;
 }
 
-.pers-sidenav-link:hover {
+.ob-pers-sidenav-link:hover {
     color: var(--accent);
     background: var(--table-hover-bg, rgba(0,0,0,.03));
     border-left-color: var(--component-border);
 }
 
-.pers-sidenav-link.active {
+.ob-pers-sidenav-link.active {
     color: var(--accent);
     background: var(--table-hover-bg, rgba(0,0,0,.03));
     border-left-color: var(--accent);
     font-weight: 600;
 }
 
-.pers-sidenav-link .ob-badge { margin-left: auto; }
+.ob-pers-sidenav-link .ob-badge { margin-left: auto; }

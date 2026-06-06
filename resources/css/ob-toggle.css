@@ -31,7 +31,7 @@
     height: 0;
 }
 
-.ob-switch .slider {
+.ob-switch .ob-switch-slider {
     position: absolute;
     cursor: pointer;
     inset: 0;
@@ -41,7 +41,7 @@
 }
 
 /* Thumb */
-.ob-switch .slider::before {
+.ob-switch .ob-switch-slider::before {
     content: "";
     position: absolute;
     height: 12px;
@@ -55,16 +55,16 @@
 }
 
 /* Checked state */
-.ob-switch input:checked + .slider {
+.ob-switch input:checked + .ob-switch-slider {
     background: var(--accent);
 }
 
-.ob-switch input:checked + .slider::before {
+.ob-switch input:checked + .ob-switch-slider::before {
     transform: translateX(16px);
 }
 
 /* Keyboard focus */
-.ob-switch input:focus-visible + .slider {
+.ob-switch input:focus-visible + .ob-switch-slider {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
 }

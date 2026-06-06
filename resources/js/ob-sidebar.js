@@ -7,7 +7,7 @@ import $ from 'jquery';
 $(document).ready(function () {
     if (sessionStorage.getItem('isCollapsed') == 1) {
         $('.ob-col-lateral').addClass('collapsed');
-        $('#space-left').addClass('collapsed');
+        $('#ob-space-left').addClass('collapsed');
         $('.ob-navbar-lateral').css({ width: 49, overflow: 'hidden' });
         $('.ob-collapse-menu').hide();
         $('.ob-decollapse-menu').show();
@@ -16,7 +16,7 @@ $(document).ready(function () {
     $('.ob-collapse-menu').on('click', function () {
         sessionStorage.setItem('isCollapsed', 1);
         $('.ob-col-lateral').addClass('collapsed');
-        $('#space-left').addClass('collapsed');
+        $('#ob-space-left').addClass('collapsed');
         $('.ob-navbar-lateral').animate({ width: 49 }, 350);
         $('.ob-collapse-menu').hide();
         $('.ob-decollapse-menu').show();
@@ -25,7 +25,7 @@ $(document).ready(function () {
     $('.ob-decollapse-menu').on('click', function () {
         sessionStorage.setItem('isCollapsed', 0);
         $('.ob-col-lateral').removeClass('collapsed');
-        $('#space-left').removeClass('collapsed');
+        $('#ob-space-left').removeClass('collapsed');
         $('.ob-navbar-lateral').animate({ width: 220 }, 350);
         $('.ob-decollapse-menu').hide();
         $('.ob-collapse-menu').show();
@@ -116,7 +116,7 @@ $(document).ready(function () {
      * Works on plain-text content (no HTML injection risk from user input).
      */
     function highlight(text, regex) {
-        return text.replace(regex, '<mark class="sidebar-match">$&</mark>');
+        return text.replace(regex, '<mark class="ob-sidebar-match">$&</mark>');
     }
 
     // ── State snapshot ───────────────────────────────────────────────────────

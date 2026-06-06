@@ -21,7 +21,7 @@
 </div>
 
 <div class="mx-3 mt-3">
-    <div class="org-tree">
+    <div class="ob-org-tree">
         @include('organisation._node', ['nodes' => $tree, 'currentSectionId' => $sectionId])
     </div>
 </div>
