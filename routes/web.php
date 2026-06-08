@@ -103,6 +103,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/sauvegarde/{filename}/download', [BackupController::class, 'download'])->name('admin.backup.download')->middleware('permission:14');
     Route::delete('/admin/sauvegarde/{filename}', [BackupController::class, 'destroy'])->name('admin.backup.destroy')->middleware('permission:14');
     Route::post('/admin/sauvegarde/restore', [BackupController::class, 'restore'])->name('admin.backup.restore')->middleware('permission:14');
+    Route::patch('/admin/sauvegarde/parametres', [BackupController::class, 'updateSettings'])->name('admin.backup.settings')->middleware('permission:14');
     // Maintenance (upgrade.php superseded by artisan migrate)
     Route::get('/admin/maintenance', [MaintenanceController::class, 'index'])->name('admin.maintenance')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');

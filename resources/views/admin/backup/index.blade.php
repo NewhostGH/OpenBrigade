@@ -6,7 +6,7 @@
 
 <x-ob-breadcrumb :items="[
     ['label' => 'Administration'],
-    ['label' => 'Sauvegarde &amp; restauration'],
+    ['label' => 'Sauvegarde & restauration'],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -24,9 +24,114 @@
                 </button>
             </form>
             <span class="text-muted" style="font-size:var(--font-size-xs);">
-                Crée un dump SQL complet de la base de données (mysqldump). Les 30 fichiers les plus récents sont conservés.
+                Crée un dump SQL complet de la base de données (mysqldump). Les {{ $settings->retention_count }} fichiers les plus récents sont conservés.
             </span>
         </div>
+    </div>
+
+    {{-- Settings --}}
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title"><i class="fas fa-cog me-2"></i>Préférences</div>
+        </div>
+        <form method="POST" action="{{ route('admin.backup.settings') }}" class="p-3" id="backupSettingsForm">
+            @csrf @method('PATCH')
+
+            <div class="row g-4">
+                {{-- Automatic backups --}}
+                <div class="col-md-6">
+                    <h6 class="mb-3"><i class="fas fa-clock me-2"></i>Sauvegardes automatiques</h6>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="auto_enabled" id="auto_enabled" value="1"
+                                   class="form-check-input" {{ old('auto_enabled', $settings->auto_enabled) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="auto_enabled">Activer les sauvegardes automatiques</label>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 align-items-end">
+                        <div class="col-auto">
+                            <label class="form-label form-label-sm" for="frequency">Fréquence</label>
+                            <select name="frequency" id="frequency" class="form-select form-select-sm">
+                                <option value="hourly" {{ old('frequency', $settings->frequency) === 'hourly' ? 'selected' : '' }}>Horaire</option>
+                                <option value="daily" {{ old('frequency', $settings->frequency) === 'daily' ? 'selected' : '' }}>Quotidienne</option>
+                                <option value="weekly" {{ old('frequency', $settings->frequency) === 'weekly' ? 'selected' : '' }}>Hebdomadaire</option>
+                                <option value="monthly" {{ old('frequency', $settings->frequency) === 'monthly' ? 'selected' : '' }}>Mensuelle</option>
+                            </select>
+                        </div>
+                        <div class="col-auto" data-frequency-option="weekly">
+                            <label class="form-label form-label-sm" for="day_of_week">Jour de la semaine</label>
+                            <select name="day_of_week" id="day_of_week" class="form-select form-select-sm">
+                                @foreach(\App\Models\BackupSetting::DAYS_OF_WEEK as $value => $label)
+                                    <option value="{{ $value }}" {{ (int) old('day_of_week', $settings->day_of_week) === $value ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-auto" data-frequency-option="monthly">
+                            <label class="form-label form-label-sm" for="day_of_month">Jour du mois</label>
+                            <input type="number" name="day_of_month" id="day_of_month" min="1" max="31"
+                                   value="{{ old('day_of_month', $settings->day_of_month ?? 1) }}"
+                                   class="form-control form-control-sm" style="max-width:90px;">
+                        </div>
+                        <div class="col-auto" data-frequency-option="hourly daily weekly monthly">
+                            <label class="form-label form-label-sm" for="run_time" data-run-time-label>Heure d'exécution</label>
+                            <input type="time" name="run_time" id="run_time"
+                                   value="{{ old('run_time', \Illuminate\Support\Carbon::parse($settings->run_time)->format('H:i')) }}"
+                                   class="form-control form-control-sm" style="max-width:120px;">
+                        </div>
+                        <div class="col-auto">
+                            <label class="form-label form-label-sm" for="start_date">À partir du</label>
+                            <input type="date" name="start_date" id="start_date"
+                                   value="{{ old('start_date', $settings->start_date?->format('Y-m-d')) }}"
+                                   class="form-control form-control-sm" style="max-width:160px;">
+                        </div>
+                    </div>
+
+                    <p class="text-muted mt-3 mb-0" style="font-size:var(--font-size-xs);" data-frequency-hint="hourly">
+                        Pour une fréquence horaire, seule la <strong>minute</strong> de l'heure d'exécution est prise en compte (sauvegarde déclenchée chaque heure à cette minute).
+                    </p>
+                    <p class="text-muted mt-1 mb-0" style="font-size:var(--font-size-xs);">
+                        Dernière sauvegarde automatique :
+                        {{ $settings->last_auto_backup_at?->format('d/m/Y H:i') ?? 'jamais' }}
+                    </p>
+                </div>
+
+                {{-- Other options --}}
+                <div class="col-md-6">
+                    <h6 class="mb-3"><i class="fas fa-sliders-h me-2"></i>Autres options</h6>
+
+                    <div class="row g-3 align-items-end">
+                        <div class="col-auto">
+                            <label class="form-label form-label-sm" for="retention_count">Sauvegardes à conserver</label>
+                            <input type="number" name="retention_count" id="retention_count" min="1" max="365"
+                                   value="{{ old('retention_count', $settings->retention_count) }}"
+                                   class="form-control form-control-sm" style="max-width:120px;">
+                        </div>
+                        <div class="col-auto">
+                            <label class="form-label form-label-sm" for="naming_pattern">Convention de nommage</label>
+                            <select name="naming_pattern" id="naming_pattern" class="form-select form-select-sm">
+                                @foreach(\App\Models\BackupSetting::NAMING_PATTERNS as $pattern => $example)
+                                    <option value="{{ $pattern }}" data-example="{{ $example }}.sql"
+                                            {{ old('naming_pattern', $settings->naming_pattern) === $pattern ? 'selected' : '' }}>
+                                        {{ $pattern }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0" style="font-size:var(--font-size-xs);">
+                        Exemple : <span class="font-monospace" id="namingPatternExample"></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fas fa-save me-1"></i>Enregistrer
+                </button>
+            </div>
+        </form>
     </div>
 
     {{-- Backup list --}}
@@ -152,6 +257,38 @@ document.getElementById('restoreModal').addEventListener('show.bs.modal', functi
     document.getElementById('restoreFilenameInput').value = btn.dataset.filename;
     this.querySelector('[name="confirm"]').value = '';
 });
+
+(function () {
+    var form = document.getElementById('backupSettingsForm');
+    var frequencySelect = form.querySelector('#frequency');
+    var optionEls = form.querySelectorAll('[data-frequency-option]');
+    var hintEls = form.querySelectorAll('[data-frequency-hint]');
+
+    function syncFrequencyOptions() {
+        var freq = frequencySelect.value;
+        optionEls.forEach(function (el) {
+            var shown = el.dataset.frequencyOption.split(' ').indexOf(freq) !== -1;
+            el.style.display = shown ? '' : 'none';
+        });
+        hintEls.forEach(function (el) {
+            el.style.display = el.dataset.frequencyHint === freq ? '' : 'none';
+        });
+    }
+
+    frequencySelect.addEventListener('change', syncFrequencyOptions);
+    syncFrequencyOptions();
+
+    var namingSelect = form.querySelector('#naming_pattern');
+    var namingExample = document.getElementById('namingPatternExample');
+
+    function syncNamingExample() {
+        var selected = namingSelect.options[namingSelect.selectedIndex];
+        namingExample.textContent = selected ? selected.dataset.example : '';
+    }
+
+    namingSelect.addEventListener('change', syncNamingExample);
+    syncNamingExample();
+})();
 </script>
 @endpush
 

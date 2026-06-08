@@ -24,6 +24,7 @@ FROM mcr.microsoft.com/devcontainers/php:8.4
 
 # Install system libraries required by PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        default-mysql-client \
         libzip-dev \
         libpng-dev \
         libjpeg62-turbo-dev \

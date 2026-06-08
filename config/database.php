@@ -42,6 +42,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Backup/Restore Binaries
+    |--------------------------------------------------------------------------
+    |
+    | Paths to the mysqldump/mysql client binaries used by BackupController.
+    | Override in .env if they aren't on the PATH (e.g. local MySQL install).
+    |
+    */
+
+    'mysqldump_path' => env('MYSQLDUMP_PATH', 'mysqldump'),
+    'mysql_path' => env('MYSQL_PATH', 'mysql'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Migration Repository Table
     |--------------------------------------------------------------------------
     */

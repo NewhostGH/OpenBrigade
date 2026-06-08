@@ -60,5 +60,11 @@ fi
 # Start PHP-FPM in background
 php-fpm -D
 
+# Run the Laravel scheduler every minute (drives automatic backups, etc.)
+( while true; do
+	php artisan schedule:run >> /dev/null 2>&1
+	sleep 60
+done ) &
+
 # Start Nginx in the foreground (keeps the container alive)
 exec nginx -g 'daemon off;'
