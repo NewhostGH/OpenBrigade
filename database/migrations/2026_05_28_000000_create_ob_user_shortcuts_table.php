@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('user_shortcuts', function (Blueprint $table) {
+        Schema::create('ob_user_shortcuts', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
             $table->string('item_key', 64);
@@ -22,6 +22,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('user_shortcuts');
+        Schema::dropIfExists('ob_user_shortcuts');
     }
 };

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserShortcut extends Model
 {
+    protected $table = 'ob_user_shortcuts';
+
     protected $fillable = ['user_id', 'item_key', 'sort_order'];
 
     public static function keysForUser(int $userId): array
