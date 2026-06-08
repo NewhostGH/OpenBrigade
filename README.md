@@ -43,9 +43,11 @@ npm install
 npm run build
 ```
 
-User migration documentation:
+Documentation:
 
-- [Database Migration Guide](docs/user/database-migration.md)
+- [Documentation index](docs/README.md) — full doc map (developer + admin)
+- [Developer setup](docs/dev/DEVELOPMENT.md) — environment, database, auth, assets, tooling
+- [Database Migration Guide](docs/admin/database-migration.md) — schema, migrations, parity
 
 ### Data Migration Validation
 

@@ -74,40 +74,22 @@ git checkout -b feat/my-awesome-feature
 
 ## Setting Up Your Development Environment
 
-### Option A — Docker Compose (recommended)
-
-Requires [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/).
+Full setup instructions — Docker Compose, the VS Code Dev Container, and manual
+installation — live in **[docs/dev/DEVELOPMENT.md](../docs/dev/DEVELOPMENT.md)**, the
+single source of truth for running the project. The short version:
 
 ```bash
-cp .env.example .env   # Edit DB credentials if needed
+cp .env.example .env        # adjust credentials if needed
 docker compose up -d
+docker compose exec app php artisan migrate --seed
+docker compose exec app sh -lc "npm ci && npm run build"
 ```
 
-The application will be available at `http://localhost:8080`.  
-phpMyAdmin is available at `http://localhost:8081`.
+The application is served at `http://localhost:8080`; CloudBeaver (web DB browser) at
+`http://localhost:8081`. Stop everything with `docker compose down`.
 
-Stop containers:
-
-```bash
-docker compose down
-```
-
-### Option B — VS Code Dev Container
-
-Requires [VS Code](https://code.visualstudio.com/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
-
-1. Open the repository folder in VS Code.
-2. When prompted, click **Reopen in Container** (or use the command palette: `Dev Containers: Reopen in Container`).
-3. VS Code will build and start the container automatically.
-4. The app will be served on port `8080` (forwarded to your host).
-
-### Option C — Manual
-
-- PHP 7.4 – 8.3 with extensions: `mysqli`, `mbstring`, `gd`, `zip`, `ldap` (optional), `imap` (optional)
-- MySQL 5.7+ or MariaDB 10.3+
-- Apache 2.4+ with `mod_rewrite` enabled
-
-Configure a virtual host pointing to the repository root, create a MySQL database, then navigate to `http://localhost/` to run the setup wizard.
+OpenBrigade is a **Laravel 12 / PHP 8.4** application — there is no PHP setup wizard;
+the schema is built by `php artisan migrate`.
 
 ---
 
@@ -288,7 +270,9 @@ A maintainer will review your PR. Please be patient — this is a community proj
 
 ### Before submitting, please check:
 
-- [ ] The code runs without PHP errors or warnings.
+- [ ] `composer pint -- --test` passes (formatting).
+- [ ] `composer analyse` passes (PHPStan / Larastan).
+- [ ] `composer test` passes (Pest, including `ConventionsTest`).
 - [ ] Existing features are not broken.
 - [ ] The PR description clearly explains the changes.
 - [ ] No secrets or credentials are included.
@@ -309,14 +293,31 @@ Before opening an issue, please search existing issues to avoid duplicates.
 
 ## Coding Guidelines
 
-> For the full set of binding rules on SSOT, model design, Blade views, CSS/JS naming, and legacy flagging, see **[docs/dev/CONVENTIONS.md](../docs/dev/CONVENTIONS.md)**. The summary below covers the basics; the conventions document covers everything the CI test enforces.
+> For the full set of binding rules on SSOT, model design, Blade views, CSS/JS naming,
+> exports, legacy flagging, and UI component patterns, see
+> **[docs/dev/CONVENTIONS.md](../docs/dev/CONVENTIONS.md)** — the single source of truth
+> for how code is written here. The summary below covers the basics; the conventions
+> document covers everything the CI test enforces.
+
+### Quality gates
+
+Run these before pushing; CI runs the same three and fails on any error:
+
+```bash
+composer pint -- --test     # code style (drop --test to auto-fix)
+composer analyse            # PHPStan / Larastan, level 5
+composer test               # Pest test suite
+```
 
 ### PHP / Laravel
 
-- Follow the existing code style already present in the file you are editing.
+- Follow the existing code style already present in the file you are editing (Pint
+  enforces the canonical style).
 - Keep PHP files UTF-8 encoded.
 - No raw SQL in controllers — use Eloquent or the Query Builder in a Service class.
 - SQL queries must use parameterised bindings (never string-interpolate user input).
+- Native tables get the `ob_` prefix; legacy tables keep their original names
+  (CONVENTIONS §2).
 - Avoid introducing new Composer dependencies without discussion.
 
 ### JavaScript / CSS
