@@ -189,7 +189,13 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 - [x] Maintenance page — system info + migration status (replaces `upgrade.php`)
 - [x] Habilitations — group × permission matrix, access-group CRUD, system groups protected
 - [ ] Add-on / module management — install/download from ebrigade.app not applicable to the fork; `nav.modules.list` still points at legacy `addons.php`
-- [ ] Add tests and parity check; retire remaining ADMIN legacy files
+- [x] Add tests and parity check; retire migrated ADMIN legacy files —
+  `tests/Feature/AdminTest.php` (auth, permission gating, view rendering, legacy
+  redirects); migrated ADMIN bridge routes now redirect to native routes
+  (configuration, save_configuration, configuration_theme, configuration_icone_grade,
+  parametrage, habilitations + save/upd, audit, history, backup, upgrade).
+  `paramfn`/`paramfnv` (billable + vehicle function params) and grade category CRUD
+  stay on the legacy bridge — still WIP, tracked under ORGA
 
 ### Cross-cutting settings not yet wired (from settings annotations)
 - [ ] `password_quality` (ID 15) — complexity validation not enforced in `AuthService`

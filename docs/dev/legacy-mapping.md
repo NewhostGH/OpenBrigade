@@ -386,8 +386,8 @@ at folder granularity (they are binary assets copied as-is).
 | `bilans.php` | `app/Http/Controllers/StatistiqueController.php` + `resources/views/statistique/index.blade.php` |
 | `bilan_participation.php` | `StatistiqueController.php` |
 | `delete_statistique.php` | `StatistiqueController.php` |
-| `history.php` | **WIP** |
-| `audit.php` | **WIP** |
+| `history.php` | `app/Http/Controllers/AdminController.php` (`monitoring`) + `resources/views/admin/monitoring.blade.php` |
+| `audit.php` | `AdminController.php` (`monitoring`) |
 
 ## Company / configuration / settings
 
@@ -396,7 +396,7 @@ at folder granularity (they are binary assets copied as-is).
 | `configuration.php` | `app/Http/Controllers/AdminController.php` (`settings`) + `resources/views/admin/settings.blade.php` |
 | `save_configuration.php` | `AdminController.php` (`saveSetting`/`uploadSetting`/`deleteSetting`) |
 | `configuration_db.php` | `MaintenanceController.php` |
-| `configuration_theme.php` | **WIP** |
+| `configuration_theme.php` | `AdminController.php` (`uploadSetting`/`deleteSetting` — theme images) |
 | `parametrage.php` | `app/Http/Controllers/ParametrageController.php` (`index`) + `admin/parametrage/index.blade.php` |
 | `company.php` | `app/Http/Controllers/CompanyController.php` + `resources/views/company/index.blade.php` |
 | `save_company.php` | `CompanyController.php` |
