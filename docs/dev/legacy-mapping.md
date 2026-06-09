@@ -429,8 +429,8 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file | New implementation |
 |---|---|
-| `addons.php` | **WIP** |
-| `addons_save.php` | **WIP** |
+| `addons.php` | `admin.plugins` (redirect) — community plugins, WIP placeholder |
+| `addons_save.php` | `admin.fonctionnalites` (redirect) — feature/module toggles now in `ob_feature` |
 | `install_addon.php` | **WIP** |
 | `download_addon.php` | **WIP** |
 | `download_module.php` | **WIP** |

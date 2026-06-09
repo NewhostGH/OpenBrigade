@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Request;
 
 class NavigationService
 {
+    public function __construct(private readonly FeatureService $features) {}
+
     /**
      * Full navigation tree for the sidebar.
      * Each item includes `key`, `pinned` (bool), and `active` (bool).
@@ -21,6 +23,10 @@ class NavigationService
 
         foreach (config('navigation.top', []) as $group) {
             if (isset($group['permission']) && ! $this->can($user, $group['permission'])) {
+                continue;
+            }
+
+            if (isset($group['feature']) && ! $this->features->isEnabled($group['feature'])) {
                 continue;
             }
 
@@ -117,6 +123,9 @@ class NavigationService
                 if (isset($item['permission']) && ! $this->can($user, $item['permission'])) {
                     continue;
                 }
+                if (isset($item['feature']) && ! $this->features->isEnabled($item['feature'])) {
+                    continue;
+                }
                 $map[$item['key']] = [
                     'key' => $item['key'],
                     'label' => $item['label'],
@@ -141,6 +150,10 @@ class NavigationService
             }
 
             if (isset($item['permission']) && ! $this->can($user, $item['permission'])) {
+                continue;
+            }
+
+            if (isset($item['feature']) && ! $this->features->isEnabled($item['feature'])) {
                 continue;
             }
 

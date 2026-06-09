@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OrganisationController;
+use App\Http\Middleware\RequireFeature;
 use App\Models\User;
 use App\Services\NavigationService;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -68,7 +69,7 @@ function orgStubView(string $method, string $view, array $data): void
 
 beforeEach(function () {
     orgStubNav();
-    $this->withoutMiddleware(ValidateCsrfToken::class);
+    $this->withoutMiddleware([ValidateCsrfToken::class, RequireFeature::class]);
 });
 
 // ── Access control ───────────────────────────────────────────────────────────

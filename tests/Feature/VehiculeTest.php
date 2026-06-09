@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VehiculeController;
+use App\Http\Middleware\RequireFeature;
 use App\Models\User;
 use App\Services\NavigationService;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -65,7 +66,7 @@ function vehiculeStubIndex(): void
 
 beforeEach(function () {
     vehiculeStubNav();
-    $this->withoutMiddleware(ValidateCsrfToken::class);
+    $this->withoutMiddleware([ValidateCsrfToken::class, RequireFeature::class]);
 });
 
 // ── Access control ───────────────────────────────────────────────────────────

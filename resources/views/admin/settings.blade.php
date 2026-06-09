@@ -57,41 +57,8 @@
                     <div class="tab-pane fade @if($loop->first) show active @endif"
                          id="tab-{{ $tabId }}" role="tabpanel">
 
-                        @if($tabId === 6)
-                            {{-- Module cards --}}
-                            <div class="d-flex flex-wrap gap-3">
-                            @foreach($grouped->get($tabId) as $row)
-                                @if($row->CARD_NAME)
-                                    <div class="ob-widget-card p-3" style="min-width:180px;flex:0 0 auto;">
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <form method="POST"
-                                                  action="{{ route('admin.settings.save', $row->ID) }}">
-                                                @csrf @method('PATCH')
-                                                <input type="hidden" name="_tab" value="{{ $tabId }}">
-                                                <input type="hidden" name="toggle" value="1">
-                                                <input type="hidden" name="VALUE" value="{{ $row->VALUE == '1' ? '0' : '1' }}">
-                                                <button type="submit"
-                                                        class="btn btn-sm {{ $row->VALUE == '1' ? 'btn-success' : 'btn-outline-secondary' }}"
-                                                        title="{{ $row->VALUE == '1' ? 'Désactiver' : 'Activer' }}">
-                                                    <i class="fas fa-{{ $row->VALUE == '1' ? 'check' : 'times' }}"></i>
-                                                </button>
-                                            </form>
-                                            <span class="fw-semibold" style="font-size:var(--font-size-sm);">
-                                                {{ $row->CARD_NAME }}
-                                            </span>
-                                        </div>
-                                        @if($row->DESCRIPTION)
-                                            <div class="text-muted" style="font-size:var(--font-size-xs);">
-                                                {{ $row->DESCRIPTION }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endif
-                            @endforeach
-                            </div>
-                        @else
-                            <table class="table table-sm table-hover mb-0">
-                                <tbody>
+                        <table class="table table-sm table-hover mb-0">
+                            <tbody>
                                 @foreach($grouped->get($tabId) as $row)
                                     @php
                                         $label = $row->DISPLAY_NAME ?: $row->NAME;
@@ -234,9 +201,8 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                </tbody>
-                            </table>
-                        @endif
+                            </tbody>
+                        </table>
                     </div>
                 @endif
             @endforeach

@@ -7,6 +7,6 @@ parameters:
     paths:
         - app/
     excludePaths:
-        - app/Legacy/
+        - app/Legacy/ (?)
     checkModelProperties: true
     checkPhpDocMissingReturn: true

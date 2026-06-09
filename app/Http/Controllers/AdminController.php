@@ -55,17 +55,17 @@ class AdminController extends Controller
     {
         $rows = DB::table('configuration')
             ->where('HIDDEN', 0)
+            ->whereNotIn('ID', DB::table('ob_feature')->whereNotNull('legacy_config_id')->pluck('legacy_config_id'))
             ->orderBy('TAB')
             ->orderBy('ORDERING')
             ->get();
 
         $tabs = [
-            1 => ['label' => 'Fonctionnalités', 'icon' => 'toggle-on'],
+            1 => ['label' => 'Général',          'icon' => 'sliders-h'],
             2 => ['label' => 'Options',          'icon' => 'sliders-h'],
             3 => ['label' => 'Sécurité',         'icon' => 'shield-alt'],
             4 => ['label' => 'Organisation',      'icon' => 'building'],
             5 => ['label' => 'Avancé',            'icon' => 'wrench'],
-            6 => ['label' => 'Modules',           'icon' => 'puzzle-piece'],
         ];
 
         $grouped = $rows->groupBy('TAB');
@@ -74,6 +74,63 @@ class AdminController extends Controller
         // Settings whose behaviour has changed or is not yet wired in Laravel.
         // ID => ['type' => 'obsolete'|'todo', 'note' => '...']
         $annotations = [
+            88 => ['type' => 'obsolete', 'note' => 'Le logo dans la navbar ne sera plus utilisé. L\'icône de maison sera utilisée à la place. Ce réglage n\'a plus d\'effet.'],
+            76 => ['type' => 'todo',     'note' => 'Le fuseau horaire n\'est pas encore utilisé dans Laravel.'],
+            96 => ['type' => 'obsolete', 'note' => 'Le pays des victimes par défaut sera géré par la localisation de Laravel. Ce réglage n\'a plus d\'effet.'],
+            97 => ['type' => 'obsolete', 'note' => 'Le pays par défaut pour la géolocalisation sera géré par la localisation de Laravel. Ce réglage n\'a plus d\'effet.'],
+            98 => ['type' => 'todo',     'note' => 'La devise par défaut n\'est pas encore utilisée dans Laravel.'],
+            99 => ['type' => 'todo',     'note' => 'La devise par défaut n\'est pas encore utilisée dans Laravel.'],
+            100 => ['type' => 'todo',     'note' => 'Le préfixe des numéros n\'est pas encore utilisé dans Laravel.'],
+            101 => ['type' => 'todo',     'note' => 'La longueur des numéros n\'est pas encore utilisée dans Laravel.'],
+            102 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
+            103 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
+            104 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
+            105 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
+            106 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
+            107 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'], 
+            25 => ['type' => 'todo',     'note' => 'L\'historique des actions n\'est pas encore implémenté dans Laravel.'],
+            79 => ['type' => 'obsolete', 'note' => 'Le type d\'organisation n\'est plus utilisé. Ce réglage n\'a plus d\'effet.'],
+            6  => ['type' => 'todo',     'note' => 'Le nom de l\'organisation n\'est pas encore utilisé dans Laravel.'],
+            7  => ['type' => 'obsolete', 'note' => 'L\'URL du site est gérée par APP_URL dans .env. Ce réglage n\'a plus d\'effet.'],
+            8  => ['type' => 'todo',     'note' => 'Le mail de contact n\'est pas encore utilisé dans Laravel.'],
+            39 => ['type' => 'todo',     'note' => 'Le nom de l\'organsiation n\'est pas encore utilisé dans Laravel.'],
+            38 => ['type' => 'obsolete', 'note' => 'Le nom de l\'application est géré par APP_NAME dans .env. Ce réglage n\'a plus d\'effet.'],
+            40 => ['type' => 'todo',     'note' => 'La description de l\'organisation n\'est pas encore utilisée dans Laravel.'],
+            71 => ['type' => 'todo',     'note' => 'Le logo de l\'organisation n\'est pas encore utilisé dans Laravel.'],
+            74 => ['type' => 'obsolete', 'note' => 'Le logo IOS de l\'application sera géré automatiquement à partir du logo principal. Ce réglage n\'a plus d\'effet.'],
+            73 => ['type' => 'obsolete', 'note' => 'Le favicon de l\'application est géré par le logo principal. Ce réglage n\'a plus d\'effet.'],
+            75 => ['type' => 'todo',     'note' => 'L\'image de connexion n\'est pas encore utilisée dans Laravel.'],
+            2  => ['type' => 'obsolete', 'note' => 'Les sections ne sont plus limitées. Ce réglage n\'a plus d\'effet.'],
+            13 => ['type' => 'obsolete', 'note' => 'Les sauvegardes automatiques sont gérées dans l\'onglet Sauvegardes. Ce réglage n\'a plus d\'effet.'],
+            14 => ['type' => 'todo',     'note' => 'L\'optimisation de la base de données n\'est pas encore implémentée dans Laravel.'],
+            26 => ['type' => 'obsolete', 'note' => 'Les Cron Jobs sont gérés par Laravel Scheduler. Ce réglage n\'a plus d\'effet.'],
+            28 => ['type' => 'todo',     'note' => 'Les notifications par email ne sont pas encore implémentées dans Laravel.'],
+            55 => ['type' => 'obsolete', 'note' => 'Les flocons de neige ne seront pas réimplémentés. Ce réglage n\'a plus d\'effet.'],
+            63 => ['type' => 'obsolete', 'note' => 'Les changements du personnel peuvent être bloqués par des permissions. Ce réglage n\'a plus d\'effet.'],
+            68 => ['type' => 'todo',     'note' => 'Les photos de profil obligatoires ne sont pas encore implémentées dans Laravel.'],
+            64 => ['type' => 'todo',     'note' => 'L\'API n\'est pas encore implémentée dans Laravel.'],
+            65 => ['type' => 'todo',     'note' => 'L\'URL de l\'API n\'est pas encore implémentée dans Laravel.'],
+            37 => ['type' => 'todo',     'note' => 'Le mode de maintenance n\'est pas encore implémenté dans Laravel.'],
+            41 => ['type' => 'todo',     'note' => 'Le texte de maintenance n\'est pas encore implémenté dans Laravel.'],
+            66 => ['type' => 'todo',     'note' => 'Le token d\'API n\'est pas encore implémenté dans Laravel.'],
+            9  => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
+            10 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
+            11 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
+            12 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
+            33 => ['type' => 'todo',     'note' => 'Les données sensibles ne sont pas encore gérées dans Laravel.'],
+            42 => ['type' => 'todo',     'note' => 'Les ACLs des fichiers ne sont pas encore gérées dans Laravel.'],
+            48 => ['type' => 'todo',     'note' => 'Les condition d\'utilisation ne sont pas encore implémentées dans Laravel.'],
+            16 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
+            17 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
+            34 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
+            36 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
+            49 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
+            50 => ['type' => 'obsolete', 'note' => 'La clé du webservice n\'est plus utilisée. Ce réglage n\'a plus d\'effet.'],
+            80 => ['type' => 'todo',     'note' => 'La télémétrie n\'est pas encore implémentée dans Laravel.'],
+            20 => ['type' => 'obsolete', 'note' => 'L\'URL de la page d\'identification est désormais fixe. Ce réglage n\'a plus d\'effet.'],
+            51 => ['type' => 'obsolete', 'note' => 'L\'URL de redirection après connexion est désormais fixe. Ce réglage n\'a plus d\'effet.'],
+            43 => ['type' => 'obsolete', 'note' => 'L\'ordre des sections n\'est plus utilisé. Ce réglage n\'a plus d\'effet.'],
+            21 => ['type' => 'obsolete', 'note' => 'Les répertoires de stockage sont configurés dans config/filesystems.php. Ce réglage n\'a plus d\'effet.'],
             44 => ['type' => 'obsolete', 'note' => 'Laravel utilise bcrypt automatiquement. Les anciens hachages MD5 sont migrés à la prochaine connexion. Ce réglage n\'a plus d\'effet.'],
             54 => ['type' => 'obsolete', 'note' => 'L\'affichage des erreurs est contrôlé par APP_DEBUG dans .env. Ce réglage n\'a plus d\'effet.'],
             15 => ['type' => 'todo',     'note' => 'La validation de la complexité du mot de passe n\'est pas encore implémentée dans Laravel.'],

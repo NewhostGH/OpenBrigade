@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'about.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.about');
-    Route::match(['GET', 'POST'], 'addons.php', [LegacyBridgeController::class, 'show'])->middleware('permission:78')->name('legacy_bridge.addons');
-    Route::match(['GET', 'POST'], 'addons_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:78')->name('legacy_bridge.addons_save');
+    Route::match(['GET', 'POST'], 'addons.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.addons');
+    Route::match(['GET', 'POST'], 'addons_save.php', fn () => redirect()->route('admin.fonctionnalites'))->middleware('permission:14')->name('legacy_bridge.addons_save');
     Route::match(['GET', 'POST'], 'alerte_create.php', [LegacyBridgeController::class, 'show'])->middleware('permission:43')->name('legacy_bridge.alerte_create');
     Route::match(['GET', 'POST'], 'alerte_send.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.alerte_send');
     Route::match(['GET', 'POST'], 'astreinte_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:26')->name('legacy_bridge.astreinte_edit');

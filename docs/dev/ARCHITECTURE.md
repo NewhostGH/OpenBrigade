@@ -54,7 +54,8 @@ app/
   | Service | Responsibility |
   |---|---|
   | `Auth/AuthService` | Login against `pompier`, legacy-hash upgrade |
-  | `NavigationService` | Render `config/navigation.php` with permission filtering |
+  | `NavigationService` | Render `config/navigation.php` with permission + feature filtering |
+  | `FeatureService` | Read/toggle feature-module flags (`ob_feature`), kept in sync with legacy `configuration` |
   | `DashboardService` | Aggregate dashboard widget data |
   | `BrigadeService` | Brigade identity / global settings |
   | `TableExportService` | Universal XLSX / CSV export |
@@ -132,6 +133,35 @@ Asset structure and the build pipeline are documented in
 - `framework/` — cache, sessions, compiled views
 - `app/public/` — user uploads (symlinked into `public/`)
 - `app/backups/` — database dumps written by the backup feature
+
+---
+
+## Feature flags & gating
+
+Optional capabilities (Véhicules, Matériel, Cotisations, Cartographie, Animaux, …)
+are switched on/off from one place. The two legacy `configuration` buckets —
+TAB 1 "Fonctionnalités" and TAB 6 "Modules" — are unified into the native
+`ob_feature` registry.
+
+- **`ob_feature`** (one row per capability): `key` (mirrors `configuration.NAME`),
+  `name`, `category` (`fonctionnalite` | `module`), `status` (`native` | `wip`),
+  `enabled`, `legacy_config_id`. Back-filled from `configuration`; toggles are
+  written back to the legacy row so un-migrated code keeps working.
+- **`FeatureService`** — per-request-cached `isEnabled(key)` / `all()` /
+  `setEnabled()`. The single read/write point; never query `ob_feature` directly.
+- **Route gate** — `Route::…->middleware('feature:vehicules')` (alias
+  `RequireFeature`) responds **404** when the flag is off, so a disabled screen
+  behaves as if it does not exist.
+- **Nav gate** — add `'feature' => 'key'` to a `config/navigation.php` group or
+  item and `NavigationService` hides it when the flag is off.
+- **Admin UI** — Administration ▸ **Fonctionnalités** (`/admin/fonctionnalites`)
+  lists every capability with a toggle; `status = wip` (not yet migrated, e.g.
+  Animaux) shows a **WIP** marker but remains toggleable. Administration ▸
+  **Plugins** (`/admin/plugins`) is a WIP placeholder for a future community
+  marketplace.
+
+To gate a newly-migrated screen: add `feature:<key>` to its route(s) and a
+`'feature' => '<key>'` hook to its nav entry, then flip the row to `status = native`.
 
 ---
 

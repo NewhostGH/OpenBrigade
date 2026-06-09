@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\User;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
+use App\Services\FeatureService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
 use Illuminate\Support\Facades\Gate;
@@ -28,8 +29,13 @@ class AppServiceProvider extends ServiceProvider
             return new BrigadeService;
         });
 
+        // Per-request memoized feature/module flags (the ob_feature registry).
+        $this->app->singleton(FeatureService::class, function ($app) {
+            return new FeatureService;
+        });
+
         $this->app->singleton(NavigationService::class, function ($app) {
-            return new NavigationService;
+            return new NavigationService($app->make(FeatureService::class));
         });
 
         // Per-request memoized permission resolution (section ceilings + grants).

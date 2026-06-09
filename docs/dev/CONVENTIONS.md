@@ -288,6 +288,22 @@ Rules:
 See [project_habilitations memory] and `tests/Unit/PermissionResolverTest.php` for the
 resolution algorithm and worked examples.
 
+**Permissions vs. feature flags.** `hasPermission()` answers *"may this user do
+X?"*; feature flags answer *"is capability X switched on for this brigade?"* They
+are orthogonal and a gated screen needs **both**. Feature flags go through one
+path only — `App\Services\FeatureService` (the `ob_feature` registry), never a raw
+`configuration` / `ob_feature` query:
+
+```php
+app(FeatureService::class)->isEnabled('vehicules');     // read a flag
+->middleware('feature:vehicules')                        // RequireFeature gate (404 when off)
+'feature' => 'vehicules'                                 // nav hook (NavigationService hides it)
+```
+
+Toggle flags only via `FeatureService::setEnabled()` (it keeps the legacy
+`configuration` row in sync). See [ARCHITECTURE.md](ARCHITECTURE.md) §"Feature
+flags & gating".
+
 ---
 
 ## See also

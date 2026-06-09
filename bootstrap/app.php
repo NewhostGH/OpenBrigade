@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\RequireFeature;
 use App\Http\Middleware\RequirePermission;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Route-level disabled-account guard (replaces legacy GP_ID==-1 inline checks)
         $middleware->alias([
             'permission' => RequirePermission::class,
+            'feature' => RequireFeature::class,
             'user.active' => EnsureUserIsActive::class,
         ]);
 

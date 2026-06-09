@@ -75,6 +75,7 @@ test('unauthenticated users are redirected from admin pages to login', function 
     '/admin/habilitations',
     '/admin/sauvegarde',
     '/admin/maintenance',
+    '/admin/plugins',
 ]);
 
 // ── Permission gating ────────────────────────────────────────────────────────
@@ -88,6 +89,7 @@ test('users without the required permission get 403', function (string $path) {
     '/admin/habilitations',
     '/admin/sauvegarde',
     '/admin/maintenance',
+    '/admin/plugins',
 ]);
 
 // ── Settings ─────────────────────────────────────────────────────────────────
@@ -104,6 +106,18 @@ test('settings page renders the admin.settings view', function () {
         ->assertOk()
         ->assertViewIs('admin.settings')
         ->assertViewHasAll(['grouped', 'tabs', 'activeTab', 'annotations']);
+});
+
+// ── Plugins (WIP) ────────────────────────────────────────────────────────────
+
+test('plugins page renders for an admin and is forbidden otherwise', function () {
+    $this->actingAs(adminFakeUser())->get('/admin/plugins')
+        ->assertOk()
+        ->assertViewIs('admin.plugins')
+        ->assertSee('Plugins');
+
+    $this->actingAs(adminFakeUser(can: false))->get('/admin/plugins')
+        ->assertForbidden();
 });
 
 // ── Monitoring (audit log) ───────────────────────────────────────────────────

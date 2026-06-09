@@ -198,7 +198,19 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
   section/role context switchers, user "Mes droits" preview, `PermissionResolver`
   (deny-list ceiling: parent caps child) wired into `User::hasPermission`.
   Legacy `groupe`/`habilitation`/`section_role` back-filled by migration
-- [ ] Add-on / module management — install/download from ebrigade.app not applicable to the fork; `nav.modules.list` still points at legacy `addons.php`
+- [x] **Feature / module unification** — the legacy `configuration` TAB 1
+  ("Fonctionnalités") and TAB 6 ("Modules") buckets are merged into a single
+  native registry. New `ob_feature` table (key/category/status/enabled,
+  back-filled from `configuration`, two-way synced), `FeatureService` (cached
+  flag reads + legacy sync), `feature:<key>` route middleware and a
+  `'feature' => 'key'` nav hook so native screens are shown/served only when
+  enabled. Admin ▸ **Fonctionnalités** page (`/admin/fonctionnalites`) replaces
+  the old Modules tab/menu; un-migrated features (e.g. Animaux) carry a **WIP**
+  marker. The Modules tab and top-level Modules menu are removed; legacy
+  `addons.php` now redirects to the native plugins/feature pages
+  (commit: feat: unified ob_feature registry + Fonctionnalités/Plugins admin)
+- [ ] **Plugins** (community marketplace) — Admin ▸ Plugins (`/admin/plugins`)
+  ships as a WIP placeholder; install/download flow still to be designed
 - [x] Add tests and parity check; retire migrated ADMIN legacy files —
   `tests/Feature/AdminTest.php` (auth, permission gating, view rendering, legacy
   redirects); migrated ADMIN bridge routes now redirect to native routes

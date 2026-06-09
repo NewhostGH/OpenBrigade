@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConsommableController;
 use App\Http\Controllers\MaterielController;
+use App\Http\Middleware\RequireFeature;
 use App\Models\User;
 use App\Services\NavigationService;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -90,7 +91,7 @@ function consommableStubIndex(): void
 
 beforeEach(function () {
     inventaireStubNav();
-    $this->withoutMiddleware(ValidateCsrfToken::class);
+    $this->withoutMiddleware([ValidateCsrfToken::class, RequireFeature::class]);
 });
 
 // ── Matériels ────────────────────────────────────────────────────────────────
