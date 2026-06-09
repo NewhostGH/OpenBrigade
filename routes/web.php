@@ -1,33 +1,33 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\GeolocalisationController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EvenementController;
-use App\Http\Controllers\GardeController;
-use App\Http\Controllers\DispoController;
-use App\Http\Controllers\IndispoController;
-use App\Http\Controllers\RemplacementController;
-use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BackupController;
-use App\Http\Controllers\MaintenanceController;
-use App\Http\Controllers\ParametrageController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConsommableController;
-use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\OrganisationController;
-use App\Http\Controllers\StatistiqueController;
-use App\Http\Controllers\MessageController;
-use App\Http\Controllers\MaterielController;
-use App\Http\Controllers\VehiculeController;
-use App\Http\Controllers\Legacy\LegacyBridgeController;
-use App\Http\Controllers\CotisationController;
-use App\Http\Controllers\PersonnelController;
-use App\Http\Controllers\HabilitationController;
 use App\Http\Controllers\ContextController;
+use App\Http\Controllers\CotisationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DispoController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EvenementController;
+use App\Http\Controllers\GardeController;
+use App\Http\Controllers\GeolocalisationController;
+use App\Http\Controllers\HabilitationController;
+use App\Http\Controllers\IndispoController;
+use App\Http\Controllers\Legacy\LegacyBridgeController;
+use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\MaterielController;
 use App\Http\Controllers\MesDroitsController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\OrganisationController;
+use App\Http\Controllers\ParametrageController;
+use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\PlanningController;
+use App\Http\Controllers\RemplacementController;
 use App\Http\Controllers\ShortcutController;
+use App\Http\Controllers\StatistiqueController;
+use App\Http\Controllers\VehiculeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -175,6 +175,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
     Route::get('/organisation', [OrganisationController::class, 'index'])->name('organisation.index')->middleware('permission:52');
+    // Sections — native list + CRUD (replaces departement.php)
+    Route::get('/organisation/sections', [OrganisationController::class, 'sections'])->name('organisation.sections')->middleware('permission:52');
+    Route::get('/organisation/sections/create', [OrganisationController::class, 'createSection'])->name('organisation.sections.create')->middleware('permission:52');
+    Route::post('/organisation/sections', [OrganisationController::class, 'storeSection'])->name('organisation.sections.store')->middleware('permission:52');
+    Route::get('/organisation/sections/{section}/edit', [OrganisationController::class, 'editSection'])->name('organisation.sections.edit')->middleware('permission:52');
+    Route::patch('/organisation/sections/{section}', [OrganisationController::class, 'updateSection'])->name('organisation.sections.update')->middleware('permission:52');
+    Route::delete('/organisation/sections/{section}', [OrganisationController::class, 'destroySection'])->name('organisation.sections.destroy')->middleware('permission:52');
+    // Cartographie — native Leaflet map (replaces jvectormap.php)
+    Route::get('/organisation/cartographie', [OrganisationController::class, 'cartographie'])->name('organisation.cartographie')->middleware('permission:27');
     Route::get('/statistiques', [StatistiqueController::class, 'index'])->name('statistique.index')->middleware('permission:27');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
@@ -258,6 +267,6 @@ Route::middleware('auth')->group(function () {
         ->name('legacy_bridge.compat.pathinfo');
 });
 
-if (file_exists(__DIR__ . '/web_legacy_bridge.php')) {
-    require __DIR__ . '/web_legacy_bridge.php';
+if (file_exists(__DIR__.'/web_legacy_bridge.php')) {
+    require __DIR__.'/web_legacy_bridge.php';
 }

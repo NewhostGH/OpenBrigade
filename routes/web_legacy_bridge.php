@@ -76,7 +76,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'delete_statistique.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.delete_statistique');
     Route::match(['GET', 'POST'], 'deletePompier.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.deletePompier');
     Route::match(['GET', 'POST'], 'demande_renfort.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.demande_renfort');
-    Route::match(['GET', 'POST'], 'departement.php', fn () => redirect()->route('organisation.index'))->name('legacy_bridge.departement');
+    Route::match(['GET', 'POST'], 'departement.php', fn () => redirect()->route('organisation.sections'))->name('legacy_bridge.departement');
     Route::match(['GET', 'POST'], 'destinataires.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.destinataires');
     Route::match(['GET', 'POST'], 'diplome_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:54')->name('legacy_bridge.diplome_edit');
     Route::match(['GET', 'POST'], 'dispo.php', fn () => redirect()->route('dispo.index'))->name('legacy_bridge.dispo');
@@ -201,7 +201,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'ins_vehicule.php', fn () => redirect()->route('vehicule.create'))->name('legacy_bridge.ins_vehicule');
     Route::match(['GET', 'POST'], 'install_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.install_addon');
     Route::match(['GET', 'POST'], 'intervention_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.intervention_edit');
-    Route::match(['GET', 'POST'], 'jvectormap.php', [LegacyBridgeController::class, 'show'])->middleware('permission:27')->name('legacy_bridge.jvectormap');
+    Route::match(['GET', 'POST'], 'jvectormap.php', fn () => redirect()->route('organisation.cartographie'))->name('legacy_bridge.jvectormap');
     Route::match(['GET', 'POST'], 'liste_victimes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.liste_victimes');
     Route::match(['GET', 'POST'], 'listecontacts.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.listecontacts');
     Route::match(['GET', 'POST'], 'listemails.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.listemails');

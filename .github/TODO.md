@@ -174,8 +174,9 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 - [ ] Custom exports (XLS, TCD, HTML, TXT, SQL)
 
 ### Organisation (ORGA)
-- [x] Section/unit management
-- [ ] Group and role (habilitations) management — group × permission matrix done; rank/grade and poste pending
+- [x] Section/unit management — native list + CRUD (`organisation.sections`), organigramme tree
+- [x] Cartographie — native Leaflet map of sections (`organisation.cartographie`, replaces jvectormap.php)
+- [x] Group and role (habilitations) management — section-scoped, ceiling-based model (ob_ tables)
 - [ ] Rank and grade management
 - [ ] Position (poste) management
 - [ ] Team (equipe) management

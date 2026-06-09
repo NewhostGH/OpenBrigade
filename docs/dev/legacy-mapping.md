@@ -374,8 +374,8 @@ at folder granularity (they are binary assets copied as-is).
 | `localize_me.php` | **WIP** |
 | `localize_send.php` | **WIP** |
 | `map.php` | **WIP** |
-| `jvectormap.php` | **WIP** |
-| `departement.php` | **WIP** |
+| `jvectormap.php` | `OrganisationController.php` (`cartographie`) + `resources/views/organisation/cartographie.blade.php` (Leaflet) |
+| `departement.php` | `OrganisationController.php` (`sections` + CRUD) + `resources/views/organisation/sections.blade.php` |
 | `zipcode.php` | **WIP** |
 | `buildzipcode.php` | **WIP** |
 
