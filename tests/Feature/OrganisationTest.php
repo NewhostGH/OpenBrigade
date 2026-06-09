@@ -76,7 +76,7 @@ beforeEach(function () {
 
 test('unauthenticated users are redirected from organisation pages to login', function (string $path) {
     $this->get($path)->assertRedirect('/login');
-})->with(['/organisation', '/organisation/sections', '/organisation/cartographie']);
+})->with(['/organisation', '/organisation/organigramme', '/organisation/sections', '/organisation/cartographie']);
 
 test('section CRUD routes are registered', function () {
     expect(route('organisation.sections.create'))->toContain('/organisation/sections/create')
@@ -124,20 +124,26 @@ test('legacy jvectormap.php redirects to organisation.cartographie', function ()
         ->assertRedirect(route('organisation.cartographie'));
 });
 
-// ── Organisation index (stubbed controller) ──────────────────────────────────
+// ── Organisation index / organigramme (stubbed controller) ───────────────────
 
-test('authenticated users can access the organisation index', function () {
-    orgStubIndex();
-    $this->actingAs(orgFakeUser())->get('/organisation')->assertStatus(200);
+test('/organisation redirects to the organigramme URL', function () {
+    $this->actingAs(orgFakeUser())
+        ->get('/organisation')
+        ->assertRedirect(route('organisation.organigramme'));
 });
 
-test('organisation index renders the organisation.index view', function () {
+test('authenticated users can access the organigramme', function () {
     orgStubIndex();
-    $this->actingAs(orgFakeUser())->get('/organisation')->assertViewIs('organisation.index');
+    $this->actingAs(orgFakeUser())->get('/organisation/organigramme')->assertStatus(200);
 });
 
-test('organisation index passes all required view variables', function () {
+test('organigramme renders the organisation.index view', function () {
     orgStubIndex();
-    $this->actingAs(orgFakeUser())->get('/organisation')
+    $this->actingAs(orgFakeUser())->get('/organisation/organigramme')->assertViewIs('organisation.index');
+});
+
+test('organigramme passes all required view variables', function () {
+    orgStubIndex();
+    $this->actingAs(orgFakeUser())->get('/organisation/organigramme')
         ->assertViewHasAll(['tree', 'sectionId']);
 });

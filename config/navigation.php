@@ -128,7 +128,7 @@ return [
             'permission' => 52,
             'items' => [
                 ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/organisation/sections',    'icon' => 'layer-group',  'permission' => 52],
-                ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation',             'icon' => 'project-diagram', 'permission' => 52],
+                ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation/organigramme', 'icon' => 'project-diagram', 'permission' => 52],
                 ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/organisation/cartographie', 'icon' => 'map',          'permission' => 27, 'feature' => 'carte'],
             ],
         ],
@@ -140,10 +140,10 @@ return [
             'icon' => 'chart-bar',
             'permission' => 27,
             'items' => [
-                ['key' => 'stats.graphiques', 'label' => 'Graphiques',            'url' => '/statistiques',                    'icon' => 'chart-line',  'permission' => 27],
-                ['key' => 'stats.reporting',  'label' => 'Reporting',             'url' => '/legacy/export.php',               'icon' => 'file-export', 'permission' => 27],
-                ['key' => 'stats.cotis',      'label' => 'Cotisations', 'url' => '/legacy/report_cotisations.php',   'icon' => 'coins',       'permission' => 53],
-                ['key' => 'stats.bilans',     'label' => 'Bilans annuels',        'url' => '/statistiques',                    'icon' => 'chart-pie',   'permission' => 27],
+                ['key' => 'stats.graphiques', 'label' => 'Tableau de bord',      'url' => '/statistiques/dashboard',          'icon' => 'chart-line',  'permission' => 27],
+                ['key' => 'stats.bilans',    'label' => 'Bilan annuel',          'url' => '/statistiques/bilan-annuel',       'icon' => 'chart-pie',   'permission' => 27],
+                ['key' => 'stats.reporting', 'label' => 'Reporting',             'url' => '/legacy/export.php',               'icon' => 'file-export', 'permission' => 27],
+                ['key' => 'stats.cotis',     'label' => 'Cotisations',           'url' => '/legacy/report_cotisations.php',   'icon' => 'coins',       'permission' => 53],
             ],
         ],
 

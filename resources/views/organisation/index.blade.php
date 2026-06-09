@@ -28,12 +28,18 @@
         </div>
         <div class="ob-widget-card-body p-0">
             <div class="ob-org-chart-wrap">
-                <ul class="ob-org-chart">
-                    @include('organisation._node', ['nodes' => $tree, 'currentSectionId' => $sectionId])
-                </ul>
+                <div id="ob-org-tree"></div>
             </div>
         </div>
     </div>
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+window.__OB_ORG_TREE__        = @json($tree);
+window.__OB_CURRENT_SECTION__ = {{ $sectionId }};
+</script>
+@vite(['resources/js/ob-organisation-organigramme.js'])
+@endpush

@@ -14,7 +14,7 @@
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title"><i class="fas fa-layer-group me-2"></i>Sections</div>
             <div class="ob-widget-card-actions">
-                <a href="{{ route('organisation.index') }}" class="btn btn-sm btn-outline-secondary me-1">
+                <a href="{{ route('organisation.organigramme') }}" class="btn btn-sm btn-outline-secondary me-1">
                     <i class="fas fa-project-diagram me-1"></i>Organigramme
                 </a>
                 <a href="{{ route('organisation.sections.create') }}" class="btn btn-sm btn-primary">

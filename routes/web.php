@@ -187,7 +187,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/consommables', [ConsommableController::class, 'index'])->name('consommable.index')->middleware(['permission:42', 'feature:consommables']);
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
-    Route::get('/organisation', [OrganisationController::class, 'index'])->name('organisation.index')->middleware('permission:52');
+    Route::get('/organisation', fn () => redirect()->route('organisation.organigramme'))->name('organisation.index');
+    Route::get('/organisation/organigramme', [OrganisationController::class, 'index'])->name('organisation.organigramme')->middleware('permission:52');
     // Sections — native list + CRUD (replaces departement.php)
     Route::get('/organisation/sections', [OrganisationController::class, 'sections'])->name('organisation.sections')->middleware('permission:52');
     Route::get('/organisation/sections/create', [OrganisationController::class, 'createSection'])->name('organisation.sections.create')->middleware('permission:52');
@@ -202,7 +203,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/organisation/sections/{section}/agrement/{code}', [OrganisationController::class, 'destroyAgrement'])->name('organisation.sections.agrement.destroy')->middleware('permission:52');
     // Cartographie — native Leaflet map (replaces jvectormap.php)
     Route::get('/organisation/cartographie', [OrganisationController::class, 'cartographie'])->name('organisation.cartographie')->middleware(['permission:27', 'feature:carte']);
-    Route::get('/statistiques', [StatistiqueController::class, 'index'])->name('statistique.index')->middleware('permission:27');
+    Route::get('/statistiques', fn () => redirect()->route('statistique.dashboard'))->name('statistique.index');
+    Route::get('/statistiques/dashboard', [StatistiqueController::class, 'index'])->name('statistique.dashboard')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel', fn () => redirect()->route('statistique.bilan.generalites'))->name('statistique.bilan');
+    Route::get('/statistiques/bilan-annuel/generalites',     [StatistiqueController::class, 'bilanGeneralites'])->name('statistique.bilan.generalites')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/generalites/pdf',[StatistiqueController::class, 'bilanGeneralitesPdf'])->name('statistique.bilan.generalites.pdf')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/activites',      [StatistiqueController::class, 'bilanActivites'])->name('statistique.bilan.activites')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/activites/pdf',  [StatistiqueController::class, 'bilanActivitesPdf'])->name('statistique.bilan.activites.pdf')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/formations',     [StatistiqueController::class, 'bilanFormations'])->name('statistique.bilan.formations')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/formations/pdf', [StatistiqueController::class, 'bilanFormationsPdf'])->name('statistique.bilan.formations.pdf')->middleware('permission:27');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');

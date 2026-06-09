@@ -40,14 +40,16 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('personnel.livret', $personnel) }}" target="_blank">
+                            <button type="button" class="dropdown-item" data-livret-btn
+                                onclick="window.__downloadLivretPdf && window.__downloadLivretPdf({{ $personnel->P_ID }})">
                                 <i class="fas fa-file-pdf me-2 text-danger"></i> Livret (PDF)
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('personnel.carte', $personnel) }}" target="_blank">
+                            <button type="button" class="dropdown-item" data-carte-btn
+                                onclick="window.__downloadCartePdf && window.__downloadCartePdf({{ $personnel->P_ID }})">
                                 <i class="fas fa-id-card me-2 text-danger"></i> Carte adhérent (PDF)
-                            </a>
+                            </button>
                         </li>
                     </ul>
                 </div>
@@ -952,5 +954,5 @@
 
 @push('scripts')
 <script>window.PERS_SHOW_CONFIG = { cotisUrl: '{{ url('personnel/' . $personnel->P_ID . '/cotisations') }}', qualUrl: '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}' };</script>
-@vite('resources/js/ob-personnel-show.js')
+@vite(['resources/js/ob-personnel-show.js', 'resources/js/ob-pdf-personnel.js'])
 @endpush

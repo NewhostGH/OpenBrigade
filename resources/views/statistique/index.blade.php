@@ -6,12 +6,14 @@
 
 <x-ob-breadcrumb :items="[
     ['label' => 'Statistiques'],
+    ['label' => 'Tableau de bord', 'url' => route('statistique.dashboard')],
 ]"/>
 
 <div class="ob-toolbar mx-3 mt-3">
     <div class="ob-toolbar-title">
-        <h1>Statistiques</h1>
-        <form method="GET" action="{{ route('statistique.index') }}" class="d-flex gap-2 align-items-center">
+        <h1>Statistiques {{ $year }}</h1>
+        <form method="GET" action="{{ route('statistique.dashboard') }}" class="ob-stats-year-form">
+            <label class="text-muted" style="font-size:var(--font-size-sm)">Année :</label>
             <select name="year" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
                 @foreach($years as $y)
                     <option value="{{ $y }}" @selected($y === $year)>{{ $y }}</option>
@@ -19,118 +21,136 @@
             </select>
         </form>
     </div>
+    <div class="ob-toolbar-actions">
+        <a href="{{ route('statistique.bilan') }}?year={{ $year }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-file-pdf me-1"></i>Bilan annuel
+        </a>
+    </div>
 </div>
 
 <div class="mx-3 mt-3">
+
+    {{-- ── KPI cards ──────────────────────────────────────────────────────── --}}
+    <div class="ob-kpi-grid">
+        <div class="ob-kpi-card ob-kpi-card--primary">
+            <span class="ob-kpi-card__label">Activités</span>
+            <span class="ob-kpi-card__value">{{ $totalEvents }}</span>
+            <span class="ob-kpi-card__sub">en {{ $year }}</span>
+        </div>
+        <div class="ob-kpi-card ob-kpi-card--success">
+            <span class="ob-kpi-card__label">Participations</span>
+            <span class="ob-kpi-card__value">{{ $totalParticipants }}</span>
+            <span class="ob-kpi-card__sub">cumulées sur l'année</span>
+        </div>
+        <div class="ob-kpi-card ob-kpi-card--accent">
+            <span class="ob-kpi-card__label">Heures</span>
+            <span class="ob-kpi-card__value">{{ number_format($totalHours, 0, ',', ' ') }}</span>
+            <span class="ob-kpi-card__sub">total bénévoles</span>
+        </div>
+        <div class="ob-kpi-card ob-kpi-card--info">
+            <span class="ob-kpi-card__label">Membres actifs</span>
+            <span class="ob-kpi-card__value">{{ $totalMembers }}</span>
+            <span class="ob-kpi-card__sub">{{ $newMembersThisYear }} nouveau{{ $newMembersThisYear !== 1 ? 'x' : '' }} en {{ $year }}</span>
+        </div>
+    </div>
+
+    {{-- ── Charts row 1 ───────────────────────────────────────────────────── --}}
     <div class="row g-3">
 
-        {{-- ── Activities per month ─────────────────────────────────────── --}}
         <div class="col-lg-6">
             <div class="ob-widget-card">
                 <div class="ob-widget-card-header">
                     <div class="ob-widget-card-title">
-                        <i class="fas fa-chart-bar"></i> Activités par mois — {{ $year }}
+                        <i class="fas fa-chart-bar me-1"></i> Activités par mois
                     </div>
                 </div>
                 <div class="ob-widget-card-body">
-                    @php
-                        $monthLabels = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-                        $maxEv = max(array_merge($eventsData, [1]));
-                    @endphp
-                    <div class="d-flex align-items-end gap-1" style="height:120px">
-                        @foreach($eventsData as $i => $val)
-                            @php $pct = $maxEv > 0 ? round($val / $maxEv * 100) : 0; @endphp
-                            <div class="d-flex flex-column align-items-center flex-fill">
-                                <div style="font-size:9px;color:var(--text-muted-soft)">{{ $val ?: '' }}</div>
-                                <div style="background:var(--brand-bg);opacity:0.7;width:100%;height:{{ max($pct, 4) }}%;border-radius:2px 2px 0 0"></div>
-                                <div style="font-size:9px;color:var(--text-muted-soft);margin-top:2px">{{ $monthLabels[$i] }}</div>
-                            </div>
-                        @endforeach
-                    </div>
+                    <div id="chart-events-month" data-values="{{ json_encode(array_values($eventsData)) }}"></div>
                 </div>
             </div>
         </div>
 
-        {{-- ── Participants per month ───────────────────────────────────── --}}
         <div class="col-lg-6">
             <div class="ob-widget-card">
                 <div class="ob-widget-card-header">
                     <div class="ob-widget-card-title">
-                        <i class="fas fa-users"></i> Participants par mois — {{ $year }}
+                        <i class="fas fa-users me-1"></i> Participants par mois
                     </div>
                 </div>
                 <div class="ob-widget-card-body">
-                    @php $maxPart = max(array_merge($participantData, [1])); @endphp
-                    <div class="d-flex align-items-end gap-1" style="height:120px">
-                        @foreach($participantData as $i => $val)
-                            @php $pct = $maxPart > 0 ? round($val / $maxPart * 100) : 0; @endphp
-                            <div class="d-flex flex-column align-items-center flex-fill">
-                                <div style="font-size:9px;color:var(--text-muted-soft)">{{ $val ?: '' }}</div>
-                                <div style="background:var(--color-success-icon);opacity:0.7;width:100%;height:{{ max($pct, 4) }}%;border-radius:2px 2px 0 0"></div>
-                                <div style="font-size:9px;color:var(--text-muted-soft);margin-top:2px">{{ $monthLabels[$i] }}</div>
-                            </div>
-                        @endforeach
-                    </div>
+                    <div id="chart-participants-month" data-values="{{ json_encode(array_values($participantData)) }}"></div>
                 </div>
             </div>
         </div>
 
-        {{-- ── New members per year ─────────────────────────────────────── --}}
+        {{-- Events by type --}}
         <div class="col-lg-6">
             <div class="ob-widget-card">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-user-plus"></i> Nouveaux membres (5 ans)</div>
+                    <div class="ob-widget-card-title">
+                        <i class="fas fa-chart-pie me-1"></i> Répartition par type
+                    </div>
+                </div>
+                <div class="ob-widget-card-body">
+                    <div id="chart-events-type" data-values="{{ json_encode($eventsByType) }}"></div>
+                </div>
+            </div>
+        </div>
+
+        {{-- New members trend --}}
+        <div class="col-lg-6">
+            <div class="ob-widget-card">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title">
+                        <i class="fas fa-user-plus me-1"></i> Nouveaux membres (5 ans)
+                    </div>
                 </div>
                 <div class="ob-widget-card-body">
                     @if(empty($newMembersByYear))
                         <span class="ob-widget-empty">Aucune donnée.</span>
                     @else
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                @foreach($newMembersByYear as $yr => $nb)
-                                    <tr>
-                                        <td style="font-size:var(--font-size-sm);font-weight:600">{{ $yr }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div style="background:var(--brand-bg);opacity:0.6;height:12px;width:{{ min($nb * 10, 200) }}px;border-radius:2px"></div>
-                                                <span style="font-size:var(--font-size-xs)">{{ $nb }}</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <div id="chart-new-members" data-values="{{ json_encode($newMembersByYear) }}"></div>
                     @endif
                 </div>
             </div>
         </div>
 
-        {{-- ── Top participants ─────────────────────────────────────────── --}}
-        <div class="col-lg-6">
+        {{-- Top participants --}}
+        <div class="col-12">
             <div class="ob-widget-card">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-trophy"></i> Top participants — {{ $year }}</div>
+                    <div class="ob-widget-card-title">
+                        <i class="fas fa-trophy me-1"></i> Top 10 participants — {{ $year }}
+                    </div>
                 </div>
                 <div class="ob-widget-card-body p-0">
                     @if($topParticipants->isEmpty())
                         <p class="ob-widget-empty p-3">Aucune donnée.</p>
                     @else
-                        <table class="table table-sm mb-0">
+                        <table class="table table-sm ob-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width:32px">#</th>
+                                    <th>Membre</th>
+                                    <th>Activités</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @foreach($topParticipants as $rank => $p)
-                                    <tr>
-                                        <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft);width:24px">
-                                            {{ $rank + 1 }}.
-                                        </td>
-                                        <td style="font-size:var(--font-size-sm)">
-                                            <a href="{{ route('personnel.show', $p->P_ID) }}" class="text-decoration-none">
-                                                {{ $p->P_PRENOM }} {{ strtoupper($p->P_NOM) }}
-                                            </a>
-                                        </td>
-                                        <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
-                                            {{ $p->nb_events }} activités
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td class="text-muted" style="font-size:var(--font-size-xs)">{{ $rank + 1 }}</td>
+                                    <td>
+                                        <a href="{{ route('personnel.show', $p->P_ID) }}" class="text-decoration-none">
+                                            {{ $p->P_PRENOM }} {{ strtoupper($p->P_NOM) }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div style="background:var(--brand-bg);opacity:0.6;height:8px;border-radius:2px;width:{{ min($p->nb_events * 8, 160) }}px"></div>
+                                            <span style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">{{ $p->nb_events }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -140,18 +160,10 @@
         </div>
 
     </div>
-
-    {{-- Link to full reporting --}}
-    <div class="mt-3 d-flex gap-2">
-        {{-- TODO: Migrate code --}}
-        <a href="{{ url('/legacy/export.php') }}" class="btn btn-sm btn-outline-secondary">
-            <i class="fas fa-file-export me-1"></i> Export personnalisé
-        </a>
-        {{-- TODO: Migrate code --}}
-        <a href="{{ url('/legacy/bilans.php') }}" class="btn btn-sm btn-outline-secondary">
-            <i class="fas fa-chart-pie me-1"></i> Bilans annuels
-        </a>
-    </div>
 </div>
 
 @endsection
+
+@push('scripts')
+@vite(['resources/js/ob-statistique-index.js'])
+@endpush
