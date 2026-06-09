@@ -1,11 +1,11 @@
 <?php
 
-# project: OpenBrigade
+// project: OpenBrigade
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 
 namespace App\Http\Controllers;
 
@@ -57,26 +57,26 @@ class GeolocalisationController extends Controller
         // Transform to array for JSON
         $markers = $members->map(function ($m) {
             return [
-                'id'        => $m->P_ID,
-                'name'      => $m->P_NOM . ' ' . $m->P_PRENOM,
-                'grade'     => $m->P_GRADE,
-                'phone'     => $m->P_PHONE,
-                'section'   => $m->S_CODE,
-                'statut'    => $m->P_STATUT,
-                'lat'       => (float) $m->LAT,
-                'lng'       => (float) $m->LNG,
-                'address'   => $m->ADDRESS,
-                'date_loc'  => $m->DATE_LOC,
+                'id' => $m->P_ID,
+                'name' => $m->P_NOM.' '.$m->P_PRENOM,
+                'grade' => $m->P_GRADE,
+                'phone' => $m->P_PHONE,
+                'section' => $m->S_CODE,
+                'statut' => $m->P_STATUT,
+                'lat' => (float) $m->LAT,
+                'lng' => (float) $m->LNG,
+                'address' => $m->ADDRESS,
+                'date_loc' => $m->DATE_LOC,
                 'photo_url' => route('personnel.photo', $m->P_ID),
                 'profile_url' => route('personnel.show', $m->P_ID),
             ];
         })->values()->toArray();
 
         return view('personnel.geolocalisation', [
-            'markers'   => $markers,
-            'sections'  => $sections,
+            'markers' => $markers,
+            'sections' => $sections,
             'sectionId' => $sectionId,
-            'count'     => count($markers),
+            'count' => count($markers),
         ]);
     }
 
@@ -86,17 +86,17 @@ class GeolocalisationController extends Controller
     public function updateGps(Request $request, Personnel $personnel)
     {
         $validated = $request->validate([
-            'lat'     => ['required', 'numeric', 'between:-90,90'],
-            'lng'     => ['required', 'numeric', 'between:-180,180'],
+            'lat' => ['required', 'numeric', 'between:-90,90'],
+            'lng' => ['required', 'numeric', 'between:-180,180'],
             'address' => ['nullable', 'string', 'max:200'],
         ]);
 
         DB::table('gps')->updateOrInsert(
             ['P_ID' => $personnel->P_ID],
             [
-                'LAT'      => $validated['lat'],
-                'LNG'      => $validated['lng'],
-                'ADDRESS'  => $validated['address'] ?? null,
+                'LAT' => $validated['lat'],
+                'LNG' => $validated['lng'],
+                'ADDRESS' => $validated['address'] ?? null,
                 'DATE_LOC' => now(),
             ]
         );

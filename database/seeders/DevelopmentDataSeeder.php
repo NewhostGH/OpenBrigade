@@ -129,13 +129,13 @@ class DevelopmentDataSeeder extends Seeder
             Personnel::factory()
                 ->count(5)
                 ->state(function () use (&$sequence, $section, $groupe): array {
-                    $code = 'dev.user.' . $sequence;
+                    $code = 'dev.user.'.$sequence;
                     $sequence++;
 
                     return [
-                    'P_SECTION' => $section->S_ID,
-                    'GP_ID' => $groupe->GP_ID,
-                    'P_CODE' => $code,
+                        'P_SECTION' => $section->S_ID,
+                        'GP_ID' => $groupe->GP_ID,
+                        'P_CODE' => $code,
                     ];
                 })
                 ->create();

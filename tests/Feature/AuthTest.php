@@ -18,12 +18,12 @@ function authFakeUser(array $attrs = []): User
     /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
-        'P_ID'      => 1,
-        'P_NOM'     => 'Test',
-        'P_PRENOM'  => 'User',
+        'P_ID' => 1,
+        'P_NOM' => 'Test',
+        'P_PRENOM' => 'User',
         'P_SECTION' => 1,
-        'P_ACTIF'   => 1,
-        'P_MDP'     => bcrypt('secret'),
+        'P_ACTIF' => 1,
+        'P_MDP' => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(false);
 
@@ -100,7 +100,7 @@ test('login fails with wrong credentials and shows error', function () {
 });
 
 test('login succeeds with correct credentials and redirects to dashboard', function () {
-    $user        = authFakeUser();
+    $user = authFakeUser();
     $authService = Mockery::mock(AuthService::class);
     $authService->shouldReceive('attemptLogin')
         ->with('testuser', 'secret', false)
@@ -134,7 +134,7 @@ test('logout redirects unauthenticated users to login', function () {
 });
 
 test('logout signs out the user and redirects to login', function () {
-    $user        = authFakeUser();
+    $user = authFakeUser();
     $authService = Mockery::mock(AuthService::class);
     $authService->shouldReceive('logout')->once();
     app()->instance(AuthService::class, $authService);
@@ -145,7 +145,7 @@ test('logout signs out the user and redirects to login', function () {
 });
 
 test('logout flash message confirms disconnection', function () {
-    $user        = authFakeUser();
+    $user = authFakeUser();
     $authService = Mockery::mock(AuthService::class);
     $authService->shouldReceive('logout');
     app()->instance(AuthService::class, $authService);
@@ -158,7 +158,7 @@ test('logout flash message confirms disconnection', function () {
 // ── Post-login redirect normalization ────────────────────────────────────────
 
 test('login normalizes legacy index_d.php intended URL to dashboard', function () {
-    $user        = authFakeUser();
+    $user = authFakeUser();
     $authService = Mockery::mock(AuthService::class);
     $authService->shouldReceive('attemptLogin')->andReturnUsing(function () use ($user) {
         Auth::guard('web')->setUser($user);

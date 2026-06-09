@@ -15,11 +15,11 @@ class IndispoController extends Controller
      */
     public function index(Request $request): View
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
-        $pid       = (int) $user->P_ID;
+        $pid = (int) $user->P_ID;
 
-        $tab    = (string) $request->string('tab', 'section'); // section | mine
+        $tab = (string) $request->string('tab', 'section'); // section | mine
         $status = (string) $request->string('status', 'pending'); // pending | accepted | all
 
         $query = DB::table('indisponibilite as i')
@@ -41,15 +41,15 @@ class IndispoController extends Controller
         }
 
         match ($status) {
-            'pending'  => $query->whereNull('i.I_ACCEPT')->orWhere('i.I_ACCEPT', 0),
+            'pending' => $query->whereNull('i.I_ACCEPT')->orWhere('i.I_ACCEPT', 0),
             'accepted' => $query->where('i.I_ACCEPT', 1),
-            default    => null,
+            default => null,
         };
 
         // Add upcoming filter: only show current/future
         $query->where(function ($q) {
             $q->where('i.I_FIN', '>=', now()->toDateString())
-              ->orWhereNull('i.I_FIN');
+                ->orWhereNull('i.I_FIN');
         });
 
         $items = $query->paginate(30)->withQueryString();
@@ -61,12 +61,12 @@ class IndispoController extends Controller
     private function indispoColumns(): array
     {
         return [
-            ['key'=>'personnel','label'=>'Personnel','type'=>'text','value'=>fn($i)=>$i->person_name ?? '—','alwaysVisible'=>true,'mobile'=>true],
-            ['key'=>'type','label'=>'Type','type'=>'text','value'=>fn($i)=>$i->TI_LIBELLE ?? '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($i)=>$i->TI_LIBELLE ?? ''],
-            ['key'=>'debut','label'=>'Début','type'=>'date','value'=>fn($i)=>$i->I_DEBUT,'alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($i)=>$i->I_DEBUT?\Carbon\Carbon::parse($i->I_DEBUT)->format('d/m/Y'):''],
-            ['key'=>'fin','label'=>'Fin','type'=>'date','value'=>fn($i)=>$i->I_FIN,'mobile'=>false,'exportable'=>true,'exportValue'=>fn($i)=>$i->I_FIN?\Carbon\Carbon::parse($i->I_FIN)->format('d/m/Y'):''],
-            ['key'=>'statut','label'=>'Statut','type'=>'badge','value'=>fn($i)=>$i->I_ACCEPT == 1 ? 'ACCEPTED' : ($i->I_ACCEPT === null || $i->I_ACCEPT == 0 ? 'PENDING' : 'REJECTED'),'badgeMap'=>['ACCEPTED'=>['Acceptée','ob-badge-actif'],'REJECTED'=>['Refusée','ob-badge-bloqued'],'PENDING'=>['En attente','ob-badge-ben']],'exportable'=>true,'exportValue'=>fn($i)=>$i->I_ACCEPT == 1 ? 'Acceptée' : ($i->I_ACCEPT === null || $i->I_ACCEPT == 0 ? 'En attente' : 'Refusée'),'mobile'=>true],
-            ['key'=>'commentaire','label'=>'Commentaire','type'=>'text','value'=>fn($i)=>$i->I_COMMENT ?: '','mobile'=>false,'default'=>false,'exportable'=>true,'exportValue'=>fn($i)=>$i->I_COMMENT ?? ''],
+            ['key' => 'personnel', 'label' => 'Personnel', 'type' => 'text', 'value' => fn ($i) => $i->person_name ?? '—', 'alwaysVisible' => true, 'mobile' => true],
+            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($i) => $i->TI_LIBELLE ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($i) => $i->TI_LIBELLE ?? ''],
+            ['key' => 'debut', 'label' => 'Début', 'type' => 'date', 'value' => fn ($i) => $i->I_DEBUT, 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($i) => $i->I_DEBUT ? Carbon::parse($i->I_DEBUT)->format('d/m/Y') : ''],
+            ['key' => 'fin', 'label' => 'Fin', 'type' => 'date', 'value' => fn ($i) => $i->I_FIN, 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($i) => $i->I_FIN ? Carbon::parse($i->I_FIN)->format('d/m/Y') : ''],
+            ['key' => 'statut', 'label' => 'Statut', 'type' => 'badge', 'value' => fn ($i) => $i->I_ACCEPT == 1 ? 'ACCEPTED' : ($i->I_ACCEPT === null || $i->I_ACCEPT == 0 ? 'PENDING' : 'REJECTED'), 'badgeMap' => ['ACCEPTED' => ['Acceptée', 'ob-badge-actif'], 'REJECTED' => ['Refusée', 'ob-badge-bloqued'], 'PENDING' => ['En attente', 'ob-badge-ben']], 'exportable' => true, 'exportValue' => fn ($i) => $i->I_ACCEPT == 1 ? 'Acceptée' : ($i->I_ACCEPT === null || $i->I_ACCEPT == 0 ? 'En attente' : 'Refusée'), 'mobile' => true],
+            ['key' => 'commentaire', 'label' => 'Commentaire', 'type' => 'text', 'value' => fn ($i) => $i->I_COMMENT ?: '', 'mobile' => false, 'default' => false, 'exportable' => true, 'exportValue' => fn ($i) => $i->I_COMMENT ?? ''],
         ];
     }
 }

@@ -51,9 +51,9 @@ function materielStubIndex(): void
         $page->setPath('/materiels');
         $ctrl->shouldReceive('index')->andReturn(
             view('materiel.index', [
-                'items'    => $page,
-                'columns'  => [],
-                'search'   => '',
+                'items' => $page,
+                'columns' => [],
+                'search' => '',
                 'filtSect' => 0,
                 'sections' => Collection::make([]),
             ])
@@ -75,11 +75,11 @@ function consommableStubIndex(): void
         $page->setPath('/consommables');
         $ctrl->shouldReceive('index')->andReturn(
             view('consommable.index', [
-                'items'    => $page,
-                'columns'  => [],
-                'search'   => '',
+                'items' => $page,
+                'columns' => [],
+                'search' => '',
                 'filtSect' => 0,
-                'alert'    => false,
+                'alert' => false,
                 'sections' => Collection::make([]),
             ])
         );

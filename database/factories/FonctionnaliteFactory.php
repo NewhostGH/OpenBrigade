@@ -16,7 +16,7 @@ class FonctionnaliteFactory extends Factory
     {
         return [
             'F_ID' => fake()->unique()->numberBetween(9000, 9999),
-            'F_LIBELLE' => 'DEV ' . fake()->words(2, true),
+            'F_LIBELLE' => 'DEV '.fake()->words(2, true),
             'F_TYPE' => 0,
             'TF_ID' => 0,
             'F_FLAG' => 0,

@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Models\Personnel;
+use FPDF;
 use Illuminate\Support\Facades\DB;
 use Sabre\VObject\Component\VCard;
-use FPDF;
 
 /**
  * Handles per-member and list-level personnel exports:
@@ -24,8 +24,8 @@ class PersonnelExportService
     public function buildVcard(Personnel $personnel): string
     {
         $vcard = new VCard([
-            'FN'  => trim(strtoupper($personnel->P_NOM) . ' ' . ucfirst(mb_strtolower($personnel->P_PRENOM))),
-            'N'   => [strtoupper($personnel->P_NOM), ucfirst(mb_strtolower($personnel->P_PRENOM)), '', '', ''],
+            'FN' => trim(strtoupper($personnel->P_NOM).' '.ucfirst(mb_strtolower($personnel->P_PRENOM))),
+            'N' => [strtoupper($personnel->P_NOM), ucfirst(mb_strtolower($personnel->P_PRENOM)), '', '', ''],
         ]);
 
         if ($personnel->P_EMAIL) {
@@ -116,19 +116,21 @@ class PersonnelExportService
             ->get();
 
         $oneYearAgo = now()->subYear()->format('Y-m-d');
-        $today      = now()->format('Y-m-d');
+        $today = now()->format('Y-m-d');
 
         $formations = $this->getActivities($pid, 'C_FOR', $oneYearAgo, $today);
-        $secours    = $this->getActivities($pid, 'C_SEC', $oneYearAgo, $today);
+        $secours = $this->getActivities($pid, 'C_SEC', $oneYearAgo, $today);
         $operations = $this->getActivities($pid, 'C_OPE', $oneYearAgo, $today);
 
-        $categories  = DB::table('categorie_evenement')->orderBy('CEV_CODE')->select('CEV_CODE', 'CEV_DESCRIPTION')->get();
+        $categories = DB::table('categorie_evenement')->orderBy('CEV_CODE')->select('CEV_CODE', 'CEV_DESCRIPTION')->get();
         $currentYear = (int) date('Y');
 
         // ── PDF generation ───────────────────────────────────────────────────
 
-        $pdf = new class extends FPDF {
+        $pdf = new class extends FPDF
+        {
             public $y = 50;      // phpcs:ignore -- no type: parent FPDF::$y is untyped
+
             public $goDown = 7;  // phpcs:ignore -- no type: same reason
 
             public function down(int $n = 1, int $ymax = 240): void
@@ -165,14 +167,14 @@ class PersonnelExportService
         // ── Identity ─────────────────────────────────────────────────────────
 
         $civMap = [1 => 'M.', 2 => 'Mme', 3 => 'Dr.', 4 => 'Pr.'];
-        $civ    = $civMap[$personnel->P_CIVILITE] ?? '';
+        $civ = $civMap[$personnel->P_CIVILITE] ?? '';
 
         // Photo
         $photoPath = '';
         foreach ([
             // TODO: Migrate code — trombi photos live in archive/legacy_app; move to storage/ after decommission
-            base_path('archive/legacy_app/images/user-specific/trombi/' . $personnel->P_PHOTO),
-            public_path('images/user-specific/trombi/' . $personnel->P_PHOTO),
+            base_path('archive/legacy_app/images/user-specific/trombi/'.$personnel->P_PHOTO),
+            public_path('images/user-specific/trombi/'.$personnel->P_PHOTO),
         ] as $p) {
             if ($personnel->P_PHOTO && file_exists($p)) {
                 $photoPath = $p;
@@ -183,29 +185,29 @@ class PersonnelExportService
             $pdf->Image($photoPath, 15, $pdf->y + 5, 40);
         }
 
-        $GoX  = 60;
+        $GoX = 60;
         $GoX2 = 94;
 
-        $nom    = mb_convert_encoding(strtoupper($personnel->P_NOM), 'ISO-8859-1', 'UTF-8');
+        $nom = mb_convert_encoding(strtoupper($personnel->P_NOM), 'ISO-8859-1', 'UTF-8');
         $prenom = mb_convert_encoding(ucfirst(mb_strtolower($personnel->P_PRENOM)), 'ISO-8859-1', 'UTF-8');
 
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Text($GoX, $pdf->y, mb_convert_encoding('Identité: ', 'ISO-8859-1', 'UTF-8'));
         $pdf->SetTextColor(13, 53, 148);
-        $pdf->Text($GoX2, $pdf->y, mb_convert_encoding($civ . ' ' . $nom . ' ' . $prenom, 'ISO-8859-1', 'UTF-8'));
+        $pdf->Text($GoX2, $pdf->y, mb_convert_encoding($civ.' '.$nom.' '.$prenom, 'ISO-8859-1', 'UTF-8'));
         $pdf->SetTextColor(0, 0, 0);
         $pdf->down();
 
         $pdf->SetFont('Arial', '', 10);
 
         $fields = [
-            'Date de naissance:'  => $personnel->P_BIRTHDATE?->format('d-m-Y') ?? '',
-            'Lieu de naissance:'  => ($personnel->P_BIRTHPLACE ?? '') . ($personnel->P_BIRTH_DEP ? ' (' . $personnel->P_BIRTH_DEP . ')' : ''),
-            'Adresse:'            => $personnel->P_ADDRESS ?? '',
-            ''                    => trim(($personnel->P_ZIP_CODE ?? '') . ' ' . ($personnel->P_CITY ?? '')),
-            'Téléphone:'          => $personnel->P_PHONE ?? '',
-            'Email:'              => $personnel->P_EMAIL ?? '',
-            'Date engagement:'    => $personnel->P_DATE_ENGAGEMENT?->format('d-m-Y') ?? '',
+            'Date de naissance:' => $personnel->P_BIRTHDATE?->format('d-m-Y') ?? '',
+            'Lieu de naissance:' => ($personnel->P_BIRTHPLACE ?? '').($personnel->P_BIRTH_DEP ? ' ('.$personnel->P_BIRTH_DEP.')' : ''),
+            'Adresse:' => $personnel->P_ADDRESS ?? '',
+            '' => trim(($personnel->P_ZIP_CODE ?? '').' '.($personnel->P_CITY ?? '')),
+            'Téléphone:' => $personnel->P_PHONE ?? '',
+            'Email:' => $personnel->P_EMAIL ?? '',
+            'Date engagement:' => $personnel->P_DATE_ENGAGEMENT?->format('d-m-Y') ?? '',
         ];
 
         if ($personnel->section) {
@@ -225,8 +227,12 @@ class PersonnelExportService
         if ($medals->isNotEmpty()) {
             $pdf->sectionHeader(mb_convert_encoding('Décorations collectives', 'ISO-8859-1', 'UTF-8'), 50);
 
-            $h = 8; $sx = 15;
-            $L1 = 60; $L2 = 25; $L3 = 54; $L4 = 45;
+            $h = 8;
+            $sx = 15;
+            $L1 = 60;
+            $L2 = 25;
+            $L3 = 54;
+            $L4 = 45;
 
             $pdf->SetXY($sx, $pdf->y);
             $pdf->SetFillColor(200, 200, 200);
@@ -263,8 +269,11 @@ class PersonnelExportService
         if ($indivMedals->isNotEmpty()) {
             $pdf->sectionHeader(mb_convert_encoding('Médailles et Récompenses', 'ISO-8859-1', 'UTF-8'), 50);
 
-            $h = 8; $sx = 15;
-            $L1 = 110; $L2 = 30; $L3 = 44;
+            $h = 8;
+            $sx = 15;
+            $L1 = 110;
+            $L2 = 30;
+            $L3 = 44;
 
             $pdf->SetXY($sx, $pdf->y);
             $pdf->SetFillColor(200, 200, 200);
@@ -284,7 +293,7 @@ class PersonnelExportService
                 $pdf->SetXY($sx + $L1, $pdf->y);
                 $pdf->MultiCell($L2, $h, mb_convert_encoding('à titre individuel', 'ISO-8859-1', 'UTF-8'), 1, 'C', true);
                 $pdf->SetXY($sx + $L1 + $L2, $pdf->y);
-                $pdf->MultiCell($L3, $h, mb_convert_encoding($prenom . ' ' . $nom, 'ISO-8859-1', 'UTF-8'), 1, 'C', true);
+                $pdf->MultiCell($L3, $h, mb_convert_encoding($prenom.' '.$nom, 'ISO-8859-1', 'UTF-8'), 1, 'C', true);
                 $pdf->y = (int) ($pdf->y + $h);
                 if ($pdf->y > 265) {
                     $pdf->AddPage();
@@ -298,8 +307,14 @@ class PersonnelExportService
         if ($diplomes->isNotEmpty()) {
             $pdf->sectionHeader(mb_convert_encoding('Diplômes officiels', 'ISO-8859-1', 'UTF-8'), 50);
 
-            $h = 8; $sx = 15;
-            $L1 = 16; $L2 = 50; $L3 = 20; $L4 = 28; $L5 = 42; $L6 = 28;
+            $h = 8;
+            $sx = 15;
+            $L1 = 16;
+            $L2 = 50;
+            $L3 = 20;
+            $L4 = 28;
+            $L5 = 42;
+            $L6 = 28;
 
             $pdf->SetXY($sx, $pdf->y);
             $pdf->SetFillColor(200, 200, 200);
@@ -338,10 +353,14 @@ class PersonnelExportService
         // ── Qualifications ────────────────────────────────────────────────────
 
         if ($qualifications->isNotEmpty()) {
-            $pdf->sectionHeader(mb_convert_encoding('Compétences valides au ' . date('d-m-Y'), 'ISO-8859-1', 'UTF-8'), 40);
+            $pdf->sectionHeader(mb_convert_encoding('Compétences valides au '.date('d-m-Y'), 'ISO-8859-1', 'UTF-8'), 40);
 
-            $h = 7; $sx = 15;
-            $L1 = 45; $L2 = 25; $L3 = 80; $L4 = 30;
+            $h = 7;
+            $sx = 15;
+            $L1 = 45;
+            $L2 = 25;
+            $L3 = 80;
+            $L4 = 30;
 
             $pdf->SetXY($sx, $pdf->y);
             $pdf->SetFillColor(200, 200, 200);
@@ -403,8 +422,11 @@ class PersonnelExportService
 
         $pdf->sectionHeader(mb_convert_encoding('Bilan participations bénévole sur 5 ans', 'ISO-8859-1', 'UTF-8'), 40);
 
-        $h = 8; $sx = 15; $Y = $currentYear;
-        $L1 = 48; $Lw = 25;
+        $h = 8;
+        $sx = 15;
+        $Y = $currentYear;
+        $L1 = 48;
+        $Lw = 25;
 
         $pdf->SetXY($sx, $pdf->y);
         $pdf->SetFillColor(200, 200, 200);
@@ -438,7 +460,7 @@ class PersonnelExportService
 
         $pdf->SetXY(10, 272);
         $pdf->SetFont('Arial', '', 6);
-        $printedBy = mb_convert_encoding('Imprimé le ' . now()->format('d-m-Y à H:i'), 'ISO-8859-1', 'UTF-8');
+        $printedBy = mb_convert_encoding('Imprimé le '.now()->format('d-m-Y à H:i'), 'ISO-8859-1', 'UTF-8');
         $pdf->MultiCell(100, 5, $printedBy, '', 'L');
 
         return $pdf->Output('S');
@@ -469,8 +491,8 @@ class PersonnelExportService
         $photoPath = '';
         foreach ([
             // TODO: Migrate code — trombi photos live in archive/legacy_app; move to storage/ after decommission
-            base_path('archive/legacy_app/images/user-specific/trombi/' . $personnel->P_PHOTO),
-            public_path('images/user-specific/trombi/' . $personnel->P_PHOTO),
+            base_path('archive/legacy_app/images/user-specific/trombi/'.$personnel->P_PHOTO),
+            public_path('images/user-specific/trombi/'.$personnel->P_PHOTO),
         ] as $p) {
             if ($personnel->P_PHOTO && file_exists($p)) {
                 $photoPath = $p;
@@ -484,7 +506,7 @@ class PersonnelExportService
         // Member info
         $pdf->SetTextColor(0, 0, 60);
         $pdf->SetFont('Arial', 'B', 9);
-        $nom    = mb_convert_encoding(strtoupper($personnel->P_NOM), 'ISO-8859-1', 'UTF-8');
+        $nom = mb_convert_encoding(strtoupper($personnel->P_NOM), 'ISO-8859-1', 'UTF-8');
         $prenom = mb_convert_encoding(ucfirst(mb_strtolower($personnel->P_PRENOM)), 'ISO-8859-1', 'UTF-8');
 
         $pdf->SetXY(26, 15);
@@ -502,7 +524,7 @@ class PersonnelExportService
         $pdf->SetXY(26, 33);
         $pdf->SetFont('Arial', '', 8);
         $pdf->SetTextColor(80, 80, 80);
-        $pdf->Cell(57, 5, mb_convert_encoding('N° ' . $personnel->P_CODE, 'ISO-8859-1', 'UTF-8'), 0, 1, 'L');
+        $pdf->Cell(57, 5, mb_convert_encoding('N° '.$personnel->P_CODE, 'ISO-8859-1', 'UTF-8'), 0, 1, 'L');
 
         if ($personnel->section) {
             $pdf->SetXY(26, 38);
@@ -515,7 +537,7 @@ class PersonnelExportService
         $pdf->SetTextColor(255, 255, 255);
         $pdf->SetFont('Arial', 'I', 6);
         $pdf->SetXY(2, 48);
-        $pdf->Cell(81.6, 4, mb_convert_encoding('Carte de membre — ' . date('Y'), 'ISO-8859-1', 'UTF-8'), 0, 0, 'C');
+        $pdf->Cell(81.6, 4, mb_convert_encoding('Carte de membre — '.date('Y'), 'ISO-8859-1', 'UTF-8'), 0, 0, 'C');
 
         return $pdf->Output('S');
     }
@@ -560,7 +582,7 @@ class PersonnelExportService
             ->where('ep.EP_FLAG1', 0)
             ->where('e.E_VISIBLE_INSIDE', 1)
             ->where('te.TE_CODE', '<>', 'MC')
-            ->whereRaw("YEAR(eh.EH_DATE_FIN) = ?", [$year])
+            ->whereRaw('YEAR(eh.EH_DATE_FIN) = ?', [$year])
             ->select('eh.EH_DUREE', 'ep.EP_DUREE')
             ->get();
 
@@ -568,19 +590,32 @@ class PersonnelExportService
         foreach ($rows as $r) {
             $total += ($r->EP_DUREE > 0) ? $r->EP_DUREE : $r->EH_DUREE;
         }
+
         return (int) round($total);
     }
 
     private function renderActivityTable($pdf, $activities, string $type): void
     {
-        $h = 8; $sx = 15;
+        $h = 8;
+        $sx = 15;
         $sum = 0;
 
         if ($type === 'formation') {
-            $L1 = 18; $L2 = 28; $L3 = 16; $L4 = 46; $L5 = 29; $L6 = 16; $L7 = 30;
+            $L1 = 18;
+            $L2 = 28;
+            $L3 = 16;
+            $L4 = 46;
+            $L5 = 29;
+            $L6 = 16;
+            $L7 = 30;
             $cols = [[$L1, 'Date'], [$L2, 'Type'], [$L3, 'Pour'], [$L4, 'Description'], [$L5, 'Lieu'], [$L6, 'Heures'], [$L7, 'Rôle']];
         } else {
-            $L1 = 18; $L2 = 30; $L3 = 50; $L4 = 36; $L5 = 16; $L6 = 30;
+            $L1 = 18;
+            $L2 = 30;
+            $L3 = 50;
+            $L4 = 36;
+            $L5 = 16;
+            $L6 = 30;
             $cols = [[$L1, 'Date'], [$L2, 'Activité'], [$L3, 'Description'], [$L4, 'Lieu'], [$L5, 'Heures'], [$L6, 'Rôle']];
         }
 
@@ -596,18 +631,18 @@ class PersonnelExportService
         $pdf->y = (int) ($pdf->y + $h);
 
         foreach ($activities as $a) {
-            $duree  = ($a->EP_DUREE > 0) ? $a->EP_DUREE : $a->EH_DUREE;
-            $sum   += (int) $duree;
-            $role   = substr($a->TP_LIBELLE ?? 'stagiaire', 0, 20);
-            $lieu   = substr($a->E_LIEU ?? '', 0, 20);
+            $duree = ($a->EP_DUREE > 0) ? $a->EP_DUREE : $a->EH_DUREE;
+            $sum += (int) $duree;
+            $role = substr($a->TP_LIBELLE ?? 'stagiaire', 0, 20);
+            $lieu = substr($a->E_LIEU ?? '', 0, 20);
 
             if ($type === 'formation') {
-                $tf   = ($a->TF_CODE === 'I') ? 'Formation initiale' : substr($a->TF_LIBELLE ?? '', 0, 18);
+                $tf = ($a->TF_CODE === 'I') ? 'Formation initiale' : substr($a->TF_LIBELLE ?? '', 0, 18);
                 $pour = substr($a->TE_CODE ?? '', 0, 8);
                 $desc = substr($a->E_LIBELLE ?? '', 0, 28);
                 $rowData = [$a->datedeb, $tf, $pour, $desc, $lieu, (string) $duree, $role];
             } else {
-                $te   = ($a->TE_CODE === 'DPS') ? 'DPS' : substr($a->TE_LIBELLE ?? '', 0, 20);
+                $te = ($a->TE_CODE === 'DPS') ? 'DPS' : substr($a->TE_LIBELLE ?? '', 0, 20);
                 $desc = substr($a->E_LIBELLE ?? '', 0, 30);
                 $rowData = [$a->datedeb, $te, $desc, $lieu, (string) $duree, $role];
             }
@@ -629,10 +664,10 @@ class PersonnelExportService
         }
 
         $pdf->down(2);
-        $label = match($type) {
+        $label = match ($type) {
             'formation' => "Nombre total d'heures de formation bénévole depuis un an: {$sum}h",
-            'secours'   => "Nombre total d'heures de participation aux activités de secours depuis un an: {$sum}h",
-            default     => "Nombre total d'heures de participation aux activités opérationnelles depuis un an: {$sum}h",
+            'secours' => "Nombre total d'heures de participation aux activités de secours depuis un an: {$sum}h",
+            default => "Nombre total d'heures de participation aux activités opérationnelles depuis un an: {$sum}h",
         };
         $pdf->SetFont('Arial', '', 10);
         $pdf->Text(15, $pdf->y, mb_convert_encoding($label, 'ISO-8859-1', 'UTF-8'));

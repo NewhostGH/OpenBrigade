@@ -28,12 +28,12 @@ function gardeFakeUser(array $attrs = []): User
     /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
-        'P_ID'      => 1,
-        'P_NOM'     => 'Test',
-        'P_PRENOM'  => 'User',
+        'P_ID' => 1,
+        'P_NOM' => 'Test',
+        'P_PRENOM' => 'User',
         'P_SECTION' => 1,
-        'P_ACTIF'   => 1,
-        'P_MDP'     => bcrypt('secret'),
+        'P_ACTIF' => 1,
+        'P_MDP' => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(true);
 
@@ -51,13 +51,13 @@ function gardeStubIndex(User $user): void
         $ctrl = Mockery::mock(GardeController::class)->makePartial();
         $ctrl->shouldReceive('index')->andReturn(
             view('garde.index', [
-                'days'       => [],
-                'monday'     => $now->copy()->startOfWeek(),
-                'sunday'     => $now->copy()->endOfWeek(),
-                'prevWeek'   => -1,
-                'nextWeek'   => 1,
+                'days' => [],
+                'monday' => $now->copy()->startOfWeek(),
+                'sunday' => $now->copy()->endOfWeek(),
+                'prevWeek' => -1,
+                'nextWeek' => 1,
                 'weekOffset' => 0,
-                'roles'      => [],
+                'roles' => [],
             ])
         );
 

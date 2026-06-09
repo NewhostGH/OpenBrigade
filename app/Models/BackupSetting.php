@@ -27,10 +27,10 @@ class BackupSetting extends Model
      * by BackupController::buildFilename: {date}=Y-m-d, {time}=H-i-s, {database}=DB name.
      */
     public const NAMING_PATTERNS = [
-        'backup_{date}_{time}'    => 'backup_2026-06-08_03-00-00',
+        'backup_{date}_{time}' => 'backup_2026-06-08_03-00-00',
         '{database}_{date}_{time}' => 'openbrigade_2026-06-08_03-00-00',
-        '{date}_{time}_backup'    => '2026-06-08_03-00-00_backup',
-        '{database}-{date}'       => 'openbrigade-2026-06-08',
+        '{date}_{time}_backup' => '2026-06-08_03-00-00_backup',
+        '{database}-{date}' => 'openbrigade-2026-06-08',
     ];
 
     protected $fillable = [
@@ -46,8 +46,8 @@ class BackupSetting extends Model
     ];
 
     protected $casts = [
-        'auto_enabled'        => 'boolean',
-        'start_date'          => 'date',
+        'auto_enabled' => 'boolean',
+        'start_date' => 'date',
         'last_auto_backup_at' => 'datetime',
     ];
 

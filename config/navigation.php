@@ -22,9 +22,9 @@ return [
 
         // ── Personnel ──────────────────────────────────────────────────────
         [
-            'code'  => 'personnel',
+            'code' => 'personnel',
             'label' => 'Personnel',
-            'icon'  => 'users',
+            'icon' => 'users',
             'items' => [
                 ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',      'icon' => 'list'],
                 ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications', 'icon' => 'certificate',      'permission' => 56],
@@ -35,9 +35,9 @@ return [
 
         // ── Activités ──────────────────────────────────────────────────────
         [
-            'code'  => 'activities',
+            'code' => 'activities',
             'label' => 'Activités',
-            'icon'  => 'calendar-alt',
+            'icon' => 'calendar-alt',
             'items' => [
                 ['key' => 'activities.list',     'label' => 'Liste',            'url' => '/evenements',                                        'icon' => 'list-ul',    'permission' => 41],
                 ['key' => 'activities.mc',       'label' => 'Main courante',    'url' => '/evenements?type=MC',                                'icon' => 'ambulance',  'permission' => 52],
@@ -48,9 +48,9 @@ return [
 
         // ── Garde ──────────────────────────────────────────────────────────
         [
-            'code'  => 'garde',
+            'code' => 'garde',
             'label' => 'Garde',
-            'icon'  => 'clipboard-list',
+            'icon' => 'clipboard-list',
             'items' => [
                 ['key' => 'garde.tableau', 'label' => 'Tableau de garde', 'url' => '/garde',                                           'icon' => 'shield-alt',   'permission' => 61],
                 ['key' => 'garde.jour',    'label' => 'Garde du jour',    'url' => '/garde',                                           'icon' => 'calendar-day', 'permission' => 61],
@@ -59,9 +59,9 @@ return [
 
         // ── Planning ───────────────────────────────────────────────────────
         [
-            'code'  => 'planning',
+            'code' => 'planning',
             'label' => 'Planning',
-            'icon'  => 'calendar-check',
+            'icon' => 'calendar-check',
             'items' => [
                 ['key' => 'planning.calendar',    'label' => 'Calendrier',      'url' => '/planning',                                   'icon' => 'calendar'],
                 ['key' => 'planning.dispos',      'label' => 'Disponibilités',  'url' => '/disponibilites',                             'icon' => 'check-square',   'permission' => 38],
@@ -74,20 +74,20 @@ return [
 
         // ── Clients ────────────────────────────────────────────────────────
         [
-            'code'       => 'clients',
-            'label'      => 'Clients',
-            'icon'       => 'user-circle',
+            'code' => 'clients',
+            'label' => 'Clients',
+            'icon' => 'user-circle',
             'permission' => 29,
-            'items'      => [
+            'items' => [
                 ['key' => 'clients.list', 'label' => 'Liste', 'url' => '/clients', 'icon' => 'list', 'permission' => 29],
             ],
         ],
 
         // ── Logistique ─────────────────────────────────────────────────────
         [
-            'code'  => 'logistics',
+            'code' => 'logistics',
             'label' => 'Logistique',
-            'icon'  => 'truck',
+            'icon' => 'truck',
             'items' => [
                 ['key' => 'logistics.vehicules',    'label' => 'Véhicules',    'url' => '/vehicules',                    'icon' => 'truck',    'permission' => 42],
                 ['key' => 'logistics.materiels',    'label' => 'Matériels',    'url' => '/materiels',    'icon' => 'toolbox',  'permission' => 42],
@@ -97,9 +97,9 @@ return [
 
         // ── Communication ──────────────────────────────────────────────────
         [
-            'code'  => 'comm',
+            'code' => 'comm',
             'label' => 'Communication',
-            'icon'  => 'envelope',
+            'icon' => 'envelope',
             'items' => [
                 ['key' => 'comm.chat',    'label' => 'Chat',    'url' => '/legacy/chat.php',           'icon' => 'comments',  'permission' => 51],
                 ['key' => 'comm.alerte',  'label' => 'Alerte',  'url' => '/legacy/alerte_create.php',  'icon' => 'bell',      'permission' => 43],
@@ -109,11 +109,11 @@ return [
 
         // ── Documents ──────────────────────────────────────────────────────
         [
-            'code'       => 'docs',
-            'label'      => 'Documents',
-            'icon'       => 'folder-open',
+            'code' => 'docs',
+            'label' => 'Documents',
+            'icon' => 'folder-open',
             'permission' => 44,
-            'items'      => [
+            'items' => [
                 ['key' => 'docs.library', 'label' => 'Bibliothèque', 'url' => '/documents', 'icon' => 'book', 'permission' => 44],
                 ['key' => 'docs.photos',  'label' => 'Album photos',  'url' => '/legacy/spgm/index.php',                                   'icon' => 'images', 'permission' => 44],
             ],
@@ -121,24 +121,24 @@ return [
 
         // ── Organisation ───────────────────────────────────────────────────
         [
-            'code'       => 'orga',
-            'label'      => 'Organisation',
-            'icon'       => 'sitemap',
+            'code' => 'orga',
+            'label' => 'Organisation',
+            'icon' => 'sitemap',
             'permission' => 52,
-            'items'      => [
+            'items' => [
                 ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/organisation/sections',    'icon' => 'layer-group',  'permission' => 52],
                 ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation',             'icon' => 'project-diagram', 'permission' => 52],
-                ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/organisation/cartographie','icon' => 'map',          'permission' => 27],
+                ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/organisation/cartographie', 'icon' => 'map',          'permission' => 27],
             ],
         ],
 
         // ── Statistiques ───────────────────────────────────────────────────
         [
-            'code'       => 'stats',
-            'label'      => 'Statistiques',
-            'icon'       => 'chart-bar',
+            'code' => 'stats',
+            'label' => 'Statistiques',
+            'icon' => 'chart-bar',
             'permission' => 27,
-            'items'      => [
+            'items' => [
                 ['key' => 'stats.graphiques', 'label' => 'Graphiques',            'url' => '/statistiques',                    'icon' => 'chart-line',  'permission' => 27],
                 ['key' => 'stats.reporting',  'label' => 'Reporting',             'url' => '/legacy/export.php',               'icon' => 'file-export', 'permission' => 27],
                 ['key' => 'stats.cotis',      'label' => 'Cotisations', 'url' => '/legacy/report_cotisations.php',   'icon' => 'coins',       'permission' => 53],
@@ -148,11 +148,11 @@ return [
 
         // ── Administration ─────────────────────────────────────────────────
         [
-            'code'       => 'admin',
-            'label'      => 'Administration',
-            'icon'       => 'cog',
+            'code' => 'admin',
+            'label' => 'Administration',
+            'icon' => 'cog',
             'permission' => 5,
-            'items'      => [
+            'items' => [
                 ['key' => 'admin.configuration', 'label' => 'Général',       'url' => '/admin/settings',              'icon' => 'sliders-h',  'permission' => 14],
                 ['key' => 'admin.parametrage',   'label' => 'Paramétrage',   'url' => '/admin/parametrage',           'icon' => 'wrench',     'permission' => 5],
                 null,
@@ -165,11 +165,11 @@ return [
 
         // ── Modules ────────────────────────────────────────────────────────
         [
-            'code'       => 'modules',
-            'label'      => 'Modules',
-            'icon'       => 'puzzle-piece',
+            'code' => 'modules',
+            'label' => 'Modules',
+            'icon' => 'puzzle-piece',
             'permission' => 78,
-            'items'      => [
+            'items' => [
                 ['key' => 'modules.list', 'label' => 'Liste', 'url' => '/legacy/addons.php', 'icon' => 'th', 'permission' => 78],
             ],
         ],

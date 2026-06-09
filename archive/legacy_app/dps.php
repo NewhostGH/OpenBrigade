@@ -1,81 +1,81 @@
 <?php
 
-  # project: eBrigade
-  # homepage: https://ebrigade.app
-  # version: 5.3
+// project: eBrigade
+// homepage: https://ebrigade.app
+// version: 5.3
 
-  # Copyright (C) 2004, 2021 Nicolas MARCHE (eBrigade Technologies)
-  # This program is free software; you can redistribute it and/or modify
-  # it under the terms of the GNU General Public License as published by
-  # the Free Software Foundation; either version 2 of the License, or
-  # (at your option) any later version.
-  #
-  # This program is distributed in the hope that it will be useful,
-  # but WITHOUT ANY WARRANTY; without even the implied warranty of
-  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  # GNU General Public License for more details.
-  # You should have received a copy of the GNU General Public License
-  # along with this program; if not, write to the Free Software
-  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// Copyright (C) 2004, 2021 Nicolas MARCHE (eBrigade Technologies)
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-include_once ("config.php");
-include_once ("fonctions_dps.php");
+include_once 'config.php';
+include_once 'fonctions_dps.php';
 check_all(0);
 
-$evenement = (isset($_POST['evenement'])?intval($_POST['evenement']):(isset($_GET['evenement'])?intval($_GET['evenement']):""));
+$evenement = (isset($_POST['evenement']) ? intval($_POST['evenement']) : (isset($_GET['evenement']) ? intval($_GET['evenement']) : ''));
 
-$table_params = (!isset($_GET['table'])) ? 0 : $_GET['table'];
+$table_params = (! isset($_GET['table'])) ? 0 : $_GET['table'];
 
-if (!$table_params) {
+if (! $table_params) {
 
     writehead();
-    writeBreadCrumb("Dispositifs prévisionnels","Evénement", "aa");
+    writeBreadCrumb('Dispositifs prévisionnels', 'Evénement', 'aa');
 }
 
-$msgerr="";
+$msgerr = '';
 
-if(isset($_POST['action'])){
-$dimNbISActeurs = (isset($_POST['dimNbISActeurs'])?secure_input($dbc,$_POST['dimNbISActeurs']):0);
-$dimNbISActeursCom = (isset($_POST['dimNbISActeursCom'])?secure_input($dbc,$_POST['dimNbISActeursCom']):"");
-$dimP=(isset($_POST['P'])?secure_input($dbc,$_POST['P']):0);
-$dimP1=(isset($_POST['P1'])?secure_input($dbc,$_POST['P1']):0);
-$dimP2=(isset($_POST['P2'])?secure_input($dbc,$_POST['P2']):0.25);
-$dimE1=(isset($_POST['E1'])?secure_input($dbc,$_POST['E1']):0.25);
-$dimE2=(isset($_POST['E2'])?secure_input($dbc,$_POST['E2']):0.25);
-$dimI=(isset($_POST['i'])?secure_input($dbc,$_POST['i']):0);
-$dimRIS=(isset($_POST['RIS'])?secure_input($dbc,$_POST['RIS']):0);
-$dimRISCalc=(isset($_POST['RISCalc'])?secure_input($dbc,$_POST['RISCalc']):0);
-$dimNbIS=(isset($_POST['NbIS'])?secure_input($dbc,$_POST['NbIS']):0);
-$dimTypeDPS=(isset($_POST['type'])?secure_input($dbc,$_POST['type']):0);
-$dimTypeDPSCom=(isset($_POST['commentaire'])?secure_input($dbc,$_POST['commentaire']):"");
-$dimSecteurs=(isset($_POST['secteurs'])?secure_input($dbc,$_POST['secteurs']):0);
-$dimPostes=(isset($_POST['postes'])?secure_input($dbc,$_POST['postes']):0);
-$dimEquipes=(isset($_POST['equipes'])?secure_input($dbc,$_POST['equipes']):0);
-$dimBinomes=(isset($_POST['binomes'])?secure_input($dbc,$_POST['binomes']):0);
-EvenementSave($_POST);
+if (isset($_POST['action'])) {
+    $dimNbISActeurs = (isset($_POST['dimNbISActeurs']) ? secure_input($dbc, $_POST['dimNbISActeurs']) : 0);
+    $dimNbISActeursCom = (isset($_POST['dimNbISActeursCom']) ? secure_input($dbc, $_POST['dimNbISActeursCom']) : '');
+    $dimP = (isset($_POST['P']) ? secure_input($dbc, $_POST['P']) : 0);
+    $dimP1 = (isset($_POST['P1']) ? secure_input($dbc, $_POST['P1']) : 0);
+    $dimP2 = (isset($_POST['P2']) ? secure_input($dbc, $_POST['P2']) : 0.25);
+    $dimE1 = (isset($_POST['E1']) ? secure_input($dbc, $_POST['E1']) : 0.25);
+    $dimE2 = (isset($_POST['E2']) ? secure_input($dbc, $_POST['E2']) : 0.25);
+    $dimI = (isset($_POST['i']) ? secure_input($dbc, $_POST['i']) : 0);
+    $dimRIS = (isset($_POST['RIS']) ? secure_input($dbc, $_POST['RIS']) : 0);
+    $dimRISCalc = (isset($_POST['RISCalc']) ? secure_input($dbc, $_POST['RISCalc']) : 0);
+    $dimNbIS = (isset($_POST['NbIS']) ? secure_input($dbc, $_POST['NbIS']) : 0);
+    $dimTypeDPS = (isset($_POST['type']) ? secure_input($dbc, $_POST['type']) : 0);
+    $dimTypeDPSCom = (isset($_POST['commentaire']) ? secure_input($dbc, $_POST['commentaire']) : '');
+    $dimSecteurs = (isset($_POST['secteurs']) ? secure_input($dbc, $_POST['secteurs']) : 0);
+    $dimPostes = (isset($_POST['postes']) ? secure_input($dbc, $_POST['postes']) : 0);
+    $dimEquipes = (isset($_POST['equipes']) ? secure_input($dbc, $_POST['equipes']) : 0);
+    $dimBinomes = (isset($_POST['binomes']) ? secure_input($dbc, $_POST['binomes']) : 0);
+    EvenementSave($_POST);
 }
 
-$row=EvenementDPS($evenement,'data');
-$dimNbISActeurs=$row['dimNbISActeurs'];
-$dimNbISActeursCom=stripslashes($row['dimNbISActeursCom']);
-$dimI=$row['i'];
-$dimP=intval($row['P']);
-$dimP1=intval($row['P1']);
-$dimP2=$row['P2'];
-$dimE1=$row['E1'];
-$dimE2=$row['E2'];
-$dimRIS=$row['RIS'];
-$dimRISCalc=$row['RISCalc'];
-$dimNbIS=$row['NbIS'];
-$dimTypeDPS=stripslashes($row['type']);
-$dimTypeDPSCom=stripslashes($row['commentaire']);
-$dimSecteurs=$row['secteurs'];
-$dimPostes=$row['postes'];
-$dimEquipes=$row['equipes'];
-$dimBinomes=$row['binomes'];
-$effectif=$row['effectif'];
-$action=(($dimRISCalc>0)?"Modifier":"Enregistrer");// si Modifier >> affiche lien vers impression
-print import_jquery();
+$row = EvenementDPS($evenement, 'data');
+$dimNbISActeurs = $row['dimNbISActeurs'];
+$dimNbISActeursCom = stripslashes($row['dimNbISActeursCom']);
+$dimI = $row['i'];
+$dimP = intval($row['P']);
+$dimP1 = intval($row['P1']);
+$dimP2 = $row['P2'];
+$dimE1 = $row['E1'];
+$dimE2 = $row['E2'];
+$dimRIS = $row['RIS'];
+$dimRISCalc = $row['RISCalc'];
+$dimNbIS = $row['NbIS'];
+$dimTypeDPS = stripslashes($row['type']);
+$dimTypeDPSCom = stripslashes($row['commentaire']);
+$dimSecteurs = $row['secteurs'];
+$dimPostes = $row['postes'];
+$dimEquipes = $row['equipes'];
+$dimBinomes = $row['binomes'];
+$effectif = $row['effectif'];
+$action = (($dimRISCalc > 0) ? 'Modifier' : 'Enregistrer'); // si Modifier >> affiche lien vers impression
+echo import_jquery();
 ?> 
 <script type="text/javascript" src="js/jquery_forms.js"></script> 
 <script type="text/javascript">
@@ -107,7 +107,7 @@ function calcRIS(){
             E2:$("input[type='radio'][name='E2']").fieldValue()[0],
             dimNbISActeurs:$("input[type='text'][name='dimNbISActeurs']").fieldValue()[0],
             dimNbISActeursCom:$("input[type='textarea'][name='dimNbISActeursCom']").fieldValue()[0],
-            actionPrint:'<?php echo $action;?>'
+            actionPrint:'<?php echo $action; ?>'
         },
         function(data){
             $("#resultat").html(data);
@@ -124,7 +124,7 @@ function fermerfenetre(){
 </script>
 <style type='text/css'>
 tr{
-    background-color:<?php echo "white"; ?>;
+    background-color:<?php echo 'white'; ?>;
 }
 </style>
 </head>
@@ -132,7 +132,7 @@ tr{
 <?php
 
 echo "<div class='table-responsive'><p style=\"color:red;\">$msgerr</p>";
-echo  "<div style='padding-top:0px'><div class='col-sm-12'><table cellpading=0 cellspacing=0 border=0  class='noBorder'>
+echo "<div style='padding-top:0px'><div class='col-sm-12'><table cellpading=0 cellspacing=0 border=0  class='noBorder'>
     <tr class='TabHeader'><td colspan=2 >RNMSC-DPS - Dimensionnement</td></tr><tr><td>";
 ?>
 <form action="dps_save.php?tab=2" method="POST" name="dps" id="frmDPS">
@@ -167,18 +167,18 @@ Descriptif de la demande pour les acteurs
 <tr><th class="TabHeader">Activité du rassemblement</th>
 <th class="TabHeader">Indicateur P2</th></tr>
 <tr>
-<td><input type="radio" name="P2" value="0.25"  <?php echo ($dimP2==0.25?"checked=\"yes\"":""); ?>> Public assis : <small>spectacle, cérémonie cultuelle, réunion publique, restauration, rendez-vous sportif...</small></td>
+<td><input type="radio" name="P2" value="0.25"  <?php echo $dimP2 == 0.25 ? 'checked="yes"' : ''; ?>> Public assis : <small>spectacle, cérémonie cultuelle, réunion publique, restauration, rendez-vous sportif...</small></td>
 <td>0,25</td>
 </tr>
 <tr>
-<td><input type="radio" name="P2" value="0.30" <?php echo ($dimP2==0.30?"checked=\"yes\"":""); ?>> Public debout : <small>cérémonie cultuelle, réunion publique, restauration, exposition, foire, salon, comice agricole...</small></td>
+<td><input type="radio" name="P2" value="0.30" <?php echo $dimP2 == 0.30 ? 'checked="yes"' : ''; ?>> Public debout : <small>cérémonie cultuelle, réunion publique, restauration, exposition, foire, salon, comice agricole...</small></td>
 <td>0,30</td>
 </tr>
 <tr>
-<td><input type="radio" name="P2" value="0.35" <?php echo ($dimP2==0.35?"checked=\"yes\"":""); ?>> Public debout : <small>spectacle avec public statique, fête foraine, rendez-vous sportif avec protection du public par rapport à  l'événement...</small></td>
+<td><input type="radio" name="P2" value="0.35" <?php echo $dimP2 == 0.35 ? 'checked="yes"' : ''; ?>> Public debout : <small>spectacle avec public statique, fête foraine, rendez-vous sportif avec protection du public par rapport à  l'événement...</small></td>
 <td>0,35</td>
 <tr>
-<td><input type="radio" name="P2" value="0.40" <?php echo ($dimP2==0.40?"checked=\"yes\"":""); ?>> Public debout : <small>spectacle avec public dynamique, danse, feria, fête votive, carnaval, spectacle de rue, grande parade, rendez-vous sportif sans protection du public par rapport à  l'événement ...
+<td><input type="radio" name="P2" value="0.40" <?php echo $dimP2 == 0.40 ? 'checked="yes"' : ''; ?>> Public debout : <small>spectacle avec public dynamique, danse, feria, fête votive, carnaval, spectacle de rue, grande parade, rendez-vous sportif sans protection du public par rapport à  l'événement ...
 Evénement se déroulant sur plusieurs jours avec présence permanente du public : hébergement sur site ou à proximité. </small></td>
 <td>0,40</td>
 </tr>
@@ -187,22 +187,22 @@ Evénement se déroulant sur plusieurs jours avec présence permanente du public
 <th class="TabHeader">Indicateur E1</th>
 </tr>
 <tr>
-<td><input type="radio" name="E1" value="0.25"  <?php echo ($dimE1==0.25?"checked=\"yes\"":""); ?>> Structures permanentes : Bâtiment, salle « en dur »,...
+<td><input type="radio" name="E1" value="0.25"  <?php echo $dimE1 == 0.25 ? 'checked="yes"' : ''; ?>> Structures permanentes : Bâtiment, salle « en dur »,...
 <br /><small>Voies publiques, rues,...avec accès dégagés. Conditions d'accès aisés </small></td>
 <td>0.25</td>
 </tr>
 <tr>
-<td><input type="radio" name="E1" value="0.30"  <?php echo ($dimE1==0.30?"checked=\"yes\"":""); ?>> Structures non permanentes : gradins, tribunes, chapiteaux,...
+<td><input type="radio" name="E1" value="0.30"  <?php echo $dimE1 == 0.30 ? 'checked="yes"' : ''; ?>> Structures non permanentes : gradins, tribunes, chapiteaux,...
 <br /><small>Espaces naturels : surface = 2 hectares. Brancardage : 150 m < longueur = 300 m. Terrain en pente sur plus de 100 mètres 0,30</small></td>
 <td>0.30</td>
 </tr>
 <tr>
-<td><input type="radio" name="E1" value="0.35"  <?php echo ($dimE1==0.35?"checked=\"yes\"":""); ?>> Espaces naturels : 2 ha < surface = 5 ha 
+<td><input type="radio" name="E1" value="0.35"  <?php echo $dimE1 == 0.35 ? 'checked="yes"' : ''; ?>> Espaces naturels : 2 ha < surface = 5 ha 
 <br /><small>Brancardage : 300 m < longueur = 600 m. Terrain en pente sur plus de 150 mètres. Autres conditions d'accès difficiles</small></td>
 <td>0.35</td>
 </tr>
 <tr>
-<td><input type="radio" name="E1" value="0.40"  <?php echo ($dimE1==0.40?"checked=\"yes\"":""); ?>> Espaces naturels : surface > 5 hectares
+<td><input type="radio" name="E1" value="0.40"  <?php echo $dimE1 == 0.40 ? 'checked="yes"' : ''; ?>> Espaces naturels : surface > 5 hectares
 <br /><small>Brancardage : longueur > 600 mètres. Terrain en pente sur plus de 300 mètres. Autres conditions d'accès difficiles : Talus, escaliers, voies d'accès non carrossables,...Progression des secours rendue difficile par la présence du public </small></td>
 <td>0.40</td>
 </tr>
@@ -211,19 +211,19 @@ Evénement se déroulant sur plusieurs jours avec présence permanente du public
 <th class="TabHeader"> Indicateur E2</th>
 </tr>
 <tr>
-<td><input type="radio" name="E2" value="0.25"  <?php echo ($dimE2==0.25?"checked=\"yes\"":""); ?>> <= 10 minutes </td>
+<td><input type="radio" name="E2" value="0.25"  <?php echo $dimE2 == 0.25 ? 'checked="yes"' : ''; ?>> <= 10 minutes </td>
 <td>0.25</td>
 </tr>
 <tr>
-<td><input type="radio" name="E2" value="0.30"  <?php echo ($dimE2==0.30?"checked=\"yes\"":""); ?>> > 10 minutes et <= 20 minutes </td>
+<td><input type="radio" name="E2" value="0.30"  <?php echo $dimE2 == 0.30 ? 'checked="yes"' : ''; ?>> > 10 minutes et <= 20 minutes </td>
 <td>0.30</td>
 </tr>
 <tr>
-<td><input type="radio" name="E2" value="0.35"  <?php echo ($dimE2==0.35?"checked=\"yes\"":""); ?>> > 20 minutes et <= 30 minutes</td>
+<td><input type="radio" name="E2" value="0.35"  <?php echo $dimE2 == 0.35 ? 'checked="yes"' : ''; ?>> > 20 minutes et <= 30 minutes</td>
 <td>0.35</td>
 </tr>
 <tr>
-<td><input type="radio" name="E2" value="0.40"  <?php echo ($dimE2==0.40?"checked=\"yes\"":""); ?>> > 30 minutes</td>
+<td><input type="radio" name="E2" value="0.40"  <?php echo $dimE2 == 0.40 ? 'checked="yes"' : ''; ?>> > 30 minutes</td>
 <td>0.40</td>
 </tr>
 </table>
@@ -254,6 +254,6 @@ Réferentiel National - Missions de Sécurité Civile : Dispositifs Prévisionne
 </div>
 
 <?php
-//writefoot();
+// writefoot();
 ?>
 

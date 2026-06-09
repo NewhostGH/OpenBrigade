@@ -47,12 +47,12 @@ function statStubIndex(): void
         $ctrl = Mockery::mock(StatistiqueController::class)->makePartial();
         $ctrl->shouldReceive('index')->andReturn(
             view('statistique.index', [
-                'year'             => now()->year,
-                'years'            => [now()->year],
-                'eventsData'       => array_fill(0, 12, 0),
-                'participantData'  => array_fill(0, 12, 0),
+                'year' => now()->year,
+                'years' => [now()->year],
+                'eventsData' => array_fill(0, 12, 0),
+                'participantData' => array_fill(0, 12, 0),
                 'newMembersByYear' => [],
-                'topParticipants'  => Collection::make([]),
+                'topParticipants' => Collection::make([]),
             ])
         );
 

@@ -27,17 +27,17 @@ function dashboardFakeUser(array $attrs = []): User
     /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
-        'P_ID'       => 1,
-        'P_NOM'      => 'Test',
-        'P_PRENOM'   => 'User',
-        'P_SECTION'  => 1,
+        'P_ID' => 1,
+        'P_NOM' => 'Test',
+        'P_PRENOM' => 'User',
+        'P_SECTION' => 1,
         'P_CIVILITE' => 1,
-        'P_STATUT'   => 'INT',
-        'P_PHOTO'    => '',
-        'GP_ID'      => 2,
-        'GP_ID2'     => null,
-        'P_ACTIF'    => 1,
-        'P_MDP'      => bcrypt('secret'),
+        'P_STATUT' => 'INT',
+        'P_PHOTO' => '',
+        'GP_ID' => 2,
+        'GP_ID2' => null,
+        'P_ACTIF' => 1,
+        'P_MDP' => bcrypt('secret'),
     ], $attrs));
 
     // Prevent hasPermission() from hitting the DB in any Blade template.
@@ -55,44 +55,44 @@ function dashboardPayloads(User $user): array
 {
     return [
         'getStats' => [
-            'partiDone'     => 5,
+            'partiDone' => 5,
             'partiIncoming' => 2,
-            'actMonth'      => 3,
-            'actQuarter'    => 9,
-            'newMonth'      => 1,
-            'newQuarter'    => 2,
-            'alerts'        => 0,
-            'sectionName'   => 'Section Test',
-            'year'          => date('Y'),
-            'pid'           => 1,
+            'actMonth' => 3,
+            'actQuarter' => 9,
+            'newMonth' => 1,
+            'newQuarter' => 2,
+            'alerts' => 0,
+            'sectionName' => 'Section Test',
+            'year' => date('Y'),
+            'pid' => 1,
         ],
-        'getPasswordExpiry'      => null,
-        'getCompetenceWarnings'  => [],
-        'getWelcome'             => [
-            'user'           => $user,
-            'section'        => null,         // null → @if omits S_DESCRIPTION access
-            'avatarSrc'      => '',
+        'getPasswordExpiry' => null,
+        'getCompetenceWarnings' => [],
+        'getWelcome' => [
+            'user' => $user,
+            'section' => null,         // null → @if omits S_DESCRIPTION access
+            'avatarSrc' => '',
             'avatarFallback' => '',
-            'missingFields'  => [],
+            'missingFields' => [],
         ],
-        'getMyActivities'        => ['events' => []],
+        'getMyActivities' => ['events' => []],
         'getReplacementRequests' => ['count' => 0, 'debut' => null, 'fin' => null],
-        'getUnpaidActivities'    => ['rows' => []],
-        'getMissingStats'        => ['rows' => []],
-        'getExpenses'            => ['rows' => [], 'isManager' => false],
-        'getEvents'              => ['events' => [], 'sectionId' => 1, 'sectionName' => ''],
-        'getDuty'                => ['duty' => []],
-        'getInfos'               => ['consignes' => [], 'actualites' => []],
-        'getBirthdays'           => ['days' => []],
-        'getVehiclesAlerts'      => ['items' => []],
-        'getConsommablesAlerts'  => ['items' => []],
-        'getCpAlerts'            => ['count' => 0, 'items' => []],
-        'getHorairesAlerts'      => ['rows' => []],
+        'getUnpaidActivities' => ['rows' => []],
+        'getMissingStats' => ['rows' => []],
+        'getExpenses' => ['rows' => [], 'isManager' => false],
+        'getEvents' => ['events' => [], 'sectionId' => 1, 'sectionName' => ''],
+        'getDuty' => ['duty' => []],
+        'getInfos' => ['consignes' => [], 'actualites' => []],
+        'getBirthdays' => ['days' => []],
+        'getVehiclesAlerts' => ['items' => []],
+        'getConsommablesAlerts' => ['items' => []],
+        'getCpAlerts' => ['count' => 0, 'items' => []],
+        'getHorairesAlerts' => ['rows' => []],
         'getRemplacementsAlerts' => ['count' => 0, 'type' => ''],
-        'getTraining'            => ['asTrainee' => [], 'asTrainer' => [], 'year' => date('Y')],
-        'getMcEvents'            => ['events' => []],
-        'getSectionLinks'        => ['links' => [], 'whatsappBase' => ''],
-        'getAbout'               => ['version' => '1.0.0', 'supportEmail' => '', 'canAdmin' => false],
+        'getTraining' => ['asTrainee' => [], 'asTrainer' => [], 'year' => date('Y')],
+        'getMcEvents' => ['events' => []],
+        'getSectionLinks' => ['links' => [], 'whatsappBase' => ''],
+        'getAbout' => ['version' => '1.0.0', 'supportEmail' => '', 'canAdmin' => false],
     ];
 }
 
@@ -102,7 +102,7 @@ function dashboardPayloads(User $user): array
  */
 function dashboardStubService(User $user, array $overrides = []): void
 {
-    $stub     = Mockery::mock(DashboardService::class);
+    $stub = Mockery::mock(DashboardService::class);
     $payloads = array_merge(dashboardPayloads($user), $overrides);
 
     foreach ($payloads as $method => $value) {

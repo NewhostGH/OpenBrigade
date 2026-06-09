@@ -19,7 +19,7 @@ class PersonnelFactory extends Factory
         $lastName = fake()->lastName();
 
         return [
-            'P_CODE' => strtolower('dev.' . fake()->unique()->bothify('user###')),
+            'P_CODE' => strtolower('dev.'.fake()->unique()->bothify('user###')),
             'P_PRENOM' => $firstName,
             'P_NOM' => $lastName,
             'P_SEXE' => fake()->randomElement(['M', 'F']),

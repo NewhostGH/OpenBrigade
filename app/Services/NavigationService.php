@@ -14,13 +14,13 @@ class NavigationService
      */
     public function getNavGroups(?User $user): array
     {
-        $currentPath = '/' . ltrim(Request::path(), '/');
-        $pinnedKeys  = $user ? UserShortcut::keysForUser($user->P_ID) : [];
-        $pinnedSet   = array_flip($pinnedKeys);
-        $groups      = [];
+        $currentPath = '/'.ltrim(Request::path(), '/');
+        $pinnedKeys = $user ? UserShortcut::keysForUser($user->P_ID) : [];
+        $pinnedSet = array_flip($pinnedKeys);
+        $groups = [];
 
         foreach (config('navigation.top', []) as $group) {
-            if (isset($group['permission']) && !$this->can($user, $group['permission'])) {
+            if (isset($group['permission']) && ! $this->can($user, $group['permission'])) {
                 continue;
             }
 
@@ -35,11 +35,11 @@ class NavigationService
                 ->contains(fn ($item) => $item['active']);
 
             $groups[] = [
-                'code'   => $group['code'],
-                'label'  => $group['label'],
-                'icon'   => $group['icon'],
+                'code' => $group['code'],
+                'label' => $group['label'],
+                'icon' => $group['icon'],
                 'active' => $active,
-                'items'  => $items,
+                'items' => $items,
             ];
         }
 
@@ -51,7 +51,7 @@ class NavigationService
      */
     public function getPinnedShortcuts(?User $user): array
     {
-        if (!$user) {
+        if (! $user) {
             return [];
         }
 
@@ -79,23 +79,24 @@ class NavigationService
     public function toggleShortcut(User $user, string $key): bool
     {
         $itemMap = $this->buildItemMap($user);
-        if (!isset($itemMap[$key])) {
+        if (! isset($itemMap[$key])) {
             return false;
         }
 
-        $existing = \App\Models\UserShortcut::where('user_id', $user->P_ID)
+        $existing = UserShortcut::where('user_id', $user->P_ID)
             ->where('item_key', $key)
             ->first();
 
         if ($existing) {
             $existing->delete();
+
             return false;
         }
 
-        $nextOrder = \App\Models\UserShortcut::where('user_id', $user->P_ID)->max('sort_order') + 1;
-        \App\Models\UserShortcut::create([
-            'user_id'    => $user->P_ID,
-            'item_key'   => $key,
+        $nextOrder = UserShortcut::where('user_id', $user->P_ID)->max('sort_order') + 1;
+        UserShortcut::create([
+            'user_id' => $user->P_ID,
+            'item_key' => $key,
             'sort_order' => $nextOrder,
         ]);
 
@@ -106,24 +107,25 @@ class NavigationService
     {
         $map = [];
         foreach (config('navigation.top', []) as $group) {
-            if (isset($group['permission']) && !$this->can($user, $group['permission'])) {
+            if (isset($group['permission']) && ! $this->can($user, $group['permission'])) {
                 continue;
             }
             foreach ($group['items'] as $item) {
                 if ($item === null) {
                     continue;
                 }
-                if (isset($item['permission']) && !$this->can($user, $item['permission'])) {
+                if (isset($item['permission']) && ! $this->can($user, $item['permission'])) {
                     continue;
                 }
                 $map[$item['key']] = [
-                    'key'   => $item['key'],
+                    'key' => $item['key'],
                     'label' => $item['label'],
-                    'url'   => $item['url'],
-                    'icon'  => $item['icon'] ?? '',
+                    'url' => $item['url'],
+                    'icon' => $item['icon'] ?? '',
                 ];
             }
         }
+
         return $map;
     }
 
@@ -134,21 +136,22 @@ class NavigationService
         foreach ($rawItems as $item) {
             if ($item === null) {
                 $resolved[] = null;
+
                 continue;
             }
 
-            if (isset($item['permission']) && !$this->can($user, $item['permission'])) {
+            if (isset($item['permission']) && ! $this->can($user, $item['permission'])) {
                 continue;
             }
 
             $itemPath = parse_url($item['url'], PHP_URL_PATH) ?? '';
-            $active   = $itemPath !== '' && str_starts_with($currentPath, $itemPath);
+            $active = $itemPath !== '' && str_starts_with($currentPath, $itemPath);
 
             $resolved[] = [
-                'key'    => $item['key'],
-                'label'  => $item['label'],
-                'url'    => $item['url'],
-                'icon'   => $item['icon'] ?? '',
+                'key' => $item['key'],
+                'label' => $item['label'],
+                'url' => $item['url'],
+                'icon' => $item['icon'] ?? '',
                 'active' => $active,
                 'pinned' => isset($pinnedSet[$item['key']]),
             ];
@@ -159,22 +162,22 @@ class NavigationService
 
     private function stripOrphanedDividers(array $items): array
     {
-        $result        = [];
+        $result = [];
         $prevWasDivider = true;
 
         foreach ($items as $item) {
             if ($item === null) {
-                if (!$prevWasDivider) {
-                    $result[]       = null;
+                if (! $prevWasDivider) {
+                    $result[] = null;
                     $prevWasDivider = true;
                 }
             } else {
-                $result[]       = $item;
+                $result[] = $item;
                 $prevWasDivider = false;
             }
         }
 
-        if (!empty($result) && end($result) === null) {
+        if (! empty($result) && end($result) === null) {
             array_pop($result);
         }
 

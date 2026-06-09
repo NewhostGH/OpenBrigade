@@ -1,19 +1,19 @@
 <?php
 
-# project: OpenBrigade
+// project: OpenBrigade
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace App\Http\Controllers;
 
@@ -39,40 +39,40 @@ class CotisationController extends Controller
         [$year, $periodeCode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order]
             = $this->parseFilters($request);
 
-        $allSections   = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
-        $periodes      = DB::table('periode')->orderBy('P_ORDER')->get();
+        $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
+        $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
         $typesPaiement = TypePaiement::orderBy('TP_DESCRIPTION')->get(['TP_ID', 'TP_DESCRIPTION']);
-        $periode       = $periodes->firstWhere('P_CODE', $periodeCode);
+        $periode = $periodes->firstWhere('P_CODE', $periodeCode);
 
-        $items          = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order, $allSections)->get();
+        $items = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order, $allSections)->get();
         $sectionOptions = $this->buildSectionTree($allSections);
 
         return view('cotisations.index', [
-            'items'          => $items,
-            'year'           => $year,
-            'currentYear'    => now()->year,
-            'periodeCode'    => $periodeCode,
-            'sectionId'      => $sectionId,
-            'subsections'    => $subsections,
-            'tpId'           => $tpId,
-            'paid'           => $paid,
-            'includeOld'     => $includeOld,
-            'order'          => $order,
-            'periodes'       => $periodes,
-            'typesPaiement'  => $typesPaiement,
+            'items' => $items,
+            'year' => $year,
+            'currentYear' => now()->year,
+            'periodeCode' => $periodeCode,
+            'sectionId' => $sectionId,
+            'subsections' => $subsections,
+            'tpId' => $tpId,
+            'paid' => $paid,
+            'includeOld' => $includeOld,
+            'order' => $order,
+            'periodes' => $periodes,
+            'typesPaiement' => $typesPaiement,
             'sectionOptions' => $sectionOptions,
         ]);
     }
 
     public function batchSave(Request $request)
     {
-        $year        = (int) $request->integer('year', now()->year);
+        $year = (int) $request->integer('year', now()->year);
         $periodeCode = (string) $request->string('periode', 'A');
-        $tpId        = (int) $request->integer('type_paiement', 0);
-        $people      = array_filter(array_map('intval', (array) $request->input('people', [])));
-        $today       = now()->toDateString();
+        $tpId = (int) $request->integer('type_paiement', 0);
+        $people = array_filter(array_map('intval', (array) $request->input('people', [])));
+        $today = now()->toDateString();
 
-        $num   = 0;
+        $num = 0;
         $total = 0.0;
 
         foreach ($people as $pid) {
@@ -81,9 +81,9 @@ class CotisationController extends Controller
             }
 
             $paidFlag = $request->boolean("payments.{$pid}");
-            $montant  = (float) $request->input("montant.{$pid}", 0);
+            $montant = (float) $request->input("montant.{$pid}", 0);
             $datePaid = trim((string) $request->input("date_paid.{$pid}", ''));
-            $comment  = substr((string) $request->input("commentaire.{$pid}", ''), 0, 100);
+            $comment = substr((string) $request->input("commentaire.{$pid}", ''), 0, 100);
 
             DB::table('personnel_cotisation')
                 ->where('P_ID', $pid)
@@ -108,13 +108,13 @@ class CotisationController extends Controller
                 }
 
                 DB::table('personnel_cotisation')->insert([
-                    'P_ID'          => $pid,
-                    'ANNEE'         => $year,
-                    'PERIODE_CODE'  => $periodeCode,
-                    'PC_DATE'       => $datePaid,
-                    'MONTANT'       => $montant,
-                    'TP_ID'         => $tpId ?: 0,
-                    'COMMENTAIRE'   => $comment,
+                    'P_ID' => $pid,
+                    'ANNEE' => $year,
+                    'PERIODE_CODE' => $periodeCode,
+                    'PC_DATE' => $datePaid,
+                    'MONTANT' => $montant,
+                    'TP_ID' => $tpId ?: 0,
+                    'COMMENTAIRE' => $comment,
                     'REMBOURSEMENT' => 0,
                 ]);
 
@@ -126,7 +126,7 @@ class CotisationController extends Controller
         $filters = $request->only(['year', 'periode', 'section', 'subsections', 'type_paiement', 'paid', 'include_old']);
 
         return redirect()->route('cotisations.index', $filters)
-            ->with('success', "Cotisations enregistrées pour {$num} personne(s). Total : " . number_format($total, 2, ',', ' ') . " €");
+            ->with('success', "Cotisations enregistrées pour {$num} personne(s). Total : ".number_format($total, 2, ',', ' ').' €');
     }
 
     public function export(Request $request)
@@ -135,24 +135,24 @@ class CotisationController extends Controller
             = $this->parseFilters($request);
 
         $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
-        $periodes    = DB::table('periode')->orderBy('P_ORDER')->get();
-        $periode     = $periodes->firstWhere('P_CODE', $periodeCode);
+        $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
+        $periode = $periodes->firstWhere('P_CODE', $periodeCode);
 
         $rows = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order, $allSections)->get();
 
         $columns = [
-            ['Nom Prénom',  fn($r) => strtoupper($r->P_NOM) . ' ' . ucfirst(strtolower($r->P_PRENOM))],
-            ['Statut',      fn($r) => $r->P_STATUT],
-            ['Section',     fn($r) => $r->S_CODE],
-            ['Entrée',      fn($r) => $r->P_DATE_ENGAGEMENT ? Carbon::parse($r->P_DATE_ENGAGEMENT)->format('d/m/Y') : ''],
-            ['Sortie',      fn($r) => $r->P_FIN ? Carbon::parse($r->P_FIN)->format('d/m/Y') : ''],
-            ['Payé',        fn($r) => $r->PC_DATE ? 'Oui' : 'Non'],
-            ['Montant',     fn($r) => $r->MONTANT ?? ''],
-            ['Date payé',   fn($r) => $r->PC_DATE ? Carbon::parse($r->PC_DATE)->format('d/m/Y') : ''],
-            ['Commentaire', fn($r) => $r->COMMENTAIRE ?? ''],
+            ['Nom Prénom',  fn ($r) => strtoupper($r->P_NOM).' '.ucfirst(strtolower($r->P_PRENOM))],
+            ['Statut',      fn ($r) => $r->P_STATUT],
+            ['Section',     fn ($r) => $r->S_CODE],
+            ['Entrée',      fn ($r) => $r->P_DATE_ENGAGEMENT ? Carbon::parse($r->P_DATE_ENGAGEMENT)->format('d/m/Y') : ''],
+            ['Sortie',      fn ($r) => $r->P_FIN ? Carbon::parse($r->P_FIN)->format('d/m/Y') : ''],
+            ['Payé',        fn ($r) => $r->PC_DATE ? 'Oui' : 'Non'],
+            ['Montant',     fn ($r) => $r->MONTANT ?? ''],
+            ['Date payé',   fn ($r) => $r->PC_DATE ? Carbon::parse($r->PC_DATE)->format('d/m/Y') : ''],
+            ['Commentaire', fn ($r) => $r->COMMENTAIRE ?? ''],
         ];
 
-        return (new TableExportService())->toXlsx(
+        return (new TableExportService)->toXlsx(
             $columns,
             $rows,
             "Cotisations_{$year}_{$periodeCode}",
@@ -168,14 +168,14 @@ class CotisationController extends Controller
      */
     public function prelevements(Request $request)
     {
-        $year        = (int) $request->integer('year', now()->year);
+        $year = (int) $request->integer('year', now()->year);
         $periodeCode = (string) $request->string('periode', 'A');
-        $sectionId   = (int) $request->integer('section', 0);
+        $sectionId = (int) $request->integer('section', 0);
         $subsections = (bool) $request->integer('subsections', 1);
 
-        $allSections    = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
-        $periodes       = DB::table('periode')->orderBy('P_ORDER')->get();
-        $periode        = $periodes->firstWhere('P_CODE', $periodeCode);
+        $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
+        $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
+        $periode = $periodes->firstWhere('P_CODE', $periodeCode);
         $sectionOptions = $this->buildSectionTree($allSections);
 
         // Base: TP_ID=1 (direct debit), active, non-EXT, non-admin
@@ -183,9 +183,9 @@ class CotisationController extends Controller
             ->join('section as s', 'p.P_SECTION', '=', 's.S_ID')
             ->leftJoin('personnel_cotisation as pc', function ($join) use ($year, $periodeCode) {
                 $join->on('pc.P_ID', '=', 'p.P_ID')
-                     ->where('pc.ANNEE', $year)
-                     ->where('pc.PERIODE_CODE', $periodeCode)
-                     ->where('pc.REMBOURSEMENT', 0);
+                    ->where('pc.ANNEE', $year)
+                    ->where('pc.PERIODE_CODE', $periodeCode)
+                    ->where('pc.REMBOURSEMENT', 0);
             })
             ->where('p.TP_ID', 1)
             ->where('p.P_NOM', '!=', 'admin')
@@ -219,19 +219,19 @@ class CotisationController extends Controller
             ->get();
 
         $totalPending = $pending->sum(fn ($r) => (float) ($r->MONTANT_REGUL ?? 0));
-        $totalPaid    = $paid->sum(fn ($r) => (float) ($r->MONTANT ?? 0));
+        $totalPaid = $paid->sum(fn ($r) => (float) ($r->MONTANT ?? 0));
 
         return view('cotisations.prelevements', [
-            'pending'        => $pending,
-            'paid'           => $paid,
-            'totalPending'   => $totalPending,
-            'totalPaid'      => $totalPaid,
-            'year'           => $year,
-            'currentYear'    => now()->year,
-            'periodeCode'    => $periodeCode,
-            'sectionId'      => $sectionId,
-            'subsections'    => $subsections,
-            'periodes'       => $periodes,
+            'pending' => $pending,
+            'paid' => $paid,
+            'totalPending' => $totalPending,
+            'totalPaid' => $totalPaid,
+            'year' => $year,
+            'currentYear' => now()->year,
+            'periodeCode' => $periodeCode,
+            'sectionId' => $sectionId,
+            'subsections' => $subsections,
+            'periodes' => $periodes,
             'sectionOptions' => $sectionOptions,
         ]);
     }
@@ -242,17 +242,17 @@ class CotisationController extends Controller
     public function savePrelevements(Request $request)
     {
         $request->validate([
-            'year'        => ['required', 'integer', 'min:2000', 'max:2100'],
-            'periode'     => ['required', 'string', 'max:10'],
+            'year' => ['required', 'integer', 'min:2000', 'max:2100'],
+            'periode' => ['required', 'string', 'max:10'],
             'date_prelev' => ['required', 'date'],
         ]);
 
-        $year        = (int) $request->input('year');
+        $year = (int) $request->input('year');
         $periodeCode = (string) $request->input('periode');
-        $datePrelev  = Carbon::parse($request->input('date_prelev'))->toDateString();
-        $pids        = array_filter(array_map('intval', (array) $request->input('pids', [])));
+        $datePrelev = Carbon::parse($request->input('date_prelev'))->toDateString();
+        $pids = array_filter(array_map('intval', (array) $request->input('pids', [])));
 
-        $num   = 0;
+        $num = 0;
         $total = 0.0;
 
         foreach ($pids as $pid) {
@@ -273,13 +273,13 @@ class CotisationController extends Controller
 
             if (! $exists) {
                 DB::table('personnel_cotisation')->insert([
-                    'P_ID'          => $pid,
-                    'ANNEE'         => $year,
-                    'PERIODE_CODE'  => $periodeCode,
-                    'PC_DATE'       => $datePrelev,
-                    'MONTANT'       => $montant,
-                    'TP_ID'         => 1,
-                    'COMMENTAIRE'   => '',
+                    'P_ID' => $pid,
+                    'ANNEE' => $year,
+                    'PERIODE_CODE' => $periodeCode,
+                    'PC_DATE' => $datePrelev,
+                    'MONTANT' => $montant,
+                    'TP_ID' => 1,
+                    'COMMENTAIRE' => '',
                     'REMBOURSEMENT' => 0,
                 ]);
                 $num++;
@@ -290,7 +290,7 @@ class CotisationController extends Controller
         $filters = $request->only(['year', 'periode', 'section', 'subsections']);
 
         return redirect()->route('cotisations.prelevements', $filters)
-            ->with('success', "Prélèvements enregistrés pour {$num} personne(s). Total : " . number_format($total, 2, ',', ' ') . ' €');
+            ->with('success', "Prélèvements enregistrés pour {$num} personne(s). Total : ".number_format($total, 2, ',', ' ').' €');
     }
 
     // ── Virements (Tab 3) ─────────────────────────────────────────────────────
@@ -301,19 +301,19 @@ class CotisationController extends Controller
      */
     public function virements(Request $request)
     {
-        $sectionId   = (int) $request->integer('section', 0);
+        $sectionId = (int) $request->integer('section', 0);
         $subsections = (bool) $request->integer('subsections', 1);
-        $includeOld  = (bool) $request->integer('include_old', 0);
-        $dateFrom    = trim((string) $request->string('date_from', ''));
-        $dateTo      = trim((string) $request->string('date_to', ''));
-        $order       = (string) $request->string('order', 'PC_DATE');
+        $includeOld = (bool) $request->integer('include_old', 0);
+        $dateFrom = trim((string) $request->string('date_from', ''));
+        $dateTo = trim((string) $request->string('date_to', ''));
+        $order = (string) $request->string('order', 'PC_DATE');
 
         $allowedOrders = ['P_NOM', 'P_DATE_ENGAGEMENT', 'P_FIN', 'MONTANT', 'PC_DATE'];
         if (! in_array($order, $allowedOrders, true)) {
             $order = 'PC_DATE';
         }
 
-        $allSections    = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
+        $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
         $sectionOptions = $this->buildSectionTree($allSections);
 
         $query = DB::table('personnel_cotisation as pc')
@@ -365,13 +365,13 @@ class CotisationController extends Controller
         $items = $query->paginate(50)->withQueryString();
 
         return view('cotisations.virements', [
-            'items'          => $items,
-            'sectionId'      => $sectionId,
-            'subsections'    => $subsections,
-            'includeOld'     => $includeOld,
-            'dateFrom'       => $dateFrom,
-            'dateTo'         => $dateTo,
-            'order'          => $order,
+            'items' => $items,
+            'sectionId' => $sectionId,
+            'subsections' => $subsections,
+            'includeOld' => $includeOld,
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo,
+            'order' => $order,
             'sectionOptions' => $sectionOptions,
         ]);
     }
@@ -380,14 +380,14 @@ class CotisationController extends Controller
 
     private function parseFilters(Request $request): array
     {
-        $year        = (int) $request->integer('year', now()->year);
+        $year = (int) $request->integer('year', now()->year);
         $periodeCode = (string) $request->string('periode', 'A');
-        $sectionId   = (int) $request->integer('section', 0);
+        $sectionId = (int) $request->integer('section', 0);
         $subsections = (bool) $request->integer('subsections', 1);
-        $tpId        = (string) $request->string('type_paiement', 'ALL');
-        $paid        = (string) $request->string('paid', '2');
-        $includeOld  = (bool) $request->integer('include_old', 0);
-        $order       = (string) $request->string('order', 'P_NOM');
+        $tpId = (string) $request->string('type_paiement', 'ALL');
+        $paid = (string) $request->string('paid', '2');
+        $includeOld = (bool) $request->integer('include_old', 0);
+        $order = (string) $request->string('order', 'P_NOM');
 
         if (! in_array($order, self::ALLOWED_ORDERS, true)) {
             $order = 'P_NOM';
@@ -405,9 +405,9 @@ class CotisationController extends Controller
         $query = DB::table('pompier as p')
             ->leftJoin('personnel_cotisation as pc', function ($join) use ($year, $periodeCode) {
                 $join->on('pc.P_ID', '=', 'p.P_ID')
-                     ->where('pc.ANNEE', $year)
-                     ->where('pc.PERIODE_CODE', $periodeCode)
-                     ->where('pc.REMBOURSEMENT', 0);
+                    ->where('pc.ANNEE', $year)
+                    ->where('pc.PERIODE_CODE', $periodeCode)
+                    ->where('pc.REMBOURSEMENT', 0);
             })
             ->join('section as s', 'p.P_SECTION', '=', 's.S_ID')
             ->join('type_paiement as tp', 'p.TP_ID', '=', 'tp.TP_ID')
@@ -449,14 +449,14 @@ class CotisationController extends Controller
         }
 
         $tableMap = [
-            'TP_DESCRIPTION'     => 'tp',
-            'PC_DATE'            => 'pc',
-            'PC_ID'              => 'pc',
-            'P_DATE_ENGAGEMENT'  => 'p',
-            'P_FIN'              => 'p',
-            'P_STATUT'           => 'p',
-            'P_SECTION'          => 's',
-            'P_NOM'              => 'p',
+            'TP_DESCRIPTION' => 'tp',
+            'PC_DATE' => 'pc',
+            'PC_ID' => 'pc',
+            'P_DATE_ENGAGEMENT' => 'p',
+            'P_FIN' => 'p',
+            'P_STATUT' => 'p',
+            'P_SECTION' => 's',
+            'P_NOM' => 'p',
         ];
         $alias = $tableMap[$order] ?? 'p';
 
@@ -476,29 +476,30 @@ class CotisationController extends Controller
         $pDate = $periode->P_DATE;
 
         if ($pDate && is_numeric($pDate)) {
-            $month      = str_pad((string) $pDate, 2, '0', STR_PAD_LEFT);
-            $start      = "{$year}-{$month}-01";
-            $nextStart  = Carbon::createFromDate($year, (int) $month, 1)->addMonth()->toDateString();
+            $month = str_pad((string) $pDate, 2, '0', STR_PAD_LEFT);
+            $start = "{$year}-{$month}-01";
+            $nextStart = Carbon::createFromDate($year, (int) $month, 1)->addMonth()->toDateString();
             $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<', $nextStart)->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                  ->where(fn ($q) => $q->where('p.P_FIN', '>', $start)->orWhereNull('p.P_FIN'));
+                ->where(fn ($q) => $q->where('p.P_FIN', '>', $start)->orWhereNull('p.P_FIN'));
+
             return;
         }
 
         match ($pCode) {
             'T1' => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<', "{$year}-04-01")->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                          ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-01-01")->orWhereNull('p.P_FIN')),
+                ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-01-01")->orWhereNull('p.P_FIN')),
             'T2' => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<', "{$year}-07-01")->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                          ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-04-01")->orWhereNull('p.P_FIN')),
+                ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-04-01")->orWhereNull('p.P_FIN')),
             'T3' => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<', "{$year}-10-01")->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                          ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-07-01")->orWhereNull('p.P_FIN')),
+                ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-07-01")->orWhereNull('p.P_FIN')),
             'T4' => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<=', "{$year}-12-31")->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                          ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-10-01")->orWhereNull('p.P_FIN')),
+                ->where(fn ($q) => $q->where('p.P_FIN', '>', "{$year}-10-01")->orWhereNull('p.P_FIN')),
             'S1' => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<', "{$year}-07-01")->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                          ->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '>', "{$year}-01-01")->orWhereNull('p.P_DATE_ENGAGEMENT')),
+                ->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '>', "{$year}-01-01")->orWhereNull('p.P_DATE_ENGAGEMENT')),
             'S2' => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<=', "{$year}-12-31")->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                          ->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '>', "{$year}-07-01")->orWhereNull('p.P_DATE_ENGAGEMENT')),
-            'A'  => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<=', "{$year}-12-31")->orWhereNull('p.P_DATE_ENGAGEMENT'))
-                          ->where(fn ($q) => $q->where('p.P_FIN', '>=', "{$year}-01-01")->orWhereNull('p.P_FIN')),
+                ->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '>', "{$year}-07-01")->orWhereNull('p.P_DATE_ENGAGEMENT')),
+            'A' => $query->where(fn ($q) => $q->where('p.P_DATE_ENGAGEMENT', '<=', "{$year}-12-31")->orWhereNull('p.P_DATE_ENGAGEMENT'))
+                ->where(fn ($q) => $q->where('p.P_FIN', '>=', "{$year}-01-01")->orWhereNull('p.P_FIN')),
             default => null,
         };
     }
@@ -509,31 +510,33 @@ class CotisationController extends Controller
         foreach ($sections as $section) {
             if ((int) ($section->S_PARENT ?? 0) === $parentId) {
                 $result[] = [
-                    'S_ID'          => (int) $section->S_ID,
-                    'S_CODE'        => $section->S_CODE,
+                    'S_ID' => (int) $section->S_ID,
+                    'S_CODE' => $section->S_CODE,
                     'S_DESCRIPTION' => $section->S_DESCRIPTION,
-                    'depth'         => $depth,
+                    'depth' => $depth,
                 ];
                 array_push($result, ...$this->buildSectionTree($sections, (int) $section->S_ID, $depth + 1));
             }
         }
+
         return $result;
     }
 
     private function getDescendantSectionIds(Collection $allSections, int $parentId): array
     {
-        $ids   = [];
+        $ids = [];
         $queue = [$parentId];
         while (! empty($queue)) {
-            $current  = array_shift($queue);
+            $current = array_shift($queue);
             $children = $allSections
                 ->filter(fn ($s) => (int) ($s->S_PARENT ?? 0) === $current)
                 ->pluck('S_ID');
             foreach ($children as $childId) {
-                $ids[]   = (int) $childId;
+                $ids[] = (int) $childId;
                 $queue[] = (int) $childId;
             }
         }
+
         return $ids;
     }
 }

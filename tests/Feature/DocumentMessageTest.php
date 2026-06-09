@@ -54,10 +54,10 @@ function docStubIndex(): void
                 'allFolders' => Collection::make([]),
                 'subFolders' => Collection::make([]),
                 'breadcrumb' => [],
-                'documents'  => $page,
-                'folderId'   => 0,
-                'typeCode'   => 'ALL',
-                'types'      => Collection::make([]),
+                'documents' => $page,
+                'folderId' => 0,
+                'typeCode' => 'ALL',
+                'types' => Collection::make([]),
             ])
         );
 
@@ -77,7 +77,7 @@ function msgStubIndex(): void
         $page->setPath('/messages');
         $ctrl->shouldReceive('index')->andReturn(
             view('message.index', [
-                'items'    => $page,
+                'items' => $page,
                 'category' => 'consigne',
             ])
         );

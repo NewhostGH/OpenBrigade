@@ -1,4 +1,5 @@
 <?php
+
 //
 //  FPDI - Version 1.5.2
 //
@@ -25,7 +26,7 @@ class pdf_context
     /**
      * Mode
      *
-     * @var integer 0 = file | 1 = string
+     * @var int 0 = file | 1 = string
      */
     protected $_mode = 0;
 
@@ -40,12 +41,12 @@ class pdf_context
     public $buffer;
 
     /**
-     * @var integer
+     * @var int
      */
     public $offset;
 
     /**
-     * @var integer
+     * @var int
      */
     public $length;
 
@@ -57,13 +58,14 @@ class pdf_context
     /**
      * The constructor
      *
-     * @param resource $f
+     * @param  resource  $f
      */
     public function __construct(&$f)
     {
-        $this->file =& $f;
-        if (is_string($this->file))
+        $this->file = &$f;
+        if (is_string($this->file)) {
             $this->_mode = 1;
+        }
 
         $this->reset();
     }
@@ -87,26 +89,27 @@ class pdf_context
      *
      * Optionally move the file pointer to a new location and reset the buffered data.
      *
-     * @param null $pos
-     * @param int $l
+     * @param  null  $pos
+     * @param  int  $l
      */
     public function reset($pos = null, $l = 100)
     {
         if ($this->_mode == 0) {
-            if (!is_null($pos)) {
-                fseek ($this->file, $pos);
+            if (! is_null($pos)) {
+                fseek($this->file, $pos);
             }
 
             $this->buffer = $l > 0 ? fread($this->file, $l) : '';
             $this->length = strlen($this->buffer);
-            if ($this->length < $l)
+            if ($this->length < $l) {
                 $this->increaseLength($l - $this->length);
+            }
         } else {
             $this->buffer = $this->file;
             $this->length = strlen($this->buffer);
         }
         $this->offset = 0;
-        $this->stack = array();
+        $this->stack = [];
     }
 
     /**
@@ -128,22 +131,23 @@ class pdf_context
     /**
      * Forcefully read more data into the buffer
      *
-     * @param int $l
+     * @param  int  $l
      * @return bool
      */
     public function increaseLength($l = 100)
     {
         if ($this->_mode == 0 && feof($this->file)) {
             return false;
-        } else if ($this->_mode == 0) {
+        } elseif ($this->_mode == 0) {
             $totalLength = $this->length + $l;
             do {
                 $toRead = $totalLength - $this->length;
-                if ($toRead < 1)
+                if ($toRead < 1) {
                     break;
+                }
 
                 $this->buffer .= fread($this->file, $toRead);
-            } while ((($this->length = strlen($this->buffer)) != $totalLength) && !feof($this->file));
+            } while ((($this->length = strlen($this->buffer)) != $totalLength) && ! feof($this->file));
 
             return true;
         } else {

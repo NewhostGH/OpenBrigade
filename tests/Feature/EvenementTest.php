@@ -30,12 +30,12 @@ function eventFakeUser(array $attrs = []): User
     /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
-        'P_ID'      => 1,
-        'P_NOM'     => 'Test',
-        'P_PRENOM'  => 'User',
+        'P_ID' => 1,
+        'P_NOM' => 'Test',
+        'P_PRENOM' => 'User',
         'P_SECTION' => 1,
-        'P_ACTIF'   => 1,
-        'P_MDP'     => bcrypt('secret'),
+        'P_ACTIF' => 1,
+        'P_MDP' => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(true);
 
@@ -49,19 +49,19 @@ function eventFakeUser(array $attrs = []): User
 function eventStubIndex(): void
 {
     app()->bind(EvenementController::class, function () {
-        $ctrl  = Mockery::mock(EvenementController::class)->makePartial();
-        $page  = new LengthAwarePaginator([], 0, 50);
+        $ctrl = Mockery::mock(EvenementController::class)->makePartial();
+        $page = new LengthAwarePaginator([], 0, 50);
         $page->setPath('/evenements');
         $empty = Collection::make([]);
         $ctrl->shouldReceive('index')->andReturn(
             view('evenement.index', [
-                'items'    => $page,
-                'columns'  => [],
-                'period'   => 'upcoming',
-                'search'   => '',
-                'type'     => 'ALL',
+                'items' => $page,
+                'columns' => [],
+                'period' => 'upcoming',
+                'search' => '',
+                'type' => 'ALL',
                 'filtSect' => 0,
-                'types'    => $empty,
+                'types' => $empty,
                 'sections' => $empty,
             ])
         );

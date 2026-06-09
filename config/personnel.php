@@ -1,6 +1,6 @@
 <?php
 
-# project: OpenBrigade
+// project: OpenBrigade
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +22,12 @@ return [
 
     // P_STATUT code → human label (full set, single source for every label).
     'statuts' => [
-        'BEN'  => 'Bénévole',
-        'EXT'  => 'Externe',
+        'BEN' => 'Bénévole',
+        'EXT' => 'Externe',
         'PRES' => 'Prestataire',
-        'SAL'  => 'Salarié',
-        'ADH'  => 'Adhérent',
-        'INT'  => 'Interne',
+        'SAL' => 'Salarié',
+        'ADH' => 'Adhérent',
+        'INT' => 'Interne',
     ],
 
     // P_STATUT codes offered in the edit form (order matters; subset of statuts).
@@ -35,20 +35,20 @@ return [
 
     // P_STATUT code → badge css class. Unknown codes fall back to the INT style.
     'statut_badge_class' => [
-        'BEN'  => 'ob-badge-ben',
-        'EXT'  => 'ob-badge-ext',
+        'BEN' => 'ob-badge-ben',
+        'EXT' => 'ob-badge-ext',
         'PRES' => 'ob-badge-pres',
-        'INT'  => 'ob-badge-int',
-        'SAL'  => 'ob-badge-sal',
-        'ADH'  => 'ob-badge-adh',
+        'INT' => 'ob-badge-int',
+        'SAL' => 'ob-badge-sal',
+        'ADH' => 'ob-badge-adh',
     ],
 
     // Derived état (see Personnel::getEtatAttribute) → [label, badge class].
     // État is not user-editable, so label and code coincide.
     'etat_badges' => [
-        'Actif'   => ['Actif',   'ob-badge-actif'],
+        'Actif' => ['Actif',   'ob-badge-actif'],
         'Archivé' => ['Archivé', 'ob-badge-archive'],
-        'Bloqué'  => ['Bloqué',  'ob-badge-bloqued'],
+        'Bloqué' => ['Bloqué',  'ob-badge-bloqued'],
     ],
 
     // P_CIVILITE → display prefix.

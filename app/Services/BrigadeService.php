@@ -18,8 +18,6 @@ class BrigadeService implements ServiceInterface
 
     /**
      * Get brigade metadata (name, version, contact info).
-     *
-     * @return array
      */
     public function getMetadata(): array
     {

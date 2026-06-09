@@ -1,6 +1,5 @@
 <?php
 /**
- * @package     libreBrigade
  * @author      Nicolas MARCHE (eBrigade Technologies)
  * @author      Benjamin Balga
  * @copyright   (C) 2004, 2021 Nicolas MARCHE (eBrigade Technologies)
@@ -8,20 +7,26 @@
  * @license     See LICENSE file
  */
 
-include_once ("config.php");
+include_once 'config.php';
 check_all(0);
 
 writehead();
-echo "<body>";
-writeBreadCrumb("Documentation", "Produit");
+echo '<body>';
+writeBreadCrumb('Documentation', 'Produit');
 
-if (isset($_GET['tab'])) $tab = secure_input($dbc, $_GET['tab']);
-else $tab = 1;
+if (isset($_GET['tab'])) {
+    $tab = secure_input($dbc, $_GET['tab']);
+} else {
+    $tab = 1;
+}
 
 echo "<div style='background:white;' class='table-responsive table-nav table-tabs'>";
 echo "<ul class='nav nav-tabs noprint' id='myTab' role='tablist'>";
-if ( $tab == 1 ) $class = 'active';
-else $class = '';
+if ($tab == 1) {
+    $class = 'active';
+} else {
+    $class = '';
+}
 echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'about.php?tab=1' role = 'tab'>
             <i class='fa fa-info-circle'></i>
@@ -29,8 +34,11 @@ echo "<li class = 'nav-item'>
         </a>
     </li>";
 
-if ( $tab == 2 ) $class = 'active';
-else $class = '';
+if ($tab == 2) {
+    $class = 'active';
+} else {
+    $class = '';
+}
 echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'about.php?tab=2' role = 'tab'>
             <i class='fa fa-hands-helping'></i>
@@ -38,43 +46,54 @@ echo "<li class = 'nav-item'>
         </a>
     </li>";
 
-if ( $tab == 3 ) $class = 'active';
-else $class = '';
+if ($tab == 3) {
+    $class = 'active';
+} else {
+    $class = '';
+}
 echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'about.php?tab=3' role = 'tab'>
             <i class='fa fa-balance-scale-right'></i>
             <span>Licence</span>
         </a>
     </li>";
-    
-if ( $tab == 4 ) $class = 'active';
-else $class = '';
+
+if ($tab == 4) {
+    $class = 'active';
+} else {
+    $class = '';
+}
 echo "<li class = 'nav-item'>
         <a class = 'nav-link $class' href = 'about.php?tab=4' role = 'tab'>
             <i class='fa fa-microchip'></i>
             <span>Technologies</span>
         </a>
     </li>";
-    
-echo "</div>";
 
-if ($tab == 1)
+echo '</div>';
+
+if ($tab == 1) {
     echo "<div><object type='text/html' data='".$wikiurl."' width = '100%' style = 'height: 78vh'></object></div>";
-if ($tab == 2)
+}
+if ($tab == 2) {
     echo "<div><object type='text/html' data='".$website."/community.php' width = '100%' style = 'height: 78vh'></object></div>";
+}
 if ($tab == 3) {
-    //echo "<div align=left style='margin-left:15px;'>";
+    // echo "<div align=left style='margin-left:15px;'>";
     echo "<div class='container-fluid' align=center style='display:inline-block'>";
     echo "<div class='col-sm-12' align=center><div class='card hide card-default graycarddefault' align=center>";
-    if ($application_title <> 'libreBrigade') 
-        echo "<h1>".$application_title."</h1>
+    if ($application_title != 'libreBrigade') {
+        echo '<h1>'.$application_title."</h1>
             <p> Est une application de $cisname, utilisant le projet opensource libreBrigade";
-    if ( $patch_version <> '' ) $version = $patch_version;
+    }
+    if ($patch_version != '') {
+        $version = $patch_version;
+    }
     echo "<p><b>libreBrigade $version
-        <p><a href='".$website."' target =_blank>".$website."</a>";
-    
-    echo "</div>";
-    
+        <p><a href='".$website."' target =_blank>".$website.'</a>';
+
+    echo '</div>';
+
     echo "<div class='row'>";
     echo "<div class='col-sm-6' align=center><div class='card hide card-default graycarddefault' align=center>";
     echo "<div class='card-header graycard'>
@@ -82,19 +101,19 @@ if ($tab == 3) {
             </div>";
     echo "<div class='card-body graycard'>";
     echo file_get_contents('license_fr.txt');
-    echo "</div>";
-    echo "</div></div>";
-    
+    echo '</div>';
+    echo '</div></div>';
+
     echo "<div class='col-sm-6' align=center><div class='card hide card-default graycarddefault' align=center>";
     echo "<div class='card-header graycard'>
                 <div class='card-title'><h6><strong>License in english</strong></h6></div>
             </div>";
     echo "<div class='card-body graycard'>";
     echo file_get_contents('license.txt');
-    echo "</div>";
-    echo "</div></div>";
+    echo '</div>';
+    echo '</div></div>';
 }
-if($tab == 4){
+if ($tab == 4) {
     echo "<div class='container-fluid' align=center style='display:inline-block'>";
     echo "<div class='col-sm-4' align=center style='' >";
     echo "<div class='card hide card-default graycarddefault' align=center style=''>
@@ -118,7 +137,7 @@ if($tab == 4){
                </table>
             </div>
            </div>";
-    echo "</div>";
+    echo '</div>';
 }
 writefoot();
 ?>

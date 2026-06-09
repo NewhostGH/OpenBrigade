@@ -50,11 +50,11 @@ function vehiculeStubIndex(): void
         $page->setPath('/vehicules');
         $ctrl->shouldReceive('index')->andReturn(
             view('vehicule.index', [
-                'items'    => $page,
-                'columns'  => [],
-                'search'   => '',
+                'items' => $page,
+                'columns' => [],
+                'search' => '',
                 'filtSect' => 0,
-                'status'   => 'all',
+                'status' => 'all',
                 'sections' => Collection::make([]),
             ])
         );

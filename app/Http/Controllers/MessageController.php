@@ -13,13 +13,13 @@ class MessageController extends Controller
      */
     public function index(Request $request): View
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
 
         // Which category: consigne | amicale (actualité) | all
         $category = (string) $request->string('category', 'consigne');
-        $allowed  = ['consigne', 'amicale', 'all'];
-        if (!in_array($category, $allowed, true)) {
+        $allowed = ['consigne', 'amicale', 'all'];
+        if (! in_array($category, $allowed, true)) {
             $category = 'consigne';
         }
 
@@ -29,7 +29,7 @@ class MessageController extends Controller
             ->where(function ($q) {
                 $today = now()->toDateString();
                 $q->whereNull('m.M_DUREE')
-                  ->orWhere(DB::raw("DATE_ADD(m.M_DATE, INTERVAL m.M_DUREE DAY)"), '>=', $today);
+                    ->orWhere(DB::raw('DATE_ADD(m.M_DATE, INTERVAL m.M_DUREE DAY)'), '>=', $today);
             })
             ->select(
                 'm.M_ID', 'm.M_OBJET', 'm.M_TEXTE', 'm.M_DATE',

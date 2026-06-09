@@ -94,6 +94,7 @@ Artisan::command('legacy:migration:validate {--table=* : Validate only specific 
         if (! $exists) {
             $rows[] = [$table, 'missing', '-', '-', 'Table missing from OpenBrigade DB'];
             $missingTables[] = $table;
+
             continue;
         }
 
@@ -102,11 +103,13 @@ Artisan::command('legacy:migration:validate {--table=* : Validate only specific 
         } catch (Throwable $exception) {
             $rows[] = [$table, 'error', '-', '-', 'Count failed: '.$exception->getMessage()];
             $missingTables[] = $table;
+
             continue;
         }
 
         if (! $compareWithLegacy) {
             $rows[] = [$table, 'ok', (string) $newCount, 'n/a', 'Structural validation only'];
+
             continue;
         }
 
@@ -116,12 +119,14 @@ Artisan::command('legacy:migration:validate {--table=* : Validate only specific 
         } catch (Throwable $exception) {
             $rows[] = [$table, 'legacy-error', (string) $newCount, '-', 'Legacy count failed: '.$exception->getMessage()];
             $countMismatches[] = $table;
+
             continue;
         }
 
         if ($legacyCount !== $newCount) {
             $rows[] = [$table, 'count-mismatch', (string) $newCount, (string) $legacyCount, 'Row count mismatch'];
             $countMismatches[] = $table;
+
             continue;
         }
 

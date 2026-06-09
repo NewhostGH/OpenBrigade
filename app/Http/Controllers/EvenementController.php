@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Evenement;
 use App\Models\Personnel;
 use App\Models\Section;
+use App\Services\ICalExportService;
+use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Services\ICalExportService;
-use App\Services\TableExportService;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -20,12 +21,12 @@ class EvenementController extends Controller
 
     public function index(Request $request): View
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
 
-        $period   = (string) $request->string('period', 'upcoming');
-        $search   = trim((string) $request->string('q'));
-        $type     = (string) $request->string('type', 'ALL');
+        $period = (string) $request->string('period', 'upcoming');
+        $search = trim((string) $request->string('q'));
+        $type = (string) $request->string('type', 'ALL');
         $filtSect = (int) $request->integer('section', 0);
 
         $query = Evenement::query()
@@ -44,8 +45,8 @@ class EvenementController extends Controller
                 'evenement.E_EQUIPE',
                 'te.TE_LIBELLE',
                 'te.TE_ICON',
-                DB::raw("MIN(eh.EH_DATE_DEBUT) as first_date"),
-                DB::raw("MIN(eh.EH_DEBUT) as first_time"),
+                DB::raw('MIN(eh.EH_DATE_DEBUT) as first_date'),
+                DB::raw('MIN(eh.EH_DEBUT) as first_time'),
             ])
             ->groupBy(
                 'evenement.E_CODE', 'evenement.E_LIBELLE', 'evenement.E_LIEU',
@@ -57,9 +58,9 @@ class EvenementController extends Controller
             ->where('evenement.E_EQUIPE', 0);
 
         match ($period) {
-            'past'     => $query->having(DB::raw("MIN(eh.EH_DATE_DEBUT)"), '<', now()->toDateString()),
-            'upcoming' => $query->having(DB::raw("MAX(eh.EH_DATE_FIN)"), '>=', now()->toDateString()),
-            default    => null, // 'all'
+            'past' => $query->having(DB::raw('MIN(eh.EH_DATE_DEBUT)'), '<', now()->toDateString()),
+            'upcoming' => $query->having(DB::raw('MAX(eh.EH_DATE_FIN)'), '>=', now()->toDateString()),
+            default => null, // 'all'
         };
 
         if ($type !== '' && $type !== 'ALL') {
@@ -75,8 +76,8 @@ class EvenementController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {
                 $q->where('evenement.E_LIBELLE', 'like', "%{$search}%")
-                  ->orWhere('evenement.E_LIEU', 'like', "%{$search}%")
-                  ->orWhere('evenement.E_CODE', 'like', "%{$search}%");
+                    ->orWhere('evenement.E_LIEU', 'like', "%{$search}%")
+                    ->orWhere('evenement.E_CODE', 'like', "%{$search}%");
             });
         }
 
@@ -104,39 +105,39 @@ class EvenementController extends Controller
     private static function typeIcon(string $code): string
     {
         return match ($code) {
-            'GAR'                    => 'shield-alt',
-            'FOR'                    => 'graduation-cap',
-            'REU'                    => 'users',
-            'CER'                    => 'award',
-            'SPO'                    => 'running',
-            'TEC'                    => 'tools',
-            'COM'                    => 'bullhorn',
-            'MLA'                    => 'tasks',
-            'WEB'                    => 'video',
-            'MC'                     => 'clipboard-list',
-            'DPS'                    => 'medkit',
-            'MAN', 'EXE'             => 'dumbbell',
-            'NAU'                    => 'water',
-            'MAR'                    => 'walking',
-            'MED'                    => 'heartbeat',
-            'COH', 'DIV'             => 'calendar-alt',
-            'ALR'                    => 'bell',
-            'HUM', 'HEB', 'AID'      => 'hands-helping',
-            'DFCI', 'FOR_INC'        => 'fire',
-            'LOG', 'TRANS'           => 'truck',
-            'RAD', 'RADIO'           => 'broadcast-tower',
-            default                  => 'calendar-alt',
+            'GAR' => 'shield-alt',
+            'FOR' => 'graduation-cap',
+            'REU' => 'users',
+            'CER' => 'award',
+            'SPO' => 'running',
+            'TEC' => 'tools',
+            'COM' => 'bullhorn',
+            'MLA' => 'tasks',
+            'WEB' => 'video',
+            'MC' => 'clipboard-list',
+            'DPS' => 'medkit',
+            'MAN', 'EXE' => 'dumbbell',
+            'NAU' => 'water',
+            'MAR' => 'walking',
+            'MED' => 'heartbeat',
+            'COH', 'DIV' => 'calendar-alt',
+            'ALR' => 'bell',
+            'HUM', 'HEB', 'AID' => 'hands-helping',
+            'DFCI', 'FOR_INC' => 'fire',
+            'LOG', 'TRANS' => 'truck',
+            'RAD', 'RADIO' => 'broadcast-tower',
+            default => 'calendar-alt',
         };
     }
 
     private function evenementColumns(): array
     {
         return [
-            ['key'=>'icon','label'=>'','type'=>'html','value'=>fn($e) => '<i class="fas fa-'.self::typeIcon($e->TE_CODE ?? '').'" style="color:var(--text-muted-soft)" title="'.e($e->TE_LIBELLE ?? '').'"></i>','alwaysVisible'=>true,'exportable'=>false,'mobile'=>true],
-            ['key'=>'activite','label'=>'Activité','type'=>'html','value'=>fn($e)=>'<a href="'.route('evenement.show',$e->E_CODE).'" class="text-decoration-none fw-semibold">'.e($e->E_LIBELLE ?? $e->E_CODE).'</a>','alwaysVisible'=>true,'exportable'=>true,'exportValue'=>fn($e)=>$e->E_LIBELLE ?? $e->E_CODE,'sortField'=>'E_INTITULE','mobile'=>true],
-            ['key'=>'lieu','label'=>'Lieu','type'=>'text','value'=>fn($e)=>$e->E_LIEU ?? '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($e)=>$e->E_LIEU ?? ''],
-            ['key'=>'date','label'=>'Date','type'=>'html','value'=>fn($e)=>$e->first_date ? \Carbon\Carbon::parse($e->first_date)->locale('fr')->isoFormat('ddd D MMM YYYY').($e->first_time ? ' <span class="text-muted">'.substr($e->first_time,0,5).'</span>' : '') : '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($e)=>$e->first_date?\Carbon\Carbon::parse($e->first_date)->format('d/m/Y'):''],
-            ['key'=>'statut','label'=>'Statut','type'=>'badge','value'=>fn($e)=>$e->E_CANCELED ? 'ANNULEE' : ($e->E_CLOSED ? 'CLOSE' : 'OPEN'),'badgeMap'=>['ANNULEE'=>['Annulée','ob-badge-bloqued'],'CLOSE'=>['Clôturée','ob-badge-archive'],'OPEN'=>['Ouverte','ob-badge-actif']],'exportable'=>true,'exportValue'=>fn($e)=>$e->E_CANCELED ? 'Annulée' : ($e->E_CLOSED ? 'Clôturée' : 'Ouverte'),'mobile'=>false],
+            ['key' => 'icon', 'label' => '', 'type' => 'html', 'value' => fn ($e) => '<i class="fas fa-'.self::typeIcon($e->TE_CODE ?? '').'" style="color:var(--text-muted-soft)" title="'.e($e->TE_LIBELLE ?? '').'"></i>', 'alwaysVisible' => true, 'exportable' => false, 'mobile' => true],
+            ['key' => 'activite', 'label' => 'Activité', 'type' => 'html', 'value' => fn ($e) => '<a href="'.route('evenement.show', $e->E_CODE).'" class="text-decoration-none fw-semibold">'.e($e->E_LIBELLE ?? $e->E_CODE).'</a>', 'alwaysVisible' => true, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIBELLE ?? $e->E_CODE, 'sortField' => 'E_INTITULE', 'mobile' => true],
+            ['key' => 'lieu', 'label' => 'Lieu', 'type' => 'text', 'value' => fn ($e) => $e->E_LIEU ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIEU ?? ''],
+            ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'value' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->locale('fr')->isoFormat('ddd D MMM YYYY').($e->first_time ? ' <span class="text-muted">'.substr($e->first_time, 0, 5).'</span>' : '') : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->format('d/m/Y') : ''],
+            ['key' => 'statut', 'label' => 'Statut', 'type' => 'badge', 'value' => fn ($e) => $e->E_CANCELED ? 'ANNULEE' : ($e->E_CLOSED ? 'CLOSE' : 'OPEN'), 'badgeMap' => ['ANNULEE' => ['Annulée', 'ob-badge-bloqued'], 'CLOSE' => ['Clôturée', 'ob-badge-archive'], 'OPEN' => ['Ouverte', 'ob-badge-actif']], 'exportable' => true, 'exportValue' => fn ($e) => $e->E_CANCELED ? 'Annulée' : ($e->E_CLOSED ? 'Clôturée' : 'Ouverte'), 'mobile' => false],
         ];
     }
 
@@ -186,9 +187,9 @@ class EvenementController extends Controller
             ->where('p.P_OLD_MEMBER', 0)
             ->whereNotExists(function ($q) use ($code) {
                 $q->select(DB::raw(1))
-                  ->from('evenement_participation as ep')
-                  ->whereColumn('ep.P_ID', 'p.P_ID')
-                  ->where('ep.E_CODE', $code);
+                    ->from('evenement_participation as ep')
+                    ->whereColumn('ep.P_ID', 'p.P_ID')
+                    ->where('ep.E_CODE', $code);
             })
             ->orderBy('p.P_NOM')
             ->orderBy('p.P_PRENOM')
@@ -241,7 +242,7 @@ class EvenementController extends Controller
     }
 
     /** Teams (equipes) for an event with member + vehicle counts. */
-    private function loadEquipes(string|int $code): \Illuminate\Support\Collection
+    private function loadEquipes(string|int $code): Collection
     {
         return DB::table('evenement_equipe as ee')
             ->where('ee.E_CODE', $code)
@@ -256,6 +257,7 @@ class EvenementController extends Controller
                 $e->vehicle_count = DB::table('evenement_vehicule')
                     ->where('E_CODE', $code)->where('EE_ID', $e->EE_ID)
                     ->distinct()->count('V_ID');
+
                 return $e;
             });
     }
@@ -267,11 +269,11 @@ class EvenementController extends Controller
         [$groupedTypes, $sections, $chefs] = $this->formLookups();
 
         return view('evenement.form', [
-            'event'        => null,
-            'horaire'      => null,
+            'event' => null,
+            'horaire' => null,
             'groupedTypes' => $groupedTypes,
-            'sections'     => $sections,
-            'chefs'        => $chefs,
+            'sections' => $sections,
+            'chefs' => $chefs,
         ]);
     }
 
@@ -283,54 +285,54 @@ class EvenementController extends Controller
             $code = (int) DB::table('evenement')->max('E_CODE') + 1;
 
             DB::table('evenement')->insert([
-                'E_CODE'                => $code,
-                'TE_CODE'               => $validated['TE_CODE'],
-                'S_ID'                  => $validated['S_ID'],
-                'E_LIBELLE'             => $validated['E_LIBELLE'],
-                'E_LIEU'                => $validated['E_LIEU'] ?? '',
-                'E_ADDRESS'             => $validated['E_ADDRESS'] ?? null,
-                'E_LIEU_RDV'            => $validated['E_LIEU_RDV'] ?? null,
-                'E_HEURE_RDV'           => $validated['E_HEURE_RDV'] ?? null,
-                'E_NB'                  => $validated['E_NB'] ?? 0,
-                'E_CHEF'                => $validated['E_CHEF'] ?? null,
-                'E_TEL'                 => $validated['E_TEL'] ?? null,
-                'E_COMMENT'             => $validated['E_COMMENT'] ?? '',
-                'E_CONSIGNES'           => $validated['E_CONSIGNES'] ?? null,
-                'E_CONTACT_LOCAL'       => $validated['E_CONTACT_LOCAL'] ?? null,
-                'E_CONTACT_TEL'         => $validated['E_CONTACT_TEL'] ?? null,
-                'E_WHATSAPP'            => $validated['E_WHATSAPP'] ?? null,
-                'E_WEBEX_URL'           => $validated['E_WEBEX_URL'] ?? null,
-                'E_WEBEX_PIN'           => $validated['E_WEBEX_PIN'] ?? null,
-                'E_WEBEX_START'         => $validated['E_WEBEX_START'] ?? null,
-                'E_CLOSED'              => 0,
-                'E_CANCELED'            => 0,
-                'E_EQUIPE'              => 0,
-                'E_ANOMALIE'            => 0,
-                'E_FLAG1'               => 0,
-                'E_OPEN_TO_EXT'         => (int) $request->boolean('E_OPEN_TO_EXT'),
-                'E_VISIBLE_OUTSIDE'     => (int) $request->boolean('E_VISIBLE_OUTSIDE'),
-                'E_EXTERIEUR'           => (int) $request->boolean('E_EXTERIEUR'),
-                'E_VISIBLE_INSIDE'      => (int) !$request->boolean('E_HIDDEN'),
+                'E_CODE' => $code,
+                'TE_CODE' => $validated['TE_CODE'],
+                'S_ID' => $validated['S_ID'],
+                'E_LIBELLE' => $validated['E_LIBELLE'],
+                'E_LIEU' => $validated['E_LIEU'] ?? '',
+                'E_ADDRESS' => $validated['E_ADDRESS'] ?? null,
+                'E_LIEU_RDV' => $validated['E_LIEU_RDV'] ?? null,
+                'E_HEURE_RDV' => $validated['E_HEURE_RDV'] ?? null,
+                'E_NB' => $validated['E_NB'] ?? 0,
+                'E_CHEF' => $validated['E_CHEF'] ?? null,
+                'E_TEL' => $validated['E_TEL'] ?? null,
+                'E_COMMENT' => $validated['E_COMMENT'] ?? '',
+                'E_CONSIGNES' => $validated['E_CONSIGNES'] ?? null,
+                'E_CONTACT_LOCAL' => $validated['E_CONTACT_LOCAL'] ?? null,
+                'E_CONTACT_TEL' => $validated['E_CONTACT_TEL'] ?? null,
+                'E_WHATSAPP' => $validated['E_WHATSAPP'] ?? null,
+                'E_WEBEX_URL' => $validated['E_WEBEX_URL'] ?? null,
+                'E_WEBEX_PIN' => $validated['E_WEBEX_PIN'] ?? null,
+                'E_WEBEX_START' => $validated['E_WEBEX_START'] ?? null,
+                'E_CLOSED' => 0,
+                'E_CANCELED' => 0,
+                'E_EQUIPE' => 0,
+                'E_ANOMALIE' => 0,
+                'E_FLAG1' => 0,
+                'E_OPEN_TO_EXT' => (int) $request->boolean('E_OPEN_TO_EXT'),
+                'E_VISIBLE_OUTSIDE' => (int) $request->boolean('E_VISIBLE_OUTSIDE'),
+                'E_EXTERIEUR' => (int) $request->boolean('E_EXTERIEUR'),
+                'E_VISIBLE_INSIDE' => (int) ! $request->boolean('E_HIDDEN'),
                 'E_ALLOW_REINFORCEMENT' => (int) $request->boolean('E_ALLOW_REINFORCEMENT'),
-                'E_AUTOCLOSE_BEFORE'    => $validated['E_AUTOCLOSE_BEFORE'] ?? null,
-                'E_CREATED_BY'          => auth()->id(),
-                'E_CREATE_DATE'         => now(),
+                'E_AUTOCLOSE_BEFORE' => $validated['E_AUTOCLOSE_BEFORE'] ?? null,
+                'E_CREATED_BY' => auth()->id(),
+                'E_CREATE_DATE' => now(),
             ]);
 
             foreach ($validated['horaires'] as $i => $h) {
                 $dateDebut = Carbon::parse($h['EH_DATE_DEBUT'])->toDateString();
-                $dateFin   = !empty($h['EH_DATE_FIN'])
+                $dateFin = ! empty($h['EH_DATE_FIN'])
                     ? Carbon::parse($h['EH_DATE_FIN'])->toDateString()
                     : $dateDebut;
 
                 DB::table('evenement_horaire')->insert([
-                    'E_CODE'         => $code,
-                    'EH_ID'          => $i + 1,
-                    'EH_DATE_DEBUT'  => $dateDebut,
-                    'EH_DATE_FIN'    => $dateFin,
-                    'EH_DEBUT'       => !empty($h['EH_DEBUT']) ? $h['EH_DEBUT'] : '00:00:00',
-                    'EH_FIN'         => !empty($h['EH_FIN'])   ? $h['EH_FIN']   : '00:00:00',
-                    'EH_DUREE'       => 0,
+                    'E_CODE' => $code,
+                    'EH_ID' => $i + 1,
+                    'EH_DATE_DEBUT' => $dateDebut,
+                    'EH_DATE_FIN' => $dateFin,
+                    'EH_DEBUT' => ! empty($h['EH_DEBUT']) ? $h['EH_DEBUT'] : '00:00:00',
+                    'EH_FIN' => ! empty($h['EH_FIN']) ? $h['EH_FIN'] : '00:00:00',
+                    'EH_DUREE' => 0,
                     'EH_DESCRIPTION' => '',
                 ]);
             }
@@ -346,7 +348,7 @@ class EvenementController extends Controller
 
     public function edit(string $code): View
     {
-        $event    = Evenement::with(['horaires'])->findOrFail($code);
+        $event = Evenement::with(['horaires'])->findOrFail($code);
         $horaires = $event->horaires->sortBy('EH_ID')->values();
 
         [$groupedTypes, $sections, $chefs] = $this->formLookups();
@@ -356,37 +358,37 @@ class EvenementController extends Controller
 
     public function update(Request $request, string $code): RedirectResponse
     {
-        $event     = Evenement::findOrFail($code);
+        $event = Evenement::findOrFail($code);
         $validated = $this->validateEventRequest($request, isCreate: false);
 
         DB::transaction(function () use ($event, $validated, $request) {
             $event->update([
-                'TE_CODE'               => $validated['TE_CODE'],
-                'S_ID'                  => $validated['S_ID'],
-                'E_LIBELLE'             => $validated['E_LIBELLE'],
-                'E_LIEU'                => $validated['E_LIEU'] ?? '',
-                'E_ADDRESS'             => $validated['E_ADDRESS'] ?? null,
-                'E_LIEU_RDV'            => $validated['E_LIEU_RDV'] ?? null,
-                'E_HEURE_RDV'           => $validated['E_HEURE_RDV'] ?? null,
-                'E_NB'                  => $validated['E_NB'] ?? 0,
-                'E_CHEF'                => $validated['E_CHEF'] ?? null,
-                'E_TEL'                 => $validated['E_TEL'] ?? null,
-                'E_COMMENT'             => $validated['E_COMMENT'] ?? '',
-                'E_CONSIGNES'           => $validated['E_CONSIGNES'] ?? null,
-                'E_CONTACT_LOCAL'       => $validated['E_CONTACT_LOCAL'] ?? null,
-                'E_CONTACT_TEL'         => $validated['E_CONTACT_TEL'] ?? null,
-                'E_WHATSAPP'            => $validated['E_WHATSAPP'] ?? null,
-                'E_WEBEX_URL'           => $validated['E_WEBEX_URL'] ?? null,
-                'E_WEBEX_PIN'           => $validated['E_WEBEX_PIN'] ?? null,
-                'E_WEBEX_START'         => $validated['E_WEBEX_START'] ?? null,
-                'E_CLOSED'              => (int) $request->boolean('E_CLOSED'),
-                'E_CANCELED'            => (int) $request->boolean('E_CANCELED'),
-                'E_OPEN_TO_EXT'         => (int) $request->boolean('E_OPEN_TO_EXT'),
-                'E_VISIBLE_OUTSIDE'     => (int) $request->boolean('E_VISIBLE_OUTSIDE'),
-                'E_EXTERIEUR'           => (int) $request->boolean('E_EXTERIEUR'),
-                'E_VISIBLE_INSIDE'      => (int) !$request->boolean('E_HIDDEN'),
+                'TE_CODE' => $validated['TE_CODE'],
+                'S_ID' => $validated['S_ID'],
+                'E_LIBELLE' => $validated['E_LIBELLE'],
+                'E_LIEU' => $validated['E_LIEU'] ?? '',
+                'E_ADDRESS' => $validated['E_ADDRESS'] ?? null,
+                'E_LIEU_RDV' => $validated['E_LIEU_RDV'] ?? null,
+                'E_HEURE_RDV' => $validated['E_HEURE_RDV'] ?? null,
+                'E_NB' => $validated['E_NB'] ?? 0,
+                'E_CHEF' => $validated['E_CHEF'] ?? null,
+                'E_TEL' => $validated['E_TEL'] ?? null,
+                'E_COMMENT' => $validated['E_COMMENT'] ?? '',
+                'E_CONSIGNES' => $validated['E_CONSIGNES'] ?? null,
+                'E_CONTACT_LOCAL' => $validated['E_CONTACT_LOCAL'] ?? null,
+                'E_CONTACT_TEL' => $validated['E_CONTACT_TEL'] ?? null,
+                'E_WHATSAPP' => $validated['E_WHATSAPP'] ?? null,
+                'E_WEBEX_URL' => $validated['E_WEBEX_URL'] ?? null,
+                'E_WEBEX_PIN' => $validated['E_WEBEX_PIN'] ?? null,
+                'E_WEBEX_START' => $validated['E_WEBEX_START'] ?? null,
+                'E_CLOSED' => (int) $request->boolean('E_CLOSED'),
+                'E_CANCELED' => (int) $request->boolean('E_CANCELED'),
+                'E_OPEN_TO_EXT' => (int) $request->boolean('E_OPEN_TO_EXT'),
+                'E_VISIBLE_OUTSIDE' => (int) $request->boolean('E_VISIBLE_OUTSIDE'),
+                'E_EXTERIEUR' => (int) $request->boolean('E_EXTERIEUR'),
+                'E_VISIBLE_INSIDE' => (int) ! $request->boolean('E_HIDDEN'),
                 'E_ALLOW_REINFORCEMENT' => (int) $request->boolean('E_ALLOW_REINFORCEMENT'),
-                'E_AUTOCLOSE_BEFORE'    => $validated['E_AUTOCLOSE_BEFORE'] ?? null,
+                'E_AUTOCLOSE_BEFORE' => $validated['E_AUTOCLOSE_BEFORE'] ?? null,
             ]);
 
             $submittedIds = [];
@@ -395,18 +397,18 @@ class EvenementController extends Controller
                 $submittedIds[] = $ehId;
 
                 $dateDebut = Carbon::parse($h['EH_DATE_DEBUT'])->toDateString();
-                $dateFin   = !empty($h['EH_DATE_FIN'])
+                $dateFin = ! empty($h['EH_DATE_FIN'])
                     ? Carbon::parse($h['EH_DATE_FIN'])->toDateString()
                     : $dateDebut;
 
                 DB::table('evenement_horaire')->updateOrInsert(
                     ['E_CODE' => $event->E_CODE, 'EH_ID' => $ehId],
                     [
-                        'EH_DATE_DEBUT'  => $dateDebut,
-                        'EH_DATE_FIN'    => $dateFin,
-                        'EH_DEBUT'       => !empty($h['EH_DEBUT']) ? $h['EH_DEBUT'] : '00:00:00',
-                        'EH_FIN'         => !empty($h['EH_FIN'])   ? $h['EH_FIN']   : '00:00:00',
-                        'EH_DUREE'       => 0,
+                        'EH_DATE_DEBUT' => $dateDebut,
+                        'EH_DATE_FIN' => $dateFin,
+                        'EH_DEBUT' => ! empty($h['EH_DEBUT']) ? $h['EH_DEBUT'] : '00:00:00',
+                        'EH_FIN' => ! empty($h['EH_FIN']) ? $h['EH_FIN'] : '00:00:00',
+                        'EH_DUREE' => 0,
                         'EH_DESCRIPTION' => '',
                     ]
                 );
@@ -450,10 +452,10 @@ class EvenementController extends Controller
         $event = Evenement::findOrFail($code);
 
         $validated = $request->validate([
-            'P_ID'     => ['required', 'integer', 'exists:pompier,P_ID'],
-            'EH_ID'    => ['required', 'integer', 'exists:evenement_horaire,EH_ID'],
-            'TP_ID'    => ['nullable', 'integer'],
-            'EE_ID'    => ['nullable', 'integer'],
+            'P_ID' => ['required', 'integer', 'exists:pompier,P_ID'],
+            'EH_ID' => ['required', 'integer', 'exists:evenement_horaire,EH_ID'],
+            'TP_ID' => ['nullable', 'integer'],
+            'EE_ID' => ['nullable', 'integer'],
             'EP_COMMENT' => ['nullable', 'string', 'max:150'],
         ]);
 
@@ -474,17 +476,17 @@ class EvenementController extends Controller
             ->value('EH_DUREE');
 
         DB::table('evenement_participation')->insert([
-            'E_CODE'     => $code,
-            'EH_ID'      => $validated['EH_ID'],
-            'P_ID'       => $validated['P_ID'],
-            'EP_DATE'    => now(),
-            'EP_BY'      => auth()->id(),
-            'TP_ID'      => $validated['TP_ID'] ?? 0,
-            'EE_ID'      => $validated['EE_ID'] ?? null,
+            'E_CODE' => $code,
+            'EH_ID' => $validated['EH_ID'],
+            'P_ID' => $validated['P_ID'],
+            'EP_DATE' => now(),
+            'EP_BY' => auth()->id(),
+            'TP_ID' => $validated['TP_ID'] ?? 0,
+            'EE_ID' => $validated['EE_ID'] ?? null,
             'EP_COMMENT' => $validated['EP_COMMENT'] ?? null,
-            'EP_DUREE'   => $duree ?? 0,
-            'EP_ABSENT'  => 0,
-            'EP_FLAG1'   => 0,
+            'EP_DUREE' => $duree ?? 0,
+            'EP_ABSENT' => 0,
+            'EP_FLAG1' => 0,
         ]);
 
         return redirect()->route('evenement.show', [$code, 'tab' => 'personnel'])
@@ -496,20 +498,20 @@ class EvenementController extends Controller
         Evenement::findOrFail($code);
 
         $validated = $request->validate([
-            'TP_ID'      => ['nullable', 'integer'],
-            'EE_ID'      => ['nullable', 'integer'],
+            'TP_ID' => ['nullable', 'integer'],
+            'EE_ID' => ['nullable', 'integer'],
             'EP_COMMENT' => ['nullable', 'string', 'max:150'],
-            'EP_ABSENT'  => ['boolean'],
+            'EP_ABSENT' => ['boolean'],
         ]);
 
         DB::table('evenement_participation')
             ->where('E_CODE', $code)
             ->where('P_ID', $pid)
             ->update([
-                'TP_ID'      => $validated['TP_ID'] ?? 0,
-                'EE_ID'      => $validated['EE_ID'] ?? null,
+                'TP_ID' => $validated['TP_ID'] ?? 0,
+                'EE_ID' => $validated['EE_ID'] ?? null,
                 'EP_COMMENT' => $validated['EP_COMMENT'] ?? null,
-                'EP_ABSENT'  => $request->boolean('EP_ABSENT') ? 1 : 0,
+                'EP_ABSENT' => $request->boolean('EP_ABSENT') ? 1 : 0,
             ]);
 
         return redirect()->route('evenement.show', [$code, 'tab' => 'personnel'])
@@ -536,10 +538,10 @@ class EvenementController extends Controller
         Evenement::findOrFail($code);
 
         $validated = $request->validate([
-            'EE_NAME'        => ['required', 'string', 'max:30'],
-            'EE_ORDER'       => ['nullable', 'integer', 'min:1', 'max:50'],
+            'EE_NAME' => ['required', 'string', 'max:30'],
+            'EE_ORDER' => ['nullable', 'integer', 'min:1', 'max:50'],
             'EE_DESCRIPTION' => ['nullable', 'string', 'max:300'],
-            'EE_ID_RADIO'    => ['nullable', 'string', 'max:12'],
+            'EE_ID_RADIO' => ['nullable', 'string', 'max:12'],
         ]);
 
         $newId = (int) DB::table('evenement_equipe')
@@ -547,13 +549,13 @@ class EvenementController extends Controller
             ->max('EE_ID') + 1;
 
         DB::table('evenement_equipe')->insert([
-            'E_CODE'         => $code,
-            'EE_ID'          => $newId ?: 1,
-            'EE_NAME'        => $validated['EE_NAME'],
-            'EE_ORDER'       => $validated['EE_ORDER'] ?? 1,
+            'E_CODE' => $code,
+            'EE_ID' => $newId ?: 1,
+            'EE_NAME' => $validated['EE_NAME'],
+            'EE_ORDER' => $validated['EE_ORDER'] ?? 1,
             'EE_DESCRIPTION' => $validated['EE_DESCRIPTION'] ?? '',
-            'EE_ID_RADIO'    => $validated['EE_ID_RADIO'] ?? null,
-            'EE_SIGNATURE'   => 0,
+            'EE_ID_RADIO' => $validated['EE_ID_RADIO'] ?? null,
+            'EE_SIGNATURE' => 0,
         ]);
 
         return redirect()->route('evenement.show', [$code, 'tab' => 'equipes'])
@@ -565,20 +567,20 @@ class EvenementController extends Controller
         Evenement::findOrFail($code);
 
         $validated = $request->validate([
-            'EE_NAME'        => ['required', 'string', 'max:30'],
-            'EE_ORDER'       => ['nullable', 'integer', 'min:1', 'max:50'],
+            'EE_NAME' => ['required', 'string', 'max:30'],
+            'EE_ORDER' => ['nullable', 'integer', 'min:1', 'max:50'],
             'EE_DESCRIPTION' => ['nullable', 'string', 'max:300'],
-            'EE_ID_RADIO'    => ['nullable', 'string', 'max:12'],
+            'EE_ID_RADIO' => ['nullable', 'string', 'max:12'],
         ]);
 
         DB::table('evenement_equipe')
             ->where('E_CODE', $code)
             ->where('EE_ID', $ee)
             ->update([
-                'EE_NAME'        => $validated['EE_NAME'],
-                'EE_ORDER'       => $validated['EE_ORDER'] ?? 1,
+                'EE_NAME' => $validated['EE_NAME'],
+                'EE_ORDER' => $validated['EE_ORDER'] ?? 1,
                 'EE_DESCRIPTION' => $validated['EE_DESCRIPTION'] ?? '',
-                'EE_ID_RADIO'    => $validated['EE_ID_RADIO'] ?? null,
+                'EE_ID_RADIO' => $validated['EE_ID_RADIO'] ?? null,
             ]);
 
         return redirect()->route('evenement.show', [$code, 'tab' => 'equipes'])
@@ -611,7 +613,7 @@ class EvenementController extends Controller
         $event = Evenement::findOrFail($code);
 
         $validated = $request->validate([
-            'renfort' => ['required', 'integer', 'different:' . $code],
+            'renfort' => ['required', 'integer', 'different:'.$code],
         ]);
 
         $renfort = Evenement::findOrFail($validated['renfort']);
@@ -687,7 +689,7 @@ class EvenementController extends Controller
             ->orderBy('te.TE_LIBELLE')
             ->get(['te.TE_CODE', 'te.TE_LIBELLE', 'te.CEV_CODE'])
             ->groupBy('CEV_CODE')
-            ->map(fn($types, $cev) => [
+            ->map(fn ($types, $cev) => [
                 'label' => $categories[$cev] ?? $cev,
                 'types' => $types,
             ])
@@ -742,9 +744,9 @@ class EvenementController extends Controller
         } else {
             DB::table('evenement_materiel')->insert([
                 'E_CODE' => $code,
-                'MA_ID'  => $validated['MA_ID'],
-                'EM_NB'  => $validated['EM_NB'] ?? 1,
-                'EE_ID'  => $ee,
+                'MA_ID' => $validated['MA_ID'],
+                'EM_NB' => $validated['EM_NB'] ?? 1,
+                'EE_ID' => $ee,
             ]);
         }
 
@@ -790,9 +792,9 @@ class EvenementController extends Controller
 
         DB::table('evenement_materiel')->insert([
             'E_CODE' => $code,
-            'MA_ID'  => $validated['MA_ID'],
-            'EM_NB'  => $validated['EM_NB'] ?? 1,
-            'EE_ID'  => $validated['EE_ID'] ?: null,
+            'MA_ID' => $validated['MA_ID'],
+            'EM_NB' => $validated['EM_NB'] ?? 1,
+            'EE_ID' => $validated['EE_ID'] ?: null,
         ]);
 
         return back()->with('success', 'Matériel assigné.');
@@ -847,19 +849,19 @@ class EvenementController extends Controller
             ->get();
 
         $columns = [
-            ['Nom',         fn($p) => strtoupper($p->P_NOM)],
-            ['Prénom',      fn($p) => ucfirst(mb_strtolower($p->P_PRENOM))],
-            ['Grade',       fn($p) => $p->P_GRADE ?? ''],
-            ['Fonction',    fn($p) => $p->TP_LIBELLE ?? ''],
-            ['Équipe',      fn($p) => $p->EE_NAME ?? ''],
-            ['Commentaire', fn($p) => $p->EP_COMMENT ?? ''],
-            ['Absent',      fn($p) => $p->EP_ABSENT ? 'Oui' : ''],
+            ['Nom',         fn ($p) => strtoupper($p->P_NOM)],
+            ['Prénom',      fn ($p) => ucfirst(mb_strtolower($p->P_PRENOM))],
+            ['Grade',       fn ($p) => $p->P_GRADE ?? ''],
+            ['Fonction',    fn ($p) => $p->TP_LIBELLE ?? ''],
+            ['Équipe',      fn ($p) => $p->EE_NAME ?? ''],
+            ['Commentaire', fn ($p) => $p->EP_COMMENT ?? ''],
+            ['Absent',      fn ($p) => $p->EP_ABSENT ? 'Oui' : ''],
         ];
 
-        return (new TableExportService())->toXlsx(
+        return (new TableExportService)->toXlsx(
             $columns,
             $participants,
-            'Activite_' . $event->E_CODE . '_Participants_' . date('Ymd'),
+            'Activite_'.$event->E_CODE.'_Participants_'.date('Ymd'),
             ['sheetTitle' => 'Participants', 'freezeHeader' => true]
         );
     }
@@ -871,7 +873,7 @@ class EvenementController extends Controller
         $vevents = [];
         foreach ($event->horaires as $h) {
             $startDate = Carbon::parse($h->EH_DATE_DEBUT);
-            $endDate   = Carbon::parse($h->EH_DATE_FIN ?? $h->EH_DATE_DEBUT);
+            $endDate = Carbon::parse($h->EH_DATE_FIN ?? $h->EH_DATE_DEBUT);
 
             $hasTime = $h->EH_DEBUT && substr((string) $h->EH_DEBUT, 0, 5) !== '00:00';
 
@@ -885,20 +887,20 @@ class EvenementController extends Controller
             }
 
             $vevents[] = [
-                'summary'     => $event->E_LIBELLE ?? $event->E_CODE,
-                'location'    => $event->E_LIEU ?? '',
+                'summary' => $event->E_LIBELLE ?? $event->E_CODE,
+                'location' => $event->E_LIEU ?? '',
                 'description' => $event->E_COMMENT ?? '',
-                'uid'         => 'ob-evt-' . $event->E_CODE . '-' . $h->EH_ID . '@' . request()->getHost(),
-                'allDay'      => !$hasTime,
-                'dtstart'     => $startDate,
-                'dtend'       => $hasTime ? $endDate : $endDate->addDay(),
+                'uid' => 'ob-evt-'.$event->E_CODE.'-'.$h->EH_ID.'@'.request()->getHost(),
+                'allDay' => ! $hasTime,
+                'dtstart' => $startDate,
+                'dtend' => $hasTime ? $endDate : $endDate->addDay(),
             ];
         }
 
-        return (new ICalExportService())->toResponse(
+        return (new ICalExportService)->toResponse(
             config('app.name'),
             $vevents,
-            'activite-' . $event->E_CODE
+            'activite-'.$event->E_CODE
         );
     }
 
@@ -907,30 +909,30 @@ class EvenementController extends Controller
     private function validateEventRequest(Request $request, bool $isCreate): array
     {
         return $request->validate([
-            'TE_CODE'             => ['required', 'string', 'max:10'],
-            'E_LIBELLE'           => ['required', 'string', 'max:60'],
-            'E_LIEU'              => ['nullable', 'string', 'max:50'],
-            'E_ADDRESS'           => ['nullable', 'string', 'max:255'],
-            'E_LIEU_RDV'          => ['nullable', 'string', 'max:150'],
-            'E_HEURE_RDV'         => ['nullable', 'date_format:H:i'],
-            'S_ID'                => ['required', 'integer'],
-            'E_NB'                => ['nullable', 'integer', 'min:0', 'max:9999'],
-            'E_CHEF'              => ['nullable', 'integer'],
-            'E_TEL'               => ['nullable', 'string', 'max:15'],
-            'horaires'                     => ['required', 'array', 'min:1'],
-            'horaires.*.EH_DATE_DEBUT'     => ['required', 'date'],
-            'horaires.*.EH_DATE_FIN'       => ['nullable', 'date'],
-            'horaires.*.EH_DEBUT'          => ['nullable', 'date_format:H:i'],
-            'horaires.*.EH_FIN'            => ['nullable', 'date_format:H:i'],
-            'E_COMMENT'           => ['nullable', 'string', 'max:5000'],
-            'E_CONSIGNES'         => ['nullable', 'string', 'max:500'],
-            'E_CONTACT_LOCAL'     => ['nullable', 'string', 'max:50'],
-            'E_CONTACT_TEL'       => ['nullable', 'string', 'max:20'],
-            'E_WHATSAPP'          => ['nullable', 'string', 'max:30'],
-            'E_WEBEX_URL'         => ['nullable', 'string', 'max:500'],
-            'E_WEBEX_PIN'         => ['nullable', 'string', 'max:20'],
-            'E_WEBEX_START'       => ['nullable', 'date_format:H:i'],
-            'E_AUTOCLOSE_BEFORE'  => ['nullable', 'integer', 'min:0', 'max:999'],
+            'TE_CODE' => ['required', 'string', 'max:10'],
+            'E_LIBELLE' => ['required', 'string', 'max:60'],
+            'E_LIEU' => ['nullable', 'string', 'max:50'],
+            'E_ADDRESS' => ['nullable', 'string', 'max:255'],
+            'E_LIEU_RDV' => ['nullable', 'string', 'max:150'],
+            'E_HEURE_RDV' => ['nullable', 'date_format:H:i'],
+            'S_ID' => ['required', 'integer'],
+            'E_NB' => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'E_CHEF' => ['nullable', 'integer'],
+            'E_TEL' => ['nullable', 'string', 'max:15'],
+            'horaires' => ['required', 'array', 'min:1'],
+            'horaires.*.EH_DATE_DEBUT' => ['required', 'date'],
+            'horaires.*.EH_DATE_FIN' => ['nullable', 'date'],
+            'horaires.*.EH_DEBUT' => ['nullable', 'date_format:H:i'],
+            'horaires.*.EH_FIN' => ['nullable', 'date_format:H:i'],
+            'E_COMMENT' => ['nullable', 'string', 'max:5000'],
+            'E_CONSIGNES' => ['nullable', 'string', 'max:500'],
+            'E_CONTACT_LOCAL' => ['nullable', 'string', 'max:50'],
+            'E_CONTACT_TEL' => ['nullable', 'string', 'max:20'],
+            'E_WHATSAPP' => ['nullable', 'string', 'max:30'],
+            'E_WEBEX_URL' => ['nullable', 'string', 'max:500'],
+            'E_WEBEX_PIN' => ['nullable', 'string', 'max:20'],
+            'E_WEBEX_START' => ['nullable', 'date_format:H:i'],
+            'E_AUTOCLOSE_BEFORE' => ['nullable', 'integer', 'min:0', 'max:999'],
         ]);
     }
 }

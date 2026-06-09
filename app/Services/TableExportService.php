@@ -29,10 +29,10 @@ class TableExportService
     /**
      * Convert ob-table column definitions to flat export pairs, filtered by ?cols=.
      *
-     * @param  array    $columns   ob-table column-definition arrays
-     * @param  Request  $request   used to parse the ?cols= query parameter
-     * @param  array    $prepend   extra [label, fn($item)] pairs prepended unconditionally
-     * @return array               [ [string $label, callable $getter], … ]
+     * @param  array  $columns  ob-table column-definition arrays
+     * @param  Request  $request  used to parse the ?cols= query parameter
+     * @param  array  $prepend  extra [label, fn($item)] pairs prepended unconditionally
+     * @return array [ [string $label, callable $getter], … ]
      */
     public function resolveColumns(array $columns, Request $request, array $prepend = []): array
     {
@@ -67,26 +67,25 @@ class TableExportService
     /**
      * Stream an XLSX file as a download response.
      *
-     * @param  array     $columns  [ [label, getter], … ]
-     * @param  iterable  $items
-     * @param  string    $filename Without extension
-     * @param  array     $options  Formatting options:
-     *                              sheetTitle   string  (default: 'Export')
-     *                              headerRgb    string  6-char hex (default: 'DDEEFF')
-     *                              freezeHeader bool    Freeze row 2 (default: false)
-     *                              zoomScale    int     Sheet zoom % (default: 100)
-     *                              repeatHeader bool    Repeat header row on print (default: false)
+     * @param  array  $columns  [ [label, getter], … ]
+     * @param  string  $filename  Without extension
+     * @param  array  $options  Formatting options:
+     *                          sheetTitle   string  (default: 'Export')
+     *                          headerRgb    string  6-char hex (default: 'DDEEFF')
+     *                          freezeHeader bool    Freeze row 2 (default: false)
+     *                          zoomScale    int     Sheet zoom % (default: 100)
+     *                          repeatHeader bool    Repeat header row on print (default: false)
      */
     public function toXlsx(array $columns, iterable $items, string $filename, array $options = []): StreamedResponse
     {
-        $sheetTitle   = $options['sheetTitle']   ?? 'Export';
-        $headerRgb    = $options['headerRgb']    ?? 'DDEEFF';
+        $sheetTitle = $options['sheetTitle'] ?? 'Export';
+        $headerRgb = $options['headerRgb'] ?? 'DDEEFF';
         $freezeHeader = $options['freezeHeader'] ?? false;
-        $zoomScale    = (int) ($options['zoomScale'] ?? 100);
+        $zoomScale = (int) ($options['zoomScale'] ?? 100);
         $repeatHeader = $options['repeatHeader'] ?? false;
 
-        $spreadsheet = new Spreadsheet();
-        $sheet       = $spreadsheet->getActiveSheet();
+        $spreadsheet = new Spreadsheet;
+        $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle($sheetTitle);
 
         $colCount = count($columns);
@@ -94,13 +93,13 @@ class TableExportService
         // Header row
         foreach ($columns as $i => [$label]) {
             $letter = chr(65 + $i);
-            $sheet->setCellValue($letter . '1', $label);
+            $sheet->setCellValue($letter.'1', $label);
             $sheet->getColumnDimension($letter)->setAutoSize(true);
-            $sheet->getStyle($letter . '1')->getFont()->setBold(true);
+            $sheet->getStyle($letter.'1')->getFont()->setBold(true);
         }
 
         if ($colCount > 0) {
-            $range = 'A1:' . chr(65 + $colCount - 1) . '1';
+            $range = 'A1:'.chr(65 + $colCount - 1).'1';
             $sheet->getStyle($range)
                 ->getFill()->setFillType(Fill::FILL_SOLID)
                 ->getStartColor()->setRGB($headerRgb);
@@ -123,7 +122,7 @@ class TableExportService
             foreach ($columns as [, $getter]) {
                 $rowData[] = $getter($item);
             }
-            $sheet->fromArray($rowData, null, 'A' . $row);
+            $sheet->fromArray($rowData, null, 'A'.$row);
             $row++;
         }
 
@@ -131,9 +130,9 @@ class TableExportService
             function () use ($spreadsheet) {
                 IOFactory::createWriter($spreadsheet, 'Xlsx')->save('php://output');
             },
-            $filename . '.xlsx',
+            $filename.'.xlsx',
             [
-                'Content-Type'  => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'Cache-Control' => 'max-age=0',
             ]
         );
@@ -144,10 +143,9 @@ class TableExportService
     /**
      * Stream a UTF-8 CSV file (with BOM for Excel compatibility) as a download response.
      *
-     * @param  array     $columns  [ [label, getter], … ]
-     * @param  iterable  $items
-     * @param  string    $filename Without extension
-     * @param  string    $sep      Column separator (default: ';')
+     * @param  array  $columns  [ [label, getter], … ]
+     * @param  string  $filename  Without extension
+     * @param  string  $sep  Column separator (default: ';')
      */
     public function toCsv(array $columns, iterable $items, string $filename, string $sep = ';'): StreamedResponse
     {
@@ -166,7 +164,7 @@ class TableExportService
                 }
                 fclose($handle);
             },
-            $filename . '.csv',
+            $filename.'.csv',
             [
                 'Content-Type' => 'text/csv; charset=UTF-8',
             ]
@@ -186,20 +184,24 @@ class TableExportService
             return $col['exportValue'];
         }
 
-        $type  = $col['type'] ?? 'text';
+        $type = $col['type'] ?? 'text';
         $value = $col['value'];
 
         if ($type === 'date') {
             return static function ($item) use ($value) {
                 $v = $value($item);
-                if ($v === null) return '';
+                if ($v === null) {
+                    return '';
+                }
+
                 return ($v instanceof Carbon ? $v : Carbon::parse($v))->format('d/m/Y');
             };
         }
 
         if ($type === 'badge' && isset($col['badgeMap'])) {
             $map = $col['badgeMap'];
-            return static fn($item) => $map[$value($item)][0] ?? $value($item);
+
+            return static fn ($item) => $map[$value($item)][0] ?? $value($item);
         }
 
         return $value;

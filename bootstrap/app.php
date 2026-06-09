@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\RequirePermission;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -22,15 +25,15 @@ return Application::configure(basePath: dirname(__DIR__))
         // Route-level permission guard: Route::middleware('permission:52')
         // Route-level disabled-account guard (replaces legacy GP_ID==-1 inline checks)
         $middleware->alias([
-            'permission'  => \App\Http\Middleware\RequirePermission::class,
-            'user.active' => \App\Http\Middleware\EnsureUserIsActive::class,
+            'permission' => RequirePermission::class,
+            'user.active' => EnsureUserIsActive::class,
         ]);
 
         // Automatically applied to all auth-guarded web routes
-        $middleware->appendToGroup('web', \App\Http\Middleware\EnsureUserIsActive::class);
+        $middleware->appendToGroup('web', EnsureUserIsActive::class);
 
         // Security headers on every web response
-        $middleware->prependToGroup('web', \App\Http\Middleware\SecurityHeaders::class);
+        $middleware->prependToGroup('web', SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Custom exception handling configuration

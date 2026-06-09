@@ -33,8 +33,8 @@ return [
      * zoom_fit: zoom used when centering on the first marker before fitBounds.
      */
     'geo' => [
-        'center'   => [46.5, 2.5],
-        'zoom'     => 6,
+        'center' => [46.5, 2.5],
+        'zoom' => 6,
         'zoom_fit' => 8,
     ],
 

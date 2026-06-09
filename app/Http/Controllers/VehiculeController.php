@@ -14,12 +14,12 @@ class VehiculeController extends Controller
 {
     public function index(Request $request): View
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
 
-        $search    = trim((string) $request->string('q'));
-        $filtSect  = (int) $request->integer('section', 0);
-        $status    = (string) $request->string('status', 'all');
+        $search = trim((string) $request->string('q'));
+        $filtSect = (int) $request->integer('section', 0);
+        $status = (string) $request->string('status', 'all');
 
         $query = Vehicule::query()
             ->with(['section'])
@@ -50,8 +50,8 @@ class VehiculeController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {
                 $q->where('vehicule.V_IMMATRICULATION', 'like', "%{$search}%")
-                  ->orWhere('vehicule.V_INDICATIF', 'like', "%{$search}%")
-                  ->orWhere('vehicule.V_MODELE', 'like', "%{$search}%");
+                    ->orWhere('vehicule.V_INDICATIF', 'like', "%{$search}%")
+                    ->orWhere('vehicule.V_MODELE', 'like', "%{$search}%");
             });
         }
 
@@ -65,121 +65,121 @@ class VehiculeController extends Controller
 
     private function vehiculeColumns(): array
     {
-        $warn = fn(?string $date) => $date && \Carbon\Carbon::parse($date)->lte(now()->addDays(30))
+        $warn = fn (?string $date) => $date && Carbon::parse($date)->lte(now()->addDays(30))
             ? '<i class="fas fa-exclamation-triangle text-warning me-1" title="Expire bientôt"></i>'
             : '';
 
         return [
             [
                 'key' => 'type', 'label' => 'Type', 'type' => 'html',
-                'value' => fn($v) => $v->TV_CODE
-                    ? '<i class="' . self::tvIcon($v->TV_CODE) . ' fa-lg" title="' . e($v->TV_LIBELLE ?? $v->TV_CODE) . '"></i>'
+                'value' => fn ($v) => $v->TV_CODE
+                    ? '<i class="'.self::tvIcon($v->TV_CODE).' fa-lg" title="'.e($v->TV_LIBELLE ?? $v->TV_CODE).'"></i>'
                     : '—',
-                'exportValue' => fn($v) => $v->TV_LIBELLE ?? $v->TV_CODE ?? '',
+                'exportValue' => fn ($v) => $v->TV_LIBELLE ?? $v->TV_CODE ?? '',
                 'mobile' => false, 'default' => true,
             ],
             [
                 'key' => 'indicatif', 'label' => 'Indicatif', 'type' => 'text',
-                'value' => fn($v) => $v->V_INDICATIF ?? '—',
+                'value' => fn ($v) => $v->V_INDICATIF ?? '—',
                 'alwaysVisible' => true, 'sortField' => 'V_INDICATIF', 'mobile' => true,
             ],
             [
                 'key' => 'immat', 'label' => 'Immatriculation', 'type' => 'text',
-                'value' => fn($v) => $v->V_IMMATRICULATION ?? '—',
+                'value' => fn ($v) => $v->V_IMMATRICULATION ?? '—',
                 'alwaysVisible' => true, 'sortField' => 'V_IMMATRICULATION', 'mobile' => true,
             ],
             [
                 'key' => 'section', 'label' => 'Section', 'type' => 'text',
-                'value' => fn($v) => $v->section?->S_CODE ?? '—',
+                'value' => fn ($v) => $v->section?->S_CODE ?? '—',
                 'mobile' => false, 'default' => true,
             ],
             [
                 'key' => 'modele', 'label' => 'Modèle', 'type' => 'text',
-                'value' => fn($v) => $v->V_MODELE ?? '—',
+                'value' => fn ($v) => $v->V_MODELE ?? '—',
                 'mobile' => false, 'default' => true,
             ],
             [
                 'key' => 'annee', 'label' => 'Année', 'type' => 'text',
-                'value' => fn($v) => $v->V_ANNEE ?? '—',
+                'value' => fn ($v) => $v->V_ANNEE ?? '—',
                 'mobile' => false, 'default' => false,
             ],
             [
                 'key' => 'statut', 'label' => 'Statut', 'type' => 'badge',
-                'value' => fn($v) => (int)($v->VP_OPERATIONNEL ?? -999) >= 3 ? '3'
-                    : ((int)($v->VP_OPERATIONNEL ?? -999) >= 1 ? '1' : '0'),
+                'value' => fn ($v) => (int) ($v->VP_OPERATIONNEL ?? -999) >= 3 ? '3'
+                    : ((int) ($v->VP_OPERATIONNEL ?? -999) >= 1 ? '1' : '0'),
                 'badgeMap' => [
                     '3' => ['Opérationnel', 'ob-badge-actif'],
                     '1' => ['Limité',       'ob-badge-ben'],
                     '0' => ['Indisponible', 'ob-badge-bloqued'],
                 ],
                 'mobile' => true, 'default' => true,
-                'exportValue' => fn($v) => match((int)($v->VP_OPERATIONNEL ?? 0)) {
+                'exportValue' => fn ($v) => match ((int) ($v->VP_OPERATIONNEL ?? 0)) {
                     2 => 'Opérationnel', 1 => 'Limité', default => 'Indisponible'
                 },
             ],
             [
                 'key' => 'assurance', 'label' => 'Assurance', 'type' => 'html',
-                'value' => fn($v) => $v->V_ASS_DATE
-                    ? $warn($v->V_ASS_DATE) . e(\Carbon\Carbon::parse($v->V_ASS_DATE)->format('d/m/Y'))
+                'value' => fn ($v) => $v->V_ASS_DATE
+                    ? $warn($v->V_ASS_DATE).e(Carbon::parse($v->V_ASS_DATE)->format('d/m/Y'))
                     : '—',
                 'mobile' => false, 'default' => true,
-                'exportValue' => fn($v) => $v->V_ASS_DATE ? \Carbon\Carbon::parse($v->V_ASS_DATE)->format('d/m/Y') : '',
+                'exportValue' => fn ($v) => $v->V_ASS_DATE ? Carbon::parse($v->V_ASS_DATE)->format('d/m/Y') : '',
             ],
             [
                 'key' => 'ct', 'label' => 'Contrôle technique', 'type' => 'html',
-                'value' => fn($v) => $v->V_CT_DATE
-                    ? $warn($v->V_CT_DATE) . e(\Carbon\Carbon::parse($v->V_CT_DATE)->format('d/m/Y'))
+                'value' => fn ($v) => $v->V_CT_DATE
+                    ? $warn($v->V_CT_DATE).e(Carbon::parse($v->V_CT_DATE)->format('d/m/Y'))
                     : '—',
                 'mobile' => false, 'default' => true,
-                'exportValue' => fn($v) => $v->V_CT_DATE ? \Carbon\Carbon::parse($v->V_CT_DATE)->format('d/m/Y') : '',
+                'exportValue' => fn ($v) => $v->V_CT_DATE ? Carbon::parse($v->V_CT_DATE)->format('d/m/Y') : '',
             ],
             [
                 'key' => 'revision', 'label' => 'Révision', 'type' => 'html',
-                'value' => fn($v) => $v->V_REV_DATE
-                    ? $warn($v->V_REV_DATE) . e(\Carbon\Carbon::parse($v->V_REV_DATE)->format('d/m/Y'))
+                'value' => fn ($v) => $v->V_REV_DATE
+                    ? $warn($v->V_REV_DATE).e(Carbon::parse($v->V_REV_DATE)->format('d/m/Y'))
                     : '—',
                 'mobile' => false, 'default' => false,
-                'exportValue' => fn($v) => $v->V_REV_DATE ? \Carbon\Carbon::parse($v->V_REV_DATE)->format('d/m/Y') : '',
+                'exportValue' => fn ($v) => $v->V_REV_DATE ? Carbon::parse($v->V_REV_DATE)->format('d/m/Y') : '',
             ],
             [
                 'key' => 'titre', 'label' => "Titre d'accès", 'type' => 'html',
-                'value' => fn($v) => $v->V_TITRE_DATE
-                    ? $warn($v->V_TITRE_DATE) . e(\Carbon\Carbon::parse($v->V_TITRE_DATE)->format('d/m/Y'))
+                'value' => fn ($v) => $v->V_TITRE_DATE
+                    ? $warn($v->V_TITRE_DATE).e(Carbon::parse($v->V_TITRE_DATE)->format('d/m/Y'))
                     : '—',
                 'mobile' => false, 'default' => false,
-                'exportValue' => fn($v) => $v->V_TITRE_DATE ? \Carbon\Carbon::parse($v->V_TITRE_DATE)->format('d/m/Y') : '',
+                'exportValue' => fn ($v) => $v->V_TITRE_DATE ? Carbon::parse($v->V_TITRE_DATE)->format('d/m/Y') : '',
             ],
             [
                 'key' => 'neige', 'label' => 'Neige', 'type' => 'html',
-                'value' => fn($v) => $v->V_FLAG1
+                'value' => fn ($v) => $v->V_FLAG1
                     ? '<i class="fas fa-snowflake text-info" title="Équipement neige"></i>'
                     : '—',
                 'mobile' => false, 'default' => false,
-                'exportValue' => fn($v) => $v->V_FLAG1 ? 'Oui' : '',
+                'exportValue' => fn ($v) => $v->V_FLAG1 ? 'Oui' : '',
             ],
             [
                 'key' => 'clim', 'label' => 'Clim', 'type' => 'html',
-                'value' => fn($v) => $v->V_FLAG2
+                'value' => fn ($v) => $v->V_FLAG2
                     ? '<i class="fas fa-wind text-primary" title="Climatisation"></i>'
                     : '—',
                 'mobile' => false, 'default' => false,
-                'exportValue' => fn($v) => $v->V_FLAG2 ? 'Oui' : '',
+                'exportValue' => fn ($v) => $v->V_FLAG2 ? 'Oui' : '',
             ],
             [
                 'key' => 'pa', 'label' => 'PA', 'type' => 'html',
-                'value' => fn($v) => $v->V_FLAG3
+                'value' => fn ($v) => $v->V_FLAG3
                     ? '<i class="fas fa-bullhorn text-warning" title="Public Address"></i>'
                     : '—',
                 'mobile' => false, 'default' => false,
-                'exportValue' => fn($v) => $v->V_FLAG3 ? 'Oui' : '',
+                'exportValue' => fn ($v) => $v->V_FLAG3 ? 'Oui' : '',
             ],
             [
                 'key' => 'att', 'label' => 'Att.', 'type' => 'html',
-                'value' => fn($v) => $v->V_FLAG4
+                'value' => fn ($v) => $v->V_FLAG4
                     ? '<i class="fas fa-link text-secondary" title="Attelage"></i>'
                     : '—',
                 'mobile' => false, 'default' => false,
-                'exportValue' => fn($v) => $v->V_FLAG4 ? 'Oui' : '',
+                'exportValue' => fn ($v) => $v->V_FLAG4 ? 'Oui' : '',
             ],
         ];
     }
@@ -188,14 +188,14 @@ class VehiculeController extends Controller
 
     public function create(): View
     {
-        $user     = auth()->user();
+        $user = auth()->user();
         [$types, $positions, $sections] = $this->formLookups();
 
         return view('vehicule.form', [
-            'vehicule'  => null,
-            'types'     => $types,
+            'vehicule' => null,
+            'types' => $types,
             'positions' => $positions,
-            'sections'  => $sections,
+            'sections' => $sections,
             'userSection' => (int) $user->P_SECTION,
         ]);
     }
@@ -217,10 +217,10 @@ class VehiculeController extends Controller
         [$types, $positions, $sections] = $this->formLookups();
 
         return view('vehicule.form', [
-            'vehicule'    => $vehicule,
-            'types'       => $types,
-            'positions'   => $positions,
-            'sections'    => $sections,
+            'vehicule' => $vehicule,
+            'types' => $types,
+            'positions' => $positions,
+            'sections' => $sections,
             'userSection' => (int) $vehicule->S_ID,
         ]);
     }
@@ -254,22 +254,22 @@ class VehiculeController extends Controller
     {
         return match ($code) {
             'ASSU', 'VSAV', 'VPS', 'MPS' => 'fas fa-ambulance',
-            'CTU', 'VTU', 'VPI'           => 'fas fa-truck',
-            'ERS'                          => 'fas fa-ship',
-            'GER'                          => 'fas fa-bolt',
-            'MOTO', 'QUAD'                 => 'fas fa-motorcycle',
-            'PCM'                          => 'fas fa-satellite-dish',
-            'REM'                          => 'fas fa-trailer',
-            'VCYN'                         => 'fas fa-dog',
-            'VELO'                         => 'fas fa-bicycle',
-            'VL', 'VLC', 'SSV'             => 'fas fa-car',
-            'VLHR'                         => 'fas fa-truck-monster',
-            'VSR'                          => 'fas fa-truck-pickup',
-            'VTD'                          => 'fas fa-hard-hat',
-            'VTH'                          => 'fas fa-bed',
-            'VTI'                          => 'fas fa-boxes',
-            'VTP'                          => 'fas fa-bus',
-            default                        => 'fas fa-car-side',
+            'CTU', 'VTU', 'VPI' => 'fas fa-truck',
+            'ERS' => 'fas fa-ship',
+            'GER' => 'fas fa-bolt',
+            'MOTO', 'QUAD' => 'fas fa-motorcycle',
+            'PCM' => 'fas fa-satellite-dish',
+            'REM' => 'fas fa-trailer',
+            'VCYN' => 'fas fa-dog',
+            'VELO' => 'fas fa-bicycle',
+            'VL', 'VLC', 'SSV' => 'fas fa-car',
+            'VLHR' => 'fas fa-truck-monster',
+            'VSR' => 'fas fa-truck-pickup',
+            'VTD' => 'fas fa-hard-hat',
+            'VTH' => 'fas fa-bed',
+            'VTI' => 'fas fa-boxes',
+            'VTP' => 'fas fa-bus',
+            default => 'fas fa-car-side',
         };
     }
 
@@ -295,50 +295,53 @@ class VehiculeController extends Controller
     {
         // HTML submits "" for empty <select> — pre-convert numeric fields to null/int.
         // VP_ID is varchar('OP','LIM'…) — keep as string, just normalise empty → null.
-        $intOrNull = fn(string $key) => $request->filled($key) ? (int) $request->input($key) : null;
-        $strOrNull = fn(string $key) => $request->filled($key) ? $request->input($key) : null;
+        $intOrNull = fn (string $key) => $request->filled($key) ? (int) $request->input($key) : null;
+        $strOrNull = fn (string $key) => $request->filled($key) ? $request->input($key) : null;
 
         $request->merge([
-            'VP_ID'         => $strOrNull('VP_ID'),
-            'V_ANNEE'       => $intOrNull('V_ANNEE'),
-            'V_KM'          => $intOrNull('V_KM'),
+            'VP_ID' => $strOrNull('VP_ID'),
+            'V_ANNEE' => $intOrNull('V_ANNEE'),
+            'V_KM' => $intOrNull('V_KM'),
             'V_KM_REVISION' => $intOrNull('V_KM_REVISION'),
             // V_EXTERNE handled via $request->boolean() — remove from validate to avoid
             // boolean failing when the checkbox is absent from the POST body.
         ]);
 
         $raw = $request->validate([
-            'TV_CODE'          => ['required', 'string', 'max:20'],
-            'V_IMMATRICULATION'=> ['required', 'string', 'max:20'],
-            'V_INDICATIF'      => ['nullable', 'string', 'max:50'],
-            'V_MODELE'         => ['nullable', 'string', 'max:50'],
-            'V_ANNEE'          => ['nullable', 'integer', 'min:1900', 'max:2100'],
-            'VP_ID'            => ['required', 'string', 'max:5'],
-            'S_ID'             => ['required', 'integer'],
-            'V_KM'             => ['nullable', 'integer', 'min:0'],
-            'V_KM_REVISION'    => ['nullable', 'integer', 'min:0'],
-            'V_ASS_DATE'       => ['nullable', 'date'],
-            'V_CT_DATE'        => ['nullable', 'date'],
-            'V_REV_DATE'       => ['nullable', 'date'],
-            'V_TITRE_DATE'     => ['nullable', 'date'],
-            'V_INVENTAIRE'     => ['nullable', 'string', 'max:50'],
-            'V_COMMENT'        => ['nullable', 'string', 'max:2000'],
+            'TV_CODE' => ['required', 'string', 'max:20'],
+            'V_IMMATRICULATION' => ['required', 'string', 'max:20'],
+            'V_INDICATIF' => ['nullable', 'string', 'max:50'],
+            'V_MODELE' => ['nullable', 'string', 'max:50'],
+            'V_ANNEE' => ['nullable', 'integer', 'min:1900', 'max:2100'],
+            'VP_ID' => ['required', 'string', 'max:5'],
+            'S_ID' => ['required', 'integer'],
+            'V_KM' => ['nullable', 'integer', 'min:0'],
+            'V_KM_REVISION' => ['nullable', 'integer', 'min:0'],
+            'V_ASS_DATE' => ['nullable', 'date'],
+            'V_CT_DATE' => ['nullable', 'date'],
+            'V_REV_DATE' => ['nullable', 'date'],
+            'V_TITRE_DATE' => ['nullable', 'date'],
+            'V_INVENTAIRE' => ['nullable', 'string', 'max:50'],
+            'V_COMMENT' => ['nullable', 'string', 'max:2000'],
         ]);
 
         // Normalise date fields to Y-m-d strings (or null)
         foreach (['V_ASS_DATE', 'V_CT_DATE', 'V_REV_DATE', 'V_TITRE_DATE'] as $f) {
             if (! empty($raw[$f])) {
-                try { $raw[$f] = Carbon::parse($raw[$f])->toDateString(); }
-                catch (\Exception) { $raw[$f] = null; }
+                try {
+                    $raw[$f] = Carbon::parse($raw[$f])->toDateString();
+                } catch (\Exception) {
+                    $raw[$f] = null;
+                }
             }
         }
 
         // Checkboxes: absent when unchecked, so read with boolean() outside validate()
         $raw['V_EXTERNE'] = $request->boolean('V_EXTERNE') ? 1 : 0;
-        $raw['V_FLAG1']   = $request->boolean('V_FLAG1')   ? 1 : 0;
-        $raw['V_FLAG2']   = $request->boolean('V_FLAG2')   ? 1 : 0;
-        $raw['V_FLAG3']   = $request->boolean('V_FLAG3')   ? 1 : 0;
-        $raw['V_FLAG4']   = $request->boolean('V_FLAG4')   ? 1 : 0;
+        $raw['V_FLAG1'] = $request->boolean('V_FLAG1') ? 1 : 0;
+        $raw['V_FLAG2'] = $request->boolean('V_FLAG2') ? 1 : 0;
+        $raw['V_FLAG3'] = $request->boolean('V_FLAG3') ? 1 : 0;
+        $raw['V_FLAG4'] = $request->boolean('V_FLAG4') ? 1 : 0;
 
         return $raw;
     }
@@ -362,7 +365,7 @@ class VehiculeController extends Controller
             ->join('evenement as e', 'ev.E_CODE', '=', 'e.E_CODE')
             ->join('evenement_horaire as eh', function ($j) {
                 $j->on('eh.E_CODE', '=', 'ev.E_CODE')
-                  ->on('eh.EH_ID',  '=', 'ev.EH_ID');
+                    ->on('eh.EH_ID', '=', 'ev.EH_ID');
             })
             ->where('ev.V_ID', $vehicule->V_ID)
             ->orderByDesc('eh.EH_DATE_DEBUT')

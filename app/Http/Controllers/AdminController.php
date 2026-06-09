@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,9 +13,9 @@ class AdminController extends Controller
 {
     public function monitoring(Request $request): View
     {
-        $search   = trim((string) $request->string('q'));
-        $ltCode   = (string) $request->string('type', 'ALL');
-        $pid      = (int) $request->integer('user', 0);
+        $search = trim((string) $request->string('q'));
+        $ltCode = (string) $request->string('type', 'ALL');
+        $pid = (int) $request->integer('user', 0);
 
         $query = DB::table('log_history as lh')
             ->leftJoin('pompier as p', 'lh.P_ID', '=', 'p.P_ID')
@@ -29,7 +30,7 @@ class AdminController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {
                 $q->where('lh.LH_COMPLEMENT', 'like', "%{$search}%")
-                  ->orWhere('p.P_NOM', 'like', "%{$search}%");
+                    ->orWhere('p.P_NOM', 'like', "%{$search}%");
             });
         }
 
@@ -41,7 +42,7 @@ class AdminController extends Controller
             $query->where('lh.P_ID', $pid);
         }
 
-        $items    = $query->paginate(50)->withQueryString();
+        $items = $query->paginate(50)->withQueryString();
         $logTypes = DB::table('log_type')->orderBy('LT_DESCRIPTION')->get(['LT_CODE', 'LT_DESCRIPTION']);
 
         return view('admin.monitoring', compact('items', 'search', 'ltCode', 'logTypes')
@@ -67,7 +68,7 @@ class AdminController extends Controller
             6 => ['label' => 'Modules',           'icon' => 'puzzle-piece'],
         ];
 
-        $grouped   = $rows->groupBy('TAB');
+        $grouped = $rows->groupBy('TAB');
         $activeTab = (int) session('_settings_tab', 0);
 
         // Settings whose behaviour has changed or is not yet wired in Laravel.
@@ -152,10 +153,10 @@ class AdminController extends Controller
     private function monitoringColumns(): array
     {
         return [
-            ['key'=>'date','label'=>'Date','type'=>'html','value'=>fn($log)=>$log->LH_STAMP ? '<span style="white-space:nowrap">'.e(\Carbon\Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i')).'</span>' : '—','alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($log)=>$log->LH_STAMP?\Carbon\Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i'):''],
-            ['key'=>'utilisateur','label'=>'Utilisateur','type'=>'text','value'=>fn($log)=>$log->actor ?? '—','alwaysVisible'=>true,'mobile'=>true,'exportable'=>true,'exportValue'=>fn($log)=>$log->actor ?? ''],
-            ['key'=>'action','label'=>'Action','type'=>'badge','value'=>fn($log)=>$log->LT_CODE ?? 'OTHER','badgeMap'=>['LOGIN'=>['Connexion','ob-badge-int'],'LOGOUT'=>['Déconnexion','ob-badge-archive'],'UPDATE'=>['Modification','ob-badge-ben'],'DELETE'=>['Suppression','ob-badge-bloqued'],'OTHER'=>['Action','ob-badge-ext']],'exportable'=>true,'exportValue'=>fn($log)=>$log->LT_DESCRIPTION ?? $log->LT_CODE ?? '','mobile'=>true],
-            ['key'=>'detail','label'=>'Détail','type'=>'text','value'=>fn($log)=>$log->LH_COMPLEMENT ?? '','mobile'=>false,'default'=>false,'exportable'=>true,'exportValue'=>fn($log)=>$log->LH_COMPLEMENT ?? ''],
+            ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'value' => fn ($log) => $log->LH_STAMP ? '<span style="white-space:nowrap">'.e(Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i')).'</span>' : '—', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($log) => $log->LH_STAMP ? Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i') : ''],
+            ['key' => 'utilisateur', 'label' => 'Utilisateur', 'type' => 'text', 'value' => fn ($log) => $log->actor ?? '—', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($log) => $log->actor ?? ''],
+            ['key' => 'action', 'label' => 'Action', 'type' => 'badge', 'value' => fn ($log) => $log->LT_CODE ?? 'OTHER', 'badgeMap' => ['LOGIN' => ['Connexion', 'ob-badge-int'], 'LOGOUT' => ['Déconnexion', 'ob-badge-archive'], 'UPDATE' => ['Modification', 'ob-badge-ben'], 'DELETE' => ['Suppression', 'ob-badge-bloqued'], 'OTHER' => ['Action', 'ob-badge-ext']], 'exportable' => true, 'exportValue' => fn ($log) => $log->LT_DESCRIPTION ?? $log->LT_CODE ?? '', 'mobile' => true],
+            ['key' => 'detail', 'label' => 'Détail', 'type' => 'text', 'value' => fn ($log) => $log->LH_COMPLEMENT ?? '', 'mobile' => false, 'default' => false, 'exportable' => true, 'exportValue' => fn ($log) => $log->LH_COMPLEMENT ?? ''],
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 //
 //  FPDI - Version 1.5.2
 //
@@ -25,7 +26,7 @@ class FilterASCIIHexDecode
     /**
      * Converts an ASCII hexadecimal encoded string into it's binary representation.
      *
-     * @param string $data The input string
+     * @param  string  $data  The input string
      * @return string
      */
     public function decode($data)
@@ -41,12 +42,12 @@ class FilterASCIIHexDecode
     /**
      * Converts a string into ASCII hexadecimal representation.
      *
-     * @param string $data The input string
-     * @param boolean $leaveEOD
+     * @param  string  $data  The input string
+     * @param  bool  $leaveEOD
      * @return string
      */
     public function encode($data, $leaveEOD = false)
     {
-        return current(unpack('H*', $data)) . ($leaveEOD ? '' : '>');
+        return current(unpack('H*', $data)).($leaveEOD ? '' : '>');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 //
 //  FPDI - Version 1.3.4
 //
@@ -17,17 +18,19 @@
 //  limitations under the License.
 //
 
-require_once('FilterASCII85.php');
+require_once 'FilterASCII85.php';
 
-class FilterASCII85_FPDI extends FilterASCII85 {
+class FilterASCII85_FPDI extends FilterASCII85
+{
+    public $fpdi;
 
-    var $fpdi;
-    
-    function FilterASCII85_FPDI(&$fpdi) {
-        $this->fpdi =& $fpdi;
+    public function FilterASCII85_FPDI(&$fpdi)
+    {
+        $this->fpdi = &$fpdi;
     }
 
-    function error($msg) {
+    public function error($msg)
+    {
         $this->fpdi->error($msg);
     }
 }

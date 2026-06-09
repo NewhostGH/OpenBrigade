@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -15,11 +14,11 @@ class DispoController extends Controller
     public function index(Request $request): View
     {
         $user = auth()->user();
-        $pid  = (int) $user->P_ID;
+        $pid = (int) $user->P_ID;
 
         $weeksAhead = 4;
-        $today  = now()->startOfDay();
-        $until  = $today->copy()->addWeeks($weeksAhead);
+        $today = now()->startOfDay();
+        $until = $today->copy()->addWeeks($weeksAhead);
 
         // Periods for the next 4 weeks
         $periods = DB::table('disponibilite_periode')
@@ -39,12 +38,12 @@ class DispoController extends Controller
         for ($w = 0; $w < $weeksAhead; $w++) {
             $week = [];
             for ($d = 0; $d < 7; $d++) {
-                $date    = $cursor->copy()->addDays($d);
+                $date = $cursor->copy()->addDays($d);
                 $dateKey = $date->format('Y-m-d');
-                $week[]  = [
-                    'date'     => $date,
-                    'key'      => $dateKey,
-                    'isToday'  => $date->isToday(),
+                $week[] = [
+                    'date' => $date,
+                    'key' => $dateKey,
+                    'isToday' => $date->isToday(),
                     'periodId' => $dispos[$dateKey] ?? null,
                 ];
             }

@@ -10,11 +10,11 @@ class CompanyController extends Controller
 {
     public function index(Request $request): View
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
 
         $search = trim((string) $request->string('q'));
-        $type   = (string) $request->string('type', 'ALL');
+        $type = (string) $request->string('type', 'ALL');
 
         $query = DB::table('company as c')
             ->leftJoin('type_company as tc', 'c.TC_CODE', '=', 'tc.TC_CODE')
@@ -29,8 +29,8 @@ class CompanyController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {
                 $q->where('c.C_NAME', 'like', "%{$search}%")
-                  ->orWhere('c.C_CONTACT_NAME', 'like', "%{$search}%")
-                  ->orWhere('c.C_EMAIL', 'like', "%{$search}%");
+                    ->orWhere('c.C_CONTACT_NAME', 'like', "%{$search}%")
+                    ->orWhere('c.C_EMAIL', 'like', "%{$search}%");
             });
         }
 
@@ -49,11 +49,11 @@ class CompanyController extends Controller
     private function companyColumns(): array
     {
         return [
-            ['key'=>'nom','label'=>'Nom','type'=>'text','value'=>fn($c)=>$c->C_NAME,'alwaysVisible'=>true,'sortField'=>'C_NAME','mobile'=>true],
-            ['key'=>'type','label'=>'Type','type'=>'text','value'=>fn($c)=>$c->TC_LIBELLE ?? $c->TC_CODE ?? '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($c)=>$c->TC_LIBELLE ?? $c->TC_CODE ?? ''],
-            ['key'=>'ville','label'=>'Ville','type'=>'text','value'=>fn($c)=>$c->C_CITY ? $c->C_CITY.($c->C_ZIP_CODE ? ' ('.$c->C_ZIP_CODE.')' : '') : '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($c)=>$c->C_CITY ?? ''],
-            ['key'=>'telephone','label'=>'Téléphone','type'=>'html','value'=>fn($c)=>$c->C_PHONE ? '<a href="tel:'.e($c->C_PHONE).'" class="text-decoration-none">'.e($c->C_PHONE).'</a>' : '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($c)=>$c->C_PHONE ?? ''],
-            ['key'=>'email','label'=>'E-mail','type'=>'html','value'=>fn($c)=>$c->C_EMAIL ? '<a href="mailto:'.e($c->C_EMAIL).'" class="text-decoration-none">'.e($c->C_EMAIL).'</a>' : '—','mobile'=>false,'exportable'=>true,'exportValue'=>fn($c)=>$c->C_EMAIL ?? ''],
+            ['key' => 'nom', 'label' => 'Nom', 'type' => 'text', 'value' => fn ($c) => $c->C_NAME, 'alwaysVisible' => true, 'sortField' => 'C_NAME', 'mobile' => true],
+            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($c) => $c->TC_LIBELLE ?? $c->TC_CODE ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->TC_LIBELLE ?? $c->TC_CODE ?? ''],
+            ['key' => 'ville', 'label' => 'Ville', 'type' => 'text', 'value' => fn ($c) => $c->C_CITY ? $c->C_CITY.($c->C_ZIP_CODE ? ' ('.$c->C_ZIP_CODE.')' : '') : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_CITY ?? ''],
+            ['key' => 'telephone', 'label' => 'Téléphone', 'type' => 'html', 'value' => fn ($c) => $c->C_PHONE ? '<a href="tel:'.e($c->C_PHONE).'" class="text-decoration-none">'.e($c->C_PHONE).'</a>' : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_PHONE ?? ''],
+            ['key' => 'email', 'label' => 'E-mail', 'type' => 'html', 'value' => fn ($c) => $c->C_EMAIL ? '<a href="mailto:'.e($c->C_EMAIL).'" class="text-decoration-none">'.e($c->C_EMAIL).'</a>' : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_EMAIL ?? ''],
         ];
     }
 }

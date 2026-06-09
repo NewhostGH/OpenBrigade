@@ -10,12 +10,12 @@ class MaintenanceController extends Controller
 {
     public function index(): View
     {
-        $phpVersion     = PHP_VERSION;
+        $phpVersion = PHP_VERSION;
         $laravelVersion = app()->version();
-        $dbVersion      = DB::selectOne('SELECT VERSION() as v')?->v ?? '—';
-        $appVersion     = DB::table('configuration')->where('ID', 1)->value('VALUE') ?? '—';
-        $env            = app()->environment();
-        $debugMode      = config('app.debug') ? 'Activé' : 'Désactivé';
+        $dbVersion = DB::selectOne('SELECT VERSION() as v')?->v ?? '—';
+        $appVersion = DB::table('configuration')->where('ID', 1)->value('VALUE') ?? '—';
+        $env = app()->environment();
+        $debugMode = config('app.debug') ? 'Activé' : 'Désactivé';
 
         $status = $this->migrationStatus();
 
@@ -37,7 +37,7 @@ class MaintenanceController extends Controller
             ->values();
 
         return $files->map(fn ($name) => [
-            'ran'  => $ran->has($name),
+            'ran' => $ran->has($name),
             'name' => $name,
         ])->toArray();
     }

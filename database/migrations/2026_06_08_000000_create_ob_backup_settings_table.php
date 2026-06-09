@@ -34,15 +34,15 @@ return new class extends Migration
 
         DB::table('ob_backup_settings')->insert([
             'retention_count' => 30,
-            'auto_enabled'    => false,
-            'frequency'       => 'daily',
-            'run_time'        => '03:00:00',
-            'start_date'      => now()->toDateString(),
-            'day_of_week'     => 1,
-            'day_of_month'    => 1,
-            'naming_pattern'  => 'backup_{date}_{time}',
-            'created_at'      => now(),
-            'updated_at'      => now(),
+            'auto_enabled' => false,
+            'frequency' => 'daily',
+            'run_time' => '03:00:00',
+            'start_date' => now()->toDateString(),
+            'day_of_week' => 1,
+            'day_of_month' => 1,
+            'naming_pattern' => 'backup_{date}_{time}',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 

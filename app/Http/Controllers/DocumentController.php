@@ -13,10 +13,10 @@ class DocumentController extends Controller
      */
     public function index(Request $request): View
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
-        $folderId  = (int) $request->integer('folder', 0);
-        $typeCode  = (string) $request->string('type', 'ALL');
+        $folderId = (int) $request->integer('folder', 0);
+        $typeCode = (string) $request->string('type', 'ALL');
 
         // All folders for the user's section (used to build breadcrumb + tree)
         $allFolders = DB::table('document_folder')
@@ -32,7 +32,7 @@ class DocumentController extends Controller
             ->values();
         if ($folderId === 0) {
             // Root: folders with no parent or parent = 0
-            $subFolders = $allFolders->filter(fn ($f) => !$f->DF_PARENT || $f->DF_PARENT === 0)
+            $subFolders = $allFolders->filter(fn ($f) => ! $f->DF_PARENT || $f->DF_PARENT === 0)
                 ->values();
         }
 
@@ -79,16 +79,18 @@ class DocumentController extends Controller
             return [];
         }
 
-        $crumbs   = [];
-        $current  = $folderId;
-        $visited  = [];
+        $crumbs = [];
+        $current = $folderId;
+        $visited = [];
 
-        while ($current > 0 && !in_array($current, $visited, true)) {
+        while ($current > 0 && ! in_array($current, $visited, true)) {
             $folder = $allFolders->firstWhere('DF_ID', $current);
-            if (!$folder) break;
-            $crumbs[]  = ['id' => $folder->DF_ID, 'name' => $folder->DF_NAME];
+            if (! $folder) {
+                break;
+            }
+            $crumbs[] = ['id' => $folder->DF_ID, 'name' => $folder->DF_NAME];
             $visited[] = $current;
-            $current   = (int) ($folder->DF_PARENT ?? 0);
+            $current = (int) ($folder->DF_PARENT ?? 0);
         }
 
         return array_reverse($crumbs);

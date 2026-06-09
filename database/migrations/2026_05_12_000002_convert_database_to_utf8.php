@@ -1,19 +1,19 @@
 <?php
 
-# project: OpenBrigade
+// project: OpenBrigade
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +34,8 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    private const CHARSET   = 'utf8mb4';
+    private const CHARSET = 'utf8mb4';
+
     private const COLLATION = 'utf8mb4_unicode_ci';
 
     public function up(): void
@@ -51,7 +52,7 @@ return new class extends Migration
 
         // 2. Convert every table in the database
         $tables = DB::select('SHOW TABLES');
-        $tableKey = 'Tables_in_' . $database;
+        $tableKey = 'Tables_in_'.$database;
 
         foreach ($tables as $row) {
             $table = $row->$tableKey;
@@ -75,7 +76,7 @@ return new class extends Migration
         ));
 
         $tables = DB::select('SHOW TABLES');
-        $tableKey = 'Tables_in_' . $database;
+        $tableKey = 'Tables_in_'.$database;
 
         foreach ($tables as $row) {
             $table = $row->$tableKey;

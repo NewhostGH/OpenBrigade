@@ -22,12 +22,12 @@ test('no inline style blocks in blade views', function () {
         if ($file->getExtension() !== 'php') {
             continue;
         }
-        $rel  = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $file->getRealPath());
+        $rel = str_replace(base_path().DIRECTORY_SEPARATOR, '', $file->getRealPath());
         $lines = file($file->getRealPath());
         foreach ($lines as $n => $line) {
             // Allow @vite directives and HTML comments, flag actual <style> tags
-            if (preg_match('/<style[\s>]/i', $line) && !str_contains($line, '{{--')) {
-                $violations[] = "$rel:" . ($n + 1) . " — " . trim($line);
+            if (preg_match('/<style[\s>]/i', $line) && ! str_contains($line, '{{--')) {
+                $violations[] = "$rel:".($n + 1).' — '.trim($line);
             }
         }
     }
@@ -35,8 +35,8 @@ test('no inline style blocks in blade views', function () {
     expect($violations)
         ->toBeEmpty(
             "Inline <style> blocks found in Blade views (Convention §3).\n"
-            . "Move CSS to resources/css/<module>.css and bundle via Vite.\n\n"
-            . implode("\n", $violations)
+            ."Move CSS to resources/css/<module>.css and bundle via Vite.\n\n"
+            .implode("\n", $violations)
         );
 });
 
@@ -60,22 +60,22 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
     // Files where legacy strings are structural (detection logic, bridge controller itself)
     // rather than navigational links that need migration.
     $exclude = [
-        'app' . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'Legacy',
-        'app' . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'AuthController.php',
+        'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.'Legacy',
+        'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.'AuthController.php',
     ];
 
     $violations = [];
 
     foreach ($dirs as $dir) {
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             continue;
         }
         $iter = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
         foreach ($iter as $file) {
-            if (!in_array($file->getExtension(), ['php'], true)) {
+            if (! in_array($file->getExtension(), ['php'], true)) {
                 continue;
             }
-            $rel = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $file->getRealPath());
+            $rel = str_replace(base_path().DIRECTORY_SEPARATOR, '', $file->getRealPath());
 
             // Skip excluded files/directories
             $skip = false;
@@ -93,7 +93,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
 
             for ($i = 0; $i < count($lines); $i++) {
                 $line = $lines[$i];
-                if (!preg_match($legacyPattern, $line)) {
+                if (! preg_match($legacyPattern, $line)) {
                     continue;
                 }
                 // Already flagged on the same line?
@@ -104,7 +104,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
                 // attributes where the <a> tag and the href: are on separate lines,
                 // and PHP arrays where the comment precedes the opening bracket.
                 $found = false;
-                $seen  = 0;
+                $seen = 0;
                 for ($j = $i - 1; $j >= 0 && $seen < 5; $j--) {
                     $candidate = trim($lines[$j]);
                     if ($candidate === '') {
@@ -119,7 +119,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
                 if ($found) {
                     continue;
                 }
-                $violations[] = "$rel:" . ($i + 1) . " — " . trim($line);
+                $violations[] = "$rel:".($i + 1).' — '.trim($line);
             }
         }
     }
@@ -127,9 +127,9 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
     expect($violations)
         ->toBeEmpty(
             "Legacy references without TODO: Migrate code marker (Convention §5).\n"
-            . "Add {{-- TODO: Migrate code --}} (Blade) or // TODO: Migrate code (PHP)\n"
-            . "on the line immediately before the reference.\n\n"
-            . implode("\n", $violations)
+            ."Add {{-- TODO: Migrate code --}} (Blade) or // TODO: Migrate code (PHP)\n"
+            ."on the line immediately before the reference.\n\n"
+            .implode("\n", $violations)
         );
 });
 
@@ -153,11 +153,11 @@ test('no legacy php files referenced without /legacy/ prefix', function () {
         if ($file->getExtension() !== 'php') {
             continue;
         }
-        $rel   = str_replace(base_path() . DIRECTORY_SEPARATOR, '', $file->getRealPath());
+        $rel = str_replace(base_path().DIRECTORY_SEPARATOR, '', $file->getRealPath());
         $lines = file($file->getRealPath());
         foreach ($lines as $n => $line) {
             if (preg_match($barePattern, $line)) {
-                $violations[] = "$rel:" . ($n + 1) . " — " . trim($line);
+                $violations[] = "$rel:".($n + 1).' — '.trim($line);
             }
         }
     }
@@ -165,7 +165,7 @@ test('no legacy php files referenced without /legacy/ prefix', function () {
     expect($violations)
         ->toBeEmpty(
             "Legacy PHP files referenced without /legacy/ prefix (Convention §5).\n"
-            . "Change url('/ins_foo.php') → url('/legacy/ins_foo.php').\n\n"
-            . implode("\n", $violations)
+            ."Change url('/ins_foo.php') → url('/legacy/ins_foo.php').\n\n"
+            .implode("\n", $violations)
         );
 });

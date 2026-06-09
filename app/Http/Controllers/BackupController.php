@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Process\Process;
 
 class BackupController extends Controller
@@ -28,13 +29,14 @@ class BackupController extends Controller
         $files = collect(Storage::disk($this->disk())->files($this->prefix()))
             ->map(function (string $path): array {
                 $filename = basename($path);
-                $size     = Storage::disk($this->disk())->size($path);
-                $mtime    = Storage::disk($this->disk())->lastModified($path);
+                $size = Storage::disk($this->disk())->size($path);
+                $mtime = Storage::disk($this->disk())->lastModified($path);
+
                 return [
                     'filename' => $filename,
-                    'path'     => $path,
-                    'size_kb'  => round($size / 1024, 1),
-                    'date'     => Carbon::createFromTimestamp($mtime),
+                    'path' => $path,
+                    'size_kb' => round($size / 1024, 1),
+                    'date' => Carbon::createFromTimestamp($mtime),
                 ];
             })
             ->sortByDesc('date')
@@ -49,17 +51,17 @@ class BackupController extends Controller
     {
         $data = $request->validate([
             'retention_count' => ['required', 'integer', 'min:1', 'max:365'],
-            'auto_enabled'    => ['nullable', 'boolean'],
-            'frequency'       => ['required', Rule::in(BackupSetting::FREQUENCIES)],
-            'run_time'        => ['required', 'date_format:H:i'],
-            'start_date'      => ['required', 'date'],
-            'day_of_week'     => ['required_if:frequency,weekly', 'nullable', 'integer', 'between:0,6'],
-            'day_of_month'    => ['required_if:frequency,monthly', 'nullable', 'integer', 'between:1,31'],
-            'naming_pattern'  => ['required', Rule::in(array_keys(BackupSetting::NAMING_PATTERNS))],
+            'auto_enabled' => ['nullable', 'boolean'],
+            'frequency' => ['required', Rule::in(BackupSetting::FREQUENCIES)],
+            'run_time' => ['required', 'date_format:H:i'],
+            'start_date' => ['required', 'date'],
+            'day_of_week' => ['required_if:frequency,weekly', 'nullable', 'integer', 'between:0,6'],
+            'day_of_month' => ['required_if:frequency,monthly', 'nullable', 'integer', 'between:1,31'],
+            'naming_pattern' => ['required', Rule::in(array_keys(BackupSetting::NAMING_PATTERNS))],
         ]);
 
         $data['auto_enabled'] = $request->boolean('auto_enabled');
-        $data['day_of_week']  = $data['frequency'] === 'weekly' ? $data['day_of_week'] : null;
+        $data['day_of_week'] = $data['frequency'] === 'weekly' ? $data['day_of_week'] : null;
         $data['day_of_month'] = $data['frequency'] === 'monthly' ? $data['day_of_month'] : null;
 
         BackupSetting::current()->update($data);
@@ -74,7 +76,7 @@ class BackupController extends Controller
 
         if ($error !== null) {
             return redirect()->route('admin.backup')
-                ->with('error', 'Échec de la sauvegarde : ' . $error);
+                ->with('error', 'Échec de la sauvegarde : '.$error);
         }
 
         return redirect()->route('admin.backup')
@@ -88,7 +90,7 @@ class BackupController extends Controller
      */
     public function createBackup(): array
     {
-        $db   = config('database.connections.' . config('database.default'));
+        $db = config('database.connections.'.config('database.default'));
         $host = $db['host'];
         $port = $db['port'];
         $name = $db['database'];
@@ -96,7 +98,7 @@ class BackupController extends Controller
         $pass = $db['password'];
 
         $filename = $this->buildFilename($name);
-        $destPath = Storage::disk($this->disk())->path($this->prefix() . '/' . $filename);
+        $destPath = Storage::disk($this->disk())->path($this->prefix().'/'.$filename);
 
         if (! is_dir(dirname($destPath))) {
             mkdir(dirname($destPath), 0755, true);
@@ -104,13 +106,13 @@ class BackupController extends Controller
 
         $cmd = [
             config('database.mysqldump_path', 'mysqldump'),
-            '--host=' . $host,
-            '--port=' . $port,
-            '--user=' . $user,
+            '--host='.$host,
+            '--port='.$port,
+            '--user='.$user,
             '--single-transaction',
             '--routines',
             '--triggers',
-            '--result-file=' . $destPath,
+            '--result-file='.$destPath,
             $name,
         ];
 
@@ -135,20 +137,20 @@ class BackupController extends Controller
     private function buildFilename(string $database): string
     {
         $pattern = BackupSetting::current()->naming_pattern;
-        $now     = Carbon::now();
+        $now = Carbon::now();
 
         $name = strtr($pattern, [
-            '{date}'     => $now->format('Y-m-d'),
-            '{time}'     => $now->format('H-i-s'),
+            '{date}' => $now->format('Y-m-d'),
+            '{time}' => $now->format('H-i-s'),
             '{database}' => $database,
         ]);
 
-        return $name . '.sql';
+        return $name.'.sql';
     }
 
-    public function download(string $filename): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function download(string $filename): StreamedResponse
     {
-        $path = $this->prefix() . '/' . $this->sanitize($filename);
+        $path = $this->prefix().'/'.$this->sanitize($filename);
         abort_unless(Storage::disk($this->disk())->exists($path), 404);
 
         return Storage::disk($this->disk())->download($path);
@@ -156,7 +158,7 @@ class BackupController extends Controller
 
     public function destroy(string $filename): RedirectResponse
     {
-        $path = $this->prefix() . '/' . $this->sanitize($filename);
+        $path = $this->prefix().'/'.$this->sanitize($filename);
         abort_unless(Storage::disk($this->disk())->exists($path), 404);
 
         Storage::disk($this->disk())->delete($path);
@@ -168,14 +170,14 @@ class BackupController extends Controller
     public function restore(Request $request): RedirectResponse
     {
         $request->validate([
-            'filename'  => ['required', 'string'],
-            'confirm'   => ['required', 'in:CONFIRMER'],
+            'filename' => ['required', 'string'],
+            'confirm' => ['required', 'in:CONFIRMER'],
         ]);
 
-        $path = $this->prefix() . '/' . $this->sanitize($request->input('filename'));
+        $path = $this->prefix().'/'.$this->sanitize($request->input('filename'));
         abort_unless(Storage::disk($this->disk())->exists($path), 404);
 
-        $db   = config('database.connections.' . config('database.default'));
+        $db = config('database.connections.'.config('database.default'));
         $host = $db['host'];
         $port = $db['port'];
         $name = $db['database'];
@@ -185,9 +187,9 @@ class BackupController extends Controller
 
         $cmd = [
             config('database.mysql_path', 'mysql'),
-            '--host=' . $host,
-            '--port=' . $port,
-            '--user=' . $user,
+            '--host='.$host,
+            '--port='.$port,
+            '--user='.$user,
             $name,
         ];
 
@@ -199,7 +201,7 @@ class BackupController extends Controller
 
         if (! $process->isSuccessful()) {
             return redirect()->route('admin.backup')
-                ->with('error', 'Échec de la restauration : ' . $process->getErrorOutput());
+                ->with('error', 'Échec de la restauration : '.$process->getErrorOutput());
         }
 
         return redirect()->route('admin.backup')

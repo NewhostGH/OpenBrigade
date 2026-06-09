@@ -32,7 +32,7 @@ class RunAutomaticBackup extends Command
         [$filename, $error] = $backups->createBackup();
 
         if ($error !== null) {
-            $this->error('Backup failed: ' . $error);
+            $this->error('Backup failed: '.$error);
 
             return self::FAILURE;
         }
@@ -83,9 +83,9 @@ class RunAutomaticBackup extends Command
     private function matchesSchedule(BackupSetting $settings, Carbon $now): bool
     {
         return match ($settings->frequency) {
-            'weekly'  => $now->dayOfWeek === (int) $settings->day_of_week,
+            'weekly' => $now->dayOfWeek === (int) $settings->day_of_week,
             'monthly' => $now->day === min((int) $settings->day_of_month, $now->daysInMonth),
-            default   => true,
+            default => true,
         };
     }
 

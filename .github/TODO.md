@@ -112,6 +112,7 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 - [x] Universal search across all fields
 - [x] Cotisations — per-member CRUD and org-wide page (batch save, Excel export, Prélèvements, Virements)
 - [x] Géolocalisation — Leaflet map with GPS markers
+- [ ] Rework grade system
 
 ### Activité — Events & Interventions (ACT)
 - [x] Event list and detail view

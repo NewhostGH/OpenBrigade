@@ -111,6 +111,7 @@ return new class extends Migration
                 }
 
                 $buffer = '';
+
                 continue;
             }
 

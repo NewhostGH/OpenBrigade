@@ -1,19 +1,19 @@
 <?php
 
-# project: OpenBrigade
+// project: OpenBrigade
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace App\Models;
 
@@ -43,22 +43,22 @@ class Personnel extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'P_BIRTHDATE'      => 'date',
+        'P_BIRTHDATE' => 'date',
         'P_DATE_ENGAGEMENT' => 'date',
-        'P_FIN'            => 'date',
-        'P_LAST_CONNECT'   => 'datetime',
-        'P_CREATE_DATE'    => 'date',
-        'P_LICENCE_DATE'   => 'date',
+        'P_FIN' => 'date',
+        'P_LAST_CONNECT' => 'datetime',
+        'P_CREATE_DATE' => 'date',
+        'P_LICENCE_DATE' => 'date',
         'P_LICENCE_EXPIRY' => 'date',
-        'P_MDP_EXPIRY'     => 'date',
-        'P_ACCEPT_DATE'    => 'datetime',
-        'P_ACCEPT_DATE2'   => 'datetime',
-        'P_HIDE'           => 'boolean',
-        'P_NOSPAM'         => 'boolean',
-        'NPAI'             => 'boolean',
-        'SUSPENDU'         => 'boolean',
-        'GP_FLAG1'         => 'boolean',
-        'GP_FLAG2'         => 'boolean',
+        'P_MDP_EXPIRY' => 'date',
+        'P_ACCEPT_DATE' => 'datetime',
+        'P_ACCEPT_DATE2' => 'datetime',
+        'P_HIDE' => 'boolean',
+        'P_NOSPAM' => 'boolean',
+        'NPAI' => 'boolean',
+        'SUSPENDU' => 'boolean',
+        'GP_FLAG1' => 'boolean',
+        'GP_FLAG2' => 'boolean',
     ];
 
     /** The section this person is directly attached to. */
@@ -131,17 +131,32 @@ class Personnel extends Model
         );
     }
 
-    public function statutBadgeLabel(): string { return $this->statutBadge()[0]; }
-    public function statutBadgeClass(): string { return $this->statutBadge()[1]; }
-    public function etatBadgeLabel(): string   { return $this->etatBadge()[0]; }
-    public function etatBadgeClass(): string   { return $this->etatBadge()[1]; }
+    public function statutBadgeLabel(): string
+    {
+        return $this->statutBadge()[0];
+    }
+
+    public function statutBadgeClass(): string
+    {
+        return $this->statutBadge()[1];
+    }
+
+    public function etatBadgeLabel(): string
+    {
+        return $this->etatBadge()[0];
+    }
+
+    public function etatBadgeClass(): string
+    {
+        return $this->etatBadge()[1];
+    }
 
     /** [label, css-class] for this person's statut badge (config-driven). */
     public function statutBadge(): array
     {
-        $labels  = config('personnel.statuts');
+        $labels = config('personnel.statuts');
         $classes = config('personnel.statut_badge_class');
-        $code    = $this->P_STATUT;
+        $code = $this->P_STATUT;
 
         return [$labels[$code] ?? $code, $classes[$code] ?? $classes['INT']];
     }
@@ -153,8 +168,8 @@ class Personnel extends Model
      */
     public static function statutBadgeMap(): array
     {
-        $labels  = config('personnel.statuts');
-        $map     = [];
+        $labels = config('personnel.statuts');
+        $map = [];
         foreach (config('personnel.statut_badge_class') as $code => $class) {
             $map[$code] = [$labels[$code] ?? $code, $class];
         }

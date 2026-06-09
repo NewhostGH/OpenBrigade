@@ -24,7 +24,7 @@ class LegacyBridgeController extends Controller
         }
 
         $legacyRoot = $this->resolveLegacyRoot((string) config('legacy_bridge.legacy_root', 'archive/legacy_app'));
-        $assetFullPath = $legacyRoot . DIRECTORY_SEPARATOR . $assetType . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $normalizedPath);
+        $assetFullPath = $legacyRoot.DIRECTORY_SEPARATOR.$assetType.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $normalizedPath);
 
         if (! is_file($assetFullPath)) {
             abort(404);
@@ -90,7 +90,7 @@ class LegacyBridgeController extends Controller
         }
 
         $legacyRoot = $this->resolveLegacyRoot((string) config('legacy_bridge.legacy_root', 'archive/legacy_app'));
-        $legacyPath = $legacyRoot . DIRECTORY_SEPARATOR . $legacyFile;
+        $legacyPath = $legacyRoot.DIRECTORY_SEPARATOR.$legacyFile;
 
         if (! is_file($legacyPath)) {
             abort(404);
@@ -134,8 +134,8 @@ class LegacyBridgeController extends Controller
 
         $this->hydrateLegacySession($request->user());
 
-        $_SERVER['PHP_SELF'] = '/' . $legacyFile;
-        $_SERVER['SCRIPT_NAME'] = '/' . $legacyFile;
+        $_SERVER['PHP_SELF'] = '/'.$legacyFile;
+        $_SERVER['SCRIPT_NAME'] = '/'.$legacyFile;
         $_SERVER['REQUEST_URI'] = $request->getRequestUri();
         $_SERVER['QUERY_STRING'] = (string) $request->server('QUERY_STRING', '');
     }

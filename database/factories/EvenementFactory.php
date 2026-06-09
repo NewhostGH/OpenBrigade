@@ -18,7 +18,7 @@ class EvenementFactory extends Factory
             'E_CODE' => fake()->unique()->numberBetween(900000, 999999),
             'TE_CODE' => 'FOR',
             'S_ID' => 0,
-            'E_LIBELLE' => 'DEV Event ' . fake()->words(2, true),
+            'E_LIBELLE' => 'DEV Event '.fake()->words(2, true),
             'E_LIEU' => fake()->city(),
             'E_NB_DPS' => 0,
             'E_OPEN_TO_EXT' => 0,

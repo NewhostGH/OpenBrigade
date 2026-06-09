@@ -28,12 +28,12 @@ function planningFakeUser(array $attrs = []): User
     /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
-        'P_ID'      => 1,
-        'P_NOM'     => 'Test',
-        'P_PRENOM'  => 'User',
+        'P_ID' => 1,
+        'P_NOM' => 'Test',
+        'P_PRENOM' => 'User',
         'P_SECTION' => 1,
-        'P_ACTIF'   => 1,
-        'P_MDP'     => bcrypt('secret'),
+        'P_ACTIF' => 1,
+        'P_MDP' => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(false);
 
@@ -51,13 +51,13 @@ function planningStubIndex(User $user): void
         $ctrl = Mockery::mock(PlanningController::class)->makePartial();
         $ctrl->shouldReceive('index')->andReturn(
             view('planning.index', [
-                'weeks'     => [],
-                'year'      => $now->year,
-                'month'     => $now->month,
-                'first'     => $now->copy()->startOfMonth(),
-                'prevYear'  => $now->year,
+                'weeks' => [],
+                'year' => $now->year,
+                'month' => $now->month,
+                'first' => $now->copy()->startOfMonth(),
+                'prevYear' => $now->year,
                 'prevMonth' => $now->month - 1 ?: 12,
-                'nextYear'  => $now->year,
+                'nextYear' => $now->year,
                 'nextMonth' => $now->month + 1 > 12 ? 1 : $now->month + 1,
             ])
         );

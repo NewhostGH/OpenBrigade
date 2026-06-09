@@ -20,7 +20,7 @@ class SectionFactory extends Factory
             'S_ID' => fake()->unique()->numberBetween(900, 999),
             'S_PARENT' => 0,
             'S_CODE' => $code,
-            'S_DESCRIPTION' => 'Development ' . $code,
+            'S_DESCRIPTION' => 'Development '.$code,
             'S_HIDE' => 0,
             'S_INACTIVE' => 0,
             'S_ORDER' => fake()->numberBetween(1, 99),
