@@ -38,3 +38,57 @@
 }
 
 .ob-pers-sidenav-link .ob-badge { margin-left: auto; }
+
+/* ── Multi-select checkbox list (Accès tab) ──────────────────────────────── */
+.ob-multiselect-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px;
+    border: 1px solid var(--component-border, #dee2e6);
+    border-radius: 6px;
+    background: var(--input-bg, #fff);
+    min-height: 42px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.ob-multiselect-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--component-border, #dee2e6);
+    background: var(--card-bg, #fff);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .15s, background .15s, color .15s;
+    white-space: nowrap;
+}
+
+.ob-multiselect-item:hover {
+    border-color: var(--accent, #0d6efd);
+    background: color-mix(in srgb, var(--accent, #0d6efd) 8%, transparent);
+}
+
+.ob-multiselect-item.ob-selected {
+    border-color: var(--accent, #0d6efd);
+    background: color-mix(in srgb, var(--accent, #0d6efd) 12%, transparent);
+    color: var(--accent, #0d6efd);
+    font-weight: 500;
+}
+
+.ob-multiselect-cb {
+    display: none;
+}
+
+.ob-multiselect-check {
+    font-size: 10px;
+    display: none;
+}
+
+.ob-multiselect-item.ob-selected .ob-multiselect-check {
+    display: inline;
+}

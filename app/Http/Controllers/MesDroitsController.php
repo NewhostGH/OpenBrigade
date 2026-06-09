@@ -29,10 +29,13 @@ class MesDroitsController extends Controller
         $roleId = $request->integer('role') ?: null;
 
         // Origin maps (display only): which group/role grants each feature.
-        $groupIds = array_values(array_unique(array_filter([
-            (int) $user->GP_ID,
-            (int) ($user->GP_ID2 ?: $user->GP_ID),
-        ], fn ($v) => $v !== null)));
+        $groupIds = DB::table('ob_personnel_group')
+            ->where('person_id', (int) $user->P_ID)
+            ->where('group_id', '!=', -1)
+            ->pluck('group_id')
+            ->map(fn ($v) => (int) $v)
+            ->values()
+            ->all();
 
         $origins = []; // feature_id => [labels]
         $this->collectOrigins(
@@ -43,15 +46,11 @@ class MesDroitsController extends Controller
                 ->get(['gp.feature_id', 'g.name'])
         );
 
-        $chain = $this->resolver->sectionChain($sectionId);
         $roleQuery = DB::table('ob_user_assignment as a')
             ->join('ob_group as g', 'g.id', '=', 'a.group_id')
             ->join('ob_group_permission as gp', 'gp.group_id', '=', 'a.group_id')
             ->where('a.person_id', (int) $user->P_ID)
             ->where('g.kind', 'role');
-        if ($chain !== []) {
-            $roleQuery->whereIn('a.section_id', $chain);
-        }
         if ($roleId !== null) {
             $roleQuery->where('a.group_id', $roleId);
         }

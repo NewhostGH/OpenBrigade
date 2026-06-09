@@ -43,8 +43,9 @@
                 @php
                     $ctxSections = $ctxSections ?? collect();
                     $ctxRoles = $ctxRoles ?? collect();
-                    $activeSectionLabel = optional($ctxSections->firstWhere('S_ID', $ctxActiveSection))->S_DESCRIPTION
-                        ?? 'Section';
+                    $activeSectionLabel = $ctxActiveSection !== null
+                        ? (optional($ctxSections->firstWhere('S_ID', $ctxActiveSection))->S_DESCRIPTION ?? 'Section')
+                        : 'Toutes';
                     $activeRoleLabel = $ctxActiveRole
                         ? (optional($ctxRoles->firstWhere('id', $ctxActiveRole))->name ?? 'Rôle')
                         : 'Tous mes rôles';
@@ -56,6 +57,14 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
                         <li><h6 class="dropdown-header">Section active</h6></li>
+                        <li>
+                            <a class="dropdown-item dropdown-item-profil {{ $ctxActiveSection === null ? 'active' : '' }}"
+                                href="{{ route('context.section', ['s' => 'all']) }}">
+                                <i class="fas fa-layer-group fa-fw ob-nav-item-icon"></i>
+                                Toutes mes sections
+                                @if ($ctxActiveSection === null)<i class="fas fa-check ms-2 text-success"></i>@endif
+                            </a>
+                        </li>
                         @forelse ($ctxSections as $s)
                             <li>
                                 <a class="dropdown-item dropdown-item-profil {{ (int) $s->S_ID === (int) $ctxActiveSection ? 'active' : '' }}"

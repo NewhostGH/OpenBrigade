@@ -20,7 +20,7 @@ class ContextController extends Controller
         $user = $request->user();
         $sId = $request->string('s')->toString();
 
-        if ($sId === '' || $sId === 'home') {
+        if ($sId === '' || $sId === 'home' || $sId === 'all') {
             $request->session()->forget('hab.section');
         } else {
             $allowed = $this->resolver->userSections($user)->pluck('S_ID')

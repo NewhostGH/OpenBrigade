@@ -22,6 +22,10 @@ class ObUserAssignment extends Model
         'group_id' => 'integer',
     ];
 
+    protected $attributes = [
+        'section_id' => null,
+    ];
+
     public function person(): BelongsTo
     {
         return $this->belongsTo(Personnel::class, 'person_id', 'P_ID');

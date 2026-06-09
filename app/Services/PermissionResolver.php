@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\DB;
  *      (section + all ancestors) that defines an explicit ceiling must
  *      include the feature (parent caps child); AND
  *   2. the user holds a grant for it — either a global group
- *      (pompier.GP_ID / GP_ID2, always applied) or a role assigned in the
- *      active section or one of its ancestors.
+ *      (ob_personnel_group, always applied) or a role (ob_user_assignment,
+ *      global or scoped to the active section / one of its ancestors).
  *
  * Registered as a singleton so the per-request lookups below are memoized.
  */
@@ -58,12 +58,13 @@ class PermissionResolver
             }
         }
 
-        // Roles held in the active section or an ancestor of it.
+        // Roles: global (section_id = null) or scoped to the active section chain.
         foreach ($this->userRoleAssignments($user) as $a) {
             if ($roleFilter !== null && (int) $a->group_id !== $roleFilter) {
                 continue;
             }
-            if ($chain !== [] && ! in_array((int) $a->section_id, $chain, true)) {
+            $sid = isset($a->section_id) && $a->section_id !== null ? (int) $a->section_id : null;
+            if ($sid !== null && $chain !== [] && ! in_array($sid, $chain, true)) {
                 continue;
             }
             if (in_array($fid, $this->groupFeatures((int) $a->group_id), true)) {
@@ -96,7 +97,8 @@ class PermissionResolver
             if ($roleFilter !== null && (int) $a->group_id !== $roleFilter) {
                 continue;
             }
-            if ($chain !== [] && ! in_array((int) $a->section_id, $chain, true)) {
+            $sid = isset($a->section_id) && $a->section_id !== null ? (int) $a->section_id : null;
+            if ($sid !== null && $chain !== [] && ! in_array($sid, $chain, true)) {
                 continue;
             }
             $granted = array_merge($granted, $this->groupFeatures((int) $a->group_id));
@@ -149,16 +151,16 @@ class PermissionResolver
      */
     public function userSections(User $user): Collection
     {
-        $ids = DB::table('ob_user_assignment')
+        $ids = DB::table('ob_personnel_section')
             ->where('person_id', (int) $user->P_ID)
             ->pluck('section_id')
             ->map(fn ($v) => (int) $v);
 
-        if ($user->P_SECTION) {
+        if ($user->P_SECTION !== null) {
             $ids->push((int) $user->P_SECTION);
         }
 
-        $ids = $ids->unique()->filter(fn ($v) => $v > 0)->values();
+        $ids = $ids->unique()->filter(fn ($v) => $v >= 0)->values();
         if ($ids->isEmpty()) {
             return collect();
         }
@@ -178,22 +180,14 @@ class PermissionResolver
      */
     public function userRoles(User $user, ?int $sId): Collection
     {
-        $chain = $this->sectionChain($sId);
-
-        $query = DB::table('ob_user_assignment as a')
+        return DB::table('ob_user_assignment as a')
             ->join('ob_group as g', 'g.id', '=', 'a.group_id')
             ->where('a.person_id', (int) $user->P_ID)
-            ->where('g.kind', ObGroup::KIND_ROLE);
-
-        if ($chain !== []) {
-            $query->whereIn('a.section_id', $chain);
-        }
-
-        return $query
+            ->where('g.kind', ObGroup::KIND_ROLE)
             ->orderBy('g.ordering')
-            ->get(['g.id', 'g.name', 'a.section_id'])
-            ->map(function ($r) use ($sId) {
-                $r->inherited = (int) $r->section_id !== (int) $sId;
+            ->get(['g.id', 'g.name'])
+            ->map(function ($r) {
+                $r->inherited = false;
 
                 return $r;
             })
@@ -208,12 +202,15 @@ class PermissionResolver
         return (int) $user->GP_ID === -1 || (int) ($user->GP_ID2 ?? $user->GP_ID) === -1;
     }
 
-    /** @return int[] [GP_ID, GP_ID2] without duplicates */
+    /** @return int[] group ids from ob_personnel_group (excludes the blocked sentinel -1) */
     protected function userGroupIds(User $user): array
     {
-        $gp2 = $user->GP_ID2 ?: $user->GP_ID;
-
-        return array_values(array_unique([(int) $user->GP_ID, (int) $gp2]));
+        return DB::table('ob_personnel_group')
+            ->where('person_id', (int) $user->P_ID)
+            ->where('group_id', '!=', -1)
+            ->pluck('group_id')
+            ->map(fn ($v) => (int) $v)
+            ->all();
     }
 
     /**

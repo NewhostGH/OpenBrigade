@@ -112,7 +112,7 @@
                     <div class="tab-pane fade show active" id="tab-identite">
                         <div class="row g-2">
 
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <label class="form-label form-label-sm" for="P_CIVILITE">Civilité</label>
                                 <select id="P_CIVILITE" name="P_CIVILITE"
                                         class="form-select form-select-sm @error('P_CIVILITE') is-invalid @enderror">
@@ -124,7 +124,23 @@
                                 @error('P_CIVILITE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-2">
+                                <label class="form-label form-label-sm" for="P_NOM">Nom *</label>
+                                <input id="P_NOM" name="P_NOM" type="text"
+                                       class="form-control form-control-sm @error('P_NOM') is-invalid @enderror"
+                                       value="{{ $val('P_NOM') }}" required>
+                                @error('P_NOM')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label form-label-sm" for="P_NOM_NAISSANCE">Nom de naissance</label>
+                                <input id="P_NOM_NAISSANCE" name="P_NOM_NAISSANCE" type="text"
+                                       class="form-control form-control-sm @error('P_NOM_NAISSANCE') is-invalid @enderror"
+                                       value="{{ $val('P_NOM_NAISSANCE') }}">
+                                @error('P_NOM_NAISSANCE')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_PRENOM">Prénom *</label>
                                 <input id="P_PRENOM" name="P_PRENOM" type="text"
                                        class="form-control form-control-sm @error('P_PRENOM') is-invalid @enderror"
@@ -132,7 +148,7 @@
                                 @error('P_PRENOM')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_PRENOM2">Prénom 2</label>
                                 <input id="P_PRENOM2" name="P_PRENOM2" type="text"
                                        class="form-control form-control-sm @error('P_PRENOM2') is-invalid @enderror"
@@ -151,22 +167,6 @@
                                 @error('P_SEXE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-5">
-                                <label class="form-label form-label-sm" for="P_NOM">Nom *</label>
-                                <input id="P_NOM" name="P_NOM" type="text"
-                                       class="form-control form-control-sm @error('P_NOM') is-invalid @enderror"
-                                       value="{{ $val('P_NOM') }}" required>
-                                @error('P_NOM')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label form-label-sm" for="P_NOM_NAISSANCE">Nom de naissance</label>
-                                <input id="P_NOM_NAISSANCE" name="P_NOM_NAISSANCE" type="text"
-                                       class="form-control form-control-sm @error('P_NOM_NAISSANCE') is-invalid @enderror"
-                                       value="{{ $val('P_NOM_NAISSANCE') }}">
-                                @error('P_NOM_NAISSANCE')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-
                             <div class="col-md-3">
                                 <label class="form-label form-label-sm" for="P_CODE">Matricule *</label>
                                 <input id="P_CODE" name="P_CODE" type="text"
@@ -175,7 +175,19 @@
                                 @error('P_CODE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
+                                <label class="form-label form-label-sm" for="P_ABBREGE">
+                                    Abrégé
+                                    <span class="text-muted fw-normal" style="font-size:0.7rem;">(indicatif radio)</span>
+                                </label>
+                                <input id="P_ABBREGE" name="P_ABBREGE" type="text"
+                                       class="form-control form-control-sm @error('P_ABBREGE') is-invalid @enderror"
+                                       maxlength="20" placeholder="ex. SP123"
+                                       value="{{ $val('P_ABBREGE') }}">
+                                @error('P_ABBREGE')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_GRADE">Grade</label>
                                 @php
                                     $gradeList = ['ADC','ADJ','AMB','AS','ASP','CCH','CD','CDT','CE','CG1',
@@ -191,7 +203,7 @@
                                 @endphp
                                 <div class="d-flex align-items-center gap-2">
                                     <select id="P_GRADE" name="P_GRADE"
-                                            class="form-select form-select-sm @error('P_GRADE') is-invalid @enderror"
+                                            class="form-select form-select-sm flex-grow-1 @error('P_GRADE') is-invalid @enderror"
                                             onchange="updateGradePreview(this.value)">
                                         <option value="">— aucun —</option>
                                         @foreach ($gradeList as $g)
@@ -206,7 +218,7 @@
                                 @error('P_GRADE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_STATUT">Statut *</label>
                                 <select id="P_STATUT" name="P_STATUT"
                                         class="form-select form-select-sm @error('P_STATUT') is-invalid @enderror" required>
@@ -225,12 +237,12 @@
                                 @error('P_PROFESSION')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-5">
-                                <label class="form-label form-label-sm" for="P_SECTION">Section</label>
+                            <div class="col-md-3">
+                                <label class="form-label form-label-sm" for="P_SECTION">Section par défaut</label>
                                 <select id="P_SECTION" name="P_SECTION"
                                         class="form-select form-select-sm @error('P_SECTION') is-invalid @enderror">
                                     <option value="">—</option>
-                                    @foreach ($sections as $section)
+                                    @foreach ($accessibleSections as $section)
                                         <option value="{{ $section->S_ID }}"
                                                 @selected((string)$val('P_SECTION')===(string)$section->S_ID)>
                                             {{ $section->S_CODE }}{{ $section->S_DESCRIPTION ? ' — '.$section->S_DESCRIPTION : '' }}
@@ -240,7 +252,7 @@
                                 @error('P_SECTION')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_DATE_ENGAGEMENT">Date d'entrée</label>
                                 <input id="P_DATE_ENGAGEMENT" name="P_DATE_ENGAGEMENT" type="date"
                                        class="form-control form-control-sm @error('P_DATE_ENGAGEMENT') is-invalid @enderror"
@@ -248,7 +260,7 @@
                                 @error('P_DATE_ENGAGEMENT')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_FIN">Date de fin</label>
                                 <input id="P_FIN" name="P_FIN" type="date"
                                        class="form-control form-control-sm @error('P_FIN') is-invalid @enderror"
@@ -256,17 +268,6 @@
                                 @error('P_FIN')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <div class="col-md-3">
-                                <label class="form-label form-label-sm" for="P_ABBREGE">
-                                    Abrégé
-                                    <span class="text-muted fw-normal" style="font-size:0.7rem;">(indicatif radio)</span>
-                                </label>
-                                <input id="P_ABBREGE" name="P_ABBREGE" type="text"
-                                       class="form-control form-control-sm @error('P_ABBREGE') is-invalid @enderror"
-                                       maxlength="20" placeholder="ex. SP123"
-                                       value="{{ $val('P_ABBREGE') }}">
-                                @error('P_ABBREGE')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
 
                         </div>
                     </div>
@@ -341,6 +342,27 @@
                             <i class="fas fa-info-circle me-1"></i>
                             Personne à contacter en cas d'urgence.
                         </p>
+                        <div class="mb-3">
+                            <label class="form-label form-label-sm" for="P_URGENCE_PERSON_ID">
+                                Lier à un membre
+                                <span class="text-muted fw-normal" style="font-size:0.7rem;">— les coordonnées sont synchronisées à chaque enregistrement</span>
+                            </label>
+                            <select id="P_URGENCE_PERSON_ID" name="P_URGENCE_PERSON_ID"
+                                    class="form-select form-select-sm @error('P_URGENCE_PERSON_ID') is-invalid @enderror">
+                                <option value="">— saisie manuelle —</option>
+                                @foreach ($allPersonnel as $p)
+                                    <option value="{{ $p->P_ID }}"
+                                            data-prenom="{{ $p->P_PRENOM }}"
+                                            data-nom="{{ $p->P_NOM }}"
+                                            data-phone="{{ $p->P_PHONE }}"
+                                            data-email="{{ $p->P_EMAIL }}"
+                                            @selected((string)$val('P_URGENCE_PERSON_ID')===(string)$p->P_ID)>
+                                        {{ strtoupper($p->P_NOM) }} {{ $p->P_PRENOM }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('P_URGENCE_PERSON_ID')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
                         <div class="row g-2">
                             <div class="col-md-4">
                                 <label class="form-label form-label-sm" for="P_RELATION_PRENOM">Prénom</label>
@@ -363,7 +385,7 @@
                                        value="{{ $val('P_RELATION_PHONE') }}">
                                 @error('P_RELATION_PHONE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-12">
                                 <label class="form-label form-label-sm" for="P_RELATION_MAIL">Email</label>
                                 <input id="P_RELATION_MAIL" name="P_RELATION_MAIL" type="email"
                                        class="form-control form-control-sm @error('P_RELATION_MAIL') is-invalid @enderror"
@@ -451,6 +473,7 @@
                                            @checked((bool)$val('P_HIDE', false))>
                                     <label class="form-check-label form-label-sm" for="P_HIDE">Masqué des listes</label>
                                 </div>
+                                <small class="text-muted d-block ps-4" style="font-size:0.7rem;">N'apparaît pas dans les listes publiques et les recherches.</small>
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="form-check">
@@ -459,6 +482,7 @@
                                            @checked((bool)$val('P_NOSPAM', false))>
                                     <label class="form-check-label form-label-sm" for="P_NOSPAM">No spam</label>
                                 </div>
+                                <small class="text-muted d-block ps-4" style="font-size:0.7rem;">Exclu des envois d'emails groupés et communications automatiques.</small>
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="form-check">
@@ -470,6 +494,7 @@
                                         NPAI <small class="text-muted">(adresse invalide)</small>
                                     </label>
                                 </div>
+                                <small class="text-muted d-block ps-4" style="font-size:0.7rem;">N'habite Plus À l'Adresse Indiquée — adresse postale réputée invalide.</small>
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="form-check">
@@ -478,6 +503,7 @@
                                            @checked((bool)$val('SUSPENDU', false))>
                                     <label class="form-check-label form-label-sm" for="SUSPENDU">Suspendu</label>
                                 </div>
+                                <small class="text-muted d-block ps-4" style="font-size:0.7rem;">Compte temporairement suspendu ; accès à l'application bloqué.</small>
                             </div>
                             <div class="col-12" id="npaiDateWrap" style="{{ (bool)$val('NPAI', false) ? '' : 'display:none;' }}">
                                 <div style="max-width:200px;">
@@ -498,108 +524,98 @@
                             <i class="fas fa-shield-alt me-1"></i>
                             Droits d'accès et affiliation organisationnelle.
                         </p>
-                        <div class="row g-2">
+                        <div class="row g-3">
 
-                            <div class="col-md-6">
-                                <label class="form-label form-label-sm" for="GP_ID">Droit d'accès (principal)</label>
-                                <select id="GP_ID" name="GP_ID"
-                                        class="form-select form-select-sm @error('GP_ID') is-invalid @enderror">
-                                    <option value="">— aucun —</option>
-                                    @foreach ($groupes as $g)
-                                        <option value="{{ $g->id }}"
-                                                @selected((string)$val('GP_ID')===(string)$g->id)>
-                                            {{ $g->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('GP_ID')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label form-label-sm" for="GP_ID2">Droit d'accès 2</label>
-                                <select id="GP_ID2" name="GP_ID2"
-                                        class="form-select form-select-sm @error('GP_ID2') is-invalid @enderror">
-                                    <option value="">— aucun —</option>
-                                    @foreach ($groupes as $g)
-                                        <option value="{{ $g->id }}"
-                                                @selected((string)$val('GP_ID2')===(string)$g->id)>
-                                            {{ $g->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('GP_ID2')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-
-                            <div class="col-md-8">
-                                <label class="form-label form-label-sm" for="C_ID">Entreprise</label>
-                                <select id="C_ID" name="C_ID"
-                                        class="form-select form-select-sm @error('C_ID') is-invalid @enderror">
-                                    <option value="">— aucune —</option>
-                                    @foreach ($companies as $co)
-                                        <option value="{{ $co->C_ID }}"
-                                                @selected((string)$val('C_ID')===(string)$co->C_ID)>
-                                            {{ $co->C_NAME }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('C_ID')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-
-                            {{-- Section-scoped organisational roles (ob_user_assignment).
-                                 A member can belong to several sections through these roles. --}}
                             @if (auth()->user()->hasPermission(9))
+
+                                {{-- ── Sections ───────────────────────────── --}}
                                 <div class="col-12">
-                                    <p class="ob-section-title mb-1 mt-2">Rôles par section</p>
+                                    <label class="form-label form-label-sm">Sections</label>
                                     <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
-                                        Un membre peut appartenir à plusieurs sections via ses rôles. Un rôle sur une
-                                        section parente s'applique aussi à ses sections filles.
+                                        Sections auxquelles ce membre appartient (en plus de la section par défaut définie dans Identité).
                                     </p>
-
-                                    <div id="ob-roles-rows" class="d-flex flex-column gap-2">
-                                        @forelse ($assignments as $i => $a)
-                                            <div class="d-flex gap-2 align-items-center ob-role-row">
-                                                <select name="roles[{{ $i }}][section_id]" class="form-select form-select-sm" style="max-width:280px;">
-                                                    <option value="">Section…</option>
-                                                    @foreach ($sections as $s)
-                                                        <option value="{{ $s->S_ID }}" @selected((int) $a->section_id === (int) $s->S_ID)>
-                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                <select name="roles[{{ $i }}][group_id]" class="form-select form-select-sm" style="max-width:240px;">
-                                                    <option value="">Rôle…</option>
-                                                    @foreach ($roles as $r)
-                                                        <option value="{{ $r->id }}" @selected((int) $a->group_id === (int) $r->id)>{{ $r->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <button type="button" class="btn btn-sm btn-outline-danger ob-role-remove"><i class="fas fa-times"></i></button>
-                                            </div>
-                                        @empty
-                                        @endforelse
+                                    <input type="text" class="form-control form-control-sm mb-2 ob-multiselect-search"
+                                           data-ob-target="sections-wrap"
+                                           placeholder="Rechercher une section…"
+                                           autocomplete="off">
+                                    <div class="ob-multiselect-wrap" id="sections-wrap" data-ob-multiselect>
+                                        @foreach ($sections as $s)
+                                            @php $sid = (int) $s->S_ID; @endphp
+                                            <label class="ob-multiselect-item @if(in_array($sid, $currentSectionIds)) ob-selected @endif">
+                                                <input type="checkbox" name="sections[]" value="{{ $sid }}"
+                                                       @checked(in_array($sid, $currentSectionIds))
+                                                       class="ob-multiselect-cb">
+                                                <span class="ob-multiselect-label">
+                                                    <span class="fw-semibold">{{ $s->S_CODE }}</span>
+                                                    @if($s->S_DESCRIPTION)
+                                                        <span class="text-muted ms-1">— {{ $s->S_DESCRIPTION }}</span>
+                                                    @endif
+                                                </span>
+                                                <i class="fas fa-check ob-multiselect-check"></i>
+                                            </label>
+                                        @endforeach
+                                        @if ($sections->isEmpty())
+                                            <span class="text-muted" style="font-size:var(--font-size-xs);">Aucune section disponible.</span>
+                                        @endif
                                     </div>
-
-                                    <template id="ob-role-template">
-                                        <div class="d-flex gap-2 align-items-center ob-role-row">
-                                            <select name="roles[__IDX__][section_id]" class="form-select form-select-sm" style="max-width:280px;">
-                                                <option value="">Section…</option>
-                                                @foreach ($sections as $s)
-                                                    <option value="{{ $s->S_ID }}">{{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}</option>
-                                                @endforeach
-                                            </select>
-                                            <select name="roles[__IDX__][group_id]" class="form-select form-select-sm" style="max-width:240px;">
-                                                <option value="">Rôle…</option>
-                                                @foreach ($roles as $r)
-                                                    <option value="{{ $r->id }}">{{ $r->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <button type="button" class="btn btn-sm btn-outline-danger ob-role-remove"><i class="fas fa-times"></i></button>
-                                        </div>
-                                    </template>
-
-                                    <button type="button" id="ob-role-add" class="btn btn-sm btn-outline-primary mt-2">
-                                        <i class="fas fa-plus me-1"></i>Ajouter un rôle
-                                    </button>
                                 </div>
+
+                                {{-- ── Rôles ──────────────────────────────── --}}
+                                <div class="col-12">
+                                    <label class="form-label form-label-sm">Rôles organisationnels</label>
+                                    <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
+                                        Rôles que ce membre exerce au sein de l'organisation. Les rôles déterminent
+                                        les droits fonctionnels en combinaison avec les plafonds de section.
+                                    </p>
+                                    <input type="text" class="form-control form-control-sm mb-2 ob-multiselect-search"
+                                           data-ob-target="roles-wrap"
+                                           placeholder="Rechercher un rôle…"
+                                           autocomplete="off">
+                                    <div class="ob-multiselect-wrap" id="roles-wrap" data-ob-multiselect>
+                                        @foreach ($allRoles as $r)
+                                            @php $rid = (int) $r->id; @endphp
+                                            <label class="ob-multiselect-item @if(in_array($rid, $currentRoleIds)) ob-selected @endif">
+                                                <input type="checkbox" name="roles[]" value="{{ $rid }}"
+                                                       @checked(in_array($rid, $currentRoleIds))
+                                                       class="ob-multiselect-cb">
+                                                <span class="ob-multiselect-label">{{ $r->name }}</span>
+                                                <i class="fas fa-check ob-multiselect-check"></i>
+                                            </label>
+                                        @endforeach
+                                        @if ($allRoles->isEmpty())
+                                            <span class="text-muted" style="font-size:var(--font-size-xs);">Aucun rôle défini.</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- ── Groupes d'accès ────────────────────── --}}
+                                <div class="col-12">
+                                    <label class="form-label form-label-sm">Groupes d'accès</label>
+                                    <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
+                                        Groupes d'accès attribués à ce membre. Les groupes accordent des droits
+                                        globaux indépendamment de la section active.
+                                    </p>
+                                    <input type="text" class="form-control form-control-sm mb-2 ob-multiselect-search"
+                                           data-ob-target="groups-wrap"
+                                           placeholder="Rechercher un groupe…"
+                                           autocomplete="off">
+                                    <div class="ob-multiselect-wrap" id="groups-wrap" data-ob-multiselect>
+                                        @foreach ($allGroups as $g)
+                                            @php $gid = (int) $g->id; @endphp
+                                            <label class="ob-multiselect-item @if(in_array($gid, $currentGroupIds)) ob-selected @endif">
+                                                <input type="checkbox" name="groups[]" value="{{ $gid }}"
+                                                       @checked(in_array($gid, $currentGroupIds))
+                                                       class="ob-multiselect-cb">
+                                                <span class="ob-multiselect-label">{{ $g->name }}</span>
+                                                <i class="fas fa-check ob-multiselect-check"></i>
+                                            </label>
+                                        @endforeach
+                                        @if ($allGroups->isEmpty())
+                                            <span class="text-muted" style="font-size:var(--font-size-xs);">Aucun groupe défini.</span>
+                                        @endif
+                                    </div>
+                                </div>
+
                             @endif
 
                             @if ($isEdit && ($personnel->P_ACCEPT_DATE || $personnel->P_ACCEPT_DATE2))
@@ -659,26 +675,4 @@
 @push('scripts')
 <script>window.PERS_FORM_GRADE_URL = '{{ route('personnel.grade_image', ['grade' => 'PLACEHOLDER']) }}';</script>
 @vite('resources/js/ob-personnel-form.js')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    var rows = document.getElementById('ob-roles-rows');
-    var tpl  = document.getElementById('ob-role-template');
-    var add  = document.getElementById('ob-role-add');
-    if (!rows || !tpl || !add) return;
-
-    var idx = rows.querySelectorAll('.ob-role-row').length;
-
-    add.addEventListener('click', function () {
-        var html = tpl.innerHTML.replace(/__IDX__/g, 'new' + (idx++));
-        var wrap = document.createElement('div');
-        wrap.innerHTML = html.trim();
-        rows.appendChild(wrap.firstChild);
-    });
-
-    rows.addEventListener('click', function (e) {
-        var btn = e.target.closest('.ob-role-remove');
-        if (btn) { btn.closest('.ob-role-row').remove(); }
-    });
-});
-</script>
 @endpush

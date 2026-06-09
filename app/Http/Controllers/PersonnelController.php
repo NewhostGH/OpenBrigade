@@ -19,12 +19,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Cotisation;
 use App\Models\ObGroup;
+use App\Models\ObPersonnelGroup;
+use App\Models\ObPersonnelSection;
 use App\Models\ObUserAssignment;
 use App\Models\Personnel;
 use App\Models\Poste;
 use App\Models\Qualification;
 use App\Models\Section;
 use App\Models\TypePaiement;
+use App\Services\PermissionResolver;
 use App\Services\PersonnelExportService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
@@ -38,6 +41,8 @@ use Illuminate\View\View;
 
 class PersonnelController extends Controller
 {
+    public function __construct(private readonly PermissionResolver $resolver) {}
+
     public function index(Request $request): View
     {
         $position = (string) $request->string('position', 'actif');
@@ -534,10 +539,36 @@ class PersonnelController extends Controller
     }
 
     /**
-     * Replace a member's section-scoped role assignments (ob_user_assignment)
-     * from the `roles[]` form rows. Only honoured for users who can manage
-     * habilitations (F_ID 9) — otherwise the input is ignored, so editing a
-     * member never silently escalates access. Used by store() and update().
+     * Sync section memberships (ob_personnel_section) from the `sections[]`
+     * form input. Guarded by permission 9.
+     */
+    private function syncSections(Request $request, Personnel $personnel): void
+    {
+        if (! $request->user()->hasPermission(9)) {
+            return;
+        }
+
+        $validSectionIds = Section::pluck('S_ID')->map(fn ($v) => (int) $v)->all();
+
+        $desired = collect($request->input('sections', []))
+            ->map(fn ($v) => (int) $v)
+            ->filter(fn ($v) => in_array($v, $validSectionIds, true))
+            ->unique()
+            ->values();
+
+        ObPersonnelSection::where('person_id', $personnel->P_ID)->delete();
+
+        foreach ($desired as $sectionId) {
+            ObPersonnelSection::create([
+                'person_id' => $personnel->P_ID,
+                'section_id' => $sectionId,
+            ]);
+        }
+    }
+
+    /**
+     * Sync role assignments (ob_user_assignment, section_id = null) from the
+     * `roles[]` form input. Guarded by permission 9.
      */
     private function syncRoles(Request $request, Personnel $personnel): void
     {
@@ -545,20 +576,50 @@ class PersonnelController extends Controller
             return;
         }
 
-        // Valid role group ids (kind = role).
         $validRoleIds = ObGroup::roles()->pluck('id')->map(fn ($v) => (int) $v)->all();
 
         $desired = collect($request->input('roles', []))
-            ->map(fn ($r) => [(int) ($r['section_id'] ?? 0), (int) ($r['group_id'] ?? 0)])
-            ->filter(fn ($pair) => $pair[0] > 0 && in_array($pair[1], $validRoleIds, true))
-            ->unique(fn ($pair) => $pair[0].'-'.$pair[1]);
+            ->map(fn ($v) => (int) $v)
+            ->filter(fn ($v) => $v > 0 && in_array($v, $validRoleIds, true))
+            ->unique()
+            ->values();
 
         ObUserAssignment::where('person_id', $personnel->P_ID)->delete();
 
-        foreach ($desired as [$sectionId, $groupId]) {
+        foreach ($desired as $groupId) {
             ObUserAssignment::create([
                 'person_id' => $personnel->P_ID,
-                'section_id' => $sectionId,
+                'section_id' => null,
+                'group_id' => $groupId,
+            ]);
+        }
+    }
+
+    /**
+     * Sync group memberships (ob_personnel_group) from the `groups[]`
+     * form input. Guarded by permission 9.
+     */
+    private function syncGroups(Request $request, Personnel $personnel): void
+    {
+        if (! $request->user()->hasPermission(9)) {
+            return;
+        }
+
+        $validGroupIds = ObGroup::groups()->where('id', '!=', -1)->pluck('id')->map(fn ($v) => (int) $v)->all();
+
+        $desired = collect($request->input('groups', []))
+            ->map(fn ($v) => (int) $v)
+            ->filter(fn ($v) => $v > 0 && in_array($v, $validGroupIds, true))
+            ->unique()
+            ->values();
+
+        ObPersonnelGroup::where('person_id', $personnel->P_ID)
+            ->where('group_id', '!=', -1)
+            ->delete();
+
+        foreach ($desired as $groupId) {
+            ObPersonnelGroup::create([
+                'person_id' => $personnel->P_ID,
                 'group_id' => $groupId,
             ]);
         }
@@ -836,16 +897,26 @@ class PersonnelController extends Controller
     public function create(): View
     {
         $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
-        $groupes = ObGroup::groups()->orderBy('name')->get(['id', 'name']);
         $companies = DB::table('company')->orderBy('C_NAME')->get(['C_ID', 'C_NAME']);
+        $allPersonnel = Personnel::query()
+            ->where('P_OLD_MEMBER', 0)
+            ->orderBy('P_NOM')->orderBy('P_PRENOM')
+            ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_PHONE', 'P_EMAIL']);
+
+        $accessibleSectionIds = $this->resolver->userSections(auth()->user())->pluck('S_ID')->all();
+        $accessibleSections = $sections->whereIn('S_ID', $accessibleSectionIds)->values();
 
         return view('personnel.form', [
             'personnel' => null,
             'sections' => $sections,
-            'groupes' => $groupes,
+            'accessibleSections' => $accessibleSections,
             'companies' => $companies,
-            'roles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
-            'assignments' => collect(),
+            'allPersonnel' => $allPersonnel,
+            'allRoles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
+            'allGroups' => ObGroup::groups()->where('id', '!=', -1)->orderBy('name')->get(['id', 'name']),
+            'currentSectionIds' => [],
+            'currentRoleIds' => [],
+            'currentGroupIds' => [],
         ]);
     }
 
@@ -877,15 +948,13 @@ class PersonnelController extends Controller
             'P_RELATION_NOM' => 'nullable|string|max:50',
             'P_RELATION_PHONE' => 'nullable|string|max:20',
             'P_RELATION_MAIL' => 'nullable|email|max:100',
+            'P_URGENCE_PERSON_ID' => 'nullable|integer|exists:pompier,P_ID',
             'P_BIRTHDATE' => 'nullable|date',
             'P_BIRTHPLACE' => 'nullable|string|max:50',
             'P_BIRTH_DEP' => 'nullable|string|max:3',
             'P_LICENCE' => 'nullable|string|max:30',
             'P_LICENCE_DATE' => 'nullable|date',
             'P_LICENCE_EXPIRY' => 'nullable|date',
-            'GP_ID' => 'nullable|integer',
-            'GP_ID2' => 'nullable|integer',
-            'C_ID' => 'nullable|integer|exists:company,C_ID',
             'DATE_NPAI' => 'nullable|date',
             'OBSERVATION' => 'nullable|string',
             'photo_upload' => 'nullable|image|max:4096',
@@ -896,6 +965,16 @@ class PersonnelController extends Controller
         $validated['NPAI'] = $request->boolean('NPAI');
         $validated['SUSPENDU'] = $request->boolean('SUSPENDU');
         $validated['P_OLD_MEMBER'] = 0;
+
+        if (! empty($validated['P_URGENCE_PERSON_ID'])) {
+            $linked = Personnel::find((int) $validated['P_URGENCE_PERSON_ID']);
+            if ($linked) {
+                $validated['P_RELATION_PRENOM'] = $linked->P_PRENOM;
+                $validated['P_RELATION_NOM'] = $linked->P_NOM;
+                $validated['P_RELATION_PHONE'] = $linked->P_PHONE;
+                $validated['P_RELATION_MAIL'] = $linked->P_EMAIL;
+            }
+        }
 
         unset($validated['photo_upload']);
 
@@ -915,7 +994,9 @@ class PersonnelController extends Controller
             $personnel->update(['P_PHOTO' => $filename]);
         }
 
+        $this->syncSections($request, $personnel);
         $this->syncRoles($request, $personnel);
+        $this->syncGroups($request, $personnel);
 
         return redirect()
             ->route('personnel.show', $personnel)
@@ -928,25 +1009,48 @@ class PersonnelController extends Controller
             ->orderBy('S_CODE')
             ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
-        $groupes = ObGroup::groups()
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
         $companies = DB::table('company')
             ->orderBy('C_NAME')
             ->get(['C_ID', 'C_NAME']);
 
-        $assignments = DB::table('ob_user_assignment')
+        $currentSectionIds = DB::table('ob_personnel_section')
             ->where('person_id', $personnel->P_ID)
-            ->get(['section_id', 'group_id']);
+            ->pluck('section_id')
+            ->map(fn ($v) => (int) $v)
+            ->all();
+
+        $currentRoleIds = DB::table('ob_user_assignment')
+            ->where('person_id', $personnel->P_ID)
+            ->pluck('group_id')
+            ->map(fn ($v) => (int) $v)
+            ->all();
+
+        $currentGroupIds = DB::table('ob_personnel_group')
+            ->where('person_id', $personnel->P_ID)
+            ->pluck('group_id')
+            ->map(fn ($v) => (int) $v)
+            ->all();
+
+        $allPersonnel = Personnel::query()
+            ->where('P_OLD_MEMBER', 0)
+            ->where('P_ID', '!=', $personnel->P_ID)
+            ->orderBy('P_NOM')->orderBy('P_PRENOM')
+            ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_PHONE', 'P_EMAIL']);
+
+        $accessibleSectionIds = $this->resolver->userSections(auth()->user())->pluck('S_ID')->all();
+        $accessibleSections = $sections->whereIn('S_ID', $accessibleSectionIds)->values();
 
         return view('personnel.form', [
             'personnel' => $personnel,
             'sections' => $sections,
-            'groupes' => $groupes,
+            'accessibleSections' => $accessibleSections,
             'companies' => $companies,
-            'roles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
-            'assignments' => $assignments,
+            'allPersonnel' => $allPersonnel,
+            'allRoles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
+            'allGroups' => ObGroup::groups()->where('id', '!=', -1)->orderBy('name')->get(['id', 'name']),
+            'currentSectionIds' => $currentSectionIds,
+            'currentRoleIds' => $currentRoleIds,
+            'currentGroupIds' => $currentGroupIds,
         ]);
     }
 
@@ -984,6 +1088,7 @@ class PersonnelController extends Controller
             'P_RELATION_NOM' => 'nullable|string|max:50',
             'P_RELATION_PHONE' => 'nullable|string|max:20',
             'P_RELATION_MAIL' => 'nullable|email|max:100',
+            'P_URGENCE_PERSON_ID' => 'nullable|integer|exists:pompier,P_ID',
             // Personal info
             'P_BIRTHDATE' => 'nullable|date',
             'P_BIRTHPLACE' => 'nullable|string|max:50',
@@ -992,10 +1097,6 @@ class PersonnelController extends Controller
             'P_LICENCE' => 'nullable|string|max:30',
             'P_LICENCE_DATE' => 'nullable|date',
             'P_LICENCE_EXPIRY' => 'nullable|date',
-            // Access / organisation
-            'GP_ID' => 'nullable|integer',
-            'GP_ID2' => 'nullable|integer',
-            'C_ID' => 'nullable|integer|exists:company,C_ID',
             // NPAI
             'DATE_NPAI' => 'nullable|date',
             // Notes
@@ -1009,6 +1110,16 @@ class PersonnelController extends Controller
         $validated['P_NOSPAM'] = $request->boolean('P_NOSPAM');
         $validated['NPAI'] = $request->boolean('NPAI');
         $validated['SUSPENDU'] = $request->boolean('SUSPENDU');
+
+        if (! empty($validated['P_URGENCE_PERSON_ID'])) {
+            $linked = Personnel::find((int) $validated['P_URGENCE_PERSON_ID']);
+            if ($linked) {
+                $validated['P_RELATION_PRENOM'] = $linked->P_PRENOM;
+                $validated['P_RELATION_NOM'] = $linked->P_NOM;
+                $validated['P_RELATION_PHONE'] = $linked->P_PHONE;
+                $validated['P_RELATION_MAIL'] = $linked->P_EMAIL;
+            }
+        }
 
         // Handle photo upload
         if ($request->hasFile('photo_upload') && $request->file('photo_upload')->isValid()) {
@@ -1030,7 +1141,9 @@ class PersonnelController extends Controller
 
         $personnel->update($validated);
 
+        $this->syncSections($request, $personnel);
         $this->syncRoles($request, $personnel);
+        $this->syncGroups($request, $personnel);
 
         return redirect()
             ->route('personnel.show', $personnel)

@@ -203,7 +203,7 @@ class HabilitationController extends Controller
             return redirect()->route('admin.habilitations')->with('error', 'Groupe système protégé.');
         }
 
-        $inUse = DB::table('pompier')->where('GP_ID', $gpId)->orWhere('GP_ID2', $gpId)->exists()
+        $inUse = DB::table('ob_personnel_group')->where('group_id', $gpId)->exists()
             || DB::table('ob_user_assignment')->where('group_id', $gpId)->exists();
         if ($inUse) {
             return redirect()->route('admin.habilitations')
