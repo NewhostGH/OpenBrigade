@@ -1,5 +1,5 @@
 /*
- * components.css  —  Miscellaneous page-level UI components.
+ * ob-components.css  —  Miscellaneous page-level UI components.
  *
  * The following have been extracted into their own files (ob-*.css):
  *   ob-toolbar  →  ob-toolbar.css
@@ -121,7 +121,9 @@
     margin: 20px 0 12px;
 }
 
-.ob-form-label:first-child { margin-top: 0; }
+.ob-form-label:first-child {
+    margin-top: 0;
+}
 
 /* ── Géolocalisation map page ───────────────────────────────────────────── */
 
@@ -169,8 +171,14 @@
     margin-right: 8px;
 }
 
-.ob-geo-popup strong { display: block; }
-.ob-geo-popup small  { display: block; color: #666; }
+.ob-geo-popup strong {
+    display: block;
+}
+
+.ob-geo-popup small {
+    display: block;
+    color: #666;
+}
 
 .ob-geo-popup a {
     display: block;
@@ -178,4 +186,6 @@
     font-size: 11px;
 }
 
-.ob-geo-popup .clearfix { clear: both; }
+.ob-geo-popup .clearfix {
+    clear: both;
+}

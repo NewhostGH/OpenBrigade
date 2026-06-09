@@ -3,10 +3,10 @@
 
 @import './variables.css';
 @import './base.css';
-@import './navbar.css';
+@import './ob-navbar.css';
 @import './ob-sidebar.css';
-@import './layout.css';
-@import './components.css';
+@import './ob-layout.css';
+@import './ob-components.css';
 
 /* ── OB UI components (one file per module) ───────────────────────── */
 @import './ob-breadcrumb.css';
@@ -17,11 +17,12 @@
 @import './ob-avatar.css';
 @import './ob-toggle.css';
 
-@import './dashboard.css';
-@import './login.css';
+@import './ob-dashboard.css';
+@import './ob-login.css';
 
 /* ── Feature module CSS (one file per section) ────────────────────── */
 @import './ob-personnel.css';
 @import './ob-organisation.css';
 @import './ob-planning.css';
 @import './ob-habilitations.css';
+@import './ob-statistique.css';
