@@ -22,8 +22,8 @@ class DispoController extends Controller
 
         // Periods for the next 4 weeks
         $periods = DB::table('disponibilite_periode')
-            ->orderBy('PERIOD_ID')
-            ->get(['PERIOD_ID', 'P_LIBELLE', 'P_DEBUT', 'P_FIN']);
+            ->orderBy('DP_ID')
+            ->get(['DP_ID', 'DP_NAME', 'DP_DEBUT', 'DP_FIN']);
 
         // User's disponibilités for the range
         $dispos = DB::table('disponibilite')

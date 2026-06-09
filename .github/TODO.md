@@ -127,6 +127,7 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 ### Garde — On-call roster (GAR)
 - [x] Roster display and assignment
 - [x] Guard sheet and replacement management
+- [ ] Modify to use the new calendar library when implemented (see PLA)
 - [ ] Automatic piquet/guard generation
 - [ ] Rest periods (`repos_*.php`)
 - [ ] Guard exports (XLS, PDF)
@@ -134,6 +135,8 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 ### Planning (PLA)
 - [x] Weekly/monthly planning view
 - [x] Personal agenda (`myagenda.php`)
+- [ ] Migrate calendars to a universal calendar library (FullCalendar or similar), replacing the current custom implementation
+- [ ] Modify the dashboard agenda widget to use the new calendar library and to open the detailed calendar view on click, instead of the personal show view
 - [ ] Schedule (horaires) management
 - [ ] Planning exports
 

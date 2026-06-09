@@ -27,7 +27,7 @@
                     @foreach($periods as $period)
                         <span class="me-2">
                             <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--brand-bg);opacity:{{ 0.3 + ($loop->index * 0.2) }}"></span>
-                            {{ $period->P_LIBELLE }}
+                            {{ $period->DP_NAME }}
                         </span>
                     @endforeach
                 </div>
@@ -51,9 +51,9 @@
                                             {{ $cell['date']->format('j') }}
                                         </div>
                                         @if($cell['periodId'])
-                                            @php $pi = $periods->firstWhere('PERIOD_ID', $cell['periodId']); @endphp
+                                            @php $pi = $periods->firstWhere('DP_ID', $cell['periodId']); @endphp
                                             <div style="font-size:9px;color:var(--color-success-icon);font-weight:600">
-                                                {{ $pi?->P_LIBELLE ?? '✓' }}
+                                                {{ $pi?->DP_NAME ?? '✓' }}
                                             </div>
                                         @endif
                                     </td>
