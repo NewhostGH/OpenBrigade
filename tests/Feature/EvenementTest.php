@@ -3,14 +3,31 @@
 use App\Http\Controllers\EvenementController;
 use App\Models\User;
 use App\Services\NavigationService;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Mockery\MockInterface;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * Stub NavigationService so the layout's view composer never hits the DB.
+ */
+function eventStubNav(): void
+{
+    $nav = Mockery::mock(NavigationService::class);
+    $nav->shouldReceive('getNavGroups')->andReturn([]);
+    $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
+    app()->instance(NavigationService::class, $nav);
+}
+
+/**
+ * Build a minimal fake User (no DB required). hasPermission() returns true so
+ * permission-gated event actions are reachable.
+ */
 function eventFakeUser(array $attrs = []): User
 {
-    /** @var User&\Mockery\MockInterface $user */
+    /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
         'P_ID'      => 1,
@@ -21,20 +38,41 @@ function eventFakeUser(array $attrs = []): User
         'P_MDP'     => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(true);
+
     return $user;
 }
 
-function eventStubNav(): void
+/**
+ * Bind EvenementController so index() returns the real view rendered with stub
+ * data, keeping the assertion at the HTTP/view level without touching the DB.
+ */
+function eventStubIndex(): void
 {
-    $nav = Mockery::mock(NavigationService::class);
-    $nav->shouldReceive('getNavGroups')->andReturn([]);
-    $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
-    app()->instance(NavigationService::class, $nav);
+    app()->bind(EvenementController::class, function () {
+        $ctrl  = Mockery::mock(EvenementController::class)->makePartial();
+        $page  = new LengthAwarePaginator([], 0, 50);
+        $page->setPath('/evenements');
+        $empty = Collection::make([]);
+        $ctrl->shouldReceive('index')->andReturn(
+            view('evenement.index', [
+                'items'    => $page,
+                'columns'  => [],
+                'period'   => 'upcoming',
+                'search'   => '',
+                'type'     => 'ALL',
+                'filtSect' => 0,
+                'types'    => $empty,
+                'sections' => $empty,
+            ])
+        );
+
+        return $ctrl;
+    });
 }
 
 beforeEach(function () {
     eventStubNav();
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
 
 // ── Access control ───────────────────────────────────────────────────────────
@@ -76,80 +114,17 @@ test('legacy evenement_detail.php without param redirects to index', function ()
 // ── Evenement index (stubbed controller) ─────────────────────────────────────
 
 test('authenticated users can access the event list', function () {
-    $user      = eventFakeUser();
-    $emptyPage = new LengthAwarePaginator([], 0, 50);
-    $emptyPage->setPath('/evenements');
-    $empty = Collection::make([]);
-
-    app()->bind(EvenementController::class, function () use ($emptyPage, $empty) {
-        $ctrl = Mockery::mock(EvenementController::class)->makePartial();
-        $ctrl->shouldReceive('index')->andReturn(
-            view('evenement.index', [
-                'items'    => $emptyPage,
-                'columns'  => [],
-                'period'   => 'upcoming',
-                'search'   => '',
-                'type'     => 'ALL',
-                'filtSect' => 0,
-                'types'    => $empty,
-                'sections' => $empty,
-            ])
-        );
-        return $ctrl;
-    });
-
-    $this->actingAs($user)->get('/evenements')->assertStatus(200);
+    eventStubIndex();
+    $this->actingAs(eventFakeUser())->get('/evenements')->assertStatus(200);
 });
 
 test('event list uses the evenement.index template', function () {
-    $user      = eventFakeUser();
-    $emptyPage = new LengthAwarePaginator([], 0, 50);
-    $emptyPage->setPath('/evenements');
-    $empty = Collection::make([]);
-
-    app()->bind(EvenementController::class, function () use ($emptyPage, $empty) {
-        $ctrl = Mockery::mock(EvenementController::class)->makePartial();
-        $ctrl->shouldReceive('index')->andReturn(
-            view('evenement.index', [
-                'items'    => $emptyPage,
-                'columns'  => [],
-                'period'   => 'upcoming',
-                'search'   => '',
-                'type'     => 'ALL',
-                'filtSect' => 0,
-                'types'    => $empty,
-                'sections' => $empty,
-            ])
-        );
-        return $ctrl;
-    });
-
-    $this->actingAs($user)->get('/evenements')->assertViewIs('evenement.index');
+    eventStubIndex();
+    $this->actingAs(eventFakeUser())->get('/evenements')->assertViewIs('evenement.index');
 });
 
 test('event list passes all required view variables', function () {
-    $user      = eventFakeUser();
-    $emptyPage = new LengthAwarePaginator([], 0, 50);
-    $emptyPage->setPath('/evenements');
-    $empty = Collection::make([]);
-
-    app()->bind(EvenementController::class, function () use ($emptyPage, $empty) {
-        $ctrl = Mockery::mock(EvenementController::class)->makePartial();
-        $ctrl->shouldReceive('index')->andReturn(
-            view('evenement.index', [
-                'items'    => $emptyPage,
-                'columns'  => [],
-                'period'   => 'upcoming',
-                'search'   => '',
-                'type'     => 'ALL',
-                'filtSect' => 0,
-                'types'    => $empty,
-                'sections' => $empty,
-            ])
-        );
-        return $ctrl;
-    });
-
-    $this->actingAs($user)->get('/evenements')
+    eventStubIndex();
+    $this->actingAs(eventFakeUser())->get('/evenements')
         ->assertViewHasAll(['items', 'period', 'search', 'type', 'filtSect', 'types', 'sections']);
 });

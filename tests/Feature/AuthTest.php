@@ -3,19 +3,19 @@
 use App\Models\User;
 use App\Services\Auth\AuthService;
 use App\Services\NavigationService;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Support\Facades\Auth;
+use Mockery\MockInterface;
 
-// Disable CSRF verification for all tests in this file — we test the form
-// logic, not token handling (that's covered by the middleware unit tests).
-beforeEach(function () {
-    // Laravel 12 uses ValidateCsrfToken (not the legacy VerifyCsrfToken class).
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
-});
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
-
+/**
+ * Build a minimal fake User (no DB required). hasPermission() returns false so
+ * Blade templates can render without touching the database.
+ */
 function authFakeUser(array $attrs = []): User
 {
-    /** @var User&\Mockery\MockInterface $user */
+    /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
         'P_ID'      => 1,
@@ -26,16 +26,26 @@ function authFakeUser(array $attrs = []): User
         'P_MDP'     => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(false);
+
     return $user;
 }
 
-function bindStubAuthNavigation(): void
+/**
+ * Stub NavigationService so the layout's view composer never hits the DB.
+ */
+function authStubNav(): void
 {
     $nav = Mockery::mock(NavigationService::class);
     $nav->shouldReceive('getNavGroups')->andReturn([]);
     $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
     app()->instance(NavigationService::class, $nav);
 }
+
+// Disable CSRF verification for the whole file — these tests exercise the form
+// logic, not token handling (covered by the middleware unit tests).
+beforeEach(function () {
+    $this->withoutMiddleware(ValidateCsrfToken::class);
+});
 
 // ── GET /login ───────────────────────────────────────────────────────────────
 
@@ -51,7 +61,7 @@ test('login page shows the sign-in form', function () {
 });
 
 test('authenticated users are redirected from /login to dashboard', function () {
-    bindStubAuthNavigation();
+    authStubNav();
     $user = authFakeUser();
 
     $this->actingAs($user)->get('/login')
@@ -95,8 +105,9 @@ test('login succeeds with correct credentials and redirects to dashboard', funct
     $authService->shouldReceive('attemptLogin')
         ->with('testuser', 'secret', false)
         ->andReturnUsing(function () use ($user) {
-            // Simulate the service logging the user in
-            \Illuminate\Support\Facades\Auth::guard('web')->setUser($user);
+            // Simulate the service logging the user in.
+            Auth::guard('web')->setUser($user);
+
             return true;
         });
     app()->instance(AuthService::class, $authService);
@@ -116,7 +127,7 @@ test('login input is repopulated after failed attempt', function () {
     $this->get('/login')->assertSee('someone');
 });
 
-// ── POST /logout ──────────────────────────────────────────────────────────────
+// ── POST /logout ─────────────────────────────────────────────────────────────
 
 test('logout redirects unauthenticated users to login', function () {
     $this->post('/logout')->assertRedirect('/login');
@@ -150,12 +161,13 @@ test('login normalizes legacy index_d.php intended URL to dashboard', function (
     $user        = authFakeUser();
     $authService = Mockery::mock(AuthService::class);
     $authService->shouldReceive('attemptLogin')->andReturnUsing(function () use ($user) {
-        \Illuminate\Support\Facades\Auth::guard('web')->setUser($user);
+        Auth::guard('web')->setUser($user);
+
         return true;
     });
     app()->instance(AuthService::class, $authService);
 
-    // Simulate the auth middleware having stored a legacy intended URL
+    // Simulate the auth middleware having stored a legacy intended URL.
     session(['url.intended' => '/legacy/index_d.php']);
 
     $this->post('/login', ['login' => 'u', 'password' => 'p'])

@@ -1,17 +1,32 @@
 <?php
 
-use App\Models\Personnel;
-use App\Models\Section;
+use App\Http\Controllers\PersonnelController;
 use App\Models\User;
 use App\Services\NavigationService;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Mockery\MockInterface;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * Stub NavigationService so the layout's view composer never hits the DB.
+ */
+function personnelStubNav(): void
+{
+    $nav = Mockery::mock(NavigationService::class);
+    $nav->shouldReceive('getNavGroups')->andReturn([]);
+    $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
+    app()->instance(NavigationService::class, $nav);
+}
+
+/**
+ * Build a minimal fake User (no DB required). hasPermission() returns true so
+ * permission-gated personnel actions are reachable.
+ */
 function personnelFakeUser(array $attrs = []): User
 {
-    /** @var User&\Mockery\MockInterface $user */
+    /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
         'P_ID'      => 1,
@@ -22,20 +37,42 @@ function personnelFakeUser(array $attrs = []): User
         'P_MDP'     => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(true);
+
     return $user;
 }
 
-function personnelStubNav(): void
+/**
+ * Bind PersonnelController so index() returns the real view rendered with stub
+ * data, short-circuiting the Eloquent calls so no real DB query is made.
+ */
+function personnelStubIndex(): void
 {
-    $nav = Mockery::mock(NavigationService::class);
-    $nav->shouldReceive('getNavGroups')->andReturn([]);
-    $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
-    app()->instance(NavigationService::class, $nav);
+    app()->bind(PersonnelController::class, function () {
+        $ctrl = Mockery::mock(PersonnelController::class)->makePartial();
+        $page = new LengthAwarePaginator([], 0, 100);
+        $page->setPath('/personnel');
+        $ctrl->shouldReceive('index')->andReturn(
+            view('personnel.index', [
+                'items'          => $page,
+                'columns'        => [],
+                'position'       => 'actif',
+                'search'         => '',
+                'category'       => 'INT',
+                'sectionId'      => 0,
+                'order'          => 'P_NOM',
+                'subsections'    => true,
+                'perPage'        => 100,
+                'sectionOptions' => [],
+            ])
+        );
+
+        return $ctrl;
+    });
 }
 
 beforeEach(function () {
     personnelStubNav();
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
 
 // ── Access control ───────────────────────────────────────────────────────────
@@ -78,61 +115,14 @@ test('legacy upd_personnel.php without params redirects to personnel.index', fun
         ->assertRedirect(route('personnel.index'));
 });
 
-// ── Personnel index (stubbed Eloquent) ───────────────────────────────────────
+// ── Personnel index (stubbed controller) ─────────────────────────────────────
 
 test('authenticated users can access the personnel list', function () {
-    $user = personnelFakeUser();
-
-    // Stub Eloquent so no real DB call is made
-    $emptyPage = new LengthAwarePaginator([], 0, 100);
-    $emptyPage->setPath('/personnel');
-
-    // Bind a mock PersonnelController that short-circuits the DB calls
-    app()->bind(\App\Http\Controllers\PersonnelController::class, function () use ($emptyPage) {
-        $ctrl = Mockery::mock(\App\Http\Controllers\PersonnelController::class)->makePartial();
-        $ctrl->shouldReceive('index')->andReturn(
-            view('personnel.index', [
-                'items'          => $emptyPage,
-                'columns'        => [],
-                'position'       => 'actif',
-                'search'         => '',
-                'category'       => 'INT',
-                'sectionId'      => 0,
-                'order'          => 'P_NOM',
-                'subsections'    => true,
-                'perPage'        => 100,
-                'sectionOptions' => [],
-            ])
-        );
-        return $ctrl;
-    });
-
-    $this->actingAs($user)->get('/personnel')->assertStatus(200);
+    personnelStubIndex();
+    $this->actingAs(personnelFakeUser())->get('/personnel')->assertStatus(200);
 });
 
 test('personnel index uses the personnel.index template', function () {
-    $user      = personnelFakeUser();
-    $emptyPage = new LengthAwarePaginator([], 0, 100);
-    $emptyPage->setPath('/personnel');
-
-    app()->bind(\App\Http\Controllers\PersonnelController::class, function () use ($emptyPage) {
-        $ctrl = Mockery::mock(\App\Http\Controllers\PersonnelController::class)->makePartial();
-        $ctrl->shouldReceive('index')->andReturn(
-            view('personnel.index', [
-                'items'          => $emptyPage,
-                'columns'        => [],
-                'position'       => 'actif',
-                'search'         => '',
-                'category'       => 'INT',
-                'sectionId'      => 0,
-                'order'          => 'P_NOM',
-                'subsections'    => true,
-                'perPage'        => 100,
-                'sectionOptions' => [],
-            ])
-        );
-        return $ctrl;
-    });
-
-    $this->actingAs($user)->get('/personnel')->assertViewIs('personnel.index');
+    personnelStubIndex();
+    $this->actingAs(personnelFakeUser())->get('/personnel')->assertViewIs('personnel.index');
 });

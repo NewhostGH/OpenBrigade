@@ -4,23 +4,16 @@ use App\Http\Controllers\ConsommableController;
 use App\Http\Controllers\MaterielController;
 use App\Models\User;
 use App\Services\NavigationService;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Mockery\MockInterface;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
-function inventaireFakeUser(): User
-{
-    /** @var User&\Mockery\MockInterface $user */
-    $user = Mockery::mock(User::class)->makePartial();
-    $user->forceFill([
-        'P_ID' => 1, 'P_NOM' => 'Test', 'P_PRENOM' => 'User',
-        'P_SECTION' => 1, 'P_ACTIF' => 1, 'P_MDP' => bcrypt('secret'),
-    ]);
-    $user->shouldReceive('hasPermission')->andReturn(true);
-    return $user;
-}
-
+/**
+ * Stub NavigationService so the layout's view composer never hits the DB.
+ */
 function inventaireStubNav(): void
 {
     $nav = Mockery::mock(NavigationService::class);
@@ -29,6 +22,27 @@ function inventaireStubNav(): void
     app()->instance(NavigationService::class, $nav);
 }
 
+/**
+ * Build a minimal fake User (no DB required). hasPermission() returns true so
+ * permission-gated inventory actions are reachable.
+ */
+function inventaireFakeUser(): User
+{
+    /** @var User&MockInterface $user */
+    $user = Mockery::mock(User::class)->makePartial();
+    $user->forceFill([
+        'P_ID' => 1, 'P_NOM' => 'Test', 'P_PRENOM' => 'User',
+        'P_SECTION' => 1, 'P_ACTIF' => 1, 'P_MDP' => bcrypt('secret'),
+    ]);
+    $user->shouldReceive('hasPermission')->andReturn(true);
+
+    return $user;
+}
+
+/**
+ * Bind MaterielController so index() returns the real view rendered with stub
+ * data, keeping the assertion at the HTTP/view level without touching the DB.
+ */
 function materielStubIndex(): void
 {
     app()->bind(MaterielController::class, function () {
@@ -37,14 +51,22 @@ function materielStubIndex(): void
         $page->setPath('/materiels');
         $ctrl->shouldReceive('index')->andReturn(
             view('materiel.index', [
-                'items' => $page, 'columns' => [], 'search' => '', 'filtSect' => 0,
+                'items'    => $page,
+                'columns'  => [],
+                'search'   => '',
+                'filtSect' => 0,
                 'sections' => Collection::make([]),
             ])
         );
+
         return $ctrl;
     });
 }
 
+/**
+ * Bind ConsommableController so index() returns the real view rendered with
+ * stub data, keeping the assertion at the HTTP/view level without a DB call.
+ */
 function consommableStubIndex(): void
 {
     app()->bind(ConsommableController::class, function () {
@@ -53,20 +75,25 @@ function consommableStubIndex(): void
         $page->setPath('/consommables');
         $ctrl->shouldReceive('index')->andReturn(
             view('consommable.index', [
-                'items' => $page, 'columns' => [], 'search' => '', 'filtSect' => 0,
-                'alert' => false, 'sections' => Collection::make([]),
+                'items'    => $page,
+                'columns'  => [],
+                'search'   => '',
+                'filtSect' => 0,
+                'alert'    => false,
+                'sections' => Collection::make([]),
             ])
         );
+
         return $ctrl;
     });
 }
 
 beforeEach(function () {
     inventaireStubNav();
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
 
-// ── Matériels ─────────────────────────────────────────────────────────────────
+// ── Matériels ────────────────────────────────────────────────────────────────
 
 test('unauthenticated users are redirected from /materiels to login', function () {
     $this->get('/materiels')->assertRedirect('/login');
@@ -88,7 +115,7 @@ test('materiel list uses the materiel.index template', function () {
     $this->actingAs(inventaireFakeUser())->get('/materiels')->assertViewIs('materiel.index');
 });
 
-// ── Consommables ──────────────────────────────────────────────────────────────
+// ── Consommables ─────────────────────────────────────────────────────────────
 
 test('unauthenticated users are redirected from /consommables to login', function () {
     $this->get('/consommables')->assertRedirect('/login');

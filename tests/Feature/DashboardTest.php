@@ -3,13 +3,14 @@
 use App\Models\User;
 use App\Services\DashboardService;
 use App\Services\NavigationService;
+use Mockery\MockInterface;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
- * Stub NavigationService so view composers never hit the DB.
+ * Stub NavigationService so the layout's view composer never hits the DB.
  */
-function bindStubNavigation(): void
+function dashboardStubNav(): void
 {
     $nav = Mockery::mock(NavigationService::class);
     $nav->shouldReceive('getNavGroups')->andReturn([]);
@@ -18,12 +19,12 @@ function bindStubNavigation(): void
 }
 
 /**
- * Build a minimal fake User (no DB required).
- * Uses a Mockery partial mock so hasPermission() never touches the DB.
+ * Build a minimal fake User (no DB required). hasPermission() returns false so
+ * every Blade template renders without touching the database.
  */
-function fakeUser(array $attrs = []): User
+function dashboardFakeUser(array $attrs = []): User
 {
-    /** @var User&\Mockery\MockInterface $user */
+    /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
         'P_ID'       => 1,
@@ -46,10 +47,11 @@ function fakeUser(array $attrs = []): User
 }
 
 /**
- * Returns empty stubs matching the exact array shapes that dashboard widgets expect.
- * Keys come from the actual DashboardService return values (verified against widgets).
+ * Empty stubs matching the exact array shapes the dashboard widgets expect.
+ * Keys mirror the real DashboardService return values (verified against the
+ * widget partials), so the controller can render every widget without a DB.
  */
-function stubPayloads(User $user): array
+function dashboardPayloads(User $user): array
 {
     return [
         'getStats' => [
@@ -95,13 +97,13 @@ function stubPayloads(User $user): array
 }
 
 /**
- * Bind a fully-stubbed DashboardService into the service container.
- * Optionally override individual method returns via $overrides.
+ * Bind a fully-stubbed DashboardService into the container. Individual method
+ * returns can be overridden via $overrides (e.g. to drive the expiry banner).
  */
-function bindStubService(User $user, array $overrides = []): void
+function dashboardStubService(User $user, array $overrides = []): void
 {
-    $stub    = Mockery::mock(DashboardService::class);
-    $payloads = array_merge(stubPayloads($user), $overrides);
+    $stub     = Mockery::mock(DashboardService::class);
+    $payloads = array_merge(dashboardPayloads($user), $overrides);
 
     foreach ($payloads as $method => $value) {
         $stub->shouldReceive($method)->andReturn($value);
@@ -111,7 +113,7 @@ function bindStubService(User $user, array $overrides = []): void
 }
 
 // Stub the NavigationService before every test so view composers never hit DB.
-beforeEach(fn () => bindStubNavigation());
+beforeEach(fn () => dashboardStubNav());
 
 // ── Access control ───────────────────────────────────────────────────────────
 
@@ -126,22 +128,22 @@ test('unauthenticated users are redirected to login from /legacy/index_d.php', f
 // ── Authenticated access ─────────────────────────────────────────────────────
 
 test('authenticated users see the dashboard', function () {
-    $user = fakeUser();
-    bindStubService($user);
+    $user = dashboardFakeUser();
+    dashboardStubService($user);
 
     $this->actingAs($user)->get('/dashboard')->assertStatus(200);
 });
 
 test('dashboard view uses the dashboard.index template', function () {
-    $user = fakeUser();
-    bindStubService($user);
+    $user = dashboardFakeUser();
+    dashboardStubService($user);
 
     $this->actingAs($user)->get('/dashboard')->assertViewIs('dashboard.index');
 });
 
 test('dashboard passes all required view variables', function () {
-    $user = fakeUser();
-    bindStubService($user);
+    $user = dashboardFakeUser();
+    dashboardStubService($user);
 
     $this->actingAs($user)->get('/dashboard')->assertViewHasAll([
         'stats', 'passwordExpiry', 'competenceAlerts', 'welcome',
@@ -152,44 +154,44 @@ test('dashboard passes all required view variables', function () {
 });
 
 test('numberEvents defaults to 20 when no query param is provided', function () {
-    $user = fakeUser();
-    bindStubService($user);
+    $user = dashboardFakeUser();
+    dashboardStubService($user);
 
     $this->actingAs($user)->get('/dashboard')->assertViewHas('numberEvents', 20);
 });
 
 test('numberEvents reflects the number_events query parameter', function () {
-    $user = fakeUser();
-    bindStubService($user);
+    $user = dashboardFakeUser();
+    dashboardStubService($user);
 
     $this->actingAs($user)->get('/dashboard?number_events=5')->assertViewHas('numberEvents', 5);
 });
 
-// ── index_d.php retirement ────────────────────────────────────────────────────
+// ── Legacy bridge redirects ──────────────────────────────────────────────────
 
 test('legacy index_d.php redirects to the dashboard', function () {
-    $this->actingAs(fakeUser())->get('/legacy/index_d.php')
+    $this->actingAs(dashboardFakeUser())->get('/legacy/index_d.php')
         ->assertRedirect(route('dashboard'));
 });
 
 test('/legacy shortcut also redirects to the dashboard', function () {
-    $this->actingAs(fakeUser())->get('/legacy')
+    $this->actingAs(dashboardFakeUser())->get('/legacy')
         ->assertRedirect(route('dashboard'));
 });
 
 // ── Password-expiry banner ───────────────────────────────────────────────────
 
 test('password expiry banner is absent when service returns null', function () {
-    $user = fakeUser();
-    bindStubService($user); // getPasswordExpiry => null
+    $user = dashboardFakeUser();
+    dashboardStubService($user); // getPasswordExpiry => null
 
     // "Changer maintenant" only appears inside the dash-alert password block.
     $this->actingAs($user)->get('/dashboard')->assertDontSee('Changer maintenant');
 });
 
 test('password expiry warning banner is shown when service returns expiry data', function () {
-    $user = fakeUser();
-    bindStubService($user, [
+    $user = dashboardFakeUser();
+    dashboardStubService($user, [
         'getPasswordExpiry' => ['expired' => false, 'days' => 3, 'expiry' => '01/06/2026'],
     ]);
 

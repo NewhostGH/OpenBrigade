@@ -1,6 +1,6 @@
 <?php
 
-// ── Convention enforcement tests ──────────────────────────────────────────────
+// ── Convention enforcement tests ─────────────────────────────────────────────
 //
 // These tests catch the three most common migration mistakes without running
 // the application. They operate on the source files directly (no HTTP, no DB).
@@ -8,7 +8,7 @@
 // Run with: php artisan test --filter ConventionsTest
 //           or: ./vendor/bin/pest tests/Feature/ConventionsTest.php
 
-// ── 1. No inline <style> blocks in Blade views ────────────────────────────────
+// ── 1. No inline <style> blocks in Blade views ───────────────────────────────
 //
 // All CSS must live in resources/css/<module>.css and be bundled via Vite.
 // Rule: Convention §3 — "No <style> blocks in Blade views."
@@ -40,7 +40,7 @@ test('no inline style blocks in blade views', function () {
         );
 });
 
-// ── 2. No unflagged legacy URL references ─────────────────────────────────────
+// ── 2. No unflagged legacy URL references ────────────────────────────────────
 //
 // Every line referencing a /legacy/*.php URL, a raw *.php? query string, or an
 // archive/legacy_app path must have "TODO: Migrate code" on the same line or
@@ -135,6 +135,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
 
 // ── 3. No bare legacy PHP links missing the /legacy/ prefix ──────────────────
 //
+
 // A link like url('/ins_personnel.php') routes to nowhere — the file is only
 // reachable under /legacy/. This was the navbar quick-add bug.
 //

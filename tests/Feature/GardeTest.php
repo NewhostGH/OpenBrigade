@@ -3,13 +3,29 @@
 use App\Http\Controllers\GardeController;
 use App\Models\User;
 use App\Services\NavigationService;
-use Illuminate\Support\Collection;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Mockery\MockInterface;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * Stub NavigationService so the layout's view composer never hits the DB.
+ */
+function gardeStubNav(): void
+{
+    $nav = Mockery::mock(NavigationService::class);
+    $nav->shouldReceive('getNavGroups')->andReturn([]);
+    $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
+    app()->instance(NavigationService::class, $nav);
+}
+
+/**
+ * Build a minimal fake User (no DB required). hasPermission() returns true so
+ * permission-gated roster actions are reachable.
+ */
 function gardeFakeUser(array $attrs = []): User
 {
-    /** @var User&\Mockery\MockInterface $user */
+    /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
         'P_ID'      => 1,
@@ -20,21 +36,18 @@ function gardeFakeUser(array $attrs = []): User
         'P_MDP'     => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(true);
+
     return $user;
 }
 
-function gardeStubNav(): void
-{
-    $nav = Mockery::mock(NavigationService::class);
-    $nav->shouldReceive('getNavGroups')->andReturn([]);
-    $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
-    app()->instance(NavigationService::class, $nav);
-}
-
+/**
+ * Bind GardeController so index() returns the real view rendered with stub data,
+ * keeping the assertion at the HTTP/view level without touching the database.
+ */
 function gardeStubIndex(User $user): void
 {
     $now = now();
-    app()->bind(GardeController::class, function () use ($user, $now) {
+    app()->bind(GardeController::class, function () use ($now) {
         $ctrl = Mockery::mock(GardeController::class)->makePartial();
         $ctrl->shouldReceive('index')->andReturn(
             view('garde.index', [
@@ -47,13 +60,14 @@ function gardeStubIndex(User $user): void
                 'roles'      => [],
             ])
         );
+
         return $ctrl;
     });
 }
 
 beforeEach(function () {
     gardeStubNav();
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
 
 // ── Access control ───────────────────────────────────────────────────────────

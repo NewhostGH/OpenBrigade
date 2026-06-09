@@ -3,19 +3,14 @@
 use App\Http\Controllers\OrganisationController;
 use App\Models\User;
 use App\Services\NavigationService;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Mockery\MockInterface;
 
-function orgFakeUser(): User
-{
-    /** @var User&\Mockery\MockInterface $user */
-    $user = Mockery::mock(User::class)->makePartial();
-    $user->forceFill([
-        'P_ID' => 1, 'P_NOM' => 'Test', 'P_PRENOM' => 'User',
-        'P_SECTION' => 1, 'P_ACTIF' => 1, 'P_MDP' => bcrypt('secret'),
-    ]);
-    $user->shouldReceive('hasPermission')->andReturn(true);
-    return $user;
-}
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * Stub NavigationService so the layout's view composer never hits the DB.
+ */
 function orgStubNav(): void
 {
     $nav = Mockery::mock(NavigationService::class);
@@ -24,6 +19,27 @@ function orgStubNav(): void
     app()->instance(NavigationService::class, $nav);
 }
 
+/**
+ * Build a minimal fake User (no DB required). hasPermission() returns true so
+ * permission-gated organisation actions are reachable.
+ */
+function orgFakeUser(): User
+{
+    /** @var User&MockInterface $user */
+    $user = Mockery::mock(User::class)->makePartial();
+    $user->forceFill([
+        'P_ID' => 1, 'P_NOM' => 'Test', 'P_PRENOM' => 'User',
+        'P_SECTION' => 1, 'P_ACTIF' => 1, 'P_MDP' => bcrypt('secret'),
+    ]);
+    $user->shouldReceive('hasPermission')->andReturn(true);
+
+    return $user;
+}
+
+/**
+ * Bind OrganisationController so index() returns the real view rendered with
+ * stub data, keeping the assertion at the HTTP/view level without a DB call.
+ */
 function orgStubIndex(): void
 {
     app()->bind(OrganisationController::class, function () {
@@ -31,18 +47,23 @@ function orgStubIndex(): void
         $ctrl->shouldReceive('index')->andReturn(
             view('organisation.index', ['tree' => [], 'sectionId' => 1])
         );
+
         return $ctrl;
     });
 }
 
 beforeEach(function () {
     orgStubNav();
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
+
+// ── Access control ───────────────────────────────────────────────────────────
 
 test('unauthenticated users are redirected from /organisation to login', function () {
     $this->get('/organisation')->assertRedirect('/login');
 });
+
+// ── Legacy bridge redirects ──────────────────────────────────────────────────
 
 test('legacy section.php redirects to organisation.index', function () {
     $this->actingAs(orgFakeUser())
@@ -55,6 +76,8 @@ test('legacy organigramme.php redirects to organisation.index', function () {
         ->get('/legacy/organigramme.php')
         ->assertRedirect(route('organisation.index'));
 });
+
+// ── Organisation index (stubbed controller) ──────────────────────────────────
 
 test('authenticated users can access the organisation view', function () {
     orgStubIndex();

@@ -12,7 +12,7 @@ use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery\MockInterface;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
  * Stub NavigationService so the layout's view composer never hits the DB.
@@ -45,9 +45,9 @@ function adminFakeUser(bool $can = true): User
 }
 
 /**
- * Bind a controller so the given method returns the real view rendered with
- * the supplied stub data — keeping the assertion at the HTTP/view level
- * without touching the database (mirrors DashboardTest).
+ * Bind a controller so $method returns the real view rendered with the supplied
+ * stub data — keeping the assertion at the HTTP/view level without touching the
+ * database (mirrors DashboardTest).
  */
 function adminStubView(string $controller, string $method, string $view, array $data): void
 {
@@ -144,9 +144,17 @@ test('parametrage index renders the admin.parametrage.index view', function () {
 
 test('habilitations index renders the admin.habilitations.index view', function () {
     adminStubView(HabilitationController::class, 'index', 'admin.habilitations.index', [
-        'groups' => collect([]),
+        'tab' => 'ceiling',
         'featuresByCategory' => collect([]),
-        'granted' => [],
+        'sections' => collect([]),
+        'sectionId' => 0,
+        'selected' => null,
+        'groups' => collect([]),
+        'roles' => collect([]),
+        'grants' => collect([]),
+        'ownDenied' => [],
+        'parentDenied' => [],
+        'sectionDenied' => [],
     ]);
 
     $this->actingAs(adminFakeUser())->get('/admin/habilitations')

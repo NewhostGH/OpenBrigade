@@ -4,23 +4,16 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\MessageController;
 use App\Models\User;
 use App\Services\NavigationService;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Mockery\MockInterface;
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
-function docMsgFakeUser(): User
-{
-    /** @var User&\Mockery\MockInterface $user */
-    $user = Mockery::mock(User::class)->makePartial();
-    $user->forceFill([
-        'P_ID' => 1, 'P_NOM' => 'Test', 'P_PRENOM' => 'User',
-        'P_SECTION' => 1, 'P_ACTIF' => 1, 'P_MDP' => bcrypt('secret'),
-    ]);
-    $user->shouldReceive('hasPermission')->andReturn(true);
-    return $user;
-}
-
+/**
+ * Stub NavigationService so the layout's view composer never hits the DB.
+ */
 function docMsgStubNav(): void
 {
     $nav = Mockery::mock(NavigationService::class);
@@ -29,6 +22,27 @@ function docMsgStubNav(): void
     app()->instance(NavigationService::class, $nav);
 }
 
+/**
+ * Build a minimal fake User (no DB required). hasPermission() returns true so
+ * permission-gated library and board actions are reachable.
+ */
+function docMsgFakeUser(): User
+{
+    /** @var User&MockInterface $user */
+    $user = Mockery::mock(User::class)->makePartial();
+    $user->forceFill([
+        'P_ID' => 1, 'P_NOM' => 'Test', 'P_PRENOM' => 'User',
+        'P_SECTION' => 1, 'P_ACTIF' => 1, 'P_MDP' => bcrypt('secret'),
+    ]);
+    $user->shouldReceive('hasPermission')->andReturn(true);
+
+    return $user;
+}
+
+/**
+ * Bind DocumentController so index() returns the real view rendered with stub
+ * data, keeping the assertion at the HTTP/view level without touching the DB.
+ */
 function docStubIndex(): void
 {
     app()->bind(DocumentController::class, function () {
@@ -46,10 +60,15 @@ function docStubIndex(): void
                 'types'      => Collection::make([]),
             ])
         );
+
         return $ctrl;
     });
 }
 
+/**
+ * Bind MessageController so index() returns the real view rendered with stub
+ * data, keeping the assertion at the HTTP/view level without touching the DB.
+ */
 function msgStubIndex(): void
 {
     app()->bind(MessageController::class, function () {
@@ -62,16 +81,17 @@ function msgStubIndex(): void
                 'category' => 'consigne',
             ])
         );
+
         return $ctrl;
     });
 }
 
 beforeEach(function () {
     docMsgStubNav();
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
 
-// ── Documents ─────────────────────────────────────────────────────────────────
+// ── Documents ────────────────────────────────────────────────────────────────
 
 test('unauthenticated users are redirected from /documents to login', function () {
     $this->get('/documents')->assertRedirect('/login');
@@ -99,7 +119,7 @@ test('document library passes required view variables', function () {
         ->assertViewHasAll(['allFolders', 'subFolders', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types']);
 });
 
-// ── Messages ──────────────────────────────────────────────────────────────────
+// ── Messages ─────────────────────────────────────────────────────────────────
 
 test('unauthenticated users are redirected from /messages to login', function () {
     $this->get('/messages')->assertRedirect('/login');
