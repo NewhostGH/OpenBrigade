@@ -99,7 +99,7 @@ test('authenticated users can access the garde roster', function () {
     $this->actingAs($user)->get('/garde')->assertStatus(200);
 });
 
-test('garde index uses the garde.index template', function () {
+test('garde index renders the garde.index view', function () {
     $user = gardeFakeUser();
     gardeStubIndex($user);
 

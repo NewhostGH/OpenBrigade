@@ -101,7 +101,7 @@ test('authenticated users can access the vehicule list', function () {
     $this->actingAs(vehiculeFakeUser())->get('/vehicules')->assertStatus(200);
 });
 
-test('vehicule list uses the vehicule.index template', function () {
+test('vehicule list renders the vehicule.index view', function () {
     vehiculeStubIndex();
     $this->actingAs(vehiculeFakeUser())->get('/vehicules')->assertViewIs('vehicule.index');
 });

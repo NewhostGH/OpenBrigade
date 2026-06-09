@@ -91,7 +91,7 @@ beforeEach(function () {
 
 // ── Authentication ───────────────────────────────────────────────────────────
 
-test('unauthenticated users are redirected from habilitation pages', function (string $path) {
+test('unauthenticated users are redirected from habilitation pages to login', function (string $path) {
     $this->get($path)->assertRedirect('/login');
 })->with(['/admin/habilitations', '/mes-droits']);
 

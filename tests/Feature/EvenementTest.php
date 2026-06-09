@@ -118,7 +118,7 @@ test('authenticated users can access the event list', function () {
     $this->actingAs(eventFakeUser())->get('/evenements')->assertStatus(200);
 });
 
-test('event list uses the evenement.index template', function () {
+test('event list renders the evenement.index view', function () {
     eventStubIndex();
     $this->actingAs(eventFakeUser())->get('/evenements')->assertViewIs('evenement.index');
 });

@@ -122,7 +122,7 @@ test('authenticated users can access the personnel list', function () {
     $this->actingAs(personnelFakeUser())->get('/personnel')->assertStatus(200);
 });
 
-test('personnel index uses the personnel.index template', function () {
+test('personnel index renders the personnel.index view', function () {
     personnelStubIndex();
     $this->actingAs(personnelFakeUser())->get('/personnel')->assertViewIs('personnel.index');
 });

@@ -108,12 +108,12 @@ test('authenticated users can access the document library', function () {
     $this->actingAs(docMsgFakeUser())->get('/documents')->assertStatus(200);
 });
 
-test('document library uses the document.index template', function () {
+test('document library renders the document.index view', function () {
     docStubIndex();
     $this->actingAs(docMsgFakeUser())->get('/documents')->assertViewIs('document.index');
 });
 
-test('document library passes required view variables', function () {
+test('document library passes all required view variables', function () {
     docStubIndex();
     $this->actingAs(docMsgFakeUser())->get('/documents')
         ->assertViewHasAll(['allFolders', 'subFolders', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types']);
@@ -142,7 +142,7 @@ test('authenticated users can access the message board', function () {
     $this->actingAs(docMsgFakeUser())->get('/messages')->assertStatus(200);
 });
 
-test('message board uses the message.index template', function () {
+test('message board renders the message.index view', function () {
     msgStubIndex();
     $this->actingAs(docMsgFakeUser())->get('/messages')->assertViewIs('message.index');
 });

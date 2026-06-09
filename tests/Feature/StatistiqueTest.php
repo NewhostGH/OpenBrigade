@@ -81,12 +81,12 @@ test('legacy repo_events.php redirects to statistique.index', function () {
 
 // ── Statistique index (stubbed controller) ───────────────────────────────────
 
-test('authenticated users can access statistics', function () {
+test('authenticated users can access the statistique index', function () {
     statStubIndex();
     $this->actingAs(statFakeUser())->get('/statistiques')->assertStatus(200);
 });
 
-test('statistique index uses the statistique.index template', function () {
+test('statistique index renders the statistique.index view', function () {
     statStubIndex();
     $this->actingAs(statFakeUser())->get('/statistiques')->assertViewIs('statistique.index');
 });

@@ -93,14 +93,14 @@ test('legacy myagenda.php redirects to planning.index', function () {
 
 // ── Planning index (stubbed controller) ──────────────────────────────────────
 
-test('authenticated users can access their planning', function () {
+test('authenticated users can access the planning', function () {
     $user = planningFakeUser();
     planningStubIndex($user);
 
     $this->actingAs($user)->get('/planning')->assertStatus(200);
 });
 
-test('planning index uses the planning.index template', function () {
+test('planning index renders the planning.index view', function () {
     $user = planningFakeUser();
     planningStubIndex($user);
 

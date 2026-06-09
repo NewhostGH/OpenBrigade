@@ -117,24 +117,24 @@ beforeEach(fn () => dashboardStubNav());
 
 // ── Access control ───────────────────────────────────────────────────────────
 
-test('unauthenticated users are redirected to login from /dashboard', function () {
+test('unauthenticated users are redirected from /dashboard to login', function () {
     $this->get('/dashboard')->assertRedirect('/login');
 });
 
-test('unauthenticated users are redirected to login from /legacy/index_d.php', function () {
+test('unauthenticated users are redirected from /legacy/index_d.php to login', function () {
     $this->get('/legacy/index_d.php')->assertRedirect('/login');
 });
 
 // ── Authenticated access ─────────────────────────────────────────────────────
 
-test('authenticated users see the dashboard', function () {
+test('authenticated users can access the dashboard', function () {
     $user = dashboardFakeUser();
     dashboardStubService($user);
 
     $this->actingAs($user)->get('/dashboard')->assertStatus(200);
 });
 
-test('dashboard view uses the dashboard.index template', function () {
+test('dashboard renders the dashboard.index view', function () {
     $user = dashboardFakeUser();
     dashboardStubService($user);
 

@@ -79,17 +79,17 @@ test('legacy organigramme.php redirects to organisation.index', function () {
 
 // ── Organisation index (stubbed controller) ──────────────────────────────────
 
-test('authenticated users can access the organisation view', function () {
+test('authenticated users can access the organisation index', function () {
     orgStubIndex();
     $this->actingAs(orgFakeUser())->get('/organisation')->assertStatus(200);
 });
 
-test('organisation index uses the organisation.index template', function () {
+test('organisation index renders the organisation.index view', function () {
     orgStubIndex();
     $this->actingAs(orgFakeUser())->get('/organisation')->assertViewIs('organisation.index');
 });
 
-test('organisation index passes tree and sectionId variables', function () {
+test('organisation index passes all required view variables', function () {
     orgStubIndex();
     $this->actingAs(orgFakeUser())->get('/organisation')
         ->assertViewHasAll(['tree', 'sectionId']);

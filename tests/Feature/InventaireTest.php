@@ -110,7 +110,7 @@ test('authenticated users can access the materiel list', function () {
     $this->actingAs(inventaireFakeUser())->get('/materiels')->assertStatus(200);
 });
 
-test('materiel list uses the materiel.index template', function () {
+test('materiel list renders the materiel.index view', function () {
     materielStubIndex();
     $this->actingAs(inventaireFakeUser())->get('/materiels')->assertViewIs('materiel.index');
 });
@@ -132,7 +132,7 @@ test('authenticated users can access the consommable list', function () {
     $this->actingAs(inventaireFakeUser())->get('/consommables')->assertStatus(200);
 });
 
-test('consommable list uses the consommable.index template', function () {
+test('consommable list renders the consommable.index view', function () {
     consommableStubIndex();
     $this->actingAs(inventaireFakeUser())->get('/consommables')->assertViewIs('consommable.index');
 });
