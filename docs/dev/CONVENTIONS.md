@@ -278,10 +278,12 @@ Rules:
   one allowed direct use, and it must read the **new** tables: `ob_user_assignment`
   (role memberships) joined to `ob_group` / `groupe` — never `section_role`, which is
   legacy reference data no longer written to.
-- **Assigning** a member: global groups via `pompier.GP_ID` / `GP_ID2`
-  (`ObGroup::groups()`), section roles via `ob_user_assignment`
-  (`personnel.role.store` / `.destroy`). The admin matrices live under
-  `admin.habilitations` (tabs Plafonds · Groupes · Rôles).
+- **Assigning** a member: both global groups (`pompier.GP_ID` / `GP_ID2`,
+  `ObGroup::groups()`) and section roles (`ob_user_assignment`) are edited on the
+  member's CRUD form, "Accès" tab, and persisted on save — the role editor is only
+  rendered/honoured for users with F_ID 9 (see `PersonnelController::syncRoles`). A
+  member belongs to multiple sections through these role rows. The admin matrices
+  live under `admin.habilitations` (tabs Plafonds · Groupes · Rôles).
 
 See [project_habilitations memory] and `tests/Unit/PermissionResolverTest.php` for the
 resolution algorithm and worked examples.

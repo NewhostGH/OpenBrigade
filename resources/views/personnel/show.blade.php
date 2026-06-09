@@ -762,10 +762,18 @@
                     </div>
                 </div>
 
-                {{-- Section-scoped organisational roles (ob_user_assignment) --}}
+                {{-- Section-scoped organisational roles (ob_user_assignment) — read-only;
+                     edited from the member's CRUD form, "Accès" tab. --}}
                 <div class="ob-widget-card mb-3">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title"><i class="fas fa-user-tie"></i> Rôles par section</div>
+                        @if (auth()->user()->hasPermission(9))
+                            <div class="ob-widget-card-actions">
+                                <a href="{{ route('personnel.edit', $personnel->P_ID) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-pen me-1"></i>Gérer
+                                </a>
+                            </div>
+                        @endif
                     </div>
                     <div class="ob-widget-card-body p-0">
                         @if ($roleAssignments->isEmpty())
@@ -773,56 +781,17 @@
                         @else
                             <table class="table table-sm mb-0">
                                 <thead class="table-light">
-                                    <tr>
-                                        <th>Section</th>
-                                        <th>Rôle</th>
-                                        <th style="width:60px;"></th>
-                                    </tr>
+                                    <tr><th>Section</th><th>Rôle</th></tr>
                                 </thead>
                                 <tbody>
                                 @foreach ($roleAssignments as $a)
                                     <tr>
                                         <td class="align-middle" style="font-size:var(--font-size-sm);">{{ $a->section_name }}</td>
                                         <td class="align-middle" style="font-size:var(--font-size-sm);">{{ $a->role_name }}</td>
-                                        <td class="text-end align-middle">
-                                            @if (auth()->user()->hasPermission(9))
-                                                <form method="POST" action="{{ route('personnel.role.destroy', [$personnel->P_ID, $a->id]) }}"
-                                                      onsubmit="return confirm('Retirer ce rôle ?')" style="margin:0;">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                                </form>
-                                            @endif
-                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-                        @endif
-
-                        @if (auth()->user()->hasPermission(9))
-                            <div class="p-3 border-top">
-                                <form method="POST" action="{{ route('personnel.role.store', $personnel->P_ID) }}"
-                                      class="d-flex gap-2 align-items-center flex-wrap">
-                                    @csrf
-                                    <select name="section_id" class="form-select form-select-sm" style="width:auto;" required>
-                                        <option value="">Section…</option>
-                                        @foreach ($allSections as $s)
-                                            <option value="{{ $s->S_ID }}">{{ $s->S_DESCRIPTION }}</option>
-                                        @endforeach
-                                    </select>
-                                    <select name="group_id" class="form-select form-select-sm" style="width:auto;" required>
-                                        <option value="">Rôle…</option>
-                                        @foreach ($roleGroups as $r)
-                                            <option value="{{ $r->id }}">{{ $r->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus me-1"></i>Attribuer</button>
-                                </form>
-                                <div class="text-muted mt-1" style="font-size:var(--font-size-xs);">
-                                    Un rôle attribué sur une section parente s'applique aussi à ses sections filles.
-                                    Les groupes d'accès globaux se règlent dans l'onglet « Accès » de la fiche.
-                                </div>
-                            </div>
                         @endif
                     </div>
                 </div>

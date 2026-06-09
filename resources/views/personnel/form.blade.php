@@ -545,6 +545,63 @@
                                 @error('C_ID')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            {{-- Section-scoped organisational roles (ob_user_assignment).
+                                 A member can belong to several sections through these roles. --}}
+                            @if (auth()->user()->hasPermission(9))
+                                <div class="col-12">
+                                    <p class="ob-section-title mb-1 mt-2">Rôles par section</p>
+                                    <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
+                                        Un membre peut appartenir à plusieurs sections via ses rôles. Un rôle sur une
+                                        section parente s'applique aussi à ses sections filles.
+                                    </p>
+
+                                    <div id="ob-roles-rows" class="d-flex flex-column gap-2">
+                                        @forelse ($assignments as $i => $a)
+                                            <div class="d-flex gap-2 align-items-center ob-role-row">
+                                                <select name="roles[{{ $i }}][section_id]" class="form-select form-select-sm" style="max-width:280px;">
+                                                    <option value="">Section…</option>
+                                                    @foreach ($sections as $s)
+                                                        <option value="{{ $s->S_ID }}" @selected((int) $a->section_id === (int) $s->S_ID)>
+                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <select name="roles[{{ $i }}][group_id]" class="form-select form-select-sm" style="max-width:240px;">
+                                                    <option value="">Rôle…</option>
+                                                    @foreach ($roles as $r)
+                                                        <option value="{{ $r->id }}" @selected((int) $a->group_id === (int) $r->id)>{{ $r->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <button type="button" class="btn btn-sm btn-outline-danger ob-role-remove"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        @empty
+                                        @endforelse
+                                    </div>
+
+                                    <template id="ob-role-template">
+                                        <div class="d-flex gap-2 align-items-center ob-role-row">
+                                            <select name="roles[__IDX__][section_id]" class="form-select form-select-sm" style="max-width:280px;">
+                                                <option value="">Section…</option>
+                                                @foreach ($sections as $s)
+                                                    <option value="{{ $s->S_ID }}">{{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}</option>
+                                                @endforeach
+                                            </select>
+                                            <select name="roles[__IDX__][group_id]" class="form-select form-select-sm" style="max-width:240px;">
+                                                <option value="">Rôle…</option>
+                                                @foreach ($roles as $r)
+                                                    <option value="{{ $r->id }}">{{ $r->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="button" class="btn btn-sm btn-outline-danger ob-role-remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </template>
+
+                                    <button type="button" id="ob-role-add" class="btn btn-sm btn-outline-primary mt-2">
+                                        <i class="fas fa-plus me-1"></i>Ajouter un rôle
+                                    </button>
+                                </div>
+                            @endif
+
                             @if ($isEdit && ($personnel->P_ACCEPT_DATE || $personnel->P_ACCEPT_DATE2))
                                 <div class="col-12">
                                     <p class="ob-section-title mb-1 mt-2">Charte d'utilisation</p>
@@ -602,4 +659,26 @@
 @push('scripts')
 <script>window.PERS_FORM_GRADE_URL = '{{ route('personnel.grade_image', ['grade' => 'PLACEHOLDER']) }}';</script>
 @vite('resources/js/ob-personnel-form.js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var rows = document.getElementById('ob-roles-rows');
+    var tpl  = document.getElementById('ob-role-template');
+    var add  = document.getElementById('ob-role-add');
+    if (!rows || !tpl || !add) return;
+
+    var idx = rows.querySelectorAll('.ob-role-row').length;
+
+    add.addEventListener('click', function () {
+        var html = tpl.innerHTML.replace(/__IDX__/g, 'new' + (idx++));
+        var wrap = document.createElement('div');
+        wrap.innerHTML = html.trim();
+        rows.appendChild(wrap.firstChild);
+    });
+
+    rows.addEventListener('click', function (e) {
+        var btn = e.target.closest('.ob-role-remove');
+        if (btn) { btn.closest('.ob-role-row').remove(); }
+    });
+});
+</script>
 @endpush

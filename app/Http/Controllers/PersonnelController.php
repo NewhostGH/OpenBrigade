@@ -28,7 +28,6 @@ use App\Models\TypePaiement;
 use App\Services\PersonnelExportService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -494,10 +493,6 @@ class PersonnelController extends Controller
             ->get(['a.id', 'a.section_id', 'g.name as role_name', 's.S_DESCRIPTION as section_name'])
             ->each(fn ($r) => $r->section_name = $r->section_name ?: 'Section '.$r->section_id);
 
-        $allSections = Section::query()->orderBy('S_DESCRIPTION')->get(['S_ID', 'S_DESCRIPTION'])
-            ->each(fn ($s) => $s->S_DESCRIPTION = $s->S_DESCRIPTION ?: 'Section '.$s->S_ID);
-        $roleGroups = ObGroup::roles()->orderBy('name')->get(['id', 'name']);
-
         $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
         $today = now()->toDateString();
         $warn30 = now()->addDays(30)->toDateString();
@@ -535,44 +530,38 @@ class PersonnelController extends Controller
             'warn30' => $warn30,
             'sideNav' => $sideNav,
             'roleAssignments' => $roleAssignments,
-            'allSections' => $allSections,
-            'roleGroups' => $roleGroups,
         ]);
     }
 
-    // ── Section-scoped role assignments (ob_user_assignment) ─────────────────
-
-    public function roleStore(Request $request, Personnel $personnel): RedirectResponse
+    /**
+     * Replace a member's section-scoped role assignments (ob_user_assignment)
+     * from the `roles[]` form rows. Only honoured for users who can manage
+     * habilitations (F_ID 9) — otherwise the input is ignored, so editing a
+     * member never silently escalates access. Used by store() and update().
+     */
+    private function syncRoles(Request $request, Personnel $personnel): void
     {
-        $validated = $request->validate([
-            'section_id' => ['required', 'integer', 'exists:section,S_ID'],
-            'group_id' => ['required', 'integer', 'exists:ob_group,id'],
-        ]);
+        if (! $request->user()->hasPermission(9)) {
+            return;
+        }
 
-        abort_unless(
-            ObGroup::roles()->whereKey($validated['group_id'])->exists(),
-            422,
-            'Le groupe choisi n’est pas un rôle organisationnel.'
-        );
+        // Valid role group ids (kind = role).
+        $validRoleIds = ObGroup::roles()->pluck('id')->map(fn ($v) => (int) $v)->all();
 
-        ObUserAssignment::firstOrCreate([
-            'person_id' => $personnel->P_ID,
-            'section_id' => $validated['section_id'],
-            'group_id' => $validated['group_id'],
-        ]);
+        $desired = collect($request->input('roles', []))
+            ->map(fn ($r) => [(int) ($r['section_id'] ?? 0), (int) ($r['group_id'] ?? 0)])
+            ->filter(fn ($pair) => $pair[0] > 0 && in_array($pair[1], $validRoleIds, true))
+            ->unique(fn ($pair) => $pair[0].'-'.$pair[1]);
 
-        return redirect()->route('personnel.show', $personnel)
-            ->with('success', 'Rôle attribué.');
-    }
+        ObUserAssignment::where('person_id', $personnel->P_ID)->delete();
 
-    public function roleDestroy(Personnel $personnel, int $assignment): RedirectResponse
-    {
-        ObUserAssignment::where('id', $assignment)
-            ->where('person_id', $personnel->P_ID)
-            ->delete();
-
-        return redirect()->route('personnel.show', $personnel)
-            ->with('success', 'Rôle retiré.');
+        foreach ($desired as [$sectionId, $groupId]) {
+            ObUserAssignment::create([
+                'person_id' => $personnel->P_ID,
+                'section_id' => $sectionId,
+                'group_id' => $groupId,
+            ]);
+        }
     }
 
     // ── Qualifications (competences) CRUD ────────────────────────────────────
@@ -855,6 +844,8 @@ class PersonnelController extends Controller
             'sections' => $sections,
             'groupes' => $groupes,
             'companies' => $companies,
+            'roles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
+            'assignments' => collect(),
         ]);
     }
 
@@ -924,6 +915,8 @@ class PersonnelController extends Controller
             $personnel->update(['P_PHOTO' => $filename]);
         }
 
+        $this->syncRoles($request, $personnel);
+
         return redirect()
             ->route('personnel.show', $personnel)
             ->with('success', 'Personnel créé avec succès.');
@@ -943,11 +936,17 @@ class PersonnelController extends Controller
             ->orderBy('C_NAME')
             ->get(['C_ID', 'C_NAME']);
 
+        $assignments = DB::table('ob_user_assignment')
+            ->where('person_id', $personnel->P_ID)
+            ->get(['section_id', 'group_id']);
+
         return view('personnel.form', [
             'personnel' => $personnel,
             'sections' => $sections,
             'groupes' => $groupes,
             'companies' => $companies,
+            'roles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
+            'assignments' => $assignments,
         ]);
     }
 
@@ -1030,6 +1029,8 @@ class PersonnelController extends Controller
         unset($validated['photo_upload']);
 
         $personnel->update($validated);
+
+        $this->syncRoles($request, $personnel);
 
         return redirect()
             ->route('personnel.show', $personnel)

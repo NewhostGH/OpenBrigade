@@ -126,15 +126,3 @@ test('personnel index renders the personnel.index view', function () {
     personnelStubIndex();
     $this->actingAs(personnelFakeUser())->get('/personnel')->assertViewIs('personnel.index');
 });
-
-// ── Section-scoped role assignment routes (ob_user_assignment) ───────────────
-
-test('role assignment routes are registered', function () {
-    expect(route('personnel.role.store', 1))->toContain('/personnel/1/roles')
-        ->and(route('personnel.role.destroy', [1, 5]))->toContain('/personnel/1/roles/5');
-});
-
-test('unauthenticated users cannot assign or remove roles', function () {
-    $this->post('/personnel/1/roles', ['section_id' => 1, 'group_id' => 100])->assertRedirect('/login');
-    $this->delete('/personnel/1/roles/5')->assertRedirect('/login');
-});

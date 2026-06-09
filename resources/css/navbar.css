@@ -277,6 +277,14 @@
     margin:       4px 0;
 }
 
+/* Headers and inert text inherit the light brand text (not Bootstrap's dark grey)
+   so they stay readable on the dark dropdown background. */
+.ob-nav-dropdown-menu .dropdown-header,
+.ob-nav-dropdown-menu .dropdown-item-text {
+    color:   var(--brand-text);
+    opacity: 0.7;
+}
+
 .ob-nav-item-icon {
     width:      16px;
     text-align: center;

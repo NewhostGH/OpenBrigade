@@ -218,11 +218,6 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.cotisation.update')->middleware('permission:0');
     Route::delete('personnel/{personnel}/cotisations/{pcId}', [PersonnelController::class, 'destroyCotisation'])
         ->name('personnel.cotisation.destroy')->middleware('permission:0');
-    // Section-scoped role assignments (ob_user_assignment) — gated by habilitations (9)
-    Route::post('personnel/{personnel}/roles', [PersonnelController::class, 'roleStore'])
-        ->name('personnel.role.store')->middleware('permission:9');
-    Route::delete('personnel/{personnel}/roles/{assignment}', [PersonnelController::class, 'roleDestroy'])
-        ->name('personnel.role.destroy')->middleware('permission:9');
     // Per-member exports
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');
