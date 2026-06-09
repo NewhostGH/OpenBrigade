@@ -39,6 +39,65 @@
         <div class="collapse navbar-collapse ob-nav-right" id="navbarMain">
             <ul class="navbar-nav nav-top">
 
+                {{-- Active section + role context switchers (always visible) --}}
+                @php
+                    $ctxSections = $ctxSections ?? collect();
+                    $ctxRoles = $ctxRoles ?? collect();
+                    $activeSectionLabel = optional($ctxSections->firstWhere('S_ID', $ctxActiveSection))->S_DESCRIPTION
+                        ?? 'Section';
+                    $activeRoleLabel = $ctxActiveRole
+                        ? (optional($ctxRoles->firstWhere('id', $ctxActiveRole))->name ?? 'Rôle')
+                        : 'Tous mes rôles';
+                @endphp
+                <li class="nav-item dropdown nav-top-item ob-navtop-hover ob-margin-li">
+                    <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown"
+                        href="#" title="Section active" aria-expanded="false">
+                        <i class="fas fa-sitemap me-1"></i><span class="ob-ctx-label">{{ $activeSectionLabel }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
+                        <li><h6 class="dropdown-header">Section active</h6></li>
+                        @forelse ($ctxSections as $s)
+                            <li>
+                                <a class="dropdown-item dropdown-item-profil {{ (int) $s->S_ID === (int) $ctxActiveSection ? 'active' : '' }}"
+                                    href="{{ route('context.section', ['s' => $s->S_ID]) }}">
+                                    <i class="fas fa-{{ (int) $s->S_PARENT === 0 ? 'building' : 'angle-right' }} fa-fw ob-nav-item-icon"></i>
+                                    {{ $s->S_DESCRIPTION }}
+                                    @if ((int) $s->S_ID === (int) $ctxActiveSection)<i class="fas fa-check ms-2 text-success"></i>@endif
+                                </a>
+                            </li>
+                        @empty
+                            <li><span class="dropdown-item-text text-muted small">Aucune section affectée</span></li>
+                        @endforelse
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown nav-top-item ob-navtop-hover ob-margin-li">
+                    <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown"
+                        href="#" title="Rôle actif" aria-expanded="false">
+                        <i class="fas fa-user-tie me-1"></i><span class="ob-ctx-label">{{ $activeRoleLabel }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
+                        <li><h6 class="dropdown-header">Rôle actif</h6></li>
+                        <li>
+                            <a class="dropdown-item dropdown-item-profil {{ $ctxActiveRole ? '' : 'active' }}"
+                                href="{{ route('context.role', ['r' => 'all']) }}">
+                                Tous mes rôles
+                                @unless ($ctxActiveRole)<i class="fas fa-check ms-2 text-success"></i>@endunless
+                            </a>
+                        </li>
+                        @foreach ($ctxRoles as $r)
+                            <li>
+                                <a class="dropdown-item dropdown-item-profil {{ (int) $r->id === (int) $ctxActiveRole ? 'active' : '' }}"
+                                    href="{{ route('context.role', ['r' => $r->id]) }}">
+                                    {{ $r->name }}
+                                    @if (!empty($r->inherited))<span class="ob-badge ob-badge-int ms-1" style="font-size:9px;">hérité</span>@endif
+                                    @if ((int) $r->id === (int) $ctxActiveRole)<i class="fas fa-check ms-2 text-success"></i>@endif
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </li>
+
                 {{-- Quick-add "+" button --}}
                 @php
                     $canAdd = auth()->user()->hasPermission(1)
@@ -131,6 +190,11 @@
                             <a class="dropdown-item dropdown-item-profil"
                                 href="{{ route('personnel.show', auth()->user()->P_ID) }}">
                                 <i class="fas fa-user fa-fw ob-nav-item-icon"></i> Ma fiche
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item dropdown-item-profil" href="{{ route('mes-droits') }}">
+                                <i class="fas fa-id-card fa-fw ob-nav-item-icon"></i> Mes droits
                             </a>
                         </li>
                         <li>

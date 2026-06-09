@@ -254,6 +254,38 @@ Route::resource('foos', FooController::class)->only(['show', 'edit', 'update', '
 > **Critical:** declare static-segment routes (`/foos/create`) **before**
 > `Route::resource()`, or Laravel matches `create` as the `{foo}` parameter.
 
+## 9. Permission checks (section-scoped)
+
+Permissions are **section-scoped** and resolved through one path only —
+`App\Services\PermissionResolver`, reached via the model helper:
+
+```php
+auth()->user()->hasPermission($fid);                  // active section (session ‹hab.section›, default home)
+auth()->user()->hasPermissionInSection($fid, $sId);   // explicit section, ignores active-role filter
+Gate::allows('feature', $fid);                          // same, through the Gate
+->middleware('permission:'.$fid)                         // RequirePermission middleware, same path
+```
+
+Rules:
+
+- **Never decide access from a raw table query.** Do not `DB::table('habilitation')`,
+  `ob_group_permission`, `ob_section_permission`, `section_role`, or read
+  `pompier.GP_ID` to gate a feature — call `hasPermission()`. The resolver already
+  composes global groups + section roles + the section deny-list (parent caps child).
+- **Menus and nav** gate every item with `hasPermission()` (see `NavigationService`,
+  `RequirePermission`, the navbar quick-add). New menus must do the same.
+- **Reading org structure for display** (e.g. "who holds a role in section X") is the
+  one allowed direct use, and it must read the **new** tables: `ob_user_assignment`
+  (role memberships) joined to `ob_group` / `groupe` — never `section_role`, which is
+  legacy reference data no longer written to.
+- **Assigning** a member: global groups via `pompier.GP_ID` / `GP_ID2`
+  (`ObGroup::groups()`), section roles via `ob_user_assignment`
+  (`personnel.role.store` / `.destroy`). The admin matrices live under
+  `admin.habilitations` (tabs Plafonds · Groupes · Rôles).
+
+See [project_habilitations memory] and `tests/Unit/PermissionResolverTest.php` for the
+resolution algorithm and worked examples.
+
 ---
 
 ## See also

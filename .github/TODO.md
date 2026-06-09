@@ -187,7 +187,12 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 - [x] Audit log view
 - [x] Backup and restore — mysqldump, list/download/delete/restore, retention prune
 - [x] Maintenance page — system info + migration status (replaces `upgrade.php`)
-- [x] Habilitations — group × permission matrix, access-group CRUD, system groups protected
+- [x] Habilitations — **redesigned to a section-scoped, ceiling-based model**
+  (`ob_group`/`ob_group_permission`/`ob_section_permission`/`ob_user_assignment`).
+  3-tab admin UI (Plafonds par section · Groupes globaux · Rôles), navbar
+  section/role context switchers, user "Mes droits" preview, `PermissionResolver`
+  (deny-list ceiling: parent caps child) wired into `User::hasPermission`.
+  Legacy `groupe`/`habilitation`/`section_role` back-filled by migration
 - [ ] Add-on / module management — install/download from ebrigade.app not applicable to the fork; `nav.modules.list` still points at legacy `addons.php`
 - [x] Add tests and parity check; retire migrated ADMIN legacy files —
   `tests/Feature/AdminTest.php` (auth, permission gating, view rendering, legacy

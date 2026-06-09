@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Personnel;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DashboardService
@@ -16,17 +17,18 @@ class DashboardService
         if ($sectionId === 0) {
             return [0];
         }
-        $ids   = [$sectionId];
+        $ids = [$sectionId];
         $queue = [$sectionId];
-        while (!empty($queue)) {
+        while (! empty($queue)) {
             $children = DB::table('section')
                 ->whereIn('S_PARENT', $queue)
                 ->where('S_ID', '!=', 0)
                 ->pluck('S_ID')->toArray();
-            $new   = array_values(array_diff($children, $ids));
-            $ids   = array_merge($ids, $new);
+            $new = array_values(array_diff($children, $ids));
+            $ids = array_merge($ids, $new);
             $queue = $new;
         }
+
         return $ids;
     }
 
@@ -39,10 +41,13 @@ class DashboardService
             $parent = DB::table('section')
                 ->where('S_ID', $current)
                 ->value('S_PARENT');
-            if (!$parent || $parent === 0 || in_array($parent, $ids)) break;
-            $ids[]   = (int) $parent;
+            if (! $parent || $parent === 0 || in_array($parent, $ids)) {
+                break;
+            }
+            $ids[] = (int) $parent;
             $current = (int) $parent;
         }
+
         return $ids;
     }
 
@@ -51,6 +56,7 @@ class DashboardService
     private function config(string $key, mixed $default = null): mixed
     {
         $row = DB::table('configuration')->where('CO_KEY', $key)->first();
+
         return $row ? $row->CO_VALUE : $default;
     }
 
@@ -58,7 +64,7 @@ class DashboardService
 
     public function getStats(User $user): array
     {
-        $pid       = (int) $user->P_ID;
+        $pid = (int) $user->P_ID;
         $sectionId = (int) $user->P_SECTION;
 
         // Personal participations this year
@@ -76,12 +82,14 @@ class DashboardService
         $partiIncoming = 0;
         $today = date('Y-m-d');
         foreach ($rows as $r) {
-            if ($r->EH_DATE_DEBUT >= $today) $partiIncoming++;
+            if ($r->EH_DATE_DEBUT >= $today) {
+                $partiIncoming++;
+            }
         }
 
         // Section activities this month and quarter
         $month = (int) date('n');
-        $qNum  = (int) ceil($month / 3);
+        $qNum = (int) ceil($month / 3);
         $qDates = [
             1 => ["$year-01-01", "$year-03-31"],
             2 => ["$year-04-01", "$year-06-30"],
@@ -101,7 +109,9 @@ class DashboardService
         $actQuarter = count($actRows);
         $currentMonth = date('m');
         foreach ($actRows as $r) {
-            if (substr($r->EH_DATE_DEBUT, 5, 2) === $currentMonth) $actMonth++;
+            if (substr($r->EH_DATE_DEBUT, 5, 2) === $currentMonth) {
+                $actMonth++;
+            }
         }
 
         // New members this month and quarter
@@ -112,10 +122,12 @@ class DashboardService
             ->whereBetween('P_DATE_ENGAGEMENT', [$qStart, $qEnd])
             ->whereIn('P_SECTION', $family)
             ->get(['P_DATE_ENGAGEMENT']);
-        $newMonth    = 0;
-        $newQuarter  = count($newRows);
+        $newMonth = 0;
+        $newQuarter = count($newRows);
         foreach ($newRows as $r) {
-            if ($r->P_DATE_ENGAGEMENT && substr($r->P_DATE_ENGAGEMENT, 5, 2) === $currentMonth) $newMonth++;
+            if ($r->P_DATE_ENGAGEMENT && substr($r->P_DATE_ENGAGEMENT, 5, 2) === $currentMonth) {
+                $newMonth++;
+            }
         }
 
         // Total alerts count (run sub-queries cheaply)
@@ -136,7 +148,7 @@ class DashboardService
     private function countAlerts(User $user): int
     {
         $count = 0;
-        $pid   = (int) $user->P_ID;
+        $pid = (int) $user->P_ID;
 
         // Expiring qualifications
         $count += DB::table('qualification as q')
@@ -174,7 +186,7 @@ class DashboardService
                 ->count();
             $count += DB::table('consommable')
                 ->whereIn('S_ID', $family)
-                ->whereRaw("C_NOMBRE < C_MINIMUM")
+                ->whereRaw('C_NOMBRE < C_MINIMUM')
                 ->count();
         }
 
@@ -186,15 +198,20 @@ class DashboardService
     public function getPasswordExpiry(User $user): ?array
     {
         $expiry = $user->P_MDP_EXPIRY;
-        if (!$expiry) return null;
+        if (! $expiry) {
+            return null;
+        }
         $days = (int) DB::selectOne(
-            "SELECT DATEDIFF(?,NOW()) AS d",
+            'SELECT DATEDIFF(?,NOW()) AS d',
             [$expiry]
         )->d;
-        if ($days > 7) return null;
+        if ($days > 7) {
+            return null;
+        }
+
         return [
-            'days'   => $days,
-            'expiry' => $expiry instanceof \Carbon\Carbon
+            'days' => $days,
+            'expiry' => $expiry instanceof Carbon
                 ? $expiry->format('d-m-Y')
                 : date('d-m-Y', strtotime((string) $expiry)),
             'expired' => $days <= 0,
@@ -213,7 +230,7 @@ class DashboardService
             ->select(
                 'p.TYPE',
                 DB::raw("DATE_FORMAT(q.Q_EXPIRATION,'%d-%m-%Y') as Q_EXPIRATION"),
-                DB::raw("DATEDIFF(q.Q_EXPIRATION,NOW()) as NB")
+                DB::raw('DATEDIFF(q.Q_EXPIRATION,NOW()) as NB')
             )
             ->get()->toArray();
     }
@@ -227,19 +244,19 @@ class DashboardService
         $missingFields = [];
         if ($user->P_STATUT !== 'EXT') {
             $checks = [
-                'P_PHOTO'            => 'Photo',
-                'P_PRENOM2'          => 'Deuxième prénom',
-                'P_PHONE'            => 'Téléphone',
-                'P_EMAIL'            => 'Adresse mail',
-                'P_ADDRESS'          => 'Adresse',
-                'P_CITY'             => 'Ville',
-                'P_ZIP_CODE'         => 'Code postal',
-                'P_BIRTHDATE'        => 'Date de naissance',
-                'P_BIRTHPLACE'       => 'Lieu de naissance',
-                'P_BIRTH_DEP'        => 'Département de naissance',
-                'P_RELATION_NOM'     => 'Nom – contact urgence',
-                'P_RELATION_PRENOM'  => 'Prénom – contact urgence',
-                'P_RELATION_PHONE'   => 'Téléphone – contact urgence',
+                'P_PHOTO' => 'Photo',
+                'P_PRENOM2' => 'Deuxième prénom',
+                'P_PHONE' => 'Téléphone',
+                'P_EMAIL' => 'Adresse mail',
+                'P_ADDRESS' => 'Adresse',
+                'P_CITY' => 'Ville',
+                'P_ZIP_CODE' => 'Code postal',
+                'P_BIRTHDATE' => 'Date de naissance',
+                'P_BIRTHPLACE' => 'Lieu de naissance',
+                'P_BIRTH_DEP' => 'Département de naissance',
+                'P_RELATION_NOM' => 'Nom – contact urgence',
+                'P_RELATION_PRENOM' => 'Prénom – contact urgence',
+                'P_RELATION_PHONE' => 'Téléphone – contact urgence',
             ];
             foreach ($checks as $field => $label) {
                 $val = $user->$field ?? '';
@@ -250,9 +267,9 @@ class DashboardService
         }
 
         return [
-            'user'          => $user,
-            'section'       => $section,
-            'avatarSrc'     => $user->getAvatarUrl(),
+            'user' => $user,
+            'section' => $section,
+            'avatarSrc' => $user->getAvatarUrl(),
             'avatarFallback' => asset('images/autre.png'),
             'missingFields' => $missingFields,
         ];
@@ -263,7 +280,7 @@ class DashboardService
     public function getEvents(User $user, int $limit = 20): array
     {
         $sectionId = (int) $user->P_SECTION;
-        $section   = DB::table('section')->where('S_ID', $sectionId)->first();
+        $section = DB::table('section')->where('S_ID', $sectionId)->first();
 
         $events = DB::table('evenement as E')
             ->join('type_evenement as TE', 'E.TE_CODE', '=', 'TE.TE_CODE')
@@ -289,8 +306,8 @@ class DashboardService
             ->get()->toArray();
 
         return [
-            'events'      => $events,
-            'sectionId'   => $sectionId,
+            'events' => $events,
+            'sectionId' => $sectionId,
             'sectionName' => $section ? $section->S_DESCRIPTION : '',
         ];
     }
@@ -300,15 +317,15 @@ class DashboardService
     public function getDuty(User $user): array
     {
         $sectionId = (int) $user->P_SECTION;
-        $familyUp  = $this->getSectionFamilyUp($sectionId);
+        $familyUp = $this->getSectionFamilyUp($sectionId);
 
         $rows = DB::table('pompier as p')
             ->join('section_flat as sf', 'p.P_SECTION', '=', 'sf.S_ID')
             ->join('section as se', 'se.S_ID', '=', 'sf.S_ID')
-            ->join('section_role as sr', function ($j) {
-                $j->on('sr.P_ID', '=', 'p.P_ID')->on('sr.S_ID', '=', 'sf.S_ID');
+            ->join('ob_user_assignment as a', function ($j) {
+                $j->on('a.person_id', '=', 'p.P_ID')->on('a.section_id', '=', 'sf.S_ID');
             })
-            ->join('groupe as g', 'g.GP_ID', '=', 'sr.GP_ID')
+            ->join('groupe as g', 'g.GP_ID', '=', 'a.group_id')
             ->where('g.TR_WIDGET', 1)
             ->whereIn('sf.S_ID', $familyUp)
             ->select(
@@ -332,7 +349,7 @@ class DashboardService
     public function getInfos(User $user): array
     {
         $sectionId = (int) $user->P_SECTION;
-        $today     = date('Y-m-d');
+        $today = date('Y-m-d');
 
         $consignes = [];
         $actualites = [];
@@ -368,16 +385,16 @@ class DashboardService
 
     public function getBirthdays(User $user): array
     {
-        if (!$user->hasPermission(40)) {
+        if (! $user->hasPermission(40)) {
             return ['days' => []];
         }
 
         $sectionId = (int) $user->P_SECTION;
-        $family    = $this->getSectionFamily($sectionId);
+        $family = $this->getSectionFamily($sectionId);
 
         $days = [];
         for ($offset = 0; $offset <= 2; $offset++) {
-            $ts   = strtotime("+$offset days");
+            $ts = strtotime("+$offset days");
             $mmdd = date('m-d', $ts);
             $rows = DB::table('pompier')
                 ->where('P_OLD_MEMBER', 0)
@@ -395,11 +412,13 @@ class DashboardService
 
             $label = match ($offset) {
                 0 => "Aujourd'hui",
-                1 => "Demain",
-                2 => "Après-demain",
+                1 => 'Demain',
+                2 => 'Après-demain',
             };
-            $color = match ($offset) { 0 => 'blue', 1 => 'orange', default => 'violet' };
-            $displayDate = date('d', $ts) . ' ' . $this->frMonth((int) date('m', $ts));
+            $color = match ($offset) {
+                0 => 'blue', 1 => 'orange', default => 'violet'
+            };
+            $displayDate = date('d', $ts).' '.$this->frMonth((int) date('m', $ts));
             $days[] = compact('rows', 'label', 'color', 'displayDate');
         }
 
@@ -409,19 +428,21 @@ class DashboardService
     private function frMonth(int $m): string
     {
         return ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-                'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'][$m];
+            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'][$m];
     }
 
     // ── Vehicle alerts ──────────────────────────────────────────────────────
 
     public function getVehiclesAlerts(User $user): array
     {
-        if (!$user->hasPermission(42)) return ['items' => []];
+        if (! $user->hasPermission(42)) {
+            return ['items' => []];
+        }
 
         $sectionId = (int) $user->P_SECTION;
-        $family    = $this->getSectionFamily($sectionId);
-        $today     = date('Y-m-d');
-        $items     = [];
+        $family = $this->getSectionFamily($sectionId);
+        $today = date('Y-m-d');
+        $items = [];
 
         $base = DB::table('vehicule as v')->join('vehicule_position as vp', 'vp.VP_ID', '=', 'v.VP_ID')
             ->whereIn('v.S_ID', $family)->where('vp.VP_OPERATIONNEL', '>=', 0);
@@ -431,35 +452,51 @@ class DashboardService
 
         // Unavailable
         $nb = (clone $base)->where('vp.VP_OPERATIONNEL', '<', 2)->count();
-        if ($nb) $items[] = ['label' => 'Véhicules indisponibles', 'sub' => '', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        if ($nb) {
+            $items[] = ['label' => 'Véhicules indisponibles', 'sub' => '', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        }
 
         // Expired insurance
-        $nb = (clone $base)->whereRaw("v.V_ASS_DATE < NOW()")->count();
-        if ($nb) $items[] = ['label' => 'Assurances', 'sub' => 'Périmées', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        $nb = (clone $base)->whereRaw('v.V_ASS_DATE < NOW()')->count();
+        if ($nb) {
+            $items[] = ['label' => 'Assurances', 'sub' => 'Périmées', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        }
 
         // Expiring insurance ≤30 days
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_ASS_DATE,'$today') BETWEEN 1 AND 30")->count();
-        if ($nb) $items[] = ['label' => 'Assurances', 'sub' => 'Bientôt périmées', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        if ($nb) {
+            $items[] = ['label' => 'Assurances', 'sub' => 'Bientôt périmées', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        }
 
         // Expired CT
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_CT_DATE,'$today') <= 0")->count();
-        if ($nb) $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        if ($nb) {
+            $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        }
 
         // Expiring CT ≤60 days
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_CT_DATE,'$today') BETWEEN 1 AND 60")->count();
-        if ($nb) $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        if ($nb) {
+            $items[] = ['label' => 'Contrôles techniques', 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        }
 
         // Expired access titles
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_TITRE_DATE,'$today') <= 0")->count();
-        if ($nb) $items[] = ['label' => "Titres d'accès", 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        if ($nb) {
+            $items[] = ['label' => "Titres d'accès", 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger', 'url' => $vehiculeUrl];
+        }
 
         // Expiring access titles ≤60 days
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_TITRE_DATE,'$today') BETWEEN 1 AND 60")->count();
-        if ($nb) $items[] = ['label' => "Titres d'accès", 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        if ($nb) {
+            $items[] = ['label' => "Titres d'accès", 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        }
 
         // Revisions due
         $nb = (clone $base)->whereRaw("DATEDIFF(v.V_REV_DATE,'$today') <= 0")->count();
-        if ($nb) $items[] = ['label' => 'Révisions', 'sub' => 'À faire', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        if ($nb) {
+            $items[] = ['label' => 'Révisions', 'sub' => 'À faire', 'count' => $nb, 'level' => 'warning', 'url' => $vehiculeUrl];
+        }
 
         return ['items' => $items];
     }
@@ -468,23 +505,31 @@ class DashboardService
 
     public function getConsommablesAlerts(User $user): array
     {
-        if (!$user->hasPermission(71)) return ['items' => []];
+        if (! $user->hasPermission(71)) {
+            return ['items' => []];
+        }
 
         $sectionId = (int) $user->P_SECTION;
-        $family    = $this->getSectionFamily($sectionId);
-        $today     = date('Y-m-d');
-        $items     = [];
+        $family = $this->getSectionFamily($sectionId);
+        $today = date('Y-m-d');
+        $items = [];
 
         $base = DB::table('consommable')->whereIn('S_ID', $family);
 
         $nb = (clone $base)->whereRaw("DATEDIFF(C_DATE_PEREMPTION,'$today') BETWEEN 1 AND 30")->count();
-        if ($nb) $items[] = ['label' => 'Consommables', 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning'];
+        if ($nb) {
+            $items[] = ['label' => 'Consommables', 'sub' => 'Bientôt périmés', 'count' => $nb, 'level' => 'warning'];
+        }
 
         $nb = (clone $base)->whereRaw("DATEDIFF(C_DATE_PEREMPTION,'$today') <= 0")->count();
-        if ($nb) $items[] = ['label' => 'Consommables', 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger'];
+        if ($nb) {
+            $items[] = ['label' => 'Consommables', 'sub' => 'Périmés', 'count' => $nb, 'level' => 'danger'];
+        }
 
         $nb = (clone $base)->whereRaw('C_NOMBRE < C_MINIMUM')->count();
-        if ($nb) $items[] = ['label' => 'Stock minimum', 'sub' => 'En dessous du seuil', 'count' => $nb, 'level' => 'warning'];
+        if ($nb) {
+            $items[] = ['label' => 'Stock minimum', 'sub' => 'En dessous du seuil', 'count' => $nb, 'level' => 'warning'];
+        }
 
         return ['items' => $items];
     }
@@ -493,10 +538,12 @@ class DashboardService
 
     public function getCpAlerts(User $user): array
     {
-        if (!$user->hasPermission(13)) return ['count' => 0, 'items' => []];
+        if (! $user->hasPermission(13)) {
+            return ['count' => 0, 'items' => []];
+        }
 
         $sectionId = (int) $user->P_SECTION;
-        $family    = $this->getSectionFamily($sectionId);
+        $family = $this->getSectionFamily($sectionId);
 
         $rows = DB::table('pompier as p')
             ->join('indisponibilite as i', 'p.P_ID', '=', 'i.P_ID')
@@ -524,11 +571,13 @@ class DashboardService
 
     public function getHorairesAlerts(User $user): array
     {
-        if (!$user->hasPermission(13)) return ['rows' => []];
+        if (! $user->hasPermission(13)) {
+            return ['rows' => []];
+        }
 
         $sectionId = (int) $user->P_SECTION;
-        $family    = $this->getSectionFamily($sectionId);
-        $today     = date('Y-m-d');
+        $family = $this->getSectionFamily($sectionId);
+        $today = date('Y-m-d');
 
         $rows = DB::select("
             SELECT p.P_ID, p.P_NOM, p.P_PRENOM, sf.s_code, hv.ANNEE, hv.SEMAINE,
@@ -543,7 +592,7 @@ class DashboardService
                     (YEAR(h.H_DATE) = hv.ANNEE AND WEEK(h.H_DATE,1) = hv.SEMAINE)
                     OR (WEEK(h.H_DATE,1) = 53 AND hv.SEMAINE = 1 AND YEAR(h.H_DATE)+1 = hv.ANNEE)
                 )
-            WHERE sf.s_id IN (" . implode(',', $family) . ")
+            WHERE sf.s_id IN (".implode(',', $family).")
               AND DATE_FORMAT(h.H_DATE,'%Y-%m-%d') < '$today'
               AND DATEDIFF('$today', DATE_FORMAT(h.H_DATE,'%Y-%m-%d')) < 100
             GROUP BY p.P_ID, p.P_NOM, p.P_PRENOM, sf.s_code, hv.ANNEE, hv.SEMAINE
@@ -559,8 +608,8 @@ class DashboardService
     {
         $pid = (int) $user->P_ID;
         $canApprove = $user->hasPermission(6) || $user->hasPermission(15);
-        $sectionId  = (int) $user->P_SECTION;
-        $family     = $this->getSectionFamily($sectionId);
+        $sectionId = (int) $user->P_SECTION;
+        $family = $this->getSectionFamily($sectionId);
 
         $base = DB::table('remplacement as r')
             ->join('evenement_horaire as eh', function ($j) {
@@ -573,19 +622,19 @@ class DashboardService
 
         if ($canApprove) {
             $pending = (clone $base)->whereIn('e.S_ID', $family)
-                ->select(DB::raw("COUNT(1) as NB"),
+                ->select(DB::raw('COUNT(1) as NB'),
                     DB::raw("DATE_FORMAT(MIN(eh.EH_DATE_DEBUT),'%d-%m-%Y') AS DEBUT"),
                     DB::raw("DATE_FORMAT(MAX(eh.EH_DATE_FIN),'%d-%m-%Y') AS FIN"))
                 ->first();
-            $nb   = (int) ($pending->NB ?? 0);
+            $nb = (int) ($pending->NB ?? 0);
             $type = 'À approuver';
         } else {
             $pending = (clone $base)->where('r.SUBSTITUTE', $pid)->where('r.ACCEPTED', 0)
-                ->select(DB::raw("COUNT(1) as NB"),
+                ->select(DB::raw('COUNT(1) as NB'),
                     DB::raw("DATE_FORMAT(MIN(eh.EH_DATE_DEBUT),'%d-%m-%Y') AS DEBUT"),
                     DB::raw("DATE_FORMAT(MAX(eh.EH_DATE_FIN),'%d-%m-%Y') AS FIN"))
                 ->first();
-            $nb   = (int) ($pending->NB ?? 0);
+            $nb = (int) ($pending->NB ?? 0);
             $type = 'À accepter';
         }
 
@@ -596,7 +645,7 @@ class DashboardService
 
     public function getTraining(User $user): array
     {
-        $pid  = (int) $user->P_ID;
+        $pid = (int) $user->P_ID;
         $year = date('Y');
 
         $asTrainee = DB::table('evenement as e')
@@ -612,7 +661,7 @@ class DashboardService
             ->where('e.TE_CODE', 'FOR')
             ->where('e.E_VISIBLE_INSIDE', 1)
             ->whereRaw("eh.EH_DATE_FIN >= '$year-01-01'")
-            ->whereRaw("eh.EH_DATE_DEBUT <= CURDATE()")
+            ->whereRaw('eh.EH_DATE_DEBUT <= CURDATE()')
             ->groupBy('ps.PH_CODE')
             ->select('ps.PH_CODE', DB::raw('SUM(ep.EP_DUREE) as TOTAL'))
             ->get()->toArray();
@@ -630,12 +679,12 @@ class DashboardService
             ->where('e.TE_CODE', 'FOR')
             ->where('e.E_VISIBLE_INSIDE', 1)
             ->whereRaw("eh.EH_DATE_FIN >= '$year-01-01'")
-            ->whereRaw("eh.EH_DATE_DEBUT <= CURDATE()")
+            ->whereRaw('eh.EH_DATE_DEBUT <= CURDATE()')
             ->groupBy('ps.PH_CODE')
             ->select('ps.PH_CODE', DB::raw('SUM(ep.EP_DUREE) as TOTAL'))
             ->get()->toArray();
 
-        $format = fn($mins) => sprintf('%02d:%02d', floor($mins * 60 / 60), ($mins * 60) % 60);
+        $format = fn ($mins) => sprintf('%02d:%02d', floor($mins * 60 / 60), ($mins * 60) % 60);
 
         return ['asTrainee' => $asTrainee, 'asTrainer' => $asTrainer, 'year' => $year];
     }
@@ -652,8 +701,8 @@ class DashboardService
             ->join('evenement_horaire as eh', 'e.E_CODE', '=', 'eh.E_CODE')
             ->join('evenement_participation as ep', function ($j) use ($pid) {
                 $j->on('ep.E_CODE', '=', 'e.E_CODE')
-                  ->on('ep.EH_ID', '=', 'eh.EH_ID')
-                  ->where('ep.P_ID', $pid);
+                    ->on('ep.EH_ID', '=', 'eh.EH_ID')
+                    ->where('ep.P_ID', $pid);
             })
             ->where('e.TE_CODE', 'MC')
             ->where('e.E_CANCELED', 0)
@@ -676,7 +725,7 @@ class DashboardService
     public function getSectionLinks(User $user): array
     {
         $sectionId = (int) $user->P_SECTION;
-        $links     = [];
+        $links = [];
 
         $section = DB::table('section as s')
             ->leftJoin('section as p', 'p.S_ID', '=', 's.S_PARENT')
@@ -688,23 +737,24 @@ class DashboardService
             ->first();
 
         if ($section) {
-            if (!empty($section->P_WHATSAPP)) {
+            if (! empty($section->P_WHATSAPP)) {
                 $label = $section->P_CODE;
                 if ($section->P_DESCRIPTION && $section->P_DESCRIPTION !== $section->P_CODE) {
-                    $label .= ' – ' . $section->P_DESCRIPTION;
+                    $label .= ' – '.$section->P_DESCRIPTION;
                 }
                 $links[] = ['label' => $label, 'whatsapp' => $section->P_WHATSAPP, 'sectionId' => (int) $section->S_PARENT];
             }
-            if (!empty($section->S_WHATSAPP)) {
+            if (! empty($section->S_WHATSAPP)) {
                 $label = $section->S_CODE;
                 if ($section->S_DESCRIPTION && $section->S_DESCRIPTION !== $section->S_CODE) {
-                    $label .= ' – ' . $section->S_DESCRIPTION;
+                    $label .= ' – '.$section->S_DESCRIPTION;
                 }
                 $links[] = ['label' => $label, 'whatsapp' => $section->S_WHATSAPP, 'sectionId' => $sectionId];
             }
         }
 
         $whatsappBase = config('brigade.whatsapp_url', 'https://chat.whatsapp.com');
+
         return ['links' => $links, 'whatsappBase' => $whatsappBase];
     }
 
@@ -745,13 +795,13 @@ class DashboardService
     public function getUnpaidActivities(User $user): array
     {
         // Requires billing permission (55) and evenement_facturation table
-        if (!$user->hasPermission(55)) {
+        if (! $user->hasPermission(55)) {
             return ['rows' => []];
         }
 
         try {
             $sectionId = (int) $user->P_SECTION;
-            $family    = $this->getSectionFamily($sectionId);
+            $family = $this->getSectionFamily($sectionId);
 
             $rows = DB::table('evenement as e')
                 ->join('evenement_facturation as ef', 'ef.e_id', '=', 'e.E_CODE')
@@ -770,7 +820,7 @@ class DashboardService
                     'ef.facture_montant', 'ef.devis_montant',
                     'ef.facture_date', 'ef.relance_date',
                     DB::raw("DATE_FORMAT(eh.EH_DATE_DEBUT,'%d-%m-%Y') AS FORMDATE"),
-                    DB::raw("DATEDIFF(NOW(), eh.EH_DATE_FIN) AS TERMINE_DEPUIS")
+                    DB::raw('DATEDIFF(NOW(), eh.EH_DATE_FIN) AS TERMINE_DEPUIS')
                 )
                 ->get()->toArray();
 
@@ -786,7 +836,7 @@ class DashboardService
     {
         try {
             $sectionId = (int) $user->P_SECTION;
-            $family    = $this->getSectionFamily($sectionId);
+            $family = $this->getSectionFamily($sectionId);
 
             $rows = DB::table('evenement as e')
                 ->join('type_evenement as te', 'e.TE_CODE', '=', 'te.TE_CODE')
@@ -798,17 +848,17 @@ class DashboardService
                 ->where('e.TE_CODE', '<>', 'MC')
                 ->where('te.TE_MAIN_COURANTE', 1)
                 ->whereRaw('eh.EH_DATE_FIN <= NOW()')
-                ->whereRaw("DATEDIFF(NOW(), eh.EH_DATE_FIN) < 30")
-                ->whereExists(fn($q) => $q->select(DB::raw(1))
+                ->whereRaw('DATEDIFF(NOW(), eh.EH_DATE_FIN) < 30')
+                ->whereExists(fn ($q) => $q->select(DB::raw(1))
                     ->from('type_bilan as tb')->whereColumn('tb.TE_CODE', 'e.TE_CODE'))
-                ->whereNotExists(fn($q) => $q->select(DB::raw(1))
+                ->whereNotExists(fn ($q) => $q->select(DB::raw(1))
                     ->from('bilan_evenement as be')->whereColumn('be.E_CODE', 'e.E_CODE'))
                 ->whereNull('e.E_PARENT')
                 ->orderBy('eh.EH_DATE_FIN', 'desc')
                 ->select(
                     'e.E_CODE', 'e.E_LIBELLE', 'e.E_LIEU', 'te.TE_LIBELLE',
                     DB::raw("DATE_FORMAT(eh.EH_DATE_FIN,'%d-%m-%Y') AS FORMDATE"),
-                    DB::raw("DATEDIFF(NOW(), eh.EH_DATE_FIN) AS TERMINE_DEPUIS")
+                    DB::raw('DATEDIFF(NOW(), eh.EH_DATE_FIN) AS TERMINE_DEPUIS')
                 )
                 ->get()->toArray();
 
@@ -827,7 +877,7 @@ class DashboardService
         try {
             if ($isManager) {
                 $sectionId = (int) $user->P_SECTION;
-                $family    = $this->getSectionFamily($sectionId);
+                $family = $this->getSectionFamily($sectionId);
 
                 $rows = DB::table('note_de_frais as n')
                     ->join('pompier as p', 'p.P_ID', '=', 'n.P_ID')
@@ -863,7 +913,7 @@ class DashboardService
     public function getReplacementRequests(User $user): array
     {
         $sectionId = (int) $user->P_SECTION;
-        $family    = $this->getSectionFamily($sectionId);
+        $family = $this->getSectionFamily($sectionId);
 
         $row = DB::table('remplacement as r')
             ->join('evenement_horaire as eh', function ($j) {
@@ -885,7 +935,7 @@ class DashboardService
         return [
             'count' => (int) ($row->NB ?? 0),
             'debut' => $row->DEBUT ?? null,
-            'fin'   => $row->FIN   ?? null,
+            'fin' => $row->FIN ?? null,
         ];
     }
 
@@ -898,16 +948,16 @@ class DashboardService
         // Webmaster email from section role
         $sectionId = (int) $user->P_SECTION;
         $webmaster = DB::table('pompier as p')
-            ->join('section_role as sr', 'sr.P_ID', '=', 'p.P_ID')
-            ->join('groupe as g', 'g.GP_ID', '=', 'sr.GP_ID')
+            ->join('ob_user_assignment as a', 'a.person_id', '=', 'p.P_ID')
+            ->join('groupe as g', 'g.GP_ID', '=', 'a.group_id')
             ->whereRaw("UPPER(g.GP_DESCRIPTION) LIKE 'WEB%MASTER'")
-            ->whereIn('sr.S_ID', $this->getSectionFamilyUp($sectionId))
+            ->whereIn('a.section_id', $this->getSectionFamilyUp($sectionId))
             ->value('p.P_EMAIL');
 
         return [
-            'version'       => $version,
-            'supportEmail'  => $webmaster ?: config('mail.from.address'),
-            'canAdmin'      => $user->hasPermission(14),
+            'version' => $version,
+            'supportEmail' => $webmaster ?: config('mail.from.address'),
+            'canAdmin' => $user->hasPermission(14),
         ];
     }
 }

@@ -25,6 +25,8 @@ use App\Http\Controllers\Legacy\LegacyBridgeController;
 use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\HabilitationController;
+use App\Http\Controllers\ContextController;
+use App\Http\Controllers\MesDroitsController;
 use App\Http\Controllers\ShortcutController;
 use Illuminate\Support\Facades\Route;
 
@@ -138,12 +140,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/parametrage/type-vehicule', [ParametrageController::class, 'typeVehiculeStore'])->name('admin.parametrage.type-vehicule.store')->middleware('permission:5');
     Route::patch('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeUpdate'])->name('admin.parametrage.type-vehicule.update')->middleware('permission:5');
     Route::delete('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeDestroy'])->name('admin.parametrage.type-vehicule.destroy')->middleware('permission:5');
-    // Habilitations — group × permission matrix
+    // Habilitations — section ceilings + group/role grant matrices
     Route::get('/admin/habilitations', [HabilitationController::class, 'index'])->name('admin.habilitations')->middleware('permission:9');
-    Route::post('/admin/habilitations/toggle', [HabilitationController::class, 'toggle'])->name('admin.habilitations.toggle')->middleware('permission:9');
+    Route::post('/admin/habilitations/grant', [HabilitationController::class, 'toggleGrant'])->name('admin.habilitations.grant.toggle')->middleware('permission:9');
+    Route::post('/admin/habilitations/plafond', [HabilitationController::class, 'toggleCeiling'])->name('admin.habilitations.ceiling.toggle')->middleware('permission:9');
     Route::post('/admin/habilitations/groupe', [HabilitationController::class, 'groupStore'])->name('admin.habilitations.group.store')->middleware('permission:9');
     Route::patch('/admin/habilitations/groupe/{gpId}', [HabilitationController::class, 'groupUpdate'])->name('admin.habilitations.group.update')->middleware('permission:9');
     Route::delete('/admin/habilitations/groupe/{gpId}', [HabilitationController::class, 'groupDestroy'])->name('admin.habilitations.group.destroy')->middleware('permission:9');
+    // Active section / role context switch (navbar)
+    Route::get('/contexte/section', [ContextController::class, 'section'])->name('context.section')->middleware('permission:0');
+    Route::get('/contexte/role', [ContextController::class, 'role'])->name('context.role')->middleware('permission:0');
+    // User-facing "Mes droits" (effective permissions preview)
+    Route::get('/mes-droits', [MesDroitsController::class, 'index'])->name('mes-droits')->middleware('permission:0');
     // Grade icons
     Route::get('/admin/parametrage/grade', [ParametrageController::class, 'gradeIndex'])->name('admin.parametrage.grade')->middleware('permission:5');
     Route::post('/admin/parametrage/grade/{grade}/icon', [ParametrageController::class, 'gradeIconUpload'])->name('admin.parametrage.grade.icon.upload')->middleware('permission:5');
@@ -201,6 +209,11 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.cotisation.update')->middleware('permission:0');
     Route::delete('personnel/{personnel}/cotisations/{pcId}', [PersonnelController::class, 'destroyCotisation'])
         ->name('personnel.cotisation.destroy')->middleware('permission:0');
+    // Section-scoped role assignments (ob_user_assignment) — gated by habilitations (9)
+    Route::post('personnel/{personnel}/roles', [PersonnelController::class, 'roleStore'])
+        ->name('personnel.role.store')->middleware('permission:9');
+    Route::delete('personnel/{personnel}/roles/{assignment}', [PersonnelController::class, 'roleDestroy'])
+        ->name('personnel.role.destroy')->middleware('permission:9');
     // Per-member exports
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');

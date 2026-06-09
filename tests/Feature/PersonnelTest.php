@@ -29,12 +29,12 @@ function personnelFakeUser(array $attrs = []): User
     /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
     $user->forceFill(array_merge([
-        'P_ID'      => 1,
-        'P_NOM'     => 'Test',
-        'P_PRENOM'  => 'User',
+        'P_ID' => 1,
+        'P_NOM' => 'Test',
+        'P_PRENOM' => 'User',
         'P_SECTION' => 1,
-        'P_ACTIF'   => 1,
-        'P_MDP'     => bcrypt('secret'),
+        'P_ACTIF' => 1,
+        'P_MDP' => bcrypt('secret'),
     ], $attrs));
     $user->shouldReceive('hasPermission')->andReturn(true);
 
@@ -53,15 +53,15 @@ function personnelStubIndex(): void
         $page->setPath('/personnel');
         $ctrl->shouldReceive('index')->andReturn(
             view('personnel.index', [
-                'items'          => $page,
-                'columns'        => [],
-                'position'       => 'actif',
-                'search'         => '',
-                'category'       => 'INT',
-                'sectionId'      => 0,
-                'order'          => 'P_NOM',
-                'subsections'    => true,
-                'perPage'        => 100,
+                'items' => $page,
+                'columns' => [],
+                'position' => 'actif',
+                'search' => '',
+                'category' => 'INT',
+                'sectionId' => 0,
+                'order' => 'P_NOM',
+                'subsections' => true,
+                'perPage' => 100,
                 'sectionOptions' => [],
             ])
         );

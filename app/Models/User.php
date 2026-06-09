@@ -1,25 +1,25 @@
 <?php
 
-# project: OpenBrigade
+// project: OpenBrigade
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace App\Models;
 
 use App\Models\Concerns\HasAvatar;
+use App\Services\PermissionResolver;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -55,9 +55,7 @@ class User extends Authenticatable
         return null;
     }
 
-    public function setRememberToken($value): void
-    {
-    }
+    public function setRememberToken($value): void {}
 
     public function getRememberTokenName(): string
     {
@@ -65,29 +63,27 @@ class User extends Authenticatable
     }
 
     /**
-     * Check whether this user has the given legacy permission (F_ID).
-     * Covers GP_ID and GP_ID2 group memberships and section-role grants.
+     * Check whether this user has the given permission (F_ID) in their active
+     * section context. Global groups (GP_ID / GP_ID2) always apply; roles apply
+     * within the active section and its ancestors; the section ceiling caps
+     * everything. See {@see PermissionResolver}.
      */
     public function hasPermission(int $fid): bool
     {
-        if ((int) $this->GP_ID === -1 || (int) ($this->GP_ID2 ?? $this->GP_ID) === -1) {
-            return false;
-        }
+        $resolver = app(PermissionResolver::class);
 
-        $gp2 = $this->GP_ID2 ?: $this->GP_ID;
-        $groups = array_unique([(int) $this->GP_ID, (int) $gp2]);
+        return $resolver->allows(
+            $this,
+            $fid,
+            $resolver->activeSectionId($this),
+            $resolver->activeRoleId($this),
+        );
+    }
 
-        // Primary check: group habilitation
-        if (DB::table('habilitation')->whereIn('GP_ID', $groups)->where('F_ID', $fid)->exists()) {
-            return true;
-        }
-
-        // Section-role check: roles held in any section
-        return DB::table('habilitation')
-            ->join('section_role', 'habilitation.GP_ID', '=', 'section_role.GP_ID')
-            ->where('habilitation.F_ID', $fid)
-            ->where('section_role.P_ID', $this->P_ID)
-            ->exists();
+    /** Check a permission in an explicit section, ignoring the active-role filter. */
+    public function hasPermissionInSection(int $fid, ?int $sectionId): bool
+    {
+        return app(PermissionResolver::class)->allows($this, $fid, $sectionId);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
 use App\Services\NavigationService;
+use App\Services\PermissionResolver;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -19,16 +20,21 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(AuthService::class, function ($app) {
-            return new AuthService();
+            return new AuthService;
         });
 
         // Register singleton services (instantiated once per container)
         $this->app->singleton(BrigadeService::class, function ($app) {
-            return new BrigadeService();
+            return new BrigadeService;
         });
 
         $this->app->singleton(NavigationService::class, function ($app) {
-            return new NavigationService();
+            return new NavigationService;
+        });
+
+        // Per-request memoized permission resolution (section ceilings + grants).
+        $this->app->singleton(PermissionResolver::class, function ($app) {
+            return new PermissionResolver;
         });
     }
 
@@ -58,6 +64,23 @@ class AppServiceProvider extends ServiceProvider
             $nav = app(NavigationService::class);
             $user = auth()->user();
             $view->with('pinnedShortcuts', $nav->getPinnedShortcuts($user));
+
+            // Active section / role context switchers. Non-critical navbar
+            // enhancement — never let it break a page render (e.g. before the
+            // ob_ tables exist, or in tests without a database).
+            $ctx = ['ctxSections' => collect(), 'ctxActiveSection' => null, 'ctxRoles' => collect(), 'ctxActiveRole' => null];
+            if ($user !== null) {
+                try {
+                    $resolver = app(PermissionResolver::class);
+                    $ctx['ctxActiveSection'] = $resolver->activeSectionId($user);
+                    $ctx['ctxSections'] = $resolver->userSections($user);
+                    $ctx['ctxRoles'] = $resolver->userRoles($user, $ctx['ctxActiveSection']);
+                    $ctx['ctxActiveRole'] = $resolver->activeRoleId($user);
+                } catch (\Throwable $e) {
+                    // keep defaults
+                }
+            }
+            $view->with($ctx);
         });
 
         View::composer('layout.sidebar', function ($view): void {

@@ -506,9 +506,9 @@
                                         class="form-select form-select-sm @error('GP_ID') is-invalid @enderror">
                                     <option value="">— aucun —</option>
                                     @foreach ($groupes as $g)
-                                        <option value="{{ $g->GP_ID }}"
-                                                @selected((string)$val('GP_ID')===(string)$g->GP_ID)>
-                                            {{ $g->GP_DESCRIPTION }}
+                                        <option value="{{ $g->id }}"
+                                                @selected((string)$val('GP_ID')===(string)$g->id)>
+                                            {{ $g->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -521,9 +521,9 @@
                                         class="form-select form-select-sm @error('GP_ID2') is-invalid @enderror">
                                     <option value="">— aucun —</option>
                                     @foreach ($groupes as $g)
-                                        <option value="{{ $g->GP_ID }}"
-                                                @selected((string)$val('GP_ID2')===(string)$g->GP_ID)>
-                                            {{ $g->GP_DESCRIPTION }}
+                                        <option value="{{ $g->id }}"
+                                                @selected((string)$val('GP_ID2')===(string)$g->id)>
+                                            {{ $g->name }}
                                         </option>
                                     @endforeach
                                 </select>
