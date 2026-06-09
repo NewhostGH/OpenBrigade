@@ -717,15 +717,15 @@
                     <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
                             <div class="ob-info-item">
-                                <dt>Groupe principal</dt>
-                                <dd>{{ $personnel->groupe?->GP_DESCRIPTION ?? '—' }}</dd>
+                                <dt>Groupes d'accès</dt>
+                                <dd>
+                                    @forelse ($personnelGroups as $gname)
+                                        <span class="ob-badge ob-badge-ext me-1">{{ $gname }}</span>
+                                    @empty
+                                        <span class="text-muted">—</span>
+                                    @endforelse
+                                </dd>
                             </div>
-                            @if ($groupe2)
-                            <div class="ob-info-item">
-                                <dt>Groupe 2</dt>
-                                <dd>{{ $groupe2->GP_DESCRIPTION }}</dd>
-                            </div>
-                            @endif
                             <div class="ob-info-item">
                                 <dt>Dernière connexion</dt>
                                 <dd>{{ $personnel->P_LAST_CONNECT?->format('d/m/Y H:i') ?? 'jamais' }}</dd>
@@ -759,6 +759,37 @@
                                 </dd>
                             </div>
                         </dl>
+                    </div>
+                </div>
+
+                {{-- Section memberships (ob_personnel_section) --}}
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title">
+                            <i class="fas fa-sitemap me-1"></i> Sections
+                            @if ($personnel->section)
+                                <span class="text-muted fw-normal ms-2" style="font-size:var(--font-size-sm);">
+                                    — par défaut : <strong>{{ $personnel->section->S_CODE }}</strong>
+                                    @if ($personnel->section->S_DESCRIPTION)
+                                        <span class="fw-normal">{{ $personnel->section->S_DESCRIPTION }}</span>
+                                    @endif
+                                </span>
+                            @endif
+                        </div>
+                        @if (auth()->user()->hasPermission(9))
+                            <div class="ob-widget-card-actions">
+                                <a href="{{ route('personnel.edit', $personnel->P_ID) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-pen me-1"></i>Gérer
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="ob-widget-card-body">
+                        @forelse ($personnelSections as $s)
+                            <span class="ob-badge ob-badge-int me-1 mb-1">{{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}</span>
+                        @empty
+                            <span class="text-muted" style="font-size:var(--font-size-sm);">Aucune section attribuée.</span>
+                        @endforelse
                     </div>
                 </div>
 

@@ -489,14 +489,30 @@ class PersonnelController extends Controller
 
         $gps = DB::table('gps')->where('P_ID', $personnel->P_ID)->first();
 
+        // All group memberships (ob_personnel_group).
+        $personnelGroups = DB::table('ob_personnel_group as pg')
+            ->join('ob_group as g', 'g.id', '=', 'pg.group_id')
+            ->where('pg.person_id', $personnel->P_ID)
+            ->orderBy('g.name')
+            ->pluck('g.name');
+
+        // All section memberships (ob_personnel_section).
+        $personnelSections = DB::table('ob_personnel_section as ps')
+            ->join('section as s', 's.S_ID', '=', 'ps.section_id')
+            ->where('ps.person_id', $personnel->P_ID)
+            ->orderBy('s.S_CODE')
+            ->get(['s.S_CODE', 's.S_DESCRIPTION']);
+
         // Section-scoped role assignments (ob_user_assignment).
         $roleAssignments = DB::table('ob_user_assignment as a')
             ->join('ob_group as g', 'g.id', '=', 'a.group_id')
             ->leftJoin('section as s', 's.S_ID', '=', 'a.section_id')
             ->where('a.person_id', $personnel->P_ID)
             ->orderBy('s.S_DESCRIPTION')
-            ->get(['a.id', 'a.section_id', 'g.name as role_name', 's.S_DESCRIPTION as section_name'])
-            ->each(fn ($r) => $r->section_name = $r->section_name ?: 'Section '.$r->section_id);
+            ->get(['a.id', 'a.section_id', 'g.name as role_name', 's.S_CODE as section_code', 's.S_DESCRIPTION as section_name'])
+            ->each(fn ($r) => $r->section_name = $r->section_id == 0
+                ? '— global —'
+                : ($r->section_code ? $r->section_code.($r->section_name ? ' — '.$r->section_name : '') : 'Section '.$r->section_id));
 
         $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
         $today = now()->toDateString();
@@ -535,6 +551,8 @@ class PersonnelController extends Controller
             'warn30' => $warn30,
             'sideNav' => $sideNav,
             'roleAssignments' => $roleAssignments,
+            'personnelGroups' => $personnelGroups,
+            'personnelSections' => $personnelSections,
         ]);
     }
 
@@ -567,8 +585,9 @@ class PersonnelController extends Controller
     }
 
     /**
-     * Sync role assignments (ob_user_assignment, section_id = null) from the
-     * `roles[]` form input. Guarded by permission 9.
+     * Sync role assignments (ob_user_assignment) from the `role_assignments[]`
+     * form input. Each entry carries a group_id and an optional section_id.
+     * Guarded by permission 9.
      */
     private function syncRoles(Request $request, Personnel $personnel): void
     {
@@ -577,21 +596,25 @@ class PersonnelController extends Controller
         }
 
         $validRoleIds = ObGroup::roles()->pluck('id')->map(fn ($v) => (int) $v)->all();
+        $validSectionIds = Section::pluck('S_ID')->map(fn ($v) => (int) $v)->all();
 
-        $desired = collect($request->input('roles', []))
-            ->map(fn ($v) => (int) $v)
-            ->filter(fn ($v) => $v > 0 && in_array($v, $validRoleIds, true))
-            ->unique()
+        $desired = collect($request->input('role_assignments', []))
+            ->filter(fn ($a) => isset($a['group_id']) && in_array((int) $a['group_id'], $validRoleIds, true))
+            ->map(fn ($a) => [
+                'person_id' => $personnel->P_ID,
+                'group_id' => (int) $a['group_id'],
+                // 0 = global sentinel; non-zero only if it's a valid section.
+                'section_id' => ! empty($a['section_id']) && in_array((int) $a['section_id'], $validSectionIds, true)
+                    ? (int) $a['section_id']
+                    : 0,
+            ])
+            ->unique(fn ($a) => $a['group_id'].'-'.$a['section_id'])
             ->values();
 
         ObUserAssignment::where('person_id', $personnel->P_ID)->delete();
 
-        foreach ($desired as $groupId) {
-            ObUserAssignment::create([
-                'person_id' => $personnel->P_ID,
-                'section_id' => null,
-                'group_id' => $groupId,
-            ]);
+        foreach ($desired as $row) {
+            ObUserAssignment::create($row);
         }
     }
 
@@ -915,7 +938,7 @@ class PersonnelController extends Controller
             'allRoles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
             'allGroups' => ObGroup::groups()->where('id', '!=', -1)->orderBy('name')->get(['id', 'name']),
             'currentSectionIds' => [],
-            'currentRoleIds' => [],
+            'currentRoleAssignments' => [],
             'currentGroupIds' => [],
         ]);
     }
@@ -1019,10 +1042,13 @@ class PersonnelController extends Controller
             ->map(fn ($v) => (int) $v)
             ->all();
 
-        $currentRoleIds = DB::table('ob_user_assignment')
+        $currentRoleAssignments = DB::table('ob_user_assignment')
             ->where('person_id', $personnel->P_ID)
-            ->pluck('group_id')
-            ->map(fn ($v) => (int) $v)
+            ->get(['group_id', 'section_id'])
+            ->map(fn ($r) => [
+                'group_id' => (int) $r->group_id,
+                'section_id' => (int) $r->section_id, // 0 = global
+            ])
             ->all();
 
         $currentGroupIds = DB::table('ob_personnel_group')
@@ -1049,7 +1075,7 @@ class PersonnelController extends Controller
             'allRoles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
             'allGroups' => ObGroup::groups()->where('id', '!=', -1)->orderBy('name')->get(['id', 'name']),
             'currentSectionIds' => $currentSectionIds,
-            'currentRoleIds' => $currentRoleIds,
+            'currentRoleAssignments' => $currentRoleAssignments,
             'currentGroupIds' => $currentGroupIds,
         ]);
     }

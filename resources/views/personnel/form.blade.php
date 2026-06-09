@@ -564,28 +564,72 @@
                                 <div class="col-12">
                                     <label class="form-label form-label-sm">Rôles organisationnels</label>
                                     <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
-                                        Rôles que ce membre exerce au sein de l'organisation. Les rôles déterminent
-                                        les droits fonctionnels en combinaison avec les plafonds de section.
+                                        Rôles que ce membre exerce au sein de l'organisation. Chaque rôle peut être
+                                        limité à une section ou s'appliquer globalement.
                                     </p>
-                                    <input type="text" class="form-control form-control-sm mb-2 ob-multiselect-search"
-                                           data-ob-target="roles-wrap"
-                                           placeholder="Rechercher un rôle…"
-                                           autocomplete="off">
-                                    <div class="ob-multiselect-wrap" id="roles-wrap" data-ob-multiselect>
-                                        @foreach ($allRoles as $r)
-                                            @php $rid = (int) $r->id; @endphp
-                                            <label class="ob-multiselect-item @if(in_array($rid, $currentRoleIds)) ob-selected @endif">
-                                                <input type="checkbox" name="roles[]" value="{{ $rid }}"
-                                                       @checked(in_array($rid, $currentRoleIds))
-                                                       class="ob-multiselect-cb">
-                                                <span class="ob-multiselect-label">{{ $r->name }}</span>
-                                                <i class="fas fa-check ob-multiselect-check"></i>
-                                            </label>
-                                        @endforeach
-                                        @if ($allRoles->isEmpty())
-                                            <span class="text-muted" style="font-size:var(--font-size-xs);">Aucun rôle défini.</span>
-                                        @endif
-                                    </div>
+
+                                    @if ($allRoles->isEmpty())
+                                        <p class="text-muted" style="font-size:var(--font-size-xs);">Aucun rôle défini.</p>
+                                    @else
+                                        <div id="ob-role-assignments-wrap">
+                                            @foreach ($currentRoleAssignments as $i => $ra)
+                                            <div class="ob-role-assignment-row d-flex gap-2 align-items-center mb-2 flex-wrap">
+                                                <select name="role_assignments[{{ $i }}][group_id]"
+                                                        class="form-select form-select-sm" style="flex:1 1 180px; max-width:220px;" required>
+                                                    @foreach ($allRoles as $r)
+                                                        <option value="{{ $r->id }}" @selected($r->id === $ra['group_id'])>{{ $r->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <select name="role_assignments[{{ $i }}][section_id]"
+                                                        class="form-select form-select-sm" style="flex:1 1 180px; max-width:240px;">
+                                                    <option value="0">— global —</option>
+                                                    @foreach ($sections as $s)
+                                                        <option value="{{ $s->S_ID }}"
+                                                                @selected($ra['section_id'] === (int)$s->S_ID)>
+                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger ob-role-remove"
+                                                        title="Supprimer ce rôle">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                            @endforeach
+                                        </div>
+
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mt-1"
+                                                id="ob-add-role-btn">
+                                            <i class="fas fa-plus me-1"></i> Ajouter un rôle
+                                        </button>
+
+                                        {{-- Template for new rows (rendered server-side, cloned by JS) --}}
+                                        <template id="ob-role-row-tpl">
+                                            <div class="ob-role-assignment-row d-flex gap-2 align-items-center mb-2 flex-wrap">
+                                                <select name="role_assignments[__OB_IDX__][group_id]"
+                                                        class="form-select form-select-sm" style="flex:1 1 180px; max-width:220px;" required>
+                                                    @foreach ($allRoles as $r)
+                                                        <option value="{{ $r->id }}">{{ $r->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <select name="role_assignments[__OB_IDX__][section_id]"
+                                                        class="form-select form-select-sm" style="flex:1 1 180px; max-width:240px;">
+                                                    <option value="0">— global —</option>
+                                                    @foreach ($sections as $s)
+                                                        <option value="{{ $s->S_ID }}">
+                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger ob-role-remove"
+                                                        title="Supprimer ce rôle">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </template>
+                                    @endif
                                 </div>
 
                                 {{-- ── Groupes d'accès ────────────────────── --}}

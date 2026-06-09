@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Schema;
  *  - ob_personnel_section : section memberships (replaces section_id in ob_user_assignment)
  *  - ob_personnel_group   : group memberships (replaces pompier.GP_ID / GP_ID2)
  *
- * ob_user_assignment.section_id is made nullable so role entries can be
- * stored without a section constraint (globally applicable roles).
+ * ob_user_assignment.section_id gets a DEFAULT 0 so role entries with no
+ * section restriction use 0 as the global sentinel (kept NOT NULL so the
+ * three-column unique index works reliably in MariaDB/MySQL).
  */
 return new class extends Migration
 {
@@ -37,16 +38,17 @@ return new class extends Migration
             $table->index('person_id');
         });
 
-        // Make section_id nullable so roles can be assigned globally (no section constraint).
+        // Ensure section_id defaults to 0 (global sentinel — section-scoped design keeps
+        // NOT NULL so the three-column unique index works reliably).
         Schema::table('ob_user_assignment', function (Blueprint $table) {
-            $table->smallInteger('section_id')->nullable()->change();
+            $table->smallInteger('section_id')->default(0)->change();
         });
     }
 
     public function down(): void
     {
         Schema::table('ob_user_assignment', function (Blueprint $table) {
-            $table->smallInteger('section_id')->nullable(false)->change();
+            $table->smallInteger('section_id')->default(0)->nullable(false)->change();
         });
 
         Schema::dropIfExists('ob_personnel_group');

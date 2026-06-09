@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * A role held by a person in a section (section-scoped, inherited to child
- * sections). Global group membership stays on pompier.GP_ID / GP_ID2, so this
- * table holds role assignments only. Table: ob_user_assignment.
+ * A role held by a person, optionally scoped to a section (inherited to child
+ * sections). section_id = 0 means global (no section restriction). Unique on
+ * (person_id, section_id, group_id). Table: ob_user_assignment.
  */
 class ObUserAssignment extends Model
 {
@@ -23,7 +23,7 @@ class ObUserAssignment extends Model
     ];
 
     protected $attributes = [
-        'section_id' => null,
+        'section_id' => 0,
     ];
 
     public function person(): BelongsTo

@@ -92,4 +92,29 @@ window.previewPhoto       = previewPhoto;
             });
         });
     });
+
+    // Role-per-section assignment widget
+    var roleWrap   = document.getElementById('ob-role-assignments-wrap');
+    var roleAddBtn = document.getElementById('ob-add-role-btn');
+    var roleTpl    = document.getElementById('ob-role-row-tpl');
+
+    if (roleWrap && roleAddBtn && roleTpl) {
+        var obRoleIdx = roleWrap.querySelectorAll('.ob-role-assignment-row').length;
+
+        roleWrap.addEventListener('click', function (e) {
+            var removeBtn = e.target.closest('.ob-role-remove');
+            if (removeBtn) {
+                removeBtn.closest('.ob-role-assignment-row').remove();
+            }
+        });
+
+        roleAddBtn.addEventListener('click', function () {
+            var clone = roleTpl.content.cloneNode(true);
+            clone.querySelectorAll('[name]').forEach(function (el) {
+                el.name = el.name.replace('__OB_IDX__', obRoleIdx);
+            });
+            obRoleIdx++;
+            roleWrap.appendChild(clone);
+        });
+    }
 }());
