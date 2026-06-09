@@ -92,4 +92,5 @@ class Section extends Model
     {
         return $this->hasMany(Consommable::class, 'S_ID', 'S_ID');
     }
+
 }

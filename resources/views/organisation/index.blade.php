@@ -1,28 +1,38 @@
 @extends('layout.app')
 
-@section('title', 'Organisation — ' . config('app.name'))
+@section('title', 'Organigramme — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
     ['label' => 'Organisation'],
+    ['label' => 'Organigramme'],
 ]"/>
 
-<div class="ob-toolbar mx-3 mt-3">
-    <div class="ob-toolbar-title">
-        <h1>Organisation</h1>
-        @if(auth()->user()->hasPermission(55))
-            {{-- TODO: Migrate code --}}
-            <a href="{{ url('/legacy/ins_section.php') }}" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus me-1"></i> Nouvelle section
-            </a>
-        @endif
-    </div>
-</div>
-
 <div class="mx-3 mt-3">
-    <div class="ob-org-tree">
-        @include('organisation._node', ['nodes' => $tree, 'currentSectionId' => $sectionId])
+    <div class="ob-widget-card">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
+                <i class="fas fa-project-diagram me-2"></i>Organigramme
+            </div>
+            <div class="ob-widget-card-actions">
+                <a href="{{ route('organisation.sections') }}" class="btn btn-sm btn-outline-secondary me-1">
+                    <i class="fas fa-layer-group me-1"></i>Gérer les sections
+                </a>
+                @if(auth()->user()->hasPermission(55))
+                    <a href="{{ route('organisation.sections.create') }}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i>Nouvelle section
+                    </a>
+                @endif
+            </div>
+        </div>
+        <div class="ob-widget-card-body p-0">
+            <div class="ob-org-chart-wrap">
+                <ul class="ob-org-chart">
+                    @include('organisation._node', ['nodes' => $tree, 'currentSectionId' => $sectionId])
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 

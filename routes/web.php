@@ -192,9 +192,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/organisation/sections', [OrganisationController::class, 'sections'])->name('organisation.sections')->middleware('permission:52');
     Route::get('/organisation/sections/create', [OrganisationController::class, 'createSection'])->name('organisation.sections.create')->middleware('permission:52');
     Route::post('/organisation/sections', [OrganisationController::class, 'storeSection'])->name('organisation.sections.store')->middleware('permission:52');
+    Route::get('/organisation/sections/{section}', [OrganisationController::class, 'showSection'])->name('organisation.sections.show')->middleware('permission:52');
     Route::get('/organisation/sections/{section}/edit', [OrganisationController::class, 'editSection'])->name('organisation.sections.edit')->middleware('permission:52');
     Route::patch('/organisation/sections/{section}', [OrganisationController::class, 'updateSection'])->name('organisation.sections.update')->middleware('permission:52');
     Route::delete('/organisation/sections/{section}', [OrganisationController::class, 'destroySection'])->name('organisation.sections.destroy')->middleware('permission:52');
+    Route::patch('/organisation/sections/{section}/personalisation', [OrganisationController::class, 'updatePersonalisation'])->name('organisation.sections.personalisation')->middleware('permission:52');
+    Route::patch('/organisation/sections/{section}/rib', [OrganisationController::class, 'updateRib'])->name('organisation.sections.rib')->middleware('permission:52');
+    Route::put('/organisation/sections/{section}/agrement/{code}', [OrganisationController::class, 'upsertAgrement'])->name('organisation.sections.agrement.upsert')->middleware('permission:52');
+    Route::delete('/organisation/sections/{section}/agrement/{code}', [OrganisationController::class, 'destroyAgrement'])->name('organisation.sections.agrement.destroy')->middleware('permission:52');
     // Cartographie — native Leaflet map (replaces jvectormap.php)
     Route::get('/organisation/cartographie', [OrganisationController::class, 'cartographie'])->name('organisation.cartographie')->middleware(['permission:27', 'feature:carte']);
     Route::get('/statistiques', [StatistiqueController::class, 'index'])->name('statistique.index')->middleware('permission:27');

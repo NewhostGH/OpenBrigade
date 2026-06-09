@@ -185,6 +185,103 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 - [ ] Position (poste) management
 - [ ] Team (equipe) management
 
+#### Section CRUD — form fields ✅
+
+The create/edit form for a section is organised into three field groups:
+
+**Informations obligatoires**
+- Nom
+- Description
+- Ordre garde
+
+**Contact**
+- Téléphone
+- Tél opérationnel
+- Tél Formations
+- Fax
+- Email opérationnel
+- Email secrétariat
+- Email formation
+- Groupe Whatsapp
+- ID Radio
+
+**Informations facultatives**
+- Adresse
+- Complément d'adresse
+- Code postal
+- Ville
+- SIRET
+- N° Affiliation
+- Site web
+
+#### Section show page — tabs ✅ (partial — see open items per tab below)
+
+The section detail page (`organisation.sections.show`) exposes five tabs:
+
+**Tab 1 — Informations**
+Main section data (all fields from the form above).
+
+**Tab 2 — Organigramme**
+- [ ] Diagram showing every personnel member assigned to this section with their role(s).
+  Render as an interactive org-chart (e.g. `ob-orgchart` component or D3/GoJS); data
+  sourced from `ob_user_assignment` + `ob_group` scoped to the section.
+
+**Tab 3 — Personnalisation**
+- [ ] **Papier à entête** — Modèle (.PDF upload), Marge Haut, Marge Gauche / Droite,
+  Début de la zone de texte, Fin de la zone de texte
+- [ ] **Badge** — Image de fond du badge (file upload)
+- [ ] **Interdire les modifications sur les activités terminées** — toggle: Jamais / x
+  number of days after (integer input shown when not "Jamais")
+- [ ] **Textes par défaut pour devis et factures** — Signature des documents, Début du
+  devis, Fin de devis, Début de facture, Fin de facture (textarea per field)
+- [ ] **Image de la signature du président** — Signature scannée (file upload)
+
+**Tab 4 — Agréments & Médailles**
+- [ ] Each subsection is a table with columns **Code**, **Libellé**, **Début**, **Fin**
+  (date pickers); rows are fixed by category. Inline add/edit/delete per row.
+
+  | Catégorie | Code | Libellé |
+  |---|---|---|
+  | **Agréments de sécurité civile** | A-Aqua | Sauvetage aquatique |
+  | | A1 | Opérations de secours à personnes et sauvetage |
+  | | A2 | Recherche cynophile |
+  | | B | Actions de soutien aux populations sinistrées |
+  | | C | Encadrement des bénévoles lors des actions de soutien |
+  | | D | Dispositif prévisionnel de secours — agrément |
+  | | D-Aqua | Sécurité de la pratique des activités aquatiques |
+  | **Conventions de missions** | 37 | Missions de secours d'urgence aux personnes |
+  | | 38 | Actions de soutien aux populations et de formation |
+  | **Conventions spécifiques** | AUTRE | Convention Spécifique autre |
+  | | CUMP | Convention CUMP |
+  | | ERDF | Convention avec ERDF |
+  | | PCS | Convention Plans Communaux de Sauvegarde |
+  | | PREF | Convention avec la Préfecture |
+  | | SNCF | Convention avec la SNCF |
+  | | TRIP | Convention tripartite |
+  | **Formation Entreprise** | APS-ASD | Acteur Prévention Secours / Aide et soins à domicile |
+  | | PRAP | Formation Prévention des Risques liés à l'Activité Physique |
+  | | SST | Formation Sauveteur Secouriste du Travail |
+  | **Formations au secourisme** | BNSSA | Formations au B.N.S.S.A |
+  | | GQS | Sensibilisation aux Gestes Qui Sauvent |
+  | | PAE-PS | Formation de formateur aux Premiers Secours |
+  | | PAE-PSC | Formation de formateur en Prévention et Secours Civiques de niveau 1 |
+  | | PS | Formation de formateur aux Premiers Secours |
+  | | PSC1 | Formation Prévention et Secours Civiques de niveau 1 |
+  | **Formations spécifiques** | CE | Chef d'équipe |
+  | | CP | Chef de poste |
+  | | PSSP | Premiers Secours Socio-psychologiques |
+  | | SC | Secourisme canin |
+  | **Informations liées à l'association** | AUT | Autorisation d'exercice |
+  | | CONTR | Contribution fédérale |
+  | | COTIS | Cotisation fédérale |
+  | **Médailles collectives** | CD | Acte de Courage et de Dévouement — colonnes: Délivrée le, Agrafe |
+  | | GO | Médaille Grand Or de la Sécurité Civile — colonnes: Délivrée le, Agrafe |
+
+**Tab 5 — Cotisation**
+- [ ] RIB file upload (PDF/image)
+- [ ] RIB text fields: can be extracted from the uploaded file or filled in manually
+  (IBAN, BIC, Titulaire du compte, Domiciliation, N° de compte)
+
 ### Configuration — Admin (ADMIN)
 - [x] Application settings — configuration CRUD (tabbed UI, toggle/select/file controls)
 - [x] Parametrage reference tables — type-evenement/participation/materiel/consommable/vehicule CRUD
