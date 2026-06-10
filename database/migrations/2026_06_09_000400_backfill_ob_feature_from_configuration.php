@@ -21,10 +21,6 @@ return new class extends Migration
 {
     /** Feature keys that already have a native Laravel implementation. */
     private const NATIVE = [
-        'vehicules', 'materiel', 'consommables', 'activités', 'competences',
-        'disponibilites', 'chat', 'remplacements', 'cotisations', 'externes',
-        'bank_accounts', 'main_courante', 'client', 'geolocalize_enabled',
-        'carte', 'multi_site', 'staff_assignment',
     ];
 
     /** Functional domain per feature key. */
