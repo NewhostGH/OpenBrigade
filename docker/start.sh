@@ -9,10 +9,15 @@ if [ ! -f /var/www/html/vendor/autoload.php ] && [ -d /opt/bootstrap/vendor ]; t
 	cp -a /opt/bootstrap/vendor/. /var/www/html/vendor/
 fi
 
-if [ ! -f /var/www/html/public/build/manifest.json ] && [ -d /opt/bootstrap/public-build ]; then
-	echo "public/build missing in bind mount. Restoring from image cache..."
-	mkdir -p /var/www/html/public/build
-	cp -a /opt/bootstrap/public-build/. /var/www/html/public/build/
+# Refresh public/build when missing OR when the image holds a newer build than
+# the copy previously written into the bind mount (stale manifest after rebuild).
+if [ -d /opt/bootstrap/public-build ]; then
+	if [ ! -f /var/www/html/public/build/manifest.json ] \
+		|| [ /opt/bootstrap/public-build/manifest.json -nt /var/www/html/public/build/manifest.json ]; then
+		echo "public/build missing or older than image cache. Restoring..."
+		mkdir -p /var/www/html/public/build
+		cp -a /opt/bootstrap/public-build/. /var/www/html/public/build/
+	fi
 fi
 
 # Ensure writable Laravel directories keep correct permissions even with mounted volumes.
@@ -41,7 +46,9 @@ if [ "${AUTO_RUN_MIGRATIONS:-1}" = "1" ]; then
 	max_attempts="${MIGRATION_MAX_ATTEMPTS:-30}"
 
 	while [ "$attempt" -le "$max_attempts" ]; do
-		if php artisan migrate --force; then
+		# Run as www-data so files created by artisan (e.g. storage/logs/laravel.log)
+		# stay writable by PHP-FPM.
+		if runuser -u www-data -- php artisan migrate --force; then
 			echo "Migrations completed successfully."
 			break
 		fi
@@ -61,8 +68,9 @@ fi
 php-fpm -D
 
 # Run the Laravel scheduler every minute (drives automatic backups, etc.)
+# Runs as www-data for the same file-ownership reason as migrations above.
 ( while true; do
-	php artisan schedule:run >> /dev/null 2>&1
+	runuser -u www-data -- php artisan schedule:run >> /dev/null 2>&1
 	sleep 60
 done ) &
 

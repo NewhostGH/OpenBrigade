@@ -228,32 +228,41 @@
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label class="form-label form-label-sm">Modèle (.PDF)</label>
+                            <input type="file" name="S_PDF_PAGE" accept=".pdf" class="form-control form-control-sm">
                             @if ($section->S_PDF_PAGE)
-                                <div class="mb-1" style="font-size:var(--font-size-xs); color:var(--text-muted);">
-                                    <i class="fas fa-file-pdf text-danger me-1"></i>{{ $section->S_PDF_PAGE }}
+                                <div class="mt-1 d-flex align-items-center gap-2" style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                                    <span><i class="fas fa-file-pdf text-danger me-1"></i>{{ $section->S_PDF_PAGE }}</span>
+                                    <button type="submit" form="letterhead-reset-form"
+                                            class="btn btn-sm btn-outline-secondary py-0"
+                                            onclick="return confirm('Réinitialiser le papier à entête ? Le modèle par défaut sera utilisé.')">
+                                        <i class="fas fa-undo me-1"></i>Modèle par défaut
+                                    </button>
+                                </div>
+                            @else
+                                <div class="mt-1" style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                                    Modèle par défaut utilisé (pdf_page.pdf)
                                 </div>
                             @endif
-                            <input type="file" name="S_PDF_PAGE" accept=".pdf" class="form-control form-control-sm">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label class="form-label form-label-sm" for="S_PDF_MARGE_TOP">Marge haut (mm)</label>
                             <input type="number" id="S_PDF_MARGE_TOP" name="S_PDF_MARGE_TOP"
                                    min="0" max="999" class="form-control form-control-sm"
                                    value="{{ old('S_PDF_MARGE_TOP', $section->S_PDF_MARGE_TOP ?? 15) }}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label class="form-label form-label-sm" for="S_PDF_MARGE_LEFT">Marge gauche/droite (mm)</label>
                             <input type="number" id="S_PDF_MARGE_LEFT" name="S_PDF_MARGE_LEFT"
                                    min="0" max="999" class="form-control form-control-sm"
                                    value="{{ old('S_PDF_MARGE_LEFT', $section->S_PDF_MARGE_LEFT ?? 15) }}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label class="form-label form-label-sm" for="S_PDF_TEXTE_TOP">Début zone de texte (mm)</label>
                             <input type="number" id="S_PDF_TEXTE_TOP" name="S_PDF_TEXTE_TOP"
                                    min="0" max="9999" class="form-control form-control-sm"
                                    value="{{ old('S_PDF_TEXTE_TOP', $section->S_PDF_TEXTE_TOP ?? 40) }}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label class="form-label form-label-sm" for="S_PDF_TEXTE_BOTTOM">Fin zone de texte (mm)</label>
                             <input type="number" id="S_PDF_TEXTE_BOTTOM" name="S_PDF_TEXTE_BOTTOM"
                                    min="0" max="9999" class="form-control form-control-sm"
@@ -272,12 +281,21 @@
                     <div class="row g-2 align-items-start">
                         <div class="col-md-4">
                             <label class="form-label form-label-sm">Image de fond du badge</label>
+                            <input type="file" name="S_PDF_BADGE" accept="image/*" class="form-control form-control-sm">
                             @if ($section->S_PDF_BADGE)
-                                <div class="mb-1" style="font-size:var(--font-size-xs); color:var(--text-muted);">
-                                    <i class="fas fa-image me-1"></i>{{ $section->S_PDF_BADGE }}
+                                <div class="mt-1 d-flex align-items-center gap-2" style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                                    <span><i class="fas fa-image me-1"></i>{{ $section->S_PDF_BADGE }}</span>
+                                    <button type="submit" form="badge-reset-form"
+                                            class="btn btn-sm btn-outline-secondary py-0"
+                                            onclick="return confirm('Réinitialiser l\'image de fond du badge ?')">
+                                        <i class="fas fa-undo me-1"></i>Image par défaut
+                                    </button>
+                                </div>
+                            @else
+                                <div class="mt-1" style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                                    Aucune image de fond (dessin par défaut)
                                 </div>
                             @endif
-                            <input type="file" name="S_PDF_BADGE" accept="image/*" class="form-control form-control-sm">
                         </div>
                     </div>
                 </div>
@@ -357,6 +375,20 @@
             <div class="mb-4">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Enregistrer</button>
             </div>
+        </form>
+
+        {{-- Reset letterhead to the default template (button lives in the card above) --}}
+        <form id="letterhead-reset-form" method="POST"
+              action="{{ route('organisation.sections.letterhead.reset', $section->S_ID) }}">
+            @csrf
+            @method('DELETE')
+        </form>
+
+        {{-- Reset badge background image (button lives in the card above) --}}
+        <form id="badge-reset-form" method="POST"
+              action="{{ route('organisation.sections.badge.reset', $section->S_ID) }}">
+            @csrf
+            @method('DELETE')
         </form>
 
     {{-- ════════════════════════════════════════════════════════════════════════

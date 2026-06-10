@@ -234,6 +234,7 @@
             tab: 'generalites',
             year: {{ $year }},
             section: @json(['code' => $section?->S_CODE, 'name' => $section?->S_DESCRIPTION]),
+            letterhead: @json($letterhead ?? null),
             totalMembers: {{ $totalMembers }},
             membersByGroup: @json($membersByGroup ?? []),
             newMembersByYear: @json($newMembersByYear ?? []),

@@ -236,19 +236,19 @@ class OrganisationController extends Controller
     public function updatePersonalisation(Request $request, Section $section): RedirectResponse
     {
         $data = $request->validate([
-            'S_PDF_MARGE_TOP'    => ['nullable', 'numeric', 'min:0', 'max:999'],
-            'S_PDF_MARGE_LEFT'   => ['nullable', 'numeric', 'min:0', 'max:999'],
-            'S_PDF_TEXTE_TOP'    => ['nullable', 'numeric', 'min:0', 'max:9999'],
+            'S_PDF_MARGE_TOP' => ['nullable', 'numeric', 'min:0', 'max:999'],
+            'S_PDF_MARGE_LEFT' => ['nullable', 'numeric', 'min:0', 'max:999'],
+            'S_PDF_TEXTE_TOP' => ['nullable', 'numeric', 'min:0', 'max:9999'],
             'S_PDF_TEXTE_BOTTOM' => ['nullable', 'numeric', 'min:0', 'max:9999'],
             'NB_DAYS_BEFORE_BLOCK' => ['nullable', 'integer', 'min:0', 'max:9999'],
-            'S_PDF_SIGNATURE'    => ['nullable', 'string'],
-            'S_DEVIS_DEBUT'      => ['nullable', 'string'],
-            'S_DEVIS_FIN'        => ['nullable', 'string'],
-            'S_FACTURE_DEBUT'    => ['nullable', 'string'],
-            'S_FACTURE_FIN'      => ['nullable', 'string'],
-            'S_PDF_PAGE'         => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
-            'S_PDF_BADGE'        => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:2048'],
-            'S_IMAGE_SIGNATURE'  => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:2048'],
+            'S_PDF_SIGNATURE' => ['nullable', 'string'],
+            'S_DEVIS_DEBUT' => ['nullable', 'string'],
+            'S_DEVIS_FIN' => ['nullable', 'string'],
+            'S_FACTURE_DEBUT' => ['nullable', 'string'],
+            'S_FACTURE_FIN' => ['nullable', 'string'],
+            'S_PDF_PAGE' => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
+            'S_PDF_BADGE' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:2048'],
+            'S_IMAGE_SIGNATURE' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:2048'],
         ]);
 
         foreach (['S_PDF_PAGE' => 'pdf', 'S_PDF_BADGE' => 'images', 'S_IMAGE_SIGNATURE' => 'images'] as $field => $subDir) {
@@ -271,17 +271,71 @@ class OrganisationController extends Controller
             ->with('success', 'Personnalisation enregistrée.');
     }
 
+    // ── Section PDF assets (letterhead / badge, used by client-side pdf-lib) ──
+
+    public function sectionLetterhead(Section $section)
+    {
+        $file = basename(trim((string) $section->S_PDF_PAGE));
+        abort_if($file === '', 404);
+
+        $path = Storage::disk('public')->path("sections/{$section->S_ID}/pdf/{$file}");
+        abort_unless(file_exists($path), 404);
+
+        return response()->file($path, ['Content-Type' => 'application/pdf']);
+    }
+
+    public function sectionBadge(Section $section)
+    {
+        $file = basename(trim((string) $section->S_PDF_BADGE));
+        abort_if($file === '', 404);
+
+        $path = Storage::disk('public')->path("sections/{$section->S_ID}/images/{$file}");
+        abort_unless(file_exists($path), 404);
+
+        return response()->file($path);
+    }
+
+    /**
+     * Remove the section's custom letterhead so PDFs fall back to the
+     * generic public/pdf/pdf_page.pdf template.
+     */
+    public function resetLetterhead(Section $section): RedirectResponse
+    {
+        $file = basename(trim((string) $section->S_PDF_PAGE));
+        if ($file !== '') {
+            Storage::disk('public')->delete("sections/{$section->S_ID}/pdf/{$file}");
+        }
+
+        $section->update(['S_PDF_PAGE' => '']);
+
+        return redirect()->route('organisation.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
+            ->with('success', 'Papier à entête réinitialisé — le modèle par défaut sera utilisé.');
+    }
+
+    public function resetBadge(Section $section): RedirectResponse
+    {
+        $file = basename(trim((string) $section->S_PDF_BADGE));
+        if ($file !== '') {
+            Storage::disk('public')->delete("sections/{$section->S_ID}/images/{$file}");
+        }
+
+        $section->update(['S_PDF_BADGE' => '']);
+
+        return redirect()->route('organisation.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
+            ->with('success', 'Image de fond du badge réinitialisée.');
+    }
+
     // ── Cotisation / RIB tab ──────────────────────────────────────────────────
 
     public function updateRib(Request $request, Section $section): RedirectResponse
     {
         $validated = $request->validate([
             'IBAN' => ['nullable', 'string', 'max:34'],
-            'BIC'  => ['nullable', 'string', 'max:11'],
+            'BIC' => ['nullable', 'string', 'max:11'],
         ]);
 
         $iban = preg_replace('/\s+/', '', strtoupper($validated['IBAN'] ?? ''));
-        $bic  = trim(strtoupper($validated['BIC'] ?? ''));
+        $bic = trim(strtoupper($validated['BIC'] ?? ''));
 
         DB::table('compte_bancaire')
             ->where('CB_TYPE', 'S')
@@ -290,10 +344,10 @@ class OrganisationController extends Controller
 
         if ($iban || $bic) {
             DB::table('compte_bancaire')->insert([
-                'CB_TYPE'     => 'S',
-                'CB_ID'       => $section->S_ID,
-                'IBAN'        => $iban,
-                'BIC'         => $bic,
+                'CB_TYPE' => 'S',
+                'CB_ID' => $section->S_ID,
+                'IBAN' => $iban,
+                'BIC' => $bic,
                 'UPDATE_DATE' => now(),
             ]);
         }
@@ -308,8 +362,8 @@ class OrganisationController extends Controller
     {
         $validated = $request->validate([
             'date_debut' => ['nullable', 'date'],
-            'date_fin'   => ['nullable', 'date'],
-            'agrafe'     => ['nullable', 'string', 'max:100'],
+            'date_fin' => ['nullable', 'date'],
+            'agrafe' => ['nullable', 'string', 'max:100'],
         ]);
 
         // Always delete first (legacy pattern: delete then re-insert)
@@ -320,12 +374,12 @@ class OrganisationController extends Controller
 
         if ($validated['date_debut'] || $validated['date_fin'] || $validated['agrafe']) {
             DB::table('agrement')->insert([
-                'TA_CODE'   => $code,
-                'S_ID'      => $section->S_ID,
-                'A_DEBUT'   => $validated['date_debut'] ?: null,
-                'A_FIN'     => $validated['date_fin'] ?: null,
+                'TA_CODE' => $code,
+                'S_ID' => $section->S_ID,
+                'A_DEBUT' => $validated['date_debut'] ?: null,
+                'A_FIN' => $validated['date_fin'] ?: null,
                 'A_COMMENT' => $validated['agrafe'] ?: null,
-                'TAV_ID'    => null,
+                'TAV_ID' => null,
             ]);
         }
 
@@ -368,21 +422,21 @@ class OrganisationController extends Controller
             $label = ($r->S_CODE ? $r->S_CODE.' — ' : '').($r->S_DESCRIPTION ?: 'Section '.$r->P_SECTION);
 
             return [
-                'name'        => $label,
-                'grade'       => $r->cnt.' membre'.($r->cnt > 1 ? 's' : ''),
-                'section'     => '',
-                'phone'       => '',
-                'address'     => $r->cnt.' membre'.($r->cnt > 1 ? 's' : '').' géolocalisé'.($r->cnt > 1 ? 's' : ''),
-                'lat'         => (float) $r->lat,
-                'lng'         => (float) $r->lng,
-                'photo_url'   => '',
+                'name' => $label,
+                'grade' => $r->cnt.' membre'.($r->cnt > 1 ? 's' : ''),
+                'section' => '',
+                'phone' => '',
+                'address' => $r->cnt.' membre'.($r->cnt > 1 ? 's' : '').' géolocalisé'.($r->cnt > 1 ? 's' : ''),
+                'lat' => (float) $r->lat,
+                'lng' => (float) $r->lng,
+                'photo_url' => '',
                 'profile_url' => route('geolocalisation.index', ['section' => $r->P_SECTION]),
             ];
         })->values()->toArray();
 
         return view('organisation.cartographie', [
             'markers' => $markers,
-            'count'   => count($markers),
+            'count' => count($markers),
         ]);
     }
 
@@ -413,28 +467,28 @@ class OrganisationController extends Controller
     {
         return $request->validate([
             // Informations obligatoires
-            'S_CODE'               => ['required', 'string', 'max:25'],
-            'S_DESCRIPTION'        => ['nullable', 'string', 'max:80'],
-            'S_ORDER'              => ['nullable', 'integer', 'min:0', 'max:255'],
-            'S_PARENT'             => ['nullable', 'integer'],
+            'S_CODE' => ['required', 'string', 'max:25'],
+            'S_DESCRIPTION' => ['nullable', 'string', 'max:80'],
+            'S_ORDER' => ['nullable', 'integer', 'min:0', 'max:255'],
+            'S_PARENT' => ['nullable', 'integer'],
             // Contact
-            'S_PHONE'              => ['nullable', 'string', 'max:20'],
-            'S_PHONE2'             => ['nullable', 'string', 'max:20'],
-            'S_PHONE3'             => ['nullable', 'string', 'max:20'],
-            'S_FAX'                => ['nullable', 'string', 'max:20'],
-            'S_EMAIL'              => ['nullable', 'email', 'max:60'],
-            'S_EMAIL2'             => ['nullable', 'email', 'max:60'],
-            'S_EMAIL3'             => ['nullable', 'email', 'max:60'],
-            'S_WHATSAPP'           => ['nullable', 'string', 'max:30'],
-            'S_ID_RADIO'           => ['nullable', 'string', 'max:5'],
+            'S_PHONE' => ['nullable', 'string', 'max:20'],
+            'S_PHONE2' => ['nullable', 'string', 'max:20'],
+            'S_PHONE3' => ['nullable', 'string', 'max:20'],
+            'S_FAX' => ['nullable', 'string', 'max:20'],
+            'S_EMAIL' => ['nullable', 'email', 'max:60'],
+            'S_EMAIL2' => ['nullable', 'email', 'max:60'],
+            'S_EMAIL3' => ['nullable', 'email', 'max:60'],
+            'S_WHATSAPP' => ['nullable', 'string', 'max:30'],
+            'S_ID_RADIO' => ['nullable', 'string', 'max:5'],
             // Informations facultatives
-            'S_ADDRESS'            => ['nullable', 'string', 'max:150'],
+            'S_ADDRESS' => ['nullable', 'string', 'max:150'],
             'S_ADDRESS_COMPLEMENT' => ['nullable', 'string', 'max:150'],
-            'S_ZIP_CODE'           => ['nullable', 'string', 'max:6'],
-            'S_CITY'               => ['nullable', 'string', 'max:30'],
-            'S_SIRET'              => ['nullable', 'string', 'max:20'],
-            'S_AFFILIATION'        => ['nullable', 'string', 'max:20'],
-            'S_URL'                => ['nullable', 'string', 'max:60'],
+            'S_ZIP_CODE' => ['nullable', 'string', 'max:6'],
+            'S_CITY' => ['nullable', 'string', 'max:30'],
+            'S_SIRET' => ['nullable', 'string', 'max:20'],
+            'S_AFFILIATION' => ['nullable', 'string', 'max:20'],
+            'S_URL' => ['nullable', 'string', 'max:60'],
         ]);
     }
 
@@ -447,8 +501,8 @@ class OrganisationController extends Controller
                 return $parentId === 0 ? ($p === 0) : $p === $parentId;
             })
             ->map(fn ($s) => [
-                'section'  => $s,
-                'count'    => (int) ($memberCounts[$s->S_ID] ?? 0),
+                'section' => $s,
+                'count' => (int) ($memberCounts[$s->S_ID] ?? 0),
                 'children' => $this->buildTree($sections, (int) $s->S_ID, $memberCounts),
             ])
             ->values()

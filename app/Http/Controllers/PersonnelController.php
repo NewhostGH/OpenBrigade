@@ -818,32 +818,18 @@ class PersonnelController extends Controller
         ]);
     }
 
-    public function exportLivret(Personnel $personnel)
+    public function livretData(Personnel $personnel)
     {
         $personnel->load('section');
-        $service = new PersonnelExportService;
-        $pdf = $service->buildLivret($personnel);
 
-        $filename = Str::ascii('Livret_'.strtoupper($personnel->P_NOM).'_'.$personnel->P_PRENOM).'.pdf';
-
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => "inline; filename=\"{$filename}\"",
-        ]);
+        return response()->json((new PersonnelExportService)->livretData($personnel));
     }
 
-    public function exportCarte(Personnel $personnel)
+    public function carteData(Personnel $personnel)
     {
         $personnel->load('section');
-        $service = new PersonnelExportService;
-        $pdf = $service->buildCarte($personnel);
 
-        $filename = Str::ascii('Carte_'.strtoupper($personnel->P_NOM).'_'.$personnel->P_PRENOM).'.pdf';
-
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => "inline; filename=\"{$filename}\"",
-        ]);
+        return response()->json((new PersonnelExportService)->carteData($personnel));
     }
 
     // ── Shared query builder (used by index() and the XLS/CSV exports) ─────────

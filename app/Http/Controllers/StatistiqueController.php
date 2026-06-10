@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\BilanPdfService;
+use App\Models\Section;
+use App\Services\PersonnelExportService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -24,31 +24,11 @@ class StatistiqueController extends Controller
         return view('statistique.bilan.generalites', $this->fetchGeneralites($request));
     }
 
-    public function bilanGeneralitesPdf(Request $request): Response
-    {
-        $data = $this->fetchGeneralites($request);
-        $pdf  = app(BilanPdfService::class)->buildGeneralites($data);
-
-        return response($pdf, 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="bilan-generalites-'.$data['year'].'.pdf"');
-    }
-
     // ── Bilan annuel — Activités opérationnelles ──────────────────────────────
 
     public function bilanActivites(Request $request): View
     {
         return view('statistique.bilan.activites', $this->fetchActivites($request));
-    }
-
-    public function bilanActivitesPdf(Request $request): Response
-    {
-        $data = $this->fetchActivites($request);
-        $pdf  = app(BilanPdfService::class)->buildActivites($data);
-
-        return response($pdf, 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="bilan-activites-'.$data['year'].'.pdf"');
     }
 
     // ── Bilan annuel — Formations ─────────────────────────────────────────────
@@ -58,21 +38,11 @@ class StatistiqueController extends Controller
         return view('statistique.bilan.formations', $this->fetchFormations($request));
     }
 
-    public function bilanFormationsPdf(Request $request): Response
-    {
-        $data = $this->fetchFormations($request);
-        $pdf  = app(BilanPdfService::class)->buildFormations($data);
-
-        return response($pdf, 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="bilan-formations-'.$data['year'].'.pdf"');
-    }
-
     // ── Private data fetchers ─────────────────────────────────────────────────
 
     private function fetchGeneralites(Request $request): array
     {
-        $base      = $this->bilanBase($request);
+        $base = $this->bilanBase($request);
         $sectionId = $base['sectionId'];
 
         $totalMembers = DB::table('pompier')
@@ -129,23 +99,23 @@ class StatistiqueController extends Controller
             ->get();
 
         return array_merge($base, [
-            'totalMembers'       => $totalMembers,
-            'membersByGroup'     => $membersByGroup,
-            'newMembersByYear'   => $newMembersByYear,
-            'vehiclesByType'     => $vehiclesByType,
-            'totalVehicles'      => $vehiclesByType->sum('nb'),
-            'materielsByType'    => $materielsByType,
-            'totalMateriels'     => $materielsByType->sum('nb'),
+            'totalMembers' => $totalMembers,
+            'membersByGroup' => $membersByGroup,
+            'newMembersByYear' => $newMembersByYear,
+            'vehiclesByType' => $vehiclesByType,
+            'totalVehicles' => $vehiclesByType->sum('nb'),
+            'materielsByType' => $materielsByType,
+            'totalMateriels' => $materielsByType->sum('nb'),
             'consommablesByType' => $consommablesByType,
-            'totalConsommables'  => $consommablesByType->sum('nb'),
+            'totalConsommables' => $consommablesByType->sum('nb'),
         ]);
     }
 
     private function fetchActivites(Request $request): array
     {
-        $base      = $this->bilanBase($request);
+        $base = $this->bilanBase($request);
         $sectionId = $base['sectionId'];
-        $year      = $base['year'];
+        $year = $base['year'];
 
         $eventsByMonthRaw = DB::table('evenement as e')
             ->join('evenement_horaire as eh', 'e.E_CODE', '=', 'eh.E_CODE')
@@ -179,7 +149,7 @@ class StatistiqueController extends Controller
             ->whereYear('eh.EH_DATE_DEBUT', $year)
             ->where('e.TE_CODE', '<>', 'MC')
             ->groupBy('e.TE_CODE', 'te.TE_LIBELLE')
-            ->select(DB::raw("COALESCE(te.TE_LIBELLE, e.TE_CODE) as label"), DB::raw('COUNT(DISTINCT e.E_CODE) as nb'))
+            ->select(DB::raw('COALESCE(te.TE_LIBELLE, e.TE_CODE) as label'), DB::raw('COUNT(DISTINCT e.E_CODE) as nb'))
             ->orderByDesc('nb')
             ->pluck('nb', 'label')
             ->toArray();
@@ -201,26 +171,26 @@ class StatistiqueController extends Controller
             ->limit(10)
             ->get();
 
-        $months          = range(1, 12);
-        $eventsData      = array_map(fn ($m) => $eventsByMonthRaw[$m] ?? 0, $months);
+        $months = range(1, 12);
+        $eventsData = array_map(fn ($m) => $eventsByMonthRaw[$m] ?? 0, $months);
         $participantData = array_map(fn ($m) => $partByMonth->has($m) ? (int) $partByMonth->get($m)->nb_persons : 0, $months);
 
         return array_merge($base, [
-            'eventsData'        => $eventsData,
-            'participantData'   => $participantData,
-            'eventsByType'      => $eventsByType,
-            'topParticipants'   => $topParticipants,
-            'totalEvents'       => array_sum($eventsData),
+            'eventsData' => $eventsData,
+            'participantData' => $participantData,
+            'eventsByType' => $eventsByType,
+            'topParticipants' => $topParticipants,
+            'totalEvents' => array_sum($eventsData),
             'totalParticipants' => array_sum($participantData),
-            'totalHours'        => (int) collect($participationByMonth)->sum('hours'),
+            'totalHours' => (int) collect($participationByMonth)->sum('hours'),
         ]);
     }
 
     private function fetchFormations(Request $request): array
     {
-        $base      = $this->bilanBase($request);
+        $base = $this->bilanBase($request);
         $sectionId = $base['sectionId'];
-        $year      = $base['year'];
+        $year = $base['year'];
 
         $formWhere = "LOWER(COALESCE(c.CEV_DESCRIPTION, '')) LIKE '%form%' OR LOWER(te.TE_LIBELLE) LIKE '%form%'";
 
@@ -246,7 +216,7 @@ class StatistiqueController extends Controller
             ->whereYear('eh.EH_DATE_DEBUT', $year)
             ->whereRaw("($formWhere)")
             ->groupBy('te.TE_CODE', 'te.TE_LIBELLE')
-            ->select(DB::raw("COALESCE(te.TE_LIBELLE, te.TE_CODE) as label"), DB::raw('COUNT(DISTINCT e.E_CODE) as nb'))
+            ->select(DB::raw('COALESCE(te.TE_LIBELLE, te.TE_CODE) as label'), DB::raw('COUNT(DISTINCT e.E_CODE) as nb'))
             ->orderByDesc('nb')
             ->pluck('nb', 'label')
             ->toArray();
@@ -257,8 +227,8 @@ class StatistiqueController extends Controller
             ->leftJoin('categorie_evenement as c', 'c.CEV_CODE', '=', 'te.CEV_CODE')
             ->leftJoin('evenement_participation as ep', function ($j) {
                 $j->on('ep.E_CODE', '=', 'e.E_CODE')
-                  ->on('ep.EH_ID', '=', 'eh.EH_ID')
-                  ->where('ep.EP_ABSENT', 0);
+                    ->on('ep.EH_ID', '=', 'eh.EH_ID')
+                    ->where('ep.EP_ABSENT', 0);
             })
             ->where('e.S_ID', $sectionId)
             ->where('e.E_CANCELED', 0)
@@ -277,16 +247,16 @@ class StatistiqueController extends Controller
             ->orderBy('eh.EH_DATE_DEBUT')
             ->get();
 
-        $months     = range(1, 12);
+        $months = range(1, 12);
         $eventsData = array_map(fn ($m) => $eventsByMonthRaw[$m] ?? 0, $months);
 
         return array_merge($base, [
-            'eventsData'      => $eventsData,
-            'eventsByType'    => $eventsByType,
-            'formationsList'  => $formationsList,
+            'eventsData' => $eventsData,
+            'eventsByType' => $eventsByType,
+            'formationsList' => $formationsList,
             'totalFormations' => array_sum($eventsData),
-            'totalHours'      => (int) $formationsList->sum('duree_h'),
-            'totalTrained'    => (int) $formationsList->sum('nb_participants'),
+            'totalHours' => (int) $formationsList->sum('duree_h'),
+            'totalTrained' => (int) $formationsList->sum('nb_participants'),
         ]);
     }
 
@@ -295,18 +265,19 @@ class StatistiqueController extends Controller
     private function bilanBase(Request $request): array
     {
         $sectionId = (int) auth()->user()->P_SECTION;
-        $year      = (int) $request->integer('year', now()->year);
-        $years     = range(now()->year, max(now()->year - 5, 2018));
-        $section   = DB::table('section')->where('S_ID', $sectionId)->first(['S_CODE', 'S_DESCRIPTION']);
+        $year = (int) $request->integer('year', now()->year);
+        $years = range(now()->year, max(now()->year - 5, 2018));
+        $section = DB::table('section')->where('S_ID', $sectionId)->first(['S_CODE', 'S_DESCRIPTION']);
+        $letterhead = (new PersonnelExportService)->letterheadConfig(Section::find($sectionId));
 
-        return compact('year', 'years', 'sectionId', 'section');
+        return compact('year', 'years', 'sectionId', 'section', 'letterhead');
     }
 
     private function fetchStats(Request $request): array
     {
         $sectionId = (int) auth()->user()->P_SECTION;
-        $year      = (int) $request->integer('year', now()->year);
-        $years     = range(now()->year, max(now()->year - 5, 2018));
+        $year = (int) $request->integer('year', now()->year);
+        $years = range(now()->year, max(now()->year - 5, 2018));
 
         $eventsByMonth = DB::table('evenement as e')
             ->join('evenement_horaire as eh', 'e.E_CODE', '=', 'eh.E_CODE')
@@ -365,7 +336,7 @@ class StatistiqueController extends Controller
             ->where('e.E_CANCELED', 0)
             ->whereYear('eh.EH_DATE_DEBUT', $year)
             ->groupBy('e.TE_CODE', 'te.TE_LIBELLE')
-            ->select(DB::raw("COALESCE(te.TE_LIBELLE, e.TE_CODE) as label"), DB::raw('COUNT(DISTINCT e.E_CODE) as nb'))
+            ->select(DB::raw('COALESCE(te.TE_LIBELLE, e.TE_CODE) as label'), DB::raw('COUNT(DISTINCT e.E_CODE) as nb'))
             ->pluck('nb', 'label')
             ->toArray();
 
@@ -376,23 +347,23 @@ class StatistiqueController extends Controller
             ->whereNull('P_FIN')
             ->count();
 
-        $months          = range(1, 12);
-        $eventsData      = array_map(fn ($m) => $eventsByMonth[$m] ?? 0, $months);
+        $months = range(1, 12);
+        $eventsData = array_map(fn ($m) => $eventsByMonth[$m] ?? 0, $months);
         $participantData = array_map(fn ($m) => $partByMonth->has($m) ? (int) $partByMonth->get($m)->nb_persons : 0, $months);
 
         return [
-            'year'               => $year,
-            'years'              => $years,
-            'sectionId'          => $sectionId,
-            'eventsData'         => $eventsData,
-            'participantData'    => $participantData,
-            'newMembersByYear'   => $newMembersByYear,
-            'topParticipants'    => $topParticipants,
-            'eventsByType'       => $eventsByType,
-            'totalMembers'       => $totalMembers,
-            'totalEvents'        => array_sum($eventsData),
-            'totalParticipants'  => array_sum($participantData),
-            'totalHours'         => (int) collect($participationByMonth)->sum('hours'),
+            'year' => $year,
+            'years' => $years,
+            'sectionId' => $sectionId,
+            'eventsData' => $eventsData,
+            'participantData' => $participantData,
+            'newMembersByYear' => $newMembersByYear,
+            'topParticipants' => $topParticipants,
+            'eventsByType' => $eventsByType,
+            'totalMembers' => $totalMembers,
+            'totalEvents' => array_sum($eventsData),
+            'totalParticipants' => array_sum($participantData),
+            'totalHours' => (int) collect($participationByMonth)->sum('hours'),
             'newMembersThisYear' => (int) ($newMembersByYear[$year] ?? 0),
         ];
     }

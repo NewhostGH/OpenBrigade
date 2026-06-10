@@ -176,6 +176,7 @@
             tab: 'activites',
             year: {{ $year }},
             section: @json(['code' => $section?->S_CODE, 'name' => $section?->S_DESCRIPTION]),
+            letterhead: @json($letterhead ?? null),
             totalEvents: {{ $totalEvents }},
             totalParticipants: {{ $totalParticipants }},
             totalHours: {{ $totalHours }},

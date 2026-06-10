@@ -4,237 +4,392 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 const MM = 2.8346;
 
 const C = {
-    brand:   rgb(0.12, 0.23, 0.47),
+    brand: rgb(0.12, 0.23, 0.47),
     brandLt: rgb(0.92, 0.95, 0.98),
-    gray:    rgb(0.45, 0.45, 0.45),
-    grayLt:  rgb(0.95, 0.95, 0.95),
-    dark:    rgb(0.08, 0.08, 0.08),
-    white:   rgb(1, 1, 1),
-    sep:     rgb(0.80, 0.80, 0.80),
+    ident: rgb(0.05, 0.21, 0.58),
+    gray: rgb(0.45, 0.45, 0.45),
+    grayLt: rgb(0.95, 0.95, 0.95),
+    dark: rgb(0.08, 0.08, 0.08),
+    white: rgb(1, 1, 1),
+    sep: rgb(0.80, 0.80, 0.80),
+};
+
+const L = {
+    // Print line / header
+    imprime: 'Imprimé le ',
+    page: 'Page ',
+    passeportHeader: 'Passeport du bénévole  —  ',
+    passeportTitle: 'Passeport du bénévole',
+
+    // Identity block labels
+    identite: 'Identité:',
+    dateNaissance: 'Date de naissance:',
+    lieuNaissance: 'Lieu de naissance:',
+    adresse: 'Adresse:',
+    telephone: 'Téléphone:',
+    email: 'Email:',
+    departement: 'Département:',
+    antenne: 'Antenne:',
+    dateEngagement: 'Date engagement:',
+
+    // Section headers
+    shDecorations: 'Décorations collectives',
+    shMedailles: 'Médailles et Récompenses',
+    shDiplomes: 'Diplômes officiels',
+    shCompetences: 'Compétences valides au ',
+    shFormations: 'Formations depuis 1 an',
+    shSecours: 'Opérations de secours depuis 1 an',
+    shOperations: 'Activités opérationnelles depuis 1 an',
+    shBilan5y: 'Bilan participations bénévole sur 5 ans',
+
+    // Table column headers
+    medaille: 'Médaille',
+    date: 'Date',
+    agrafe: 'Agrafe',
+    decerneeA: 'Décernée à',
+    remiseA: 'Remise à',
+    code: 'Code',
+    qualification: 'Qualification',
+    nDiplome: 'N° diplôme',
+    delivrePar: 'Délivré par',
+    lieu: 'Lieu',
+    categorie: 'Catégorie',
+    type: 'Type',
+    description: 'Description',
+    expiration: 'Expiration',
+    illimitee: 'Illimitée',
+    activite: 'Activité',
+    pour: 'Pour',
+    role: 'Rôle',
+    h: 'H',
+    total: 'TOTAL',
+
+    // Carte
+    carteMembre: 'Carte de membre  ',
+
+    // UI
+    generation: 'Génération...',
+    erreurPdf: 'Erreur lors de la génération du PDF.',
+    livretBtn: '<i class="fas fa-file-pdf me-2 text-danger"></i> Livret (PDF)',
+    carteBtn: '<i class="fas fa-id-card me-2 text-danger"></i> Carte adhérent (PDF)',
+    erreurHttp: 'Erreur ',
 };
 
 function csrfToken() {
     return document.querySelector('meta[name="csrf-token"]')?.content || '';
 }
 
+// Fetch an image and embed it into the document (PNG or JPG).
+async function embedImage(doc, url) {
+    const resp = await fetch(url);
+    if (!resp.ok) return null;
+    const bytes = await resp.arrayBuffer();
+    const ct = resp.headers.get('content-type') || '';
+    if (ct.includes('png') || /\.png(\?.*)?$/i.test(url)) {
+        return doc.embedPng(bytes);
+    }
+    return doc.embedJpg(bytes);
+}
+
+// Fetch the section letterhead PDF ("Papier à entête") and embed its first page.
+async function embedLetterhead(doc, letterhead) {
+    if (!letterhead?.pdf_url) return null;
+    try {
+        const resp = await fetch(letterhead.pdf_url);
+        if (!resp.ok) return null;
+        const bytes = await resp.arrayBuffer();
+        const [page] = await doc.embedPdf(bytes);
+        return page;
+    } catch (e) {
+        console.warn('Letterhead unavailable, rendering without it.', e);
+        return null;
+    }
+}
+
 // ── Livret PDF ─────────────────────────────────────────────────────────────────
 
 const A4W = 595.28;
 const A4H = 841.89;
-const MARGIN = 15 * MM;
-const CW = A4W - 2 * MARGIN;
 
 class LivetPdf {
-    constructor(doc, regular, bold, italic) {
+    /**
+     * opts: {
+     *   letterhead: embedded PDF page used as page background (or null),
+     *   margeLeft, texteTop, texteBottom: text zone in points
+     *     (from section settings: Marge gauche/droite, Début/Fin zone de texte)
+     * }
+     */
+    constructor(doc, regular, bold, italic, opts = {}) {
         this.doc = doc;
         this.regular = regular;
         this.bold = bold;
         this.italic = italic;
         this.page = null;
         this.topY = 0;
+        this.pageNo = 0;
         this._hdrTitle = '';
+
+        this.letterhead = opts.letterhead || null;
+        this.marginX = opts.margeLeft ?? 15 * MM;
+        this.cw = A4W - 2 * this.marginX;
+        this.topStart = opts.texteTop ?? 22 * MM;
+        this.bottomLimit = A4H - (opts.texteBottom ?? 10 * MM);
     }
 
     setHeader(title) { this._hdrTitle = title; }
 
     newPage() {
         this.page = this.doc.addPage([A4W, A4H]);
-        // Header bar
-        this._rect(0, 0, A4W, 18 * MM, C.brand);
-        this._text(this._hdrTitle, MARGIN, 5 * MM, 11, this.bold, C.white);
-        // Footer
-        const footTop = A4H - 8 * MM;
-        this._line(MARGIN, footTop, A4W - MARGIN, footTop, C.sep, 0.4);
-        const dateStr = 'Imprime le ' + new Date().toLocaleDateString('fr-FR');
-        this._text(dateStr, MARGIN, footTop + 2 * MM, 7, this.regular, C.gray);
-        const app = 'OpenBrigade';
-        const appW = this.regular.widthOfTextAtSize(app, 7);
-        this._text(app, A4W - MARGIN - appW, footTop + 2 * MM, 7, this.regular, C.gray);
-        this.topY = 22 * MM;
+        this.pageNo += 1;
+
+        if (this.letterhead) {
+            // Letterhead PDF as full-page background; the header/footer artwork
+            // belongs to the template, text stays inside the configured zone.
+            this.page.drawPage(this.letterhead, { x: 0, y: 0, width: A4W, height: A4H });
+        } else {
+            // Fallback drawn header when the entity has no letterhead.
+            this._rect(0, 0, A4W, 18 * MM, C.brand);
+            this._text(this._hdrTitle, this.marginX, 5 * MM, 11, this.bold, C.white);
+        }
+
+        // Print line just below the text zone
+        const footTop = this.bottomLimit + 2 * MM;
+        const dateStr = L.imprime + new Date().toLocaleDateString('fr-FR');
+        this._text(dateStr, this.marginX, footTop, 6, this.italic, C.gray);
+        const pageTxt = L.page + this.pageNo;
+        const ptW = this.italic.widthOfTextAtSize(pageTxt, 6);
+        this._text(pageTxt, A4W - this.marginX - ptW, footTop, 6, this.italic, C.gray);
+
+        this.topY = this.topStart;
     }
 
     allocate(h) {
-        if (this.topY + h > A4H - 10 * MM) this.newPage();
+        if (this.topY + h > this.bottomLimit) this.newPage();
     }
 
     sectionHeader(label) {
         this.topY += 2 * MM;
-        this.allocate(8 * MM);
-        this._rect(MARGIN, this.topY, CW, 7 * MM, C.brandLt);
-        this._text(label, MARGIN + 3 * MM, this.topY + 1.2 * MM, 9, this.bold, C.brand);
+        this.allocate(8 * MM + 12 * MM); // header + at least one row
+        this._rect(this.marginX, this.topY, this.cw, 7 * MM, C.brandLt);
+        this._text(label, this.marginX + 3 * MM, this.topY + 1.2 * MM, 9, this.bold, C.brand);
         this.topY += 8 * MM;
     }
 
-    table(headers, rows) {
+    table(headers, rows, totals = null) {
         if (!rows.length) return;
         const ROW_H = 5.5 * MM;
         const HDR_H = 6 * MM;
-        const widths = headers.map(h => h.width * CW);
+        const widths = headers.map(h => h.width * this.cw);
+
+        const drawHeader = () => {
+            this._rect(this.marginX, this.topY, this.cw, HDR_H, C.brand);
+            let x = this.marginX;
+            headers.forEach((h, i) => {
+                const lw = this.bold.widthOfTextAtSize(h.label, 7.5);
+                this._text(h.label, x + (widths[i] - lw) / 2, this.topY + 1.1 * MM, 7.5, this.bold, C.white);
+                x += widths[i];
+            });
+            this.topY += HDR_H;
+        };
 
         this.allocate(HDR_H + ROW_H);
-        this._rect(MARGIN, this.topY, CW, HDR_H, C.brand);
-        let x = MARGIN;
-        headers.forEach((h, i) => {
-            const lw = this.bold.widthOfTextAtSize(h.label, 7.5);
-            this._text(h.label, x + (widths[i] - lw) / 2, this.topY + 1.1 * MM, 7.5, this.bold, C.white);
-            x += widths[i];
-        });
-        this.topY += HDR_H;
+        drawHeader();
 
-        rows.forEach((row, rIdx) => {
-            this.allocate(ROW_H);
-            if (rIdx % 2 === 0) this._rect(MARGIN, this.topY, CW, ROW_H, C.grayLt);
-            this._line(MARGIN, this.topY + ROW_H, MARGIN + CW, this.topY + ROW_H, C.sep, 0.25);
-            x = MARGIN;
+        const drawRow = (row, fill, font) => {
+            if (this.topY + ROW_H > this.bottomLimit) {
+                this.newPage();
+                drawHeader();
+            }
+            if (fill) this._rect(this.marginX, this.topY, this.cw, ROW_H, fill);
+            this._line(this.marginX, this.topY + ROW_H, this.marginX + this.cw, this.topY + ROW_H, C.sep, 0.25);
+            let x = this.marginX;
             row.forEach((cell, ci) => {
                 const s = String(cell ?? '-');
                 const SIZE = 7;
                 const align = headers[ci]?.align || 'left';
-                const sw = this.regular.widthOfTextAtSize(s, SIZE);
+                const sw = font.widthOfTextAtSize(s, SIZE);
                 let tx;
                 if (align === 'right') tx = x + widths[ci] - sw - 1.5 * MM;
                 else if (align === 'center') tx = x + (widths[ci] - sw) / 2;
                 else tx = x + 1.5 * MM;
-                this._text(s, Math.max(x + 0.5 * MM, tx), this.topY + 1.2 * MM, SIZE, this.regular, C.dark);
+                this._text(s, Math.max(x + 0.5 * MM, tx), this.topY + 1.2 * MM, SIZE, font, C.dark);
                 x += widths[ci];
             });
             this.topY += ROW_H;
-        });
+        };
+
+        rows.forEach((row, rIdx) => drawRow(row, rIdx % 2 === 0 ? C.grayLt : null, this.regular));
+        if (totals) drawRow(totals, C.brandLt, this.bold);
+
         this.topY += 1.5 * MM;
     }
 
     _text(str, x, topY, size, font, color) {
         try {
             this.page.drawText(str, { x, y: A4H - topY - size * 0.72, size, font, color });
-        } catch (_) {}
+        } catch (_) { }
     }
     _rect(x, topY, width, height, color) {
         this.page.drawRectangle({ x, y: A4H - topY - height, width, height, color });
+    }
+    _rectBorder(x, topY, width, height, color, borderWidth = 0.8) {
+        this.page.drawRectangle({
+            x, y: A4H - topY - height, width, height,
+            borderColor: color, borderWidth,
+        });
     }
     _line(x1, y1, x2, y2, color, thickness = 0.5) {
         this.page.drawLine({ start: { x: x1, y: A4H - y1 }, end: { x: x2, y: A4H - y2 }, thickness, color });
     }
 }
 
-async function buildLivretPdf(data) {
-    const doc = await PDFDocument.create();
+async function buildLivretPdf(doc, data) {
     const [regular, bold, italic] = await Promise.all([
         doc.embedFont(StandardFonts.Helvetica),
         doc.embedFont(StandardFonts.HelveticaBold),
         doc.embedFont(StandardFonts.HelveticaOblique),
     ]);
 
-    const pdf = new LivetPdf(doc, regular, bold, italic);
+    const lh = data.letterhead || {};
+    const letterhead = await embedLetterhead(doc, lh);
+
+    const pdf = new LivetPdf(doc, regular, bold, italic, letterhead ? {
+        letterhead,
+        margeLeft: (lh.marge_left ?? 15) * MM,
+        texteTop: (lh.texte_top ?? 40) * MM,
+        texteBottom: (lh.texte_bottom ?? 25) * MM,
+    } : {});
+
     const nom = (data.nom || '').toUpperCase();
     const prenom = data.prenom || '';
-    const hdrTitle = 'Passeport benevole  —  ' + nom + ' ' + prenom;
-    pdf.setHeader(hdrTitle);
+    pdf.setHeader(L.passeportHeader + nom + ' ' + prenom);
+    pdf.newPage();
 
-    // ── Cover / identity page ──────────────────────────────────────────────────
-    pdf.page = doc.addPage([A4W, A4H]);
-    // Cover header
-    pdf._rect(0, 0, A4W, 60 * MM, C.brand);
-    const coverTitle = 'PASSEPORT DU BENEVOLE';
-    const ctW = bold.widthOfTextAtSize(coverTitle, 20);
-    pdf._text(coverTitle, (A4W - ctW) / 2, 15 * MM, 20, bold, C.white);
-    const nameLine = nom + '  ' + prenom;
-    const nlW = regular.widthOfTextAtSize(nameLine, 13);
-    pdf._text(nameLine, (A4W - nlW) / 2, 15 * MM + 20 * 0.72 + 5 * MM, 13, regular, rgb(0.75, 0.85, 1));
+    // ── Title ───────────────────────────────────────────────────────────────────
+    const titleW = 100 * MM;
+    const titleX = (A4W - titleW) / 2;
+    pdf._rectBorder(titleX, pdf.topY, titleW, 15 * MM, C.dark);
+    const tW = bold.widthOfTextAtSize(L.passeportTitle, 20);
+    pdf._text(L.passeportTitle, (A4W - tW) / 2, pdf.topY + 4.5 * MM, 20, bold, C.dark);
+    pdf.topY += 15 * MM + 6 * MM;
 
-    // Identity fields
-    pdf.topY = 68 * MM;
-    const fields = [
-        ['Date de naissance', data.birthdate],
-        ['Lieu de naissance', data.birthplace],
-        ['Adresse', data.address],
+    // ── Identité ────────────────────────────────────────────────────────────────
+    const idTop = pdf.topY;
+
+    // Photo on the left, like the legacy livret
+    if (data.photo_url) {
+        try {
+            const img = await embedImage(doc, data.photo_url);
+            if (img) {
+                const box = { w: 28 * MM, h: 36 * MM };
+                const scale = Math.min(box.w / img.width, box.h / img.height);
+                pdf.page.drawImage(img, {
+                    x: pdf.marginX,
+                    y: A4H - idTop - img.height * scale,
+                    width: img.width * scale,
+                    height: img.height * scale,
+                });
+            }
+        } catch (_) { }
+    }
+
+    const labelX = pdf.marginX + 45 * MM;
+    const valX = pdf.marginX + 79 * MM;
+    const lineH = 7 * MM;
+
+    pdf._text(L.identite, labelX, pdf.topY, 12, bold, C.dark);
+    pdf._text([data.civilite, nom, prenom].filter(Boolean).join(' '), valX, pdf.topY, 12, bold, C.ident);
+    pdf.topY += lineH;
+
+    const idRows = [
+        [L.dateNaissance, data.birthdate],
+        [L.lieuNaissance, data.birthplace],
+        [L.adresse, data.address],
         ['', data.zip_city],
-        ['Telephone', data.phone],
-        ['Email', data.email],
-        ['Date engagement', data.date_engagement],
-        ['Section', data.section],
-        ['Grade', data.grade],
-        ['N° adherent', data.code],
-    ].filter(([, v]) => v);
-
-    const labelX = MARGIN;
-    const valX = MARGIN + 45 * MM;
-
-    fields.forEach(([label, value]) => {
-        pdf.allocate(6 * MM);
-        if (label) {
-            pdf._text(label + ' :', labelX, pdf.topY, 9, bold, C.gray);
-        }
-        pdf._text(String(value || ''), valX, pdf.topY, 9, regular, C.dark);
-        pdf.topY += 6 * MM;
+        [L.telephone, data.phone],
+        [L.email, data.email],
+        [L.departement, data.departement],
+        [L.antenne, data.antenne],
+        [L.dateEngagement, data.date_engagement],
+    ];
+    idRows.forEach(([label, value]) => {
+        if (label === '' && !value) return;
+        pdf.allocate(lineH);
+        if (label) pdf._text(label, labelX, pdf.topY, 10, regular, C.dark);
+        pdf._text(String(value || ''), valX, pdf.topY, 10, regular, C.dark);
+        pdf.topY += lineH;
     });
 
-    // ── Medals ──────────────────────────────────────────────────────────────────
+    // Make sure following sections start below the photo
+    pdf.topY = Math.max(pdf.topY, idTop + 38 * MM);
+
+    // ── Décorations collectives ─────────────────────────────────────────────────
     if (data.medals?.length) {
-        pdf.sectionHeader('Decorations collectives');
+        pdf.sectionHeader(L.shDecorations);
         pdf.table(
             [
-                { label: 'Medaille', width: 0.38 },
-                { label: 'Date', width: 0.15, align: 'center' },
-                { label: 'Agrafe', width: 0.25, align: 'center' },
-                { label: 'Decernee a', width: 0.22, align: 'center' },
+                { label: L.medaille, width: 0.38 },
+                { label: L.date, width: 0.15, align: 'center' },
+                { label: L.agrafe, width: 0.25, align: 'center' },
+                { label: L.decerneeA, width: 0.22, align: 'center' },
             ],
             data.medals.map(m => [m.TA_DESCRIPTION, m.A_DEBUT, m.A_COMMENT, m.S_DESCRIPTION])
         );
     }
 
     if (data.indiv_medals?.length) {
-        pdf.sectionHeader('Medailles et Recompenses individuelles');
+        pdf.sectionHeader(L.shMedailles);
         pdf.table(
             [
-                { label: 'Medaille', width: 0.7 },
-                { label: 'Remise a', width: 0.3, align: 'center' },
+                { label: L.medaille, width: 0.7 },
+                { label: L.remiseA, width: 0.3, align: 'center' },
             ],
             data.indiv_medals.map(m => [m.DESCRIPTION, nom + ' ' + prenom])
         );
     }
 
-    // ── Diplomes ────────────────────────────────────────────────────────────────
+    // ── Diplômes ────────────────────────────────────────────────────────────────
     if (data.diplomes?.length) {
-        pdf.sectionHeader('Diplomes officiels');
+        pdf.sectionHeader(L.shDiplomes);
         pdf.table(
             [
-                { label: 'Code', width: 0.10 },
-                { label: 'Qualification', width: 0.28 },
-                { label: 'Date', width: 0.12, align: 'center' },
-                { label: 'N° diplome', width: 0.17, align: 'center' },
-                { label: 'Delivre par', width: 0.21 },
-                { label: 'Lieu', width: 0.12 },
+                { label: L.code, width: 0.10 },
+                { label: L.qualification, width: 0.28 },
+                { label: L.date, width: 0.12, align: 'center' },
+                { label: L.nDiplome, width: 0.17, align: 'center' },
+                { label: L.delivrePar, width: 0.21 },
+                { label: L.lieu, width: 0.12 },
             ],
             data.diplomes.map(d => [d.TYPE, d.DESCRIPTION, d.PF_DATE, d.PF_DIPLOME, d.PF_RESPONSABLE, d.PF_LIEU])
         );
     }
 
-    // ── Qualifications ──────────────────────────────────────────────────────────
+    // ── Compétences ─────────────────────────────────────────────────────────────
     if (data.qualifications?.length) {
-        pdf.sectionHeader('Competences valides');
+        pdf.sectionHeader(L.shCompetences + new Date().toLocaleDateString('fr-FR'));
         pdf.table(
             [
-                { label: 'Categorie', width: 0.28 },
-                { label: 'Type', width: 0.15, align: 'center' },
-                { label: 'Description', width: 0.42 },
-                { label: 'Expiration', width: 0.15, align: 'center' },
+                { label: L.categorie, width: 0.28 },
+                { label: L.type, width: 0.15, align: 'center' },
+                { label: L.description, width: 0.42 },
+                { label: L.expiration, width: 0.15, align: 'center' },
             ],
-            data.qualifications.map(q => [q.EQ_NOM, q.TYPE, q.DESCRIPTION, q.Q_EXPIRATION || 'Illimitee'])
+            data.qualifications.map(q => [q.EQ_NOM, q.TYPE, q.DESCRIPTION, q.Q_EXPIRATION || L.illimitee])
         );
     }
 
-    // ── Activity summaries ───────────────────────────────────────────────────────
+    // ── Activités sur 12 mois ────────────────────────────────────────────────────
     const actCols = (type) => type === 'formation'
         ? [
-            { label: 'Date', width: 0.11 }, { label: 'Type', width: 0.17 },
-            { label: 'Pour', width: 0.10 }, { label: 'Description', width: 0.28 },
-            { label: 'Lieu', width: 0.18 }, { label: 'H', width: 0.08, align: 'right' }, { label: 'Role', width: 0.08 },
-          ]
+            { label: L.date, width: 0.11 }, { label: L.type, width: 0.17 },
+            { label: L.pour, width: 0.10 }, { label: L.description, width: 0.28 },
+            { label: L.lieu, width: 0.18 }, { label: L.h, width: 0.08, align: 'right' }, { label: L.role, width: 0.08 },
+        ]
         : [
-            { label: 'Date', width: 0.11 }, { label: 'Activite', width: 0.18 },
-            { label: 'Description', width: 0.32 }, { label: 'Lieu', width: 0.23 },
-            { label: 'H', width: 0.08, align: 'right' }, { label: 'Role', width: 0.08 },
-          ];
+            { label: L.date, width: 0.11 }, { label: L.activite, width: 0.18 },
+            { label: L.description, width: 0.32 }, { label: L.lieu, width: 0.23 },
+            { label: L.h, width: 0.08, align: 'right' }, { label: L.role, width: 0.08 },
+        ];
 
     const actRows = (activities, type) => activities.map(a => type === 'formation'
         ? [a.datedeb, a.TE_LIBELLE, a.TF_CODE, a.E_LIBELLE, a.E_LIEU, a.EP_DUREE > 0 ? a.EP_DUREE : a.EH_DUREE, a.TP_LIBELLE]
@@ -242,33 +397,38 @@ async function buildLivretPdf(data) {
     );
 
     if (data.formations?.length) {
-        pdf.sectionHeader('Formations (12 derniers mois)');
+        pdf.sectionHeader(L.shFormations);
         pdf.table(actCols('formation'), actRows(data.formations, 'formation'));
     }
     if (data.secours?.length) {
-        pdf.sectionHeader('Operations de secours (12 derniers mois)');
+        pdf.sectionHeader(L.shSecours);
         pdf.table(actCols('other'), actRows(data.secours, 'other'));
     }
     if (data.operations?.length) {
-        pdf.sectionHeader('Activites operationnelles (12 derniers mois)');
+        pdf.sectionHeader(L.shOperations);
         pdf.table(actCols('other'), actRows(data.operations, 'other'));
     }
 
-    // ── 5-year summary ───────────────────────────────────────────────────────────
+    // ── Bilan participations bénévole sur 5 ans ─────────────────────────────────
     if (data.summary_5y?.categories?.length) {
-        pdf.sectionHeader('Bilan participations benevole sur 5 ans');
+        pdf.sectionHeader(L.shBilan5y);
         const yr = new Date().getFullYear();
-        const years = [yr-4, yr-3, yr-2, yr-1, yr];
+        const years = [yr - 4, yr - 3, yr - 2, yr - 1, yr];
         const yearFrac = 0.55 / 5;
+        const cellHours = (code, y) => Number(data.summary_5y.data?.[code]?.[y] ?? 0);
+        const totals = years.map(y =>
+            data.summary_5y.categories.reduce((sum, cat) => sum + cellHours(cat.code, y), 0)
+        );
         pdf.table(
             [
-                { label: 'Activite', width: 0.45 },
+                { label: L.activite, width: 0.45 },
                 ...years.map(y => ({ label: String(y), width: yearFrac, align: 'right' })),
             ],
             data.summary_5y.categories.map(cat => [
                 cat.label,
-                ...years.map(y => data.summary_5y.data?.[cat.code]?.[y] ?? 0),
-            ])
+                ...years.map(y => cellHours(cat.code, y)),
+            ]),
+            [L.total, ...totals.map(t => t + ' h')]
         );
     }
 
@@ -277,11 +437,10 @@ async function buildLivretPdf(data) {
 
 // ── Carte adhérent PDF ─────────────────────────────────────────────────────────
 
-async function buildCartePdf(data) {
+async function buildCartePdf(doc, data) {
     const CW = 85.6 * MM;   // 242.6 pt
     const CH = 53.98 * MM;  // 153.1 pt
 
-    const doc = await PDFDocument.create();
     const [regular, bold, italic] = await Promise.all([
         doc.embedFont(StandardFonts.Helvetica),
         doc.embedFont(StandardFonts.HelveticaBold),
@@ -290,66 +449,71 @@ async function buildCartePdf(data) {
 
     const page = doc.addPage([CW, CH]);
 
-    // Background
-    page.drawRectangle({ x: 0, y: 0, width: CW, height: CH, color: rgb(0.86, 0.90, 0.96) });
+    // "Image de fond du badge" from the section settings, full-card background.
+    let badge = null;
+    if (data.badge_url) {
+        try {
+            badge = await embedImage(doc, data.badge_url);
+        } catch (_) { }
+    }
 
-    // Header bar (12mm)
-    const hdrH = 12 * MM;
-    page.drawRectangle({ x: 0, y: CH - hdrH, width: CW, height: hdrH, color: C.brand });
-    const appName = data.app_name || 'OpenBrigade';
-    const appW = bold.widthOfTextAtSize(appName, 8);
-    page.drawText(appName, {
-        x: (CW - appW) / 2, y: CH - hdrH + (hdrH - 8 * 0.72) / 2,
-        size: 8, font: bold, color: C.white,
-    });
+    if (badge) {
+        page.drawImage(badge, { x: 0, y: 0, width: CW, height: CH });
+    } else {
+        // Fallback drawn design when the entity has no badge background
+        page.drawRectangle({ x: 0, y: 0, width: CW, height: CH, color: rgb(0.86, 0.90, 0.96) });
 
-    // Footer bar (7mm)
-    const ftrH = 7 * MM;
-    page.drawRectangle({ x: 0, y: 0, width: CW, height: ftrH, color: C.brand });
-    const footTxt = 'Carte de membre  ' + new Date().getFullYear();
-    const ftW = italic.widthOfTextAtSize(footTxt, 6);
-    page.drawText(footTxt, {
-        x: (CW - ftW) / 2, y: (ftrH - 6 * 0.72) / 2,
-        size: 6, font: italic, color: C.white,
-    });
+        const hdrH = 12 * MM;
+        page.drawRectangle({ x: 0, y: CH - hdrH, width: CW, height: hdrH, color: C.brand });
+        const appName = data.app_name || 'OpenBrigade';
+        const appW = bold.widthOfTextAtSize(appName, 8);
+        page.drawText(appName, {
+            x: (CW - appW) / 2, y: CH - hdrH + (hdrH - 8 * 0.72) / 2,
+            size: 8, font: bold, color: C.white,
+        });
 
-    // Photo area (embedded if available): 20mm × 28mm, at x=3mm, top=14mm from card top
+        const ftrH = 7 * MM;
+        page.drawRectangle({ x: 0, y: 0, width: CW, height: ftrH, color: C.brand });
+        const footTxt = L.carteMembre + new Date().getFullYear();
+        const ftW = italic.widthOfTextAtSize(footTxt, 6);
+        page.drawText(footTxt, {
+            x: (CW - ftW) / 2, y: (ftrH - 6 * 0.72) / 2,
+            size: 6, font: italic, color: C.white,
+        });
+    }
+
+    // Photo area: 20mm × 26mm, at x=3mm, top=14mm from card top
     if (data.photo_url) {
         try {
-            const resp = await fetch(data.photo_url);
-            if (resp.ok) {
-                const bytes = await resp.arrayBuffer();
-                const ct = resp.headers.get('content-type') || '';
-                const img = (ct.includes('png') || data.photo_url.match(/\.png$/i))
-                    ? await doc.embedPng(bytes)
-                    : await doc.embedJpg(bytes);
+            const img = await embedImage(doc, data.photo_url);
+            if (img) {
                 const photoH = 26 * MM;
                 const photoW = 20 * MM;
-                const photoX = 3 * MM;
-                const photoY_top = 14 * MM; // from card top
                 page.drawImage(img, {
-                    x: photoX,
-                    y: CH - photoY_top - photoH,
+                    x: 3 * MM,
+                    y: CH - 14 * MM - photoH,
                     width: photoW,
                     height: photoH,
                 });
             }
-        } catch (_) {}
+        } catch (_) { }
     }
 
     // Member info (right of photo)
     const infoX = 26 * MM;
-    const infoTopFromCardTop = 15 * MM; // top of info block from card top (just below header)
+    const infoTopFromCardTop = 15 * MM;
 
     const nom = (data.nom || '').toUpperCase();
     const prenom = data.prenom || '';
 
     const drawAt = (text, size, font, color, topFromCardTop) => {
-        page.drawText(text, {
-            x: infoX,
-            y: CH - topFromCardTop - size * 0.72,
-            size, font, color,
-        });
+        try {
+            page.drawText(text, {
+                x: infoX,
+                y: CH - topFromCardTop - size * 0.72,
+                size, font, color,
+            });
+        } catch (_) { }
     };
 
     drawAt(nom, 9, bold, rgb(0, 0, 0.23), infoTopFromCardTop);
@@ -384,42 +548,44 @@ async function fetchPersonnelData(url) {
     const resp = await fetch(url, {
         headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
     });
-    if (!resp.ok) throw new Error('Erreur ' + resp.status);
+    if (!resp.ok) throw new Error(L.erreurHttp + resp.status);
     return resp.json();
 }
 
 export async function downloadLivretPdf(personnelId) {
     const btn = document.querySelector('[data-livret-btn]');
-    if (btn) { btn.disabled = true; btn.textContent = 'Generation...'; }
+    if (btn) { btn.disabled = true; btn.textContent = L.generation; }
     try {
         const data = await fetchPersonnelData(`/personnel/${personnelId}/livret-data`);
-        const bytes = await buildLivretPdf(data);
+        const doc = await PDFDocument.create();
+        const bytes = await buildLivretPdf(doc, data);
         triggerDownload(bytes, `livret-${(data.nom || personnelId).toLowerCase()}.pdf`);
     } catch (e) {
         console.error(e);
-        alert('Erreur lors de la generation du PDF.');
+        alert(L.erreurPdf);
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-file-pdf me-2 text-danger"></i> Livret (PDF)';
+            btn.innerHTML = L.livretBtn;
         }
     }
 }
 
 export async function downloadCartePdf(personnelId) {
     const btn = document.querySelector('[data-carte-btn]');
-    if (btn) { btn.disabled = true; btn.textContent = 'Generation...'; }
+    if (btn) { btn.disabled = true; btn.textContent = L.generation; }
     try {
         const data = await fetchPersonnelData(`/personnel/${personnelId}/carte-data`);
-        const bytes = await buildCartePdf(data);
+        const doc = await PDFDocument.create();
+        const bytes = await buildCartePdf(doc, data);
         triggerDownload(bytes, `carte-${(data.nom || personnelId).toLowerCase()}.pdf`);
     } catch (e) {
         console.error(e);
-        alert('Erreur lors de la generation du PDF.');
+        alert(L.erreurPdf);
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-id-card me-2 text-danger"></i> Carte adherent (PDF)';
+            btn.innerHTML = L.carteBtn;
         }
     }
 }

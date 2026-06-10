@@ -8,26 +8,118 @@ const MARGIN = 15 * MM;
 const CW = A4W - 2 * MARGIN;
 
 const C = {
-    brand:   rgb(0.09, 0.24, 0.47),
+    brand: rgb(0.09, 0.24, 0.47),
     brandLt: rgb(0.92, 0.95, 0.98),
-    gray:    rgb(0.45, 0.45, 0.45),
-    grayLt:  rgb(0.95, 0.95, 0.95),
-    dark:    rgb(0.1, 0.1, 0.1),
-    white:   rgb(1, 1, 1),
-    sep:     rgb(0.82, 0.82, 0.82),
+    gray: rgb(0.45, 0.45, 0.45),
+    grayLt: rgb(0.95, 0.95, 0.95),
+    dark: rgb(0.1, 0.1, 0.1),
+    white: rgb(1, 1, 1),
+    sep: rgb(0.82, 0.82, 0.82),
 };
 
-const MONTHS = ['Jan','Fev','Mar','Avr','Mai','Jun','Jul','Aou','Sep','Oct','Nov','Dec'];
+const MONTHS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+
+const L = {
+    appName:          'OpenBrigade',
+    genere:           'Généré le ',
+    bilanAnnuel:      'BILAN ANNUEL ',
+    bilanPrefix:      'BILAN ',
+    generation:       'Génération...',
+    telechargerPdf:   '<i class="fas fa-file-pdf me-1"></i>Télécharger PDF',
+
+    // Tab labels (cover + tabLabels map)
+    tabGeneralites:   'Généralités, personnels et moyens',
+    tabActivites:     'Activités opérationnelles',
+    tabFormations:    'Formations',
+
+    // setMeta subtitles
+    metaGeneralites:  'Généralités',
+    metaActivites:    'Activités',
+    metaFormations:   'Formations',
+
+    // Section headers
+    shPersonnel:      'Personnel',
+    shNouveauxEng:    'Nouveaux engagements (5 ans)',
+    shVehicules:      'Véhicules',
+    shMateriel:       'Matériel',
+    shConsommables:   'Consommables',
+    shActivites:      'Activités opérationnelles',
+    shRepartMens:     'Répartition mensuelle',
+    shRepartType:     'Répartition par type',
+    shTop10:          'Top 10 participants',
+    shFormations:     'Formations',
+    shDetailSessions: 'Détail des sessions',
+
+    // KPI labels
+    membresActifs:    'Membres actifs',
+    totalVehicules:   'Total véhicules',
+    articlesInv:      'Articles inventoriés',
+    activites:        'Activités',
+    participations:   'Participations',
+    heuresBenevoles:  'Heures bénévoles',
+    sessions:         'Sessions',
+    stagiaires:       'Stagiaires',
+    heuresDisp:       'Heures dispensées',
+    cumules:          'cumulés',
+    partCumulees:     'participations cumulées',
+    enAnnee:          'en ',
+
+    // Table column headers
+    groupe:           'Groupe',
+    membres:          'Membres',
+    annee:            'Année',
+    engagements:      'Engagements',
+    type:             'Type',
+    quantite:         'Quantité',
+    categorie:        'Catégorie',
+    mois:             'Mois',
+    participants:     'Participants',
+    nom:              'Nom',
+    prenom:           'Prénom',
+    date:             'Date',
+    intitule:         'Intitulé',
+    lieu:             'Lieu',
+    dureeH:           'Durée h',
+    stag:             'Stag.',
+};
+
+// Fetch the section letterhead PDF ("Papier à entête") and embed its first page.
+async function embedLetterhead(doc, letterhead) {
+    if (!letterhead?.pdf_url) return null;
+    try {
+        const resp = await fetch(letterhead.pdf_url);
+        if (!resp.ok) return null;
+        const bytes = await resp.arrayBuffer();
+        const [page] = await doc.embedPdf(bytes);
+        return page;
+    } catch (e) {
+        console.warn('Letterhead unavailable, rendering without it.', e);
+        return null;
+    }
+}
 
 // ── PDF helper class ───────────────────────────────────────────────────────────
 class BilanPdf {
-    constructor(doc, regular, bold) {
+    /**
+     * opts: {
+     *   letterhead: embedded PDF page used as page background (or null),
+     *   margeLeft, texteTop, texteBottom: text zone in points
+     *     (from section settings: Marge gauche/droite, Début/Fin zone de texte)
+     * }
+     */
+    constructor(doc, regular, bold, opts = {}) {
         this.doc = doc;
         this.regular = regular;
         this.bold = bold;
         this.page = null;
         this.topY = 0;       // cursor from page top (points)
         this._meta = {};
+
+        this.letterhead = opts.letterhead || null;
+        this.marginX = opts.margeLeft ?? MARGIN;
+        this.cw = A4W - 2 * this.marginX;
+        this.topStart = opts.texteTop ?? 26 * MM;
+        this.bottomLimit = A4H - (opts.texteBottom ?? 12 * MM);
     }
 
     setMeta(title, subtitle, section, year) {
@@ -39,30 +131,40 @@ class BilanPdf {
         const { title, subtitle, section, year } = this._meta;
         this.page = this.doc.addPage([A4W, A4H]);
 
-        // Header bar
-        this._rect(0, 0, A4W, 22 * MM, C.brand);
-        this._text(title || '', MARGIN, 5 * MM, 15, this.bold, C.white);
-        if (subtitle) {
-            const sw = this.bold.widthOfTextAtSize(subtitle, 9);
-            this._text(subtitle, A4W - MARGIN - sw, 7 * MM, 9, this.regular, rgb(0.75, 0.85, 1));
+        if (this.letterhead) {
+            // Letterhead PDF as full-page background; the header/footer artwork
+            // belongs to the template, text stays inside the configured zone.
+            this.page.drawPage(this.letterhead, { x: 0, y: 0, width: A4W, height: A4H });
+
+            // Discreet context line just below the text zone
+            const footTop = this.bottomLimit + 2 * MM;
+            const footL = (title || '') + (subtitle ? '  —  ' + subtitle : '');
+            this._text(footL, this.marginX, footTop, 6, this.regular, C.gray);
+        } else {
+            // Fallback drawn header when the entity has no letterhead
+            this._rect(0, 0, A4W, 22 * MM, C.brand);
+            this._text(title || '', this.marginX, 5 * MM, 15, this.bold, C.white);
+            if (subtitle) {
+                const sw = this.bold.widthOfTextAtSize(subtitle, 9);
+                this._text(subtitle, A4W - this.marginX - sw, 7 * MM, 9, this.regular, rgb(0.75, 0.85, 1));
+            }
+
+            // Footer
+            const footTop = A4H - 10 * MM;
+            this._line(this.marginX, footTop, A4W - this.marginX, footTop, C.sep, 0.4);
+            const footL = (section || '') + (year ? '  —  ' + year : '');
+            this._text(footL, this.marginX, footTop + 2 * MM, 7, this.regular, C.gray);
+            const appW = this.regular.widthOfTextAtSize(L.appName, 7);
+            this._text(L.appName, A4W - this.marginX - appW, footTop + 2 * MM, 7, this.regular, C.gray);
         }
 
-        // Footer
-        const footTop = A4H - 10 * MM;
-        this._line(MARGIN, footTop, A4W - MARGIN, footTop, C.sep, 0.4);
-        const footL = (section || '') + (year ? '  —  ' + year : '');
-        this._text(footL, MARGIN, footTop + 2 * MM, 7, this.regular, C.gray);
-        const appTxt = 'OpenBrigade';
-        const appW = this.regular.widthOfTextAtSize(appTxt, 7);
-        this._text(appTxt, A4W - MARGIN - appW, footTop + 2 * MM, 7, this.regular, C.gray);
-
-        this.topY = 26 * MM;
+        this.topY = this.topStart;
         return this;
     }
 
     // Check remaining space; add new page if height won't fit
     allocate(height) {
-        if (this.topY + height > A4H - 12 * MM) {
+        if (this.topY + height > this.bottomLimit) {
             this.newPage();
         }
     }
@@ -71,8 +173,8 @@ class BilanPdf {
     sectionHeader(label) {
         this.topY += 2 * MM;
         this.allocate(9 * MM);
-        this._rect(MARGIN, this.topY, CW, 8 * MM, C.brandLt);
-        this._text(label, MARGIN + 3 * MM, this.topY + 1.5 * MM, 9, this.bold, C.brand);
+        this._rect(this.marginX, this.topY, this.cw, 8 * MM, C.brandLt);
+        this._text(label, this.marginX + 3 * MM, this.topY + 1.5 * MM, 9, this.bold, C.brand);
         this.topY += 9 * MM;
     }
 
@@ -82,9 +184,9 @@ class BilanPdf {
         this.allocate(KH + 4 * MM);
         const n = kpis.length;
         const gap = 2 * MM;
-        const kw = (CW - gap * (n - 1)) / n;
+        const kw = (this.cw - gap * (n - 1)) / n;
         kpis.forEach((k, i) => {
-            const x = MARGIN + i * (kw + gap);
+            const x = this.marginX + i * (kw + gap);
             this._rect(x, this.topY, kw, KH, C.grayLt);
             const valStr = String(k.value ?? '');
             const vs = Math.min(18, kw / (valStr.length * 0.55)); // adaptive font size
@@ -105,12 +207,12 @@ class BilanPdf {
         if (!rows.length) return;
         const ROW_H = 5.5 * MM;
         const HDR_H = 6.5 * MM;
-        const widths = headers.map(h => h.width * CW);
+        const widths = headers.map(h => h.width * this.cw);
 
         // Header
         this.allocate(HDR_H + ROW_H);
-        this._rect(MARGIN, this.topY, CW, HDR_H, C.brand);
-        let x = MARGIN;
+        this._rect(this.marginX, this.topY, this.cw, HDR_H, C.brand);
+        let x = this.marginX;
         headers.forEach((h, i) => {
             const lw = this.bold.widthOfTextAtSize(h.label, 8);
             this._text(h.label, x + (widths[i] - lw) / 2, this.topY + 1.2 * MM, 8, this.bold, C.white);
@@ -121,10 +223,10 @@ class BilanPdf {
         rows.forEach((row, rIdx) => {
             this.allocate(ROW_H);
             if (rIdx % 2 === 0) {
-                this._rect(MARGIN, this.topY, CW, ROW_H, C.grayLt);
+                this._rect(this.marginX, this.topY, this.cw, ROW_H, C.grayLt);
             }
-            this._line(MARGIN, this.topY + ROW_H, MARGIN + CW, this.topY + ROW_H, C.sep, 0.3);
-            x = MARGIN;
+            this._line(this.marginX, this.topY + ROW_H, this.marginX + this.cw, this.topY + ROW_H, C.sep, 0.3);
+            x = this.marginX;
             row.forEach((cell, ci) => {
                 const cellStr = cell !== null && cell !== undefined ? String(cell) : '-';
                 const SIZE = 7.5;
@@ -169,7 +271,7 @@ class BilanPdf {
     _line(x1, y1, x2, y2, color, thickness = 0.5) {
         this.page.drawLine({
             start: { x: x1, y: A4H - y1 },
-            end:   { x: x2, y: A4H - y2 },
+            end: { x: x2, y: A4H - y2 },
             thickness,
             color,
         });
@@ -180,12 +282,51 @@ class BilanPdf {
 function buildCover(pdf, year, sectionName, tabLabel) {
     pdf.page = pdf.doc.addPage([A4W, A4H]);
 
-    // Header block (~38% of page height)
+    if (pdf.letterhead) {
+        // Letterhead as cover background; titles centred inside the text zone
+        pdf.page.drawPage(pdf.letterhead, { x: 0, y: 0, width: A4W, height: A4H });
+
+        const zoneTop = pdf.topStart;
+        const zoneH = pdf.bottomLimit - zoneTop;
+
+        const t1 = L.bilanAnnuel + year;
+        const t1size = 26;
+        const t1w = pdf.bold.widthOfTextAtSize(t1, t1size);
+        let y = zoneTop + zoneH * 0.30;
+        pdf._text(t1, (A4W - t1w) / 2, y, t1size, pdf.bold, C.brand);
+        y += t1size * 0.72 + 8 * MM;
+
+        if (tabLabel) {
+            const t2size = 13;
+            const t2w = pdf.regular.widthOfTextAtSize(tabLabel, t2size);
+            pdf._text(tabLabel, (A4W - t2w) / 2, y, t2size, pdf.regular, C.gray);
+            y += t2size * 0.72 + 10 * MM;
+        }
+
+        pdf._rect(pdf.marginX, y, pdf.cw, 0.8, C.sep);
+        y += 6 * MM;
+
+        const secName = sectionName || L.appName;
+        const snSize = 13;
+        const snW = pdf.bold.widthOfTextAtSize(secName, snSize);
+        pdf._text(secName, (A4W - snW) / 2, y, snSize, pdf.bold, C.brand);
+        y += snSize * 0.72 + 4 * MM;
+
+        const dateStr = L.genere + new Date().toLocaleDateString('fr-FR', {
+            day: '2-digit', month: 'long', year: 'numeric',
+        });
+        const dateSize = 9;
+        const dateW = pdf.regular.widthOfTextAtSize(dateStr, dateSize);
+        pdf._text(dateStr, (A4W - dateW) / 2, y, dateSize, pdf.regular, C.gray);
+        return;
+    }
+
+    // Fallback drawn cover when the entity has no letterhead
     const hH = A4H * 0.38;
     pdf._rect(0, 0, A4W, hH, C.brand);
 
     // Main title
-    const t1 = 'BILAN ANNUEL ' + year;
+    const t1 = L.bilanAnnuel + year;
     const t1size = 26;
     const t1w = pdf.bold.widthOfTextAtSize(t1, t1size);
     pdf._text(t1, (A4W - t1w) / 2, hH * 0.28, t1size, pdf.bold, C.white);
@@ -201,13 +342,13 @@ function buildCover(pdf, year, sectionName, tabLabel) {
     pdf._rect(MARGIN, hH + 9 * MM, CW, 0.8, C.sep);
 
     // Section name
-    const secName = sectionName || 'OpenBrigade';
+    const secName = sectionName || L.appName;
     const snSize = 13;
     const snW = pdf.bold.widthOfTextAtSize(secName, snSize);
     pdf._text(secName, (A4W - snW) / 2, hH + 14 * MM, snSize, pdf.bold, C.brand);
 
     // Date
-    const dateStr = 'Genere le ' + new Date().toLocaleDateString('fr-FR', {
+    const dateStr = L.genere + new Date().toLocaleDateString('fr-FR', {
         day: '2-digit', month: 'long', year: 'numeric',
     });
     const dateSize = 9;
@@ -218,99 +359,99 @@ function buildCover(pdf, year, sectionName, tabLabel) {
 // ── Tab builders ───────────────────────────────────────────────────────────────
 
 function buildGeneralites(pdf, data) {
-    pdf.setMeta('BILAN ' + data.year, 'Generalites', data.section?.name || '', data.year);
+    pdf.setMeta(L.bilanPrefix + data.year, L.metaGeneralites, data.section?.name || '', data.year);
     pdf.newPage();
 
     // Personnel
-    pdf.sectionHeader('Personnel');
-    pdf.kpiRow([{ label: 'Membres actifs', value: data.totalMembers }]);
+    pdf.sectionHeader(L.shPersonnel);
+    pdf.kpiRow([{ label: L.membresActifs, value: data.totalMembers }]);
 
     const groupEntries = Object.entries(data.membersByGroup || {});
     if (groupEntries.length) {
         pdf.table(
-            [{ label: 'Groupe', width: 0.75 }, { label: 'Membres', width: 0.25, align: 'right' }],
+            [{ label: L.groupe, width: 0.75 }, { label: L.membres, width: 0.25, align: 'right' }],
             groupEntries.map(([l, n]) => [l, n])
         );
     }
 
     const yearEntries = Object.entries(data.newMembersByYear || {});
     if (yearEntries.length) {
-        pdf.sectionHeader('Nouveaux engagements (5 ans)');
+        pdf.sectionHeader(L.shNouveauxEng);
         pdf.table(
-            [{ label: 'Annee', width: 0.5 }, { label: 'Engagements', width: 0.5, align: 'right' }],
+            [{ label: L.annee, width: 0.5 }, { label: L.engagements, width: 0.5, align: 'right' }],
             yearEntries.map(([yr, n]) => [yr, n])
         );
     }
 
-    // Vehicules
-    pdf.sectionHeader('Vehicules');
-    pdf.kpiRow([{ label: 'Total vehicules', value: data.totalVehicles }]);
+    // Véhicules
+    pdf.sectionHeader(L.shVehicules);
+    pdf.kpiRow([{ label: L.totalVehicules, value: data.totalVehicles }]);
     if (data.vehiclesByType?.length) {
         pdf.table(
-            [{ label: 'Type', width: 0.75 }, { label: 'Quantite', width: 0.25, align: 'right' }],
+            [{ label: L.type, width: 0.75 }, { label: L.quantite, width: 0.25, align: 'right' }],
             data.vehiclesByType.map(r => [r.label, r.nb])
         );
     }
 
-    // Materiel
-    pdf.sectionHeader('Materiel');
-    pdf.kpiRow([{ label: 'Articles inventories', value: data.totalMateriels }]);
+    // Matériel
+    pdf.sectionHeader(L.shMateriel);
+    pdf.kpiRow([{ label: L.articlesInv, value: data.totalMateriels }]);
     if (data.materielsByType?.length) {
         pdf.table(
-            [{ label: 'Categorie', width: 0.75 }, { label: 'Quantite', width: 0.25, align: 'right' }],
+            [{ label: L.categorie, width: 0.75 }, { label: L.quantite, width: 0.25, align: 'right' }],
             data.materielsByType.map(r => [r.label, r.nb])
         );
     }
 
     // Consommables
-    pdf.sectionHeader('Consommables');
-    pdf.kpiRow([{ label: 'Articles inventories', value: data.totalConsommables }]);
+    pdf.sectionHeader(L.shConsommables);
+    pdf.kpiRow([{ label: L.articlesInv, value: data.totalConsommables }]);
     if (data.consommablesByType?.length) {
         pdf.table(
-            [{ label: 'Categorie', width: 0.75 }, { label: 'Quantite', width: 0.25, align: 'right' }],
+            [{ label: L.categorie, width: 0.75 }, { label: L.quantite, width: 0.25, align: 'right' }],
             data.consommablesByType.map(r => [r.label, r.nb])
         );
     }
 }
 
 function buildActivites(pdf, data) {
-    pdf.setMeta('BILAN ' + data.year, 'Activites', data.section?.name || '', data.year);
+    pdf.setMeta(L.bilanPrefix + data.year, L.metaActivites, data.section?.name || '', data.year);
     pdf.newPage();
 
-    pdf.sectionHeader('Activites operationnelles');
+    pdf.sectionHeader(L.shActivites);
     pdf.kpiRow([
-        { label: 'Activites', value: data.totalEvents, sub: 'en ' + data.year },
-        { label: 'Participations', value: data.totalParticipants, sub: 'cumules' },
-        { label: 'Heures benevoles', value: (data.totalHours || 0).toLocaleString('fr-FR') },
+        { label: L.activites,       value: data.totalEvents,        sub: L.enAnnee + data.year },
+        { label: L.participations,  value: data.totalParticipants,  sub: L.cumules },
+        { label: L.heuresBenevoles, value: (data.totalHours || 0).toLocaleString('fr-FR') },
     ]);
 
-    pdf.sectionHeader('Repartition mensuelle');
+    pdf.sectionHeader(L.shRepartMens);
     pdf.table(
         [
-            { label: 'Mois', width: 0.25 },
-            { label: 'Activites', width: 0.375, align: 'right' },
-            { label: 'Participants', width: 0.375, align: 'right' },
+            { label: L.mois,          width: 0.25 },
+            { label: L.activites,     width: 0.375, align: 'right' },
+            { label: L.participants,  width: 0.375, align: 'right' },
         ],
         MONTHS.map((m, i) => [m, data.eventsData?.[i] ?? 0, data.participantData?.[i] ?? 0])
     );
 
     const typeEntries = Object.entries(data.eventsByType || {});
     if (typeEntries.length) {
-        pdf.sectionHeader('Repartition par type');
+        pdf.sectionHeader(L.shRepartType);
         pdf.table(
-            [{ label: 'Type', width: 0.75 }, { label: 'Activites', width: 0.25, align: 'right' }],
+            [{ label: L.type, width: 0.75 }, { label: L.activites, width: 0.25, align: 'right' }],
             typeEntries.map(([l, n]) => [l, n])
         );
     }
 
     if (data.topParticipants?.length) {
-        pdf.sectionHeader('Top 10 participants');
+        pdf.sectionHeader(L.shTop10);
         pdf.table(
             [
-                { label: '#', width: 0.07, align: 'center' },
-                { label: 'Prenom', width: 0.31 },
-                { label: 'Nom', width: 0.38 },
-                { label: 'Activites', width: 0.24, align: 'right' },
+                { label: '#',       width: 0.07, align: 'center' },
+                { label: L.prenom,  width: 0.31 },
+                { label: L.nom,     width: 0.38 },
+                { label: L.activites, width: 0.24, align: 'right' },
             ],
             data.topParticipants.map((p, i) => [i + 1, p.prenom, p.nom, p.nb])
         );
@@ -318,41 +459,41 @@ function buildActivites(pdf, data) {
 }
 
 function buildFormations(pdf, data) {
-    pdf.setMeta('BILAN ' + data.year, 'Formations', data.section?.name || '', data.year);
+    pdf.setMeta(L.bilanPrefix + data.year, L.metaFormations, data.section?.name || '', data.year);
     pdf.newPage();
 
-    pdf.sectionHeader('Formations');
+    pdf.sectionHeader(L.shFormations);
     pdf.kpiRow([
-        { label: 'Sessions', value: data.totalFormations, sub: 'en ' + data.year },
-        { label: 'Stagiaires', value: data.totalTrained, sub: 'participations cumulees' },
-        { label: 'Heures dispensees', value: (data.totalHours || 0).toLocaleString('fr-FR') },
+        { label: L.sessions,   value: data.totalFormations, sub: L.enAnnee + data.year },
+        { label: L.stagiaires, value: data.totalTrained,    sub: L.partCumulees },
+        { label: L.heuresDisp, value: (data.totalHours || 0).toLocaleString('fr-FR') },
     ]);
 
-    pdf.sectionHeader('Repartition mensuelle');
+    pdf.sectionHeader(L.shRepartMens);
     pdf.table(
-        [{ label: 'Mois', width: 0.5 }, { label: 'Sessions', width: 0.5, align: 'right' }],
+        [{ label: L.mois, width: 0.5 }, { label: L.sessions, width: 0.5, align: 'right' }],
         MONTHS.map((m, i) => [m, data.eventsData?.[i] ?? 0])
     );
 
     const typeEntries = Object.entries(data.eventsByType || {});
     if (typeEntries.length) {
-        pdf.sectionHeader('Repartition par type');
+        pdf.sectionHeader(L.shRepartType);
         pdf.table(
-            [{ label: 'Type', width: 0.75 }, { label: 'Sessions', width: 0.25, align: 'right' }],
+            [{ label: L.type, width: 0.75 }, { label: L.sessions, width: 0.25, align: 'right' }],
             typeEntries.map(([l, n]) => [l, n])
         );
     }
 
     if (data.formationsList?.length) {
-        pdf.sectionHeader('Detail des sessions');
+        pdf.sectionHeader(L.shDetailSessions);
         pdf.table(
             [
-                { label: 'Date', width: 0.12 },
-                { label: 'Intitule', width: 0.34 },
-                { label: 'Type', width: 0.18 },
-                { label: 'Lieu', width: 0.18 },
-                { label: 'Duree h', width: 0.09, align: 'right' },
-                { label: 'Stag.', width: 0.09, align: 'right' },
+                { label: L.date,     width: 0.12 },
+                { label: L.intitule, width: 0.34 },
+                { label: L.type,     width: 0.18 },
+                { label: L.lieu,     width: 0.18 },
+                { label: L.dureeH,   width: 0.09, align: 'right' },
+                { label: L.stag,     width: 0.09, align: 'right' },
             ],
             data.formationsList.map(f => [
                 f.date ? new Date(f.date).toLocaleDateString('fr-FR') : '-',
@@ -377,7 +518,7 @@ export async function downloadBilanPdf() {
     const btn = document.getElementById('btn-download-pdf');
     if (btn) {
         btn.disabled = true;
-        btn.textContent = 'Génération...';
+        btn.textContent = L.generation;
     }
 
     try {
@@ -388,16 +529,24 @@ export async function downloadBilanPdf() {
         ]);
 
         const tabLabels = {
-            generalites: 'Generalites, personnels et moyens',
-            activites:   'Activites operationnelles',
-            formations:  'Formations',
+            generalites: L.tabGeneralites,
+            activites:   L.tabActivites,
+            formations:  L.tabFormations,
         };
 
-        const pdf = new BilanPdf(doc, regular, bold);
+        const lh = data.letterhead || {};
+        const letterhead = await embedLetterhead(doc, lh);
+
+        const pdf = new BilanPdf(doc, regular, bold, letterhead ? {
+            letterhead,
+            margeLeft: (lh.marge_left ?? 15) * MM,
+            texteTop: (lh.texte_top ?? 40) * MM,
+            texteBottom: (lh.texte_bottom ?? 25) * MM,
+        } : {});
         buildCover(pdf, data.year, data.section?.name, tabLabels[data.tab]);
 
-        if (data.tab === 'generalites')     buildGeneralites(pdf, data);
-        else if (data.tab === 'activites')  buildActivites(pdf, data);
+        if (data.tab === 'generalites') buildGeneralites(pdf, data);
+        else if (data.tab === 'activites') buildActivites(pdf, data);
         else if (data.tab === 'formations') buildFormations(pdf, data);
 
         const bytes = await doc.save();
@@ -413,7 +562,7 @@ export async function downloadBilanPdf() {
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-file-pdf me-1"></i>Télécharger PDF';
+            btn.innerHTML = L.telechargerPdf;
         }
     }
 }

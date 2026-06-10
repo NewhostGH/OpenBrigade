@@ -198,6 +198,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/organisation/sections/{section}', [OrganisationController::class, 'updateSection'])->name('organisation.sections.update')->middleware('permission:52');
     Route::delete('/organisation/sections/{section}', [OrganisationController::class, 'destroySection'])->name('organisation.sections.destroy')->middleware('permission:52');
     Route::patch('/organisation/sections/{section}/personalisation', [OrganisationController::class, 'updatePersonalisation'])->name('organisation.sections.personalisation')->middleware('permission:52');
+    // PDF assets — permission:0 because any member generating a livret/carte needs them
+    Route::get('/organisation/sections/{section}/letterhead', [OrganisationController::class, 'sectionLetterhead'])->name('organisation.sections.letterhead')->middleware('permission:0');
+    Route::delete('/organisation/sections/{section}/letterhead', [OrganisationController::class, 'resetLetterhead'])->name('organisation.sections.letterhead.reset')->middleware('permission:52');
+    Route::get('/organisation/sections/{section}/badge', [OrganisationController::class, 'sectionBadge'])->name('organisation.sections.badge')->middleware('permission:0');
+    Route::delete('/organisation/sections/{section}/badge', [OrganisationController::class, 'resetBadge'])->name('organisation.sections.badge.reset')->middleware('permission:52');
     Route::patch('/organisation/sections/{section}/rib', [OrganisationController::class, 'updateRib'])->name('organisation.sections.rib')->middleware('permission:52');
     Route::put('/organisation/sections/{section}/agrement/{code}', [OrganisationController::class, 'upsertAgrement'])->name('organisation.sections.agrement.upsert')->middleware('permission:52');
     Route::delete('/organisation/sections/{section}/agrement/{code}', [OrganisationController::class, 'destroyAgrement'])->name('organisation.sections.agrement.destroy')->middleware('permission:52');
@@ -207,11 +212,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/statistiques/dashboard', [StatistiqueController::class, 'index'])->name('statistique.dashboard')->middleware('permission:27');
     Route::get('/statistiques/bilan-annuel', fn () => redirect()->route('statistique.bilan.generalites'))->name('statistique.bilan');
     Route::get('/statistiques/bilan-annuel/generalites',     [StatistiqueController::class, 'bilanGeneralites'])->name('statistique.bilan.generalites')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel/generalites/pdf',[StatistiqueController::class, 'bilanGeneralitesPdf'])->name('statistique.bilan.generalites.pdf')->middleware('permission:27');
     Route::get('/statistiques/bilan-annuel/activites',      [StatistiqueController::class, 'bilanActivites'])->name('statistique.bilan.activites')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel/activites/pdf',  [StatistiqueController::class, 'bilanActivitesPdf'])->name('statistique.bilan.activites.pdf')->middleware('permission:27');
     Route::get('/statistiques/bilan-annuel/formations',     [StatistiqueController::class, 'bilanFormations'])->name('statistique.bilan.formations')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel/formations/pdf', [StatistiqueController::class, 'bilanFormationsPdf'])->name('statistique.bilan.formations.pdf')->middleware('permission:27');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');
@@ -248,9 +250,9 @@ Route::middleware('auth')->group(function () {
     // Per-member exports
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');
-    Route::get('personnel/{personnel}/livret', [PersonnelController::class, 'exportLivret'])
+    Route::get('personnel/{personnel}/livret-data', [PersonnelController::class, 'livretData'])
         ->name('personnel.livret')->middleware('permission:0');
-    Route::get('personnel/{personnel}/carte', [PersonnelController::class, 'exportCarte'])
+    Route::get('personnel/{personnel}/carte-data', [PersonnelController::class, 'carteData'])
         ->name('personnel.carte')->middleware('permission:0');
     // Géolocalisation
     Route::get('/geolocalisation', [GeolocalisationController::class, 'index'])

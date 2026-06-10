@@ -135,6 +135,7 @@
             tab: 'formations',
             year: {{ $year }},
             section: @json(['code' => $section?->S_CODE, 'name' => $section?->S_DESCRIPTION]),
+            letterhead: @json($letterhead ?? null),
             totalFormations: {{ $totalFormations }},
             totalTrained: {{ $totalTrained }},
             totalHours: {{ $totalHours }},
