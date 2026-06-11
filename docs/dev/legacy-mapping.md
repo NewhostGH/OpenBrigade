@@ -44,7 +44,7 @@ at folder granularity (they are binary assets copied as-is).
 | ------------------ | ----------------------------------------------------------------------------- |
 | `index.php`        | `app/Http/Controllers/DashboardController.php` + `resources/views/dashboard/` |
 | `index_d.php`      | `DashboardController.php`                                                     |
-| `save_accueil.php` | **WIP** (widget layout persistence; bridge redirects to the dashboard)        |
+| `save_accueil.php` | `DashboardController::saveLayout()` — `POST /dashboard/layout`, persists widget order/column per user in `ob_dashboard_layout` |
 | `myagenda.php`     | `PlanningController.php` (personal agenda merged into the planning view)      |
 | `noscript.php`     | **WIP**                                                                       |
 | `error.php`        | **WIP**                                                                       |

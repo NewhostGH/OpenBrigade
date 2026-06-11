@@ -9,6 +9,94 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
+    // ── Widget layout defaults ──────────────────────────────────────────────
+
+    public const WIDGET_LABELS = [
+        'welcome'              => 'Mon profil',
+        'duty'                 => 'Astreinte',
+        'birthdays'            => 'Anniversaires',
+        'horaires'             => 'Horaires à valider',
+        'unpaid'               => 'Activités non facturées',
+        'stats-missing'        => 'Bilans manquants',
+        'mes-activites'        => 'Mes activités',
+        'cp'                   => 'Congés à valider',
+        'vehicles'             => 'Véhicules',
+        'consumables'          => 'Consommables',
+        'remplacements'        => 'Remplacements',
+        'replacement-requests' => 'Demandes de remplacement',
+        'infos'                => 'Consignes & Actualités',
+        'mc'                   => 'Main courante',
+        'expenses'             => 'Notes de frais',
+        'events'               => 'Activités de la section',
+        'training'             => 'Formation',
+        'about'                => 'À propos',
+    ];
+
+    public const WIDGET_DEFAULTS = [
+        ['key' => 'welcome',              'col' => 1, 'position' => 1,  'visible' => 1],
+        ['key' => 'duty',                 'col' => 1, 'position' => 2,  'visible' => 1],
+        ['key' => 'birthdays',            'col' => 1, 'position' => 3,  'visible' => 1],
+        ['key' => 'horaires',             'col' => 1, 'position' => 4,  'visible' => 1],
+        ['key' => 'unpaid',               'col' => 1, 'position' => 5,  'visible' => 1],
+        ['key' => 'stats-missing',        'col' => 1, 'position' => 6,  'visible' => 1],
+        ['key' => 'mes-activites',        'col' => 2, 'position' => 1,  'visible' => 1],
+        ['key' => 'cp',                   'col' => 2, 'position' => 2,  'visible' => 1],
+        ['key' => 'vehicles',             'col' => 2, 'position' => 3,  'visible' => 1],
+        ['key' => 'consumables',          'col' => 2, 'position' => 4,  'visible' => 1],
+        ['key' => 'remplacements',        'col' => 2, 'position' => 5,  'visible' => 1],
+        ['key' => 'replacement-requests', 'col' => 2, 'position' => 6,  'visible' => 1],
+        ['key' => 'infos',                'col' => 2, 'position' => 7,  'visible' => 1],
+        ['key' => 'mc',                   'col' => 3, 'position' => 1,  'visible' => 1],
+        ['key' => 'expenses',             'col' => 3, 'position' => 2,  'visible' => 1],
+        ['key' => 'events',               'col' => 3, 'position' => 3,  'visible' => 1],
+        ['key' => 'training',             'col' => 3, 'position' => 4,  'visible' => 1],
+        ['key' => 'about',                'col' => 3, 'position' => 5,  'visible' => 1],
+    ];
+
+    /**
+     * Returns ['columns' => [1 => [...], 2 => [...], 3 => [...]], 'hidden' => [...]]
+     * Each item carries key, col, position, visible, label.
+     * Columns contain ALL widgets (visible and hidden) so DOM position is preserved.
+     */
+    public function getWidgetLayout(User $user): array
+    {
+        $pid = (int) $user->P_ID;
+        $saved = DB::table('ob_dashboard_layout')
+            ->where('P_ID', $pid)
+            ->get(['widget_key', 'col', 'position', 'visible'])
+            ->keyBy('widget_key');
+
+        $result = [];
+        foreach (self::WIDGET_DEFAULTS as $default) {
+            $key = $default['key'];
+            if ($saved->has($key)) {
+                $s = $saved[$key];
+                $result[] = [
+                    'key'      => $key,
+                    'col'      => (int) $s->col,
+                    'position' => (int) $s->position,
+                    'visible'  => (bool) $s->visible,
+                    'label'    => self::WIDGET_LABELS[$key] ?? $key,
+                ];
+            } else {
+                $result[] = array_merge($default, ['label' => self::WIDGET_LABELS[$key] ?? $key]);
+            }
+        }
+
+        usort($result, fn ($a, $b) => $a['col'] <=> $b['col'] ?: $a['position'] <=> $b['position']);
+
+        $columns = [1 => [], 2 => [], 3 => []];
+        $hidden  = [];
+        foreach ($result as $w) {
+            $columns[(int) $w['col']][] = $w;
+            if (! $w['visible']) {
+                $hidden[] = $w;
+            }
+        }
+
+        return ['columns' => $columns, 'hidden' => $hidden];
+    }
+
     // ── Section hierarchy ───────────────────────────────────────────────────
 
     /** Returns $sectionId and all descendant section IDs (BFS). */

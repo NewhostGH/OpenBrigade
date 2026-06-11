@@ -64,6 +64,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/layout', [DashboardController::class, 'saveLayout'])->name('dashboard.layout.save');
     Route::get('/evenements', [EvenementController::class, 'index'])->name('evenement.index')->middleware('permission:0');
     Route::get('/evenements/create', [EvenementController::class, 'create'])->name('evenement.create')->middleware('permission:15');
     Route::post('/evenements', [EvenementController::class, 'store'])->name('evenement.store')->middleware('permission:15');

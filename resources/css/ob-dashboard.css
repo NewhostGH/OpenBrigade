@@ -101,6 +101,13 @@
     align-items:           start;
 }
 
+/* In edit mode every column stretches to the height of the tallest one so
+   empty columns remain reachable as drop targets (align-items:start would
+   collapse a 0-content column to 0px height, blocking dragover). */
+.ob-dash-columns.ob-dash-edit-mode {
+    align-items: stretch;
+}
+
 @media (max-width: 1100px) {
     .ob-dash-columns { grid-template-columns: repeat(2, 1fr); }
 }
@@ -502,6 +509,181 @@
 .ob-dash-about-text { flex: 1; color: var(--page-text); }
 
 .ob-dash-about-arrow { color: var(--text-muted-soft); }
+
+/* ── Edit mode toggle — fixed pill at bottom-right, takes no layout space ── */
+.ob-btn-edit-mode {
+    position:      fixed;
+    bottom:        24px;
+    right:         24px;
+    z-index:       200;
+    display:       flex;
+    align-items:   center;
+    gap:           6px;
+    font-size:     var(--font-size-sm);
+    padding:       8px 16px;
+    border:        1px solid var(--component-border);
+    border-radius: 20px;
+    background:    var(--component-bg);
+    color:         var(--text-muted-soft);
+    cursor:        pointer;
+    box-shadow:    0 2px 8px rgba(0, 0, 0, 0.12);
+    transition:    background var(--transition-fast), color var(--transition-fast),
+                   border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.ob-btn-edit-mode:hover {
+    background:  var(--sidebar-hover-bg);
+    color:       var(--page-text);
+    box-shadow:  0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.ob-btn-edit-mode.ob-edit-active {
+    background:   var(--accent, #0d6efd);
+    color:        #fff;
+    border-color: transparent;
+    box-shadow:   0 4px 12px rgba(13, 110, 253, 0.35);
+}
+
+/* ── Widget drag-and-drop (edit mode only) ─────────────────────────────── */
+.ob-widget-hidden {
+    display: none !important;
+}
+
+.ob-dash-edit-mode .ob-widget-wrapper {
+    cursor: grab;
+}
+
+.ob-dash-edit-mode .ob-widget-wrapper:active {
+    cursor: grabbing;
+}
+
+.ob-dash-edit-mode .ob-widget-wrapper.ob-widget-dragging {
+    opacity: 0.35;
+}
+
+.ob-dash-edit-mode .ob-widget-card-header {
+    user-select: none;
+}
+
+.ob-drop-line {
+    height:        3px;
+    background:    var(--accent, #0d6efd);
+    border-radius: 2px;
+    margin:        4px 0;
+    pointer-events: none;
+}
+
+/* ── Drag handle ───────────────────────────────────────────────────────── */
+.ob-widget-drag-handle {
+    flex-shrink:  0;
+    margin-right: 4px;
+    color:        var(--text-muted-soft);
+    font-size:    11px;
+    cursor:       grab;
+    padding:      2px 4px;
+}
+
+.ob-widget-drag-handle:active { cursor: grabbing; }
+
+/* ── Widget hide button ────────────────────────────────────────────────── */
+.ob-widget-hide-btn {
+    flex-shrink:   0;
+    margin-left:   4px;
+    background:    none;
+    border:        none;
+    color:         var(--text-muted-soft);
+    font-size:     12px;
+    cursor:        pointer;
+    padding:       2px 6px;
+    border-radius: var(--radius-sm);
+    line-height:   1;
+    transition:    color var(--transition-fast);
+}
+
+.ob-widget-hide-btn:hover { color: var(--danger, #dc3545); }
+
+/* ── Column empty drop hint ────────────────────────────────────────────── */
+.ob-col-drop-hint {
+    display:         none;
+    align-items:     center;
+    justify-content: center;
+    gap:             8px;
+    min-height:      80px;
+    border:          2px dashed var(--component-border);
+    border-radius:   var(--radius-md);
+    color:           var(--text-muted-soft);
+    font-size:       var(--font-size-sm);
+    margin-bottom:   12px;
+}
+
+.ob-dash-edit-mode .ob-col-drop-hint.ob-hint-visible {
+    display: flex;
+}
+
+/* ── Hidden widgets tray ───────────────────────────────────────────────── */
+.ob-hidden-tray {
+    margin-top:    20px;
+    padding:       14px 16px;
+    border:        1px solid var(--component-border);
+    border-radius: var(--radius-md);
+    background:    var(--component-bg);
+}
+
+.ob-hidden-tray-header {
+    display:       flex;
+    align-items:   center;
+    gap:           8px;
+    font-size:     var(--font-size-sm);
+    font-weight:   600;
+    color:         var(--page-text);
+    margin-bottom: 10px;
+}
+
+.ob-hidden-tray-empty {
+    font-size:  var(--font-size-sm);
+    color:      var(--text-muted-soft);
+    font-style: italic;
+}
+
+.ob-hidden-tray-items {
+    display:   flex;
+    flex-wrap: wrap;
+    gap:       8px;
+    min-height: 24px;
+}
+
+.ob-hidden-widget-pill {
+    display:       flex;
+    align-items:   center;
+    gap:           8px;
+    background:    var(--sidebar-hover-bg, #f5f5f5);
+    border:        1px solid var(--component-border);
+    border-radius: 20px;
+    padding:       4px 6px 4px 12px;
+    font-size:     var(--font-size-sm);
+}
+
+.ob-hidden-widget-name {
+    color: var(--page-text);
+}
+
+.ob-add-back-btn {
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    width:           20px;
+    height:          20px;
+    border:          none;
+    border-radius:   50%;
+    background:      var(--accent, #0d6efd);
+    color:           #fff;
+    font-size:       10px;
+    cursor:          pointer;
+    flex-shrink:     0;
+    transition:      opacity var(--transition-fast);
+}
+
+.ob-add-back-btn:hover { opacity: 0.8; }
 
 /* ── Empty / no-content ────────────────────────────────────────────────── */
 .ob-widget-empty {

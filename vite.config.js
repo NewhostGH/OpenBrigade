@@ -21,6 +21,7 @@ export default defineConfig({
                 'resources/js/ob-statistique-bilan.js',
                 'resources/js/ob-pdf-bilan.js',
                 'resources/js/ob-pdf-personnel.js',
+                'resources/js/ob-dashboard.js',
             ],
             refresh: true,
         }),

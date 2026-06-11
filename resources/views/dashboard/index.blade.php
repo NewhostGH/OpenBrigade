@@ -39,38 +39,58 @@
     @endif
 
     {{-- ── 3-column widget grid ──────────────────────────────────────────── --}}
-    <div class="ob-dash-columns">
+    <div class="ob-dash-columns"
+         id="ob-dash-columns"
+         data-save-url="{{ route('dashboard.layout.save') }}">
 
-        {{-- Column 1: profil + astreinte + section + plannings + alertes financières --}}
-        <div>
-            @include('dashboard.widgets.welcome')
-            @include('dashboard.widgets.duty')
-            @include('dashboard.widgets.birthdays')
-            @include('dashboard.widgets.horaires')
-            @include('dashboard.widgets.unpaid')
-            @include('dashboard.widgets.stats-missing')
-        </div>
+        @foreach([1, 2, 3] as $col)
+        <div class="ob-dash-column" data-col="{{ $col }}">
 
-        {{-- Column 2: activités personnelles + congés + matériel + remplacements + consignes --}}
-        <div>
-            @include('dashboard.widgets.mes-activites')
-            @include('dashboard.widgets.cp')
-            @include('dashboard.widgets.vehicles')
-            @include('dashboard.widgets.consumables')
-            @include('dashboard.widgets.remplacements')
-            @include('dashboard.widgets.replacement-requests')
-            @include('dashboard.widgets.infos')
-        </div>
+            {{-- Drop hint — only visible in edit mode when the column has no visible widgets --}}
+            <div class="ob-col-drop-hint" aria-hidden="true">
+                <i class="fas fa-plus-circle"></i> Glissez un widget ici
+            </div>
 
-        {{-- Column 3: main courante + frais + calendrier + formation + à propos --}}
-        <div>
-            @include('dashboard.widgets.mc')
-            @include('dashboard.widgets.expenses')
-            @include('dashboard.widgets.events')
-            @include('dashboard.widgets.training')
-            @include('dashboard.widgets.about')
+            @foreach($widgetsByColumn[$col] as $widget)
+                <div class="ob-widget-wrapper{{ $widget['visible'] ? '' : ' ob-widget-hidden' }}"
+                     data-widget="{{ $widget['key'] }}"
+                     data-label="{{ $widget['label'] }}"
+                     draggable="true">
+                    @include('dashboard.widgets.' . $widget['key'])
+                </div>
+            @endforeach
         </div>
+        @endforeach
 
     </div>
+
+    {{-- ── Hidden widgets tray (edit mode only) ────────────────────────── --}}
+    <div id="ob-hidden-tray" class="ob-hidden-tray" style="display:none">
+        <div class="ob-hidden-tray-header">
+            <i class="fas fa-eye-slash"></i> Widgets masqués
+        </div>
+        <div id="ob-hidden-tray-items" class="ob-hidden-tray-items">
+            @forelse($hiddenWidgets as $w)
+                <div class="ob-hidden-widget-pill" data-widget="{{ $w['key'] }}">
+                    <span class="ob-hidden-widget-name">{{ $w['label'] }}</span>
+                    <button class="ob-add-back-btn" type="button" title="Afficher">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            @empty
+                <span id="ob-tray-empty" class="ob-hidden-tray-empty">Tous les widgets sont visibles.</span>
+            @endforelse
+        </div>
+    </div>
 </div>
+
+{{-- Fixed edit-mode toggle — position:fixed, takes no layout space --}}
+<button id="ob-dash-edit-toggle" class="ob-btn-edit-mode" type="button">
+    <i class="fas fa-sliders-h"></i> Personnaliser
+</button>
+
 @endsection
+
+@push('scripts')
+<script type="module" src="{{ Vite::asset('resources/js/ob-dashboard.js') }}"></script>
+@endpush

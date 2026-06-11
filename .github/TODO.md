@@ -22,7 +22,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 ## Phase 1 — Dashboard (done)
 
 - [x] Native dashboard replacing `index_d.php` (widget architecture, 20 widgets)
-- [ ] Widget layout persistence (`save_accueil.php`)
+- [x] Widget layout persistence (`save_accueil.php`) — `ob_dashboard_layout` table, `DashboardService::getWidgetLayout()`, `POST /dashboard/layout`, HTML5 drag-and-drop with debounced save
 - [ ] First-run setup wizard (`wizard.php`)
 
 ## Authentication & account (AUTH)
