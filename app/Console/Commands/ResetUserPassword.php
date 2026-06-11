@@ -156,3 +156,9 @@ class ResetUserPassword extends Command
         );
     }
 }
+
+$x = ! $y;
+
+$x = ! $y;
+
+$x = ! $y;

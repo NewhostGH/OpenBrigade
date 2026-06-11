@@ -11,11 +11,14 @@ INI_WIN=$(cygpath -w "$INI")
 printf 'extension_dir = "%s/ext"\nextension=mbstring\nextension=openssl\nextension=fileinfo\nextension=curl\nextension=zip\nextension=pdo_mysql\nmemory_limit=1G\n' "$PHP_FWD" > "$INI"
 PINT_JSON=$(mktemp)
 PINT_JSON_WIN=$(cygpath -w "$PINT_JSON")
+set +e
 php -c "$INI_WIN" vendor/bin/pint --test > "$PINT_JSON" 2>/dev/null
 STATUS=$?
+set -e
 rm -f "$INI"
 if [ $STATUS -ne 0 ]; then
-    node -e "const d=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));(d.files||d.errors||[]).forEach(f=>console.log('  '+f.path));" "$PINT_JSON_WIN"
+    echo "PHP lint failed — run vendor/bin/pint to fix:"
+    node -e "const d=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));(d.files||d.errors||[]).forEach(f=>console.log('  '+f.path));" "$PINT_JSON_WIN" || true
 fi
 rm -f "$PINT_JSON"
 exit $STATUS
