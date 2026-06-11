@@ -8,6 +8,8 @@ use App\Services\BrigadeService;
 use App\Services\FeatureService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
+use App\Services\SectionScopeService;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -42,6 +44,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(PermissionResolver::class, function ($app) {
             return new PermissionResolver;
         });
+
+        // Per-request memoized section data isolation (visible-section set).
+        $this->app->singleton(SectionScopeService::class, function ($app) {
+            return new SectionScopeService(
+                $app->make(FeatureService::class),
+                $app->make(PermissionResolver::class),
+            );
+        });
     }
 
     /**
@@ -66,6 +76,17 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasPermission($fid);
         });
 
+        // @feature('multi_site') … @endfeature — hide UI tied to a disabled
+        // feature flag. Fails open (enabled) so a missing ob_feature table
+        // never blanks a page (e.g. tests without a database).
+        Blade::if('feature', function (string $key): bool {
+            try {
+                return app(FeatureService::class)->isEnabled($key);
+            } catch (\Throwable) {
+                return true;
+            }
+        });
+
         View::composer('layout.navbar', function ($view): void {
             $nav = app(NavigationService::class);
             $user = auth()->user();
@@ -79,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
                 try {
                     $resolver = app(PermissionResolver::class);
                     $ctx['ctxActiveSection'] = $resolver->activeSectionId($user);
-                    $ctx['ctxSections'] = $resolver->userSections($user);
+                    $ctx['ctxSections'] = app(SectionScopeService::class)->switcherSections();
                     $ctx['ctxRoles'] = $resolver->userRoles($user, $ctx['ctxActiveSection']);
                     $ctx['ctxActiveRole'] = $resolver->activeRoleId($user);
                 } catch (\Throwable $e) {

@@ -127,9 +127,9 @@ return [
             'icon' => 'sitemap',
             'permission' => 52,
             'items' => [
-                ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/organisation/sections',    'icon' => 'layer-group',  'permission' => 52],
-                ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation/organigramme', 'icon' => 'project-diagram', 'permission' => 52],
-                ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/organisation/cartographie', 'icon' => 'map',          'permission' => 27, 'feature' => 'carte'],
+                ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/organisation/sections',    'icon' => 'layer-group',  'permission' => 52, 'feature' => 'multi_site'],
+                ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation/organigramme', 'icon' => 'project-diagram', 'permission' => 52, 'feature' => 'multi_site'],
+                ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/organisation/cartographie', 'icon' => 'map',          'permission' => 27, 'feature' => 'multi_site'],
             ],
         ],
 
