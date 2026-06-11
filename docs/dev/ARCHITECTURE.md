@@ -58,9 +58,11 @@ app/
   | `FeatureService` | Read/toggle feature-module flags (`ob_feature`), kept in sync with legacy `configuration` |
   | `DashboardService` | Aggregate dashboard widget data |
   | `BrigadeService` | Brigade identity / global settings |
+  | `PermissionResolver` | Section-scoped, ceiling-based permission resolution (see CONVENTIONS §9) |
+  | `SectionScopeService` | Data-isolation authority for `multi_site` — per-request visible section set (see CONVENTIONS §10) |
   | `TableExportService` | Universal XLSX / CSV export |
   | `ICalExportService` | iCal export |
-  | `PersonnelExportService` | vCard / PDF (livret, carte adhérent) |
+  | `PersonnelExportService` | vCard / PDF data (livret, carte adhérent — rendered client-side with pdf-lib + section letterhead) |
 
 - **Models** — Eloquent; derived values live here as accessors. Two models may map to
   the same legacy table — shared behaviour goes in a `Concerns/` trait.

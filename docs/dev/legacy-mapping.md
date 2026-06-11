@@ -43,8 +43,8 @@ at folder granularity (they are binary assets copied as-is).
 |---|---|
 | `index.php` | `app/Http/Controllers/DashboardController.php` + `resources/views/dashboard/` |
 | `index_d.php` | `DashboardController.php` |
-| `save_accueil.php` | **WIP** (widget layout persistence) |
-| `myagenda.php` | **WIP** |
+| `save_accueil.php` | **WIP** (widget layout persistence; bridge redirects to the dashboard) |
+| `myagenda.php` | `PlanningController.php` (personal agenda merged into the planning view) |
 | `noscript.php` | **WIP** |
 | `error.php` | **WIP** |
 | `config.php` | N/A — replaced by Laravel `config/` + `.env` |
@@ -89,7 +89,7 @@ at folder granularity (they are binary assets copied as-is).
 | `evenement_facturation_num.php` | **WIP** |
 | `evenement_tarif.php` | **WIP** |
 | `evenement_tarif_formation.php` | **WIP** |
-| `repo_events.php` | **WIP** |
+| `repo_events.php` | `StatistiqueController.php` — bridge redirects to `statistique.index` |
 | `bilan_participation.php` | **WIP** (see Statistiques) |
 
 ## Personnel / members
@@ -133,16 +133,16 @@ at folder granularity (they are binary assets copied as-is).
 | `specific_info.php` | **WIP** |
 | `homonymes_manage.php` | **WIP** |
 | `homonymes_modal.php` | **WIP** |
-| `vcard.php` | **WIP** |
-| `vcard_class.php` | **WIP** |
-| `trombinoscope.php` | **WIP** |
+| `vcard.php` | `PersonnelController.php` (`exportVcard`) + `app/Services/PersonnelExportService.php` (`buildVcard`) |
+| `vcard_class.php` | `PersonnelExportService.php` (Sabre VObject) |
+| `trombinoscope.php` | `PersonnelController.php` (`trombinoscope`) |
 | `organigramme.php` | `app/Http/Controllers/OrganisationController.php` |
 
 ## Habilitations (access rights)
 
 | Legacy file | New implementation |
 |---|---|
-| `habilitations.php` | `app/Http/Controllers/HabilitationController.php` + `resources/views/admin/habilitations/index.blade.php` |
+| `habilitations.php` | `app/Http/Controllers/HabilitationController.php` + `resources/views/admin/habilitations/index.blade.php` + `app/Services/PermissionResolver.php` (resolution) |
 | `save_habilitations.php` | `HabilitationController.php` (`toggle`/`group*`) |
 | `upd_habilitations.php` | `HabilitationController.php` |
 | `habilitations_xls.php` | **WIP** |
@@ -246,7 +246,7 @@ at folder granularity (they are binary assets copied as-is).
 | `save_prelevements.php` | `CotisationController.php` (`savePrelevements`) |
 | `config_prelevements.php` | **WIP** |
 | `virements.php` | `CotisationController.php` (`virements`) + `cotisations/virements.blade.php` |
-| `virements_extract.php` | **WIP** |
+| `virements_extract.php` | `CotisationController.php` (`virements`) — bridge redirects to `cotisations.virements` |
 | `element_facturable.php` | **WIP** |
 | `save_element_facturable.php` | **WIP** |
 | `del_element_facturable.php` | **WIP** |
@@ -284,7 +284,7 @@ at folder granularity (they are binary assets copied as-is).
 | `astreintes_updates.php` | `GardeController.php` |
 | `feuille_garde.php` | `GardeController.php` (`index`) + `garde/index.blade.php` |
 | `save_garde.php` | `GardeController.php` |
-| `tableau_garde.php` | **WIP** |
+| `tableau_garde.php` | `GardeController.php` (`index`) — bridge redirects to `garde.index` |
 | `tableau_garde_create.php` | **WIP** |
 | `tableau_garde_status.php` | **WIP** |
 | `tableau_garde_xls.php` | **WIP** |
@@ -444,13 +444,13 @@ at folder granularity (they are binary assets copied as-is).
 | `pdf_asa.php` | **WIP** |
 | `pdf_attestation_fiscale.php` | **WIP** |
 | `pdf_attestation_formation.php` | **WIP** |
-| `pdf_bilans.php` | **WIP** |
+| `pdf_bilans.php` | `StatistiqueController.php` (bilan annuel) — client-side pdf-lib (`resources/js/ob-pdf-bilan.js`) — **WIP** (parity not verified) |
 | `pdf_bulletin.php` | **WIP** |
-| `pdf_carte_adherent.php` | **WIP** |
+| `pdf_carte_adherent.php` | `PersonnelController.php` (`carteData`) + `PersonnelExportService.php` — client-side pdf-lib (`resources/js/ob-pdf-personnel.js`) |
 | `pdf_courrier_nouvel_adherent.php` | **WIP** |
 | `pdf_diplome.php` | **WIP** |
 | `pdf_document.php` | **WIP** |
-| `pdf_livret.php` | **WIP** |
+| `pdf_livret.php` | `PersonnelController.php` (`livretData`) + `PersonnelExportService.php` — client-side pdf-lib (`resources/js/ob-pdf-personnel.js`) |
 | `export_badges.php` | **WIP** |
 
 ## Exports
@@ -464,7 +464,7 @@ at folder granularity (they are binary assets copied as-is).
 | `export-tcd.php` | **WIP** |
 | `export-txt.php` | **WIP** |
 | `export-xls.php` | **WIP** |
-| `iCalcreator.class.php` | `EvenementController.php` (`exportIcal`) |
+| `iCalcreator.class.php` | `app/Services/ICalExportService.php` (Sabre VObject), used by `EvenementController::exportIcal` |
 
 ## Emergency ops (DPS / SITAC / victims)
 
@@ -562,7 +562,7 @@ Replaced by Composer packages where a Laravel equivalent exists; otherwise **WIP
 | `lib/PBKDF2/` | N/A — replaced by Laravel Hash/bcrypt |
 | `lib/PHPMailer/` | N/A — replaced by Laravel Mail (when mail ported) |
 | `lib/SMSGatewayMe/` | **WIP** |
-| `lib/fpdf/` | **WIP** (PDF generation not ported) |
+| `lib/fpdf/` | Replaced by client-side pdf-lib (`resources/js/ob-pdf-personnel.js`, `ob-pdf-bilan.js`) for livret / carte / bilans; remaining `pdf_*.php` pages still **WIP** |
 | `lib/phpqrcode/` | **WIP** |
 | `lib/vendor/` | N/A — replaced by Composer `vendor/` |
 | `lib/index.php` | N/A |

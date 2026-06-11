@@ -1,142 +1,107 @@
 # OpenBrigade Migration TODO
 
-This file is the working tracker for migrating the legacy eBrigade app
-(`archive/legacy_app/`) into the native Laravel application, menu by menu. It is the
-operational companion to the reference docs — read the **Project instructions** below
-before starting any task.
+Working tracker for migrating the legacy eBrigade app (`archive/legacy_app/`) into
+the native Laravel application, menu by menu.
 
-When you complete an item, tick its checkbox and append the commit subject in
-parentheses. If a change touches behaviour described elsewhere, update the relevant
-doc in the same change.
+Rules and process live elsewhere — read them first:
+[CONVENTIONS.md](../docs/dev/CONVENTIONS.md) (how code is written),
+[ARCHITECTURE.md](../docs/dev/ARCHITECTURE.md) (where things live),
+[DEVELOPMENT.md](../docs/dev/DEVELOPMENT.md) (how to run it),
+[legacy-mapping.md](../docs/dev/legacy-mapping.md) (legacy file map),
+[CONTRIBUTING.md](CONTRIBUTING.md) (branches, commits, PRs).
 
----
+When you complete an item, tick its checkbox. Update
+[legacy-mapping.md](../docs/dev/legacy-mapping.md) when a file moves from legacy
+to native. Keep the gates green: `composer pint -- --test`, `composer analyse`,
+`composer test`.
 
-## Project instructions
-
-A short working agreement for anyone (or anything) making changes in this repository.
-These apply to every task, not just migration work.
-
-1. **Read the rules first.** Before writing code, read
-   [docs/dev/CONVENTIONS.md](../docs/dev/CONVENTIONS.md) (how code is written),
-   [docs/dev/ARCHITECTURE.md](../docs/dev/ARCHITECTURE.md) (where things live), and
-   [docs/dev/DEVELOPMENT.md](../docs/dev/DEVELOPMENT.md) (how to run it). Those are the
-   single source of truth; this file does not restate their rules.
-2. **One coherent change at a time.** Prefer finishing a single menu section or a
-   single fix over spreading partial work across many. Keep commits small and focused.
-3. **Reuse before adding.** Search for an existing model accessor, service, config
-   entry, or `ob-*` component before writing a new one. Duplicated logic is a defect
-   (SSOT, CONVENTIONS §1).
-4. **Edit existing files in place.** Don't create parallel "v2" files; don't leave
-   dead code behind.
-5. **Keep the gates green.** Every change must pass:
-
-   ```bash
-   composer pint -- --test   # formatting
-   composer analyse          # PHPStan / Larastan
-   composer test             # Pest, including ConventionsTest
-   ```
-
-6. **Flag every remaining legacy reference** with a `TODO: Migrate code` marker
-   (CONVENTIONS §7). Never point at a legacy `.php` page without the `/legacy/` prefix.
-7. **Definition of done for a migrated page:** native route + controller + view, logic
-   in a service/model, feature test covering the happy path and access control, output
-   parity with the legacy page verified, legacy bridge entry removed, and the legacy
-   file retired.
-8. **Record progress here.** Tick the checkbox and add the commit subject. Update the
-   file map in [docs/dev/legacy-mapping.md](../docs/dev/legacy-mapping.md) when a file
-   moves from legacy to native.
-9. **Follow the commit and branch conventions** in
-   [CONTRIBUTING.md](CONTRIBUTING.md). Never commit directly to `main`.
+Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 
 ---
 
-## File migration strategy
+## Phase 1 — Dashboard (done)
 
-Each menu section follows this repeatable process:
+- [x] Native dashboard replacing `index_d.php` (widget architecture, 20 widgets)
+- [ ] Widget layout persistence (`save_accueil.php`)
+- [ ] First-run setup wizard (`wizard.php`)
 
-1. **Inventory** — list every `archive/legacy_app/` file in the menu (pages, save
-   handlers, modals, XLS/PDF exports, JS helpers). Cross-check against
-   [docs/dev/legacy-mapping.md](../docs/dev/legacy-mapping.md).
-2. **Controller** — create/extend a controller under `app/Http/Controllers/`.
-3. **Views** — create Blade views under `resources/views/<menu>/` using the `ob-*`
-   component set (CONVENTIONS §8).
-4. **Routes** — add named routes to `routes/web.php`; remove the matching entries from
-   `routes/web_legacy_bridge.php` and `config/legacy_bridge.php`.
-5. **Services / Models** — move business logic into a service or Eloquent model; no raw
-   SQL in controllers.
-6. **Tests** — add Pest feature tests (happy path + access control + key edge cases).
-7. **Parity check** — verify the native page matches the legacy page (same data, same
-   access rules).
-8. **Retire legacy files** — once parity passes, delete the legacy files and update
-   the file map.
-9. **Modernize** — after cutover, improve UI/UX using the current component set.
+## Authentication & account (AUTH)
 
----
+- [x] Login / logout (legacy-hash upgrade)
+- [ ] Password change (`change_password.php`, `save_password.php`)
+- [ ] Lost password / send credentials (`lost_password.php`, `send_id.php`)
+- [ ] Charter acceptance on first login (`charte.php`)
+- [ ] Connected users view (`connected_users.php`)
 
-## Phase 1 — Dashboard ✅
+## Cross-cutting (done)
 
-Replaced `index_d.php` with a native Laravel dashboard (widget architecture, 20
-widgets). **Done.**
+- [x] Universal `ob-*` component system (breadcrumb, toolbar, table, commandbar, badge, avatar, toggle)
+- [x] `TableExportService` — universal XLS/CSV export
+- [x] All list pages migrated to the `ob-*` component set
+- [x] Convention enforcement — CONVENTIONS.md + `ConventionsTest`
+- [x] Static-analysis remediation — model `@property` docblocks, PHPStan at 0 errors, Pint clean
 
-## Cross-cutting UI architecture ✅
+## Cross-cutting — Data isolation by section (multi_site)
 
-- [x] Universal component system — `ob-breadcrumb`, `ob-toolbar`, `ob-table`,
-  `ob-commandbar`, `ob-badge`, `ob-avatar`, `ob-toggle`; one CSS + JS file per module;
-  `ObTable` ES6 class driven by `data-*` attributes (commit: feat: universal
-  ob-component system)
-- [x] `TableExportService` — universal XLS/CSV export, column-aware export URLs
-- [x] Migrate all list pages to the `ob-*` component set (evenement, vehicule,
-  matériel, consommable, company, astreintes, indispo, remplacement, monitoring,
-  qualifications; breadcrumb on 14 further pages)
-- [x] Migrate cotisations global page to `ob-toolbar` + `ob-commandbar`
-- [x] Convention enforcement — `docs/dev/CONVENTIONS.md` + `tests/Feature/ConventionsTest.php`
-
-> The 2026-06-04 conventions remediation (SSOT avatar/maps, Blade PHP removal, CSS
-> prefixing, legacy flagging) is complete. The binding rules now live in
-> [docs/dev/CONVENTIONS.md](../docs/dev/CONVENTIONS.md); regressions are caught by
-> `ConventionsTest`.
+- [x] `SectionScopeService` — visible-set authority, navbar switcher, `<x-ob-section-select>`
+- [x] Wired into Personnel, Véhicules, Cotisations, Organisation controllers
+- [ ] Extend scoping to remaining section-tied controllers (Evenement, Garde, Materiel, Consommable, Document, Message, Statistique)
 
 ---
 
 ## Phase 2 — Menu by menu
 
-Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
-
-### Personnel (PERSO) ✅
+### Personnel (PERSO)
 - [x] Member list, profile view/edit, create/add
 - [x] Trombinoscope and org chart
-- [x] Exports (XLS, CSV, vCard, PDF livret/carte)
-- [x] Qualifications and training records (CRUD from profile)
-- [x] On-call availability / indisponibility (`indispo*.php`, `dispo.php`)
-- [x] Full list parity (bulk select, grade badges, section filter, column toggle, card/table view)
-- [x] Universal search across all fields
-- [x] Cotisations — per-member CRUD and org-wide page (batch save, Excel export, Prélèvements, Virements)
-- [x] Géolocalisation — Leaflet map with GPS markers
+- [x] Exports — XLS, CSV, vCard, PDF livret/carte (client-side pdf-lib + section letterhead)
+- [x] Qualifications and training records
+- [x] On-call availability / indisponibility
+- [x] Full list parity, universal search
+- [x] Cotisations — per-member CRUD and org-wide page
+- [x] Géolocalisation — Leaflet map
 - [ ] Rework grade system
+- [ ] Trainings & diplomas CRUD (`personnel_formation.php`, `diplome_edit.php`)
+- [ ] Tenues / uniforms (`personnel_tenues.php`)
+- [ ] User preferences (`personnel_preferences.php`)
+- [ ] Salarié data (`upd_personnel_salarie.php`)
+- [ ] Emergency contacts (`personnel_contact.php`)
+- [ ] Homonym management (`homonymes_*.php`)
+- [ ] Contact / email lists (`listecontacts.php`, `listemails.php`)
+- [ ] Custom member fields (`specific_info.php`)
+- [ ] Remaining exports (`formations_xls.php`, `qualifications_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)
 
 ### Activité — Events & Interventions (ACT)
-- [x] Event list and detail view
-- [x] Create / edit / save / delete
-- [x] Participant management (inscription, equipes, renforts)
-- [x] Material and vehicle assignment
+- [x] Event list, detail, create/edit/delete
+- [x] Participants, équipes, renforts, matériel and vehicle assignment
 - [x] Calendar view
 - [x] Exports (XLS + iCal)
 - [ ] Editable PDF for conventions
 - [ ] Main courante (incident log)
+- [ ] Event duplication (`evenement_duplicate.php`)
+- [ ] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`)
+- [ ] Required competences / diplomas per event (`evenement_competences.php`, `evenement_diplome.php`)
+- [ ] Participant notifications (`evenement_notify.php`)
+- [ ] Event report (`evenement_rapport.php`)
+- [ ] Per-event trombinoscope (`evenement_trombinoscope.php`)
+- [ ] Event billing & tariffs (`evenement_facturation*.php`, `evenement_tarif*.php`)
+- [ ] Remaining exports (`evenement_xls.php`, `evenement_vehicule_xls.php`)
 
 ### Garde — On-call roster (GAR)
 - [x] Roster display and assignment
 - [x] Guard sheet and replacement management
-- [ ] Modify to use the new calendar library when implemented (see PLA)
+- [ ] Use the new calendar library when implemented (see PLA)
 - [ ] Automatic piquet/guard generation
 - [ ] Rest periods (`repos_*.php`)
 - [ ] Guard exports (XLS, PDF)
+- [ ] Type de garde management (`type_garde.php`)
+- [ ] Demande de renfort (`demande_renfort.php`)
 
 ### Planning (PLA)
 - [x] Weekly/monthly planning view
-- [x] Personal agenda (`myagenda.php`)
-- [ ] Migrate calendars to a universal calendar library (FullCalendar or similar), replacing the current custom implementation
-- [ ] Modify the dashboard agenda widget to use the new calendar library and to open the detailed calendar view on click, instead of the personal show view
+- [x] Personal agenda
+- [ ] Migrate calendars to a universal calendar library (FullCalendar or similar)
+- [ ] Dashboard agenda widget on the new calendar library, opening the detailed calendar view
 - [ ] Schedule (horaires) management
 - [ ] Planning exports
 
@@ -144,10 +109,13 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 - [x] Company/client list and detail
 - [ ] Billing and financial exports
 - [ ] PDF attestations (fiscale, formation)
+- [ ] Billable elements (`element_facturable.php`)
+- [ ] Expense notes (`note_frais_*.php`)
+- [ ] Prélèvements configuration (`config_prelevements.php`)
+- [ ] Payment categories (`edit_categorie*.php`)
 
 ### Logistique — Vehicles (VEH)
-- [x] Vehicle list, detail, CRUD
-- [x] Vehicle type management
+- [x] Vehicle list, detail, CRUD, type management
 - [ ] Vehicle assignment to events
 - [ ] Vehicle exports (XLS)
 
@@ -161,190 +129,91 @@ Legend: `[x]` done · `[ ]` open. Commit subjects in parentheses.
 
 ### Communication (COMM)
 - [x] Internal messaging and chat board
-- [ ] Email composition and send (`mail_create.php`, `mail_send.php`)
-- [ ] Alert creation and sending (`alerte_*.php`)
+- [ ] Email composition and send
+- [ ] Alert creation and sending
 - [ ] SMS history view
 - [ ] Push notification monitor
+- [ ] Reminders / relances (`reminder.php`)
+- [ ] RSS feed (`rss.php`)
 
 ### Document (DOC)
 - [x] Document and folder tree view
 - [ ] Document upload and edit
 - [ ] File serving and download
 - [ ] Document exports (PDF)
+- [ ] Document configuration (`config_doc.php`)
 
 ### Statistique (STAT)
 - [x] Participation and event statistics (charts)
+- [x] Bilan annuel — Généralités / Activités / Formations with pdf-lib export (WIP)
 - [ ] Financial reports (`report_cotisations.php`)
 - [ ] Custom exports (XLS, TCD, HTML, TXT, SQL)
 
 ### Organisation (ORGA)
-- [x] Section/unit management — native list + CRUD (`organisation.sections`), organigramme tree
-- [x] Cartographie — native Leaflet map of sections (`organisation.cartographie`, replaces jvectormap.php)
-- [x] Group and role (habilitations) management — section-scoped, ceiling-based model (ob_ tables)
+- [x] Section list + CRUD, organigramme tree
+- [x] Cartographie — Leaflet map of sections
+- [x] Groups and roles (habilitations) — section-scoped, ceiling-based model
+- [x] Section show page — tabs Informations, Organigramme, Personnalisation (letterhead, badge, lock delay, devis/facture texts, signature), Agréments & Médailles
+- [ ] Section Cotisation tab — RIB file upload and remaining fields (IBAN/BIC manual entry is done)
+- [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
 - [ ] Rank and grade management
 - [ ] Position (poste) management
 - [ ] Team (equipe) management
-
-#### Section CRUD — form fields ✅
-
-The create/edit form for a section is organised into three field groups:
-
-**Informations obligatoires**
-- Nom
-- Description
-- Ordre garde
-
-**Contact**
-- Téléphone
-- Tél opérationnel
-- Tél Formations
-- Fax
-- Email opérationnel
-- Email secrétariat
-- Email formation
-- Groupe Whatsapp
-- ID Radio
-
-**Informations facultatives**
-- Adresse
-- Complément d'adresse
-- Code postal
-- Ville
-- SIRET
-- N° Affiliation
-- Site web
-
-#### Section show page — tabs ✅ (partial — see open items per tab below)
-
-The section detail page (`organisation.sections.show`) exposes five tabs:
-
-**Tab 1 — Informations**
-Main section data (all fields from the form above).
-
-**Tab 2 — Organigramme**
-- [ ] Diagram showing every personnel member assigned to this section with their role(s).
-  Render as an interactive org-chart (e.g. `ob-orgchart` component or D3/GoJS); data
-  sourced from `ob_user_assignment` + `ob_group` scoped to the section.
-
-**Tab 3 — Personnalisation**
-- [ ] **Papier à entête** — Modèle (.PDF upload), Marge Haut, Marge Gauche / Droite,
-  Début de la zone de texte, Fin de la zone de texte
-- [ ] **Badge** — Image de fond du badge (file upload)
-- [ ] **Interdire les modifications sur les activités terminées** — toggle: Jamais / x
-  number of days after (integer input shown when not "Jamais")
-- [ ] **Textes par défaut pour devis et factures** — Signature des documents, Début du
-  devis, Fin de devis, Début de facture, Fin de facture (textarea per field)
-- [ ] **Image de la signature du président** — Signature scannée (file upload)
-
-**Tab 4 — Agréments & Médailles**
-- [ ] Each subsection is a table with columns **Code**, **Libellé**, **Début**, **Fin**
-  (date pickers); rows are fixed by category. Inline add/edit/delete per row.
-
-  | Catégorie | Code | Libellé |
-  |---|---|---|
-  | **Agréments de sécurité civile** | A-Aqua | Sauvetage aquatique |
-  | | A1 | Opérations de secours à personnes et sauvetage |
-  | | A2 | Recherche cynophile |
-  | | B | Actions de soutien aux populations sinistrées |
-  | | C | Encadrement des bénévoles lors des actions de soutien |
-  | | D | Dispositif prévisionnel de secours — agrément |
-  | | D-Aqua | Sécurité de la pratique des activités aquatiques |
-  | **Conventions de missions** | 37 | Missions de secours d'urgence aux personnes |
-  | | 38 | Actions de soutien aux populations et de formation |
-  | **Conventions spécifiques** | AUTRE | Convention Spécifique autre |
-  | | CUMP | Convention CUMP |
-  | | ERDF | Convention avec ERDF |
-  | | PCS | Convention Plans Communaux de Sauvegarde |
-  | | PREF | Convention avec la Préfecture |
-  | | SNCF | Convention avec la SNCF |
-  | | TRIP | Convention tripartite |
-  | **Formation Entreprise** | APS-ASD | Acteur Prévention Secours / Aide et soins à domicile |
-  | | PRAP | Formation Prévention des Risques liés à l'Activité Physique |
-  | | SST | Formation Sauveteur Secouriste du Travail |
-  | **Formations au secourisme** | BNSSA | Formations au B.N.S.S.A |
-  | | GQS | Sensibilisation aux Gestes Qui Sauvent |
-  | | PAE-PS | Formation de formateur aux Premiers Secours |
-  | | PAE-PSC | Formation de formateur en Prévention et Secours Civiques de niveau 1 |
-  | | PS | Formation de formateur aux Premiers Secours |
-  | | PSC1 | Formation Prévention et Secours Civiques de niveau 1 |
-  | **Formations spécifiques** | CE | Chef d'équipe |
-  | | CP | Chef de poste |
-  | | PSSP | Premiers Secours Socio-psychologiques |
-  | | SC | Secourisme canin |
-  | **Informations liées à l'association** | AUT | Autorisation d'exercice |
-  | | CONTR | Contribution fédérale |
-  | | COTIS | Cotisation fédérale |
-  | **Médailles collectives** | CD | Acte de Courage et de Dévouement — colonnes: Délivrée le, Agrafe |
-  | | GO | Médaille Grand Or de la Sécurité Civile — colonnes: Délivrée le, Agrafe |
-
-**Tab 5 — Cotisation**
-- [ ] RIB file upload (PDF/image)
-- [ ] RIB text fields: can be extracted from the uploaded file or filled in manually
-  (IBAN, BIC, Titulaire du compte, Domiciliation, N° de compte)
+- [ ] Section deactivation / radiation (`section_stop.php`, `radier_section.php`)
+- [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
+- [ ] Competence hierarchy (`hierarchie_competence.php`)
+- [ ] Habilitations export (`habilitations_xls.php`)
 
 ### Configuration — Admin (ADMIN)
-- [x] Application settings — configuration CRUD (tabbed UI, toggle/select/file controls)
-- [x] Parametrage reference tables — type-evenement/participation/materiel/consommable/vehicule CRUD
-- [x] Theme and icon configuration — IS_FILE image upload + grade icon management
+- [x] Application settings CRUD (tabbed UI)
+- [x] Parametrage reference tables (type-evenement/participation/materiel/consommable/vehicule)
+- [x] Theme and icon configuration, grade icons
 - [x] Audit log view
-- [x] Backup and restore — mysqldump, list/download/delete/restore, retention prune
-- [x] Maintenance page — system info + migration status (replaces `upgrade.php`)
-- [x] Habilitations — **redesigned to a section-scoped, ceiling-based model**
-  (`ob_group`/`ob_group_permission`/`ob_section_permission`/`ob_user_assignment`).
-  3-tab admin UI (Plafonds par section · Groupes globaux · Rôles), navbar
-  section/role context switchers, user "Mes droits" preview, `PermissionResolver`
-  (deny-list ceiling: parent caps child) wired into `User::hasPermission`.
-  Legacy `groupe`/`habilitation`/`section_role` back-filled by migration
-- [x] **Feature / module unification** — the legacy `configuration` TAB 1
-  ("Fonctionnalités") and TAB 6 ("Modules") buckets are merged into a single
-  native registry. New `ob_feature` table (key/category/status/enabled,
-  back-filled from `configuration`, two-way synced), `FeatureService` (cached
-  flag reads + legacy sync), `feature:<key>` route middleware and a
-  `'feature' => 'key'` nav hook so native screens are shown/served only when
-  enabled. Admin ▸ **Fonctionnalités** page (`/admin/fonctionnalites`) replaces
-  the old Modules tab/menu; un-migrated features (e.g. Animaux) carry a **WIP**
-  marker. The Modules tab and top-level Modules menu are removed; legacy
-  `addons.php` now redirects to the native plugins/feature pages
-  (commit: feat: unified ob_feature registry + Fonctionnalités/Plugins admin)
-- [ ] **Plugins** (community marketplace) — Admin ▸ Plugins (`/admin/plugins`)
-  ships as a WIP placeholder; install/download flow still to be designed
-- [x] Add tests and parity check; retire migrated ADMIN legacy files —
-  `tests/Feature/AdminTest.php` (auth, permission gating, view rendering, legacy
-  redirects); migrated ADMIN bridge routes now redirect to native routes
-  (configuration, save_configuration, configuration_theme, configuration_icone_grade,
-  parametrage, habilitations + save/upd, audit, history, backup, upgrade).
-  `paramfn`/`paramfnv` (billable + vehicle function params) and grade category CRUD
-  stay on the legacy bridge — still WIP, tracked under ORGA
+- [x] Backup and restore
+- [x] Maintenance page (replaces `upgrade.php`)
+- [x] Habilitations — section-scoped ceiling model, 3-tab admin UI, `PermissionResolver`
+- [x] Feature/module unification — `ob_feature` registry, `FeatureService`, `feature:` middleware, Fonctionnalités admin page
+- [x] Tests and parity for migrated ADMIN pages; bridge routes redirect to native
+- [ ] Plugins marketplace — `/admin/plugins` is a placeholder; install/download flow to design
+- [ ] `paramfn` / `paramfnv` (billable + vehicle function params) and grade category CRUD — still on the legacy bridge
+- [ ] Maintenance utilities (`update_app.php`, `buildsql.php`, `decrypt.php`, `import_api.php`, `debug_data.php`)
 
-### Cross-cutting settings not yet wired (from settings annotations)
-- [ ] `password_quality` (ID 15) — complexity validation not enforced in `AuthService`
-- [ ] `password_expiry_days` (ID 70) — expiry not enforced on login in `AuthService`
-- [ ] `info_connexion` (ID 69) — native first-login banner driven by this flag
-- [ ] `ameliorations` (ID 80) — telemetry opt-in; no endpoint implemented
+### Opérations d'urgence (DPS / SITAC / Victimes)
+- [ ] DPS sizing calculator (`dps.php`, `dps_calc.php`, `dps_save.php`)
+- [ ] SITAC tactical board (`sitac*.php`)
+- [ ] Victim management (`victimes.php`, `liste_victimes.php`, `scan_victime.php`, `intervention_edit.php`)
+
+### Settings not yet wired
+- [ ] `password_quality` (ID 15) — complexity validation in `AuthService`
+- [ ] `password_expiry_days` (ID 70) — expiry enforcement on login
+- [ ] `info_connexion` (ID 69) — first-login banner
+- [ ] `ameliorations` (ID 80) — telemetry opt-in
 
 ---
 
-## Phase 2B — Login screen ✅
+## Phase 2B — Login screen (done)
 - [x] Parity tests with the legacy login page
-- [x] Modernised login screen (current Bootstrap)
+- [x] Modernised login screen
 
 ## Phase 3 — API and integrations
 - [ ] Inventory legacy `api/` endpoints and consumers
-- [ ] Rewrite or proxy each as a versioned Laravel API route under `routes/api.php`
-- [x] iCal export (`evenement_ical.php`)
-- [ ] QR-code generation (`qrcode.php`, `qrcode_pic.php`)
-- [ ] Geolocation helpers (`geolocalize_all_persons.php`, `gmaps_*.php`)
+- [ ] Rewrite or proxy each as a versioned route under `routes/api.php`
+- [x] iCal export
+- [ ] QR-code generation
+- [ ] Geolocation helpers (`gmaps_evenement.php`, `localize*.php`, `map.php`, `zipcode.php`)
 - [ ] API tests and parity check; retire legacy API files
 
 ## Phase 3B — Non-menu plugins / modules
 - [ ] Inventory plugin/module files (`addons.php`, `install_addon.php`, `download_*.php`)
-- [ ] Define module boundaries and migrate config, routes, assets, permissions
-- [ ] Feature tests per module; deprecation rules; remove legacy loaders after cutover
+- [ ] Define module boundaries; migrate config, routes, assets, permissions
+- [ ] Animaux module (`personnel_maitre.php`, `cav_edit.php` — `ob_feature` flag exists, status wip)
+- [ ] SMS gateway integration (`lib/SMSGatewayMe/`, `fonctions_sms.php`)
+- [ ] Feature tests per module; remove legacy loaders after cutover
 
 ## Phase 4 — Cutover and decommission
-- [ ] Keep the legacy → Laravel parity matrix current (see legacy-mapping.md)
-- [ ] User acceptance validation on all critical workflows
+- [ ] Keep the legacy parity matrix current (legacy-mapping.md)
+- [ ] User acceptance validation on critical workflows
 - [ ] Remove the legacy bridge routes and `LegacyBridgeController`
 - [ ] Delete `archive/legacy_app/` and all bridge configuration
 - [ ] Execute production cutover plan
-- [ ] Update README and docs to reflect the fully-migrated state
+- [ ] Update README and docs to the fully-migrated state
