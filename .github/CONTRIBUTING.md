@@ -105,8 +105,9 @@ docker compose exec app php artisan migrate --seed
 docker compose exec app sh -lc "npm ci && npm run build"
 ```
 
-The application is served at `http://localhost:8080`; CloudBeaver (web DB browser) at
-`http://localhost:8081`. Stop everything with `docker compose down`.
+The application is served at `http://localhost:8080`; DBGate (web DB browser) at
+`http://localhost:8888` — only started when `COMPOSE_PROFILES=development` (set automatically
+by `.env.example.dev`). Stop everything with `docker compose down`.
 
 OpenBrigade is a **Laravel 12 / PHP 8.4** application — there is no PHP setup wizard;
 the schema is built by `php artisan migrate`.

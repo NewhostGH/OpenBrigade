@@ -61,13 +61,25 @@ services:
       timeout: 5s
       retries: 5
 
-  cloudbeaver:
-    image: dbeaver/cloudbeaver:24.3.0
-    container_name: openbrigade_cloudbeaver
+  dbgate:
+    image: dbgate/dbgate:7.2.0
+    container_name: openbrigade_dbgate
     restart: unless-stopped
+    profiles:
+      - development
 
     ports:
-      - "${CB_PORT:-8081}:8978"
+      - "${DBGATE_PORT:-8888}:3000"
+
+    environment:
+      CONNECTIONS: CON1
+      ENGINE_CON1: mariadb@dbgate-plugin-mysql
+      SERVER_CON1: db
+      PORT_CON1: "3306"
+      USER_CON1: "${DB_USER:-openbrigade}"
+      PASSWORD_CON1: "${DB_PASSWORD:-CHANGE_ME}"
+      DATABASE_CON1: "${DB_NAME:-openbrigade}"
+      LABEL_CON1: OpenBrigade DB
 
     depends_on:
       - db

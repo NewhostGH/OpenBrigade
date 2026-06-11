@@ -28,11 +28,11 @@ cp .env.example .env        # adjust credentials if needed
 docker compose up -d
 ```
 
-| Service                                 | URL / port              | Notes                            |
-| --------------------------------------- | ----------------------- | -------------------------------- |
-| Application (`openbrigade_app`)         | <http://localhost:8080> | `APP_PORT`, Apache → port 80     |
-| Database (`openbrigade_db`)             | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL` |
-| CloudBeaver (`openbrigade_cloudbeaver`) | <http://localhost:8081> | Web DB browser, `CB_PORT`        |
+| Service                         | URL / port              | Notes                                                        |
+| ------------------------------- | ----------------------- | ------------------------------------------------------------ |
+| Application (`openbrigade_app`) | <http://localhost:8080> | `APP_PORT`, Apache → port 80                                 |
+| Database (`openbrigade_db`)     | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL`                             |
+| DBGate (`openbrigade_dbgate`)   | <http://localhost:8888> | Web DB browser, `DBGATE_PORT` — dev only (`COMPOSE_PROFILES=development`) |
 
 After the containers are up, run migrations and seed development data:
 
