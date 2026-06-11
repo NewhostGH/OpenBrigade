@@ -5,14 +5,17 @@ npm run build --silent > /dev/null 2>&1
 
 # PHP lint — temp ini needed because PHPRC → nonexistent C:\PHP on this machine.
 # cygpath converts the POSIX path Git Bash gives us to a Windows path PHP can resolve.
-PHP_WIN=$(cygpath -w "$(dirname "$(which php)")")
+PHP_FWD=$(cygpath -m "$(dirname "$(which php)")")
 INI=$(mktemp)
 INI_WIN=$(cygpath -w "$INI")
-printf 'extension_dir = "%s\\ext"\nextension=mbstring\nextension=openssl\nextension=fileinfo\nextension=curl\nextension=zip\nextension=pdo_mysql\nmemory_limit=1G\n' "$PHP_WIN" > "$INI"
-PINT_OUT=$(php -c "$INI_WIN" vendor/bin/pint --test --no-ansi 2>/dev/null)
+printf 'extension_dir = "%s/ext"\nextension=mbstring\nextension=openssl\nextension=fileinfo\nextension=curl\nextension=zip\nextension=pdo_mysql\nmemory_limit=1G\n' "$PHP_FWD" > "$INI"
+PINT_JSON=$(mktemp)
+PINT_JSON_WIN=$(cygpath -w "$PINT_JSON")
+php -c "$INI_WIN" vendor/bin/pint --test > "$PINT_JSON" 2>/dev/null
 STATUS=$?
 rm -f "$INI"
 if [ $STATUS -ne 0 ]; then
-    echo "$PINT_OUT" | grep -E "(FAIL|\.php)"
+    node -e "const d=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));(d.files||d.errors||[]).forEach(f=>console.log('  '+f.path));" "$PINT_JSON_WIN"
 fi
+rm -f "$PINT_JSON"
 exit $STATUS
