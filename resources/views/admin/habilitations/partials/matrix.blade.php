@@ -8,6 +8,7 @@
         <span class="fw-semibold"><i class="fas fa-{{ $kind === 'role' ? 'user-tie' : 'key' }} me-1 text-secondary"></i>{{ $title }}</span>
         <span class="text-muted" style="font-size:var(--font-size-xs);">{{ $hint }}</span>
 
+        @feature('multi_site')
         <span class="ms-auto d-flex align-items-center gap-2">
             <span class="text-muted" style="font-size:var(--font-size-xs);">{{ $kind === 'role' ? 'Section :' : 'Aperçu du plafond :' }}</span>
             <form method="GET" action="{{ route('admin.habilitations') }}" style="margin:0;">
@@ -19,6 +20,7 @@
                 </select>
             </form>
         </span>
+        @endfeature
     </div>
 
     {{-- Create a new group/role (top of page) --}}

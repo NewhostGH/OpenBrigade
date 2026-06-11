@@ -39,17 +39,19 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="p-3">
             {{-- Section + role selectors (side by side), groups always-on --}}
             <div class="d-flex align-items-center flex-wrap gap-2">
+                @feature('multi_site')
                 <span class="text-muted" style="font-size:var(--font-size-sm);">Section&nbsp;:</span>
                 <form method="GET" action="{{ route('mes-droits') }}" style="margin:0;">
                     <input type="hidden" name="role" value="{{ $roleId }}">
                     <select name="section" class="form-select form-select-sm ob-ctx-auto" style="width:auto;">
                         @forelse ($sections as $s)
-                            <option value="{{ $s->S_ID }}" {{ (int) $s->S_ID === (int) $sectionId ? 'selected' : '' }}>{{ $s->S_DESCRIPTION }}</option>
+                            <option value="{{ $s->S_ID }}" {{ (int) $s->S_ID === (int) $sectionId ? 'selected' : '' }}>{!! str_repeat('&nbsp;&nbsp;&nbsp;', (int) ($s->depth ?? 0)) !!}{{ ($s->depth ?? 0) > 0 ? '└ ' : '' }}{{ $s->S_DESCRIPTION }}</option>
                         @empty
                             <option>—</option>
                         @endforelse
                     </select>
                 </form>
+                @endfeature
 
                 <span class="text-muted ms-2" style="font-size:var(--font-size-sm);">Rôle&nbsp;:</span>
                 <form method="GET" action="{{ route('mes-droits') }}" style="margin:0;">

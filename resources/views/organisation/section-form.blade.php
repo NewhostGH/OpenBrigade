@@ -56,14 +56,19 @@ if ($isEdit) {
                     </div>
                     <div class="col-md-6">
                         <label class="form-label form-label-sm" for="S_PARENT">Section parente</label>
-                        <select id="S_PARENT" name="S_PARENT" class="form-select form-select-sm">
-                            <option value="0">— racine —</option>
+                        <select id="S_PARENT" name="S_PARENT" required
+                                class="form-select form-select-sm @error('S_PARENT') is-invalid @enderror">
+                            {{-- L'organigramme n'admet qu'une seule racine. --}}
+                            @if ($canBeRoot)
+                                <option value="0">— racine —</option>
+                            @endif
                             @foreach ($parents as $p)
                                 <option value="{{ $p->S_ID }}" @selected((string) $val('S_PARENT') === (string) $p->S_ID)>
                                     {{ $p->S_CODE }} — {{ $p->S_DESCRIPTION }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('S_PARENT')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-md-6 d-flex align-items-end">
                         <div class="form-check">

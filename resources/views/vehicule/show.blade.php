@@ -123,8 +123,10 @@
                         <dt class="text-muted fw-normal">Indicatif</dt>
                         <dd class="mb-0 fw-semibold">{{ $vehicule->V_INDICATIF ?: '—' }}</dd>
 
+                        @feature('multi_site')
                         <dt class="text-muted fw-normal">Section</dt>
                         <dd class="mb-0">{{ $vehicule->section?->S_DESCRIPTION ?? '—' }}</dd>
+                        @endfeature
 
                         <dt class="text-muted fw-normal">Statut</dt>
                         <dd class="mb-0">

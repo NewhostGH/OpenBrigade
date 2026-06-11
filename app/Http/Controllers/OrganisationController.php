@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Services\SectionScopeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -176,6 +177,7 @@ class OrganisationController extends Controller
         return view('organisation.section-form', [
             'section' => null,
             'parents' => $this->parentOptions(null),
+            'canBeRoot' => ! $this->rootExists(null),
         ]);
     }
 
@@ -196,13 +198,14 @@ class OrganisationController extends Controller
     {
         return view('organisation.section-form', [
             'section' => $section,
-            'parents' => $this->parentOptions((int) $section->S_ID),
+            'parents' => $this->parentOptions($section),
+            'canBeRoot' => ! $this->rootExists($section),
         ]);
     }
 
     public function updateSection(Request $request, Section $section): RedirectResponse
     {
-        $data = $this->validateSection($request);
+        $data = $this->validateSection($request, $section);
         $data['S_INACTIVE'] = $request->boolean('S_INACTIVE');
 
         $section->update($data);
@@ -453,24 +456,63 @@ class OrganisationController extends Controller
             ->pluck('cnt', 'P_SECTION');
     }
 
-    private function parentOptions(?int $excludeId)
+    /**
+     * Eligible parents for a section: everything except the section itself
+     * and its own subtree (a descendant as parent would create a cycle).
+     */
+    private function parentOptions(?Section $editing)
     {
+        $excluded = $editing !== null
+            ? app(SectionScopeService::class)->descendantIds((int) $editing->S_ID)
+            : [];
+
         return DB::table('section')
-            ->when($excludeId, fn ($q) => $q->where('S_ID', '<>', $excludeId))
+            ->when($excluded !== [], fn ($q) => $q->whereNotIn('S_ID', $excluded))
+            ->orderBy('S_ORDER')
             ->orderBy('S_CODE')
             ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION'])
             ->each(fn ($s) => $s->S_DESCRIPTION = $s->S_DESCRIPTION ?: 'Section '.$s->S_ID);
     }
 
+    /** Does a root section (no parent) already exist, other than $editing? */
+    private function rootExists(?Section $editing): bool
+    {
+        return DB::table('section')
+            ->where(fn ($q) => $q->where('S_PARENT', 0)->orWhereNull('S_PARENT'))
+            ->when($editing, fn ($q) => $q->where('S_ID', '<>', $editing->S_ID))
+            ->exists();
+    }
+
     /** @return array<string,mixed> */
-    private function validateSection(Request $request): array
+    private function validateSection(Request $request, ?Section $editing = null): array
     {
         return $request->validate([
             // Informations obligatoires
             'S_CODE' => ['required', 'string', 'max:25'],
             'S_DESCRIPTION' => ['nullable', 'string', 'max:80'],
             'S_ORDER' => ['nullable', 'integer', 'min:0', 'max:255'],
-            'S_PARENT' => ['nullable', 'integer'],
+            'S_PARENT' => ['nullable', 'integer', function (string $attribute, $value, \Closure $fail) use ($editing): void {
+                // No parent → root: the org chart allows exactly one root.
+                if (empty($value)) {
+                    if ($this->rootExists($editing)) {
+                        $fail('Une section racine existe déjà — l\'organisation ne peut avoir qu\'une seule racine.');
+                    }
+
+                    return;
+                }
+
+                if (! DB::table('section')->where('S_ID', (int) $value)->exists()) {
+                    $fail('La section parente sélectionnée n\'existe pas.');
+
+                    return;
+                }
+
+                // A section cannot be parented to itself or its own subtree.
+                if ($editing !== null
+                    && in_array((int) $value, app(SectionScopeService::class)->descendantIds((int) $editing->S_ID), true)) {
+                    $fail('La section parente ne peut pas être la section elle-même ni l\'une de ses sous-sections.');
+                }
+            }],
             // Contact
             'S_PHONE' => ['nullable', 'string', 'max:20'],
             'S_PHONE2' => ['nullable', 'string', 'max:20'],

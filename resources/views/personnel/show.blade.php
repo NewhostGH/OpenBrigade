@@ -77,12 +77,14 @@
                         <dt class="text-muted fw-normal">Matricule</dt>
                         <dd class="mb-0 fw-semibold">{{ $personnel->P_CODE }}</dd>
 
-                        <dt class="text-muted fw-normal">Section</dt>
+                        @feature('multi_site')
+                        <dt class="text-muted fw-normal" title="Section où le membre se situe dans l'organigramme">Section principale</dt>
                         <dd class="mb-0">{{ $personnel->section?->S_CODE ?: '—' }}
                             @if($personnel->section?->S_DESCRIPTION)
                                 <span class="text-muted">— {{ $personnel->section->S_DESCRIPTION }}</span>
                             @endif
                         </dd>
+                        @endfeature
 
                         <dt class="text-muted fw-normal">Grade</dt>
                         <dd class="mb-0">
@@ -666,18 +668,6 @@
                 </div>
             </div>{{-- /section-absences --}}
 
-            {{-- ▸ Historique ─────────────────────────────────────────────── --}}
-            <div id="section-historique" data-pers-section>
-                <div class="ob-widget-card mb-3">
-                    <div class="ob-widget-card-header">
-                        <div class="ob-widget-card-title"><i class="fas fa-history"></i> Historique</div>
-                    </div>
-                    <div class="ob-widget-card-body">
-                        <p class="ob-widget-empty mb-0">Aucun historique disponible.</p>
-                    </div>
-                </div>
-            </div>{{-- /section-historique --}}
-
             {{-- ▸ Géolocalisation ────────────────────────────────────────── --}}
             <div id="section-geo" data-pers-section>
                 <div class="ob-widget-card mb-3">
@@ -715,6 +705,13 @@
                 <div class="ob-widget-card mb-3">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title"><i class="fas fa-shield-alt"></i> Droits d'accès</div>
+                        @if (auth()->user()->hasPermission(9))
+                            <div class="ob-widget-card-actions">
+                                <a href="{{ route('personnel.edit', $personnel->P_ID) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-pen me-1"></i>Gérer
+                                </a>
+                            </div>
+                        @endif
                     </div>
                     <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
@@ -762,29 +759,21 @@
                             </div>
                         </dl>
                     </div>
-                </div>
 
-                {{-- Section memberships (ob_personnel_section) --}}
-                <div class="ob-widget-card mb-3">
-                    <div class="ob-widget-card-header">
-                        <div class="ob-widget-card-title">
+                    {{-- Section memberships (ob_personnel_section) --}}
+                    @feature('multi_site')
+                    <div class="ob-widget-card-subheader">
+                        <div>
                             <i class="fas fa-sitemap me-1"></i> Sections
                             @if ($personnel->section)
                                 <span class="text-muted fw-normal ms-2" style="font-size:var(--font-size-sm);">
-                                    — par défaut : <strong>{{ $personnel->section->S_CODE }}</strong>
+                                    — principale : <strong>{{ $personnel->section->S_CODE }}</strong>
                                     @if ($personnel->section->S_DESCRIPTION)
                                         <span class="fw-normal">{{ $personnel->section->S_DESCRIPTION }}</span>
                                     @endif
                                 </span>
                             @endif
                         </div>
-                        @if (auth()->user()->hasPermission(9))
-                            <div class="ob-widget-card-actions">
-                                <a href="{{ route('personnel.edit', $personnel->P_ID) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-pen me-1"></i>Gérer
-                                </a>
-                            </div>
-                        @endif
                     </div>
                     <div class="ob-widget-card-body">
                         @forelse ($personnelSections as $s)
@@ -793,33 +782,27 @@
                             <span class="text-muted" style="font-size:var(--font-size-sm);">Aucune section attribuée.</span>
                         @endforelse
                     </div>
-                </div>
+                    @endfeature
 
-                {{-- Section-scoped organisational roles (ob_user_assignment) — read-only;
-                     edited from the member's CRUD form, "Accès" tab. --}}
-                <div class="ob-widget-card mb-3">
-                    <div class="ob-widget-card-header">
-                        <div class="ob-widget-card-title"><i class="fas fa-user-tie"></i> Rôles par section</div>
-                        @if (auth()->user()->hasPermission(9))
-                            <div class="ob-widget-card-actions">
-                                <a href="{{ route('personnel.edit', $personnel->P_ID) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-pen me-1"></i>Gérer
-                                </a>
-                            </div>
-                        @endif
+                    {{-- Section-scoped organisational roles (ob_user_assignment) — read-only;
+                         edited from the member's CRUD form, "Accès" tab. --}}
+                    <div class="ob-widget-card-subheader">
+                        <div><i class="fas fa-user-tie me-1"></i> @feature('multi_site')Rôles par section @else Rôles organisationnels @endfeature</div>
                     </div>
                     <div class="ob-widget-card-body p-0">
                         @if ($roleAssignments->isEmpty())
-                            <div class="ob-widget-empty p-3">Aucun rôle organisationnel attribué.</div>
+                            <div class="ob-widget-empty p-3">Aucun rôle attribué.</div>
                         @else
                             <table class="table table-sm mb-0">
                                 <thead class="table-light">
-                                    <tr><th>Section</th><th>Rôle</th></tr>
+                                    <tr>@feature('multi_site')<th>Section</th>@endfeature<th>Rôle</th></tr>
                                 </thead>
                                 <tbody>
                                 @foreach ($roleAssignments as $a)
                                     <tr>
+                                        @feature('multi_site')
                                         <td class="align-middle" style="font-size:var(--font-size-sm);">{{ $a->section_name }}</td>
+                                        @endfeature
                                         <td class="align-middle" style="font-size:var(--font-size-sm);">{{ $a->role_name }}</td>
                                     </tr>
                                 @endforeach
@@ -829,6 +812,18 @@
                     </div>
                 </div>
             </div>{{-- /section-acces --}}
+
+            {{-- ▸ Historique ─────────────────────────────────────────────── --}}
+            <div id="section-historique" data-pers-section>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-history"></i> Historique</div>
+                    </div>
+                    <div class="ob-widget-card-body">
+                        <p class="ob-widget-empty mb-0">Aucun historique disponible.</p>
+                    </div>
+                </div>
+            </div>{{-- /section-historique --}}
 
         </div>{{-- /content --}}
     </div>{{-- /sidebar layout --}}

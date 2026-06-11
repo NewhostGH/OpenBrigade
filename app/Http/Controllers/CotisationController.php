@@ -17,12 +17,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Section;
 use App\Models\TypePaiement;
+use App\Services\FeatureService;
+use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class CotisationController extends Controller
@@ -39,13 +39,11 @@ class CotisationController extends Controller
         [$year, $periodeCode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order]
             = $this->parseFilters($request);
 
-        $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
         $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
         $typesPaiement = TypePaiement::orderBy('TP_DESCRIPTION')->get(['TP_ID', 'TP_DESCRIPTION']);
         $periode = $periodes->firstWhere('P_CODE', $periodeCode);
 
-        $items = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order, $allSections)->get();
-        $sectionOptions = $this->buildSectionTree($allSections);
+        $items = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order)->get();
 
         return view('cotisations.index', [
             'items' => $items,
@@ -60,7 +58,6 @@ class CotisationController extends Controller
             'order' => $order,
             'periodes' => $periodes,
             'typesPaiement' => $typesPaiement,
-            'sectionOptions' => $sectionOptions,
         ]);
     }
 
@@ -134,16 +131,17 @@ class CotisationController extends Controller
         [$year, $periodeCode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order]
             = $this->parseFilters($request);
 
-        $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
         $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
         $periode = $periodes->firstWhere('P_CODE', $periodeCode);
 
-        $rows = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order, $allSections)->get();
+        $rows = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order)->get();
 
         $columns = [
             ['Nom Prénom',  fn ($r) => strtoupper($r->P_NOM).' '.ucfirst(strtolower($r->P_PRENOM))],
             ['Statut',      fn ($r) => $r->P_STATUT],
-            ['Section',     fn ($r) => $r->S_CODE],
+            // Only meaningful with several sites.
+            ...(app(FeatureService::class)->isEnabled('multi_site')
+                ? [['Section', fn ($r) => $r->S_CODE]] : []),
             ['Entrée',      fn ($r) => $r->P_DATE_ENGAGEMENT ? Carbon::parse($r->P_DATE_ENGAGEMENT)->format('d/m/Y') : ''],
             ['Sortie',      fn ($r) => $r->P_FIN ? Carbon::parse($r->P_FIN)->format('d/m/Y') : ''],
             ['Payé',        fn ($r) => $r->PC_DATE ? 'Oui' : 'Non'],
@@ -173,10 +171,8 @@ class CotisationController extends Controller
         $sectionId = (int) $request->integer('section', 0);
         $subsections = (bool) $request->integer('subsections', 1);
 
-        $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
         $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
         $periode = $periodes->firstWhere('P_CODE', $periodeCode);
-        $sectionOptions = $this->buildSectionTree($allSections);
 
         // Base: TP_ID=1 (direct debit), active, non-EXT, non-admin
         $base = DB::table('pompier as p')
@@ -193,14 +189,7 @@ class CotisationController extends Controller
             ->where('p.P_OLD_MEMBER', 0)
             ->where('p.SUSPENDU', 0);
 
-        if ($sectionId > 0) {
-            if ($subsections) {
-                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
-                $base->whereIn('p.P_SECTION', array_merge([$sectionId], $descendants));
-            } else {
-                $base->where('p.P_SECTION', $sectionId);
-            }
-        }
+        app(SectionScopeService::class)->apply($base, 'p.P_SECTION', $sectionId, $subsections);
 
         if ($periode) {
             $this->applyPeriodFilter($base, $periode, $year);
@@ -232,7 +221,6 @@ class CotisationController extends Controller
             'sectionId' => $sectionId,
             'subsections' => $subsections,
             'periodes' => $periodes,
-            'sectionOptions' => $sectionOptions,
         ]);
     }
 
@@ -313,9 +301,6 @@ class CotisationController extends Controller
             $order = 'PC_DATE';
         }
 
-        $allSections = Section::orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
-        $sectionOptions = $this->buildSectionTree($allSections);
-
         $query = DB::table('personnel_cotisation as pc')
             ->join('pompier as p', 'p.P_ID', '=', 'pc.P_ID')
             ->join('section as s', 'p.P_SECTION', '=', 's.S_ID')
@@ -328,14 +313,7 @@ class CotisationController extends Controller
                 'pc.PC_ID', 'pc.PC_DATE', 'pc.MONTANT', 'pc.COMMENTAIRE',
             ]);
 
-        if ($sectionId > 0) {
-            if ($subsections) {
-                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
-                $query->whereIn('p.P_SECTION', array_merge([$sectionId], $descendants));
-            } else {
-                $query->where('p.P_SECTION', $sectionId);
-            }
-        }
+        app(SectionScopeService::class)->apply($query, 'p.P_SECTION', $sectionId, $subsections);
 
         if (! $includeOld) {
             $query->where('p.P_OLD_MEMBER', 0)->where('p.SUSPENDU', 0);
@@ -372,7 +350,6 @@ class CotisationController extends Controller
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
             'order' => $order,
-            'sectionOptions' => $sectionOptions,
         ]);
     }
 
@@ -399,8 +376,7 @@ class CotisationController extends Controller
     private function buildQuery(
         int $year, string $periodeCode, ?object $periode,
         int $sectionId, bool $subsections, mixed $tpId,
-        string $paid, bool $includeOld, string $order,
-        Collection $allSections
+        string $paid, bool $includeOld, string $order
     ) {
         $query = DB::table('pompier as p')
             ->leftJoin('personnel_cotisation as pc', function ($join) use ($year, $periodeCode) {
@@ -421,14 +397,7 @@ class CotisationController extends Controller
             ->where('p.P_NOM', '!=', 'admin')
             ->where('p.P_STATUT', '!=', 'EXT');
 
-        if ($sectionId > 0) {
-            if ($subsections) {
-                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
-                $query->whereIn('p.P_SECTION', array_merge([$sectionId], $descendants));
-            } else {
-                $query->where('p.P_SECTION', $sectionId);
-            }
-        }
+        app(SectionScopeService::class)->apply($query, 'p.P_SECTION', $sectionId, $subsections);
 
         if ($tpId !== 'ALL' && is_numeric($tpId)) {
             $query->where('p.TP_ID', (int) $tpId);
@@ -504,39 +473,4 @@ class CotisationController extends Controller
         };
     }
 
-    private function buildSectionTree(Collection $sections, int $parentId = 0, int $depth = 0): array
-    {
-        $result = [];
-        foreach ($sections as $section) {
-            if ((int) ($section->S_PARENT ?? 0) === $parentId) {
-                $result[] = [
-                    'S_ID' => (int) $section->S_ID,
-                    'S_CODE' => $section->S_CODE,
-                    'S_DESCRIPTION' => $section->S_DESCRIPTION,
-                    'depth' => $depth,
-                ];
-                array_push($result, ...$this->buildSectionTree($sections, (int) $section->S_ID, $depth + 1));
-            }
-        }
-
-        return $result;
-    }
-
-    private function getDescendantSectionIds(Collection $allSections, int $parentId): array
-    {
-        $ids = [];
-        $queue = [$parentId];
-        while (! empty($queue)) {
-            $current = array_shift($queue);
-            $children = $allSections
-                ->filter(fn ($s) => (int) ($s->S_PARENT ?? 0) === $current)
-                ->pluck('S_ID');
-            foreach ($children as $childId) {
-                $ids[] = (int) $childId;
-                $queue[] = (int) $childId;
-            }
-        }
-
-        return $ids;
-    }
 }

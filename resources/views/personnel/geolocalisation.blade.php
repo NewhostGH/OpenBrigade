@@ -10,6 +10,7 @@
 
 {{-- Toolbar --}}
 <div class="ob-geo-toolbar noprint">
+    @feature('multi_site')
     <select class="form-select" onchange="updateParam('section', this.value)">
         <option value="0" {{ $sectionId === 0 ? 'selected' : '' }}>Toutes sections</option>
         @foreach ($sections as $sec)
@@ -18,6 +19,7 @@
             </option>
         @endforeach
     </select>
+    @endfeature
     <span class="ob-geo-stat">
         <i class="fas fa-map-marker-alt me-1"></i>
         {{ $count }} membre{{ $count > 1 ? 's' : '' }} géolocalisé{{ $count > 1 ? 's' : '' }}

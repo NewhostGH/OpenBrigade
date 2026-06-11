@@ -125,7 +125,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <label class="form-label form-label-sm" for="P_NOM">Nom *</label>
+                                <label class="form-label form-label-sm" for="P_NOM">Nom <span class="text-danger">*</span></label>
                                 <input id="P_NOM" name="P_NOM" type="text"
                                        class="form-control form-control-sm @error('P_NOM') is-invalid @enderror"
                                        value="{{ $val('P_NOM') }}" required>
@@ -141,7 +141,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <label class="form-label form-label-sm" for="P_PRENOM">Prénom *</label>
+                                <label class="form-label form-label-sm" for="P_PRENOM">Prénom <span class="text-danger">*</span></label>
                                 <input id="P_PRENOM" name="P_PRENOM" type="text"
                                        class="form-control form-control-sm @error('P_PRENOM') is-invalid @enderror"
                                        value="{{ $val('P_PRENOM') }}" required>
@@ -168,7 +168,7 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label class="form-label form-label-sm" for="P_CODE">Matricule *</label>
+                                <label class="form-label form-label-sm" for="P_CODE">Matricule <span class="text-danger">*</span></label>
                                 <input id="P_CODE" name="P_CODE" type="text"
                                        class="form-control form-control-sm @error('P_CODE') is-invalid @enderror"
                                        value="{{ $val('P_CODE') }}" required>
@@ -219,7 +219,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <label class="form-label form-label-sm" for="P_STATUT">Statut *</label>
+                                <label class="form-label form-label-sm" for="P_STATUT">Statut <span class="text-danger">*</span></label>
                                 <select id="P_STATUT" name="P_STATUT"
                                         class="form-select form-select-sm @error('P_STATUT') is-invalid @enderror" required>
                                     @foreach (config('personnel.statuts_assignable') as $statut)
@@ -237,20 +237,20 @@
                                 @error('P_PROFESSION')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            @feature('multi_site')
                             <div class="col-md-3">
-                                <label class="form-label form-label-sm" for="P_SECTION">Section par défaut</label>
-                                <select id="P_SECTION" name="P_SECTION"
-                                        class="form-select form-select-sm @error('P_SECTION') is-invalid @enderror">
-                                    <option value="">—</option>
-                                    @foreach ($accessibleSections as $section)
-                                        <option value="{{ $section->S_ID }}"
-                                                @selected((string)$val('P_SECTION')===(string)$section->S_ID)>
-                                            {{ $section->S_CODE }}{{ $section->S_DESCRIPTION ? ' — '.$section->S_DESCRIPTION : '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label form-label-sm" for="P_SECTION"
+                                       title="Section où le membre se situe dans l'organigramme">Section principale <span class="text-danger">*</span></label>
+                                {{-- @error n'est pas compilé dans les attributs de composant — expression liée obligatoire. --}}
+                                <x-ob-section-select id="P_SECTION" name="P_SECTION" required
+                                                     :selected="$val('P_SECTION', auth()->user()->P_SECTION)"
+                                                     :class="$errors->has('P_SECTION') ? 'is-invalid' : ''" />
                                 @error('P_SECTION')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+                            @else
+                                {{-- Multi sites désactivé : préserve la section existante ou défaut à celle du créateur. --}}
+                                <input type="hidden" name="P_SECTION" value="{{ $val('P_SECTION', auth()->user()->P_SECTION) }}">
+                            @endfeature
 
                             <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_DATE_ENGAGEMENT">Date d'entrée</label>
@@ -529,10 +529,11 @@
                             @if (auth()->user()->hasPermission(9))
 
                                 {{-- ── Sections ───────────────────────────── --}}
+                                @feature('multi_site')
                                 <div class="col-12">
                                     <label class="form-label form-label-sm">Sections</label>
                                     <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
-                                        Sections auxquelles ce membre appartient (en plus de la section par défaut définie dans Identité).
+                                        Sections auxquelles ce membre appartient. La section principale est toujours incluse.
                                     </p>
                                     <input type="text" class="form-control form-control-sm mb-2 ob-multiselect-search"
                                            data-ob-target="sections-wrap"
@@ -559,13 +560,20 @@
                                         @endif
                                     </div>
                                 </div>
+                                @else
+                                    {{-- Multi sites désactivé : syncSections() recrée les lignes
+                                         depuis sections[], on rejoue donc l'existant tel quel. --}}
+                                    @foreach ($currentSectionIds as $sid)
+                                        <input type="hidden" name="sections[]" value="{{ $sid }}">
+                                    @endforeach
+                                @endfeature
 
                                 {{-- ── Rôles ──────────────────────────────── --}}
                                 <div class="col-12">
                                     <label class="form-label form-label-sm">Rôles organisationnels</label>
                                     <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
-                                        Rôles que ce membre exerce au sein de l'organisation. Chaque rôle peut être
-                                        limité à une section ou s'appliquer globalement.
+                                        Rôles que ce membre exerce au sein de l'organisation.@feature('multi_site') Chaque rôle peut être
+                                        limité à une section ou s'appliquer globalement.@endfeature
                                     </p>
 
                                     @if ($allRoles->isEmpty())
@@ -580,6 +588,7 @@
                                                         <option value="{{ $r->id }}" @selected($r->id === $ra['group_id'])>{{ $r->name }}</option>
                                                     @endforeach
                                                 </select>
+                                                @feature('multi_site')
                                                 <select name="role_assignments[{{ $i }}][section_id]"
                                                         class="form-select form-select-sm" style="flex:1 1 180px; max-width:240px;">
                                                     <option value="0">— global —</option>
@@ -590,6 +599,10 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                @else
+                                                    <input type="hidden" name="role_assignments[{{ $i }}][section_id]"
+                                                           value="{{ $ra['section_id'] }}">
+                                                @endfeature
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-danger ob-role-remove"
                                                         title="Supprimer ce rôle">
@@ -613,6 +626,7 @@
                                                         <option value="{{ $r->id }}">{{ $r->name }}</option>
                                                     @endforeach
                                                 </select>
+                                                @feature('multi_site')
                                                 <select name="role_assignments[__OB_IDX__][section_id]"
                                                         class="form-select form-select-sm" style="flex:1 1 180px; max-width:240px;">
                                                     <option value="0">— global —</option>
@@ -622,6 +636,10 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                @else
+                                                    {{-- 0 = portée globale --}}
+                                                    <input type="hidden" name="role_assignments[__OB_IDX__][section_id]" value="0">
+                                                @endfeature
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-danger ob-role-remove"
                                                         title="Supprimer ce rôle">

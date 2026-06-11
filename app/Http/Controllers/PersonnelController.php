@@ -27,8 +27,9 @@ use App\Models\Poste;
 use App\Models\Qualification;
 use App\Models\Section;
 use App\Models\TypePaiement;
-use App\Services\PermissionResolver;
+use App\Services\FeatureService;
 use App\Services\PersonnelExportService;
+use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,7 +42,10 @@ use Illuminate\View\View;
 
 class PersonnelController extends Controller
 {
-    public function __construct(private readonly PermissionResolver $resolver) {}
+    public function __construct(
+        private readonly FeatureService $features,
+        private readonly SectionScopeService $sectionScope,
+    ) {}
 
     public function index(Request $request): View
     {
@@ -56,11 +60,6 @@ class PersonnelController extends Controller
             $perPage = 100;
         }
 
-        // Load all sections once for hierarchy building + section options
-        $allSections = Section::query()
-            ->orderBy('S_CODE')
-            ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
-
         $items = $this->buildFilteredQuery($request)
             ->with(['section'])
             ->select([
@@ -73,8 +72,6 @@ class PersonnelController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
-        $sectionOptions = $this->buildSectionTree($allSections);
-
         return view('personnel.index', [
             'items' => $items,
             'columns' => $this->personnelColumns(),
@@ -85,7 +82,6 @@ class PersonnelController extends Controller
             'order' => $order,
             'subsections' => $subsections,
             'perPage' => $perPage,
-            'sectionOptions' => $sectionOptions,
         ]);
     }
 
@@ -169,16 +165,17 @@ class PersonnelController extends Controller
                 'exportable' => true,
                 'sortField' => 'P_CODE',
             ],
-            [
+            // The home/principal section only means something with several sites.
+            ...($this->features->isEnabled('multi_site') ? [[
                 'key' => 'section',
-                'label' => 'Section',
+                'label' => 'Section principale',
                 'type' => 'text',
                 'value' => fn ($p) => $p->section?->S_CODE ?: '—',
                 'mobile' => false,
                 'default' => true,
                 'exportable' => true,
                 'exportValue' => fn ($p) => $p->section?->S_CODE ?? '',
-            ],
+            ]] : []),
             [
                 'key' => 'entree',
                 'label' => "Date d'entrée",
@@ -318,46 +315,21 @@ class PersonnelController extends Controller
     }
 
     /**
-     * Build a depth-annotated flat list of sections in DFS (tree) order.
-     * Sections with S_PARENT = 0 are considered top-level (depth 0).
+     * Section rows visible to the current user, for the form's membership
+     * multiselect and role-assignment selects (SectionScopeService is the
+     * single isolation authority).
      */
-    private function buildSectionTree(Collection $sections, int $parentId = 0, int $depth = 0): array
+    private function visibleSections(): Collection
     {
-        $result = [];
-        foreach ($sections as $section) {
-            if ((int) ($section->S_PARENT ?? 0) === $parentId) {
-                $result[] = [
-                    'S_ID' => (int) $section->S_ID,
-                    'S_CODE' => $section->S_CODE,
-                    'S_DESCRIPTION' => $section->S_DESCRIPTION,
-                    'depth' => $depth,
-                ];
-                array_push($result, ...$this->buildSectionTree($sections, (int) $section->S_ID, $depth + 1));
-            }
+        $query = Section::query()
+            ->orderByRaw('(S_CODE IS NULL), S_CODE, S_DESCRIPTION');
+
+        $visible = $this->sectionScope->visibleSectionIds();
+        if ($visible !== null) {
+            $query->whereIn('S_ID', $visible);
         }
 
-        return $result;
-    }
-
-    /**
-     * Return all descendant section IDs of a given section via BFS.
-     */
-    private function getDescendantSectionIds(Collection $allSections, int $parentId): array
-    {
-        $ids = [];
-        $queue = [$parentId];
-        while (! empty($queue)) {
-            $current = array_shift($queue);
-            $children = $allSections
-                ->filter(fn ($s) => (int) ($s->S_PARENT ?? 0) === $current)
-                ->pluck('S_ID');
-            foreach ($children as $childId) {
-                $ids[] = (int) $childId;
-                $queue[] = (int) $childId;
-            }
-        }
-
-        return $ids;
+        return $query->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
     }
 
     /**
@@ -532,9 +504,9 @@ class PersonnelController extends Controller
             ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day',  'label' => 'Disponibilité'],
             ['id' => 'section-calendrier',    'icon' => 'fas fa-calendar',      'label' => 'Calendrier'],
             ['id' => 'section-absences',      'icon' => 'fas fa-user-times',    'label' => 'Absences'],
-            ['id' => 'section-historique',    'icon' => 'fas fa-history',       'label' => 'Historique'],
             ['id' => 'section-geo',           'icon' => 'fas fa-map-marker-alt', 'label' => 'Géolocalisation'],
             ['id' => 'section-acces',         'icon' => 'fas fa-shield-alt',    'label' => 'Accès'],
+            ['id' => 'section-historique',    'icon' => 'fas fa-history',       'label' => 'Historique'],
         ];
 
         return view('personnel.show', [
@@ -566,21 +538,42 @@ class PersonnelController extends Controller
             return;
         }
 
-        $validSectionIds = Section::pluck('S_ID')->map(fn ($v) => (int) $v)->all();
+        // The editor can only add/remove memberships inside their own visible
+        // scope; memberships outside it are preserved untouched (the form
+        // never displayed them, so their absence from sections[] means
+        // nothing).
+        $editable = $this->sectionScope->visibleSectionIds()
+            ?? Section::pluck('S_ID')->map(fn ($v) => (int) $v)->all();
 
         $desired = collect($request->input('sections', []))
             ->map(fn ($v) => (int) $v)
-            ->filter(fn ($v) => in_array($v, $validSectionIds, true))
-            ->unique()
-            ->values();
+            ->filter(fn ($v) => in_array($v, $editable, true))
+            ->unique();
 
-        ObPersonnelSection::where('person_id', $personnel->P_ID)->delete();
+        // The principal section (P_SECTION) must always be present.
+        if ($personnel->P_SECTION !== null) {
+            $desired->push((int) $personnel->P_SECTION);
+        }
+        $desired = $desired->unique()->values();
+
+        ObPersonnelSection::where('person_id', $personnel->P_ID)
+            ->whereIn('section_id', $editable)
+            ->where('section_id', '!=', (int) $personnel->P_SECTION)
+            ->whereNotIn('section_id', $desired)
+            ->delete();
+
+        $existing = ObPersonnelSection::where('person_id', $personnel->P_ID)
+            ->pluck('section_id')
+            ->map(fn ($v) => (int) $v)
+            ->all();
 
         foreach ($desired as $sectionId) {
-            ObPersonnelSection::create([
-                'person_id' => $personnel->P_ID,
-                'section_id' => $sectionId,
-            ]);
+            if (! in_array($sectionId, $existing, true)) {
+                ObPersonnelSection::create([
+                    'person_id' => $personnel->P_ID,
+                    'section_id' => $sectionId,
+                ]);
+            }
         }
     }
 
@@ -596,22 +589,29 @@ class PersonnelController extends Controller
         }
 
         $validRoleIds = ObGroup::roles()->pluck('id')->map(fn ($v) => (int) $v)->all();
-        $validSectionIds = Section::pluck('S_ID')->map(fn ($v) => (int) $v)->all();
+
+        // Section-scoped roles can only be granted/revoked inside the
+        // editor's visible scope; assignments tied to a section outside it
+        // are preserved untouched (the form never displayed them).
+        $editable = $this->sectionScope->visibleSectionIds()
+            ?? Section::pluck('S_ID')->map(fn ($v) => (int) $v)->all();
 
         $desired = collect($request->input('role_assignments', []))
             ->filter(fn ($a) => isset($a['group_id']) && in_array((int) $a['group_id'], $validRoleIds, true))
             ->map(fn ($a) => [
                 'person_id' => $personnel->P_ID,
                 'group_id' => (int) $a['group_id'],
-                // 0 = global sentinel; non-zero only if it's a valid section.
-                'section_id' => ! empty($a['section_id']) && in_array((int) $a['section_id'], $validSectionIds, true)
+                // 0 = global sentinel; non-zero only if it's a visible section.
+                'section_id' => ! empty($a['section_id']) && in_array((int) $a['section_id'], $editable, true)
                     ? (int) $a['section_id']
                     : 0,
             ])
             ->unique(fn ($a) => $a['group_id'].'-'.$a['section_id'])
             ->values();
 
-        ObUserAssignment::where('person_id', $personnel->P_ID)->delete();
+        ObUserAssignment::where('person_id', $personnel->P_ID)
+            ->where(fn ($q) => $q->whereIn('section_id', $editable)->orWhere('section_id', 0)->orWhereNull('section_id'))
+            ->delete();
 
         foreach ($desired as $row) {
             ObUserAssignment::create($row);
@@ -869,15 +869,7 @@ class PersonnelController extends Controller
             }
         }
 
-        if ($sectionId > 0) {
-            if ($subsections) {
-                $allSections = Section::query()->get(['S_ID', 'S_CODE', 'S_DESCRIPTION', 'S_PARENT']);
-                $descendants = $this->getDescendantSectionIds($allSections, $sectionId);
-                $query->whereIn('P_SECTION', array_merge([$sectionId], $descendants));
-            } else {
-                $query->where('P_SECTION', $sectionId);
-            }
-        }
+        $this->sectionScope->apply($query, 'P_SECTION', $sectionId, $subsections);
 
         if ($search !== '') {
             $query->where(function ($inner) use ($search): void {
@@ -905,20 +897,15 @@ class PersonnelController extends Controller
 
     public function create(): View
     {
-        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
         $companies = DB::table('company')->orderBy('C_NAME')->get(['C_ID', 'C_NAME']);
         $allPersonnel = Personnel::query()
             ->where('P_OLD_MEMBER', 0)
             ->orderBy('P_NOM')->orderBy('P_PRENOM')
             ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_PHONE', 'P_EMAIL']);
 
-        $accessibleSectionIds = $this->resolver->userSections(auth()->user())->pluck('S_ID')->all();
-        $accessibleSections = $sections->whereIn('S_ID', $accessibleSectionIds)->values();
-
         return view('personnel.form', [
             'personnel' => null,
-            'sections' => $sections,
-            'accessibleSections' => $accessibleSections,
+            'sections' => $this->visibleSections(),
             'companies' => $companies,
             'allPersonnel' => $allPersonnel,
             'allRoles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
@@ -942,7 +929,7 @@ class PersonnelController extends Controller
             'P_GRADE' => 'nullable|string|max:6',
             'P_PROFESSION' => 'nullable|string|max:6',
             'P_STATUT' => 'required|string|max:5',
-            'P_SECTION' => 'nullable|integer|exists:section,S_ID',
+            'P_SECTION' => 'required|integer|exists:section,S_ID',
             'P_DATE_ENGAGEMENT' => 'nullable|date',
             'P_FIN' => 'nullable|date',
             'P_ABBREGE' => 'nullable|string|max:20',
@@ -974,6 +961,17 @@ class PersonnelController extends Controller
         $validated['NPAI'] = $request->boolean('NPAI');
         $validated['SUSPENDU'] = $request->boolean('SUSPENDU');
         $validated['P_OLD_MEMBER'] = 0;
+
+        $validated = $this->coerceLegacyNotNullColumns($validated);
+
+        // Enforce section isolation: a member can only be assigned to a
+        // section inside the editor's visible scope.
+        $validated['P_SECTION'] = $this->sectionScope->coerce((int) $validated['P_SECTION']);
+
+        // pompier.P_MDP is NOT NULL with no default. An empty hash can never
+        // match a login attempt, so the member has no account until a
+        // password is set (password-reset flow).
+        $validated['P_MDP'] = '';
 
         if (! empty($validated['P_URGENCE_PERSON_ID'])) {
             $linked = Personnel::find((int) $validated['P_URGENCE_PERSON_ID']);
@@ -1012,12 +1010,23 @@ class PersonnelController extends Controller
             ->with('success', 'Personnel créé avec succès.');
     }
 
+    /**
+     * Empty optional inputs arrive as NULL (ConvertEmptyStringsToNull), which
+     * strict-mode MariaDB rejects on these legacy NOT NULL pompier columns.
+     * Coerce them back to their legacy defaults.
+     */
+    private function coerceLegacyNotNullColumns(array $validated): array
+    {
+        return array_merge($validated, [
+            'P_CIVILITE' => $validated['P_CIVILITE'] ?? 1,
+            'P_SEXE' => $validated['P_SEXE'] ?? 'M',
+            'P_GRADE' => $validated['P_GRADE'] ?? '',
+            'P_PROFESSION' => $validated['P_PROFESSION'] ?? '',
+        ]);
+    }
+
     public function edit(Personnel $personnel): View
     {
-        $sections = Section::query()
-            ->orderBy('S_CODE')
-            ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
-
         $companies = DB::table('company')
             ->orderBy('C_NAME')
             ->get(['C_ID', 'C_NAME']);
@@ -1028,6 +1037,9 @@ class PersonnelController extends Controller
             ->map(fn ($v) => (int) $v)
             ->all();
 
+        // Only assignments inside the editor's visible scope (or global ones)
+        // are shown and editable; the rest is preserved by syncRoles().
+        $visible = $this->sectionScope->visibleSectionIds();
         $currentRoleAssignments = DB::table('ob_user_assignment')
             ->where('person_id', $personnel->P_ID)
             ->get(['group_id', 'section_id'])
@@ -1035,6 +1047,10 @@ class PersonnelController extends Controller
                 'group_id' => (int) $r->group_id,
                 'section_id' => (int) $r->section_id, // 0 = global
             ])
+            ->filter(fn ($a) => $visible === null
+                || $a['section_id'] === 0
+                || in_array($a['section_id'], $visible, true))
+            ->values()
             ->all();
 
         $currentGroupIds = DB::table('ob_personnel_group')
@@ -1049,13 +1065,9 @@ class PersonnelController extends Controller
             ->orderBy('P_NOM')->orderBy('P_PRENOM')
             ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_PHONE', 'P_EMAIL']);
 
-        $accessibleSectionIds = $this->resolver->userSections(auth()->user())->pluck('S_ID')->all();
-        $accessibleSections = $sections->whereIn('S_ID', $accessibleSectionIds)->values();
-
         return view('personnel.form', [
             'personnel' => $personnel,
-            'sections' => $sections,
-            'accessibleSections' => $accessibleSections,
+            'sections' => $this->visibleSections(),
             'companies' => $companies,
             'allPersonnel' => $allPersonnel,
             'allRoles' => ObGroup::roles()->orderBy('name')->get(['id', 'name']),
@@ -1083,7 +1095,7 @@ class PersonnelController extends Controller
             'P_GRADE' => 'nullable|string|max:6',
             'P_PROFESSION' => 'nullable|string|max:6',
             'P_STATUT' => 'required|string|max:5',
-            'P_SECTION' => 'nullable|integer|exists:section,S_ID',
+            'P_SECTION' => 'required|integer|exists:section,S_ID',
             'P_DATE_ENGAGEMENT' => 'nullable|date',
             'P_FIN' => 'nullable|date',
             'P_ABBREGE' => 'nullable|string|max:20',
@@ -1122,6 +1134,14 @@ class PersonnelController extends Controller
         $validated['P_NOSPAM'] = $request->boolean('P_NOSPAM');
         $validated['NPAI'] = $request->boolean('NPAI');
         $validated['SUSPENDU'] = $request->boolean('SUSPENDU');
+
+        $validated = $this->coerceLegacyNotNullColumns($validated);
+
+        // Enforce section isolation on edit: an out-of-scope target section
+        // is rejected and the member keeps their current one.
+        if (! $this->sectionScope->allows((int) $validated['P_SECTION'])) {
+            $validated['P_SECTION'] = (int) $personnel->P_SECTION;
+        }
 
         if (! empty($validated['P_URGENCE_PERSON_ID'])) {
             $linked = Personnel::find((int) $validated['P_URGENCE_PERSON_ID']);

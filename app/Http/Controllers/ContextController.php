@@ -3,29 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Services\PermissionResolver;
+use App\Services\SectionScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 /**
  * Switches the active section / role context used by the section-scoped
- * permission resolver ({@see PermissionResolver}). Stored in the session.
+ * permission resolver ({@see PermissionResolver}) and the data isolation
+ * layer ({@see SectionScopeService}). Stored in the session.
  */
 class ContextController extends Controller
 {
-    public function __construct(private readonly PermissionResolver $resolver) {}
+    public function __construct(
+        private readonly PermissionResolver $resolver,
+        private readonly SectionScopeService $sectionScope,
+    ) {}
 
     /** Set the active section; '' or 'home' clears it back to the home section. */
     public function section(Request $request): RedirectResponse
     {
-        $user = $request->user();
         $sId = $request->string('s')->toString();
 
         if ($sId === '' || $sId === 'home' || $sId === 'all') {
             $request->session()->forget('hab.section');
         } else {
-            $allowed = $this->resolver->userSections($user)->pluck('S_ID')
-                ->map(fn ($v) => (int) $v)->all();
-            abort_unless(in_array((int) $sId, $allowed, true), 403);
+            abort_unless($this->sectionScope->canChoose((int) $sId), 403);
             $request->session()->put('hab.section', (int) $sId);
         }
 

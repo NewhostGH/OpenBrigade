@@ -152,6 +152,28 @@
     text-decoration: none;
 }
 
+/* Secondary header inside a card body, for grouping sub-blocks
+   (e.g. Droits d'accès ▸ Sections ▸ Rôles). */
+.ob-widget-card-subheader {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    gap:             8px;
+    padding:         7px 14px;
+    background:      var(--card-subheader-bg);
+    border-top:      1px solid var(--card-subheader-border);
+    border-bottom:   1px solid var(--card-subheader-border);
+    font-weight:     600;
+    font-size:       var(--font-size-sm);
+    color:           var(--page-text);
+}
+
+.ob-widget-card-subheader i {
+    color:      var(--text-muted-soft);
+    width:      16px;
+    text-align: center;
+}
+
 .ob-widget-card-link:hover {
     color: var(--accent);
 }

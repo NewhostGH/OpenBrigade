@@ -18,7 +18,6 @@ abstract class TestCase extends BaseTestCase
         $resolver = Mockery::mock(PermissionResolver::class)->makePartial();
         $resolver->shouldReceive('activeSectionId')->andReturn(null)->byDefault();
         $resolver->shouldReceive('activeRoleId')->andReturn(null)->byDefault();
-        $resolver->shouldReceive('userSections')->andReturn(collect())->byDefault();
         $resolver->shouldReceive('userRoles')->andReturn(collect())->byDefault();
         $this->app->instance(PermissionResolver::class, $resolver);
     }

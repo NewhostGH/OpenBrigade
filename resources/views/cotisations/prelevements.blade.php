@@ -24,28 +24,11 @@
     </button>
 
     <x-slot:filters>
+        @feature('multi_site')
         <div>
-            <select name="section" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value="0" {{ $sectionId === 0 ? 'selected' : '' }}>Toutes sections</option>
-                @foreach ($sectionOptions as $opt)
-                    @php
-                        $depth = $opt['depth'];
-                        $bgs   = ['#FFCC33','#FFFF99','#B7D8FB','#D4F1C0','#F0E6FF'];
-                        $bg    = $bgs[min($depth, count($bgs) - 1)];
-                        $pad   = round(1.2 + $depth * 0.5, 1);
-                        $lbl   = $opt['S_CODE'];
-                        if ($opt['S_DESCRIPTION']) {
-                            $lbl .= ' — ' . \Illuminate\Support\Str::limit($opt['S_DESCRIPTION'], 22);
-                        }
-                    @endphp
-                    <option value="{{ $opt['S_ID'] }}"
-                            style="padding-left:{{ $pad }}rem; background:{{ $bg }};"
-                            {{ $sectionId === $opt['S_ID'] ? 'selected' : '' }}>
-                        {{ $lbl }}
-                    </option>
-                @endforeach
-            </select>
+            <x-ob-section-select :selected="$sectionId" all-label="Toutes sections" :auto-submit="true" />
         </div>
+        @endfeature
 
         <div>
             <select name="periode" class="form-select form-select-sm" onchange="this.form.submit()">
@@ -71,6 +54,7 @@
     </x-slot:filters>
 
     <x-slot:secondary>
+        @feature('multi_site')
         @if ($sectionId > 0)
             <div class="ob-toggle-switch">
                 <label for="subsToggle">Sous-sections</label>
@@ -82,6 +66,7 @@
             </div>
             <span class="text-muted">|</span>
         @endif
+        @endfeature
 
         <span class="text-muted small">
             Mode de paiement&nbsp;: <strong>Prélèvement (TP_ID = 1)</strong>
@@ -190,7 +175,7 @@
         <thead>
             <tr>
                 <th>Nom Prénom</th>
-                <th>Section</th>
+                @feature('multi_site')<th>Section</th>@endfeature
                 <th>Montant régul</th>
             </tr>
         </thead>
@@ -202,7 +187,7 @@
                             {{ strtoupper($row->P_NOM) }} {{ ucfirst(mb_strtolower($row->P_PRENOM)) }}
                         </a>
                     </td>
-                    <td>{{ $row->S_CODE }}</td>
+                    @feature('multi_site')<td>{{ $row->S_CODE }}</td>@endfeature
                     <td>{{ $row->MONTANT_REGUL ? number_format((float)$row->MONTANT_REGUL, 2, ',', ' ') . ' €' : '—' }}</td>
                 </tr>
             @endforeach
@@ -223,7 +208,7 @@
         <thead>
             <tr>
                 <th>Nom Prénom</th>
-                <th>Section</th>
+                @feature('multi_site')<th>Section</th>@endfeature
                 <th>Montant</th>
                 <th>Date prélevé</th>
             </tr>
@@ -236,7 +221,7 @@
                             {{ strtoupper($row->P_NOM) }} {{ ucfirst(mb_strtolower($row->P_PRENOM)) }}
                         </a>
                     </td>
-                    <td>{{ $row->S_CODE }}</td>
+                    @feature('multi_site')<td>{{ $row->S_CODE }}</td>@endfeature
                     <td>{{ $row->MONTANT ? number_format((float)$row->MONTANT, 2, ',', ' ') . ' €' : '—' }}</td>
                     <td>{{ $row->PC_DATE ? \Carbon\Carbon::parse($row->PC_DATE)->format('d/m/Y') : '—' }}</td>
                 </tr>

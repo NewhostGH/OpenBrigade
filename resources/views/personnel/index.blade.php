@@ -38,24 +38,7 @@
         <input type="hidden" name="perPage"     value="{{ $perPage }}">
         <input type="hidden" name="subsections" value="{{ $subsections ? 1 : 0 }}">
 
-        <select name="section" class="form-select form-select-sm" onchange="this.form.submit()">
-            <option value="0" {{ $sectionId === 0 ? 'selected' : '' }}>Toutes sections</option>
-            @foreach ($sectionOptions as $opt)
-                @php
-                    $depth = $opt['depth'];
-                    $bgs   = ['#FFCC33','#FFFF99','#B7D8FB','#D4F1C0','#F0E6FF'];
-                    $bg    = $bgs[min($depth, count($bgs) - 1)];
-                    $pad   = round(1.2 + $depth * 0.5, 1);
-                    $lbl   = $opt['S_CODE'] . ($opt['S_DESCRIPTION']
-                        ? ' — ' . \Illuminate\Support\Str::limit($opt['S_DESCRIPTION'], 22) : '');
-                @endphp
-                <option value="{{ $opt['S_ID'] }}"
-                        style="padding-left:{{ $pad }}rem; background:{{ $bg }};"
-                        {{ $sectionId === $opt['S_ID'] ? 'selected' : '' }}>
-                    {{ $lbl }}
-                </option>
-            @endforeach
-        </select>
+        <x-ob-section-select :selected="$sectionId" all-label="Toutes sections" :auto-submit="true" />
 
         <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
             <option value="ALL"  {{ $category === 'ALL'  ? 'selected' : '' }}>Tous</option>
@@ -85,6 +68,7 @@
 
     {{-- Secondary controls (left side of secondary row) --}}
     <x-slot:secondary>
+        @feature('multi_site')
         @if ($sectionId > 0)
             <div class="ob-toggle-switch">
                 <label for="subsToggle">Sous-sections</label>
@@ -96,6 +80,7 @@
             </div>
             <span class="text-muted">|</span>
         @endif
+        @endfeature
 
         <select class="form-select form-select-sm" style="width:auto;"
                 onchange="updateParam('perPage', this.value)">

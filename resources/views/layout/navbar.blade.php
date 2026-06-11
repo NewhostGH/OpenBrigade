@@ -50,6 +50,7 @@
                         ? (optional($ctxRoles->firstWhere('id', $ctxActiveRole))->name ?? 'Rôle')
                         : 'Tous mes rôles';
                 @endphp
+                @feature('multi_site')
                 <li class="nav-item dropdown nav-top-item ob-navtop-hover ob-margin-li">
                     <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown"
                         href="#" title="Section active" aria-expanded="false">
@@ -62,23 +63,38 @@
                                 href="{{ route('context.section', ['s' => 'all']) }}">
                                 <i class="fas fa-layer-group fa-fw ob-nav-item-icon"></i>
                                 Toutes mes sections
-                                @if ($ctxActiveSection === null)<i class="fas fa-check ms-2 text-success"></i>@endif
+                                @if ($ctxActiveSection === null)<i class="fas fa-check ms-2 ob-nav-check"></i>@endif
                             </a>
                         </li>
                         @forelse ($ctxSections as $s)
+                            @php
+                                $depth = (int) ($s->depth ?? 0);
+                                $isRoot = (int) ($s->S_PARENT ?? 0) === 0;
+                            @endphp
                             <li>
-                                <a class="dropdown-item dropdown-item-profil {{ (int) $s->S_ID === (int) $ctxActiveSection ? 'active' : '' }}"
-                                    href="{{ route('context.section', ['s' => $s->S_ID]) }}">
-                                    <i class="fas fa-{{ (int) $s->S_PARENT === 0 ? 'building' : 'angle-right' }} fa-fw ob-nav-item-icon"></i>
+                                <a class="dropdown-item dropdown-item-profil {{ $isRoot ? 'ob-nav-section-root' : '' }} {{ (int) $s->S_ID === (int) $ctxActiveSection ? 'active' : '' }}"
+                                    href="{{ route('context.section', ['s' => $s->S_ID]) }}"
+                                    style="padding-left: {{ 1 + $depth * 1.1 }}rem;">
+                                    @if ($depth === 0)
+                                        <i class="fas fa-building fa-fw ob-nav-item-icon"></i>
+                                    @else
+                                        <span class="ob-nav-item-icon fa-fw ob-nav-muted" aria-hidden="true">└</span>
+                                    @endif
                                     {{ $s->S_DESCRIPTION }}
-                                    @if ((int) $s->S_ID === (int) $ctxActiveSection)<i class="fas fa-check ms-2 text-success"></i>@endif
+                                    @if ($isRoot)
+                                        <span class="ob-nav-section-root-badge">site</span>
+                                    @elseif (!empty($s->S_CODE))
+                                        <span class="ob-nav-muted ms-1" style="font-size:var(--font-size-xs);">{{ $s->S_CODE }}</span>
+                                    @endif
+                                    @if ((int) $s->S_ID === (int) $ctxActiveSection)<i class="fas fa-check ms-2 ob-nav-check"></i>@endif
                                 </a>
                             </li>
                         @empty
-                            <li><span class="dropdown-item-text text-muted small">Aucune section affectée</span></li>
+                            <li><span class="dropdown-item-text ob-nav-muted small">Aucune section affectée</span></li>
                         @endforelse
                     </ul>
                 </li>
+                @endfeature
 
                 <li class="nav-item dropdown nav-top-item ob-navtop-hover ob-margin-li">
                     <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown"
@@ -91,7 +107,7 @@
                             <a class="dropdown-item dropdown-item-profil {{ $ctxActiveRole ? '' : 'active' }}"
                                 href="{{ route('context.role', ['r' => 'all']) }}">
                                 Tous mes rôles
-                                @unless ($ctxActiveRole)<i class="fas fa-check ms-2 text-success"></i>@endunless
+                                @unless ($ctxActiveRole)<i class="fas fa-check ms-2 ob-nav-check"></i>@endunless
                             </a>
                         </li>
                         @foreach ($ctxRoles as $r)
@@ -100,7 +116,7 @@
                                     href="{{ route('context.role', ['r' => $r->id]) }}">
                                     {{ $r->name }}
                                     @if (!empty($r->inherited))<span class="ob-badge ob-badge-int ms-1" style="font-size:9px;">hérité</span>@endif
-                                    @if ((int) $r->id === (int) $ctxActiveRole)<i class="fas fa-check ms-2 text-success"></i>@endif
+                                    @if ((int) $r->id === (int) $ctxActiveRole)<i class="fas fa-check ms-2 ob-nav-check"></i>@endif
                                 </a>
                             </li>
                         @endforeach

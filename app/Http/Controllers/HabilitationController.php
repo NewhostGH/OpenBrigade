@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ObGroup;
+use App\Services\FeatureService;
 use App\Services\PermissionResolver;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,9 +22,12 @@ class HabilitationController extends Controller
 
     public function index(Request $request): View
     {
+        // Without multi-site there is one section: per-section ceilings are
+        // hidden and the screen opens on the groups matrix instead.
+        $defaultTab = app(FeatureService::class)->isEnabled('multi_site') ? 'ceiling' : 'groups';
         $tab = in_array($request->string('tab')->toString(), ['ceiling', 'groups', 'roles'], true)
             ? $request->string('tab')->toString()
-            : 'ceiling';
+            : $defaultTab;
 
         $features = DB::table('fonctionnalite as f')
             ->leftJoin('type_fonctionnalite as tf', 'tf.TF_ID', '=', 'f.TF_ID')

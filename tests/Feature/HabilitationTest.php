@@ -26,7 +26,6 @@ function habStubNav(): void
     $resolver = Mockery::mock(PermissionResolver::class)->makePartial();
     $resolver->shouldReceive('activeSectionId')->andReturn(null);
     $resolver->shouldReceive('activeRoleId')->andReturn(null);
-    $resolver->shouldReceive('userSections')->andReturn(collect());
     $resolver->shouldReceive('userRoles')->andReturn(collect());
     app()->instance(PermissionResolver::class, $resolver);
 }

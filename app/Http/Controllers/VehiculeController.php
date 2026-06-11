@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Section;
 use App\Models\Vehicule;
+use App\Services\FeatureService;
+use App\Services\SectionScopeService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,9 +15,6 @@ class VehiculeController extends Controller
 {
     public function index(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
-
         $search = trim((string) $request->string('q'));
         $filtSect = (int) $request->integer('section', 0);
         $status = (string) $request->string('status', 'all');
@@ -36,9 +34,8 @@ class VehiculeController extends Controller
                 'tv.TV_LIBELLE'
             );
 
-        // Section filter
-        $targetSection = $filtSect > 0 ? $filtSect : $sectionId;
-        $query->where('vehicule.S_ID', $targetSection);
+        // Section isolation + optional explicit filter (single subtree).
+        app(SectionScopeService::class)->apply($query, 'vehicule.S_ID', $filtSect, subsections: false);
 
         // Operational status filter
         if ($status === 'op') {
@@ -57,9 +54,7 @@ class VehiculeController extends Controller
 
         $items = $query->orderBy('vehicule.V_INDICATIF')->paginate(30)->withQueryString();
 
-        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
-
-        return view('vehicule.index', compact('items', 'search', 'filtSect', 'status', 'sections')
+        return view('vehicule.index', compact('items', 'search', 'filtSect', 'status')
             + ['columns' => $this->vehiculeColumns()]);
     }
 
@@ -88,11 +83,12 @@ class VehiculeController extends Controller
                 'value' => fn ($v) => $v->V_IMMATRICULATION ?? '—',
                 'alwaysVisible' => true, 'sortField' => 'V_IMMATRICULATION', 'mobile' => true,
             ],
-            [
+            // Only meaningful with several sites.
+            ...(app(FeatureService::class)->isEnabled('multi_site') ? [[
                 'key' => 'section', 'label' => 'Section', 'type' => 'text',
                 'value' => fn ($v) => $v->section?->S_CODE ?? '—',
                 'mobile' => false, 'default' => true,
-            ],
+            ]] : []),
             [
                 'key' => 'modele', 'label' => 'Modèle', 'type' => 'text',
                 'value' => fn ($v) => $v->V_MODELE ?? '—',
@@ -188,15 +184,13 @@ class VehiculeController extends Controller
 
     public function create(): View
     {
-        $user = auth()->user();
-        [$types, $positions, $sections] = $this->formLookups();
+        [$types, $positions] = $this->formLookups();
 
         return view('vehicule.form', [
             'vehicule' => null,
             'types' => $types,
             'positions' => $positions,
-            'sections' => $sections,
-            'userSection' => (int) $user->P_SECTION,
+            'userSection' => app(SectionScopeService::class)->defaultSectionId(),
         ]);
     }
 
@@ -214,13 +208,12 @@ class VehiculeController extends Controller
 
     public function edit(Vehicule $vehicule): View
     {
-        [$types, $positions, $sections] = $this->formLookups();
+        [$types, $positions] = $this->formLookups();
 
         return view('vehicule.form', [
             'vehicule' => $vehicule,
             'types' => $types,
             'positions' => $positions,
-            'sections' => $sections,
             'userSection' => (int) $vehicule->S_ID,
         ]);
     }
@@ -285,10 +278,7 @@ class VehiculeController extends Controller
             ->orderBy('VP_LIBELLE')
             ->get(['VP_ID', 'VP_LIBELLE', 'VP_OPERATIONNEL']);
 
-        $sections = Section::orderBy('S_CODE')
-            ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
-
-        return [$types, $positions, $sections];
+        return [$types, $positions];
     }
 
     private function validateVehicule(Request $request): array
@@ -342,6 +332,10 @@ class VehiculeController extends Controller
         $raw['V_FLAG2'] = $request->boolean('V_FLAG2') ? 1 : 0;
         $raw['V_FLAG3'] = $request->boolean('V_FLAG3') ? 1 : 0;
         $raw['V_FLAG4'] = $request->boolean('V_FLAG4') ? 1 : 0;
+
+        // Enforce section isolation: a vehicle can only be attached to a
+        // section inside the editor's visible scope.
+        $raw['S_ID'] = app(SectionScopeService::class)->coerce((int) $raw['S_ID']);
 
         return $raw;
     }

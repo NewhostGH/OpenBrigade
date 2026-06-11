@@ -56,12 +56,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     {{-- Tabs : Plafonds, Groupes, Rôles --}}
     <ul class="nav nav-tabs" role="tablist">
+        @feature('multi_site')
         <li class="nav-item">
             <a class="nav-link {{ $tab === 'ceiling' ? 'active' : '' }}"
                href="{{ route('admin.habilitations', ['tab' => 'ceiling', 'section' => $sectionId]) }}">
                 <i class="fas fa-layer-group me-1"></i>Plafonds par section
             </a>
         </li>
+        @endfeature
         <li class="nav-item">
             <a class="nav-link {{ $tab === 'groups' ? 'active' : '' }}"
                href="{{ route('admin.habilitations', ['tab' => 'groups', 'section' => $sectionId]) }}">

@@ -60,8 +60,10 @@
                         <dt class="text-muted fw-normal">Lieu</dt>
                         <dd class="mb-0">{{ $event->E_LIEU ?: '—' }}</dd>
 
+                        @feature('multi_site')
                         <dt class="text-muted fw-normal">Section</dt>
                         <dd class="mb-0">{{ $event->section?->S_DESCRIPTION ?? '—' }}</dd>
+                        @endfeature
 
                         @if($event->chef)
                             <dt class="text-muted fw-normal">Responsable</dt>

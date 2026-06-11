@@ -117,6 +117,7 @@
                                    value="{{ $val('E_LIEU') }}" maxlength="50">
                             @error('E_LIEU')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
+                        @feature('multi_site')
                         <div class="col-sm-6">
                             <label class="form-label fw-semibold" for="S_ID">Section</label>
                             <select id="S_ID" name="S_ID"
@@ -129,6 +130,10 @@
                                 @endforeach
                             </select>
                         </div>
+                        @else
+                            {{-- Multi sites désactivé : la donnée est conservée telle quelle. --}}
+                            <input type="hidden" name="S_ID" value="{{ $val('S_ID', $userSection) }}">
+                        @endfeature
                     </div>
                     <div class="row g-3 mb-4">
                         <div class="col-12">

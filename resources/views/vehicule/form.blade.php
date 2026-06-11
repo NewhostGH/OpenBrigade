@@ -161,21 +161,20 @@
                     </div>
 
                     <div class="row g-3 mb-3">
+                        @feature('multi_site')
                         <div class="col-sm-6">
                             <label class="form-label fw-semibold" for="S_ID">
                                 Section <span class="text-danger">*</span>
                             </label>
-                            <select id="S_ID" name="S_ID"
-                                    class="form-select form-select-sm @error('S_ID') is-invalid @enderror"
-                                    required>
-                                @foreach ($sections as $s)
-                                    <option value="{{ $s->S_ID }}"
-                                            {{ (int) $val('S_ID', $userSection) === (int) $s->S_ID ? 'selected' : '' }}>
-                                        {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — ' . $s->S_DESCRIPTION : '' }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            {{-- @error n'est pas compilé dans les attributs de composant — expression liée obligatoire. --}}
+                            <x-ob-section-select id="S_ID" name="S_ID" required
+                                                 :selected="$val('S_ID', $userSection)"
+                                                 :class="$errors->has('S_ID') ? 'is-invalid' : ''" />
                         </div>
+                        @else
+                            {{-- Multi sites désactivé : la donnée est conservée telle quelle. --}}
+                            <input type="hidden" name="S_ID" value="{{ $val('S_ID', $userSection) }}">
+                        @endfeature
                         <div class="col-sm-6">
                             <label class="form-label fw-semibold" for="VP_ID">
                                 Statut / Position <span class="text-danger">*</span>

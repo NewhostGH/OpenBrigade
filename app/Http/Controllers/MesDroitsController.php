@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\PermissionResolver;
+use App\Services\SectionScopeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -15,13 +16,17 @@ use Illuminate\View\View;
  */
 class MesDroitsController extends Controller
 {
-    public function __construct(private readonly PermissionResolver $resolver) {}
+    public function __construct(
+        private readonly PermissionResolver $resolver,
+        private readonly SectionScopeService $sectionScope,
+    ) {}
 
     public function index(Request $request): View
     {
         $user = $request->user();
 
-        $sections = $this->resolver->userSections($user);
+        // Same set and order as the navbar switcher (memberships + descendants).
+        $sections = $this->sectionScope->switcherSections();
         $sectionId = (int) $request->integer('section')
             ?: ($this->resolver->activeSectionId($user) ?? (int) ($sections->first()->S_ID ?? 0));
 

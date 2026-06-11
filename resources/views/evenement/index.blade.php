@@ -43,6 +43,7 @@
                 </option>
             @endforeach
         </select>
+        @feature('multi_site')
         <select name="section" class="form-select form-select-sm">
             <option value="0" @selected($filtSect === 0)>Ma section</option>
             @foreach($sections as $s)
@@ -51,6 +52,7 @@
                 </option>
             @endforeach
         </select>
+        @endfeature
     </x-slot:filters>
 </x-ob-toolbar>
 

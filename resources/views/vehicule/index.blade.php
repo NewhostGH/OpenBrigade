@@ -34,14 +34,7 @@
             <option value="op"  @selected($status === 'op')>Opérationnels</option>
             <option value="nop" @selected($status === 'nop')>Non opérationnels</option>
         </select>
-        <select name="section" class="form-select form-select-sm">
-            <option value="0" @selected($filtSect === 0)>Ma section</option>
-            @foreach($sections as $s)
-                <option value="{{ $s->S_ID }}" @selected($filtSect === $s->S_ID)>
-                    {{ $s->S_CODE }} — {{ $s->S_DESCRIPTION }}
-                </option>
-            @endforeach
-        </select>
+        <x-ob-section-select :selected="$filtSect" all-label="Toutes les sections" />
     </x-slot:filters>
 </x-ob-toolbar>
 

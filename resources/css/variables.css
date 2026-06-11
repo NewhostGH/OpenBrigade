@@ -17,6 +17,8 @@
     --brand-bg-active: rgba(209, 209, 240, 0.30);
     --brand-text: rgb(188, 188, 207);
     --brand-text-active: #ffffff;
+    --brand-text-muted: rgba(188, 188, 207, 0.50);
+    --brand-text-check: #86efac;
     --brand-border: rgba(188, 188, 207, 0.20);
     --brand-separator: #6868b9;
 

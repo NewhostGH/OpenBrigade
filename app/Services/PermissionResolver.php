@@ -6,6 +6,7 @@ use App\Models\ObGroup;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Services\FeatureService;
 
 /**
  * Section-scoped, ceiling-based permission resolution.
@@ -129,9 +130,19 @@ class PermissionResolver
     /** Active section id from session, falling back to the user's home section. */
     public function activeSectionId(User $user): ?int
     {
-        $s = session('hab.section');
-        if ($s !== null && $s !== '') {
-            return (int) $s;
+        // When multi-site is off the switcher is hidden; ignore any stale
+        // session value so permissions don't unexpectedly narrow mid-request.
+        try {
+            $multiSite = app(FeatureService::class)->isEnabled('multi_site');
+        } catch (\Throwable) {
+            $multiSite = true;
+        }
+
+        if ($multiSite) {
+            $s = session('hab.section');
+            if ($s !== null && $s !== '') {
+                return (int) $s;
+            }
         }
 
         return $user->P_SECTION !== null ? (int) $user->P_SECTION : null;
@@ -146,31 +157,21 @@ class PermissionResolver
     }
 
     /**
-     * Sections the user can act in (home section + every section where they
-     * hold a role), for the navbar section switcher.
+     * The section the user EXPLICITLY chose via the navbar switcher.
+     * Unlike activeSectionId() this never falls back to P_SECTION, so null
+     * means "no restriction chosen — show everything accessible."
      */
-    public function userSections(User $user): Collection
+    public function chosenSectionId(): ?int
     {
-        $ids = DB::table('ob_personnel_section')
-            ->where('person_id', (int) $user->P_ID)
-            ->pluck('section_id')
-            ->map(fn ($v) => (int) $v);
+        try {
+            if (! app(FeatureService::class)->isEnabled('multi_site')) {
+                return null;
+            }
+        } catch (\Throwable) {}
 
-        if ($user->P_SECTION !== null) {
-            $ids->push((int) $user->P_SECTION);
-        }
+        $s = session('hab.section');
 
-        $ids = $ids->unique()->filter(fn ($v) => $v >= 0)->values();
-        if ($ids->isEmpty()) {
-            return collect();
-        }
-
-        return DB::table('section')
-            ->whereIn('S_ID', $ids->all())
-            ->orderBy('S_PARENT')
-            ->orderBy('S_DESCRIPTION')
-            ->get(['S_ID', 'S_PARENT', 'S_DESCRIPTION'])
-            ->each(fn ($s) => $s->S_DESCRIPTION = $s->S_DESCRIPTION ?: 'Section '.$s->S_ID);
+        return ($s !== null && $s !== '') ? (int) $s : null;
     }
 
     /**
