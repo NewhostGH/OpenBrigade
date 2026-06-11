@@ -184,10 +184,24 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Victim management (`victimes.php`, `liste_victimes.php`, `scan_victime.php`, `intervention_edit.php`)
 
 ### Settings not yet wired
-- [ ] `password_quality` (ID 15) — complexity validation in `AuthService`
-- [ ] `password_expiry_days` (ID 70) — expiry enforcement on login
-- [ ] `info_connexion` (ID 69) — first-login banner
-- [ ] `ameliorations` (ID 80) — telemetry opt-in
+
+Authoritative list: the `todo` annotations in `AdminController::settings()`
+(settings marked `obsolete` there are intentionally retired — no work needed).
+
+- [ ] Password policies — complexity, history, expiry (IDs 15, 16, 17, 70)
+- [ ] Session policies (IDs 34, 36, 49)
+- [ ] Organisation identity — name, description, contact mail, logo, login image (IDs 6, 8, 39, 40, 71, 75)
+- [ ] Timezone (ID 76), default currency (IDs 98, 99)
+- [ ] Numbering prefix / length (IDs 100, 101)
+- [ ] Action history (ID 25)
+- [ ] Email notifications (ID 28)
+- [ ] Mandatory profile photos (ID 68)
+- [ ] Maintenance mode and text (IDs 37, 41)
+- [ ] API enable / URL / token (IDs 64, 65, 66) — see Phase 3
+- [ ] SMS provider settings (IDs 9, 10, 11, 12) — see COMM
+- [ ] Sensitive data handling (ID 33), file ACLs (ID 42), terms of use (ID 48)
+- [ ] First-login banner (ID 69), telemetry opt-in (ID 80)
+- [ ] Database optimization (ID 14)
 
 ---
 
