@@ -84,7 +84,7 @@ class LegacyBridgeController extends Controller
 
         if ($requiredPermission !== null) {
             $user = $request->user();
-            if (! $user || ! method_exists($user, 'hasPermission') || ! $user->hasPermission((int) $requiredPermission)) {
+            if (! $user || ! $user->hasPermission((int) $requiredPermission)) {
                 abort(403);
             }
         }

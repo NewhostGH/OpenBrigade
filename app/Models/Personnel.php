@@ -19,15 +19,44 @@ namespace App\Models;
 
 use App\Models\Concerns\HasAvatar;
 use App\Models\Pivots\EvenementParticipation;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * Legacy table: pompier
  * Primary key: P_ID
+ *
+ * @property int $P_ID
+ * @property string|null $P_NOM
+ * @property string|null $P_PRENOM
+ * @property string|null $P_CODE
+ * @property string|null $P_EMAIL
+ * @property string|null $P_PHONE
+ * @property string|null $P_PHONE2
+ * @property string|null $P_ADDRESS
+ * @property string|null $P_ZIP_CODE
+ * @property string|null $P_CITY
+ * @property string|null $P_BIRTHPLACE
+ * @property string|null $P_BIRTH_DEP
+ * @property Carbon|null $P_BIRTHDATE
+ * @property Carbon|null $P_DATE_ENGAGEMENT
+ * @property string|null $P_GRADE
+ * @property int|string|null $P_CIVILITE
+ * @property string|null $P_STATUT
+ * @property int|null $P_SECTION
+ * @property int|null $P_OLD_MEMBER
+ * @property string|null $P_PHOTO
+ * @property int|null $GP_ID
+ * @property int|null $GP_ID2
+ * @property int|null $C_ID
+ * @property-read Section|null $section
+ * @property-read Collection<int, Cotisation> $cotisations
+ * @property-read Collection<int, Qualification> $qualifications
  */
 class Personnel extends Model
 {

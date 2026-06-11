@@ -19,11 +19,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Legacy table: personnel_cotisation
  * Primary key: PC_ID
  * Represents a membership fee (or refund) record for a personnel member.
+ *
+ * @property int $PC_ID
+ * @property int $P_ID
+ * @property string $MONTANT
+ * @property bool $REMBOURSEMENT
+ * @property Carbon|null $PC_DATE
  */
 class Cotisation extends Model
 {

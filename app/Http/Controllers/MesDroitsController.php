@@ -83,15 +83,16 @@ class MesDroitsController extends Controller
 
     /**
      * @param  array<int,string[]>  $origins
-     * @param  Collection<int,object>  $rows
+     * @param  Collection<int,\stdClass>  $rows
      */
-    private function collectOrigins(array &$origins, $rows): void
+    private function collectOrigins(array &$origins, Collection $rows): void
     {
         foreach ($rows as $r) {
             $fid = (int) $r->feature_id;
+            $name = (string) $r->name;
             $origins[$fid] ??= [];
-            if (! in_array($r->name, $origins[$fid], true)) {
-                $origins[$fid][] = $r->name;
+            if (! in_array($name, $origins[$fid], true)) {
+                $origins[$fid][] = $name;
             }
         }
     }

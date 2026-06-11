@@ -10,3 +10,9 @@ parameters:
         - app/Legacy/ (?)
     checkModelProperties: true
     checkPhpDocMissingReturn: true
+    ignoreErrors:
+        # Table-qualified columns ("evenement.E_CANCELED") are required in joined
+        # queries; Larastan's model-property check cannot resolve the prefix.
+        -
+            identifier: argument.type
+            message: "#expects .*model property of App\\\\Models\\\\[A-Za-z]+, '[A-Za-z_]+\\.[^']*' given#"

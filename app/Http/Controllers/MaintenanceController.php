@@ -12,7 +12,7 @@ class MaintenanceController extends Controller
     {
         $phpVersion = PHP_VERSION;
         $laravelVersion = app()->version();
-        $dbVersion = DB::selectOne('SELECT VERSION() as v')?->v ?? '—';
+        $dbVersion = DB::selectOne('SELECT VERSION() as v')->v ?? '—';
         $appVersion = DB::table('configuration')->where('ID', 1)->value('VALUE') ?? '—';
         $env = app()->environment();
         $debugMode = config('app.debug') ? 'Activé' : 'Désactivé';

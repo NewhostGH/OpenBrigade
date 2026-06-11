@@ -128,7 +128,7 @@ class PersonnelExportService
             ->value('TC_LIBELLE') ?? '';
 
         $section = $personnel->section;
-        $departement = $section?->parent?->S_DESCRIPTION ?? $section?->S_DESCRIPTION;
+        $departement = $section->parent->S_DESCRIPTION ?? $section?->S_DESCRIPTION;
 
         return [
             'nom' => mb_strtoupper($personnel->P_NOM),
@@ -198,10 +198,10 @@ class PersonnelExportService
 
         return [
             'pdf_url' => $url,
-            'marge_top' => (float) ($section?->S_PDF_MARGE_TOP ?? 15) ?: 15,
-            'marge_left' => (float) ($section?->S_PDF_MARGE_LEFT ?? 15) ?: 15,
-            'texte_top' => (float) ($section?->S_PDF_TEXTE_TOP ?? 40) ?: 40,
-            'texte_bottom' => (float) ($section?->S_PDF_TEXTE_BOTTOM ?? 25) ?: 25,
+            'marge_top' => (float) ($section->S_PDF_MARGE_TOP ?? 15) ?: 15,
+            'marge_left' => (float) ($section->S_PDF_MARGE_LEFT ?? 15) ?: 15,
+            'texte_top' => (float) ($section->S_PDF_TEXTE_TOP ?? 40) ?: 40,
+            'texte_bottom' => (float) ($section->S_PDF_TEXTE_BOTTOM ?? 25) ?: 25,
         ];
     }
 

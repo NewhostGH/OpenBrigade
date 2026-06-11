@@ -19,11 +19,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Legacy table: evenement_horaire
  * Composite primary key: (E_CODE, EH_ID)
  * A time-slot within an event.
+ *
+ * @property int $EH_ID
+ * @property int|string $E_CODE
+ * @property Carbon|null $EH_DATE_DEBUT
+ * @property Carbon|null $EH_DATE_FIN
+ * @property string|null $EH_DEBUT
+ * @property string|null $EH_FIN
+ * @property float|string|null $EH_DUREE
  */
 class EvenementHoraire extends Model
 {

@@ -32,7 +32,7 @@ class DocumentController extends Controller
             ->values();
         if ($folderId === 0) {
             // Root: folders with no parent or parent = 0
-            $subFolders = $allFolders->filter(fn ($f) => ! $f->DF_PARENT || $f->DF_PARENT === 0)
+            $subFolders = $allFolders->filter(fn ($f) => ! $f->DF_PARENT)
                 ->values();
         }
 

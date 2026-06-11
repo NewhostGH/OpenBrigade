@@ -17,6 +17,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +27,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * Legacy table: section
  * Primary key: S_ID
+ *
+ * @property int $S_ID
+ * @property string|null $S_CODE
+ * @property string|null $S_DESCRIPTION
+ * @property int|null $S_PARENT
+ * @property int|null $S_ORDER
+ * @property bool $S_HIDE
+ * @property bool $S_INACTIVE
+ * @property string|null $S_PDF_PAGE
+ * @property string|null $S_PDF_BADGE
+ * @property float|string|null $S_PDF_MARGE_TOP
+ * @property float|string|null $S_PDF_MARGE_LEFT
+ * @property float|string|null $S_PDF_TEXTE_TOP
+ * @property float|string|null $S_PDF_TEXTE_BOTTOM
+ * @property-read Section|null $parent
+ * @property-read Collection<int, Section> $children
  */
 class Section extends Model
 {
@@ -92,5 +109,4 @@ class Section extends Model
     {
         return $this->hasMany(Consommable::class, 'S_ID', 'S_ID');
     }
-
 }

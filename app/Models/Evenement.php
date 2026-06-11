@@ -18,6 +18,7 @@
 namespace App\Models;
 
 use App\Models\Pivots\EvenementParticipation;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +28,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * Legacy table: evenement
  * Primary key: E_CODE
+ *
+ * @property int|string $E_CODE
+ * @property string|null $E_LIBELLE
+ * @property string|null $E_LIEU
+ * @property string|null $E_COMMENT
+ * @property string|null $TE_CODE
+ * @property int|string|null $E_PARENT
+ * @property int|null $S_ID
+ * @property int|null $E_EQUIPE
+ * @property bool $E_CANCELED
+ * @property bool $E_CLOSED
+ * @property-read Section|null $section
+ * @property-read Evenement|null $parent
+ * @property-read Collection<int, EvenementHoraire> $horaires
  */
 class Evenement extends Model
 {
@@ -94,7 +109,11 @@ class Evenement extends Model
             ]);
     }
 
-    /** Vehicles deployed on this event. */
+    /**
+     * Vehicles deployed on this event.
+     *
+     * @return BelongsToMany<Vehicule, $this>
+     */
     public function vehicules(): BelongsToMany
     {
         return $this->belongsToMany(Vehicule::class, 'evenement_vehicule', 'E_CODE', 'V_ID')

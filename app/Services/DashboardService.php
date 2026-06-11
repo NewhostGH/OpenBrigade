@@ -41,7 +41,7 @@ class DashboardService
             $parent = DB::table('section')
                 ->where('S_ID', $current)
                 ->value('S_PARENT');
-            if (! $parent || $parent === 0 || in_array($parent, $ids)) {
+            if (! $parent || in_array((int) $parent, $ids, true)) {
                 break;
             }
             $ids[] = (int) $parent;
@@ -49,15 +49,6 @@ class DashboardService
         }
 
         return $ids;
-    }
-
-    // ── Brigade configuration (from DB) ────────────────────────────────────
-
-    private function config(string $key, mixed $default = null): mixed
-    {
-        $row = DB::table('configuration')->where('CO_KEY', $key)->first();
-
-        return $row ? $row->CO_VALUE : $default;
     }
 
     // ── Stats bar ───────────────────────────────────────────────────────────

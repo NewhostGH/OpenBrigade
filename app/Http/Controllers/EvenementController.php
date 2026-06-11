@@ -616,7 +616,7 @@ class EvenementController extends Controller
             'renfort' => ['required', 'integer', 'different:'.$code],
         ]);
 
-        $renfort = Evenement::findOrFail($validated['renfort']);
+        $renfort = Evenement::findOrFail((int) $validated['renfort']);
 
         if ($renfort->E_PARENT) {
             return redirect()->route('evenement.show', [$code, 'tab' => 'renforts'])

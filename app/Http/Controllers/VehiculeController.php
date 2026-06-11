@@ -86,7 +86,7 @@ class VehiculeController extends Controller
             // Only meaningful with several sites.
             ...(app(FeatureService::class)->isEnabled('multi_site') ? [[
                 'key' => 'section', 'label' => 'Section', 'type' => 'text',
-                'value' => fn ($v) => $v->section?->S_CODE ?? '—',
+                'value' => fn ($v) => $v->section->S_CODE ?? '—',
                 'mobile' => false, 'default' => true,
             ]] : []),
             [

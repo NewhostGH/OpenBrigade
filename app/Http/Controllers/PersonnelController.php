@@ -174,7 +174,7 @@ class PersonnelController extends Controller
                 'mobile' => false,
                 'default' => true,
                 'exportable' => true,
-                'exportValue' => fn ($p) => $p->section?->S_CODE ?? '',
+                'exportValue' => fn ($p) => $p->section->S_CODE ?? '',
             ]] : []),
             [
                 'key' => 'entree',

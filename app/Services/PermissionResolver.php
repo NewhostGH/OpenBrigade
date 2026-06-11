@@ -6,7 +6,6 @@ use App\Models\ObGroup;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Services\FeatureService;
 
 /**
  * Section-scoped, ceiling-based permission resolution.
@@ -64,7 +63,7 @@ class PermissionResolver
             if ($roleFilter !== null && (int) $a->group_id !== $roleFilter) {
                 continue;
             }
-            $sid = isset($a->section_id) && $a->section_id !== null ? (int) $a->section_id : null;
+            $sid = isset($a->section_id) ? (int) $a->section_id : null;
             if ($sid !== null && $chain !== [] && ! in_array($sid, $chain, true)) {
                 continue;
             }
@@ -98,7 +97,7 @@ class PermissionResolver
             if ($roleFilter !== null && (int) $a->group_id !== $roleFilter) {
                 continue;
             }
-            $sid = isset($a->section_id) && $a->section_id !== null ? (int) $a->section_id : null;
+            $sid = isset($a->section_id) ? (int) $a->section_id : null;
             if ($sid !== null && $chain !== [] && ! in_array($sid, $chain, true)) {
                 continue;
             }
@@ -167,7 +166,8 @@ class PermissionResolver
             if (! app(FeatureService::class)->isEnabled('multi_site')) {
                 return null;
             }
-        } catch (\Throwable) {}
+        } catch (\Throwable) {
+        }
 
         $s = session('hab.section');
 

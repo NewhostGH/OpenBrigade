@@ -20,7 +20,21 @@ namespace App\Models;
 use App\Models\Concerns\HasAvatar;
 use App\Services\PermissionResolver;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 
+/**
+ * Auth-side model for the legacy `pompier` table (domain concerns live on
+ * {@see Personnel}, which maps to the same table).
+ *
+ * @property int $P_ID
+ * @property string|null $P_MDP
+ * @property Carbon|string|null $P_MDP_EXPIRY
+ * @property string|null $P_STATUT
+ * @property int|null $P_SECTION
+ * @property int|null $GP_ID
+ * @property int|null $GP_ID2
+ * @property Carbon|null $P_LAST_CONNECT
+ */
 class User extends Authenticatable
 {
     use HasAvatar;

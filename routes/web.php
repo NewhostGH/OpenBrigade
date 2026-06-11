@@ -211,9 +211,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/statistiques', fn () => redirect()->route('statistique.dashboard'))->name('statistique.index');
     Route::get('/statistiques/dashboard', [StatistiqueController::class, 'index'])->name('statistique.dashboard')->middleware('permission:27');
     Route::get('/statistiques/bilan-annuel', fn () => redirect()->route('statistique.bilan.generalites'))->name('statistique.bilan');
-    Route::get('/statistiques/bilan-annuel/generalites',     [StatistiqueController::class, 'bilanGeneralites'])->name('statistique.bilan.generalites')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel/activites',      [StatistiqueController::class, 'bilanActivites'])->name('statistique.bilan.activites')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel/formations',     [StatistiqueController::class, 'bilanFormations'])->name('statistique.bilan.formations')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/generalites', [StatistiqueController::class, 'bilanGeneralites'])->name('statistique.bilan.generalites')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/activites', [StatistiqueController::class, 'bilanActivites'])->name('statistique.bilan.activites')->middleware('permission:27');
+    Route::get('/statistiques/bilan-annuel/formations', [StatistiqueController::class, 'bilanFormations'])->name('statistique.bilan.formations')->middleware('permission:27');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');
@@ -264,6 +264,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/clients', [CompanyController::class, 'index'])->name('company.index')->middleware(['permission:29', 'feature:client']);
     Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {
+        // TODO: Migrate code
         return redirect('/legacy/about.php');
     })->name('about');
     Route::post('/shortcuts/toggle', [ShortcutController::class, 'toggle'])->name('shortcuts.toggle');

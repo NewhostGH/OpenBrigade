@@ -25,6 +25,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * Legacy table: vehicule
  * Primary key: V_ID
+ *
+ * @property int $V_ID
+ * @property string|null $V_INDICATIF
+ * @property string|null $V_IMMATRICULATION
+ * @property string|null $V_MODELE
+ * @property string|null $TV_CODE
+ * @property int|null $S_ID
+ * @property int|null $VP_ID joined from `vehicule_position` list queries
+ * @property int|null $VP_OPERATIONNEL joined from `vehicule_position` list queries
+ * @property string|null $TV_LIBELLE joined from `type_vehicule` list queries
+ * @property-read Section|null $section
  */
 class Vehicule extends Model
 {
