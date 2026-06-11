@@ -11,7 +11,7 @@ Companion docs: [CONVENTIONS.md](CONVENTIONS.md) (how to write code),
 
 ## Top-level layout
 
-```
+```files
 app/            Application code (HTTP, models, services, console)
 bootstrap/      Framework bootstrap (app.php, cache)
 config/         Configuration (see below)
@@ -28,7 +28,7 @@ archive/        Frozen legacy eBrigade app (archive/legacy_app/) — read-only
 
 ## `app/`
 
-```
+```files
 app/
 ├── Console/Commands/      Artisan commands (e.g. RunAutomaticBackup)
 ├── Exceptions/            Custom exceptions / handler
@@ -51,17 +51,17 @@ app/
 - **Services** (`app/Services/`) — reusable business logic; implement
   `ServiceInterface` where appropriate.
 
-  | Service | Responsibility |
-  |---|---|
-  | `Auth/AuthService` | Login against `pompier`, legacy-hash upgrade |
-  | `NavigationService` | Render `config/navigation.php` with permission + feature filtering |
-  | `FeatureService` | Read/toggle feature-module flags (`ob_feature`), kept in sync with legacy `configuration` |
-  | `DashboardService` | Aggregate dashboard widget data |
-  | `BrigadeService` | Brigade identity / global settings |
-  | `PermissionResolver` | Section-scoped, ceiling-based permission resolution (see CONVENTIONS §9) |
-  | `SectionScopeService` | Data-isolation authority for `multi_site` — per-request visible section set (see CONVENTIONS §10) |
-  | `TableExportService` | Universal XLSX / CSV export |
-  | `ICalExportService` | iCal export |
+  | Service                  | Responsibility                                                                                     |
+  | ------------------------ | -------------------------------------------------------------------------------------------------- |
+  | `Auth/AuthService`       | Login against `pompier`, legacy-hash upgrade                                                       |
+  | `NavigationService`      | Render `config/navigation.php` with permission + feature filtering                                 |
+  | `FeatureService`         | Read/toggle feature-module flags (`ob_feature`), kept in sync with legacy `configuration`          |
+  | `DashboardService`       | Aggregate dashboard widget data                                                                    |
+  | `BrigadeService`         | Brigade identity / global settings                                                                 |
+  | `PermissionResolver`     | Section-scoped, ceiling-based permission resolution (see CONVENTIONS §9)                           |
+  | `SectionScopeService`    | Data-isolation authority for `multi_site` — per-request visible section set (see CONVENTIONS §10)  |
+  | `TableExportService`     | Universal XLSX / CSV export                                                                        |
+  | `ICalExportService`      | iCal export                                                                                        |
   | `PersonnelExportService` | vCard / PDF data (livret, carte adhérent — rendered client-side with pdf-lib + section letterhead) |
 
 - **Models** — Eloquent; derived values live here as accessors. Two models may map to
@@ -69,23 +69,23 @@ app/
 
 ## `config/`
 
-| File | Purpose |
-|---|---|
-| `app.php` | Application identity (name, env, debug, URL) |
-| `auth.php` | Auth guards/providers — `users` provider → `App\Models\User` (table `pompier`) |
-| `brigade.php` | Brigade-specific settings (version, features) |
-| `personnel.php` | Personnel lookup maps (statuts, badges, civilités) — SSOT for those |
-| `navigation.php` | Top-level menu definition (rendered by `NavigationService`) |
-| `legacy_bridge.php` | Which legacy `.php` pages the bridge still serves |
-| `backup.php` | Backup destination, schedule, retention |
-| `database.php` | Connections (default + optional `legacy` for parity validation) |
-| `cache.php` / `queue.php` / `session.php` / `logging.php` | Framework subsystems |
+| File                                                      | Purpose                                                                        |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `app.php`                                                 | Application identity (name, env, debug, URL)                                   |
+| `auth.php`                                                | Auth guards/providers — `users` provider → `App\Models\User` (table `pompier`) |
+| `brigade.php`                                             | Brigade-specific settings (version, features)                                  |
+| `personnel.php`                                           | Personnel lookup maps (statuts, badges, civilités) — SSOT for those            |
+| `navigation.php`                                          | Top-level menu definition (rendered by `NavigationService`)                    |
+| `legacy_bridge.php`                                       | Which legacy `.php` pages the bridge still serves                              |
+| `backup.php`                                              | Backup destination, schedule, retention                                        |
+| `database.php`                                            | Connections (default + optional `legacy` for parity validation)                |
+| `cache.php` / `queue.php` / `session.php` / `logging.php` | Framework subsystems                                                           |
 
 > New lookup maps and external URLs belong in `config/` (SSOT, rule 1) — never inline.
 
 ## `database/`
 
-```
+```files
 database/
 ├── migrations/
 │   ├── 2026_05_06_..._migrate_legacy_5_5_to_openbrigade_6_0_0.php   Baseline import
@@ -106,16 +106,16 @@ database/
 
 ## `routes/`
 
-| File | Responses |
-|---|---|
-| `web.php` | Native HTML routes (the migrated app) |
-| `api.php` | JSON API routes |
-| `console.php` | Closure-based Artisan commands (incl. `legacy:migration:validate`) |
-| `web_legacy_bridge.php` | Bridge routes for pages not yet migrated |
+| File                    | Responses                                                          |
+| ----------------------- | ------------------------------------------------------------------ |
+| `web.php`               | Native HTML routes (the migrated app)                              |
+| `api.php`               | JSON API routes                                                    |
+| `console.php`           | Closure-based Artisan commands (incl. `legacy:migration:validate`) |
+| `web_legacy_bridge.php` | Bridge routes for pages not yet migrated                           |
 
 ## `resources/`
 
-```
+```files
 resources/
 ├── views/
 │   ├── layout/          app, navbar, sidebar shells

@@ -6,16 +6,36 @@ Thank you for your interest in contributing to **OpenBrigade**! This document ex
 
 ## Table of Contents
 
-1. [Code of Conduct](#code-of-conduct)
-2. [How to Fork the Repository](#how-to-fork-the-repository)
-3. [How to Branch](#how-to-branch)
-4. [Setting Up Your Development Environment](#setting-up-your-development-environment)
-5. [Making Changes](#making-changes)
-6. [Commit Message Guidelines](#commit-message-guidelines)
-7. [Git Hooks (Husky + Commitlint)](#git-hooks-husky--commitlint)
-8. [How to Submit a Pull Request](#how-to-submit-a-pull-request)
-9. [How to Submit an Issue](#how-to-submit-an-issue)
-10. [Coding Guidelines](#coding-guidelines)
+- [Contributing to OpenBrigade](#contributing-to-openbrigade)
+  - [Table of Contents](#table-of-contents)
+  - [Code of Conduct](#code-of-conduct)
+  - [How to Fork the Repository](#how-to-fork-the-repository)
+  - [How to Branch](#how-to-branch)
+    - [Branch naming conventions](#branch-naming-conventions)
+    - [Creating a branch](#creating-a-branch)
+  - [Setting Up Your Development Environment](#setting-up-your-development-environment)
+  - [Making Changes](#making-changes)
+  - [Commit Message Guidelines](#commit-message-guidelines)
+    - [Format](#format)
+    - [Types](#types)
+    - [Scope (optional)](#scope-optional)
+    - [Subject line rules](#subject-line-rules)
+    - [Body (optional)](#body-optional)
+    - [Footer (optional)](#footer-optional)
+    - [Full examples](#full-examples)
+  - [Git Hooks (Husky + Commitlint)](#git-hooks-husky--commitlint)
+    - [First-time setup](#first-time-setup)
+    - [Bypassing hooks (for emergencies only)](#bypassing-hooks-for-emergencies-only)
+    - [Disabling hooks locally](#disabling-hooks-locally)
+    - [Testing commitlint without committing](#testing-commitlint-without-committing)
+  - [How to Submit a Pull Request](#how-to-submit-a-pull-request)
+    - [Before submitting, please check](#before-submitting-please-check)
+  - [How to Submit an Issue](#how-to-submit-an-issue)
+  - [Coding Guidelines](#coding-guidelines)
+    - [Quality gates](#quality-gates)
+    - [PHP / Laravel](#php--laravel)
+    - [JavaScript / CSS](#javascript--css)
+    - [Git](#git)
 
 ---
 
@@ -51,11 +71,11 @@ Always create a new branch for your work — **never commit directly to `main`**
 
 ### Branch naming conventions
 
-| Purpose | Pattern | Example |
-|---------|---------|---------|
-| Bug fix | `fix/<short-description>` | `fix/login-redirect` |
-| New feature | `feat/<short-description>` | `feat/export-csv` |
-| Documentation | `docs/<short-description>` | `docs/update-readme` |
+| Purpose             | Pattern                     | Example                        |
+| ------------------- | --------------------------- | ------------------------------ |
+| Bug fix             | `fix/<short-description>`   | `fix/login-redirect`           |
+| New feature         | `feat/<short-description>`  | `feat/export-csv`              |
+| Documentation       | `docs/<short-description>`  | `docs/update-readme`           |
 | Chore / maintenance | `chore/<short-description>` | `chore/upgrade-phpspreadsheet` |
 
 ### Creating a branch
@@ -113,7 +133,7 @@ Commit messages are validated automatically on every `git commit` via commitlint
 
 ### Format
 
-```
+```format
 <type>(<optional scope>): <subject>
 
 [optional body]
@@ -123,25 +143,25 @@ Commit messages are validated automatically on every `git commit` via commitlint
 
 ### Types
 
-| Type | When to use |
-|------|-------------|
-| `feat` | A new feature or user-visible behaviour change |
-| `fix` | A bug fix |
-| `docs` | Documentation-only changes (CONTRIBUTING, README, inline comments) |
-| `style` | Formatting, whitespace — no logic change |
-| `refactor` | Code restructuring with no feature or bug change |
-| `perf` | Performance improvement |
-| `test` | Adding or fixing tests |
-| `build` | Build system or external dependency changes (Vite, npm, Composer) |
-| `ci` | CI/CD pipeline changes (GitHub Actions, Docker) |
-| `chore` | Routine maintenance that touches none of the above |
-| `revert` | Reverts a previous commit |
+| Type       | When to use                                                        |
+| ---------- | ------------------------------------------------------------------ |
+| `feat`     | A new feature or user-visible behaviour change                     |
+| `fix`      | A bug fix                                                          |
+| `docs`     | Documentation-only changes (CONTRIBUTING, README, inline comments) |
+| `style`    | Formatting, whitespace — no logic change                           |
+| `refactor` | Code restructuring with no feature or bug change                   |
+| `perf`     | Performance improvement                                            |
+| `test`     | Adding or fixing tests                                             |
+| `build`    | Build system or external dependency changes (Vite, npm, Composer)  |
+| `ci`       | CI/CD pipeline changes (GitHub Actions, Docker)                    |
+| `chore`    | Routine maintenance that touches none of the above                 |
+| `revert`   | Reverts a previous commit                                          |
 
 ### Scope (optional)
 
 A scope names the subsystem affected. Use the Laravel layer or menu section:
 
-```
+```git
 feat(dashboard): add missing "Mes activités" widget
 fix(auth): prevent redirect loop on invalid session
 chore(deps): upgrade leaflet to 1.9.4
@@ -165,7 +185,7 @@ Wrap lines at 100 characters.
 
 Reference issues or breaking changes:
 
-```
+```git
 fix(vehicles): handle null VP_ID when no position assigned
 
 Vehicles without an assigned position returned a 500.
@@ -176,7 +196,7 @@ Closes #42
 
 Breaking changes must start with `BREAKING CHANGE:`:
 
-```
+```git
 refactor(auth)!: remove legacy session-based permission cache
 
 BREAKING CHANGE: GP_ID is no longer cached in $_SESSION.
@@ -185,7 +205,7 @@ All permission checks now query the habilitation table directly.
 
 ### Full examples
 
-```
+```git
 feat(dashboard): add Note de frais and Demande de remplaçant widgets
 
 Both widgets were present in the legacy index_d.php but missing from
@@ -193,14 +213,14 @@ the Laravel dashboard. Added getExpenses() and getReplacementRequests()
 to DashboardService with graceful try/catch for optional tables.
 ```
 
-```
+```git
 fix(csp): allow OpenStreetMap tile domains in img-src
 
 Leaflet geo map was blocked by the Content-Security-Policy.
 Added https://*.tile.openstreetmap.org to img-src and connect-src.
 ```
 
-```
+```git
 chore(deps): replace CDN Leaflet with npm package bundled via Vite
 
 Removed unpkg <script> and <link> CDN tags.
@@ -214,9 +234,9 @@ Created resources/js/geolocalisation.js as a dedicated Vite entry.
 The repository ships with two Git hooks managed by **[Husky](https://typicode.github.io/husky/)**.  
 They activate automatically after `npm install`.
 
-| Hook | What it does |
-|------|-------------|
-| `pre-commit` | Runs `npm run build` — verifies the Vite bundle compiles before the commit is recorded |
+| Hook         | What it does                                                                                   |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| `pre-commit` | Runs `npm run build` — verifies the Vite bundle compiles before the commit is recorded         |
 | `commit-msg` | Runs `commitlint` — rejects the commit if the message violates the Conventional Commits format |
 
 ### First-time setup
@@ -268,7 +288,7 @@ echo "bad message"      | npx commitlint   # should fail
 
 A maintainer will review your PR. Please be patient — this is a community project. Address any requested changes by pushing new commits to the same branch.
 
-### Before submitting, please check:
+### Before submitting, please check
 
 - [ ] `composer pint -- --test` passes (formatting).
 - [ ] `composer analyse` passes (PHPStan / Larastan).

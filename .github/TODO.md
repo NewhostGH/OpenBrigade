@@ -52,6 +52,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 ## Phase 2 — Menu by menu
 
 ### Personnel (PERSO)
+
 - [x] Member list, profile view/edit, create/add
 - [x] Trombinoscope and org chart
 - [x] Exports — XLS, CSV, vCard, PDF livret/carte (client-side pdf-lib + section letterhead)
@@ -72,6 +73,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Remaining exports (`formations_xls.php`, `qualifications_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)
 
 ### Activité — Events & Interventions (ACT)
+
 - [x] Event list, detail, create/edit/delete
 - [x] Participants, équipes, renforts, matériel and vehicle assignment
 - [x] Calendar view
@@ -88,6 +90,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Remaining exports (`evenement_xls.php`, `evenement_vehicule_xls.php`)
 
 ### Garde — On-call roster (GAR)
+
 - [x] Roster display and assignment
 - [x] Guard sheet and replacement management
 - [ ] Use the new calendar library when implemented (see PLA)
@@ -98,6 +101,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Demande de renfort (`demande_renfort.php`)
 
 ### Planning (PLA)
+
 - [x] Weekly/monthly planning view
 - [x] Personal agenda
 - [ ] Migrate calendars to a universal calendar library (FullCalendar or similar)
@@ -106,6 +110,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Planning exports
 
 ### Client (CLI)
+
 - [x] Company/client list and detail
 - [ ] Billing and financial exports
 - [ ] PDF attestations (fiscale, formation)
@@ -115,11 +120,13 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Payment categories (`edit_categorie*.php`)
 
 ### Logistique — Vehicles (VEH)
+
 - [x] Vehicle list, detail, CRUD, type management
 - [ ] Vehicle assignment to events
 - [ ] Vehicle exports (XLS)
 
 ### Inventaire — Equipment & Consumables (MAT / CONSO)
+
 - [x] Equipment list and detail/edit
 - [x] Consumable stock management
 - [x] Type management (matériel, consommable)
@@ -128,6 +135,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Equipment/consumable exports (XLS)
 
 ### Communication (COMM)
+
 - [x] Internal messaging and chat board
 - [ ] Email composition and send
 - [ ] Alert creation and sending
@@ -137,6 +145,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] RSS feed (`rss.php`)
 
 ### Document (DOC)
+
 - [x] Document and folder tree view
 - [ ] Document upload and edit
 - [ ] File serving and download
@@ -144,12 +153,14 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Document configuration (`config_doc.php`)
 
 ### Statistique (STAT)
+
 - [x] Participation and event statistics (charts)
 - [x] Bilan annuel — Généralités / Activités / Formations with pdf-lib export (WIP)
 - [ ] Financial reports (`report_cotisations.php`)
 - [ ] Custom exports (XLS, TCD, HTML, TXT, SQL)
 
 ### Organisation (ORGA)
+
 - [x] Section list + CRUD, organigramme tree
 - [x] Cartographie — Leaflet map of sections
 - [x] Groups and roles (habilitations) — section-scoped, ceiling-based model
@@ -165,6 +176,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Habilitations export (`habilitations_xls.php`)
 
 ### Configuration — Admin (ADMIN)
+
 - [x] Application settings CRUD (tabbed UI)
 - [x] Parametrage reference tables (type-evenement/participation/materiel/consommable/vehicule)
 - [x] Theme and icon configuration, grade icons
@@ -179,6 +191,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Maintenance utilities (`update_app.php`, `buildsql.php`, `decrypt.php`, `import_api.php`, `debug_data.php`)
 
 ### Opérations d'urgence (DPS / SITAC / Victimes)
+
 - [ ] DPS sizing calculator (`dps.php`, `dps_calc.php`, `dps_save.php`)
 - [ ] SITAC tactical board (`sitac*.php`)
 - [ ] Victim management (`victimes.php`, `liste_victimes.php`, `scan_victime.php`, `intervention_edit.php`)
@@ -206,10 +219,12 @@ Authoritative list: the `todo` annotations in `AdminController::settings()`
 ---
 
 ## Phase 2B — Login screen (done)
+
 - [x] Parity tests with the legacy login page
 - [x] Modernised login screen
 
 ## Phase 3 — API and integrations
+
 - [ ] Inventory legacy `api/` endpoints and consumers
 - [ ] Rewrite or proxy each as a versioned route under `routes/api.php`
 - [x] iCal export
@@ -218,6 +233,7 @@ Authoritative list: the `todo` annotations in `AdminController::settings()`
 - [ ] API tests and parity check; retire legacy API files
 
 ## Phase 3B — Non-menu plugins / modules
+
 - [ ] Inventory plugin/module files (`addons.php`, `install_addon.php`, `download_*.php`)
 - [ ] Define module boundaries; migrate config, routes, assets, permissions
 - [ ] Animaux module (`personnel_maitre.php`, `cav_edit.php` — `ob_feature` flag exists, status wip)
@@ -225,6 +241,7 @@ Authoritative list: the `todo` annotations in `AdminController::settings()`
 - [ ] Feature tests per module; remove legacy loaders after cutover
 
 ## Phase 4 — Cutover and decommission
+
 - [ ] Keep the legacy parity matrix current (legacy-mapping.md)
 - [ ] User acceptance validation on critical workflows
 - [ ] Remove the legacy bridge routes and `LegacyBridgeController`

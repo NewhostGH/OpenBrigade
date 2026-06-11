@@ -28,11 +28,11 @@ cp .env.example .env        # adjust credentials if needed
 docker compose up -d
 ```
 
-| Service | URL / port | Notes |
-|---|---|---|
-| Application (`openbrigade_app`) | <http://localhost:8080> | `APP_PORT`, Apache → port 80 |
-| Database (`openbrigade_db`) | `localhost:3306` | MariaDB 11.4, `DB_PORT_EXTERNAL` |
-| CloudBeaver (`openbrigade_cloudbeaver`) | <http://localhost:8081> | Web DB browser, `CB_PORT` |
+| Service                                 | URL / port              | Notes                            |
+| --------------------------------------- | ----------------------- | -------------------------------- |
+| Application (`openbrigade_app`)         | <http://localhost:8080> | `APP_PORT`, Apache → port 80     |
+| Database (`openbrigade_db`)             | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL` |
+| CloudBeaver (`openbrigade_cloudbeaver`) | <http://localhost:8081> | Web DB browser, `CB_PORT`        |
 
 After the containers are up, run migrations and seed development data:
 
@@ -56,13 +56,13 @@ Requires [VS Code](https://code.visualstudio.com/) and the
 
 ### Option C — Manual
 
-| Dependency | Version |
-|---|---|
-| PHP | 8.4 (ext: `mbstring`, `xml`, `ctype`, `json`, `intl`, `pdo_mysql`, `zip`, `gd`; optional `ldap`) |
-| Composer | 2.x |
-| Node.js | 18+ (with npm) |
-| MySQL / MariaDB | 5.7+ / 10.3+ |
-| Web server | Nginx 1.24+ or Apache 2.4+ (`mod_rewrite`) |
+| Dependency      | Version                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| PHP             | 8.4 (ext: `mbstring`, `xml`, `ctype`, `json`, `intl`, `pdo_mysql`, `zip`, `gd`; optional `ldap`) |
+| Composer        | 2.x                                                                                              |
+| Node.js         | 18+ (with npm)                                                                                   |
+| MySQL / MariaDB | 5.7+ / 10.3+                                                                                     |
+| Web server      | Nginx 1.24+ or Apache 2.4+ (`mod_rewrite`)                                                       |
 
 ```bash
 composer install
@@ -104,11 +104,11 @@ Authentication reads the **legacy `pompier` table directly** — there is no sep
 `users` table. The Laravel `User` model maps to `pompier`, so existing legacy
 accounts log in unchanged.
 
-| Concern | Location |
-|---|---|
-| Auth provider model | `config/auth.php` → `App\Models\User` |
-| Table mapping | `app/Models/User.php` → `protected $table = 'pompier'` |
-| Login logic | `app/Services/Auth/AuthService.php` — by `P_EMAIL` or `P_CODE`, requires `P_FIN IS NULL` |
+| Concern             | Location                                                                                 |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| Auth provider model | `config/auth.php` → `App\Models\User`                                                    |
+| Table mapping       | `app/Models/User.php` → `protected $table = 'pompier'`                                   |
+| Login logic         | `app/Services/Auth/AuthService.php` — by `P_EMAIL` or `P_CODE`, requires `P_FIN IS NULL` |
 
 Password checking accepts **both** legacy MD5 hashes and modern `password_hash()`
 values. On a successful login against a legacy MD5 hash, the stored hash is
@@ -164,15 +164,15 @@ FontAwesome, Leaflet, etc. are npm packages bundled by Vite into `public/build/`
 file that matches the area, or create a new `resources/css/<module>.css` and add an
 `@import './<module>.css';` line at the bottom of `app.css`.
 
-| File | What goes there |
-|---|---|
-| `app.css` | Import hub only |
-| `variables.css` | Design tokens (`--sidebar-*`, `--font-size-*`, colours) |
-| `base.css` | `body`, resets, global utilities |
-| `layout.css` | Content offset, responsive `@media` |
-| `navbar.css` / `sidebar.css` | Shell chrome |
-| `components.css` | Reusable `ob-*` components (toolbar, table, badge, avatar…) |
-| `<module>.css` | One file per feature module (`ob-personnel.css`, `ob-planning.css`, …) |
+| File                         | What goes there                                                        |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| `app.css`                    | Import hub only                                                        |
+| `variables.css`              | Design tokens (`--sidebar-*`, `--font-size-*`, colours)                |
+| `base.css`                   | `body`, resets, global utilities                                       |
+| `layout.css`                 | Content offset, responsive `@media`                                    |
+| `navbar.css` / `sidebar.css` | Shell chrome                                                           |
+| `components.css`             | Reusable `ob-*` components (toolbar, table, badge, avatar…)            |
+| `<module>.css`               | One file per feature module (`ob-personnel.css`, `ob-planning.css`, …) |
 
 ### JS structure (`resources/js/`)
 

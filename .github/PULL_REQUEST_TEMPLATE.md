@@ -1,3 +1,5 @@
+# OpenBrigade Pull Request
+
 ## Summary
 
 <!-- Briefly describe what this PR does and why. -->
@@ -10,14 +12,14 @@ Closes #<!-- issue number, if applicable -->
 
 <!-- List the main changes made. -->
 
-- 
+-
 
 ## How to Test
 
 <!-- Step-by-step instructions to verify the change works correctly. -->
 
-1. 
-2. 
+1.
+2.
 
 ## Checklist
 

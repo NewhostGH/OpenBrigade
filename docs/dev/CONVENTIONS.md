@@ -18,14 +18,14 @@ Companion docs: [ARCHITECTURE.md](ARCHITECTURE.md) (where things live),
 A value or rule is defined in exactly **one** place. Never copy logic between a
 controller, a service, and a Blade view.
 
-| What | Where it belongs |
-|---|---|
-| Derived values (avatar URL, full name, état/status label, age, net total) | A method or accessor on the Eloquent model (e.g. `Personnel::getAvatarUrl()`) |
-| Lookup / label / badge maps (status → label+class, civility → prefix) | A `config/` file (e.g. `config/personnel.php`), referenced everywhere |
-| External URLs (third-party services, CDNs, map tiles, API endpoints, doc links) | A `config/` file, read via `config('...')` — never hardcoded in PHP/Blade/JS |
-| Business logic (sums, filters, eligibility rules, query shaping) | A service (`app/Services/`) or the model — never a Blade view |
-| Raw DB rows needing a derived value | The shared model accessor or a service helper — never a second inline copy |
-| Column / field definitions (list columns, export field lists) | One definition reused by both the list view and the export |
+| What                                                                            | Where it belongs                                                              |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Derived values (avatar URL, full name, état/status label, age, net total)       | A method or accessor on the Eloquent model (e.g. `Personnel::getAvatarUrl()`) |
+| Lookup / label / badge maps (status → label+class, civility → prefix)           | A `config/` file (e.g. `config/personnel.php`), referenced everywhere         |
+| External URLs (third-party services, CDNs, map tiles, API endpoints, doc links) | A `config/` file, read via `config('...')` — never hardcoded in PHP/Blade/JS  |
+| Business logic (sums, filters, eligibility rules, query shaping)                | A service (`app/Services/`) or the model — never a Blade view                 |
+| Raw DB rows needing a derived value                                             | The shared model accessor or a service helper — never a second inline copy    |
+| Column / field definitions (list columns, export field lists)                   | One definition reused by both the list view and the export                    |
 
 **Raw rows are not exempt.** If a query builder returns `stdClass` rows that need a
 derived value, either return Eloquent models (so the accessor is available) or put
@@ -77,13 +77,13 @@ the derivation in a shared service method called from both paths.
 - **Every custom class and id uses the `ob-` prefix**, with a module sub-namespace.
   Bootstrap utility classes are used as-is; only *our* classes get the prefix.
 
-  | Scope | Prefix | Example |
-  |---|---|---|
-  | Dashboard-specific | `ob-dash-*` | `ob-dash-stat-tile` |
-  | Reusable widget card | `ob-widget-*` | `ob-widget-card` |
-  | Sidebar / navbar | `ob-*` | `ob-navbar-lateral` |
-  | Login page | `ob-login-*` | `ob-login-card` |
-  | Personnel module | `ob-pers-*` | `ob-pers-sidenav` |
+  | Scope                | Prefix        | Example             |
+  | -------------------- | ------------- | ------------------- |
+  | Dashboard-specific   | `ob-dash-*`   | `ob-dash-stat-tile` |
+  | Reusable widget card | `ob-widget-*` | `ob-widget-card`    |
+  | Sidebar / navbar     | `ob-*`        | `ob-navbar-lateral` |
+  | Login page           | `ob-login-*`  | `ob-login-card`     |
+  | Personnel module     | `ob-pers-*`   | `ob-pers-sidenav`   |
 
 - CSS **design tokens** (`--sidebar-*`, `--siglet-*`, `--font-size-*`) are not classes
   — do not rename or prefix them.
@@ -137,19 +137,19 @@ a legacy destination, use `route()` instead of `url('/legacy/...')`.
 
 ### Quick reference — legacy URL → native route
 
-| Legacy URL | Native route |
-|---|---|
-| `evenement_display.php?evenement={code}` | `route('evenement.show', $code)` |
-| `evenement_choice.php` | `route('evenement.index')` |
-| `personnel.php` | `route('personnel.index')` |
-| `upd_personnel.php?pompier={id}` | `route('personnel.show', $id)` / `route('personnel.edit', $id)` |
-| `upd_personnel.php?tab=2` (formations) | `route('personnel.qualifications', $id)` |
-| `vehicule.php` | `route('vehicule.index')` |
-| `consommable.php` | `route('consommable.index')` |
-| `remplacements.php` | `route('remplacement.index')` |
-| `tableau_garde.php` | `route('garde.index')` |
-| `message.php` | `route('message.index')` |
-| `bilans.php` | `route('statistique.index')` |
+| Legacy URL                               | Native route                                                    |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| `evenement_display.php?evenement={code}` | `route('evenement.show', $code)`                                |
+| `evenement_choice.php`                   | `route('evenement.index')`                                      |
+| `personnel.php`                          | `route('personnel.index')`                                      |
+| `upd_personnel.php?pompier={id}`         | `route('personnel.show', $id)` / `route('personnel.edit', $id)` |
+| `upd_personnel.php?tab=2` (formations)   | `route('personnel.qualifications', $id)`                        |
+| `vehicule.php`                           | `route('vehicule.index')`                                       |
+| `consommable.php`                        | `route('consommable.index')`                                    |
+| `remplacements.php`                      | `route('remplacement.index')`                                   |
+| `tableau_garde.php`                      | `route('garde.index')`                                          |
+| `message.php`                            | `route('message.index')`                                        |
+| `bilans.php`                             | `route('statistique.index')`                                    |
 
 The complete legacy-file → new-implementation map is in
 [legacy-mapping.md](legacy-mapping.md).
@@ -163,15 +163,15 @@ these patterns rather than hand-rolling markup.
 
 ### Component inventory
 
-| Component | Tag / class | File |
-|---|---|---|
-| Breadcrumb | `<x-ob-breadcrumb>` | `resources/views/components/ob-breadcrumb.blade.php` |
-| Toolbar | `<x-ob-toolbar>` | `resources/views/components/ob-toolbar.blade.php` |
-| Command bar | `<x-ob-commandbar>` | `resources/views/components/ob-commandbar.blade.php` |
-| Table | `<x-ob-table>` | `resources/views/components/ob-table.blade.php` |
-| Badge | `<span class="ob-badge ob-badge-*">` | `resources/css/components.css` |
-| Widget card | `<div class="ob-widget-card">` | `resources/css/components.css` |
-| Avatar | `Personnel::getAvatarUrl()` | `app/Models/Concerns/HasAvatar.php` |
+| Component   | Tag / class                          | File                                                 |
+| ----------- | ------------------------------------ | ---------------------------------------------------- |
+| Breadcrumb  | `<x-ob-breadcrumb>`                  | `resources/views/components/ob-breadcrumb.blade.php` |
+| Toolbar     | `<x-ob-toolbar>`                     | `resources/views/components/ob-toolbar.blade.php`    |
+| Command bar | `<x-ob-commandbar>`                  | `resources/views/components/ob-commandbar.blade.php` |
+| Table       | `<x-ob-table>`                       | `resources/views/components/ob-table.blade.php`      |
+| Badge       | `<span class="ob-badge ob-badge-*">` | `resources/css/components.css`                       |
+| Widget card | `<div class="ob-widget-card">`       | `resources/css/components.css`                       |
+| Avatar      | `Personnel::getAvatarUrl()`          | `app/Models/Concerns/HasAvatar.php`                  |
 
 ### List page skeleton
 
@@ -229,11 +229,11 @@ private function fooColumns(): array
 
 ### Badge classes
 
-| Class | Meaning | Colour |
-|---|---|---|
-| `ob-badge-actif` | Active / open | Green |
-| `ob-badge-archive` | Archived / neutral chip | Grey |
-| `ob-badge-bloqued` | Blocked / cancelled | Red |
+| Class                                      | Meaning                             | Colour                        |
+| ------------------------------------------ | ----------------------------------- | ----------------------------- |
+| `ob-badge-actif`                           | Active / open                       | Green                         |
+| `ob-badge-archive`                         | Archived / neutral chip             | Grey                          |
+| `ob-badge-bloqued`                         | Blocked / cancelled                 | Red                           |
 | `ob-badge-int` / `-ben` / `-ext` / `-pres` | Personnel statut (INT/BEN/EXT/PRES) | Blue / Teal / Orange / Purple |
 
 Prefer the model accessor over a hardcoded class:
@@ -312,11 +312,12 @@ flags & gating".
 data a user may see or edit, when the `multi_site` feature flag is on. It computes
 one **visible set** per request:
 
-```
+```equation
 visible = (user's member sections + descendants)  ∩  (navbar-chosen section + descendants)
 ```
 
 A user is a member of a section via:
+
 - `pompier.P_SECTION` (principal/home section, required, always included)
 - `ob_personnel_section` (additional memberships)
 - `ob_user_assignment` scoped to a `section_id` (role assignment sections)
