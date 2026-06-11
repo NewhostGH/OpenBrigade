@@ -1,4 +1,18 @@
 #!/usr/bin/env sh
 # Verify the Vite bundle compiles cleanly before every commit.
 # PHP/Pest tests are Docker-only — run them manually: docker compose exec app php vendor/bin/pest
-npm run build --silent
+npm run build --silent > /dev/null 2>&1
+
+# PHP lint — temp ini needed because PHPRC → nonexistent C:\PHP on this machine.
+# cygpath converts the POSIX path Git Bash gives us to a Windows path PHP can resolve.
+PHP_WIN=$(cygpath -w "$(dirname "$(which php)")")
+INI=$(mktemp)
+INI_WIN=$(cygpath -w "$INI")
+printf 'extension_dir = "%s\\ext"\nextension=mbstring\nextension=openssl\nextension=fileinfo\nextension=curl\nextension=zip\nextension=pdo_mysql\nmemory_limit=1G\n' "$PHP_WIN" > "$INI"
+PINT_OUT=$(php -c "$INI_WIN" vendor/bin/pint --test --no-ansi 2>/dev/null)
+STATUS=$?
+rm -f "$INI"
+if [ $STATUS -ne 0 ]; then
+    echo "$PINT_OUT" | grep -E "(FAIL|\.php)"
+fi
+exit $STATUS

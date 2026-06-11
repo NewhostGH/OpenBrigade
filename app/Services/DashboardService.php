@@ -12,24 +12,24 @@ class DashboardService
     // ── Widget layout defaults ──────────────────────────────────────────────
 
     public const WIDGET_LABELS = [
-        'welcome'              => 'Mon profil',
-        'duty'                 => 'Astreinte',
-        'birthdays'            => 'Anniversaires',
-        'horaires'             => 'Horaires à valider',
-        'unpaid'               => 'Activités non facturées',
-        'stats-missing'        => 'Bilans manquants',
-        'mes-activites'        => 'Mes activités',
-        'cp'                   => 'Congés à valider',
-        'vehicles'             => 'Véhicules',
-        'consumables'          => 'Consommables',
-        'remplacements'        => 'Remplacements',
+        'welcome' => 'Mon profil',
+        'duty' => 'Astreinte',
+        'birthdays' => 'Anniversaires',
+        'horaires' => 'Horaires à valider',
+        'unpaid' => 'Activités non facturées',
+        'stats-missing' => 'Bilans manquants',
+        'mes-activites' => 'Mes activités',
+        'cp' => 'Congés à valider',
+        'vehicles' => 'Véhicules',
+        'consumables' => 'Consommables',
+        'remplacements' => 'Remplacements',
         'replacement-requests' => 'Demandes de remplacement',
-        'infos'                => 'Consignes & Actualités',
-        'mc'                   => 'Main courante',
-        'expenses'             => 'Notes de frais',
-        'events'               => 'Activités de la section',
-        'training'             => 'Formation',
-        'about'                => 'À propos',
+        'infos' => 'Consignes & Actualités',
+        'mc' => 'Main courante',
+        'expenses' => 'Notes de frais',
+        'events' => 'Activités de la section',
+        'training' => 'Formation',
+        'about' => 'À propos',
     ];
 
     public const WIDGET_DEFAULTS = [
@@ -72,11 +72,11 @@ class DashboardService
             if ($saved->has($key)) {
                 $s = $saved[$key];
                 $result[] = [
-                    'key'      => $key,
-                    'col'      => (int) $s->col,
+                    'key' => $key,
+                    'col' => (int) $s->col,
                     'position' => (int) $s->position,
-                    'visible'  => (bool) $s->visible,
-                    'label'    => self::WIDGET_LABELS[$key] ?? $key,
+                    'visible' => (bool) $s->visible,
+                    'label' => self::WIDGET_LABELS[$key] ?? $key,
                 ];
             } else {
                 $result[] = array_merge($default, ['label' => self::WIDGET_LABELS[$key] ?? $key]);
@@ -86,7 +86,7 @@ class DashboardService
         usort($result, fn ($a, $b) => $a['col'] <=> $b['col'] ?: $a['position'] <=> $b['position']);
 
         $columns = [1 => [], 2 => [], 3 => []];
-        $hidden  = [];
+        $hidden = [];
         foreach ($result as $w) {
             $columns[(int) $w['col']][] = $w;
             if (! $w['visible']) {

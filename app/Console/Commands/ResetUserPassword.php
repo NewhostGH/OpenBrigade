@@ -61,8 +61,8 @@ class ResetUserPassword extends Command
         );
 
         $fields = [
-            'P_MDP'              => password_hash($password, PASSWORD_DEFAULT),
-            'P_MDP_EXPIRY'       => $forceChange ? now()->toDateString() : null,
+            'P_MDP' => password_hash($password, PASSWORD_DEFAULT),
+            'P_MDP_EXPIRY' => $forceChange ? now()->toDateString() : null,
             'P_PASSWORD_FAILURE' => null,
         ];
 
@@ -98,7 +98,7 @@ class ResetUserPassword extends Command
         }
 
         $field = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'P_EMAIL' : 'P_CODE';
-        $user  = User::query()->where($field, $identifier)->first();
+        $user = User::query()->where($field, $identifier)->first();
 
         if (! $user instanceof User) {
             $this->error("No account found for {$field} = {$identifier}.");
@@ -136,11 +136,11 @@ class ResetUserPassword extends Command
 
     private function displayAccountInfo(User $user): void
     {
-        $name       = trim(($user->P_NOM ?? '').' '.($user->P_PRENOM ?? ''));
-        $lastLogin  = $user->P_LAST_CONNECT?->format('Y-m-d H:i') ?? 'never';
-        $failures   = $user->P_PASSWORD_FAILURE ?? 0;
-        $expiry     = $user->P_MDP_EXPIRY ?? 'none';
-        $blocked    = (int) ($user->GP_ID ?? 0) === -1 ? '<fg=red>yes</>' : 'no';
+        $name = trim(($user->P_NOM ?? '').' '.($user->P_PRENOM ?? ''));
+        $lastLogin = $user->P_LAST_CONNECT?->format('Y-m-d H:i') ?? 'never';
+        $failures = $user->P_PASSWORD_FAILURE ?? 0;
+        $expiry = $user->P_MDP_EXPIRY ?? 'none';
+        $blocked = (int) ($user->GP_ID ?? 0) === -1 ? '<fg=red>yes</>' : 'no';
 
         $this->table(
             ['Field', 'Value'],

@@ -12,8 +12,8 @@ class DashboardController extends Controller
 {
     public function index(Request $request, DashboardService $dash): View
     {
-        $user   = auth()->user();
-        $limit  = (int) $request->query('number_events', 20);
+        $user = auth()->user();
+        $limit = (int) $request->query('number_events', 20);
         $layout = $dash->getWidgetLayout($user);
 
         return view('dashboard.index', [
@@ -39,9 +39,9 @@ class DashboardController extends Controller
             'mc' => $dash->getMcEvents($user),
             'sectionLinks' => $dash->getSectionLinks($user),
             'about' => $dash->getAbout($user),
-            'numberEvents'    => $limit,
+            'numberEvents' => $limit,
             'widgetsByColumn' => $layout['columns'],
-            'hiddenWidgets'   => $layout['hidden'],
+            'hiddenWidgets' => $layout['hidden'],
         ]);
     }
 
@@ -60,11 +60,11 @@ class DashboardController extends Controller
                     continue;
                 }
                 DB::table('ob_dashboard_layout')->insert([
-                    'P_ID'       => $pid,
+                    'P_ID' => $pid,
                     'widget_key' => $key,
-                    'col'        => $col,
-                    'position'   => (int) ($item['position'] ?? $i),
-                    'visible'    => isset($item['visible']) ? (int) (bool) $item['visible'] : 1,
+                    'col' => $col,
+                    'position' => (int) ($item['position'] ?? $i),
+                    'visible' => isset($item['visible']) ? (int) (bool) $item['visible'] : 1,
                 ]);
             }
         });
