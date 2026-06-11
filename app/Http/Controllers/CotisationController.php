@@ -472,5 +472,4 @@ class CotisationController extends Controller
             default => null,
         };
     }
-
 }

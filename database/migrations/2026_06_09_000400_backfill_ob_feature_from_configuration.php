@@ -26,12 +26,12 @@ return new class extends Migration
     /** Functional domain per feature key. */
     private const KEY_GROUPS = [
         'logistique' => ['vehicules', 'materiel', 'consommables'],
-        'personnel'  => ['competences', 'externes', 'staff_assignment', 'licences', 'grades', 'matricule'],
-        'planning'   => ['disponibilites', 'remplacements', 'gardes', 'activités'],
+        'personnel' => ['competences', 'externes', 'staff_assignment', 'licences', 'grades', 'matricule'],
+        'planning' => ['disponibilites', 'remplacements', 'gardes', 'activités'],
         'operations' => ['main_courante', 'client', 'victime', 'renfort', 'animaux'],
-        'finances'   => ['cotisations', 'bank_accounts', 'bilan', 'notes'],
+        'finances' => ['cotisations', 'bank_accounts', 'bilan', 'notes'],
         'geographie' => ['geolocalize_enabled', 'carte'],
-        'systeme'    => ['chat', 'multi_site'],
+        'systeme' => ['chat', 'multi_site'],
     ];
 
     /** Optional Font Awesome glyph per feature key (sidebar / admin screen). */
@@ -77,16 +77,16 @@ return new class extends Migration
             DB::table('ob_feature')->updateOrInsert(
                 ['key' => $key],
                 [
-                    'name'             => $name,
-                    'description'      => $row->DESCRIPTION ?: null,
-                    'group'            => $keyToGroup[$key] ?? null,
-                    'status'           => in_array($key, self::NATIVE, true) ? 'native' : 'wip',
-                    'icon'             => self::ICONS[$key] ?? null,
-                    'enabled'          => ((string) $row->VALUE === '1'),
-                    'ordering'         => (int) $row->ORDERING,
+                    'name' => $name,
+                    'description' => $row->DESCRIPTION ?: null,
+                    'group' => $keyToGroup[$key] ?? null,
+                    'status' => in_array($key, self::NATIVE, true) ? 'native' : 'wip',
+                    'icon' => self::ICONS[$key] ?? null,
+                    'enabled' => ((string) $row->VALUE === '1'),
+                    'ordering' => (int) $row->ORDERING,
                     'legacy_config_id' => (int) $row->ID,
-                    'updated_at'       => $now,
-                    'created_at'       => $now,
+                    'updated_at' => $now,
+                    'created_at' => $now,
                 ]
             );
         }
