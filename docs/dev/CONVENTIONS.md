@@ -306,6 +306,77 @@ flags & gating".
 
 ---
 
+## 10. Data isolation by section (multi_site)
+
+**Single authority:** `App\Services\SectionScopeService` is the sole arbiter of what
+data a user may see or edit, when the `multi_site` feature flag is on. It computes
+one **visible set** per request:
+
+```
+visible = (user's member sections + descendants)  ∩  (navbar-chosen section + descendants)
+```
+
+A user is a member of a section via:
+- `pompier.P_SECTION` (principal/home section, required, always included)
+- `ob_personnel_section` (additional memberships)
+- `ob_user_assignment` scoped to a `section_id` (role assignment sections)
+
+The **navbar section switcher** shows the base set (membership + descendants, never
+narrowed by the current choice — otherwise switching sideways becomes impossible).
+It uses `switcherSections()` which returns objects in **org-chart order** (`S_ORDER`,
+`S_CODE`), so the tree structure itself determines rank, not alphabetical luck.
+
+The **active operation scope** (`activeOperationScope()`) is what's actually filtered
+when viewing or editing data. It intersects the base set with the navbar choice,
+returning `null` when unrestricted (multi_site off).
+
+**Controllers:** In every action that lists or saves data tied to a section, use
+`SectionScopeService` to enforce isolation:
+
+```php
+// Listing — data isolation
+app(SectionScopeService::class)->apply($query, 'column_name', $requestedFilter, $subsections);
+
+// Creating — default section  
+$validated['S_ID'] = app(SectionScopeService::class)->defaultSectionId();
+
+// Editing — prevent out-of-scope assignment
+$validated['S_ID'] = app(SectionScopeService::class)->coerce((int) $validated['S_ID']);
+
+// Navbar switch — validate the chosen section is in the user's base set
+if (!app(SectionScopeService::class)->canChoose((int) $sId)) abort(403);
+```
+
+**Section hierarchy:** Use `S_PARENT = 0` (or NULL, deprecated) for root sections.
+When querying or displaying sections, always use:
+
+```php
+->orderBy('S_ORDER')      // Explicit ordering first (applies within siblings)
+->orderBy('S_CODE')       // Then alphabetically
+```
+
+This ensures the org chart root (CIS or your top-level section) appears first,
+not last, and users see the intended hierarchy. `SectionScopeService::descendantIds()`
+expands a section to itself + all descendants; use it to build subtrees for
+scope checks or cycle prevention in section editor.
+
+**Form membership multiselect:** When a user edits `ob_personnel_section` memberships,
+only touch rows within the editor's visible scope. Out-of-scope rows are preserved
+untouched — a narrowly-scoped editor cannot accidentally strip a member's
+wider-scope memberships. Same pattern for `ob_user_assignment` role rows.
+
+**Section dropdown component:** `<x-ob-section-select>` (class
+`App\View\Components\ObSectionSelect`) renders nothing when multi_site is off and
+self-feeds from `SectionScopeService` when it is on, so there's one rendering source
+for every section select across forms and filters.
+
+**Global groups do not widen visibility.** Global role assignments
+(`ob_user_assignment` with `section_id = 0`) grant permissions but never grant data
+access — only membership of a section itself does. The navbar and scope checking
+never look at roles.
+
+---
+
 ## See also
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) — directory structure and layer responsibilities
