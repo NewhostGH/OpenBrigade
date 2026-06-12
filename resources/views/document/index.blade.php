@@ -24,10 +24,9 @@
         <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#folderCreateModal">
             <i class="fas fa-folder-plus me-1"></i> Nouveau dossier
         </button>
-        {{-- TODO: Migrate code — replaced by the native upload modal in the next step --}}
-        <a href="{{ url('/legacy/upd_document.php?action=insert') }}" class="btn btn-sm btn-primary">
+        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#docUploadModal">
             <i class="fas fa-upload me-1"></i> Ajouter
-        </a>
+        </button>
     @endif
 
     <x-slot:filters>
@@ -106,6 +105,106 @@
         </div>
     </div>
 
+    {{-- Upload document(s) --}}
+    <div class="modal fade" id="docUploadModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('document.store') }}" enctype="multipart/form-data" class="modal-content">
+                @csrf
+                <input type="hidden" name="section_id" value="{{ $sectionId }}">
+                <input type="hidden" name="folder_id" value="{{ $folderId }}">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-upload me-2"></i>Ajouter un document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="docUploadFiles">Fichier(s)</label>
+                        <input type="file" id="docUploadFiles" name="userfile[]" class="form-control" multiple required>
+                        <div class="form-text">
+                            {{ implode(', ', config('documents.supported_extensions')) }} — max {{ config('documents.max_size_mb') }} Mo.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="docUploadType">Type</label>
+                        <select id="docUploadType" name="type" class="form-select" required>
+                            @foreach ($types as $t)
+                                <option value="{{ $t->TD_CODE }}">{{ $t->TD_LIBELLE }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label" for="docUploadSecurity">Visibilité</label>
+                        <select id="docUploadSecurity" name="security" class="form-select" required>
+                            @foreach ($securities as $s)
+                                <option value="{{ $s->DS_ID }}">{{ $s->DS_LIBELLE }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Edit document (action + fields filled by JS from the clicked row) --}}
+    <div class="modal fade" id="docEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" id="docEditForm">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Modifier le document</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label" for="docEditType">Type</label>
+                            <select id="docEditType" name="type" class="form-select" required>
+                                @foreach ($types as $t)
+                                    <option value="{{ $t->TD_CODE }}">{{ $t->TD_LIBELLE }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="docEditSecurity">Visibilité</label>
+                            <select id="docEditSecurity" name="security" class="form-select" required>
+                                @foreach ($securities as $s)
+                                    <option value="{{ $s->DS_ID }}">{{ $s->DS_LIBELLE }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label" for="docEditFolder">Dossier</label>
+                            <select id="docEditFolder" name="folder_id" class="form-select">
+                                <option value="0">Racine</option>
+                                @foreach ($folders as $f)
+                                    <option value="{{ $f->DF_ID }}">{{ $f->DF_NAME }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-sm btn-outline-danger" data-doc-delete>
+                            <i class="fas fa-trash me-1"></i>Supprimer
+                        </button>
+                        <span>
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                        </span>
+                    </div>
+                </form>
+                <form method="POST" id="docDeleteForm" class="d-none">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            </div>
+        </div>
+    </div>
+
     {{-- Rename folder (action + name filled by JS from the clicked button) --}}
     <div class="modal fade" id="folderEditModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -154,6 +253,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    // Document edit modal: fill the form action + fields from the clicked row.
+    var docEditModalEl = document.getElementById('docEditModal');
+    var docEditForm = document.getElementById('docEditForm');
+    var docDeleteForm = document.getElementById('docDeleteForm');
+    var docBase = "{{ url('/documents') }}";
+
+    document.querySelectorAll('[data-doc-edit]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            docEditForm.setAttribute('action', docBase + '/' + btn.dataset.id);
+            docDeleteForm.setAttribute('action', docBase + '/' + btn.dataset.id);
+            docEditForm.querySelector('#docEditType').value = btn.dataset.type || '';
+            docEditForm.querySelector('#docEditSecurity').value = btn.dataset.security || '';
+            docEditForm.querySelector('#docEditFolder').value = btn.dataset.folder || '0';
+            bootstrap.Modal.getOrCreateInstance(docEditModalEl).show();
+        });
+    });
+
+    var docDeleteBtn = document.querySelector('[data-doc-delete]');
+    if (docDeleteBtn) {
+        docDeleteBtn.addEventListener('click', function () {
+            if (window.confirm('Supprimer définitivement ce document ?')) {
+                docDeleteForm.submit();
+            }
+        });
+    }
 
     // Collapsible folder tree: a chevron toggles its node's children.
     document.querySelectorAll('[data-tree-toggle]').forEach(function (btn) {

@@ -146,11 +146,12 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 
 ### Document (DOC)
 
-- [x] Document and folder tree view
-- [ ] Document upload and edit
-- [ ] File serving and download
-- [ ] Document exports (PDF)
-- [ ] Document configuration (`config_doc.php`)
+- [x] Native library — `ob-*` file-explorer (collapsible folder tree, folders + files in one table, type icons, list/card views); `Document`/`DocumentFolder`/`TypeDocument`/`DocumentSecurity` models + `DocumentService`
+- [x] Folder management — create / rename / delete (permission 47)
+- [x] Document upload and edit — upload (multi-file), retype, move, delete (permission 47)
+- [x] File serving and download — native `document.download`, type/doc-security + section checked (PDF inline, else attachment)
+- [ ] Document exports (XLS/CSV via `TableExportService`)
+- [ ] Document type & security config (`type_document` management) — note: legacy `config_doc.php` is PDF attestation text, not library config (belongs to the PDF/billing items)
 
 ### Statistique (STAT)
 

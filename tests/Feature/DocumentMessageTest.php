@@ -67,6 +67,7 @@ function docStubIndex(): void
                 'folderId' => 0,
                 'typeCode' => 'ALL',
                 'types' => Collection::make([]),
+                'securities' => Collection::make([]),
                 'sectionId' => 1,
                 'columns' => [],
                 'canManage' => false,
@@ -128,7 +129,7 @@ test('document library renders the document.index view', function () {
 test('document library passes all required view variables', function () {
     docStubIndex();
     $this->actingAs(docMsgFakeUser())->get('/documents')
-        ->assertViewHasAll(['folders', 'tree', 'openFolders', 'rows', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types', 'sectionId', 'columns', 'canManage']);
+        ->assertViewHasAll(['folders', 'tree', 'openFolders', 'rows', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types', 'securities', 'sectionId', 'columns', 'canManage']);
 });
 
 // ── Document folders (permission gating) ──────────────────────────────────────
@@ -141,6 +142,16 @@ test('unauthenticated users cannot create a folder', function () {
 test('creating a folder requires permission 47', function () {
     $this->actingAs(docMsgFakeUser(can: false))
         ->post('/documents/folders', ['section_id' => 1, 'name' => 'Dossier'])
+        ->assertForbidden();
+});
+
+test('unauthenticated users cannot upload a document', function () {
+    $this->post('/documents', ['section_id' => 1])->assertRedirect('/login');
+});
+
+test('uploading a document requires permission 47', function () {
+    $this->actingAs(docMsgFakeUser(can: false))
+        ->post('/documents', ['section_id' => 1])
         ->assertForbidden();
 });
 

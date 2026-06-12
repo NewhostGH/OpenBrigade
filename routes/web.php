@@ -193,6 +193,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/documents/folders', [DocumentController::class, 'folderStore'])->name('document.folder.store')->middleware('permission:47');
     Route::patch('/documents/folders/{folder}', [DocumentController::class, 'folderUpdate'])->name('document.folder.update')->middleware('permission:47');
     Route::delete('/documents/folders/{folder}', [DocumentController::class, 'folderDestroy'])->name('document.folder.destroy')->middleware('permission:47');
+    // Document upload / edit / delete (replaces upd_document.php / save_documents.php) — permission 47
+    Route::post('/documents', [DocumentController::class, 'store'])->name('document.store')->middleware('permission:47');
+    Route::patch('/documents/{document}', [DocumentController::class, 'update'])->name('document.update')->middleware('permission:47');
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('document.destroy')->middleware('permission:47');
     Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
     Route::get('/organisation', fn () => redirect()->route('organisation.organigramme'))->name('organisation.index');
     Route::get('/organisation/organigramme', [OrganisationController::class, 'index'])->name('organisation.organigramme')->middleware('permission:52');

@@ -6,8 +6,10 @@ use App\Models\Document;
 use App\Models\DocumentFolder;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 /**
  * Document library business logic — single source of truth for folder trees,
@@ -130,7 +132,7 @@ class DocumentService implements ServiceInterface
         $page = $query
             ->orderByDesc('d.D_CREATED_DATE')
             ->select(
-                'd.D_ID', 'd.D_NAME', 'd.TD_CODE', 'd.DS_ID', 'd.D_CREATED_BY', 'd.D_CREATED_DATE',
+                'd.D_ID', 'd.D_NAME', 'd.TD_CODE', 'd.DS_ID', 'd.DF_ID', 'd.D_CREATED_BY', 'd.D_CREATED_DATE',
                 'td.TD_LIBELLE', 'td.TD_SECURITY',
                 'ds.DS_LIBELLE', 'ds.F_ID as DS_FID',
                 DB::raw("TRIM(CONCAT(COALESCE(p.P_PRENOM,''), ' ', COALESCE(p.P_NOM,''))) as created_by_name")
@@ -239,12 +241,77 @@ class DocumentService implements ServiceInterface
         };
     }
 
+    /** Absolute on-disk directory holding a section/folder's files. */
+    public function fileDir(int $sectionId, int $folderId): string
+    {
+        $root = base_path(config('legacy_bridge.legacy_root').'/'.config('documents.files_subpath'));
+
+        return $folderId > 0 ? $root.'/'.$sectionId.'/'.$folderId : $root.'/'.$sectionId;
+    }
+
     /** Absolute on-disk path of a library document's file. */
     public function filePath(int $sectionId, int $folderId, string $name): string
     {
-        $root = base_path(config('legacy_bridge.legacy_root').'/'.config('documents.files_subpath'));
-        $dir = $folderId > 0 ? $root.'/'.$sectionId.'/'.$folderId : $root.'/'.$sectionId;
+        return $this->fileDir($sectionId, $folderId).'/'.basename($name);
+    }
 
-        return $dir.'/'.basename($name);
+    /** Sanitise an uploaded filename like the legacy upload helper. */
+    public function sanitizeFileName(string $name): string
+    {
+        $name = basename(str_replace('\\', '', $name));
+
+        return str_replace([' ', '°', '#', "'", '&', '+', '(', ')'], ['_', '', '', '', '', '', '', ''], $name);
+    }
+
+    /** Per-document access levels (reference data) for the edit form. */
+    public function securities(): Collection
+    {
+        return DB::table('document_security')->orderBy('DS_ID')->get(['DS_ID', 'DS_LIBELLE', 'F_ID']);
+    }
+
+    /** Store one uploaded file on disk and record the document row. */
+    public function storeUpload(int $sectionId, int $folderId, UploadedFile $file, string $typeCode, int $securityId, int $userId): void
+    {
+        $name = $this->sanitizeFileName($file->getClientOriginalName());
+        $dir = $this->fileDir($sectionId, $folderId);
+        File::ensureDirectoryExists($dir);
+        $file->move($dir, $name);
+
+        Document::create([
+            'S_ID' => $sectionId,
+            'D_NAME' => $name,
+            'TD_CODE' => $typeCode,
+            'DS_ID' => $securityId,
+            'D_CREATED_BY' => $userId,
+            'D_CREATED_DATE' => now(),
+            'DF_ID' => $folderId,
+        ]);
+    }
+
+    /** Change a document's type/security and, if the folder changed, move its file. */
+    public function updateDocument(Document $document, string $typeCode, int $securityId, int $newFolderId): void
+    {
+        $oldFolderId = (int) $document->DF_ID;
+        if ($oldFolderId !== $newFolderId) {
+            $src = $this->filePath((int) $document->S_ID, $oldFolderId, $document->D_NAME);
+            $destDir = $this->fileDir((int) $document->S_ID, $newFolderId);
+            if (File::exists($src)) {
+                File::ensureDirectoryExists($destDir);
+                File::move($src, $destDir.'/'.basename($document->D_NAME));
+            }
+        }
+
+        $document->update(['TD_CODE' => $typeCode, 'DS_ID' => $securityId, 'DF_ID' => $newFolderId]);
+    }
+
+    /** Delete a document's file (if present) and its row. */
+    public function deleteDocument(Document $document): void
+    {
+        $path = $this->filePath((int) $document->S_ID, (int) $document->DF_ID, $document->D_NAME);
+        if (File::exists($path)) {
+            File::delete($path);
+        }
+
+        $document->delete();
     }
 }
