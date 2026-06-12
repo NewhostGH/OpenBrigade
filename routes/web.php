@@ -150,9 +150,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/parametrage/type-vehicule', [ParametrageController::class, 'typeVehiculeStore'])->name('admin.parametrage.type-vehicule.store')->middleware('permission:5');
     Route::patch('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeUpdate'])->name('admin.parametrage.type-vehicule.update')->middleware('permission:5');
     Route::delete('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeDestroy'])->name('admin.parametrage.type-vehicule.destroy')->middleware('permission:5');
-    // Habilitations — section ceilings + group/role grant matrices
+    // Habilitations — full ACL: section ceilings + group/role grants + per-user overrides
     Route::get('/admin/habilitations', [HabilitationController::class, 'index'])->name('admin.habilitations')->middleware('permission:9');
-    Route::post('/admin/habilitations/grant', [HabilitationController::class, 'toggleGrant'])->name('admin.habilitations.grant.toggle')->middleware('permission:9');
+    Route::post('/admin/habilitations/grant', [HabilitationController::class, 'setGrant'])->name('admin.habilitations.grant.set')->middleware('permission:9');
+    Route::post('/admin/habilitations/derogation', [HabilitationController::class, 'setUserGrant'])->name('admin.habilitations.user.set')->middleware('permission:9');
     Route::post('/admin/habilitations/plafond', [HabilitationController::class, 'toggleCeiling'])->name('admin.habilitations.ceiling.toggle')->middleware('permission:9');
     Route::post('/admin/habilitations/groupe', [HabilitationController::class, 'groupStore'])->name('admin.habilitations.group.store')->middleware('permission:9');
     Route::patch('/admin/habilitations/groupe/{gpId}', [HabilitationController::class, 'groupUpdate'])->name('admin.habilitations.group.update')->middleware('permission:9');

@@ -76,6 +76,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <i class="fas fa-user-tie me-1"></i>Rôles organisationnels
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ $tab === 'overrides' ? 'active' : '' }}"
+               href="{{ route('admin.habilitations', ['tab' => 'overrides']) }}">
+                <i class="fas fa-user-shield me-1"></i>Dérogations
+            </a>
+        </li>
     </ul>
 
     <div class="border border-top-0 rounded-bottom bg-white p-3">
@@ -89,13 +95,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 'title'   => "Groupes d'accès globaux",
                 'hint'    => 'Droits globaux, transverses à toutes les sections, mais plafonnés par chaque section.',
             ])
-        @else
+        @elseif ($tab === 'roles')
             @include('admin.habilitations.partials.matrix', [
                 'kind'    => 'role',
                 'columns' => $roles,
                 'title'   => 'Rôles organisationnels',
                 'hint'    => 'Rôles attribués par section. Les fonctionnalités refusées par la section sont verrouillées.',
             ])
+        @else
+            @include('admin.habilitations.partials.overrides')
         @endif
 
     </div>

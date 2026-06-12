@@ -80,6 +80,10 @@ function habAdminStub(string $tab): array
         'ownDenied' => [],
         'parentDenied' => [],
         'sectionDenied' => [],
+        'people' => collect([]),
+        'person' => null,
+        'scopeId' => 0,
+        'userGrants' => collect([]),
     ];
 }
 
@@ -117,7 +121,7 @@ test('each admin habilitations tab renders the index view', function (string $ta
     $this->actingAs(habFakeUser())->get('/admin/habilitations?tab='.$tab)
         ->assertOk()
         ->assertViewIs('admin.habilitations.index');
-})->with(['ceiling', 'groups', 'roles']);
+})->with(['ceiling', 'groups', 'roles', 'overrides']);
 
 // ── Mes droits ───────────────────────────────────────────────────────────────
 

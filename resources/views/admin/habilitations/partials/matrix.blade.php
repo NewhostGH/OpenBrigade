@@ -1,5 +1,6 @@
-{{-- Group/role grant matrix. Vars: $featuresByCategory, $columns, $grants, $sectionDenied,
-     $sections, $sectionId, $tab, $kind ('group'|'role'), $title, $hint, $obsolete --}}
+{{-- Group/role grant matrix. Vars: $featuresByCategory, $columns, $grants (key
+     "group|feature" => 'allow'|'deny'), $sectionDenied, $sections, $sectionId,
+     $tab, $kind ('group'|'role'), $title, $hint, $obsolete --}}
 @php $obsolete = $obsolete ?? []; @endphp
 <div class="ob-hab-matrix" data-hab-matrix>
 
@@ -43,6 +44,12 @@
     @if ($columns->isEmpty())
         <div class="text-muted mb-2" style="font-size:var(--font-size-sm);">Aucun {{ $kind === 'role' ? 'rôle' : 'groupe' }} défini.</div>
     @else
+        <div class="ob-hab-legend">
+            <span><i class="fas fa-check text-success"></i> autorise</span>
+            <span><i class="fas fa-ban text-danger"></i> refuse (prioritaire sur les autres groupes)</span>
+            <span><span class="text-muted">·</span> neutre</span>
+        </div>
+
         {{-- Column show/hide pills --}}
         <div class="ob-hab-pills">
             <span class="ob-hab-pills-label">{{ $kind === 'role' ? 'Rôles' : 'Groupes' }} :</span>
@@ -87,22 +94,20 @@
                                     @if ($capped)<span class="ob-badge ob-badge-archive ms-1" style="font-size:9px;" title="Refusé par la section affichée">plafonné</span>@endif
                                 </td>
                                 @foreach ($columns as $c)
-                                    @php $granted = $grants->has("{$c->id}|{$f->F_ID}"); @endphp
+                                    @php $effect = $grants->get("{$c->id}|{$f->F_ID}"); @endphp
                                     <td class="ob-hab-cell" data-col="{{ $c->id }}">
                                         @if ($c->is_system)
-                                            @if ($granted)<i class="fas fa-check text-success"></i>@else<i class="fas fa-minus text-muted" style="font-size:10px;"></i>@endif
+                                            @if ($effect === 'allow')<i class="fas fa-check text-success"></i>
+                                            @elseif ($effect === 'deny')<i class="fas fa-ban text-danger"></i>
+                                            @else<i class="fas fa-minus text-muted" style="font-size:10px;"></i>@endif
                                         @elseif ($kind === 'role' && $capped)
                                             <i class="fas fa-lock text-muted" title="Refusé par la section affichée"></i>
                                         @else
-                                            <form method="POST" action="{{ route('admin.habilitations.grant.toggle') }}" style="margin:0;">
-                                                @csrf
-                                                <input type="hidden" name="group_id" value="{{ $c->id }}">
-                                                <input type="hidden" name="feature_id" value="{{ $f->F_ID }}">
-                                                <input type="hidden" name="grant" value="{{ $granted ? '0' : '1' }}">
-                                                <input type="hidden" name="tab" value="{{ $tab }}">
-                                                <input type="hidden" name="section" value="{{ $sectionId }}">
-                                                <input class="form-check-input ob-hab-auto" type="checkbox" style="cursor:pointer;" {{ $granted ? 'checked' : '' }}>
-                                            </form>
+                                            @include('admin.habilitations.partials.effect-cell', [
+                                                'action'  => route('admin.habilitations.grant.set'),
+                                                'hidden'  => ['group_id' => $c->id, 'feature_id' => $f->F_ID, 'tab' => $tab, 'section' => $sectionId],
+                                                'current' => $effect,
+                                            ])
                                         @endif
                                     </td>
                                 @endforeach

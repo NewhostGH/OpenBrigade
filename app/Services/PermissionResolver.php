@@ -3,36 +3,54 @@
 namespace App\Services;
 
 use App\Models\ObGroup;
+use App\Models\ObGroupPermission;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Section-scoped, ceiling-based permission resolution.
+ * Full ACL with groups — section-scoped permission resolution with explicit
+ * allow *and* deny at every tier.
  *
- * A permission (F_ID) is effective for a user in a section when:
- *   1. the section ceiling allows it — every section in the chain
- *      (section + all ancestors) that defines an explicit ceiling must
- *      include the feature (parent caps child); AND
- *   2. the user holds a grant for it — either a global group
- *      (ob_personnel_group, always applied) or a role (ob_user_assignment,
- *      global or scoped to the active section / one of its ancestors).
+ * A feature (F_ID) is decided for a user in a section by the first matching
+ * rule (most specific wins):
+ *
+ *   1. user deny        — a per-person override refuses it            → DENY
+ *   2. user allow       — a per-person override grants it             → ALLOW
+ *   3. section deny     — any section in the chain caps it (ceiling)  → DENY
+ *   4. group/role deny  — a held group/role explicitly refuses it     → DENY
+ *   5. group/role allow — a held group/role grants it                 → ALLOW
+ *   6. (nothing grants it)                                            → DENY
+ *
+ * "In scope" for a user-override or role row means section_id ≤ 0 (global,
+ * inherited everywhere) or a section in the active chain (section + ancestors).
+ * Global groups (ob_personnel_group) always apply. Within a tier, deny wins.
  *
  * Registered as a singleton so the per-request lookups below are memoized.
  */
 class PermissionResolver
 {
+    private const ALLOW = 'allow';
+
+    private const DENY = 'deny';
+
     /** @var array<int,int[]> section id => ancestor chain (self first, root last) */
     private array $chainCache = [];
 
     /** @var array<int,int[]> section id => F_IDs denied at that section (deny-list) */
     private array $deniedCache = [];
 
-    /** @var array<int,int[]> group id => granted F_IDs */
+    /** @var array<int,int[]> group id => allow-granted F_IDs */
     private array $groupFeatureCache = [];
+
+    /** @var array<int,int[]> group id => deny-granted F_IDs */
+    private array $groupDeniedCache = [];
 
     /** @var array<int,array<object>> person id => role assignment rows */
     private array $roleCache = [];
+
+    /** @var array<int,array<object>> person id => user-override rows */
+    private array $userPermCache = [];
 
     /**
      * Does the user have feature $fid, evaluated in section $sId under an
@@ -47,37 +65,28 @@ class PermissionResolver
 
         $chain = $this->sectionChain($sId);
 
+        // 1 & 2 — per-person override is the most specific tier.
+        $userEffect = $this->userEffect($user, $fid, $chain);
+        if ($userEffect === self::DENY) {
+            return false;
+        }
+        if ($userEffect === self::ALLOW) {
+            return true;
+        }
+
+        // 3 — section ceiling.
         if (! $this->ceilingAllows($fid, $chain)) {
             return false;
         }
 
-        // Global groups are always applied (a role filter narrows roles, not groups).
-        foreach ($this->userGroupIds($user) as $gid) {
-            if (in_array($fid, $this->groupFeatures($gid), true)) {
-                return true;
-            }
-        }
-
-        // Roles: global (section_id = null) or scoped to the active section chain.
-        foreach ($this->userRoleAssignments($user) as $a) {
-            if ($roleFilter !== null && (int) $a->group_id !== $roleFilter) {
-                continue;
-            }
-            $sid = isset($a->section_id) ? (int) $a->section_id : null;
-            if ($sid !== null && $chain !== [] && ! in_array($sid, $chain, true)) {
-                continue;
-            }
-            if (in_array($fid, $this->groupFeatures((int) $a->group_id), true)) {
-                return true;
-            }
-        }
-
-        return false;
+        // 4 & 5 — group/role grants (a deny on any held principal wins).
+        return $this->groupRoleEffect($user, $fid, $chain, $roleFilter) === self::ALLOW;
     }
 
     /**
      * Every feature id effective for the user in the given context. Used by the
-     * "Mes droits" screen.
+     * "Mes droits" screen. Resolved through {@see allows()} so the precedence
+     * is defined in exactly one place.
      *
      * @return int[]
      */
@@ -88,25 +97,30 @@ class PermissionResolver
         }
 
         $chain = $this->sectionChain($sId);
-        $granted = [];
 
+        // Candidates = anything a held group/role or the user could grant.
+        $candidates = [];
         foreach ($this->userGroupIds($user) as $gid) {
-            $granted = array_merge($granted, $this->groupFeatures($gid));
+            $candidates = array_merge($candidates, $this->groupFeatures($gid));
         }
         foreach ($this->userRoleAssignments($user) as $a) {
             if ($roleFilter !== null && (int) $a->group_id !== $roleFilter) {
                 continue;
             }
-            $sid = isset($a->section_id) ? (int) $a->section_id : null;
-            if ($sid !== null && $chain !== [] && ! in_array($sid, $chain, true)) {
+            if (! $this->appliesInChain($this->rowSection($a), $chain)) {
                 continue;
             }
-            $granted = array_merge($granted, $this->groupFeatures((int) $a->group_id));
+            $candidates = array_merge($candidates, $this->groupFeatures((int) $a->group_id));
+        }
+        foreach ($this->userPermissionRows($user) as $p) {
+            if ($p->effect === self::ALLOW && $this->appliesInChain($this->rowSection($p), $chain)) {
+                $candidates[] = (int) $p->feature_id;
+            }
         }
 
-        $granted = array_values(array_unique($granted));
+        $candidates = array_values(array_unique($candidates));
 
-        return array_values(array_filter($granted, fn (int $fid) => $this->ceilingAllows($fid, $chain)));
+        return array_values(array_filter($candidates, fn (int $fid) => $this->allows($user, $fid, $sId, $roleFilter)));
     }
 
     /**
@@ -241,7 +255,91 @@ class PermissionResolver
         return $this->chainCache[$sId] = $chain;
     }
 
-    /** A feature is allowed only if no section in the chain denies it. @param int[] $chain */
+    /**
+     * Is a section-scoped row (role or user override) active in the chain?
+     * section ≤ 0 means global (everywhere); an empty chain means no section
+     * context, so every row applies (used by the "all sections" preview).
+     *
+     * @param  int[]  $chain
+     */
+    private function appliesInChain(?int $sid, array $chain): bool
+    {
+        if ($sid === null || $sid <= 0) {
+            return true;
+        }
+        if ($chain === []) {
+            return true;
+        }
+
+        return in_array($sid, $chain, true);
+    }
+
+    /** Read a row's section_id (defaults to global when the column is absent). */
+    private function rowSection(object $row): ?int
+    {
+        return isset($row->section_id) ? (int) $row->section_id : null;
+    }
+
+    /**
+     * Effect of the per-person override tier for a feature, or null when the
+     * user has no in-scope override. Deny wins within the tier.
+     */
+    private function userEffect(User $user, int $fid, array $chain): ?string
+    {
+        $allow = false;
+        foreach ($this->userPermissionRows($user) as $p) {
+            if ((int) $p->feature_id !== $fid || ! $this->appliesInChain($this->rowSection($p), $chain)) {
+                continue;
+            }
+            if ($p->effect === self::DENY) {
+                return self::DENY;
+            }
+            $allow = true;
+        }
+
+        return $allow ? self::ALLOW : null;
+    }
+
+    /**
+     * Effect of the group/role tier for a feature, or null when no held
+     * group/role mentions it. Global groups always apply; roles apply in scope.
+     * A single deny on any held principal wins over allows from the others.
+     *
+     * @param  int[]  $chain
+     */
+    private function groupRoleEffect(User $user, int $fid, array $chain, ?int $roleFilter): ?string
+    {
+        $allow = false;
+
+        foreach ($this->userGroupIds($user) as $gid) {
+            if (in_array($fid, $this->groupDeniedFeatures($gid), true)) {
+                return self::DENY;
+            }
+            if (in_array($fid, $this->groupFeatures($gid), true)) {
+                $allow = true;
+            }
+        }
+
+        foreach ($this->userRoleAssignments($user) as $a) {
+            if ($roleFilter !== null && (int) $a->group_id !== $roleFilter) {
+                continue;
+            }
+            if (! $this->appliesInChain($this->rowSection($a), $chain)) {
+                continue;
+            }
+            $gid = (int) $a->group_id;
+            if (in_array($fid, $this->groupDeniedFeatures($gid), true)) {
+                return self::DENY;
+            }
+            if (in_array($fid, $this->groupFeatures($gid), true)) {
+                $allow = true;
+            }
+        }
+
+        return $allow ? self::ALLOW : null;
+    }
+
+    /** A feature is capped only if no section in the chain denies it. @param int[] $chain */
     protected function ceilingAllows(int $fid, array $chain): bool
     {
         foreach ($chain as $node) {
@@ -267,7 +365,7 @@ class PermissionResolver
             ->all();
     }
 
-    /** @return int[] */
+    /** Features a group/role grants (effect = allow). @return int[] */
     protected function groupFeatures(int $groupId): array
     {
         if (isset($this->groupFeatureCache[$groupId])) {
@@ -276,6 +374,22 @@ class PermissionResolver
 
         return $this->groupFeatureCache[$groupId] = DB::table('ob_group_permission')
             ->where('group_id', $groupId)
+            ->where('effect', ObGroupPermission::EFFECT_ALLOW)
+            ->pluck('feature_id')
+            ->map(fn ($v) => (int) $v)
+            ->all();
+    }
+
+    /** Features a group/role explicitly refuses (effect = deny). @return int[] */
+    protected function groupDeniedFeatures(int $groupId): array
+    {
+        if (isset($this->groupDeniedCache[$groupId])) {
+            return $this->groupDeniedCache[$groupId];
+        }
+
+        return $this->groupDeniedCache[$groupId] = DB::table('ob_group_permission')
+            ->where('group_id', $groupId)
+            ->where('effect', ObGroupPermission::EFFECT_DENY)
             ->pluck('feature_id')
             ->map(fn ($v) => (int) $v)
             ->all();
@@ -292,6 +406,20 @@ class PermissionResolver
         return $this->roleCache[$pid] = DB::table('ob_user_assignment')
             ->where('person_id', $pid)
             ->get(['section_id', 'group_id'])
+            ->all();
+    }
+
+    /** Per-person override rows (section_id, feature_id, effect). @return array<object> */
+    protected function userPermissionRows(User $user): array
+    {
+        $pid = (int) $user->P_ID;
+        if (isset($this->userPermCache[$pid])) {
+            return $this->userPermCache[$pid];
+        }
+
+        return $this->userPermCache[$pid] = DB::table('ob_user_permission')
+            ->where('person_id', $pid)
+            ->get(['section_id', 'feature_id', 'effect'])
             ->all();
     }
 }

@@ -254,10 +254,30 @@ Route::resource('foos', FooController::class)->only(['show', 'edit', 'update', '
 > **Critical:** declare static-segment routes (`/foos/create`) **before**
 > `Route::resource()`, or Laravel matches `create` as the `{foo}` parameter.
 
-## 9. Permission checks (section-scoped)
+## 9. Permission checks (section-scoped, full ACL)
 
-Permissions are **section-scoped** and resolved through one path only —
-`App\Services\PermissionResolver`, reached via the model helper:
+Permissions are a **section-scoped ACL with explicit allow *and* deny** at every
+tier. A feature (`F_ID`) is decided for a user in a section by the first matching
+rule — most specific wins (see `PermissionResolver`):
+
+| # | Rule                                                   | Source table             | Result |
+| - | ------------------------------------------------------ | ------------------------ | ------ |
+| 1 | per-person **deny**                                    | `ob_user_permission`     | DENY   |
+| 2 | per-person **allow**                                   | `ob_user_permission`     | ALLOW  |
+| 3 | section ceiling **deny** (any section in the chain)    | `ob_section_permission`  | DENY   |
+| 4 | group/role **deny** (any held group/role)              | `ob_group_permission`    | DENY   |
+| 5 | group/role **allow** (any held group/role)             | `ob_group_permission`    | ALLOW  |
+| 6 | nothing grants it                                      | —                        | DENY   |
+
+A row is "in scope" when its `section_id ≤ 0` (global, inherited everywhere) or it
+names a section in the active chain (section + ancestors). Global groups
+(`ob_personnel_group`) always apply. Within a tier, **deny wins**. The model
+defaults keep this backwards compatible: `ob_group_permission.effect` defaults to
+`allow` and `ob_user_permission` is empty, so with legacy data the cascade reduces
+to "section deny, then group/role allow."
+
+Permissions are resolved through one path only — `App\Services\PermissionResolver`,
+reached via the model helper:
 
 ```php
 auth()->user()->hasPermission($fid);                  // active section (session ‹hab.section›, default home)
@@ -269,9 +289,13 @@ Gate::allows('feature', $fid);                          // same, through the Gat
 Rules:
 
 - **Never decide access from a raw table query.** Do not `DB::table('habilitation')`,
-  `ob_group_permission`, `ob_section_permission`, `section_role`, or read
-  `pompier.GP_ID` to gate a feature — call `hasPermission()`. The resolver already
-  composes global groups + section roles + the section deny-list (parent caps child).
+  `ob_group_permission`, `ob_section_permission`, `ob_user_permission`,
+  `section_role`, or read `pompier.GP_ID` to gate a feature — call `hasPermission()`.
+  The resolver already composes the full cascade above (per-person overrides +
+  global groups + section roles + the section deny-list, parent caps child).
+- **The admin matrices write allow/deny, never just "on/off".** Editing a grant
+  sets `effect = allow|deny` or removes the row (neutral). The fourth tab,
+  **Dérogations**, edits `ob_user_permission` (per-person overrides, section-scoped).
 - **Menus and nav** gate every item with `hasPermission()` (see `NavigationService`,
   `RequirePermission`, the navbar quick-add). New menus must do the same.
 - **Reading org structure for display** (e.g. "who holds a role in section X") is the

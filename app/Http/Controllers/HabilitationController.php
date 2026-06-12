@@ -7,14 +7,19 @@ use App\Services\FeatureService;
 use App\Services\PermissionResolver;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
- * Section-scoped habilitation administration: three tabs —
+ * Section-scoped habilitation administration (full ACL with groups): four tabs —
  *   1. Plafonds par section  — per-section deny-list (ob_section_permission)
- *   2. Groupes d'accès        — global groups × feature grants (ob_group_permission)
- *   3. Rôles organisationnels — roles × feature grants, section-filtered
+ *   2. Groupes d'accès        — global groups × feature grants, allow/deny (ob_group_permission)
+ *   3. Rôles organisationnels — roles × feature grants, allow/deny, section-filtered
+ *   4. Dérogations            — per-person allow/deny overrides (ob_user_permission)
+ *
+ * The resolution precedence lives in {@see PermissionResolver}: user deny >
+ * user allow > section deny > group/role deny > group/role allow > default deny.
  */
 class HabilitationController extends Controller
 {
@@ -25,7 +30,7 @@ class HabilitationController extends Controller
         // Without multi-site there is one section: per-section ceilings are
         // hidden and the screen opens on the groups matrix instead.
         $defaultTab = app(FeatureService::class)->isEnabled('multi_site') ? 'ceiling' : 'groups';
-        $tab = in_array($request->string('tab')->toString(), ['ceiling', 'groups', 'roles'], true)
+        $tab = in_array($request->string('tab')->toString(), ['ceiling', 'groups', 'roles', 'overrides'], true)
             ? $request->string('tab')->toString()
             : $defaultTab;
 
@@ -50,9 +55,15 @@ class HabilitationController extends Controller
         $roles = ObGroup::query()->where('kind', ObGroup::KIND_ROLE)
             ->orderBy('ordering')->orderBy('id')->get();
 
-        // "group_id|feature_id" => true
+        // "group_id|feature_id" => effect ('allow'|'deny')
         $grants = DB::table('ob_group_permission')->get()
-            ->mapWithKeys(fn ($r) => ["{$r->group_id}|{$r->feature_id}" => true]);
+            ->mapWithKeys(fn ($r) => ["{$r->group_id}|{$r->feature_id}" => $r->effect]);
+
+        // Dérogations tab: personnel picker + the selected person's overrides at
+        // the chosen scope (section_id, where 0 = "toutes les sections / global").
+        $scopeId = (int) $request->integer('section');
+        $personId = (int) $request->integer('person') ?: null;
+        [$people, $person, $userGrants] = $this->overridesData($tab, $request, $personId, $scopeId);
 
         // Ceiling tab: features denied at the selected section, and those locked
         // by a parent (cannot be re-allowed here).
@@ -78,17 +89,62 @@ class HabilitationController extends Controller
             'ownDenied' => $ownDenied,
             'parentDenied' => $parentDenied,
             'sectionDenied' => $sectionDenied,
+            'people' => $people,
+            'person' => $person,
+            'scopeId' => $scopeId,
+            'userGrants' => $userGrants,
             'obsolete' => array_map('intval', config('habilitations.obsolete_features', [])),
         ]);
     }
 
-    /** Toggle a group/role -> feature grant (ob_group_permission). */
-    public function toggleGrant(Request $request): RedirectResponse
+    /**
+     * Personnel search + the selected person's overrides at the chosen scope,
+     * loaded only on the Dérogations tab.
+     *
+     * @return array{0:Collection<int,object>,1:?object,2:Collection<int,string>}
+     */
+    private function overridesData(string $tab, Request $request, ?int $personId, int $scopeId): array
+    {
+        $people = collect();
+        $person = null;
+        $userGrants = collect();
+
+        if ($tab !== 'overrides') {
+            return [$people, $person, $userGrants];
+        }
+
+        $q = trim($request->string('q')->toString());
+        if ($q !== '') {
+            $people = DB::table('pompier')
+                ->where('P_ACTIF', 1)
+                ->where(fn ($w) => $w->where('P_NOM', 'like', "%{$q}%")->orWhere('P_PRENOM', 'like', "%{$q}%"))
+                ->orderBy('P_NOM')->orderBy('P_PRENOM')
+                ->limit(30)
+                ->get(['P_ID', 'P_NOM', 'P_PRENOM']);
+        }
+
+        if ($personId !== null) {
+            $person = DB::table('pompier')->where('P_ID', $personId)->first(['P_ID', 'P_NOM', 'P_PRENOM']);
+            $userGrants = DB::table('ob_user_permission')
+                ->where('person_id', $personId)
+                ->where('section_id', $scopeId)
+                ->get()
+                ->mapWithKeys(fn ($r) => [(int) $r->feature_id => $r->effect]);
+        }
+
+        return [$people, $person, $userGrants];
+    }
+
+    /**
+     * Set a group/role -> feature grant (ob_group_permission). effect = allow
+     * grants, deny refuses, empty removes the entry (neutral).
+     */
+    public function setGrant(Request $request): RedirectResponse
     {
         $v = $request->validate([
             'group_id' => ['required', 'integer'],
             'feature_id' => ['required', 'integer'],
-            'grant' => ['required', 'boolean'],
+            'effect' => ['nullable', 'in:allow,deny'],
             'tab' => ['nullable', 'string'],
             'section' => ['nullable', 'integer'],
         ]);
@@ -100,21 +156,57 @@ class HabilitationController extends Controller
             return $this->backToTab($v, 'error', 'Ce groupe système est en lecture seule.');
         }
 
-        if ($v['grant']) {
-            DB::table('ob_group_permission')->insertOrIgnore([
-                'group_id' => (int) $v['group_id'],
-                'feature_id' => (int) $v['feature_id'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        } else {
+        $effect = $v['effect'] ?? null;
+        if ($effect === null) {
             DB::table('ob_group_permission')
                 ->where('group_id', (int) $v['group_id'])
                 ->where('feature_id', (int) $v['feature_id'])
                 ->delete();
+        } else {
+            DB::table('ob_group_permission')->updateOrInsert(
+                ['group_id' => (int) $v['group_id'], 'feature_id' => (int) $v['feature_id']],
+                ['effect' => $effect, 'updated_at' => now(), 'created_at' => now()],
+            );
         }
 
         return $this->backToTab($v, 'success', 'Habilitation mise à jour.');
+    }
+
+    /**
+     * Set a per-person override (ob_user_permission) at a section scope
+     * (section_id 0 = global). effect = allow|deny; empty removes it.
+     */
+    public function setUserGrant(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'person_id' => ['required', 'integer'],
+            'feature_id' => ['required', 'integer'],
+            'section_id' => ['required', 'integer'],
+            'effect' => ['nullable', 'in:allow,deny'],
+        ]);
+
+        abort_if(DB::table('pompier')->where('P_ID', (int) $v['person_id'])->doesntExist(), 404);
+
+        $key = [
+            'person_id' => (int) $v['person_id'],
+            'section_id' => (int) $v['section_id'],
+            'feature_id' => (int) $v['feature_id'],
+        ];
+        $effect = $v['effect'] ?? null;
+        if ($effect === null) {
+            DB::table('ob_user_permission')->where($key)->delete();
+        } else {
+            DB::table('ob_user_permission')->updateOrInsert(
+                $key,
+                ['effect' => $effect, 'updated_at' => now(), 'created_at' => now()],
+            );
+        }
+
+        return redirect()->route('admin.habilitations', array_filter([
+            'tab' => 'overrides',
+            'person' => (int) $v['person_id'],
+            'section' => (int) $v['section_id'] ?: null,
+        ]))->with('success', 'Dérogation mise à jour.');
     }
 
     /** Toggle a section ceiling entry. allow=1 removes the deny row; allow=0 adds it. */
