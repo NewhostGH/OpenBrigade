@@ -38,6 +38,9 @@ class FeatureService
 
     /**
      * Toggle a feature on/off, propagating to the legacy configuration row.
+     *
+     * Side-effects on specific keys:
+     *  - multi_site ON → assign every user without a section to the root section.
      */
     public function setEnabled(ObFeature $feature, bool $enabled): void
     {
@@ -49,7 +52,47 @@ class FeatureService
                 ->update(['VALUE' => $enabled ? '1' : '0']);
         }
 
+        if ($feature->key === 'multi_site' && $enabled) {
+            $this->backfillSectionlessUsers();
+        }
+
         $this->map = null;
+    }
+
+    /**
+     * When multi_site is switched on, every user whose P_SECTION is NULL
+     * is assigned to the root section (S_PARENT = 0 or NULL).
+     */
+    private function backfillSectionlessUsers(): void
+    {
+        $rootId = DB::table('section')
+            ->where(fn ($q) => $q->where('S_PARENT', 0)->orWhereNull('S_PARENT'))
+            ->value('S_ID');
+
+        if ($rootId === null) {
+            return;
+        }
+
+        DB::table('personnel')
+            ->whereNull('P_SECTION')
+            ->update(['P_SECTION' => $rootId]);
+
+        // Also insert ob_personnel_section rows for those users (they had none).
+        $missing = DB::table('personnel as p')
+            ->where('p.P_SECTION', $rootId)
+            ->whereNotExists(function ($q) use ($rootId): void {
+                $q->from('ob_personnel_section')
+                    ->whereColumn('person_id', 'p.P_ID')
+                    ->where('section_id', $rootId);
+            })
+            ->pluck('p.P_ID');
+
+        foreach ($missing as $personId) {
+            DB::table('ob_personnel_section')->insertOrIgnore([
+                'person_id' => $personId,
+                'section_id' => $rootId,
+            ]);
+        }
     }
 
     /** @return array<string,bool> */
