@@ -1,7 +1,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-calendar-user"></i> Mes activités
+            <i class="fas fa-calendar"></i> Mes activités
         </div>
         <a class="ob-widget-card-link"
            href="{{ route('personnel.show', auth()->id()) }}">
