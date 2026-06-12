@@ -18,7 +18,7 @@
 {{-- ── Page toolbar (full width: title, actions, filters) ──────────────────── --}}
 <x-ob-toolbar title="Bibliothèque de documents" :total="$documents->total()"
     filter-action="{{ route('document.index') }}" filter-id="docFilter"
-    :columns="$columns" table-id="docTable">
+    :columns="$columns" table-id="docTable" :show-card-toggle="true">
 
     @if ($canManage)
         <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#folderCreateModal">
@@ -50,35 +50,15 @@
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title"><i class="fas fa-folder-open me-2"></i>Dossiers</div>
             </div>
-            <div class="ob-widget-card-body p-0">
+            <div class="ob-widget-card-body p-0 ob-doc-tree">
                 <div class="ob-doc-folder {{ $folderId === 0 ? 'active' : '' }}">
+                    <span class="ob-doc-tree-spacer"></span>
                     <a href="{{ route('document.index', ['section' => $sectionId]) }}" class="ob-doc-folder-link">
-                        <i class="fas fa-home fa-fw me-2 text-muted"></i>Racine
+                        <i class="fas fa-home fa-fw me-1 text-muted"></i>Racine
                     </a>
                 </div>
-                @foreach ($rootFolders as $folder)
-                    <div class="ob-doc-folder {{ $folderId === (int) $folder->DF_ID ? 'active' : '' }}">
-                        <a href="{{ route('document.index', ['folder' => $folder->DF_ID, 'section' => $sectionId]) }}"
-                           class="ob-doc-folder-link">
-                            <i class="fas fa-folder fa-fw me-2" style="color:var(--color-folder)"></i>{{ $folder->DF_NAME }}
-                        </a>
-                        @if ($canManage)
-                            <span class="ob-doc-folder-actions">
-                                <button type="button" class="btn btn-link btn-sm p-0 text-secondary" title="Renommer"
-                                        data-folder-edit data-id="{{ $folder->DF_ID }}" data-name="{{ $folder->DF_NAME }}">
-                                    <i class="fas fa-pen fa-xs"></i>
-                                </button>
-                                <form method="POST" action="{{ route('document.folder.destroy', $folder->DF_ID) }}"
-                                      class="d-inline" data-folder-delete>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-link btn-sm p-0 text-danger" title="Supprimer">
-                                        <i class="fas fa-trash fa-xs"></i>
-                                    </button>
-                                </form>
-                            </span>
-                        @endif
-                    </div>
+                @foreach ($tree as $node)
+                    @include('document.partials.folder-node', ['node' => $node, 'depth' => 0])
                 @endforeach
             </div>
         </div>
@@ -87,21 +67,9 @@
     {{-- ── Documents ───────────────────────────────────────────────────────── --}}
     <div class="col-lg-9">
 
-        {{-- Sub-folder chips --}}
-        @if ($subFolders->isNotEmpty())
-            <div class="d-flex flex-wrap gap-2 mb-2">
-                @foreach ($subFolders as $sf)
-                    <a href="{{ route('document.index', ['folder' => $sf->DF_ID, 'section' => $sectionId]) }}"
-                       class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-folder me-1" style="color:var(--color-folder)"></i>{{ $sf->DF_NAME }}
-                    </a>
-                @endforeach
-            </div>
-        @endif
-
         <x-ob-commandbar table-id="docTable" :total="$documents->total()" total-label="document">
-            <x-ob-table :columns="$columns" :items="$documents" table-id="docTable"
-                empty-text="Aucun document dans ce dossier."/>
+            <x-ob-table :columns="$columns" :items="$rows" table-id="docTable"
+                empty-text="Ce dossier est vide."/>
         </x-ob-commandbar>
 
         <div class="mt-2">{{ $documents->links() }}</div>
@@ -163,7 +131,6 @@
 
 @endsection
 
-@if ($canManage)
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -187,7 +154,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    // Collapsible folder tree: a chevron toggles its node's children.
+    document.querySelectorAll('[data-tree-toggle]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var node = btn.closest('.ob-doc-tree-node');
+            var children = node ? node.querySelector(':scope > .ob-doc-tree-children') : null;
+            if (children) {
+                children.classList.toggle('d-none');
+                btn.classList.toggle('open');
+            }
+        });
+    });
 });
 </script>
 @endpush
-@endif

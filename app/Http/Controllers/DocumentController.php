@@ -39,18 +39,32 @@ class DocumentController extends Controller
         $typeCode = $request->string('type', 'ALL')->toString() ?: 'ALL';
 
         $folders = $this->documents->folders($sectionId);
+        $documents = $this->documents->documents($user, $sectionId, $folderId, $typeCode);
+
+        // Explorer listing: the current folder's sub-folders first (only on the
+        // first page), then the paginated documents — folders and files together.
+        $rows = collect();
+        if ($documents->currentPage() === 1) {
+            $rows = $this->documents->subFolders($folders, $folderId)->map(fn ($f) => (object) [
+                'is_folder' => true,
+                'DF_ID' => (int) $f->DF_ID,
+                'D_NAME' => $f->DF_NAME,
+            ]);
+        }
+        $rows = $rows->concat($documents->items());
 
         return view('document.index', [
             'folders' => $folders,
-            'rootFolders' => $this->documents->rootFolders($folders),
-            'subFolders' => $this->documents->subFolders($folders, $folderId),
+            'tree' => $this->documents->folderTree($folders),
+            'openFolders' => $this->documents->openFolderIds($folders, $folderId),
             'breadcrumb' => $this->documents->breadcrumb($folders, $folderId),
-            'documents' => $this->documents->documents($user, $sectionId, $folderId, $typeCode),
+            'rows' => $rows,
+            'documents' => $documents,
             'folderId' => $folderId,
             'typeCode' => $typeCode,
             'types' => $this->documents->types(),
             'sectionId' => $sectionId,
-            'columns' => $this->columns(),
+            'columns' => $this->columns($sectionId),
             'canManage' => $user->hasPermission((int) config('documents.feature_manage')),
         ]);
     }
@@ -167,26 +181,43 @@ class DocumentController extends Controller
             && (int) $document->EL_ID === 0;
     }
 
-    /** Column definitions, reused by the list view and (later) the export. */
-    private function columns(): array
+    /**
+     * Column definitions for the explorer table — rows are sub-folders
+     * (is_folder = true) and documents together. Reused by the export.
+     */
+    private function columns(int $sectionId): array
     {
+        $isFolder = fn ($d) => (bool) ($d->is_folder ?? false);
+        $folderUrl = fn ($d) => route('document.index', ['folder' => $d->DF_ID, 'section' => $sectionId]);
+
         return [
-            ['key' => 'name', 'label' => 'Nom', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true,
-                'value' => fn ($d) => '<i class="fas fa-file fa-xs me-2 text-muted"></i>'.e($d->D_NAME),
+            ['key' => 'icon', 'label' => '', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true,
+                'cardShow' => true, 'thWidth' => '34px', 'exportable' => false,
+                'value' => fn ($d) => $isFolder($d)
+                    ? '<i class="fas fa-folder" style="color:var(--color-folder)"></i>'
+                    : '<i class="fas '.$this->documents->fileIcon($d->D_NAME).'"></i>'],
+            ['key' => 'name', 'label' => 'Nom', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true, 'cardShow' => true,
+                'value' => fn ($d) => $isFolder($d)
+                    ? '<a href="'.e($folderUrl($d)).'" class="fw-semibold text-decoration-none">'.e($d->D_NAME).'</a>'
+                    : ($d->can_view
+                        ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="text-decoration-none">'.e($d->D_NAME).'</a>'
+                        : e($d->D_NAME)),
                 'exportable' => true, 'exportValue' => fn ($d) => $d->D_NAME],
             ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'mobile' => false,
-                'value' => fn ($d) => $d->TD_LIBELLE ?? $d->TD_CODE ?? '—',
-                'exportable' => true, 'exportValue' => fn ($d) => $d->TD_LIBELLE ?? ''],
+                'value' => fn ($d) => $isFolder($d) ? 'Dossier' : ($d->TD_LIBELLE ?? $d->TD_CODE ?? '—'),
+                'exportable' => true, 'exportValue' => fn ($d) => $isFolder($d) ? 'Dossier' : ($d->TD_LIBELLE ?? '')],
             ['key' => 'created_by', 'label' => 'Ajouté par', 'type' => 'text', 'mobile' => false,
-                'value' => fn ($d) => $d->created_by_name ?: '—',
-                'exportable' => true, 'exportValue' => fn ($d) => $d->created_by_name ?? ''],
+                'value' => fn ($d) => $isFolder($d) ? '—' : ($d->created_by_name ?: '—'),
+                'exportable' => true, 'exportValue' => fn ($d) => $isFolder($d) ? '' : ($d->created_by_name ?? '')],
             ['key' => 'date', 'label' => 'Date', 'type' => 'date', 'mobile' => true,
-                'value' => fn ($d) => $d->D_CREATED_DATE,
-                'exportable' => true, 'exportValue' => fn ($d) => $d->D_CREATED_DATE ? Carbon::parse($d->D_CREATED_DATE)->format('d/m/Y') : ''],
+                'value' => fn ($d) => $isFolder($d) ? null : $d->D_CREATED_DATE,
+                'exportable' => true, 'exportValue' => fn ($d) => (! $isFolder($d) && $d->D_CREATED_DATE) ? Carbon::parse($d->D_CREATED_DATE)->format('d/m/Y') : ''],
             ['key' => 'actions', 'label' => '', 'type' => 'html', 'alwaysVisible' => true, 'exportable' => false,
-                'value' => fn ($d) => $d->can_view
-                    ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'
-                    : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>'],
+                'value' => fn ($d) => $isFolder($d)
+                    ? '<a href="'.e($folderUrl($d)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ouvrir"><i class="fas fa-arrow-right fa-xs"></i></a>'
+                    : ($d->can_view
+                        ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'
+                        : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>')],
         ];
     }
 }

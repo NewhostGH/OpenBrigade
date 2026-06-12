@@ -45,3 +45,29 @@
 .ob-doc-folder.active .ob-doc-folder-actions {
     opacity: 1;
 }
+
+/* ── Collapsible tree (children indent comes from each row's padding-left) ─ */
+.ob-doc-tree-toggle {
+    border: 0;
+    background: none;
+    padding: 0;
+    width: 1rem;
+    flex: 0 0 1rem;
+    color: var(--text-muted-soft, #888);
+    cursor: pointer;
+}
+
+.ob-doc-tree-toggle > i {
+    transition: transform .12s;
+}
+
+.ob-doc-tree-toggle.open > i {
+    transform: rotate(90deg);
+}
+
+/* keeps leaf rows aligned with rows that have a chevron */
+.ob-doc-tree-spacer {
+    display: inline-block;
+    width: 1rem;
+    flex: 0 0 1rem;
+}

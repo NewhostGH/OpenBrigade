@@ -34,6 +34,35 @@ class DocumentService implements ServiceInterface
         return $folders->filter(fn ($f) => ! $f->DF_PARENT)->values();
     }
 
+    /**
+     * Nested folder tree for the sidebar, built from an already-loaded flat set.
+     * Each node is ['folder' => object, 'children' => node[]].
+     *
+     * @return array<int,array{folder:object,children:array<mixed>}>
+     */
+    public function folderTree(Collection $folders, int $parentId = 0): array
+    {
+        return $folders
+            ->filter(fn ($f) => (int) ($f->DF_PARENT ?? 0) === $parentId)
+            ->map(fn ($f) => [
+                'folder' => $f,
+                'children' => $this->folderTree($folders, (int) $f->DF_ID),
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Ids on the path to the open folder (the folder itself + its ancestors), so
+     * the sidebar tree can render those branches expanded.
+     *
+     * @return int[]
+     */
+    public function openFolderIds(Collection $folders, int $folderId): array
+    {
+        return array_map(fn ($c) => $c['id'], $this->breadcrumb($folders, $folderId));
+    }
+
     /** Direct sub-folders of a folder (0 = root) from an already-loaded set. */
     public function subFolders(Collection $folders, int $folderId): Collection
     {
@@ -193,6 +222,21 @@ class DocumentService implements ServiceInterface
     public function sanitizeFolderName(string $name): string
     {
         return trim(str_replace(['\\', '/', '"', "'"], '', $name));
+    }
+
+    /** FontAwesome classes (icon + colour) for a file, by extension. */
+    public function fileIcon(string $name): string
+    {
+        return match (strtolower(pathinfo($name, PATHINFO_EXTENSION))) {
+            'pdf' => 'fa-file-pdf text-danger',
+            'jpg', 'jpeg', 'png', 'gif' => 'fa-file-image text-info',
+            'doc', 'docx', 'odt' => 'fa-file-word text-primary',
+            'xls', 'xlsx' => 'fa-file-excel text-success',
+            'ppt', 'pptx', 'pps' => 'fa-file-powerpoint text-warning',
+            'zip' => 'fa-file-zipper text-secondary',
+            'mp3' => 'fa-file-audio text-body-secondary',
+            default => 'fa-file text-muted',
+        };
     }
 
     /** Absolute on-disk path of a library document's file. */

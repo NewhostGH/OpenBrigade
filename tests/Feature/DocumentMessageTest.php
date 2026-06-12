@@ -59,8 +59,9 @@ function docStubIndex(): void
         $ctrl->shouldReceive('index')->andReturn(
             view('document.index', [
                 'folders' => Collection::make([]),
-                'rootFolders' => Collection::make([]),
-                'subFolders' => Collection::make([]),
+                'tree' => [],
+                'openFolders' => [],
+                'rows' => Collection::make([]),
                 'breadcrumb' => [],
                 'documents' => $page,
                 'folderId' => 0,
@@ -127,7 +128,7 @@ test('document library renders the document.index view', function () {
 test('document library passes all required view variables', function () {
     docStubIndex();
     $this->actingAs(docMsgFakeUser())->get('/documents')
-        ->assertViewHasAll(['folders', 'rootFolders', 'subFolders', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types', 'sectionId', 'columns', 'canManage']);
+        ->assertViewHasAll(['folders', 'tree', 'openFolders', 'rows', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types', 'sectionId', 'columns', 'canManage']);
 });
 
 // ── Document folders (permission gating) ──────────────────────────────────────
