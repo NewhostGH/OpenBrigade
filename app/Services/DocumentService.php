@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Document;
+use App\Models\DocumentFolder;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -142,6 +143,56 @@ class DocumentService implements ServiceInterface
 
         return $user->hasPermissionInSection($docSecurityFid, $sectionId)
             || $user->hasPermissionInSection((int) config('documents.feature_manage'), $sectionId);
+    }
+
+    /**
+     * Create a folder. A child folder inherits its parent's document type
+     * (the legacy app forces this). Returns the new row.
+     */
+    public function createFolder(int $sectionId, int $parentId, string $name, int $userId): DocumentFolder
+    {
+        $typeCode = null;
+        if ($parentId > 0) {
+            $typeCode = DB::table('document_folder')->where('DF_ID', $parentId)->value('TD_CODE');
+        }
+
+        return DocumentFolder::create([
+            'S_ID' => $sectionId,
+            'DF_PARENT' => $parentId,
+            'DF_NAME' => $this->sanitizeFolderName($name),
+            'TD_CODE' => $typeCode,
+            'DF_CREATED_BY' => $userId,
+            'DF_CREATED_DATE' => now(),
+        ]);
+    }
+
+    public function renameFolder(DocumentFolder $folder, string $name): void
+    {
+        $folder->update(['DF_NAME' => $this->sanitizeFolderName($name)]);
+    }
+
+    /** A folder is deletable only when it holds no sub-folder and no document. */
+    public function folderIsEmpty(DocumentFolder $folder): bool
+    {
+        return ! DB::table('document_folder')->where('DF_PARENT', $folder->DF_ID)->exists()
+            && ! DB::table('document')->where('DF_ID', $folder->DF_ID)->exists();
+    }
+
+    /** Does a sibling folder already use this name? (unique S_ID, DF_PARENT, DF_NAME) */
+    public function folderNameExists(int $sectionId, int $parentId, string $name, ?int $exceptId = null): bool
+    {
+        return DocumentFolder::query()
+            ->where('S_ID', $sectionId)
+            ->where('DF_PARENT', $parentId)
+            ->where('DF_NAME', $this->sanitizeFolderName($name))
+            ->when($exceptId !== null, fn ($q) => $q->where('DF_ID', '!=', $exceptId))
+            ->exists();
+    }
+
+    /** Strip path/quote characters the legacy app also rejected in folder names. */
+    public function sanitizeFolderName(string $name): string
+    {
+        return trim(str_replace(['\\', '/', '"', "'"], '', $name));
     }
 
     /** Absolute on-disk path of a library document's file. */

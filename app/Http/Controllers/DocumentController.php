@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
+use App\Models\DocumentFolder;
 use App\Services\DocumentService;
 use App\Services\SectionScopeService;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
@@ -51,6 +53,77 @@ class DocumentController extends Controller
             'columns' => $this->columns(),
             'canManage' => $user->hasPermission((int) config('documents.feature_manage')),
         ]);
+    }
+
+    /** Create a folder in the current section/folder (permission 47). */
+    public function folderStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'section_id' => ['required', 'integer'],
+            'parent_id' => ['nullable', 'integer'],
+            'name' => ['required', 'string', 'max:50'],
+        ]);
+
+        $sectionId = (int) $v['section_id'];
+        $parentId = (int) ($v['parent_id'] ?? 0);
+        abort_unless($this->sectionScope->allows($sectionId), 403);
+
+        $name = $this->documents->sanitizeFolderName($v['name']);
+        if ($name === '') {
+            return $this->backToFolder($sectionId, $parentId, 'error', 'Nom de dossier invalide.');
+        }
+        if ($this->documents->folderNameExists($sectionId, $parentId, $name)) {
+            return $this->backToFolder($sectionId, $parentId, 'error', 'Un dossier porte déjà ce nom ici.');
+        }
+
+        $this->documents->createFolder($sectionId, $parentId, $name, (int) $request->user()->P_ID);
+
+        return $this->backToFolder($sectionId, $parentId, 'success', "Dossier « {$name} » créé.");
+    }
+
+    /** Rename a folder (permission 47). */
+    public function folderUpdate(Request $request, DocumentFolder $folder): RedirectResponse
+    {
+        $v = $request->validate(['name' => ['required', 'string', 'max:50']]);
+        $sectionId = (int) $folder->S_ID;
+        $parentId = (int) $folder->DF_PARENT;
+        abort_unless($this->sectionScope->allows($sectionId), 403);
+
+        $name = $this->documents->sanitizeFolderName($v['name']);
+        if ($name === '') {
+            return $this->backToFolder($sectionId, $parentId, 'error', 'Nom de dossier invalide.');
+        }
+        if ($this->documents->folderNameExists($sectionId, $parentId, $name, (int) $folder->DF_ID)) {
+            return $this->backToFolder($sectionId, $parentId, 'error', 'Un dossier porte déjà ce nom ici.');
+        }
+
+        $this->documents->renameFolder($folder, $name);
+
+        return $this->backToFolder($sectionId, $parentId, 'success', 'Dossier renommé.');
+    }
+
+    /** Delete an empty folder (permission 47). */
+    public function folderDestroy(DocumentFolder $folder): RedirectResponse
+    {
+        $sectionId = (int) $folder->S_ID;
+        $parentId = (int) $folder->DF_PARENT;
+        abort_unless($this->sectionScope->allows($sectionId), 403);
+
+        if (! $this->documents->folderIsEmpty($folder)) {
+            return $this->backToFolder($sectionId, (int) $folder->DF_ID, 'error',
+                'Dossier non vide : videz-le avant de le supprimer.');
+        }
+
+        $folder->delete();
+
+        return $this->backToFolder($sectionId, $parentId, 'success', 'Dossier supprimé.');
+    }
+
+    private function backToFolder(int $sectionId, int $folderId, string $flash, string $message): RedirectResponse
+    {
+        return redirect()
+            ->route('document.index', array_filter(['folder' => $folderId ?: null, 'section' => $sectionId]))
+            ->with($flash, $message);
     }
 
     /** Stream a library document — permission, type/doc security and section checked. */

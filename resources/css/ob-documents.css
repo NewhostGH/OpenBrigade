@@ -3,11 +3,11 @@
    ========================================================================== */
 
 .ob-doc-folder {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
     padding: .4rem .75rem;
     font-size: var(--font-size-sm);
-    text-decoration: none;
-    color: var(--text-body, #333);
     border-bottom: 1px solid var(--component-border, #eee);
 }
 
@@ -22,4 +22,26 @@
 .ob-doc-folder.active {
     font-weight: 600;
     background: var(--hover-bg, #f0ecfa);
+}
+
+.ob-doc-folder-link {
+    flex: 1 1 auto;
+    text-decoration: none;
+    color: var(--text-body, #333);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Manage controls stay hidden until the row is hovered, to keep the tree tidy. */
+.ob-doc-folder-actions {
+    display: inline-flex;
+    gap: .4rem;
+    opacity: 0;
+    transition: opacity .12s;
+}
+
+.ob-doc-folder:hover .ob-doc-folder-actions,
+.ob-doc-folder.active .ob-doc-folder-actions {
+    opacity: 1;
 }

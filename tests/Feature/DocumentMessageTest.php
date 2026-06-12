@@ -33,7 +33,7 @@ function docMsgStubNav(): void
  * Build a minimal fake User (no DB required). hasPermission() returns true so
  * permission-gated library and board actions are reachable.
  */
-function docMsgFakeUser(): User
+function docMsgFakeUser(bool $can = true): User
 {
     /** @var User&MockInterface $user */
     $user = Mockery::mock(User::class)->makePartial();
@@ -41,7 +41,7 @@ function docMsgFakeUser(): User
         'P_ID' => 1, 'P_NOM' => 'Test', 'P_PRENOM' => 'User',
         'P_SECTION' => 1, 'P_ACTIF' => 1, 'P_MDP' => bcrypt('secret'),
     ]);
-    $user->shouldReceive('hasPermission')->andReturn(true);
+    $user->shouldReceive('hasPermission')->andReturn($can);
 
     return $user;
 }
@@ -128,6 +128,19 @@ test('document library passes all required view variables', function () {
     docStubIndex();
     $this->actingAs(docMsgFakeUser())->get('/documents')
         ->assertViewHasAll(['folders', 'rootFolders', 'subFolders', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types', 'sectionId', 'columns', 'canManage']);
+});
+
+// ── Document folders (permission gating) ──────────────────────────────────────
+
+test('unauthenticated users cannot create a folder', function () {
+    $this->post('/documents/folders', ['section_id' => 1, 'name' => 'Dossier'])
+        ->assertRedirect('/login');
+});
+
+test('creating a folder requires permission 47', function () {
+    $this->actingAs(docMsgFakeUser(can: false))
+        ->post('/documents/folders', ['section_id' => 1, 'name' => 'Dossier'])
+        ->assertForbidden();
 });
 
 // ── Messages ─────────────────────────────────────────────────────────────────
