@@ -2,97 +2,118 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
+use App\Services\DocumentService;
+use App\Services\SectionScopeService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+/**
+ * Section document library — browse folders and documents, download files.
+ * All query/business logic lives in {@see DocumentService}; this controller
+ * stays thin (CONVENTIONS §3). Upload/edit/folder management is permission 47.
+ */
 class DocumentController extends Controller
 {
-    /**
-     * Document library — shows folder tree and documents for a given folder.
-     */
+    public function __construct(
+        private readonly DocumentService $documents,
+        private readonly SectionScopeService $sectionScope,
+    ) {}
+
     public function index(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
+        $user = $request->user();
+
+        // Active section: the navbar-chosen one when allowed, else the home section.
+        $requested = (int) $request->integer('section');
+        $sectionId = ($requested > 0 && $this->sectionScope->canChoose($requested))
+            ? $requested
+            : (int) ($this->sectionScope->defaultSectionId() ?? $user->P_SECTION);
+
         $folderId = (int) $request->integer('folder', 0);
-        $typeCode = (string) $request->string('type', 'ALL');
+        $typeCode = $request->string('type', 'ALL')->toString() ?: 'ALL';
 
-        // All folders for the user's section (used to build breadcrumb + tree)
-        $allFolders = DB::table('document_folder')
-            ->where('S_ID', $sectionId)
-            ->orderBy('DF_NAME')
-            ->get(['DF_ID', 'DF_PARENT', 'DF_NAME', 'TD_CODE']);
+        $folders = $this->documents->folders($sectionId);
 
-        // Current folder's breadcrumb
-        $breadcrumb = $this->buildBreadcrumb($allFolders, $folderId);
-
-        // Sub-folders of current folder
-        $subFolders = $allFolders->where('DF_PARENT', $folderId === 0 ? null : $folderId)
-            ->values();
-        if ($folderId === 0) {
-            // Root: folders with no parent or parent = 0
-            $subFolders = $allFolders->filter(fn ($f) => ! $f->DF_PARENT)
-                ->values();
-        }
-
-        // Documents in current folder
-        $docQuery = DB::table('document as d')
-            ->leftJoin('type_document as td', 'd.TD_CODE', '=', 'td.TD_CODE')
-            ->leftJoin('pompier as p', 'd.D_CREATED_BY', '=', 'p.P_ID')
-            ->where('d.S_ID', $sectionId);
-
-        if ($folderId > 0) {
-            $docQuery->where('d.DF_ID', $folderId);
-        } else {
-            $docQuery->whereNull('d.DF_ID')->orWhere('d.DF_ID', 0);
-        }
-
-        if ($typeCode !== 'ALL') {
-            $docQuery->where('d.TD_CODE', $typeCode);
-        }
-
-        $documents = $docQuery
-            ->orderByDesc('d.D_CREATED_DATE')
-            ->select(
-                'd.D_ID', 'd.D_NAME', 'd.TD_CODE', 'd.D_CREATED_DATE',
-                'td.TD_LIBELLE',
-                DB::raw("CONCAT(p.P_PRENOM, ' ', p.P_NOM) as created_by_name")
-            )
-            ->paginate(30)
-            ->withQueryString();
-
-        // Document types for filter
-        $types = DB::table('type_document')
-            ->orderBy('TD_LIBELLE')
-            ->get(['TD_CODE', 'TD_LIBELLE']);
-
-        return view('document.index', compact(
-            'allFolders', 'subFolders', 'breadcrumb',
-            'documents', 'folderId', 'typeCode', 'types'
-        ));
+        return view('document.index', [
+            'folders' => $folders,
+            'rootFolders' => $this->documents->rootFolders($folders),
+            'subFolders' => $this->documents->subFolders($folders, $folderId),
+            'breadcrumb' => $this->documents->breadcrumb($folders, $folderId),
+            'documents' => $this->documents->documents($user, $sectionId, $folderId, $typeCode),
+            'folderId' => $folderId,
+            'typeCode' => $typeCode,
+            'types' => $this->documents->types(),
+            'sectionId' => $sectionId,
+            'columns' => $this->columns(),
+            'canManage' => $user->hasPermission((int) config('documents.feature_manage')),
+        ]);
     }
 
-    private function buildBreadcrumb($allFolders, int $folderId): array
+    /** Stream a library document — permission, type/doc security and section checked. */
+    public function download(Request $request, Document $document): BinaryFileResponse
     {
-        if ($folderId === 0) {
-            return [];
-        }
+        $user = $request->user();
+        $sectionId = (int) $document->S_ID;
 
-        $crumbs = [];
-        $current = $folderId;
-        $visited = [];
+        // Only library documents are served here (entity files use their own paths).
+        abort_unless($this->isLibraryDocument($document), 404);
+        abort_unless($this->sectionScope->allows($sectionId), 403);
 
-        while ($current > 0 && ! in_array($current, $visited, true)) {
-            $folder = $allFolders->firstWhere('DF_ID', $current);
-            if (! $folder) {
-                break;
-            }
-            $crumbs[] = ['id' => $folder->DF_ID, 'name' => $folder->DF_NAME];
-            $visited[] = $current;
-            $current = (int) ($folder->DF_PARENT ?? 0);
-        }
+        $document->loadMissing('type', 'security');
+        $canView = $this->documents->canView(
+            $user,
+            $sectionId,
+            (int) ($document->type->TD_SECURITY ?? 0),
+            (int) ($document->security->F_ID ?? 0),
+            (int) $document->D_CREATED_BY,
+        );
+        abort_unless($canView, 403);
 
-        return array_reverse($crumbs);
+        $path = $this->documents->filePath($sectionId, (int) $document->DF_ID, $document->D_NAME);
+        abort_unless(File::exists($path), 404);
+
+        // PDFs open inline; everything else downloads as an attachment.
+        $inline = strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf';
+
+        return response()->file($path, [
+            'Content-Disposition' => ($inline ? 'inline' : 'attachment')
+                .'; filename="'.basename($document->D_NAME).'"',
+        ]);
+    }
+
+    /** A document not attached to any entity (event, person, vehicle…). */
+    private function isLibraryDocument(Document $document): bool
+    {
+        return (int) $document->E_CODE === 0 && (int) $document->P_ID === 0
+            && (int) $document->V_ID === 0 && (int) $document->M_ID === 0
+            && (int) $document->NF_ID === 0 && (int) $document->VI_ID === 0
+            && (int) $document->EL_ID === 0;
+    }
+
+    /** Column definitions, reused by the list view and (later) the export. */
+    private function columns(): array
+    {
+        return [
+            ['key' => 'name', 'label' => 'Nom', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true,
+                'value' => fn ($d) => '<i class="fas fa-file fa-xs me-2 text-muted"></i>'.e($d->D_NAME),
+                'exportable' => true, 'exportValue' => fn ($d) => $d->D_NAME],
+            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'mobile' => false,
+                'value' => fn ($d) => $d->TD_LIBELLE ?? $d->TD_CODE ?? '—',
+                'exportable' => true, 'exportValue' => fn ($d) => $d->TD_LIBELLE ?? ''],
+            ['key' => 'created_by', 'label' => 'Ajouté par', 'type' => 'text', 'mobile' => false,
+                'value' => fn ($d) => $d->created_by_name ?: '—',
+                'exportable' => true, 'exportValue' => fn ($d) => $d->created_by_name ?? ''],
+            ['key' => 'date', 'label' => 'Date', 'type' => 'date', 'mobile' => true,
+                'value' => fn ($d) => $d->D_CREATED_DATE,
+                'exportable' => true, 'exportValue' => fn ($d) => $d->D_CREATED_DATE ? Carbon::parse($d->D_CREATED_DATE)->format('d/m/Y') : ''],
+            ['key' => 'actions', 'label' => '', 'type' => 'html', 'alwaysVisible' => true, 'exportable' => false,
+                'value' => fn ($d) => $d->can_view
+                    ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'
+                    : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>'],
+        ];
     }
 }

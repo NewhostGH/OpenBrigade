@@ -1,0 +1,25 @@
+/* ==========================================================================
+   ob-documents.css — document library (folder tree + listing)
+   ========================================================================== */
+
+.ob-doc-folder {
+    display: block;
+    padding: .4rem .75rem;
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    color: var(--text-body, #333);
+    border-bottom: 1px solid var(--component-border, #eee);
+}
+
+.ob-doc-folder:last-child {
+    border-bottom: 0;
+}
+
+.ob-doc-folder:hover {
+    background: var(--hover-bg, #f5f3fa);
+}
+
+.ob-doc-folder.active {
+    font-weight: 600;
+    background: var(--hover-bg, #f0ecfa);
+}

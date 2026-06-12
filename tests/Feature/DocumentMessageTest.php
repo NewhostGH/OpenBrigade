@@ -3,6 +3,7 @@
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\MessageController;
 use App\Models\User;
+use App\Services\FeatureService;
 use App\Services\NavigationService;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -20,6 +21,12 @@ function docMsgStubNav(): void
     $nav->shouldReceive('getNavGroups')->andReturn([]);
     $nav->shouldReceive('getPinnedShortcuts')->andReturn([]);
     app()->instance(NavigationService::class, $nav);
+
+    // The document index renders <x-ob-section-select>, whose component reads
+    // the multi_site flag — stub it off so the view renders DB-free.
+    $features = Mockery::mock(FeatureService::class);
+    $features->shouldReceive('isEnabled')->andReturn(false);
+    app()->instance(FeatureService::class, $features);
 }
 
 /**
@@ -51,13 +58,17 @@ function docStubIndex(): void
         $page->setPath('/documents');
         $ctrl->shouldReceive('index')->andReturn(
             view('document.index', [
-                'allFolders' => Collection::make([]),
+                'folders' => Collection::make([]),
+                'rootFolders' => Collection::make([]),
                 'subFolders' => Collection::make([]),
                 'breadcrumb' => [],
                 'documents' => $page,
                 'folderId' => 0,
                 'typeCode' => 'ALL',
                 'types' => Collection::make([]),
+                'sectionId' => 1,
+                'columns' => [],
+                'canManage' => false,
             ])
         );
 
@@ -116,7 +127,7 @@ test('document library renders the document.index view', function () {
 test('document library passes all required view variables', function () {
     docStubIndex();
     $this->actingAs(docMsgFakeUser())->get('/documents')
-        ->assertViewHasAll(['allFolders', 'subFolders', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types']);
+        ->assertViewHasAll(['folders', 'rootFolders', 'subFolders', 'breadcrumb', 'documents', 'folderId', 'typeCode', 'types', 'sectionId', 'columns', 'canManage']);
 });
 
 // ── Messages ─────────────────────────────────────────────────────────────────

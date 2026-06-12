@@ -188,6 +188,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/materiels', [MaterielController::class, 'index'])->name('materiel.index')->middleware(['permission:42', 'feature:materiel']);
     Route::get('/consommables', [ConsommableController::class, 'index'])->name('consommable.index')->middleware(['permission:42', 'feature:consommables']);
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
+    Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download')->middleware('permission:44');
     Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
     Route::get('/organisation', fn () => redirect()->route('organisation.organigramme'))->name('organisation.index');
     Route::get('/organisation/organigramme', [OrganisationController::class, 'index'])->name('organisation.organigramme')->middleware('permission:52');
