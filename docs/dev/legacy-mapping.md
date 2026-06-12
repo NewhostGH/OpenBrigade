@@ -327,16 +327,16 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file                                   | New implementation                                                                         |
 | --------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `documents.php`                               | `app/Http/Controllers/DocumentController.php` + `resources/views/document/index.blade.php` |
-| `document_modal.php`                          | `document/index.blade.php`                                                                 |
-| `save_documents.php`                          | `DocumentController.php`                                                                   |
-| `save_folder.php`                             | `DocumentController.php`                                                                   |
-| `upd_folder.php`                              | `DocumentController.php`                                                                   |
+| `documents.php`                               | `DocumentController@index` + `DocumentService` + `document/index.blade.php` (ob-* explorer) |
+| `document_modal.php`                          | `document/index.blade.php` (upload/edit modals)                                            |
+| `upd_document.php` / `save_documents.php`     | `DocumentController@store/update/destroy` (permission 47)                                  |
+| `save_folder.php` / `upd_folder.php`          | `DocumentController@folderStore/folderUpdate/folderDestroy`                                |
 | `delete_file.php`                             | `DocumentController.php`                                                                   |
 | `delete_event_file.php`                       | **WIP**                                                                                    |
 | `upload.php`                                  | `DocumentController.php`                                                                   |
-| `showfile.php`                                | `DocumentController.php`                                                                   |
-| `config_doc.php`                              | **WIP**                                                                                    |
+| `showfile.php`                                | `DocumentController@download` for library docs; still bridged for entity files            |
+| `config_doc.php`                              | Not library config — PDF attestation/convention text (tracked under the PDF/billing items) |
+| Document type config                          | `DocumentTypeController.php` + `document/types.blade.php` (`type_document` CRUD, perm 47)  |
 | `observations_modal.php`                      | **WIP**                                                                                    |
 | `document_folders` / `document_security` docs | see `archive/legacy_app/documentation/` below                                              |
 

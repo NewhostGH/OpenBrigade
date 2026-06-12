@@ -149,6 +149,9 @@ a legacy destination, use `route()` instead of `url('/legacy/...')`.
 | `remplacements.php`                      | `route('remplacement.index')`                                   |
 | `tableau_garde.php`                      | `route('garde.index')`                                          |
 | `message.php`                            | `route('message.index')`                                        |
+| `documents.php`                          | `route('document.index')`                                       |
+| `upd_document.php` / `save_documents.php`| `route('document.index')` (upload/edit modals)                  |
+| `showfile.php` (library doc)             | `route('document.download', $id)`                               |
 | `bilans.php`                             | `route('statistique.index')`                                    |
 
 The complete legacy-file → new-implementation map is in
