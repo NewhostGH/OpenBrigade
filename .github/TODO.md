@@ -154,6 +154,17 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Document type & security config — `type_document` CRUD (`DocumentTypeController`, perm 47), `document_security` shown as reference. (Legacy `config_doc.php` is PDF attestation text, not library config — tracked under the PDF/billing items, not here.)
 - [x] **Per-object ACL on files & folders** — granular rights (read / download / write / delete / share / fullcontrol) granted to **users / groups / roles / everyone** with explicit **allow *and* deny** (deny wins); folder ACEs **inherited** by descendant folders & documents, the item's own ACEs override. Overlays the section/type security — **no ACE keeps the legacy behaviour** (backward compatible). `ob_document_acl` + `ObDocumentAcl` + `DocumentAclService` (resolver, memoised, 9 unit tests); enforced on every gate (download/write/delete/share); **"Partager"** page (`DocumentAclController`) per file/folder. See [project_documents] memory.
 
+### Photos (PHOTO)
+
+- [x] Native album photo library — `ob-*` grid + bs5-lightbox; `ob_photo_album` + `ob_photo` tables; `PhotoService`, `PhotoController`, section-scoped, perm 44 view / 47 manage
+- [x] Public storage — `storage/app/public/photos/{S_ID}/{album_id}/{filename}` served via `storage:link` symlink
+- [x] Album CRUD — create, rename/describe, delete (with photo file cleanup)
+- [x] Photo upload (multi-file per album), caption edit, set cover, delete
+- [x] bs5-lightbox integration — full-screen gallery with keyboard nav, grouped per album
+- [ ] Drag-and-drop reorder of photos within an album (`sort_order`)
+- [ ] Bulk delete photos
+- [ ] Photo download (single + zip album)
+
 ### Statistique (STAT)
 
 - [x] Participation and event statistics (charts)

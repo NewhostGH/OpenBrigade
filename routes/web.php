@@ -26,6 +26,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ParametrageController;
 use App\Http\Controllers\PersonnelController;
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\PluginController;
 use App\Http\Controllers\RemplacementController;
@@ -213,6 +214,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/documents/{document}', [DocumentController::class, 'update'])->name('document.update')->middleware('permission:44');
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('document.destroy')->middleware('permission:44');
     Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
+    // Photo album (replaces legacy SPGM gallery). Entry: permission 44; upload/delete: 47.
+    Route::get('/photos', [PhotoController::class, 'index'])->name('photo.index')->middleware('permission:44');
+    Route::get('/photos/{album}', [PhotoController::class, 'albumShow'])->name('photo.album')->middleware('permission:44');
+    Route::post('/photos', [PhotoController::class, 'albumStore'])->name('photo.album.store')->middleware('permission:47');
+    Route::patch('/photos/{album}', [PhotoController::class, 'albumUpdate'])->name('photo.album.update')->middleware('permission:47');
+    Route::delete('/photos/{album}', [PhotoController::class, 'albumDestroy'])->name('photo.album.destroy')->middleware('permission:47');
+    Route::post('/photos/{album}/upload', [PhotoController::class, 'photoStore'])->name('photo.store')->middleware('permission:47');
+    Route::patch('/photos/{album}/cover', [PhotoController::class, 'setCover'])->name('photo.cover')->middleware('permission:47');
+    Route::patch('/photo/{photo}', [PhotoController::class, 'photoUpdate'])->name('photo.update')->middleware('permission:47');
+    Route::delete('/photo/{photo}', [PhotoController::class, 'photoDestroy'])->name('photo.destroy')->middleware('permission:47');
     Route::get('/organisation', fn () => redirect()->route('organisation.organigramme'))->name('organisation.index');
     Route::get('/organisation/organigramme', [OrganisationController::class, 'index'])->name('organisation.organigramme')->middleware('permission:52');
     // Sections — native list + CRUD (replaces departement.php)

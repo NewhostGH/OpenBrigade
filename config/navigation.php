@@ -116,7 +116,7 @@ return [
             'permission' => 44,
             'items' => [
                 ['key' => 'docs.library', 'label' => 'Bibliothèque', 'url' => '/documents', 'icon' => 'book', 'permission' => 44],
-                ['key' => 'docs.photos',  'label' => 'Album photos',  'url' => '/legacy/spgm/index.php',                                   'icon' => 'images', 'permission' => 44],
+                ['key' => 'docs.photos',  'label' => 'Album photos',  'url' => '/photos',  'icon' => 'images', 'permission' => 44],
             ],
         ],
 
