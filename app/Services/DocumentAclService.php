@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ObDocumentAcl;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -130,6 +131,37 @@ class DocumentAclService implements ServiceInterface
         }
 
         return $chain;
+    }
+
+    // ── internals ─────────────────────────────────────────────────────────────
+
+    // ── management (for the share UI) ───────────────────────────────────────
+
+    /** The ACEs defined directly on a resource (not inherited), oldest first. */
+    public function ownAces(string $resourceType, int $resourceId): Collection
+    {
+        return DB::table('ob_document_acl')
+            ->where('resource_type', $resourceType)
+            ->where('resource_id', $resourceId)
+            ->orderBy('id')
+            ->get(['id', 'principal_type', 'principal_id', 'effect', 'rights']);
+    }
+
+    /** Add or replace an ACE (one allow + one deny per principal per resource). */
+    public function setAce(string $resourceType, int $resourceId, string $principalType, int $principalId, string $effect, int $rights, ?int $createdBy): void
+    {
+        DB::table('ob_document_acl')->updateOrInsert(
+            [
+                'resource_type' => $resourceType, 'resource_id' => $resourceId,
+                'principal_type' => $principalType, 'principal_id' => $principalId, 'effect' => $effect,
+            ],
+            ['rights' => $rights & ObDocumentAcl::ALL_RIGHTS, 'created_by' => $createdBy, 'updated_at' => now(), 'created_at' => now()],
+        );
+    }
+
+    public function removeAce(int $aceId): void
+    {
+        DB::table('ob_document_acl')->where('id', $aceId)->delete();
     }
 
     // ── internals ─────────────────────────────────────────────────────────────

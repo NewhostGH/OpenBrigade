@@ -22,6 +22,9 @@
 
         @if ($canManage)
             <span class="ob-doc-folder-actions">
+                <a href="{{ route('document.acl', ['folder', $f->DF_ID]) }}" class="btn btn-link btn-sm p-0 text-secondary" title="Partager">
+                    <i class="fas fa-user-lock fa-xs"></i>
+                </a>
                 <button type="button" class="btn btn-link btn-sm p-0 text-secondary" title="Renommer"
                         data-folder-edit data-id="{{ $f->DF_ID }}" data-name="{{ $f->DF_NAME }}">
                     <i class="fas fa-pen fa-xs"></i>

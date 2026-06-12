@@ -155,6 +155,14 @@ test('unauthenticated users cannot export documents', function () {
     $this->get('/documents/export/xlsx')->assertRedirect('/login');
 });
 
+test('unauthenticated users cannot open the share page', function () {
+    $this->get('/documents/acl/document/1')->assertRedirect('/login');
+});
+
+test('the share page is forbidden without library access', function () {
+    $this->actingAs(docMsgFakeUser(can: false))->get('/documents/acl/document/1')->assertForbidden();
+});
+
 test('the document types screen requires permission 47', function () {
     $this->actingAs(docMsgFakeUser(can: false))->get('/documents/types')->assertForbidden();
 });

@@ -271,12 +271,15 @@ class DocumentController extends Controller
         $isFolder = fn ($d) => (bool) ($d->is_folder ?? false);
         $folderUrl = fn ($d) => route('document.index', ['folder' => $d->DF_ID, 'section' => $sectionId]);
 
-        // Edit (write) affordance, shown per-row from the resolved rights.
+        // Edit (write) + share affordances, shown per-row from the resolved rights.
         $editButton = fn ($d) => ($d->can_write ?? false)
             ? '<button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1 ms-1" title="Modifier"'
                 .' data-doc-edit data-id="'.$d->D_ID.'" data-type="'.e($d->TD_CODE).'"'
                 .' data-security="'.(int) $d->DS_ID.'" data-folder="'.(int) $d->DF_ID.'">'
                 .'<i class="fas fa-pen fa-xs"></i></button>'
+            : '';
+        $shareButton = fn ($d) => ($d->can_share ?? false)
+            ? '<a href="'.e(route('document.acl', [ObDocumentAcl::TYPE_DOCUMENT, $d->D_ID])).'" class="btn btn-sm btn-outline-secondary py-0 px-1 ms-1" title="Partager"><i class="fas fa-user-lock fa-xs"></i></a>'
             : '';
 
         return [
@@ -305,8 +308,8 @@ class DocumentController extends Controller
                 'value' => fn ($d) => $isFolder($d)
                     ? '<a href="'.e($folderUrl($d)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ouvrir"><i class="fas fa-arrow-right fa-xs"></i></a>'
                     : ($d->can_view
-                        ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'.$editButton($d)
-                        : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>'.$editButton($d))],
+                        ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'.$editButton($d).$shareButton($d)
+                        : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>'.$editButton($d).$shareButton($d))],
         ];
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\ContextController;
 use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DispoController;
+use App\Http\Controllers\DocumentAclController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\EvenementController;
@@ -191,6 +192,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download')->middleware('permission:44');
     Route::get('/documents/export/{format}', [DocumentController::class, 'export'])->name('document.export')->middleware('permission:44');
+    // Per-object ACL ("Partager") — entry needs library access (44); the SHARE
+    // right (or permission 47) is enforced in the controller.
+    Route::get('/documents/acl/{type}/{id}', [DocumentAclController::class, 'show'])->name('document.acl')->middleware('permission:44')->whereIn('type', ['folder', 'document']);
+    Route::post('/documents/acl/{type}/{id}', [DocumentAclController::class, 'store'])->name('document.acl.store')->middleware('permission:44')->whereIn('type', ['folder', 'document']);
+    Route::delete('/documents/acl/ace/{ace}', [DocumentAclController::class, 'destroy'])->name('document.acl.destroy')->middleware('permission:44');
     // Document type & security configuration — permission 47
     Route::get('/documents/types', [DocumentTypeController::class, 'index'])->name('document.types')->middleware('permission:47');
     Route::post('/documents/types', [DocumentTypeController::class, 'store'])->name('document.types.store')->middleware('permission:47');
