@@ -30,7 +30,7 @@ class DocumentAclController extends Controller
 
         $groups = ObGroup::query()->where('kind', ObGroup::KIND_GROUP)->orderBy('ordering')->orderBy('id')->get(['id', 'name']);
         $roles = ObGroup::query()->where('kind', ObGroup::KIND_ROLE)->orderBy('ordering')->orderBy('id')->get(['id', 'name']);
-        $people = DB::table('pompier')->where('P_SECTION', $sectionId)->where('P_ACTIF', 1)
+        $people = DB::table('pompier')->where('P_SECTION', $sectionId)->where('SUSPENDU', 0)
             ->orderBy('P_NOM')->orderBy('P_PRENOM')->get(['P_ID', 'P_NOM', 'P_PRENOM']);
 
         // Label maps for rendering the current ACEs.
@@ -38,6 +38,8 @@ class DocumentAclController extends Controller
         $peopleNames = $people->mapWithKeys(fn ($p) => [(int) $p->P_ID => $p->P_NOM.' '.$p->P_PRENOM])->all();
 
         return view('document.acl', [
+            'layout' => $request->boolean('window') ? 'layout.popup' : 'layout.app',
+            'isWindow' => $request->boolean('window'),
             'type' => $type,
             'id' => $id,
             'name' => $name,
@@ -80,7 +82,7 @@ class DocumentAclController extends Controller
         $rights = array_sum(array_map('intval', $v['rights']));
         $this->acl->setAce($type, $id, $v['principal_type'], $principalId, $v['effect'], $rights, (int) $request->user()->P_ID);
 
-        return redirect()->route('document.acl', [$type, $id])->with('success', 'Autorisation enregistrée.');
+        return redirect()->route('document.acl', $this->backParams($request, $type, $id))->with('success', 'Autorisation enregistrée.');
     }
 
     public function destroy(Request $request, int $ace): RedirectResponse
@@ -93,8 +95,16 @@ class DocumentAclController extends Controller
 
         $this->acl->removeAce($ace);
 
-        return redirect()->route('document.acl', [$row->resource_type, (int) $row->resource_id])
+        return redirect()->route('document.acl', $this->backParams($request, $row->resource_type, (int) $row->resource_id))
             ->with('success', 'Autorisation supprimée.');
+    }
+
+    /** Route params back to the ACL page, preserving the popup-window flag. */
+    private function backParams(Request $request, string $type, int $id): array
+    {
+        return $request->boolean('window')
+            ? ['type' => $type, 'id' => $id, 'window' => 1]
+            : ['type' => $type, 'id' => $id];
     }
 
     /** @return array{0:string,1:int} [display name, section id] */

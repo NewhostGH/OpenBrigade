@@ -396,20 +396,27 @@ class DocumentService implements ServiceInterface
         ]);
     }
 
-    /** Change a document's type and, if the folder changed, move its file. */
-    public function updateDocument(Document $document, string $typeCode, int $newFolderId): void
+    /**
+     * Edit a document: rename it, change its type and/or move it to another
+     * folder — a single on-disk move covers both the rename and the relocation.
+     */
+    public function updateDocument(Document $document, string $name, string $typeCode, int $newFolderId): void
     {
+        $name = $this->sanitizeFileName($name) ?: (string) $document->D_NAME;
+        $sectionId = (int) $document->S_ID;
         $oldFolderId = (int) $document->DF_ID;
-        if ($oldFolderId !== $newFolderId) {
-            $src = $this->existingFilePath((int) $document->S_ID, $oldFolderId, $document->D_NAME);
+        $oldName = (string) $document->D_NAME;
+
+        if ($name !== $oldName || $newFolderId !== $oldFolderId) {
+            $src = $this->existingFilePath($sectionId, $oldFolderId, $oldName);
             if ($src !== null) {
-                $destDir = $this->fileDir((int) $document->S_ID, $newFolderId);
+                $destDir = $this->fileDir($sectionId, $newFolderId);
                 File::ensureDirectoryExists($destDir);
-                File::move($src, $destDir.'/'.basename($document->D_NAME));
+                File::move($src, $destDir.'/'.$name);
             }
         }
 
-        $document->update(['TD_CODE' => $typeCode, 'DF_ID' => $newFolderId]);
+        $document->update(['D_NAME' => $name, 'TD_CODE' => $typeCode, 'DF_ID' => $newFolderId]);
     }
 
     /** Delete a document's file (canonical and/or legacy) and its row. */

@@ -41,11 +41,18 @@ class DocumentController extends Controller
         // first page), then the paginated documents — folders and files together.
         $rows = collect();
         if ($documents->currentPage() === 1) {
-            $rows = $this->documents->subFolders($folders, $folderId)->map(fn ($f) => (object) [
-                'is_folder' => true,
-                'DF_ID' => (int) $f->DF_ID,
-                'D_NAME' => $f->DF_NAME,
-            ]);
+            $rows = $this->documents->subFolders($folders, $folderId)->map(function ($f) use ($user, $sectionId) {
+                $fid = (int) $f->DF_ID;
+
+                return (object) [
+                    'is_folder' => true,
+                    'DF_ID' => $fid,
+                    'D_NAME' => $f->DF_NAME,
+                    'can_write' => $this->documents->authorize($user, ObDocumentAcl::TYPE_FOLDER, $fid, ObDocumentAcl::RIGHT_WRITE, $sectionId),
+                    'can_delete' => $this->documents->authorize($user, ObDocumentAcl::TYPE_FOLDER, $fid, ObDocumentAcl::RIGHT_DELETE, $sectionId),
+                    'can_share' => $this->documents->authorize($user, ObDocumentAcl::TYPE_FOLDER, $fid, ObDocumentAcl::RIGHT_SHARE, $sectionId),
+                ];
+            });
         }
         $rows = $rows->concat($documents->items());
         // May the user add to / manage the current folder? ACL write on the
@@ -96,12 +103,13 @@ class DocumentController extends Controller
         abort_unless($this->documents->authorize($request->user(), ObDocumentAcl::TYPE_DOCUMENT, (int) $document->D_ID, ObDocumentAcl::RIGHT_WRITE, $sectionId), 403);
 
         $v = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
             'type' => ['required', 'string', 'exists:type_document,TD_CODE'],
             'folder_id' => ['nullable', 'integer'],
         ]);
         $folderId = (int) ($v['folder_id'] ?? 0);
 
-        $this->documents->updateDocument($document, $v['type'], $folderId);
+        $this->documents->updateDocument($document, $v['name'], $v['type'], $folderId);
 
         return $this->backToFolder($sectionId, $folderId, 'success', 'Document mis à jour.');
     }
@@ -268,17 +276,6 @@ class DocumentController extends Controller
         $isFolder = fn ($d) => (bool) ($d->is_folder ?? false);
         $folderUrl = fn ($d) => route('document.index', ['folder' => $d->DF_ID, 'section' => $sectionId]);
 
-        // Edit (write) + share affordances, shown per-row from the resolved rights.
-        $editButton = fn ($d) => ($d->can_write ?? false)
-            ? '<button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1 ms-1" title="Modifier"'
-                .' data-doc-edit data-id="'.$d->D_ID.'" data-type="'.e($d->TD_CODE).'"'
-                .' data-folder="'.(int) $d->DF_ID.'">'
-                .'<i class="fas fa-pen fa-xs"></i></button>'
-            : '';
-        $shareButton = fn ($d) => ($d->can_share ?? false)
-            ? '<a href="'.e(route('document.acl', [ObDocumentAcl::TYPE_DOCUMENT, $d->D_ID])).'" class="btn btn-sm btn-outline-secondary py-0 px-1 ms-1" title="Partager"><i class="fas fa-user-lock fa-xs"></i></a>'
-            : '';
-
         return [
             ['key' => 'icon', 'label' => '', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true,
                 'cardShow' => true, 'thWidth' => '34px', 'exportable' => false,
@@ -302,11 +299,58 @@ class DocumentController extends Controller
                 'value' => fn ($d) => $isFolder($d) ? null : $d->D_CREATED_DATE,
                 'exportable' => true, 'exportValue' => fn ($d) => (! $isFolder($d) && $d->D_CREATED_DATE) ? Carbon::parse($d->D_CREATED_DATE)->format('d/m/Y') : ''],
             ['key' => 'actions', 'label' => '', 'type' => 'html', 'alwaysVisible' => true, 'exportable' => false,
-                'value' => fn ($d) => $isFolder($d)
-                    ? '<a href="'.e($folderUrl($d)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ouvrir"><i class="fas fa-arrow-right fa-xs"></i></a>'
-                    : ($d->can_view
-                        ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'.$editButton($d).$shareButton($d)
-                        : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>'.$editButton($d).$shareButton($d))],
+                'value' => fn ($d) => $this->rowActions($d, $sectionId)],
         ];
+    }
+
+    /** The action buttons for one explorer row (folder or document). */
+    private function rowActions(object $d, int $sectionId): string
+    {
+        if ($d->is_folder ?? false) {
+            $fid = (int) $d->DF_ID;
+            $out = '<a href="'.e(route('document.index', ['folder' => $fid, 'section' => $sectionId])).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Ouvrir"><i class="fas fa-arrow-right fa-xs"></i></a>';
+            if ($d->can_write ?? false) {
+                $out .= ' <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Renommer" data-folder-edit data-id="'.$fid.'" data-name="'.e($d->D_NAME).'"><i class="fas fa-pen fa-xs"></i></button>';
+            }
+            if ($d->can_share ?? false) {
+                $out .= ' '.$this->shareLink(ObDocumentAcl::TYPE_FOLDER, $fid);
+            }
+            if ($d->can_delete ?? false) {
+                $out .= ' '.$this->deleteForm(route('document.folder.destroy', $fid), 'Supprimer ce dossier ? Il doit être vide.');
+            }
+
+            return $out;
+        }
+
+        $out = ($d->can_view ?? false)
+            ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'
+            : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>';
+        if ($d->can_write ?? false) {
+            $out .= ' <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Renommer / modifier"'
+                .' data-doc-edit data-id="'.$d->D_ID.'" data-name="'.e($d->D_NAME).'" data-type="'.e($d->TD_CODE).'" data-folder="'.(int) $d->DF_ID.'">'
+                .'<i class="fas fa-pen fa-xs"></i></button>';
+        }
+        if ($d->can_share ?? false) {
+            $out .= ' '.$this->shareLink(ObDocumentAcl::TYPE_DOCUMENT, (int) $d->D_ID);
+        }
+        if ($d->can_delete ?? false) {
+            $out .= ' '.$this->deleteForm(route('document.destroy', $d->D_ID), 'Supprimer définitivement ce document ?');
+        }
+
+        return $out;
+    }
+
+    /** Share link that opens the ACL page in a popup window. */
+    private function shareLink(string $type, int $id): string
+    {
+        return '<a href="'.e(route('document.acl', [$type, $id]).'?window=1').'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Partager" data-acl-window><i class="fas fa-user-lock fa-xs"></i></a>';
+    }
+
+    /** Inline DELETE form (confirmed client-side via data-confirm). */
+    private function deleteForm(string $action, string $confirm): string
+    {
+        return '<form method="POST" action="'.e($action).'" class="d-inline" data-confirm="'.e($confirm).'">'
+            .csrf_field().method_field('DELETE')
+            .'<button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" title="Supprimer"><i class="fas fa-trash fa-xs"></i></button></form>';
     }
 }

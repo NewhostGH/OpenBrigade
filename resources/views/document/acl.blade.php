@@ -1,15 +1,17 @@
-@extends('layout.app')
+@extends($layout)
 
 @section('title', 'Partage — ' . config('app.name'))
 
 @section('content')
 
-<x-ob-breadcrumb :items="[
-    ['label' => 'Documents', 'url' => route('document.index')],
-    ['label' => 'Partage'],
-]"/>
+@unless ($isWindow)
+    <x-ob-breadcrumb :items="[
+        ['label' => 'Documents', 'url' => route('document.index')],
+        ['label' => 'Partage'],
+    ]"/>
+@endunless
 
-<div class="mx-3 mt-2" style="max-width:900px;">
+<div class="{{ $isWindow ? '' : 'mx-3 mt-2' }}" style="max-width:900px;">
 
     <h1 class="ob-toolbar-heading mb-1">
         <i class="fas fa-{{ $type === 'folder' ? 'folder' : 'file' }} me-2 text-secondary"></i>{{ $name }}
@@ -67,6 +69,7 @@
                                     <form method="POST" action="{{ route('document.acl.destroy', $ace->id) }}" data-acl-delete>
                                         @csrf
                                         @method('DELETE')
+                                        @if ($isWindow)<input type="hidden" name="window" value="1">@endif
                                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" title="Retirer">
                                             <i class="fas fa-trash fa-xs"></i>
                                         </button>
@@ -88,6 +91,7 @@
         <div class="ob-widget-card-body">
             <form method="POST" action="{{ route('document.acl.store', [$type, $id]) }}" class="row g-3">
                 @csrf
+                @if ($isWindow)<input type="hidden" name="window" value="1">@endif
 
                 <div class="col-md-4">
                     <label class="form-label" for="aclPrincipalType">Bénéficiaire</label>
@@ -149,7 +153,11 @@
                 </div>
 
                 <div class="col-12">
-                    <a href="{{ route('document.index') }}" class="btn btn-sm btn-secondary">Retour</a>
+                    @if ($isWindow)
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.close()">Fermer</button>
+                    @else
+                        <a href="{{ route('document.index') }}" class="btn btn-sm btn-secondary">Retour</a>
+                    @endif
                     <button type="submit" class="btn btn-sm btn-primary">Ajouter</button>
                 </div>
             </form>

@@ -169,6 +169,10 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
+                            <label class="form-label" for="docEditName">Nom du fichier</label>
+                            <input type="text" id="docEditName" name="name" class="form-control" maxlength="120" required>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label" for="docEditType">Type</label>
                             <select id="docEditType" name="type" class="form-select" required>
                                 @foreach ($types as $t)
@@ -263,6 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
             docEditForm.setAttribute('action', docBase + '/' + btn.dataset.id);
             docDeleteForm.setAttribute('action', docBase + '/' + btn.dataset.id);
+            docEditForm.querySelector('#docEditName').value = btn.dataset.name || '';
             docEditForm.querySelector('#docEditType').value = btn.dataset.type || '';
             docEditForm.querySelector('#docEditFolder').value = btn.dataset.folder || '0';
             bootstrap.Modal.getOrCreateInstance(docEditModalEl).show();
@@ -277,6 +282,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // Open the "Partager" (ACL) page in a popup window.
+    document.querySelectorAll('[data-acl-window]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.open(link.getAttribute('href'), 'ob-acl', 'width=780,height=720,scrollbars=yes,resizable=yes');
+        });
+    });
+
+    // Generic confirm-before-submit for inline delete forms in the table.
+    document.querySelectorAll('[data-confirm]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            if (!window.confirm(form.dataset.confirm)) { e.preventDefault(); }
+        });
+    });
 
     // Collapsible folder tree: a chevron toggles its node's children.
     document.querySelectorAll('[data-tree-toggle]').forEach(function (btn) {
