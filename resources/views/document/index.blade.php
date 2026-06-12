@@ -231,6 +231,21 @@
     </div>
 @endif
 
+{{-- ACL ("Partager") modal — content loaded into the iframe on demand. --}}
+<div class="modal fade" id="aclModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h5 class="modal-title"><i class="fas fa-user-lock me-2"></i>Partager</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe id="aclFrame" src="" style="width:100%;height:580px;border:none;" title="Partager"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -283,12 +298,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Open the "Partager" (ACL) page in a popup window.
+    // Open the "Partager" (ACL) page in an inline modal iframe.
+    var aclModalEl = document.getElementById('aclModal');
+    var aclFrame = document.getElementById('aclFrame');
     document.querySelectorAll('[data-acl-window]').forEach(function (link) {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            window.open(link.getAttribute('href'), 'ob-acl', 'width=780,height=720,scrollbars=yes,resizable=yes');
+            aclFrame.src = link.getAttribute('href');
+            bootstrap.Modal.getOrCreateInstance(aclModalEl).show();
         });
+    });
+    aclModalEl.addEventListener('hidden.bs.modal', function () { aclFrame.src = ''; });
+    window.addEventListener('message', function (e) {
+        if (e.data === 'acl:close') { bootstrap.Modal.getInstance(aclModalEl)?.hide(); }
     });
 
     // Generic confirm-before-submit for inline delete forms in the table.

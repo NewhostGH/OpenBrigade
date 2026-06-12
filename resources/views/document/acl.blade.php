@@ -154,7 +154,8 @@
 
                 <div class="col-12">
                     @if ($isWindow)
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.close()">Fermer</button>
+                        <button type="button" class="btn btn-sm btn-secondary"
+                                onclick="window.parent.postMessage('acl:close', window.location.origin)">Fermer</button>
                     @else
                         <a href="{{ route('document.index') }}" class="btn btn-sm btn-secondary">Retour</a>
                     @endif
