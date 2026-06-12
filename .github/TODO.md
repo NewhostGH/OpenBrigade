@@ -152,6 +152,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] File serving and download — native `document.download`, type/doc-security + section checked (PDF inline, else attachment)
 - [x] Document exports — XLS/CSV via `TableExportService` (visible columns, current folder/type)
 - [x] Document type & security config — `type_document` CRUD (`DocumentTypeController`, perm 47), `document_security` shown as reference. (Legacy `config_doc.php` is PDF attestation text, not library config — tracked under the PDF/billing items, not here.)
+- [ ] **Per-object ACL on files & folders** — granular rights (read / download / write / delete / share / fullcontrol) granted to **users / groups / roles** with explicit **allow *and* deny** (deny wins); folder ACEs **inherited** by descendant folders & documents, the item's own ACEs override. Overlays the existing section/type security — an item with **no ACE keeps today's behaviour** (backward compatible). `ob_document_acl` + `ObDocumentAcl` + `DocumentAclService` (resolver, memoised, unit-tested like `PermissionResolver`); a **"Partager"** modal per file/folder to manage the ACEs. See [project_documents] memory.
 
 ### Statistique (STAT)
 
