@@ -138,21 +138,14 @@
                             {{ implode(', ', config('documents.supported_extensions')) }} — max {{ config('documents.max_size_mb') }} Mo.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-0">
                         <label class="form-label" for="docUploadType">Type</label>
                         <select id="docUploadType" name="type" class="form-select" required>
                             @foreach ($types as $t)
                                 <option value="{{ $t->TD_CODE }}">{{ $t->TD_LIBELLE }}</option>
                             @endforeach
                         </select>
-                    </div>
-                    <div class="mb-0">
-                        <label class="form-label" for="docUploadSecurity">Visibilité</label>
-                        <select id="docUploadSecurity" name="security" class="form-select" required>
-                            @foreach ($securities as $s)
-                                <option value="{{ $s->DS_ID }}">{{ $s->DS_LIBELLE }}</option>
-                            @endforeach
-                        </select>
+                        <div class="form-text">La visibilité se gère ensuite via « Partager ».</div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -180,14 +173,6 @@
                             <select id="docEditType" name="type" class="form-select" required>
                                 @foreach ($types as $t)
                                     <option value="{{ $t->TD_CODE }}">{{ $t->TD_LIBELLE }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="docEditSecurity">Visibilité</label>
-                            <select id="docEditSecurity" name="security" class="form-select" required>
-                                @foreach ($securities as $s)
-                                    <option value="{{ $s->DS_ID }}">{{ $s->DS_LIBELLE }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -279,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function () {
             docEditForm.setAttribute('action', docBase + '/' + btn.dataset.id);
             docDeleteForm.setAttribute('action', docBase + '/' + btn.dataset.id);
             docEditForm.querySelector('#docEditType').value = btn.dataset.type || '';
-            docEditForm.querySelector('#docEditSecurity').value = btn.dataset.security || '';
             docEditForm.querySelector('#docEditFolder').value = btn.dataset.folder || '0';
             bootstrap.Modal.getOrCreateInstance(docEditModalEl).show();
         });

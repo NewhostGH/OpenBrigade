@@ -16,32 +16,11 @@
     </button>
 </x-ob-toolbar>
 
-<div class="row g-3 mx-1">
-    <div class="col-lg-8">
-        <x-ob-commandbar table-id="docTypeTable" :total="$types->count()" total-label="type">
-            <x-ob-table :columns="$columns" :items="$types" table-id="docTypeTable"
-                empty-text="Aucun type de document."/>
-        </x-ob-commandbar>
-    </div>
-
-    {{-- Reference: per-document security levels (read-only) --}}
-    <div class="col-lg-4">
-        <div class="ob-widget-card">
-            <div class="ob-widget-card-header">
-                <div class="ob-widget-card-title"><i class="fas fa-shield-halved me-2"></i>Niveaux de visibilité</div>
-            </div>
-            <div class="ob-widget-card-body p-0">
-                <ul class="list-group list-group-flush" style="font-size:var(--font-size-sm);">
-                    @foreach ($securities as $s)
-                        <li class="list-group-item">{{ $s->DS_LIBELLE }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="p-2 text-muted" style="font-size:var(--font-size-xs);">
-                Ces niveaux (référence) s'appliquent par document à l'ajout.
-            </div>
-        </div>
-    </div>
+<div class="mx-1">
+    <x-ob-commandbar table-id="docTypeTable" :total="$types->count()" total-label="type">
+        <x-ob-table :columns="$columns" :items="$types" table-id="docTypeTable"
+            empty-text="Aucun type de document."/>
+    </x-ob-commandbar>
 </div>
 
 {{-- Create type --}}

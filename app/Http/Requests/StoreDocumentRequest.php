@@ -25,7 +25,6 @@ class StoreDocumentRequest extends FormRequest
             'section_id' => ['required', 'integer'],
             'folder_id' => ['nullable', 'integer'],
             'type' => ['required', 'string', 'exists:type_document,TD_CODE'],
-            'security' => ['required', 'integer', 'exists:document_security,DS_ID'],
             'userfile' => ['required', 'array', 'min:1'],
             'userfile.*' => ['file', 'extensions:'.$extensions, 'max:'.$maxKb],
         ];

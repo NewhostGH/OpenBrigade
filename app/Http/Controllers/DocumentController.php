@@ -12,7 +12,6 @@ use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -64,7 +63,6 @@ class DocumentController extends Controller
             'folderId' => $folderId,
             'typeCode' => $typeCode,
             'types' => $this->documents->types(),
-            'securities' => $this->documents->securities(),
             'sectionId' => $sectionId,
             'columns' => $this->columns($sectionId),
             'canManage' => $canManage,
@@ -83,7 +81,7 @@ class DocumentController extends Controller
         abort_unless($this->documents->authorize($request->user(), ObDocumentAcl::TYPE_FOLDER, $folderId, ObDocumentAcl::RIGHT_WRITE, $sectionId), 403);
 
         foreach ($request->file('userfile') as $file) {
-            $this->documents->storeUpload($sectionId, $folderId, $file, $v['type'], (int) $v['security'], (int) $request->user()->P_ID);
+            $this->documents->storeUpload($sectionId, $folderId, $file, $v['type'], (int) $request->user()->P_ID);
         }
 
         return $this->backToFolder($sectionId, $folderId, 'success', 'Document(s) ajouté(s).');
@@ -99,12 +97,11 @@ class DocumentController extends Controller
 
         $v = $request->validate([
             'type' => ['required', 'string', 'exists:type_document,TD_CODE'],
-            'security' => ['required', 'integer', 'exists:document_security,DS_ID'],
             'folder_id' => ['nullable', 'integer'],
         ]);
         $folderId = (int) ($v['folder_id'] ?? 0);
 
-        $this->documents->updateDocument($document, $v['type'], (int) $v['security'], $folderId);
+        $this->documents->updateDocument($document, $v['type'], $folderId);
 
         return $this->backToFolder($sectionId, $folderId, 'success', 'Document mis à jour.');
     }
@@ -241,8 +238,8 @@ class DocumentController extends Controller
         abort_unless($this->sectionScope->allows($sectionId), 403);
         abort_unless($this->documents->canDownload($user, $document, $sectionId), 403);
 
-        $path = $this->documents->filePath($sectionId, (int) $document->DF_ID, $document->D_NAME);
-        abort_unless(File::exists($path), 404);
+        $path = $this->documents->existingFilePath($sectionId, (int) $document->DF_ID, $document->D_NAME);
+        abort_unless($path !== null, 404);
 
         // PDFs open inline; everything else downloads as an attachment.
         $inline = strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf';
@@ -275,7 +272,7 @@ class DocumentController extends Controller
         $editButton = fn ($d) => ($d->can_write ?? false)
             ? '<button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1 ms-1" title="Modifier"'
                 .' data-doc-edit data-id="'.$d->D_ID.'" data-type="'.e($d->TD_CODE).'"'
-                .' data-security="'.(int) $d->DS_ID.'" data-folder="'.(int) $d->DF_ID.'">'
+                .' data-folder="'.(int) $d->DF_ID.'">'
                 .'<i class="fas fa-pen fa-xs"></i></button>'
             : '';
         $shareButton = fn ($d) => ($d->can_share ?? false)

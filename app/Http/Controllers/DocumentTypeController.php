@@ -26,7 +26,6 @@ class DocumentTypeController extends Controller
         return view('document.types', [
             'types' => $this->documents->manageableTypes(),
             'features' => $features,
-            'securities' => $this->documents->securities(),
             'columns' => $this->columns($featureLabels),
         ]);
     }

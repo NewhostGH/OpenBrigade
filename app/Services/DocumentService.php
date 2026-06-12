@@ -303,18 +303,47 @@ class DocumentService implements ServiceInterface
         };
     }
 
-    /** Absolute on-disk directory holding a section/folder's files. */
+    /**
+     * Canonical on-disk directory for a section/folder's files —
+     * storage/app/private/documents/{S_ID}/{DF_ID} (section 0 = root, and the
+     * folder segment is omitted for files directly in a section's root).
+     */
     public function fileDir(int $sectionId, int $folderId): string
     {
-        $root = base_path(config('legacy_bridge.legacy_root').'/'.config('documents.files_subpath'));
+        $root = storage_path('app/private/'.config('documents.storage_subpath'));
 
         return $folderId > 0 ? $root.'/'.$sectionId.'/'.$folderId : $root.'/'.$sectionId;
     }
 
-    /** Absolute on-disk path of a library document's file. */
+    /** Canonical on-disk path of a library document's file. */
     public function filePath(int $sectionId, int $folderId, string $name): string
     {
         return $this->fileDir($sectionId, $folderId).'/'.basename($name);
+    }
+
+    /** Old on-disk path under the legacy app, kept as a read-only fallback. */
+    public function legacyFilePath(int $sectionId, int $folderId, string $name): string
+    {
+        $root = base_path(config('legacy_bridge.legacy_root').'/'.config('documents.legacy_subpath'));
+        $dir = $folderId > 0 ? $root.'/'.$sectionId.'/'.$folderId : $root.'/'.$sectionId;
+
+        return $dir.'/'.basename($name);
+    }
+
+    /**
+     * Where the file actually lives: the canonical path if present, else the
+     * legacy fallback, else null (missing). Used by every read/move.
+     */
+    public function existingFilePath(int $sectionId, int $folderId, string $name): ?string
+    {
+        $canonical = $this->filePath($sectionId, $folderId, $name);
+        if (File::exists($canonical)) {
+            return $canonical;
+        }
+
+        $legacy = $this->legacyFilePath($sectionId, $folderId, $name);
+
+        return File::exists($legacy) ? $legacy : null;
     }
 
     /** Sanitise an uploaded filename like the legacy upload helper. */
@@ -323,12 +352,6 @@ class DocumentService implements ServiceInterface
         $name = basename(str_replace('\\', '', $name));
 
         return str_replace([' ', '°', '#', "'", '&', '+', '(', ')'], ['_', '', '', '', '', '', '', ''], $name);
-    }
-
-    /** Per-document access levels (reference data) for the edit form. */
-    public function securities(): Collection
-    {
-        return DB::table('document_security')->orderBy('DS_ID')->get(['DS_ID', 'DS_LIBELLE', 'F_ID']);
     }
 
     /** All document types (including syndicate ones) for the management screen. */
@@ -350,8 +373,12 @@ class DocumentService implements ServiceInterface
             || DB::table('document_folder')->where('TD_CODE', $code)->exists();
     }
 
-    /** Store one uploaded file on disk and record the document row. */
-    public function storeUpload(int $sectionId, int $folderId, UploadedFile $file, string $typeCode, int $securityId, int $userId): void
+    /**
+     * Store one uploaded file on disk and record the document row. Per-document
+     * visibility is governed by the ACL, so DS_ID is fixed to 1 (public/legacy
+     * default) — restrict access with the "Partager" ACL instead.
+     */
+    public function storeUpload(int $sectionId, int $folderId, UploadedFile $file, string $typeCode, int $userId): void
     {
         $name = $this->sanitizeFileName($file->getClientOriginalName());
         $dir = $this->fileDir($sectionId, $folderId);
@@ -362,35 +389,39 @@ class DocumentService implements ServiceInterface
             'S_ID' => $sectionId,
             'D_NAME' => $name,
             'TD_CODE' => $typeCode,
-            'DS_ID' => $securityId,
+            'DS_ID' => 1,
             'D_CREATED_BY' => $userId,
             'D_CREATED_DATE' => now(),
             'DF_ID' => $folderId,
         ]);
     }
 
-    /** Change a document's type/security and, if the folder changed, move its file. */
-    public function updateDocument(Document $document, string $typeCode, int $securityId, int $newFolderId): void
+    /** Change a document's type and, if the folder changed, move its file. */
+    public function updateDocument(Document $document, string $typeCode, int $newFolderId): void
     {
         $oldFolderId = (int) $document->DF_ID;
         if ($oldFolderId !== $newFolderId) {
-            $src = $this->filePath((int) $document->S_ID, $oldFolderId, $document->D_NAME);
-            $destDir = $this->fileDir((int) $document->S_ID, $newFolderId);
-            if (File::exists($src)) {
+            $src = $this->existingFilePath((int) $document->S_ID, $oldFolderId, $document->D_NAME);
+            if ($src !== null) {
+                $destDir = $this->fileDir((int) $document->S_ID, $newFolderId);
                 File::ensureDirectoryExists($destDir);
                 File::move($src, $destDir.'/'.basename($document->D_NAME));
             }
         }
 
-        $document->update(['TD_CODE' => $typeCode, 'DS_ID' => $securityId, 'DF_ID' => $newFolderId]);
+        $document->update(['TD_CODE' => $typeCode, 'DF_ID' => $newFolderId]);
     }
 
-    /** Delete a document's file (if present) and its row. */
+    /** Delete a document's file (canonical and/or legacy) and its row. */
     public function deleteDocument(Document $document): void
     {
-        $path = $this->filePath((int) $document->S_ID, (int) $document->DF_ID, $document->D_NAME);
-        if (File::exists($path)) {
-            File::delete($path);
+        foreach ([
+            $this->filePath((int) $document->S_ID, (int) $document->DF_ID, $document->D_NAME),
+            $this->legacyFilePath((int) $document->S_ID, (int) $document->DF_ID, $document->D_NAME),
+        ] as $path) {
+            if (File::exists($path)) {
+                File::delete($path);
+            }
         }
 
         $document->delete();

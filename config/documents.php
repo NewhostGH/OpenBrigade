@@ -7,15 +7,20 @@ return [
     | Document library file storage
     |--------------------------------------------------------------------------
     |
-    | Library files live on disk under {legacy_root}/{files_subpath}/{S_ID}/
-    | {DF_ID}/{D_NAME}. The legacy root comes from config/legacy_bridge.php.
+    | Canonical location: storage/app/private/{storage_subpath}/{S_ID}/{DF_ID}/
+    | {D_NAME} — organised per section (section 0 = root / no section), with a
+    | sub-folder segment only for documents inside a folder.
     |
-    | TODO: Migrate code — move this tree under storage/app/documents after the
-    | legacy app is decommissioned, and drop the dependency on legacy_root.
+    | legacy_subpath is the old location ({legacy_root}/user-data/files_section,
+    | see config/legacy_bridge.php) kept as a read-only fallback so files
+    | uploaded before the move still download; the migrate-storage command and
+    | folder moves relocate them into the canonical tree.
     |
     */
 
-    'files_subpath' => 'user-data/files_section',
+    'storage_subpath' => 'documents',
+
+    'legacy_subpath' => 'user-data/files_section',
 
     /*
     |--------------------------------------------------------------------------
