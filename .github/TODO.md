@@ -151,7 +151,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Document upload and edit — upload (multi-file), retype, move, delete (permission 47)
 - [x] File serving and download — native `document.download`, type/doc-security + section checked (PDF inline, else attachment)
 - [x] Document exports — XLS/CSV via `TableExportService` (visible columns, current folder/type)
-- [ ] Document type & security config (`type_document` management) — note: legacy `config_doc.php` is PDF attestation text, not library config (belongs to the PDF/billing items)
+- [x] Document type & security config — `type_document` CRUD (`DocumentTypeController`, perm 47), `document_security` shown as reference. (Legacy `config_doc.php` is PDF attestation text, not library config — tracked under the PDF/billing items, not here.)
 
 ### Statistique (STAT)
 

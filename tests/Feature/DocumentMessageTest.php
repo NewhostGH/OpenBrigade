@@ -153,6 +153,16 @@ test('unauthenticated users cannot export documents', function () {
     $this->get('/documents/export/xlsx')->assertRedirect('/login');
 });
 
+test('the document types screen requires permission 47', function () {
+    $this->actingAs(docMsgFakeUser(can: false))->get('/documents/types')->assertForbidden();
+});
+
+test('creating a document type requires permission 47', function () {
+    $this->actingAs(docMsgFakeUser(can: false))
+        ->post('/documents/types', ['code' => 'X', 'libelle' => 'X'])
+        ->assertForbidden();
+});
+
 test('uploading a document requires permission 47', function () {
     $this->actingAs(docMsgFakeUser(can: false))
         ->post('/documents', ['section_id' => 1])

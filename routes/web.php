@@ -10,6 +10,7 @@ use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DispoController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\GardeController;
@@ -190,6 +191,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download')->middleware('permission:44');
     Route::get('/documents/export/{format}', [DocumentController::class, 'export'])->name('document.export')->middleware('permission:44');
+    // Document type & security configuration — permission 47
+    Route::get('/documents/types', [DocumentTypeController::class, 'index'])->name('document.types')->middleware('permission:47');
+    Route::post('/documents/types', [DocumentTypeController::class, 'store'])->name('document.types.store')->middleware('permission:47');
+    Route::patch('/documents/types/{type}', [DocumentTypeController::class, 'update'])->name('document.types.update')->middleware('permission:47');
+    Route::delete('/documents/types/{type}', [DocumentTypeController::class, 'destroy'])->name('document.types.destroy')->middleware('permission:47');
     // Folder management (replaces save_folder.php / upd_folder.php) — permission 47
     Route::post('/documents/folders', [DocumentController::class, 'folderStore'])->name('document.folder.store')->middleware('permission:47');
     Route::patch('/documents/folders/{folder}', [DocumentController::class, 'folderUpdate'])->name('document.folder.update')->middleware('permission:47');

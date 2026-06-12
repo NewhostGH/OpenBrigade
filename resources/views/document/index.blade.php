@@ -36,6 +36,9 @@
         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#docUploadModal">
             <i class="fas fa-upload me-1"></i> Ajouter
         </button>
+        <a href="{{ route('document.types') }}" class="btn btn-sm btn-outline-secondary" title="Types de documents">
+            <i class="fas fa-tags"></i>
+        </a>
     @endif
 
     <x-slot:filters>

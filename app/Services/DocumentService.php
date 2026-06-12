@@ -286,6 +286,25 @@ class DocumentService implements ServiceInterface
         return DB::table('document_security')->orderBy('DS_ID')->get(['DS_ID', 'DS_LIBELLE', 'F_ID']);
     }
 
+    /** All document types (including syndicate ones) for the management screen. */
+    public function manageableTypes(): Collection
+    {
+        return DB::table('type_document')->orderBy('TD_LIBELLE')->get(['TD_CODE', 'TD_LIBELLE', 'TD_SECURITY', 'TD_SYNDICATE']);
+    }
+
+    /** Features (F_ID → label) for the type-security select; F_ID 0 means public. */
+    public function features(): Collection
+    {
+        return DB::table('fonctionnalite')->orderBy('F_LIBELLE')->get(['F_ID', 'F_LIBELLE']);
+    }
+
+    /** Is a document type still referenced by a document or folder? */
+    public function typeInUse(string $code): bool
+    {
+        return DB::table('document')->where('TD_CODE', $code)->exists()
+            || DB::table('document_folder')->where('TD_CODE', $code)->exists();
+    }
+
     /** Store one uploaded file on disk and record the document row. */
     public function storeUpload(int $sectionId, int $folderId, UploadedFile $file, string $typeCode, int $securityId, int $userId): void
     {
