@@ -16,9 +16,18 @@
 <x-ob-breadcrumb :items="$crumbs"/>
 
 {{-- ── Page toolbar (full width: title, actions, filters) ──────────────────── --}}
+@php
+    $exportParams = array_filter([
+        'folder' => $folderId ?: null,
+        'section' => $sectionId,
+        'type' => $typeCode === 'ALL' ? null : $typeCode,
+    ], fn ($v) => $v !== null);
+@endphp
 <x-ob-toolbar title="Bibliothèque de documents" :total="$documents->total()"
     filter-action="{{ route('document.index') }}" filter-id="docFilter"
-    :columns="$columns" table-id="docTable" :show-card-toggle="true">
+    :columns="$columns" table-id="docTable" :show-card-toggle="true"
+    :export-xls-url="route('document.export', ['format' => 'xlsx'] + $exportParams)"
+    :export-csv-url="route('document.export', ['format' => 'csv'] + $exportParams)">
 
     @if ($canManage)
         <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#folderCreateModal">

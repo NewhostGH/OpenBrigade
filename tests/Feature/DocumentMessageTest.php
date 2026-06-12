@@ -149,6 +149,10 @@ test('unauthenticated users cannot upload a document', function () {
     $this->post('/documents', ['section_id' => 1])->assertRedirect('/login');
 });
 
+test('unauthenticated users cannot export documents', function () {
+    $this->get('/documents/export/xlsx')->assertRedirect('/login');
+});
+
 test('uploading a document requires permission 47', function () {
     $this->actingAs(docMsgFakeUser(can: false))
         ->post('/documents', ['section_id' => 1])

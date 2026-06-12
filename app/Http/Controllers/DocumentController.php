@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\DocumentFolder;
 use App\Services\DocumentService;
 use App\Services\SectionScopeService;
+use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,13 +30,7 @@ class DocumentController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
-
-        // Active section: the navbar-chosen one when allowed, else the home section.
-        $requested = (int) $request->integer('section');
-        $sectionId = ($requested > 0 && $this->sectionScope->canChoose($requested))
-            ? $requested
-            : (int) ($this->sectionScope->defaultSectionId() ?? $user->P_SECTION);
-
+        $sectionId = $this->resolveSectionId($request);
         $folderId = (int) $request->integer('folder', 0);
         $typeCode = $request->string('type', 'ALL')->toString() ?: 'ALL';
 
@@ -117,6 +112,39 @@ class DocumentController extends Controller
         $this->documents->deleteDocument($document);
 
         return $this->backToFolder($sectionId, $folderId, 'success', 'Document supprimé.');
+    }
+
+    /** Export the current folder's documents as XLSX or CSV (visible columns). */
+    public function export(Request $request, string $format)
+    {
+        abort_unless(in_array($format, ['xlsx', 'csv'], true), 404);
+
+        $sectionId = $this->resolveSectionId($request);
+        $folderId = (int) $request->integer('folder', 0);
+        $typeCode = $request->string('type', 'ALL')->toString() ?: 'ALL';
+
+        $rows = $this->documents->documentsForExport($sectionId, $folderId, $typeCode);
+
+        $service = new TableExportService;
+        $columns = $service->resolveColumns($this->columns($sectionId, false), $request, [
+            ['Nom', fn ($d) => $d->D_NAME],
+        ]);
+        $filename = 'Documents_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $rows, $filename)
+            : $service->toXlsx($columns, $rows, $filename, ['sheetTitle' => 'Documents']);
+    }
+
+    /** Active section: the navbar-chosen one when allowed, else the home section. */
+    private function resolveSectionId(Request $request): int
+    {
+        $requested = (int) $request->integer('section');
+        if ($requested > 0 && $this->sectionScope->canChoose($requested)) {
+            return $requested;
+        }
+
+        return (int) ($this->sectionScope->defaultSectionId() ?? $request->user()->P_SECTION);
     }
 
     /** Create a folder in the current section/folder (permission 47). */

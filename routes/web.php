@@ -189,6 +189,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/consommables', [ConsommableController::class, 'index'])->name('consommable.index')->middleware(['permission:42', 'feature:consommables']);
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download')->middleware('permission:44');
+    Route::get('/documents/export/{format}', [DocumentController::class, 'export'])->name('document.export')->middleware('permission:44');
     // Folder management (replaces save_folder.php / upd_folder.php) — permission 47
     Route::post('/documents/folders', [DocumentController::class, 'folderStore'])->name('document.folder.store')->middleware('permission:47');
     Route::patch('/documents/folders/{folder}', [DocumentController::class, 'folderUpdate'])->name('document.folder.update')->middleware('permission:47');

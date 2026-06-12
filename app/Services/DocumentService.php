@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Models\DocumentFolder;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -109,11 +110,10 @@ class DocumentService implements ServiceInterface
     }
 
     /**
-     * Paginated library listing for a section + folder, filtered by type.
-     * Each row carries a computed `can_view` flag (the download gate) so the
-     * view never re-implements the security rules.
+     * Base library-listing query (joins, library filter, type filter, select)
+     * for a section + folder. Shared by the paginated view and the export.
      */
-    public function documents(User $user, int $sectionId, int $folderId, string $typeCode): LengthAwarePaginator
+    private function listingQuery(int $sectionId, int $folderId, string $typeCode): Builder
     {
         $query = DB::table('document as d')
             ->leftJoin('type_document as td', 'd.TD_CODE', '=', 'td.TD_CODE')
@@ -129,14 +129,23 @@ class DocumentService implements ServiceInterface
             $query->where('d.TD_CODE', $typeCode);
         }
 
-        $page = $query
+        return $query->select(
+            'd.D_ID', 'd.D_NAME', 'd.TD_CODE', 'd.DS_ID', 'd.DF_ID', 'd.D_CREATED_BY', 'd.D_CREATED_DATE',
+            'td.TD_LIBELLE', 'td.TD_SECURITY',
+            'ds.DS_LIBELLE', 'ds.F_ID as DS_FID',
+            DB::raw("TRIM(CONCAT(COALESCE(p.P_PRENOM,''), ' ', COALESCE(p.P_NOM,''))) as created_by_name")
+        );
+    }
+
+    /**
+     * Paginated library listing for a section + folder, filtered by type.
+     * Each row carries a computed `can_view` flag (the download gate) so the
+     * view never re-implements the security rules.
+     */
+    public function documents(User $user, int $sectionId, int $folderId, string $typeCode): LengthAwarePaginator
+    {
+        $page = $this->listingQuery($sectionId, $folderId, $typeCode)
             ->orderByDesc('d.D_CREATED_DATE')
-            ->select(
-                'd.D_ID', 'd.D_NAME', 'd.TD_CODE', 'd.DS_ID', 'd.DF_ID', 'd.D_CREATED_BY', 'd.D_CREATED_DATE',
-                'td.TD_LIBELLE', 'td.TD_SECURITY',
-                'ds.DS_LIBELLE', 'ds.F_ID as DS_FID',
-                DB::raw("TRIM(CONCAT(COALESCE(p.P_PRENOM,''), ' ', COALESCE(p.P_NOM,''))) as created_by_name")
-            )
             ->paginate(30)
             ->withQueryString();
 
@@ -153,6 +162,14 @@ class DocumentService implements ServiceInterface
         });
 
         return $page;
+    }
+
+    /** All documents in a folder (unpaginated) for export. */
+    public function documentsForExport(int $sectionId, int $folderId, string $typeCode): Collection
+    {
+        return $this->listingQuery($sectionId, $folderId, $typeCode)
+            ->orderBy('d.D_NAME')
+            ->get();
     }
 
     /**
