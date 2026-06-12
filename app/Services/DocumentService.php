@@ -188,7 +188,7 @@ class DocumentService implements ServiceInterface
     public function authorize(User $user, string $resourceType, int $resourceId, int $right, int $sectionId): bool
     {
         return $this->acl->can($user, $resourceType, $resourceId, $right)
-            ?? $user->hasPermissionInSection((int) config('documents.feature_manage'), $sectionId);
+            ?? $user->hasPermission((int) config('documents.feature_manage'));
     }
 
     /** May the user download this document? ACL DOWNLOAD, else the legacy gate. */
