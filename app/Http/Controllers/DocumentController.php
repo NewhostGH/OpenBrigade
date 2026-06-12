@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Models\Document;
 use App\Models\DocumentFolder;
+use App\Models\ObDocumentAcl;
 use App\Services\DocumentService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
@@ -48,7 +49,10 @@ class DocumentController extends Controller
             ]);
         }
         $rows = $rows->concat($documents->items());
-        $canManage = $user->hasPermission((int) config('documents.feature_manage'));
+        // May the user add to / manage the current folder? ACL write on the
+        // folder, else the legacy library-manage permission (47).
+        $canManage = $this->documents->authorize($user, ObDocumentAcl::TYPE_FOLDER, $folderId, ObDocumentAcl::RIGHT_WRITE, $sectionId);
+        $canConfig = $user->hasPermission((int) config('documents.feature_manage'));
 
         return view('document.index', [
             'folders' => $folders,
@@ -62,8 +66,10 @@ class DocumentController extends Controller
             'types' => $this->documents->types(),
             'securities' => $this->documents->securities(),
             'sectionId' => $sectionId,
-            'columns' => $this->columns($sectionId, $canManage),
+            'columns' => $this->columns($sectionId),
             'canManage' => $canManage,
+            'canConfig' => $canConfig,
+            'canEditAny' => $canManage || $rows->contains(fn ($r) => (bool) ($r->can_write ?? false)),
         ]);
     }
 
@@ -74,6 +80,7 @@ class DocumentController extends Controller
         $sectionId = (int) $v['section_id'];
         $folderId = (int) ($v['folder_id'] ?? 0);
         abort_unless($this->sectionScope->allows($sectionId), 403);
+        abort_unless($this->documents->authorize($request->user(), ObDocumentAcl::TYPE_FOLDER, $folderId, ObDocumentAcl::RIGHT_WRITE, $sectionId), 403);
 
         foreach ($request->file('userfile') as $file) {
             $this->documents->storeUpload($sectionId, $folderId, $file, $v['type'], (int) $v['security'], (int) $request->user()->P_ID);
@@ -88,6 +95,7 @@ class DocumentController extends Controller
         abort_unless($this->isLibraryDocument($document), 404);
         $sectionId = (int) $document->S_ID;
         abort_unless($this->sectionScope->allows($sectionId), 403);
+        abort_unless($this->documents->authorize($request->user(), ObDocumentAcl::TYPE_DOCUMENT, (int) $document->D_ID, ObDocumentAcl::RIGHT_WRITE, $sectionId), 403);
 
         $v = $request->validate([
             'type' => ['required', 'string', 'exists:type_document,TD_CODE'],
@@ -108,6 +116,7 @@ class DocumentController extends Controller
         $sectionId = (int) $document->S_ID;
         $folderId = (int) $document->DF_ID;
         abort_unless($this->sectionScope->allows($sectionId), 403);
+        abort_unless($this->documents->authorize(request()->user(), ObDocumentAcl::TYPE_DOCUMENT, (int) $document->D_ID, ObDocumentAcl::RIGHT_DELETE, $sectionId), 403);
 
         $this->documents->deleteDocument($document);
 
@@ -126,7 +135,7 @@ class DocumentController extends Controller
         $rows = $this->documents->documentsForExport($sectionId, $folderId, $typeCode);
 
         $service = new TableExportService;
-        $columns = $service->resolveColumns($this->columns($sectionId, false), $request, [
+        $columns = $service->resolveColumns($this->columns($sectionId), $request, [
             ['Nom', fn ($d) => $d->D_NAME],
         ]);
         $filename = 'Documents_'.date('Ymd');
@@ -159,6 +168,7 @@ class DocumentController extends Controller
         $sectionId = (int) $v['section_id'];
         $parentId = (int) ($v['parent_id'] ?? 0);
         abort_unless($this->sectionScope->allows($sectionId), 403);
+        abort_unless($this->documents->authorize($request->user(), ObDocumentAcl::TYPE_FOLDER, $parentId, ObDocumentAcl::RIGHT_WRITE, $sectionId), 403);
 
         $name = $this->documents->sanitizeFolderName($v['name']);
         if ($name === '') {
@@ -180,6 +190,7 @@ class DocumentController extends Controller
         $sectionId = (int) $folder->S_ID;
         $parentId = (int) $folder->DF_PARENT;
         abort_unless($this->sectionScope->allows($sectionId), 403);
+        abort_unless($this->documents->authorize($request->user(), ObDocumentAcl::TYPE_FOLDER, (int) $folder->DF_ID, ObDocumentAcl::RIGHT_WRITE, $sectionId), 403);
 
         $name = $this->documents->sanitizeFolderName($v['name']);
         if ($name === '') {
@@ -200,6 +211,7 @@ class DocumentController extends Controller
         $sectionId = (int) $folder->S_ID;
         $parentId = (int) $folder->DF_PARENT;
         abort_unless($this->sectionScope->allows($sectionId), 403);
+        abort_unless($this->documents->authorize(request()->user(), ObDocumentAcl::TYPE_FOLDER, (int) $folder->DF_ID, ObDocumentAcl::RIGHT_DELETE, $sectionId), 403);
 
         if (! $this->documents->folderIsEmpty($folder)) {
             return $this->backToFolder($sectionId, (int) $folder->DF_ID, 'error',
@@ -227,16 +239,7 @@ class DocumentController extends Controller
         // Only library documents are served here (entity files use their own paths).
         abort_unless($this->isLibraryDocument($document), 404);
         abort_unless($this->sectionScope->allows($sectionId), 403);
-
-        $document->loadMissing('type', 'security');
-        $canView = $this->documents->canView(
-            $user,
-            $sectionId,
-            (int) ($document->type->TD_SECURITY ?? 0),
-            (int) ($document->security->F_ID ?? 0),
-            (int) $document->D_CREATED_BY,
-        );
-        abort_unless($canView, 403);
+        abort_unless($this->documents->canDownload($user, $document, $sectionId), 403);
 
         $path = $this->documents->filePath($sectionId, (int) $document->DF_ID, $document->D_NAME);
         abort_unless(File::exists($path), 404);
@@ -263,13 +266,13 @@ class DocumentController extends Controller
      * Column definitions for the explorer table — rows are sub-folders
      * (is_folder = true) and documents together. Reused by the export.
      */
-    private function columns(int $sectionId, bool $canManage): array
+    private function columns(int $sectionId): array
     {
         $isFolder = fn ($d) => (bool) ($d->is_folder ?? false);
         $folderUrl = fn ($d) => route('document.index', ['folder' => $d->DF_ID, 'section' => $sectionId]);
 
-        // Manager edit affordance for a document row (opens the edit modal via JS).
-        $editButton = fn ($d) => $canManage
+        // Edit (write) affordance, shown per-row from the resolved rights.
+        $editButton = fn ($d) => ($d->can_write ?? false)
             ? '<button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1 ms-1" title="Modifier"'
                 .' data-doc-edit data-id="'.$d->D_ID.'" data-type="'.e($d->TD_CODE).'"'
                 .' data-security="'.(int) $d->DS_ID.'" data-folder="'.(int) $d->DF_ID.'">'

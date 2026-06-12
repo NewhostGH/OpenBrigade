@@ -196,14 +196,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/documents/types', [DocumentTypeController::class, 'store'])->name('document.types.store')->middleware('permission:47');
     Route::patch('/documents/types/{type}', [DocumentTypeController::class, 'update'])->name('document.types.update')->middleware('permission:47');
     Route::delete('/documents/types/{type}', [DocumentTypeController::class, 'destroy'])->name('document.types.destroy')->middleware('permission:47');
-    // Folder management (replaces save_folder.php / upd_folder.php) — permission 47
-    Route::post('/documents/folders', [DocumentController::class, 'folderStore'])->name('document.folder.store')->middleware('permission:47');
-    Route::patch('/documents/folders/{folder}', [DocumentController::class, 'folderUpdate'])->name('document.folder.update')->middleware('permission:47');
-    Route::delete('/documents/folders/{folder}', [DocumentController::class, 'folderDestroy'])->name('document.folder.destroy')->middleware('permission:47');
-    // Document upload / edit / delete (replaces upd_document.php / save_documents.php) — permission 47
-    Route::post('/documents', [DocumentController::class, 'store'])->name('document.store')->middleware('permission:47');
-    Route::patch('/documents/{document}', [DocumentController::class, 'update'])->name('document.update')->middleware('permission:47');
-    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('document.destroy')->middleware('permission:47');
+    // Folder management (replaces save_folder.php / upd_folder.php). Entry needs
+    // library access (44); the per-object ACL (or permission 47) is enforced in
+    // the controller, so an ACL grant can authorise a non-manager.
+    Route::post('/documents/folders', [DocumentController::class, 'folderStore'])->name('document.folder.store')->middleware('permission:44');
+    Route::patch('/documents/folders/{folder}', [DocumentController::class, 'folderUpdate'])->name('document.folder.update')->middleware('permission:44');
+    Route::delete('/documents/folders/{folder}', [DocumentController::class, 'folderDestroy'])->name('document.folder.destroy')->middleware('permission:44');
+    // Document upload / edit / delete (replaces upd_document.php / save_documents.php).
+    Route::post('/documents', [DocumentController::class, 'store'])->name('document.store')->middleware('permission:44');
+    Route::patch('/documents/{document}', [DocumentController::class, 'update'])->name('document.update')->middleware('permission:44');
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('document.destroy')->middleware('permission:44');
     Route::get('/messages', [MessageController::class, 'index'])->name('message.index')->middleware('permission:44');
     Route::get('/organisation', fn () => redirect()->route('organisation.organigramme'))->name('organisation.index');
     Route::get('/organisation/organigramme', [OrganisationController::class, 'index'])->name('organisation.organigramme')->middleware('permission:52');

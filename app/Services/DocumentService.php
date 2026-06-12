@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Document;
 use App\Models\DocumentFolder;
+use App\Models\ObDocumentAcl;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Builder;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\File;
  */
 class DocumentService implements ServiceInterface
 {
+    public function __construct(private readonly DocumentAclService $acl) {}
+
     /** All folders for a section, ordered for tree + breadcrumb building. */
     public function folders(int $sectionId): Collection
     {
@@ -149,19 +152,61 @@ class DocumentService implements ServiceInterface
             ->paginate(30)
             ->withQueryString();
 
-        $page->getCollection()->transform(function ($row) use ($user, $sectionId) {
-            $row->can_view = $this->canView(
-                $user,
-                $sectionId,
-                (int) ($row->TD_SECURITY ?? 0),
-                (int) ($row->DS_FID ?? 0),
-                (int) $row->D_CREATED_BY,
+        // Warm the ACL cache for this page (folder chain + each document) once.
+        $resources = $this->acl->inheritanceChain(ObDocumentAcl::TYPE_FOLDER, $folderId);
+        foreach ($page->getCollection() as $row) {
+            $resources[] = [ObDocumentAcl::TYPE_DOCUMENT, (int) $row->D_ID];
+        }
+        $this->acl->preload($resources);
+
+        $manage = $user->hasPermissionInSection((int) config('documents.feature_manage'), $sectionId);
+
+        $page->getCollection()->transform(function ($row) use ($user, $sectionId, $manage) {
+            $id = (int) $row->D_ID;
+            $legacyView = $this->canView(
+                $user, $sectionId,
+                (int) ($row->TD_SECURITY ?? 0), (int) ($row->DS_FID ?? 0), (int) $row->D_CREATED_BY,
             );
+
+            // ACL decides when an ACE governs the item, else the legacy security.
+            $row->can_view = $this->acl->can($user, ObDocumentAcl::TYPE_DOCUMENT, $id, ObDocumentAcl::RIGHT_DOWNLOAD) ?? $legacyView;
+            $row->can_write = $this->acl->can($user, ObDocumentAcl::TYPE_DOCUMENT, $id, ObDocumentAcl::RIGHT_WRITE) ?? $manage;
+            $row->can_delete = $this->acl->can($user, ObDocumentAcl::TYPE_DOCUMENT, $id, ObDocumentAcl::RIGHT_DELETE) ?? $manage;
+            $row->can_share = $this->acl->can($user, ObDocumentAcl::TYPE_DOCUMENT, $id, ObDocumentAcl::RIGHT_SHARE) ?? $manage;
 
             return $row;
         });
 
         return $page;
+    }
+
+    /**
+     * Authorise an action right on a folder/document: the ACL decides when an
+     * ACE governs the item, otherwise the legacy library-manage permission (47)
+     * in the item's section. Used by every write action.
+     */
+    public function authorize(User $user, string $resourceType, int $resourceId, int $right, int $sectionId): bool
+    {
+        return $this->acl->can($user, $resourceType, $resourceId, $right)
+            ?? $user->hasPermissionInSection((int) config('documents.feature_manage'), $sectionId);
+    }
+
+    /** May the user download this document? ACL DOWNLOAD, else the legacy gate. */
+    public function canDownload(User $user, Document $document, int $sectionId): bool
+    {
+        $acl = $this->acl->can($user, ObDocumentAcl::TYPE_DOCUMENT, (int) $document->D_ID, ObDocumentAcl::RIGHT_DOWNLOAD);
+        if ($acl !== null) {
+            return $acl;
+        }
+
+        $document->loadMissing('type', 'security');
+
+        return $this->canView(
+            $user, $sectionId,
+            (int) ($document->type->TD_SECURITY ?? 0),
+            (int) ($document->security->F_ID ?? 0),
+            (int) $document->D_CREATED_BY,
+        );
     }
 
     /** All documents in a folder (unpaginated) for export. */

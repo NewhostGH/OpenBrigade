@@ -64,6 +64,40 @@ class DocumentAclService implements ServiceInterface
     }
 
     /**
+     * Warm the ACE cache for many resources in one query (avoids N+1 when the
+     * listing resolves rights for every row). Resources with no row are cached
+     * as empty so {@see acesFor()} won't re-query them.
+     *
+     * @param  array<array{0:string,1:int}>  $resources
+     */
+    public function preload(array $resources): void
+    {
+        $byType = [];
+        foreach ($resources as [$type, $id]) {
+            $byType[$type][] = (int) $id;
+        }
+
+        foreach ($byType as $type => $ids) {
+            $ids = array_values(array_unique($ids));
+            foreach ($ids as $id) {
+                $this->aceCache[$type.':'.$id] ??= [];
+            }
+            DB::table('ob_document_acl')
+                ->where('resource_type', $type)
+                ->whereIn('resource_id', $ids)
+                ->get(['resource_id', 'principal_type', 'principal_id', 'effect', 'rights'])
+                ->each(function ($r) use ($type) {
+                    $this->aceCache[$type.':'.(int) $r->resource_id][] = (object) [
+                        'principal_type' => $r->principal_type,
+                        'principal_id' => $r->principal_id,
+                        'effect' => $r->effect,
+                        'rights' => $r->rights,
+                    ];
+                });
+        }
+    }
+
+    /**
      * Does the user hold $right on the resource? null = no ACL defined (the
      * caller decides via the legacy rules).
      */

@@ -36,6 +36,8 @@
         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#docUploadModal">
             <i class="fas fa-upload me-1"></i> Ajouter
         </button>
+    @endif
+    @if ($canConfig)
         <a href="{{ route('document.types') }}" class="btn btn-sm btn-outline-secondary" title="Types de documents">
             <i class="fas fa-tags"></i>
         </a>
@@ -88,7 +90,7 @@
 
 </div>
 
-@if ($canManage)
+@if ($canManage || $canEditAny)
     {{-- Create folder --}}
     <div class="modal fade" id="folderCreateModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
