@@ -70,3 +70,4 @@ docs/wireframes/
 storage/app/public/theme
 storage/app/public/sections
 composer.phar
+.phpunit.cache
