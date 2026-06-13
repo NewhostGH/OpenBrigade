@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\RequireCharterAcceptance;
 use App\Http\Middleware\RequireFeature;
 use App\Http\Middleware\RequirePermission;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\TrackSession;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -33,6 +35,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Automatically applied to all auth-guarded web routes
         $middleware->appendToGroup('web', EnsureUserIsActive::class);
+        $middleware->appendToGroup('web', RequireCharterAcceptance::class);
+        $middleware->appendToGroup('web', TrackSession::class);
 
         // Security headers on every web response
         $middleware->prependToGroup('web', SecurityHeaders::class);
