@@ -85,6 +85,16 @@ test('unauthenticated users are redirected from event detail to login', function
     $this->get('/events/EVT001')->assertRedirect('/login');
 });
 
+test('unauthenticated users are redirected from the event list exports to login', function () {
+    $this->get('/events/export/xls')->assertRedirect('/login');
+    $this->get('/events/export/csv')->assertRedirect('/login');
+});
+
+test('the event list export routes are registered before the {code} wildcard', function () {
+    expect(route('event.export.xls'))->toContain('/events/export/xls');
+    expect(route('event.export.csv'))->toContain('/events/export/csv');
+});
+
 // ── Legacy bridge redirects ──────────────────────────────────────────────────
 
 test('legacy evenements.php redirects to event.index', function () {

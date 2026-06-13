@@ -9,7 +9,9 @@
     ]" />
 
 <x-ob-toolbar title="Activités" :total="$items->total()" filter-action="{{ route('event.index') }}"
-    filter-id="filterForm" filter-cols="2fr 1fr 1fr 1fr" :columns="$columns" table-id="evenementTable">
+    filter-id="filterForm" filter-cols="2fr 1fr 1fr 1fr" :columns="$columns" table-id="evenementTable"
+    :export-xls-url="route('event.export.xls', request()->query())"
+    :export-csv-url="route('event.export.csv', request()->query())">
 
     @if(auth()->user()->hasPermission(15))
         <a href="{{ route('event.create') }}" class="btn btn-sm btn-primary">

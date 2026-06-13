@@ -81,6 +81,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/layout', [DashboardController::class, 'saveLayout'])->name('dashboard.layout.save');
     Route::get('/events', [EventController::class, 'index'])->name('event.index')->middleware('permission:0');
+    // List exports (static segments before the {code} wildcard).
+    Route::get('/events/export/xls', [EventController::class, 'exportListXls'])->name('event.export.xls')->middleware('permission:0');
+    Route::get('/events/export/csv', [EventController::class, 'exportListCsv'])->name('event.export.csv')->middleware('permission:0');
     Route::get('/events/create', [EventController::class, 'create'])->name('event.create')->middleware('permission:15');
     Route::post('/events', [EventController::class, 'store'])->name('event.store')->middleware('permission:15');
     Route::get('/events/{code}', [EventController::class, 'show'])->name('event.show')->middleware('permission:0');

@@ -90,7 +90,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Event report (`evenement_rapport.php`)
 - [ ] Per-event trombinoscope (`evenement_trombinoscope.php`)
 - [ ] Event billing & tariffs (`evenement_facturation*.php`, `evenement_tarif*.php`)
-- [ ] Remaining exports (`evenement_xls.php`, `evenement_vehicule_xls.php`)
+- [x] Event list export (`evenement_xls.php`) — XLS / CSV via `TableExportService`, period/type/section/search-aware
+- [ ] Remaining exports (`evenement_vehicule_xls.php`)
 
 ### Garde — On-call roster (GAR)
 

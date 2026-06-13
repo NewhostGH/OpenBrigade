@@ -8,6 +8,7 @@ use App\Models\Section;
 use App\Services\ICalExportService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,9 +22,33 @@ class EventController extends Controller
 
     public function index(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
+        $period = (string) $request->string('period', 'upcoming');
+        $search = trim((string) $request->string('q'));
+        $type = (string) $request->string('type', 'ALL');
+        $filtSect = (int) $request->integer('section', 0);
 
+        $items = $this->buildFilteredQuery($request)->paginate(50)->withQueryString();
+
+        // Event types for the filter dropdown
+        $types = DB::table('type_evenement')
+            ->where('TE_CODE', '<>', 'MC')
+            ->orderBy('TE_LIBELLE')
+            ->get(['TE_CODE', 'TE_LIBELLE']);
+
+        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+
+        return view('event.index', compact(
+            'items', 'period', 'search', 'type', 'filtSect', 'types', 'sections'
+        ) + ['columns' => $this->evenementColumns()]);
+    }
+
+    /**
+     * Build the section-scoped, period/type/search-filtered event query shared
+     * by the list and the exports. Pagination is applied by the caller.
+     */
+    private function buildFilteredQuery(Request $request): Builder
+    {
+        $sectionId = (int) auth()->user()->P_SECTION;
         $period = (string) $request->string('period', 'upcoming');
         $search = trim((string) $request->string('q'));
         $type = (string) $request->string('type', 'ALL');
@@ -87,19 +112,42 @@ class EventController extends Controller
             $query->orderBy('first_date');
         }
 
-        $items = $query->paginate(50)->withQueryString();
+        return $query;
+    }
 
-        // Event types for the filter dropdown
-        $types = DB::table('type_evenement')
-            ->where('TE_CODE', '<>', 'MC')
-            ->orderBy('TE_LIBELLE')
-            ->get(['TE_CODE', 'TE_LIBELLE']);
+    /**
+     * Stream the filtered event list as an XLSX download. Honours the active
+     * period / type / section / search filters and the ?cols= selection.
+     */
+    public function exportListXls(Request $request)
+    {
+        return $this->exportList($request, 'xlsx');
+    }
 
-        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+    /**
+     * Stream the filtered event list as a CSV download.
+     */
+    public function exportListCsv(Request $request)
+    {
+        return $this->exportList($request, 'csv');
+    }
 
-        return view('event.index', compact(
-            'items', 'period', 'search', 'type', 'filtSect', 'types', 'sections'
-        ) + ['columns' => $this->evenementColumns()]);
+    private function exportList(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // 'activite' is alwaysVisible and 'icon' is non-exportable, so prepend
+        // the activity label/type explicitly to keep the sheet self-describing.
+        $columns = $service->resolveColumns($this->evenementColumns(), $request, [
+            ['Type',     fn ($e) => $e->TE_LIBELLE ?? ''],
+            ['Activité', fn ($e) => $e->E_LIBELLE ?? $e->E_CODE],
+        ]);
+
+        $items = $this->buildFilteredQuery($request)->get();
+        $filename = 'Evenements_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Événements', 'freezeHeader' => true]);
     }
 
     private static function typeIcon(string $code): string
