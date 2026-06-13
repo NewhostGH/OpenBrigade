@@ -26,4 +26,10 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        // ECharts (~575 kB) and pdf-lib (~430 kB) are unavoidably large, but each
+        // is split into its own chunk and only loaded on the pages that use it.
+        // Raise the warning ceiling above those page-scoped vendor chunks.
+        chunkSizeWarningLimit: 650,
+    },
 });

@@ -1,4 +1,4 @@
-import * as echarts from 'echarts';
+import echarts from './echarts.js';
 
 const FONT = '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';

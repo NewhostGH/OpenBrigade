@@ -1,4 +1,4 @@
-import * as echarts from 'echarts';
+import echarts from './echarts.js';
 
 const MONTH_LABELS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
 const PALETTE = ['#2B2350', '#6868b9', '#FA7070', '#16a34a', '#e67e22', '#0369a1', '#8950fc', '#1d6f42'];
