@@ -303,16 +303,19 @@
 
 @push('scripts')
 @if ($tab === 'password')
+@php
+$policyJs = [
+    'minLength'        => (int) $policy['min_length'],
+    'requireUppercase' => (bool) ($policy['require_uppercase'] ?? false),
+    'requireLowercase' => (bool) ($policy['require_lowercase'] ?? false),
+    'requireDigits'    => (bool) ($policy['require_digits'] ?? false),
+    'requireSpecial'   => (bool) ($policy['require_special'] ?? false),
+    'blocklist'        => (bool) ($policy['blocklist_check'] ?? false),
+];
+@endphp
 <script>
 (function () {
-    const policy = @json([
-        'minLength'        => $policy['min_length'],
-        'requireUppercase' => !empty($policy['require_uppercase']),
-        'requireLowercase' => !empty($policy['require_lowercase']),
-        'requireDigits'    => !empty($policy['require_digits']),
-        'requireSpecial'   => !empty($policy['require_special']),
-        'blocklist'        => !empty($policy['blocklist_check']),
-    ]);
+    const policy = @json($policyJs);
 
     const input   = document.getElementById('new1');
     const meter   = document.getElementById('pw-meter');

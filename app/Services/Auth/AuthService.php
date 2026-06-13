@@ -58,7 +58,7 @@ class AuthService implements ServiceInterface
         }
 
         $passwordOk = app(LdapAuthService::class)->isEnabled()
-            ? app(LdapAuthService::class)->authenticate($login, $plainPassword)
+            ? app(LdapAuthService::class)->authenticate($login, $plainPassword, $user)
             : $this->validateLegacyPassword($plainPassword, (string) $user->P_MDP);
 
         if (! $passwordOk) {

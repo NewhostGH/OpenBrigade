@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LdapAttributeMap;
+use App\Models\LdapDomain;
+use App\Models\LdapOuRule;
 use App\Models\ObGroup;
 use App\Models\ObPasswordPolicy;
+use App\Models\Section;
 use App\Services\Auth\LdapAuthService;
+use App\Services\FeatureService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -58,10 +64,12 @@ class AdminController extends Controller
     /** IDs that live on the dedicated security page, not on the generic settings page. */
     private const SECURITY_IDS = [48, 34, 36, 49, 25, 33, 69];
 
+    private const SECURITY_TABS = ['passwords', 'charter', 'sessions', 'auth', 'network'];
+
     public function security(Request $request): View
     {
         $tab = $request->input('tab', 'passwords');
-        if (! in_array($tab, ['passwords', 'charter', 'sessions', 'auth'], true)) {
+        if (! in_array($tab, self::SECURITY_TABS, true)) {
             $tab = 'passwords';
         }
 
@@ -78,7 +86,182 @@ class AdminController extends Controller
             ? ObPasswordPolicy::withCount('groups')->orderByDesc('is_default')->orderBy('name')->get()
             : collect();
 
-        return view('admin.security', compact('settings', 'charterUpdatedAt', 'tab', 'policies'));
+        $ldapDomains = ($tab === 'auth' || $tab === 'network')
+            ? LdapDomain::orderBy('priority')->get()
+            : collect();
+
+        return view('admin.security', compact('settings', 'charterUpdatedAt', 'tab', 'policies', 'ldapDomains'));
+    }
+
+    // ── LDAP domain management ────────────────────────────────────────────────
+
+    public function ldapStore(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'enabled' => 'boolean',
+            'priority' => 'integer|min:0|max:999',
+            'host' => 'required|string|max:255',
+            'port' => 'integer|min:1|max:65535',
+            'base_dn' => 'required|string|max:500',
+            'username' => 'nullable|string|max:500',
+            'password' => 'nullable|string|max:500',
+            'timeout' => 'integer|min:1|max:60',
+            'use_tls' => 'boolean',
+            'use_starttls' => 'boolean',
+            'auth_method' => 'required|in:bind,upn',
+            'upn_suffix' => 'nullable|string|max:200',
+            'user_filter' => 'nullable|string|max:500',
+            'restrict_to_ou' => 'boolean',
+        ]);
+
+        $data['enabled'] = (bool) ($data['enabled'] ?? false);
+        $data['use_tls'] = (bool) ($data['use_tls'] ?? false);
+        $data['use_starttls'] = (bool) ($data['use_starttls'] ?? false);
+        $data['restrict_to_ou'] = (bool) ($data['restrict_to_ou'] ?? false);
+        $data['user_filter'] ??= '(&(objectClass=person)(|(uid={login})(mail={login})))';
+
+        $domain = LdapDomain::create($data);
+
+        return redirect()->route('admin.ldap.edit', $domain->id)->with('success', 'Domaine LDAP créé.');
+    }
+
+    public function ldapEdit(int $id): View
+    {
+        $domain = LdapDomain::with(['attributeMaps', 'ouRules.group', 'ouRules.role', 'ouRules.section'])->findOrFail($id);
+        $groups = ObGroup::groups()->orderBy('name')->get();
+        $roles = ObGroup::roles()->orderBy('name')->get();
+        $multiSite = app(FeatureService::class)->isEnabled('multi_site');
+        $sections = $multiSite
+            ? Section::where('S_INACTIVE', false)->orderBy('S_CODE')->get()
+            : collect();
+
+        $localFields = [
+            'P_NOM' => 'Nom',
+            'P_PRENOM' => 'Prénom',
+            'P_EMAIL' => 'Email',
+            'P_CODE' => 'Matricule / Identifiant',
+            'P_GRADE' => 'Grade',
+        ];
+
+        return view('admin.ldap-domain-edit', compact('domain', 'groups', 'roles', 'sections', 'multiSite', 'localFields'));
+    }
+
+    public function ldapUpdate(Request $request, int $id): RedirectResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'enabled' => 'boolean',
+            'priority' => 'integer|min:0|max:999',
+            'host' => 'required|string|max:255',
+            'port' => 'integer|min:1|max:65535',
+            'base_dn' => 'required|string|max:500',
+            'username' => 'nullable|string|max:500',
+            'password' => 'nullable|string|max:500',
+            'timeout' => 'integer|min:1|max:60',
+            'use_tls' => 'boolean',
+            'use_starttls' => 'boolean',
+            'auth_method' => 'required|in:bind,upn',
+            'upn_suffix' => 'nullable|string|max:200',
+            'user_filter' => 'nullable|string|max:500',
+            'restrict_to_ou' => 'boolean',
+        ]);
+
+        $data['enabled'] = (bool) ($data['enabled'] ?? false);
+        $data['use_tls'] = (bool) ($data['use_tls'] ?? false);
+        $data['use_starttls'] = (bool) ($data['use_starttls'] ?? false);
+        $data['restrict_to_ou'] = (bool) ($data['restrict_to_ou'] ?? false);
+
+        // Keep existing password if not changed.
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
+        $domain->update($data);
+
+        return back()->with('success', 'Domaine mis à jour.');
+    }
+
+    public function ldapDestroy(int $id): RedirectResponse
+    {
+        LdapDomain::findOrFail($id)->delete();
+
+        return redirect()->route('admin.security', ['tab' => 'auth'])->with('success', 'Domaine LDAP supprimé.');
+    }
+
+    public function ldapTest(int $id): JsonResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+        $error = app(LdapAuthService::class)->testDomain($domain);
+
+        return $error === null
+            ? response()->json(['ok' => true,  'message' => 'Connexion réussie.'])
+            : response()->json(['ok' => false, 'message' => $error]);
+    }
+
+    public function ldapAttrStore(Request $request, int $id): RedirectResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+
+        $data = $request->validate([
+            'ldap_attr' => 'required|string|max:100',
+            'local_field' => 'required|string|max:50',
+            'overwrite' => 'boolean',
+        ]);
+
+        $data['overwrite'] = (bool) ($data['overwrite'] ?? false);
+
+        $domain->attributeMaps()->create($data);
+
+        return back()->with('success', 'Correspondance ajoutée.');
+    }
+
+    public function ldapAttrDestroy(int $id, int $attrId): RedirectResponse
+    {
+        LdapAttributeMap::where('ldap_domain_id', $id)->findOrFail($attrId)->delete();
+
+        return back()->with('success', 'Correspondance supprimée.');
+    }
+
+    public function ldapOuStore(Request $request, int $id): RedirectResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+
+        $data = $request->validate([
+            'ou_dn' => 'required|string|max:500',
+            'extra_filter' => 'nullable|string|max:500',
+            'action' => 'required|in:allow,deny,assign',
+            'group_id' => 'nullable|integer|exists:ob_group,id',
+            'role_id' => 'nullable|integer|exists:ob_group,id',
+            'section_id' => 'nullable|integer|exists:section,S_ID',
+            'priority' => 'integer|min:0|max:999',
+        ]);
+
+        $domain->ouRules()->create($data);
+
+        return back()->with('success', 'Règle OU ajoutée.');
+    }
+
+    public function ldapOuDestroy(int $id, int $ruleId): RedirectResponse
+    {
+        LdapOuRule::where('ldap_domain_id', $id)->findOrFail($ruleId)->delete();
+
+        return back()->with('success', 'Règle supprimée.');
+    }
+
+    public function testHibp(): JsonResponse
+    {
+        try {
+            $response = Http::timeout(5)->withHeaders(['Add-Padding' => 'true'])->get('https://api.pwnedpasswords.com/range/00000');
+
+            return $response->successful()
+                ? response()->json(['ok' => true,  'message' => 'Connexion réussie (HTTP '.$response->status().').'])
+                : response()->json(['ok' => false, 'message' => 'Réponse HTTP '.$response->status().'.']);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     // ── Application settings ──────────────────────────────────────────────────
@@ -354,20 +537,6 @@ class AdminController extends Controller
     }
 
     // ── LDAP ─────────────────────────────────────────────────────────────────
-
-    /** Test the LDAP connection and return JSON with {ok, message}. */
-    public function testLdap(Request $request): JsonResponse
-    {
-        if (! config('ldap.enabled')) {
-            return response()->json(['ok' => false, 'message' => 'LDAP désactivé (LDAP_ENABLED=false).']);
-        }
-
-        $error = app(LdapAuthService::class)->testConnection();
-
-        return $error === null
-            ? response()->json(['ok' => true,  'message' => 'Connexion réussie.'])
-            : response()->json(['ok' => false, 'message' => $error]);
-    }
 
     /** @param string[] $groupIds */
     private function syncPolicyGroups(ObPasswordPolicy $policy, array $groupIds): void

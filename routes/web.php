@@ -132,7 +132,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/security/politique/{id}/edit', [AdminController::class, 'policyEdit'])->name('admin.policy.edit')->middleware('permission:14');
     Route::patch('/admin/security/politique/{id}', [AdminController::class, 'policyUpdate'])->name('admin.policy.update')->middleware('permission:14');
     Route::delete('/admin/security/politique/{id}', [AdminController::class, 'policyDestroy'])->name('admin.policy.destroy')->middleware('permission:14');
-    Route::post('/admin/security/ldap-test', [AdminController::class, 'testLdap'])->name('admin.ldap.test')->middleware('permission:14');
+    Route::post('/admin/security/ldap', [AdminController::class, 'ldapStore'])->name('admin.ldap.store')->middleware('permission:14');
+    Route::get('/admin/security/ldap/{id}/edit', [AdminController::class, 'ldapEdit'])->name('admin.ldap.edit')->middleware('permission:14');
+    Route::patch('/admin/security/ldap/{id}', [AdminController::class, 'ldapUpdate'])->name('admin.ldap.update')->middleware('permission:14');
+    Route::delete('/admin/security/ldap/{id}', [AdminController::class, 'ldapDestroy'])->name('admin.ldap.destroy')->middleware('permission:14');
+    Route::post('/admin/security/ldap/{id}/test', [AdminController::class, 'ldapTest'])->name('admin.ldap.test')->middleware('permission:14');
+    Route::post('/admin/security/ldap/{id}/attr', [AdminController::class, 'ldapAttrStore'])->name('admin.ldap.attr.store')->middleware('permission:14');
+    Route::delete('/admin/security/ldap/{id}/attr/{attrId}', [AdminController::class, 'ldapAttrDestroy'])->name('admin.ldap.attr.destroy')->middleware('permission:14');
+    Route::post('/admin/security/ldap/{id}/ou', [AdminController::class, 'ldapOuStore'])->name('admin.ldap.ou.store')->middleware('permission:14');
+    Route::delete('/admin/security/ldap/{id}/ou/{ruleId}', [AdminController::class, 'ldapOuDestroy'])->name('admin.ldap.ou.destroy')->middleware('permission:14');
+    Route::post('/admin/security/network/test-hibp', [AdminController::class, 'testHibp'])->name('admin.network.test-hibp')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');
