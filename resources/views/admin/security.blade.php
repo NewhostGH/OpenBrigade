@@ -322,11 +322,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         {{-- ── Authentification ─────────────────────────────────────────────── --}}
         @if ($tab === 'auth')
+        @php
+            $ldapEnabled   = (bool) config('ldap.enabled');
+            $ldapMethod    = config('ldap.auth_method', 'bind');
+            $ldapHost      = config('ldap.connections.default.hosts.0', '—');
+            $ldapPort      = config('ldap.connections.default.port', 389);
+            $ldapBaseDn    = config('ldap.connections.default.base_dn', '—');
+            $ldapUsername  = config('ldap.connections.default.username', '—');
+            $ldapTls       = config('ldap.connections.default.use_tls', false);
+            $ldapStartTls  = config('ldap.connections.default.use_starttls', false);
+            $ldapFilter    = config('ldap.user_filter', '');
+            $ldapUpnSuffix = config('ldap.upn_suffix', '');
+        @endphp
         <div class="p-3">
 
             <div class="ob-hab-toolbar pb-1">
                 <span class="fw-semibold"><i class="fas fa-id-badge me-1 text-secondary"></i> Authentification renforcée</span>
-                <span class="text-muted" style="font-size:var(--font-size-xs);">2FA, fédération d'identité et message de première connexion. Ces fonctionnalités sont en cours d'implémentation.</span>
+                <span class="text-muted" style="font-size:var(--font-size-xs);">TOTP, fédération LDAP et message de première connexion.</span>
             </div>
 
             {{-- Info connexion (ID 69) — WIP --}}
@@ -351,35 +363,96 @@ document.addEventListener('DOMContentLoaded', function () {
 
             <div class="row g-3">
 
-                <div class="col-md-4">
-                    <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
+                {{-- ── TOTP ──────────────────────────────────────────────────── --}}
+                <div class="col-md-6">
+                    <div class="p-3 rounded border">
                         <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
-                            <i class="fas fa-mobile-alt me-1"></i> TOTP / 2FA
+                            <i class="fas fa-mobile-alt me-1 text-success"></i> TOTP / 2FA
+                            <span class="ms-1 ob-badge ob-badge-int" style="font-size:10px;">Actif</span>
                         </div>
-                        <div class="text-muted" style="font-size:var(--font-size-xs);">
-                            Authentification à deux facteurs par application (Google Authenticator, Authy…).
+                        <div class="text-muted mb-2" style="font-size:var(--font-size-xs);">
+                            Authentification à deux facteurs via application TOTP (Google Authenticator, Aegis, Authy…).
+                            Chaque utilisateur peut activer le 2FA depuis son profil. L'activation peut être rendue
+                            obligatoire par groupe via les <a href="{{ route('admin.security', ['tab' => 'passwords']) }}">politiques de mot de passe</a>.
+                        </div>
+                        <div style="font-size:var(--font-size-xs);">
+                            <i class="fas fa-circle text-success me-1" style="font-size:8px;"></i>
+                            Codes à 6 chiffres · codes de récupération · désactivation vérifiée par code TOTP
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
-                        <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
-                            <i class="fas fa-server me-1"></i> LDAP / Active Directory
+                {{-- ── LDAP ──────────────────────────────────────────────────── --}}
+                <div class="col-md-6">
+                    <div class="p-3 rounded border {{ $ldapEnabled ? '' : 'border-secondary' }}">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="fw-semibold" style="font-size:var(--font-size-sm);">
+                                <i class="fas fa-server me-1 {{ $ldapEnabled ? 'text-success' : 'text-secondary' }}"></i>
+                                LDAP / Active Directory
+                                @if ($ldapEnabled)
+                                    <span class="ms-1 ob-badge ob-badge-int" style="font-size:10px;">Actif</span>
+                                @else
+                                    <span class="ms-1 ob-badge" style="font-size:10px;background:var(--bs-secondary-bg);">Désactivé</span>
+                                @endif
+                            </div>
+                            @if ($ldapEnabled)
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    id="ldap-test-btn"
+                                    data-url="{{ route('admin.ldap.test') }}"
+                                    style="font-size:var(--font-size-xs);">
+                                <i class="fas fa-plug me-1"></i> Tester la connexion
+                            </button>
+                            @endif
                         </div>
-                        <div class="text-muted" style="font-size:var(--font-size-xs);">
-                            Authentification déléguée à un annuaire LDAP ou un AD d'entreprise.
+
+                        <div class="text-muted mb-2" style="font-size:var(--font-size-xs);">
+                            Délègue la vérification du mot de passe à l'annuaire LDAP.
+                            Le compte local doit exister dans <code>pompier</code> — seul le mot de passe
+                            est vérifié côté LDAP.
                         </div>
+
+                        @if ($ldapEnabled)
+                        <table class="table table-sm mb-2" style="font-size:var(--font-size-xs);">
+                            <tbody>
+                                <tr><th class="fw-normal text-muted" style="width:38%;">Hôte</th><td><code>{{ $ldapHost }}:{{ $ldapPort }}</code></td></tr>
+                                <tr><th class="fw-normal text-muted">Base DN</th><td><code>{{ $ldapBaseDn }}</code></td></tr>
+                                <tr><th class="fw-normal text-muted">Compte service</th><td><code>{{ $ldapUsername }}</code></td></tr>
+                                <tr><th class="fw-normal text-muted">Méthode</th><td>
+                                    @if ($ldapMethod === 'upn')
+                                        UPN — suffixe <code>{{ $ldapUpnSuffix ?: '(vide)' }}</code>
+                                    @else
+                                        Recherche DN — filtre <code>{{ $ldapFilter }}</code>
+                                    @endif
+                                </td></tr>
+                                <tr><th class="fw-normal text-muted">Chiffrement</th><td>
+                                    @if ($ldapTls) TLS (LDAPS)
+                                    @elseif ($ldapStartTls) STARTTLS
+                                    @else <span class="text-danger">Aucun</span>
+                                    @endif
+                                </td></tr>
+                            </tbody>
+                        </table>
+                        <div id="ldap-test-result" class="d-none" style="font-size:var(--font-size-xs);"></div>
+                        @else
+                        <div style="font-size:var(--font-size-xs);">
+                            Pour activer LDAP, définissez <code>LDAP_ENABLED=true</code> et les variables
+                            <code>LDAP_HOST</code>, <code>LDAP_BASE_DN</code>, <code>LDAP_USERNAME</code>,
+                            <code>LDAP_PASSWORD</code> dans le fichier <code>.env</code>.
+                            Voir <a href="{{ url('/docs/security/ldap.md') }}" target="_blank">la documentation LDAP</a>.
+                        </div>
+                        @endif
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                {{-- ── SSO placeholder ───────────────────────────────────────── --}}
+                <div class="col-12">
                     <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
                         <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
                             <i class="fas fa-sign-in-alt me-1"></i> SSO — SAML 2.0 / OAuth
+                            <span class="ms-1 ob-badge ob-badge-ext" style="font-size:10px;">Non implémenté</span>
                         </div>
                         <div class="text-muted" style="font-size:var(--font-size-xs);">
-                            Authentification unique via un fournisseur d'identité (Keycloak, Azure AD…).
+                            Authentification unique via un fournisseur d'identité (Keycloak, Azure AD, Google Workspace…).
                         </div>
                     </div>
                 </div>
@@ -387,6 +460,39 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
 
         </div>
+
+        @push('scripts')
+        <script>
+        (function () {
+            const btn = document.getElementById('ldap-test-btn');
+            if (!btn) return;
+            const result = document.getElementById('ldap-test-result');
+            btn.addEventListener('click', async function () {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Test…';
+                result.className = 'd-none';
+                try {
+                    const r = await fetch(btn.dataset.url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                        },
+                    });
+                    const data = await r.json();
+                    result.className = 'p-2 rounded ' + (data.ok ? 'alert alert-success' : 'alert alert-danger');
+                    result.innerHTML = (data.ok ? '<i class="fas fa-check me-1"></i>' : '<i class="fas fa-times me-1"></i>') + data.message;
+                } catch (e) {
+                    result.className = 'p-2 rounded alert alert-danger';
+                    result.innerHTML = '<i class="fas fa-times me-1"></i> Erreur réseau.';
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-plug me-1"></i> Tester la connexion';
+                }
+            });
+        })();
+        </script>
+        @endpush
         @endif
 
     </div>

@@ -56,14 +56,20 @@ class AuthService implements ServiceInterface
             return false;
         }
 
-        if (! $this->validateLegacyPassword($plainPassword, (string) $user->P_MDP)) {
+        $passwordOk = app(LdapAuthService::class)->isEnabled()
+            ? app(LdapAuthService::class)->authenticate($login, $plainPassword)
+            : $this->validateLegacyPassword($plainPassword, (string) $user->P_MDP);
+
+        if (! $passwordOk) {
             $this->incrementPasswordFailure($user);
 
             return false;
         }
 
         $this->resetPasswordFailure($user);
-        $this->refreshLegacyHashIfNeeded($user, $plainPassword);
+        if (! app(LdapAuthService::class)->isEnabled()) {
+            $this->refreshLegacyHashIfNeeded($user, $plainPassword);
+        }
 
         // TOTP challenge — confirmed enrolment takes priority.
         if ($user->hasEnabledTwoFactorAuthentication()) {

@@ -21,6 +21,14 @@ sources of truth** — each topic is owned by exactly one file.
 | [database-migration.md](admin/database-migration.md) | Schema ownership, migrations, legacy parity validation |
 | [backup-and-restore.md](admin/backup-and-restore.md) | Database backups, the scheduler, restore               |
 
+## Security docs (`security/`)
+
+| Doc | Owns |
+| --- | --- |
+| [password-policies.md](security/password-policies.md) | Named password policies, per-group assignment, NCSC/ANSSI guidance |
+| [totp.md](security/totp.md) | TOTP two-factor authentication — enrolment, login flow, recovery codes |
+| [ldap.md](security/ldap.md) | LDAP/AD authentication delegation, configuration, dev emulation with Docker |
+
 ## Migration tracking
 
 The menu-by-menu migration status and the working agreement for making changes live

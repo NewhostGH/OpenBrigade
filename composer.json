@@ -5,6 +5,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^8.4",
+        "directorytree/ldaprecord-laravel": "^4.0",
         "endroid/qr-code": "^6.0",
         "laravel/fortify": "^1.37",
         "laravel/framework": "^12.0",

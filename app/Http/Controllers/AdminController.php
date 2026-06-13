@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ObGroup;
 use App\Models\ObPasswordPolicy;
+use App\Services\Auth\LdapAuthService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -349,6 +351,22 @@ class AdminController extends Controller
 
         return redirect()->route('admin.security', ['tab' => 'passwords'])
             ->with('success', 'Politique supprimée.');
+    }
+
+    // ── LDAP ─────────────────────────────────────────────────────────────────
+
+    /** Test the LDAP connection and return JSON with {ok, message}. */
+    public function testLdap(Request $request): JsonResponse
+    {
+        if (! config('ldap.enabled')) {
+            return response()->json(['ok' => false, 'message' => 'LDAP désactivé (LDAP_ENABLED=false).']);
+        }
+
+        $error = app(LdapAuthService::class)->testConnection();
+
+        return $error === null
+            ? response()->json(['ok' => true,  'message' => 'Connexion réussie.'])
+            : response()->json(['ok' => false, 'message' => $error]);
     }
 
     /** @param string[] $groupIds */
