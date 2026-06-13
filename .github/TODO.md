@@ -28,10 +28,13 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 ## Authentication & account (AUTH)
 
 - [x] Login / logout (legacy-hash upgrade)
-- [ ] Password change (`change_password.php`, `save_password.php`)
-- [ ] Lost password / send credentials (`lost_password.php`, `send_id.php`)
-- [ ] Charter acceptance on first login (`charte.php`)
-- [ ] Connected users view (`connected_users.php`)
+- [X] Password change (`change_password.php`, `save_password.php`)
+- [X] Lost password / send credentials (`lost_password.php`, `send_id.php`) -> Mailing not setup yet
+- [X] Charter acceptance on first login (`charte.php`)
+- [X] Connected users view (`connected_users.php`)
+- [x] TOTP two-factor authentication (laravel/fortify) — `TotpController`, `docs/security/totp.md`
+- [x] LDAP authentication delegation — multi-domain, OU rules, attribute mapping, local-password fallback; `docs/security/ldap.md`
+- [x] Per-group password policies (NCSC/ANSSI-aligned) — complexity/history/expiry, HIBP check, strength meter, enforcement middleware; `PasswordPolicyService`, `docs/security/password-policies.md`
 
 ## Cross-cutting (done)
 
@@ -205,19 +208,20 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 Authoritative list: the `todo` annotations in `AdminController::settings()`
 (settings marked `obsolete` there are intentionally retired — no work needed).
 
-- [ ] Password policies — complexity, history, expiry (IDs 15, 16, 17, 70)
-- [ ] Session policies (IDs 34, 36, 49)
+- [x] Password policies — complexity, history, expiry (IDs 15, 16, 17, 70) — handled via Administration > Sécurité (annotated obsolete in `AdminController::settings()`)
+- [x] Session policies (IDs 34, 36, 49) — handled via Administration > Sécurité
+- [x] Action history (ID 25) — handled via Administration > Sécurité
+- [x] Sensitive data handling (ID 33), file ACLs (ID 42), terms of use (ID 48) — handled via Sécurité / document ACL system
+- [x] First-login banner (ID 69) — handled via Administration > Sécurité
 - [ ] Organisation identity — name, description, contact mail, logo, login image (IDs 6, 8, 39, 40, 71, 75)
 - [ ] Timezone (ID 76), default currency (IDs 98, 99)
 - [ ] Numbering prefix / length (IDs 100, 101)
-- [ ] Action history (ID 25)
 - [ ] Email notifications (ID 28)
 - [ ] Mandatory profile photos (ID 68)
 - [ ] Maintenance mode and text (IDs 37, 41)
 - [ ] API enable / URL / token (IDs 64, 65, 66) — see Phase 3
 - [ ] SMS provider settings (IDs 9, 10, 11, 12) — see COMM
-- [ ] Sensitive data handling (ID 33), file ACLs (ID 42), terms of use (ID 48)
-- [ ] First-login banner (ID 69), telemetry opt-in (ID 80)
+- [ ] Telemetry opt-in (ID 80)
 - [ ] Database optimization (ID 14)
 
 ---
