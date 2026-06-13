@@ -24,7 +24,16 @@
         <section class="col-lg-4 d-flex align-items-center justify-content-center px-4 py-5 ob-login-right">
             <div class="ob-login-card">
 
-                @if (isset($submitted) && $submitted)
+                @if ($mailDisabled ?? false)
+                    <div class="mb-4">
+                        <div class="ob-login-brand-title">Réinitialisation non disponible</div>
+                        <p class="ob-login-brand-sub mt-2">
+                            L'envoi d'e-mails n'est pas activé sur ce système.
+                            Contactez votre administrateur pour qu'il réinitialise votre mot de passe.
+                        </p>
+                    </div>
+                    <a href="{{ route('login') }}" class="btn ob-login-btn">Retour à la connexion</a>
+                @elseif (isset($submitted) && $submitted)
                     <div class="mb-4">
                         <div class="ob-login-brand-title">Demande envoyée</div>
                         <p class="ob-login-brand-sub mt-2">

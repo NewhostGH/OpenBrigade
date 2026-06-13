@@ -62,7 +62,7 @@ class NotificationService implements ServiceInterface
         }
     }
 
-    private function isMailAllowed(): bool
+    public function isMailAllowed(): bool
     {
         return (bool) DB::table('configuration')->where('NAME', 'mail_allowed')->value('VALUE');
     }

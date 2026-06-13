@@ -33,11 +33,15 @@ class PasswordResetController extends Controller
 
     public function showRequestForm(): View
     {
-        return view('auth.password-reset');
+        return view('auth.password-reset', ['mailDisabled' => ! $this->notificationService->isMailAllowed()]);
     }
 
     public function sendResetToken(Request $request): RedirectResponse|View
     {
+        if (! $this->notificationService->isMailAllowed()) {
+            return view('auth.password-reset', ['mailDisabled' => true]);
+        }
+
         $recovery = trim((string) $request->input('recovery', ''));
 
         if ($recovery === '') {
@@ -134,6 +138,7 @@ class PasswordResetController extends Controller
 
     private function generateSecret(): string
     {
-        return bin2hex(random_bytes(16));
+        // demande.D_SECRET is varchar(30); 15 bytes → 30 hex chars
+        return bin2hex(random_bytes(15));
     }
 }
