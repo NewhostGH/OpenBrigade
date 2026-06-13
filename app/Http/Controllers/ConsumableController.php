@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -12,15 +14,28 @@ class ConsumableController extends Controller
 {
     public function index(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
-
         $search = trim((string) $request->string('q'));
         $filtSect = (int) $request->integer('section', 0);
         $alert = (bool) $request->boolean('alert', false);
 
-        $target = $filtSect > 0 ? $filtSect : $sectionId;
+        $items = $this->buildFilteredQuery($request)->paginate(50)->withQueryString();
+        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
+        return view('consumable.index', compact('items', 'search', 'filtSect', 'alert', 'sections')
+            + ['columns' => $this->consommableColumns()]);
+    }
+
+    /**
+     * Section-scoped, searched/alert-filtered consumable query shared by the
+     * list and the exports.
+     */
+    private function buildFilteredQuery(Request $request): Builder
+    {
+        $sectionId = (int) auth()->user()->P_SECTION;
+        $search = trim((string) $request->string('q'));
+        $filtSect = (int) $request->integer('section', 0);
+        $alert = (bool) $request->boolean('alert', false);
+        $target = $filtSect > 0 ? $filtSect : $sectionId;
         $today = now()->toDateString();
 
         $query = DB::table('consommable as c')
@@ -54,11 +69,34 @@ class ConsumableController extends Controller
             });
         }
 
-        $items = $query->paginate(50)->withQueryString();
-        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+        return $query;
+    }
 
-        return view('consumable.index', compact('items', 'search', 'filtSect', 'alert', 'sections')
-            + ['columns' => $this->consommableColumns()]);
+    public function exportXls(Request $request)
+    {
+        return $this->export($request, 'xlsx');
+    }
+
+    public function exportCsv(Request $request)
+    {
+        return $this->export($request, 'csv');
+    }
+
+    private function export(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // 'type' / 'description' are alwaysVisible, so resolveColumns skips them.
+        $columns = $service->resolveColumns($this->consommableColumns(), $request, [
+            ['Type',        fn ($c) => $c->TC_LIBELLE ?? ''],
+            ['Description', fn ($c) => $c->C_DESCRIPTION ?? ''],
+        ]);
+
+        $items = $this->buildFilteredQuery($request)->get();
+        $filename = 'Consommables_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Consommables', 'freezeHeader' => true]);
     }
 
     private function consommableColumns(): array

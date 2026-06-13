@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -12,12 +14,24 @@ class EquipmentController extends Controller
 {
     public function index(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
-
         $search = trim((string) $request->string('q'));
         $filtSect = (int) $request->integer('section', 0);
 
+        $items = $this->buildFilteredQuery($request)->paginate(50)->withQueryString();
+        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+
+        return view('equipment.index', compact('items', 'search', 'filtSect', 'sections')
+            + ['columns' => $this->equipmentColumns()]);
+    }
+
+    /**
+     * Section-scoped, searched equipment query shared by the list and exports.
+     */
+    private function buildFilteredQuery(Request $request): Builder
+    {
+        $sectionId = (int) auth()->user()->P_SECTION;
+        $search = trim((string) $request->string('q'));
+        $filtSect = (int) $request->integer('section', 0);
         $target = $filtSect > 0 ? $filtSect : $sectionId;
 
         $query = DB::table('materiel as m')
@@ -40,11 +54,34 @@ class EquipmentController extends Controller
             });
         }
 
-        $items = $query->paginate(50)->withQueryString();
-        $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
+        return $query;
+    }
 
-        return view('equipment.index', compact('items', 'search', 'filtSect', 'sections')
-            + ['columns' => $this->equipmentColumns()]);
+    public function exportXls(Request $request)
+    {
+        return $this->export($request, 'xlsx');
+    }
+
+    public function exportCsv(Request $request)
+    {
+        return $this->export($request, 'csv');
+    }
+
+    private function export(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // 'type' / 'modele' are alwaysVisible, so resolveColumns skips them.
+        $columns = $service->resolveColumns($this->equipmentColumns(), $request, [
+            ['Type',   fn ($m) => $m->TM_LIBELLE ?? ''],
+            ['Modèle', fn ($m) => $m->MA_MODELE ?? ''],
+        ]);
+
+        $items = $this->buildFilteredQuery($request)->get();
+        $filename = 'Materiel_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Matériel', 'freezeHeader' => true]);
     }
 
     private function equipmentColumns(): array

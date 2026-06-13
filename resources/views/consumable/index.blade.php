@@ -15,7 +15,9 @@
     filter-id="filterForm"
     filter-cols="2fr 1fr auto"
     :columns="$columns"
-    table-id="consommableTable">
+    table-id="consommableTable"
+    :export-xls-url="route('consumable.export.xls', request()->query())"
+    :export-csv-url="route('consumable.export.csv', request()->query())">
 
     @if(auth()->user()->hasPermission(71))
         {{-- TODO: Migrate code — upd_consumable.php has no native create route yet --}}

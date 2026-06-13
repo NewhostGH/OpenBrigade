@@ -15,7 +15,9 @@
     filter-id="filterForm"
     filter-cols="2fr 1fr"
     :columns="$columns"
-    table-id="materielTable">
+    table-id="materielTable"
+    :export-xls-url="route('equipment.export.xls', request()->query())"
+    :export-csv-url="route('equipment.export.csv', request()->query())">
 
     @if(auth()->user()->hasPermission(70))
         {{-- TODO: Migrate code --}}

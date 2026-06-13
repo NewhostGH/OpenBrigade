@@ -220,7 +220,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicle.destroy')->middleware('permission:19');
     });
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index')->middleware(['permission:42', 'feature:materiel']);
+    Route::get('/equipment/export/xls', [EquipmentController::class, 'exportXls'])->name('equipment.export.xls')->middleware(['permission:42', 'feature:materiel']);
+    Route::get('/equipment/export/csv', [EquipmentController::class, 'exportCsv'])->name('equipment.export.csv')->middleware(['permission:42', 'feature:materiel']);
     Route::get('/consumables', [ConsumableController::class, 'index'])->name('consumable.index')->middleware(['permission:42', 'feature:consommables']);
+    Route::get('/consumables/export/xls', [ConsumableController::class, 'exportXls'])->name('consumable.export.xls')->middleware(['permission:42', 'feature:consommables']);
+    Route::get('/consumables/export/csv', [ConsumableController::class, 'exportCsv'])->name('consumable.export.csv')->middleware(['permission:42', 'feature:consommables']);
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download')->middleware('permission:44');
     Route::get('/documents/export/{format}', [DocumentController::class, 'export'])->name('document.export')->middleware('permission:44');

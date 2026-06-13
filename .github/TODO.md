@@ -135,7 +135,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Type management (matériel, consommable)
 - [ ] Equipment category management
 - [ ] Embarkation tracking (`materiel_embarquer.php`)
-- [ ] Equipment/consumable exports (XLS)
+- [x] Equipment/consumable exports (XLS / CSV) — `TableExportService`, section/search-aware, `?cols=` selection
 
 ### Communication (COMM)
 
