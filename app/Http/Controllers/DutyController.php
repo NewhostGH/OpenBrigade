@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class GardeController extends Controller
+class DutyController extends Controller
 {
     /**
      * On-call roster (tableau de garde) for a given week.
@@ -82,7 +82,7 @@ class GardeController extends Controller
             ->pluck('g.GP_DESCRIPTION')
             ->toArray();
 
-        return view('garde.index', compact(
+        return view('duty.index', compact(
             'days', 'monday', 'sunday', 'prevWeek', 'nextWeek', 'weekOffset', 'roles'
         ));
     }
@@ -90,7 +90,7 @@ class GardeController extends Controller
     /**
      * Astreintes management list — admin view for managing on-call slots.
      */
-    public function astreintes(Request $request): View
+    public function onCall(Request $request): View
     {
         $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
@@ -129,13 +129,13 @@ class GardeController extends Controller
         $nextMonth = $month === 12 ? 1 : $month + 1;
         $nextYear = $month === 12 ? $year + 1 : $year;
 
-        return view('garde.astreintes', compact(
+        return view('duty.on-call', compact(
             'slots', 'month', 'year', 'first',
             'prevMonth', 'prevYear', 'nextMonth', 'nextYear'
-        ) + ['columns' => $this->astreintesColumns()]);
+        ) + ['columns' => $this->onCallColumns()]);
     }
 
-    private function astreintesColumns(): array
+    private function onCallColumns(): array
     {
         return [
             ['key' => 'debut', 'label' => 'Début', 'type' => 'html', 'value' => fn ($s) => Carbon::parse($s->AS_DEBUT)->locale('fr')->isoFormat('ddd D MMM, HH:mm'), 'alwaysVisible' => true, 'mobile' => true],

@@ -17,7 +17,7 @@
 
 namespace App\Models;
 
-use App\Models\Pivots\EvenementParticipation;
+use App\Models\Pivots\EventParticipation;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,10 +40,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $E_CANCELED
  * @property bool $E_CLOSED
  * @property-read Section|null $section
- * @property-read Evenement|null $parent
- * @property-read Collection<int, EvenementHoraire> $horaires
+ * @property-read Event|null $parent
+ * @property-read Collection<int, EventSchedule> $horaires
  */
-class Evenement extends Model
+class Event extends Model
 {
     use HasFactory;
 
@@ -87,20 +87,20 @@ class Evenement extends Model
     /** Parent event (for child events). */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Evenement::class, 'E_PARENT', 'E_CODE');
+        return $this->belongsTo(Event::class, 'E_PARENT', 'E_CODE');
     }
 
     /** Child events. */
     public function children(): HasMany
     {
-        return $this->hasMany(Evenement::class, 'E_PARENT', 'E_CODE');
+        return $this->hasMany(Event::class, 'E_PARENT', 'E_CODE');
     }
 
     /** Personnel participating in this event. */
     public function participants(): BelongsToMany
     {
         return $this->belongsToMany(Personnel::class, 'evenement_participation', 'E_CODE', 'P_ID')
-            ->using(EvenementParticipation::class)
+            ->using(EventParticipation::class)
             ->withPivot([
                 'EH_ID', 'EP_DATE', 'EP_BY', 'TP_ID', 'EP_COMMENT',
                 'EP_DATE_DEBUT', 'EP_DATE_FIN', 'EP_DEBUT', 'EP_FIN',
@@ -112,11 +112,11 @@ class Evenement extends Model
     /**
      * Vehicles deployed on this event.
      *
-     * @return BelongsToMany<Vehicule, $this>
+     * @return BelongsToMany<Vehicle, $this>
      */
     public function vehicules(): BelongsToMany
     {
-        return $this->belongsToMany(Vehicule::class, 'evenement_vehicule', 'E_CODE', 'V_ID')
+        return $this->belongsToMany(Vehicle::class, 'evenement_vehicule', 'E_CODE', 'V_ID')
             ->withPivot([
                 'EH_ID', 'EV_KM', 'EV_DATE_DEBUT', 'EV_DATE_FIN',
                 'EV_DEBUT', 'EV_FIN', 'EV_DUREE', 'EE_ID', 'TFV_ID',
@@ -126,20 +126,20 @@ class Evenement extends Model
     /** Materials used in this event. */
     public function materiels(): BelongsToMany
     {
-        return $this->belongsToMany(Materiel::class, 'evenement_materiel', 'E_CODE', 'MA_ID')
+        return $this->belongsToMany(Equipment::class, 'evenement_materiel', 'E_CODE', 'MA_ID')
             ->withPivot('EM_NB', 'EE_ID');
     }
 
     /** Time slots (horaires) for this event. */
     public function horaires(): HasMany
     {
-        return $this->hasMany(EvenementHoraire::class, 'E_CODE', 'E_CODE');
+        return $this->hasMany(EventSchedule::class, 'E_CODE', 'E_CODE');
     }
 
     /** Consumables used during this event. */
     public function consommables(): HasMany
     {
-        return $this->hasMany(EvenementConsommable::class, 'E_CODE', 'E_CODE');
+        return $this->hasMany(EventConsumable::class, 'E_CODE', 'E_CODE');
     }
 
     /** Co-leads of this event. */

@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * Primary key: F_ID
  * Represents a discrete application permission/feature flag.
  */
-class Fonctionnalite extends Model
+class LegacyFeature extends Model
 {
     use HasFactory;
 
@@ -49,6 +49,6 @@ class Fonctionnalite extends Model
     /** Groups that have been granted this permission. */
     public function groupes(): BelongsToMany
     {
-        return $this->belongsToMany(Groupe::class, 'habilitation', 'F_ID', 'GP_ID');
+        return $this->belongsToMany(Group::class, 'habilitation', 'F_ID', 'GP_ID');
     }
 }

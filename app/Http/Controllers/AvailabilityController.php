@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class DispoController extends Controller
+class AvailabilityController extends Controller
 {
     /**
      * Personal availability — shows the user's dispo/indispo for the coming weeks.
@@ -61,6 +61,6 @@ class DispoController extends Controller
             ->select('i.I_CODE', 'i.I_DEBUT', 'i.I_FIN', 'i.I_ACCEPT', 'ti.TI_LIBELLE')
             ->get();
 
-        return view('dispo.index', compact('weeks', 'periods', 'absences'));
+        return view('availability.index', compact('weeks', 'periods', 'absences'));
     }
 }

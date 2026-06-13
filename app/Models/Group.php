@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Primary key: GP_ID
  * Represents a permission group (role/habilitation group) in the legacy system.
  */
-class Groupe extends Model
+class Group extends Model
 {
     use HasFactory;
 
@@ -53,7 +53,7 @@ class Groupe extends Model
     /** The permissions (fonctionnalites) granted to this group. */
     public function fonctionnalites(): BelongsToMany
     {
-        return $this->belongsToMany(Fonctionnalite::class, 'habilitation', 'GP_ID', 'F_ID');
+        return $this->belongsToMany(LegacyFeature::class, 'habilitation', 'GP_ID', 'F_ID');
     }
 
     /** All personnel belonging to this group as primary group. */

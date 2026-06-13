@@ -21,10 +21,12 @@
                         <i class="fas fa-{{ $shortcut['icon'] }}"></i>
                     @endif
                     <span>{{ $shortcut['label'] }}</span>
-                    <button class="ob-siglet-unpin" data-key="{{ $shortcut['key'] }}" title="Désépingler" aria-label="Désépingler">×</button>
+                    <button class="ob-siglet-unpin" data-key="{{ $shortcut['key'] }}" title="Désépingler"
+                        aria-label="Désépingler">×</button>
                 </a>
             @empty
-                <span class="ob-siglets-hint">Épinglez des raccourcis depuis le menu latéral <i class="fas fa-thumbtack fa-xs"></i></span>
+                <span class="ob-siglets-hint">Épinglez des raccourcis depuis le menu latéral <i
+                        class="fas fa-thumbtack fa-xs"></i></span>
             @endforelse
         </div>
 
@@ -52,12 +54,14 @@
                 @endphp
                 @feature('multi_site')
                 <li class="nav-item dropdown nav-top-item ob-navtop-hover ob-margin-li">
-                    <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown"
-                        href="#" title="Section active" aria-expanded="false">
+                    <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown" href="#"
+                        title="Section active" aria-expanded="false">
                         <i class="fas fa-sitemap me-1"></i><span class="ob-ctx-label">{{ $activeSectionLabel }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
-                        <li><h6 class="dropdown-header">Section active</h6></li>
+                        <li>
+                            <h6 class="dropdown-header">Section active</h6>
+                        </li>
                         <li>
                             <a class="dropdown-item dropdown-item-profil {{ $ctxActiveSection === null ? 'active' : '' }}"
                                 href="{{ route('context.section', ['s' => 'all']) }}">
@@ -84,9 +88,11 @@
                                     @if ($isRoot)
                                         <span class="ob-nav-section-root-badge">site</span>
                                     @elseif (!empty($s->S_CODE))
-                                        <span class="ob-nav-muted ms-1" style="font-size:var(--font-size-xs);">{{ $s->S_CODE }}</span>
+                                        <span class="ob-nav-muted ms-1"
+                                            style="font-size:var(--font-size-xs);">{{ $s->S_CODE }}</span>
                                     @endif
-                                    @if ((int) $s->S_ID === (int) $ctxActiveSection)<i class="fas fa-check ms-2 ob-nav-check"></i>@endif
+                                    @if ((int) $s->S_ID === (int) $ctxActiveSection)<i
+                                    class="fas fa-check ms-2 ob-nav-check"></i>@endif
                                 </a>
                             </li>
                         @empty
@@ -97,12 +103,14 @@
                 @endfeature
 
                 <li class="nav-item dropdown nav-top-item ob-navtop-hover ob-margin-li">
-                    <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown"
-                        href="#" title="Rôle actif" aria-expanded="false">
+                    <a class="nav-link ob-hover-white ob-text-violet ob-nodowntoggle" data-bs-toggle="dropdown" href="#"
+                        title="Rôle actif" aria-expanded="false">
                         <i class="fas fa-user-tie me-1"></i><span class="ob-ctx-label">{{ $activeRoleLabel }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
-                        <li><h6 class="dropdown-header">Rôle actif</h6></li>
+                        <li>
+                            <h6 class="dropdown-header">Rôle actif</h6>
+                        </li>
                         <li>
                             <a class="dropdown-item dropdown-item-profil {{ $ctxActiveRole ? '' : 'active' }}"
                                 href="{{ route('context.role', ['r' => 'all']) }}">
@@ -115,8 +123,10 @@
                                 <a class="dropdown-item dropdown-item-profil {{ (int) $r->id === (int) $ctxActiveRole ? 'active' : '' }}"
                                     href="{{ route('context.role', ['r' => $r->id]) }}">
                                     {{ $r->name }}
-                                    @if (!empty($r->inherited))<span class="ob-badge ob-badge-int ms-1" style="font-size:9px;">hérité</span>@endif
-                                    @if ((int) $r->id === (int) $ctxActiveRole)<i class="fas fa-check ms-2 ob-nav-check"></i>@endif
+                                    @if (!empty($r->inherited))<span class="ob-badge ob-badge-int ms-1"
+                                    style="font-size:9px;">hérité</span>@endif
+                                    @if ((int) $r->id === (int) $ctxActiveRole)<i
+                                    class="fas fa-check ms-2 ob-nav-check"></i>@endif
                                 </a>
                             </li>
                         @endforeach
@@ -142,42 +152,45 @@
                         <ul class="dropdown-menu dropdown-menu-end ob-nav-dropdown-menu">
                             @if (auth()->user()->hasPermission(1))
                                 <li>
-                                    <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ route('personnel.create') }}">
-                                        <i class="fas fa-user-plus fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Personnel
+                                    <a class="dropdown-item dropdown-item-profil" href="{{ route('personnel.create') }}">
+                                        <i class="fas fa-user-plus fa-fw ob-nav-item-icon"
+                                            style="color:var(--color-nav-add);"></i> Personnel
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(15))
                                 <li>
-                                    <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ route('evenement.create') }}">
-                                        <i class="fas fa-calendar-plus fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Activité
+                                    <a class="dropdown-item dropdown-item-profil" href="{{ route('event.create') }}">
+                                        <i class="fas fa-calendar-plus fa-fw ob-nav-item-icon"
+                                            style="color:var(--color-nav-add);"></i> Activité
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(17))
                                 <li>
-                                    <a class="dropdown-item dropdown-item-profil" href="{{ route('vehicule.create') }}">
-                                        <i class="fas fa-truck fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Véhicule
+                                    <a class="dropdown-item dropdown-item-profil" href="{{ route('vehicle.create') }}">
+                                        <i class="fas fa-truck fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i>
+                                        Véhicule
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(70))
                                 <li>
-                                    {{-- TODO: Migrate code — ins_materiel.php has no native route yet --}}
+                                    {{-- TODO: Migrate code — ins_equipment.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ url('/legacy/ins_materiel.php?usage=ALL&type=ALL') }}">
-                                        <i class="fas fa-toolbox fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Matériel
+                                        href="{{ url('/legacy/ins_equipment.php?usage=ALL&type=ALL') }}">
+                                        <i class="fas fa-toolbox fa-fw ob-nav-item-icon"
+                                            style="color:var(--color-nav-add);"></i> Matériel
                                     </a>
                                 </li>
                             @endif
                             @if (auth()->user()->hasPermission(71))
                                 <li>
-                                    {{-- TODO: Migrate code — upd_consommable.php has no native route yet --}}
+                                    {{-- TODO: Migrate code — upd_consumable.php has no native route yet --}}
                                     <a class="dropdown-item dropdown-item-profil"
-                                        href="{{ url('/legacy/upd_consommable.php?action=insert&type_conso=ALL') }}">
-                                        <i class="fas fa-boxes fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i> Consommable
+                                        href="{{ url('/legacy/upd_consumable.php?action=insert&type_conso=ALL') }}">
+                                        <i class="fas fa-boxes fa-fw ob-nav-item-icon" style="color:var(--color-nav-add);"></i>
+                                        Consommable
                                     </a>
                                 </li>
                             @endif
@@ -186,7 +199,8 @@
                 @endif
 
                 {{-- Help --}}
-                <ul class="ob-nav-text ob-navtop-hover ob-margin-li pt-2" href="{{ route('about') }}" title="A propos" role="button">
+                <ul class="ob-nav-text ob-navtop-hover ob-margin-li pt-2" href="{{ route('about') }}" title="A propos"
+                    role="button">
                     <span class="navbar-toggler-icon ob-nav-icon"><i class="far fa-question-circle fa-lg"></i></span>
                 </ul>
 
@@ -218,36 +232,37 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item dropdown-item-profil" href="{{ route('mes-droits') }}">
+                            <a class="dropdown-item dropdown-item-profil" href="{{ route('my-permissions') }}">
                                 <i class="fas fa-id-card fa-fw ob-nav-item-icon"></i> Mes droits
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item dropdown-item-profil"
-                                href="{{ route('account.auth') }}">
+                            <a class="dropdown-item dropdown-item-profil" href="{{ route('account.auth') }}">
                                 <i class="fas fa-shield-alt fa-fw ob-nav-item-icon"></i> Authentification
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item dropdown-item-profil"
-                                {{-- TODO: Migrate code — preferences.php has no native route yet --}}
-                                href="{{ url('/legacy/preferences.php') }}">
+                            <a class="dropdown-item dropdown-item-profil" {{-- TODO: Migrate code — preferences.php has
+                                no native route yet --}} href="{{ url('/legacy/preferences.php') }}">
                                 <i class="fas fa-sliders-h fa-fw ob-nav-item-icon"></i> Mes préférences
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item dropdown-item-profil"
-                                {{-- TODO: Migrate code — upd_section.php has no native route yet --}}
+                            <a class="dropdown-item dropdown-item-profil" {{-- TODO: Migrate code — upd_section.php has
+                                no native route yet --}}
                                 href="{{ url('/legacy/upd_section.php?S_ID=' . (auth()->user()->P_SECTION ?? 0)) }}">
                                 <i class="fas fa-building fa-fw ob-nav-item-icon"></i> Ma section
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}" class="d-inline">
                                 @csrf
                                 <button type="submit" class="dropdown-item dropdown-item-profil">
-                                    <i class="fa fa-power-off fa-fw ob-nav-item-icon" style="color:red;"></i> Déconnexion
+                                    <i class="fa fa-power-off fa-fw ob-nav-item-icon" style="color:red;"></i>
+                                    Déconnexion
                                 </button>
                             </form>
                         </li>

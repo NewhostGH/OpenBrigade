@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Legacy table: consommable
  * Primary key: C_ID
  */
-class Consommable extends Model
+class Consumable extends Model
 {
     protected $table = 'consommable';
 
@@ -48,6 +48,6 @@ class Consommable extends Model
     /** Material item this consumable is associated with (optional). */
     public function materiel(): BelongsTo
     {
-        return $this->belongsTo(Materiel::class, 'MA_PARENT', 'MA_ID');
+        return $this->belongsTo(Equipment::class, 'MA_PARENT', 'MA_ID');
     }
 }

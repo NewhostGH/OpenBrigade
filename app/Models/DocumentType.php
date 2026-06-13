@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $TD_SECURITY
  * @property int $TD_SYNDICATE
  */
-class TypeDocument extends Model
+class DocumentType extends Model
 {
     protected $table = 'type_document';
 

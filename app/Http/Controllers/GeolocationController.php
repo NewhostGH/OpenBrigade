@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class GeolocalisationController extends Controller
+class GeolocationController extends Controller
 {
     /**
      * Display the map with all members who have GPS coordinates.
@@ -72,7 +72,7 @@ class GeolocalisationController extends Controller
             ];
         })->values()->toArray();
 
-        return view('personnel.geolocalisation', [
+        return view('personnel.geolocation', [
             'markers' => $markers,
             'sections' => $sections,
             'sectionId' => $sectionId,

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class IndispoController extends Controller
+class UnavailabilityController extends Controller
 {
     /**
      * Availability / absences list for the section.
@@ -54,7 +54,7 @@ class IndispoController extends Controller
 
         $items = $query->paginate(30)->withQueryString();
 
-        return view('indispo.index', compact('items', 'tab', 'status')
+        return view('unavailability.index', compact('items', 'tab', 'status')
             + ['columns' => $this->indispoColumns()]);
     }
 

@@ -14,14 +14,14 @@ use Illuminate\View\View;
 /**
  * Section-scoped habilitation administration (full ACL with groups): four tabs —
  *   1. Plafonds par section  — per-section deny-list (ob_section_permission)
- *   2. Groupes d'accès        — global groups × feature grants, allow/deny (ob_group_permission)
+ *   2. Groups d'accès        — global groups × feature grants, allow/deny (ob_group_permission)
  *   3. Rôles organisationnels — roles × feature grants, allow/deny, section-filtered
  *   4. Dérogations            — per-person allow/deny overrides (ob_user_permission)
  *
  * The resolution precedence lives in {@see PermissionResolver}: user deny >
  * user allow > section deny > group/role deny > group/role allow > default deny.
  */
-class HabilitationController extends Controller
+class PermissionController extends Controller
 {
     public function __construct(private readonly PermissionResolver $resolver) {}
 
@@ -77,7 +77,7 @@ class HabilitationController extends Controller
         // Group/role grant tabs: features capped by the previewed section.
         $sectionDenied = $this->resolver->effectiveDenied($sectionId);
 
-        return view('admin.habilitations.index', [
+        return view('admin.permissions.index', [
             'tab' => $tab,
             'featuresByCategory' => $featuresByCategory,
             'sections' => $sections,
@@ -116,7 +116,7 @@ class HabilitationController extends Controller
         $q = trim($request->string('q')->toString());
         if ($q !== '') {
             $people = DB::table('pompier')
-                ->where('P_ACTIF', 1)
+                ->whereNull('P_FIN')
                 ->where(fn ($w) => $w->where('P_NOM', 'like', "%{$q}%")->orWhere('P_PRENOM', 'like', "%{$q}%"))
                 ->orderBy('P_NOM')->orderBy('P_PRENOM')
                 ->limit(30)
@@ -169,7 +169,7 @@ class HabilitationController extends Controller
             );
         }
 
-        return $this->backToTab($v, 'success', 'Habilitation mise à jour.');
+        return $this->backToTab($v, 'success', 'Permission mise à jour.');
     }
 
     /**
@@ -202,7 +202,7 @@ class HabilitationController extends Controller
             );
         }
 
-        return redirect()->route('admin.habilitations', array_filter([
+        return redirect()->route('admin.permissions', array_filter([
             'tab' => 'overrides',
             'person' => (int) $v['person_id'],
             'section' => (int) $v['section_id'] ?: null,
@@ -223,7 +223,7 @@ class HabilitationController extends Controller
         abort_if($section === null, 404);
         $parentDenied = $this->resolver->effectiveDenied((int) ($section->S_PARENT ?? 0) ?: null);
         if ($v['allow'] && in_array((int) $v['feature_id'], $parentDenied, true)) {
-            return redirect()->route('admin.habilitations', ['tab' => 'ceiling', 'section' => $v['section_id']])
+            return redirect()->route('admin.permissions', ['tab' => 'ceiling', 'section' => $v['section_id']])
                 ->with('error', 'Cette fonctionnalité est refusée par une section parente.');
         }
 
@@ -241,7 +241,7 @@ class HabilitationController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.habilitations', ['tab' => 'ceiling', 'section' => $v['section_id']])
+        return redirect()->route('admin.permissions', ['tab' => 'ceiling', 'section' => $v['section_id']])
             ->with('success', 'Plafond mis à jour.');
     }
 
@@ -267,7 +267,7 @@ class HabilitationController extends Controller
 
         $tab = $v['kind'] === ObGroup::KIND_ROLE ? 'roles' : 'groups';
 
-        return redirect()->route('admin.habilitations', ['tab' => $tab])
+        return redirect()->route('admin.permissions', ['tab' => $tab])
             ->with('success', "« {$v['name']} » créé.");
     }
 
@@ -282,13 +282,13 @@ class HabilitationController extends Controller
         $group = ObGroup::find($gpId);
         abort_if($group === null, 404);
         if ($group->isProtected()) {
-            return redirect()->route('admin.habilitations')->with('error', 'Groupe système protégé.');
+            return redirect()->route('admin.permissions')->with('error', 'Group système protégé.');
         }
 
         $group->update($v);
         $tab = $group->kind === ObGroup::KIND_ROLE ? 'roles' : 'groups';
 
-        return redirect()->route('admin.habilitations', ['tab' => $tab])->with('success', 'Mis à jour.');
+        return redirect()->route('admin.permissions', ['tab' => $tab])->with('success', 'Mis à jour.');
     }
 
     public function groupDestroy(int $gpId): RedirectResponse
@@ -296,13 +296,13 @@ class HabilitationController extends Controller
         $group = ObGroup::find($gpId);
         abort_if($group === null, 404);
         if ($group->isProtected()) {
-            return redirect()->route('admin.habilitations')->with('error', 'Groupe système protégé.');
+            return redirect()->route('admin.permissions')->with('error', 'Group système protégé.');
         }
 
         $inUse = DB::table('ob_personnel_group')->where('group_id', $gpId)->exists()
             || DB::table('ob_user_assignment')->where('group_id', $gpId)->exists();
         if ($inUse) {
-            return redirect()->route('admin.habilitations')
+            return redirect()->route('admin.permissions')
                 ->with('error', 'Affecté à du personnel : suppression impossible.');
         }
 
@@ -310,7 +310,7 @@ class HabilitationController extends Controller
         $tab = $group->kind === ObGroup::KIND_ROLE ? 'roles' : 'groups';
         $group->delete();
 
-        return redirect()->route('admin.habilitations', ['tab' => $tab])->with('success', 'Supprimé.');
+        return redirect()->route('admin.permissions', ['tab' => $tab])->with('success', 'Supprimé.');
     }
 
     /** @param array<string,mixed> $v */
@@ -321,6 +321,6 @@ class HabilitationController extends Controller
             'section' => $v['section'] ?? null,
         ], fn ($x) => $x !== null && $x !== '');
 
-        return redirect()->route('admin.habilitations', $params)->with($flash, $message);
+        return redirect()->route('admin.permissions', $params)->with($flash, $message);
     }
 }

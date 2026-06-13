@@ -10,10 +10,10 @@
 | User::hasPermission(). Items without a permission are visible to any
 | authenticated user.
 |
-| Item URLs use the /legacy/ prefix so they route through the
-| LegacyBridgeController. External URLs should start with http/https.
-|
-| null entries inside 'items' render as visual dividers.
+| Keys, codes and URLs are English (CONVENTIONS §11); labels stay French
+| (user-facing copy). Legacy URLs use the /legacy/ prefix so they route
+| through the LegacyBridgeController. 'feature' keys mirror ob_feature.key
+| and stay as legacy data. null entries inside 'items' render as dividers.
 |
 */
 
@@ -27,9 +27,9 @@ return [
             'icon' => 'users',
             'items' => [
                 ['key' => 'personnel.list',        'label' => 'Liste',           'url' => '/personnel',      'icon' => 'list'],
-                ['key' => 'personnel.competences', 'label' => 'Compétences',     'url' => '/qualifications', 'icon' => 'certificate',      'permission' => 56, 'feature' => 'competences'],
-                ['key' => 'personnel.cotisations', 'label' => 'Cotisations',     'url' => '/cotisations',                                                    'icon' => 'receipt',          'permission' => 53, 'feature' => 'cotisations'],
-                ['key' => 'personnel.geoloc',      'label' => 'Géolocalisation', 'url' => '/geolocalisation',                                              'icon' => 'map-marker-alt',   'permission' => 76, 'feature' => 'geolocalize_enabled'],
+                ['key' => 'personnel.skills',      'label' => 'Compétences',     'url' => '/qualifications', 'icon' => 'certificate',      'permission' => 56, 'feature' => 'competences'],
+                ['key' => 'personnel.dues',        'label' => 'Cotisations',     'url' => '/dues',           'icon' => 'receipt',          'permission' => 53, 'feature' => 'cotisations'],
+                ['key' => 'personnel.geolocation', 'label' => 'Géolocalisation', 'url' => '/geolocation',    'icon' => 'map-marker-alt',   'permission' => 76, 'feature' => 'geolocalize_enabled'],
             ],
         ],
 
@@ -39,21 +39,21 @@ return [
             'label' => 'Activités',
             'icon' => 'calendar-alt',
             'items' => [
-                ['key' => 'activities.list',     'label' => 'Liste',            'url' => '/evenements',                                        'icon' => 'list-ul',    'permission' => 41],
-                ['key' => 'activities.mc',       'label' => 'Main courante',    'url' => '/evenements?type=MC',                                'icon' => 'ambulance',  'permission' => 52, 'feature' => 'main_courante'],
-                ['key' => 'activities.news',     'label' => 'Actualités',       'url' => '/messages?category=amicale',                         'icon' => 'newspaper',  'permission' => 44],
-                ['key' => 'activities.geomap',   'label' => 'Géolocalisation',  'url' => '/legacy/gmaps_evenement.php',                        'icon' => 'map',        'permission' => 76],
+                ['key' => 'activities.list',     'label' => 'Liste',            'url' => '/events',                                        'icon' => 'list-ul',    'permission' => 41],
+                ['key' => 'activities.mc',       'label' => 'Main courante',    'url' => '/events?type=MC',                                'icon' => 'ambulance',  'permission' => 52, 'feature' => 'main_courante'],
+                ['key' => 'activities.news',     'label' => 'Actualités',       'url' => '/messages?category=amicale',                     'icon' => 'newspaper',  'permission' => 44],
+                ['key' => 'activities.geomap',   'label' => 'Géolocalisation',  'url' => '/legacy/gmaps_event.php',                        'icon' => 'map',        'permission' => 76],
             ],
         ],
 
         // ── Garde ──────────────────────────────────────────────────────────
         [
-            'code' => 'garde',
+            'code' => 'duty',
             'label' => 'Garde',
             'icon' => 'clipboard-list',
             'items' => [
-                ['key' => 'garde.tableau', 'label' => 'Tableau de garde', 'url' => '/garde',                                           'icon' => 'shield-alt',   'permission' => 61],
-                ['key' => 'garde.jour',    'label' => 'Garde du jour',    'url' => '/garde',                                           'icon' => 'calendar-day', 'permission' => 61],
+                ['key' => 'duty.board',   'label' => 'Tableau de garde', 'url' => '/duty',                                            'icon' => 'shield-alt',   'permission' => 61],
+                ['key' => 'duty.today',   'label' => 'Garde du jour',    'url' => '/duty',                                            'icon' => 'calendar-day', 'permission' => 61],
             ],
         ],
 
@@ -63,24 +63,24 @@ return [
             'label' => 'Planning',
             'icon' => 'calendar-check',
             'items' => [
-                ['key' => 'planning.calendar',    'label' => 'Calendrier',      'url' => '/planning',                                   'icon' => 'calendar'],
-                ['key' => 'planning.dispos',      'label' => 'Disponibilités',  'url' => '/disponibilites',                             'icon' => 'check-square',   'permission' => 38],
-                ['key' => 'planning.absences',    'label' => 'Absences',        'url' => '/indisponibilites',                           'icon' => 'user-times',     'permission' => 11],
-                ['key' => 'planning.repos',       'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],
-                ['key' => 'planning.remplace',    'label' => 'Remplacements',   'url' => '/remplacements',                              'icon' => 'exchange-alt',   'permission' => 41, 'feature' => 'remplacements'],
-                ['key' => 'planning.astreintes',  'label' => 'Astreintes',      'url' => '/garde/astreintes',                           'icon' => 'bell',           'permission' => 52],
+                ['key' => 'planning.calendar',     'label' => 'Calendrier',      'url' => '/planning',         'icon' => 'calendar'],
+                ['key' => 'planning.availability', 'label' => 'Disponibilités',  'url' => '/availability',     'icon' => 'check-square',   'permission' => 38],
+                ['key' => 'planning.absences',     'label' => 'Absences',        'url' => '/unavailability',   'icon' => 'user-times',     'permission' => 11],
+                ['key' => 'planning.rest',         'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],
+                ['key' => 'planning.replacement',  'label' => 'Remplacements',   'url' => '/replacements',     'icon' => 'exchange-alt',   'permission' => 41, 'feature' => 'remplacements'],
+                ['key' => 'planning.on-call',      'label' => 'Astreintes',      'url' => '/duty/on-call',     'icon' => 'bell',           'permission' => 52],
             ],
         ],
 
         // ── Clients ────────────────────────────────────────────────────────
         [
-            'code' => 'clients',
+            'code' => 'companies',
             'label' => 'Clients',
             'icon' => 'user-circle',
             'permission' => 29,
             'feature' => 'client',
             'items' => [
-                ['key' => 'clients.list', 'label' => 'Liste', 'url' => '/clients', 'icon' => 'list', 'permission' => 29, 'feature' => 'client'],
+                ['key' => 'companies.list', 'label' => 'Liste', 'url' => '/companies', 'icon' => 'list', 'permission' => 29, 'feature' => 'client'],
             ],
         ],
 
@@ -90,9 +90,9 @@ return [
             'label' => 'Logistique',
             'icon' => 'truck',
             'items' => [
-                ['key' => 'logistics.vehicules',    'label' => 'Véhicules',    'url' => '/vehicules',                    'icon' => 'truck',    'permission' => 42, 'feature' => 'vehicules'],
-                ['key' => 'logistics.materiels',    'label' => 'Matériels',    'url' => '/materiels',    'icon' => 'toolbox',  'permission' => 42, 'feature' => 'materiel'],
-                ['key' => 'logistics.consommables', 'label' => 'Consommables', 'url' => '/consommables', 'icon' => 'boxes',    'permission' => 42, 'feature' => 'consommables'],
+                ['key' => 'logistics.vehicles',   'label' => 'Véhicules',    'url' => '/vehicles',    'icon' => 'truck',    'permission' => 42, 'feature' => 'vehicules'],
+                ['key' => 'logistics.equipment',  'label' => 'Matériels',    'url' => '/equipment',   'icon' => 'toolbox',  'permission' => 42, 'feature' => 'materiel'],
+                ['key' => 'logistics.consumables', 'label' => 'Consommables', 'url' => '/consumables', 'icon' => 'boxes',    'permission' => 42, 'feature' => 'consommables'],
             ],
         ],
 
@@ -103,7 +103,7 @@ return [
             'icon' => 'envelope',
             'items' => [
                 ['key' => 'comm.chat',    'label' => 'Chat',    'url' => '/legacy/chat.php',           'icon' => 'comments',  'permission' => 51],
-                ['key' => 'comm.alerte',  'label' => 'Alerte',  'url' => '/legacy/alerte_create.php',  'icon' => 'bell',      'permission' => 43],
+                ['key' => 'comm.alert',   'label' => 'Alerte',  'url' => '/legacy/alerte_create.php',  'icon' => 'bell',      'permission' => 43],
                 ['key' => 'comm.message', 'label' => 'Message', 'url' => '/legacy/mail_create.php',    'icon' => 'paper-plane', 'permission' => 43],
             ],
         ],
@@ -122,14 +122,14 @@ return [
 
         // ── Organisation ───────────────────────────────────────────────────
         [
-            'code' => 'orga',
+            'code' => 'org',
             'label' => 'Organisation',
             'icon' => 'sitemap',
             'permission' => 52,
             'items' => [
-                ['key' => 'orga.sections',    'label' => 'Sections',      'url' => '/organisation/sections',    'icon' => 'layer-group',  'permission' => 52, 'feature' => 'multi_site'],
-                ['key' => 'orga.organi',      'label' => 'Organigramme',  'url' => '/organisation/organigramme', 'icon' => 'project-diagram', 'permission' => 52, 'feature' => 'multi_site'],
-                ['key' => 'orga.map',         'label' => 'Cartographie',  'url' => '/organisation/cartographie', 'icon' => 'map',          'permission' => 27, 'feature' => 'multi_site'],
+                ['key' => 'org.sections',  'label' => 'Sections',      'url' => '/organization/sections',    'icon' => 'layer-group',  'permission' => 52, 'feature' => 'multi_site'],
+                ['key' => 'org.org-chart', 'label' => 'Organigramme',  'url' => '/organization/org-chart',   'icon' => 'project-diagram', 'permission' => 52, 'feature' => 'multi_site'],
+                ['key' => 'org.map',       'label' => 'Cartographie',  'url' => '/organization/map',         'icon' => 'map',          'permission' => 27, 'feature' => 'multi_site'],
             ],
         ],
 
@@ -140,10 +140,10 @@ return [
             'icon' => 'chart-bar',
             'permission' => 27,
             'items' => [
-                ['key' => 'stats.graphiques', 'label' => 'Tableau de bord',      'url' => '/statistiques/dashboard',          'icon' => 'chart-line',  'permission' => 27],
-                ['key' => 'stats.bilans',    'label' => 'Bilan annuel',          'url' => '/statistiques/bilan-annuel',       'icon' => 'chart-pie',   'permission' => 27],
+                ['key' => 'stats.dashboard', 'label' => 'Tableau de bord',      'url' => '/statistics/dashboard',          'icon' => 'chart-line',  'permission' => 27],
+                ['key' => 'stats.report',    'label' => 'Bilan annuel',          'url' => '/statistics/annual-report',       'icon' => 'chart-pie',   'permission' => 27],
                 ['key' => 'stats.reporting', 'label' => 'Reporting',             'url' => '/legacy/export.php',               'icon' => 'file-export', 'permission' => 27],
-                ['key' => 'stats.cotis',     'label' => 'Cotisations',           'url' => '/legacy/report_cotisations.php',   'icon' => 'coins',       'permission' => 53],
+                ['key' => 'stats.dues',      'label' => 'Cotisations',           'url' => '/legacy/report_dues.php',   'icon' => 'coins',       'permission' => 53],
             ],
         ],
 
@@ -154,19 +154,19 @@ return [
             'icon' => 'cog',
             'permission' => 5,
             'items' => [
-                ['key' => 'admin.configuration',   'label' => 'Général',         'url' => '/admin/settings',        'icon' => 'sliders-h',    'permission' => 14],
-                ['key' => 'admin.fonctionnalites', 'label' => 'Fonctionnalités', 'url' => '/admin/fonctionnalites', 'icon' => 'toggle-on',    'permission' => 14],
-                ['key' => 'admin.parametrage',     'label' => 'Paramétrage',     'url' => '/admin/parametrage',     'icon' => 'wrench',       'permission' => 5],
+                ['key' => 'admin.configuration', 'label' => 'Général',         'url' => '/admin/settings',     'icon' => 'sliders-h',    'permission' => 14],
+                ['key' => 'admin.features',      'label' => 'Fonctionnalités', 'url' => '/admin/features',     'icon' => 'toggle-on',    'permission' => 14],
+                ['key' => 'admin.references',    'label' => 'Paramétrage',     'url' => '/admin/references',   'icon' => 'wrench',       'permission' => 5],
                 null,
-                ['key' => 'admin.security', 'label' => 'Sécurité', 'url' => '/admin/security', 'icon' => 'shield-alt', 'permission' => 14],
-                ['key' => 'admin.habilitations',   'label' => 'Habilitations',   'url' => '/admin/habilitations',   'icon' => 'id-badge',    'permission' => 9],
-                ['key' => 'admin.monitoring',      'label' => 'Monitoring',      'url' => '/admin/monitoring',      'icon' => 'history',     'permission' => 49],
+                ['key' => 'admin.security',    'label' => 'Sécurité',    'url' => '/admin/security',    'icon' => 'shield-alt', 'permission' => 14],
+                ['key' => 'admin.permissions', 'label' => 'Permissions', 'url' => '/admin/permissions', 'icon' => 'id-badge',   'permission' => 9],
+                ['key' => 'admin.monitoring',  'label' => 'Monitoring',  'url' => '/admin/monitoring',  'icon' => 'history',    'permission' => 49],
                 ['key' => 'account.connected-users', 'label' => 'Connexions', 'url' => '/admin/connected-users',    'icon' => 'users',        'permission' => 20],
                 null,
-                ['key' => 'admin.sauvegarde',      'label' => 'Sauvegarde',      'url' => '/admin/sauvegarde',      'icon' => 'database',     'permission' => 14],
-                ['key' => 'admin.maintenance',     'label' => 'Maintenance',     'url' => '/admin/maintenance',     'icon' => 'tools',        'permission' => 14],
+                ['key' => 'admin.backup',      'label' => 'Sauvegarde',      'url' => '/admin/backup',      'icon' => 'database',     'permission' => 14],
+                ['key' => 'admin.maintenance', 'label' => 'Maintenance',     'url' => '/admin/maintenance', 'icon' => 'tools',        'permission' => 14],
                 null,
-                ['key' => 'admin.plugins',         'label' => 'Plugins',         'url' => '/admin/plugins',         'icon' => 'puzzle-piece', 'permission' => 14],
+                ['key' => 'admin.plugins',     'label' => 'Plugins',         'url' => '/admin/plugins',     'icon' => 'puzzle-piece', 'permission' => 14],
             ],
         ],
 

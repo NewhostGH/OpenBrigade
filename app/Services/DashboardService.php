@@ -18,7 +18,7 @@ class DashboardService
         'horaires' => 'Horaires à valider',
         'unpaid' => 'Activités non facturées',
         'stats-missing' => 'Bilans manquants',
-        'mes-activites' => 'Mes activités',
+        'my-activities' => 'Mes activités',
         'cp' => 'Congés à valider',
         'vehicles' => 'Véhicules',
         'consumables' => 'Consommables',
@@ -39,7 +39,7 @@ class DashboardService
         ['key' => 'horaires',             'col' => 1, 'position' => 4,  'visible' => 1],
         ['key' => 'unpaid',               'col' => 1, 'position' => 5,  'visible' => 1],
         ['key' => 'stats-missing',        'col' => 1, 'position' => 6,  'visible' => 1],
-        ['key' => 'mes-activites',        'col' => 2, 'position' => 1,  'visible' => 1],
+        ['key' => 'my-activities',        'col' => 2, 'position' => 1,  'visible' => 1],
         ['key' => 'cp',                   'col' => 2, 'position' => 2,  'visible' => 1],
         ['key' => 'vehicles',             'col' => 2, 'position' => 3,  'visible' => 1],
         ['key' => 'consumables',          'col' => 2, 'position' => 4,  'visible' => 1],
@@ -526,8 +526,8 @@ class DashboardService
         $base = DB::table('vehicule as v')->join('vehicule_position as vp', 'vp.VP_ID', '=', 'v.VP_ID')
             ->whereIn('v.S_ID', $family)->where('vp.VP_OPERATIONNEL', '>=', 0);
 
-        // TODO: Migrate code — vehicule.index has no filter/sort params yet; link to index for now
-        $vehiculeUrl = route('vehicule.index');
+        // TODO: Migrate code — vehicle.index has no filter/sort params yet; link to index for now
+        $vehiculeUrl = route('vehicle.index');
 
         // Unavailable
         $nb = (clone $base)->where('vp.VP_OPERATIONNEL', '<', 2)->count();
@@ -582,7 +582,7 @@ class DashboardService
 
     // ── Consumable alerts ───────────────────────────────────────────────────
 
-    public function getConsommablesAlerts(User $user): array
+    public function getConsumablesAlerts(User $user): array
     {
         if (! $user->hasPermission(71)) {
             return ['items' => []];
@@ -683,7 +683,7 @@ class DashboardService
 
     // ── Guard replacements ──────────────────────────────────────────────────
 
-    public function getRemplacementsAlerts(User $user): array
+    public function getReplacementsAlerts(User $user): array
     {
         $pid = (int) $user->P_ID;
         $canApprove = $user->hasPermission(6) || $user->hasPermission(15);

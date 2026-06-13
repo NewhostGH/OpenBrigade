@@ -14,7 +14,7 @@ use Illuminate\View\View;
  * permissions for a chosen section and role (default "all roles"). Groups are
  * always applied and not selectable.
  */
-class MesDroitsController extends Controller
+class MyPermissionsController extends Controller
 {
     public function __construct(
         private readonly PermissionResolver $resolver,
@@ -69,7 +69,7 @@ class MesDroitsController extends Controller
             ->orderBy('f.F_ID')
             ->get(['f.F_ID', 'f.F_LIBELLE', 'f.F_DESCRIPTION', 'f.F_FLAG', 'tf.TF_DESCRIPTION as category']);
 
-        return view('mes-droits.index', [
+        return view('my-permissions.index', [
             'sections' => $sections,
             'sectionId' => $sectionId,
             'roles' => $roles,

@@ -95,7 +95,7 @@
                 <p class="text-muted mb-2">
                     <i class="fas fa-lightbulb me-1"></i>
                     Sans texte personnalisé, la charte est générée automatiquement depuis les paramètres
-                    de l'organisation.
+                    de l'organization.
                 </p>
                 <p class="text-muted mb-0">
                     <i class="fas fa-shield-alt me-1"></i>

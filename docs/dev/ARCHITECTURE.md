@@ -139,7 +139,7 @@ resources/
 ├── views/
 │   ├── layout/          app, navbar, sidebar shells
 │   ├── components/      ob-breadcrumb, ob-toolbar, ob-commandbar, ob-table
-│   ├── <module>/        One folder per domain (personnel, evenement, vehicule, …)
+│   ├── <module>/        One English folder per domain (personnel, event, vehicle, …; see CONVENTIONS §11)
 │   └── admin/           Settings, parametrage, habilitations, backup, maintenance
 ├── css/                 app.css import hub + per-module ob-*.css (Vite)
 └── js/                  app.js global entry + per-page ob-*.js (Vite)

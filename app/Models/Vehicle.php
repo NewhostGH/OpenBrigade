@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $TV_LIBELLE joined from `type_vehicule` list queries
  * @property-read Section|null $section
  */
-class Vehicule extends Model
+class Vehicle extends Model
 {
     protected $table = 'vehicule';
 
@@ -69,7 +69,7 @@ class Vehicule extends Model
     /** Events this vehicle was deployed on. */
     public function evenements(): BelongsToMany
     {
-        return $this->belongsToMany(Evenement::class, 'evenement_vehicule', 'V_ID', 'E_CODE')
+        return $this->belongsToMany(Event::class, 'evenement_vehicule', 'V_ID', 'E_CODE')
             ->withPivot([
                 'EH_ID', 'EV_KM', 'EV_DATE_DEBUT', 'EV_DATE_FIN',
                 'EV_DEBUT', 'EV_FIN', 'EV_DUREE', 'EE_ID', 'TFV_ID',
@@ -79,6 +79,6 @@ class Vehicule extends Model
     /** Materials stored on / assigned to this vehicle. */
     public function materiels(): HasMany
     {
-        return $this->hasMany(Materiel::class, 'V_ID', 'V_ID');
+        return $this->hasMany(Equipment::class, 'V_ID', 'V_ID');
     }
 }

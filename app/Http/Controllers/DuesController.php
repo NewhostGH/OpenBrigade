@@ -17,7 +17,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TypePaiement;
+use App\Models\PaymentType;
 use App\Services\FeatureService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
@@ -25,7 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CotisationController extends Controller
+class DuesController extends Controller
 {
     private const ALLOWED_ORDERS = [
         'P_NOM', 'P_STATUT', 'P_SECTION', 'TP_DESCRIPTION',
@@ -40,12 +40,12 @@ class CotisationController extends Controller
             = $this->parseFilters($request);
 
         $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
-        $typesPaiement = TypePaiement::orderBy('TP_DESCRIPTION')->get(['TP_ID', 'TP_DESCRIPTION']);
+        $typesPaiement = PaymentType::orderBy('TP_DESCRIPTION')->get(['TP_ID', 'TP_DESCRIPTION']);
         $periode = $periodes->firstWhere('P_CODE', $periodeCode);
 
         $items = $this->buildQuery($year, $periodeCode, $periode, $sectionId, $subsections, $tpId, $paid, $includeOld, $order)->get();
 
-        return view('cotisations.index', [
+        return view('dues.index', [
             'items' => $items,
             'year' => $year,
             'currentYear' => now()->year,
@@ -122,7 +122,7 @@ class CotisationController extends Controller
 
         $filters = $request->only(['year', 'periode', 'section', 'subsections', 'type_paiement', 'paid', 'include_old']);
 
-        return redirect()->route('cotisations.index', $filters)
+        return redirect()->route('dues.index', $filters)
             ->with('success', "Cotisations enregistrées pour {$num} personne(s). Total : ".number_format($total, 2, ',', ' ').' €');
     }
 
@@ -164,7 +164,7 @@ class CotisationController extends Controller
      * List active members who pay by direct debit (TP_ID = 1).
      * Shows pending (no cotisation yet) vs already-saved counts + batch save form.
      */
-    public function prelevements(Request $request)
+    public function directDebits(Request $request)
     {
         $year = (int) $request->integer('year', now()->year);
         $periodeCode = (string) $request->string('periode', 'A');
@@ -210,7 +210,7 @@ class CotisationController extends Controller
         $totalPending = $pending->sum(fn ($r) => (float) ($r->MONTANT_REGUL ?? 0));
         $totalPaid = $paid->sum(fn ($r) => (float) ($r->MONTANT ?? 0));
 
-        return view('cotisations.prelevements', [
+        return view('dues.direct-debits', [
             'pending' => $pending,
             'paid' => $paid,
             'totalPending' => $totalPending,
@@ -227,7 +227,7 @@ class CotisationController extends Controller
     /**
      * Batch-save direct-debit cotisations for all pending members.
      */
-    public function savePrelevements(Request $request)
+    public function saveDirectDebits(Request $request)
     {
         $request->validate([
             'year' => ['required', 'integer', 'min:2000', 'max:2100'],
@@ -277,7 +277,7 @@ class CotisationController extends Controller
 
         $filters = $request->only(['year', 'periode', 'section', 'subsections']);
 
-        return redirect()->route('cotisations.prelevements', $filters)
+        return redirect()->route('dues.direct-debits', $filters)
             ->with('success', "Prélèvements enregistrés pour {$num} personne(s). Total : ".number_format($total, 2, ',', ' ').' €');
     }
 
@@ -287,7 +287,7 @@ class CotisationController extends Controller
      * List reimbursement / bank-transfer entries (REMBOURSEMENT=1, TP_ID=2).
      * Filterable by section, date range, and include-old toggle.
      */
-    public function virements(Request $request)
+    public function transfers(Request $request)
     {
         $sectionId = (int) $request->integer('section', 0);
         $subsections = (bool) $request->integer('subsections', 1);
@@ -342,7 +342,7 @@ class CotisationController extends Controller
 
         $items = $query->paginate(50)->withQueryString();
 
-        return view('cotisations.virements', [
+        return view('dues.transfers', [
             'items' => $items,
             'sectionId' => $sectionId,
             'subsections' => $subsections,

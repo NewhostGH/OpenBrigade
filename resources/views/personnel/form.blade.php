@@ -211,7 +211,7 @@
                                         @endforeach
                                     </select>
                                     <img id="gradePreview"
-                                         src="{{ $curGrade ? route('personnel.grade_image', ['grade' => $curGrade]) : '' }}"
+                                         src="{{ $curGrade ? route('personnel.grade-image', ['grade' => $curGrade]) : '' }}"
                                          alt="" style="height:28px; {{ $curGrade ? '' : 'display:none;' }}"
                                          onerror="this.style.display='none'">
                                 </div>
@@ -572,7 +572,7 @@
                                 <div class="col-12">
                                     <label class="form-label form-label-sm">Rôles organisationnels</label>
                                     <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
-                                        Rôles que ce membre exerce au sein de l'organisation.@feature('multi_site') Chaque rôle peut être
+                                        Rôles que ce membre exerce au sein de l'organization.@feature('multi_site') Chaque rôle peut être
                                         limité à une section ou s'appliquer globalement.@endfeature
                                     </p>
 
@@ -732,6 +732,6 @@
 @endsection
 
 @push('scripts')
-<script>window.PERS_FORM_GRADE_URL = '{{ route('personnel.grade_image', ['grade' => 'PLACEHOLDER']) }}';</script>
+<script>window.PERS_FORM_GRADE_URL = '{{ route('personnel.grade-image', ['grade' => 'PLACEHOLDER']) }}';</script>
 @vite('resources/js/ob-personnel-form.js')
 @endpush

@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Primary key: TP_ID
  * Represents a payment method (chèque, virement, espèces…).
  */
-class TypePaiement extends Model
+class PaymentType extends Model
 {
     protected $table = 'type_paiement';
 
@@ -29,6 +29,6 @@ class TypePaiement extends Model
 
     public function cotisations(): HasMany
     {
-        return $this->hasMany(Cotisation::class, 'TP_ID', 'TP_ID');
+        return $this->hasMany(Dues::class, 'TP_ID', 'TP_ID');
     }
 }

@@ -89,7 +89,7 @@
                         <dt class="text-muted fw-normal">Grade</dt>
                         <dd class="mb-0">
                             @if ($personnel->P_GRADE)
-                                <img src="{{ route('personnel.grade_image', ['grade' => $personnel->P_GRADE]) }}"
+                                <img src="{{ route('personnel.grade-image', ['grade' => $personnel->P_GRADE]) }}"
                                      alt="{{ $personnel->P_GRADE }}" title="{{ $personnel->P_GRADE }}"
                                      class="ob-grade-img"
                                      onerror="this.outerHTML='<span>{{ e($personnel->P_GRADE) }}</span>'">
@@ -482,7 +482,7 @@
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <form method="POST"
-                                                      action="{{ route('personnel.cotisation.destroy', [$personnel, $cotis->PC_ID]) }}"
+                                                      action="{{ route('personnel.dues.destroy', [$personnel, $cotis->PC_ID]) }}"
                                                       class="d-inline"
                                                       onsubmit="return confirm('Supprimer cette cotisation ?')">
                                                     @csrf @method('DELETE')
@@ -551,7 +551,7 @@
                                         @endphp
                                         <tr>
                                             <td class="ps-3">
-                                                <a href="{{ route('evenement.show', $ep->E_CODE) }}" class="text-decoration-none">
+                                                <a href="{{ route('event.show', $ep->E_CODE) }}" class="text-decoration-none">
                                                     {{ $ep->E_LIBELLE ?: $ep->E_CODE }}
                                                 </a>
                                             </td>
@@ -673,7 +673,7 @@
                 <div class="ob-widget-card mb-3">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title"><i class="fas fa-map-marker-alt"></i> Géolocalisation</div>
-                        <a href="{{ route('geolocalisation.index') }}" class="btn btn-sm btn-light noprint">
+                        <a href="{{ route('geolocation.index') }}" class="btn btn-sm btn-light noprint">
                             <i class="fas fa-map-marked-alt me-1"></i> Carte globale
                         </a>
                     </div>

@@ -56,7 +56,7 @@
                             </div>
 
                             @foreach($cell['events'] as $ev)
-                                <a href="{{ route('evenement.show', $ev->E_CODE) }}"
+                                <a href="{{ route('event.show', $ev->E_CODE) }}"
                                    class="ob-cal-event ob-cal-event-ev d-block text-decoration-none"
                                    title="{{ $ev->E_LIBELLE ?? $ev->E_CODE }}">
                                     @if($ev->event_time)

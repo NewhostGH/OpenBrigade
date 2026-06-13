@@ -8,41 +8,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class StatistiqueController extends Controller
+class StatisticsController extends Controller
 {
     // ── KPI dashboard ─────────────────────────────────────────────────────────
 
     public function index(Request $request): View
     {
-        return view('statistique.index', $this->fetchStats($request));
+        return view('statistics.index', $this->fetchStats($request));
     }
 
     // ── Bilan annuel — Généralités ────────────────────────────────────────────
 
-    public function bilanGeneralites(Request $request): View
+    public function reportOverview(Request $request): View
     {
-        return view('statistique.bilan.generalites', $this->fetchGeneralites($request));
+        return view('statistics.annual-report.overview', $this->fetchGeneralites($request));
     }
 
     // ── Bilan annuel — Activités opérationnelles ──────────────────────────────
 
-    public function bilanActivites(Request $request): View
+    public function reportActivities(Request $request): View
     {
-        return view('statistique.bilan.activites', $this->fetchActivites($request));
+        return view('statistics.annual-report.activities', $this->fetchActivites($request));
     }
 
     // ── Bilan annuel — Formations ─────────────────────────────────────────────
 
-    public function bilanFormations(Request $request): View
+    public function reportTraining(Request $request): View
     {
-        return view('statistique.bilan.formations', $this->fetchFormations($request));
+        return view('statistics.annual-report.training', $this->fetchFormations($request));
     }
 
     // ── Private data fetchers ─────────────────────────────────────────────────
 
     private function fetchGeneralites(Request $request): array
     {
-        $base = $this->bilanBase($request);
+        $base = $this->reportBase($request);
         $sectionId = $base['sectionId'];
 
         $totalMembers = DB::table('pompier')
@@ -59,7 +59,7 @@ class StatistiqueController extends Controller
             ->where('p.GP_ID', '<>', -1)
             ->whereNull('p.P_FIN')
             ->groupBy('p.GP_ID', 'g.GP_DESCRIPTION')
-            ->select(DB::raw("COALESCE(g.GP_DESCRIPTION, CONCAT('Groupe ', p.GP_ID)) as label"), DB::raw('COUNT(*) as nb'))
+            ->select(DB::raw("COALESCE(g.GP_DESCRIPTION, CONCAT('Group ', p.GP_ID)) as label"), DB::raw('COUNT(*) as nb'))
             ->orderByDesc('nb')
             ->pluck('nb', 'label')
             ->toArray();
@@ -105,15 +105,15 @@ class StatistiqueController extends Controller
             'vehiclesByType' => $vehiclesByType,
             'totalVehicles' => $vehiclesByType->sum('nb'),
             'materielsByType' => $materielsByType,
-            'totalMateriels' => $materielsByType->sum('nb'),
+            'totalEquipments' => $materielsByType->sum('nb'),
             'consommablesByType' => $consommablesByType,
-            'totalConsommables' => $consommablesByType->sum('nb'),
+            'totalConsumables' => $consommablesByType->sum('nb'),
         ]);
     }
 
     private function fetchActivites(Request $request): array
     {
-        $base = $this->bilanBase($request);
+        $base = $this->reportBase($request);
         $sectionId = $base['sectionId'];
         $year = $base['year'];
 
@@ -188,7 +188,7 @@ class StatistiqueController extends Controller
 
     private function fetchFormations(Request $request): array
     {
-        $base = $this->bilanBase($request);
+        $base = $this->reportBase($request);
         $sectionId = $base['sectionId'];
         $year = $base['year'];
 
@@ -262,7 +262,7 @@ class StatistiqueController extends Controller
 
     // ── Shared helpers ────────────────────────────────────────────────────────
 
-    private function bilanBase(Request $request): array
+    private function reportBase(Request $request): array
     {
         $sectionId = (int) auth()->user()->P_SECTION;
         $year = (int) $request->integer('year', now()->year);

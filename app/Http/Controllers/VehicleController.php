@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vehicule;
+use App\Models\Vehicle;
 use App\Services\FeatureService;
 use App\Services\SectionScopeService;
 use Carbon\Carbon;
@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class VehiculeController extends Controller
+class VehicleController extends Controller
 {
     public function index(Request $request): View
     {
@@ -19,7 +19,7 @@ class VehiculeController extends Controller
         $filtSect = (int) $request->integer('section', 0);
         $status = (string) $request->string('status', 'all');
 
-        $query = Vehicule::query()
+        $query = Vehicle::query()
             ->with(['section'])
             ->leftJoin('vehicule_position as vp', 'vp.VP_ID', '=', 'vehicule.VP_ID')
             ->leftJoin('type_vehicule as tv', 'tv.TV_CODE', '=', 'vehicule.TV_CODE')
@@ -54,11 +54,11 @@ class VehiculeController extends Controller
 
         $items = $query->orderBy('vehicule.V_INDICATIF')->paginate(30)->withQueryString();
 
-        return view('vehicule.index', compact('items', 'search', 'filtSect', 'status')
-            + ['columns' => $this->vehiculeColumns()]);
+        return view('vehicle.index', compact('items', 'search', 'filtSect', 'status')
+            + ['columns' => $this->vehicleColumns()]);
     }
 
-    private function vehiculeColumns(): array
+    private function vehicleColumns(): array
     {
         $warn = fn (?string $date) => $date && Carbon::parse($date)->lte(now()->addDays(30))
             ? '<i class="fas fa-exclamation-triangle text-warning me-1" title="Expire bientôt"></i>'
@@ -106,11 +106,11 @@ class VehiculeController extends Controller
                 'badgeMap' => [
                     '3' => ['Opérationnel', 'ob-badge-actif'],
                     '1' => ['Limité',       'ob-badge-ben'],
-                    '0' => ['Indisponible', 'ob-badge-bloqued'],
+                    '0' => ['Unavailabilitynible', 'ob-badge-bloqued'],
                 ],
                 'mobile' => true, 'default' => true,
                 'exportValue' => fn ($v) => match ((int) ($v->VP_OPERATIONNEL ?? 0)) {
-                    2 => 'Opérationnel', 1 => 'Limité', default => 'Indisponible'
+                    2 => 'Opérationnel', 1 => 'Limité', default => 'Unavailabilitynible'
                 },
             ],
             [
@@ -186,7 +186,7 @@ class VehiculeController extends Controller
     {
         [$types, $positions] = $this->formLookups();
 
-        return view('vehicule.form', [
+        return view('vehicle.form', [
             'vehicule' => null,
             'types' => $types,
             'positions' => $positions,
@@ -196,21 +196,21 @@ class VehiculeController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $this->validateVehicule($request);
+        $data = $this->validateVehicle($request);
 
-        $v = Vehicule::create($data);
+        $v = Vehicle::create($data);
 
-        return redirect()->route('vehicule.show', $v->V_ID)
+        return redirect()->route('vehicle.show', $v->V_ID)
             ->with('success', 'Véhicule créé avec succès.');
     }
 
     // ── Edit / Update ─────────────────────────────────────────────────────────
 
-    public function edit(Vehicule $vehicule): View
+    public function edit(Vehicle $vehicule): View
     {
         [$types, $positions] = $this->formLookups();
 
-        return view('vehicule.form', [
+        return view('vehicle.form', [
             'vehicule' => $vehicule,
             'types' => $types,
             'positions' => $positions,
@@ -218,25 +218,25 @@ class VehiculeController extends Controller
         ]);
     }
 
-    public function update(Request $request, Vehicule $vehicule): RedirectResponse
+    public function update(Request $request, Vehicle $vehicule): RedirectResponse
     {
-        $data = $this->validateVehicule($request);
+        $data = $this->validateVehicle($request);
         $vehicule->update($data);
 
-        return redirect()->route('vehicule.show', $vehicule->V_ID)
+        return redirect()->route('vehicle.show', $vehicule->V_ID)
             ->with('success', 'Véhicule mis à jour.');
     }
 
     // ── Delete ────────────────────────────────────────────────────────────────
 
-    public function destroy(Vehicule $vehicule): RedirectResponse
+    public function destroy(Vehicle $vehicule): RedirectResponse
     {
         DB::transaction(function () use ($vehicule) {
             DB::table('evenement_vehicule')->where('V_ID', $vehicule->V_ID)->delete();
             $vehicule->delete();
         });
 
-        return redirect()->route('vehicule.index')
+        return redirect()->route('vehicle.index')
             ->with('success', 'Véhicule supprimé.');
     }
 
@@ -281,7 +281,7 @@ class VehiculeController extends Controller
         return [$types, $positions];
     }
 
-    private function validateVehicule(Request $request): array
+    private function validateVehicle(Request $request): array
     {
         // HTML submits "" for empty <select> — pre-convert numeric fields to null/int.
         // VP_ID is varchar('OP','LIM'…) — keep as string, just normalise empty → null.
@@ -340,7 +340,7 @@ class VehiculeController extends Controller
         return $raw;
     }
 
-    public function show(Vehicule $vehicule): View
+    public function show(Vehicle $vehicule): View
     {
         $vehicule->load(['section']);
 
@@ -350,7 +350,7 @@ class VehiculeController extends Controller
             ->first();
 
         // Vehicle type details (for icon tooltip on show page)
-        $typeVehicule = DB::table('type_vehicule')
+        $vehicleType = DB::table('type_vehicule')
             ->where('TV_CODE', $vehicule->TV_CODE)
             ->first();
 
@@ -388,8 +388,8 @@ class VehiculeController extends Controller
             ->select('d.D_ID', 'd.D_NAME', 'd.D_CREATED_DATE', 'td.TD_LIBELLE')
             ->get();
 
-        return view('vehicule.show', compact(
-            'vehicule', 'position', 'typeVehicule',
+        return view('vehicle.show', compact(
+            'vehicule', 'position', 'vehicleType',
             'recentEvents', 'materiels', 'documents'
         ));
     }

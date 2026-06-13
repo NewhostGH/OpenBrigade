@@ -32,7 +32,7 @@ use Illuminate\Support\Carbon;
  * @property bool $REMBOURSEMENT
  * @property Carbon|null $PC_DATE
  */
-class Cotisation extends Model
+class Dues extends Model
 {
     protected $table = 'personnel_cotisation';
 
@@ -57,6 +57,6 @@ class Cotisation extends Model
     /** The payment type (type_paiement). */
     public function typePaiement(): BelongsTo
     {
-        return $this->belongsTo(TypePaiement::class, 'TP_ID', 'TP_ID');
+        return $this->belongsTo(PaymentType::class, 'TP_ID', 'TP_ID');
     }
 }

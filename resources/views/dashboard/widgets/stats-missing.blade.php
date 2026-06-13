@@ -10,7 +10,7 @@
             <div class="ob-dash-alert-item-row">
                 <div class="ob-dash-alert-item-info">
                     <div class="ob-dash-alert-item-label">
-                        <a href="{{ route('evenement.show', $row->E_CODE) }}"
+                        <a href="{{ route('event.show', $row->E_CODE) }}"
                            style="color:inherit">{{ $row->E_LIBELLE }}</a>
                     </div>
                     <div class="ob-dash-alert-item-sub">

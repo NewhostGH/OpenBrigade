@@ -18,7 +18,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasAvatar;
-use App\Models\Pivots\EvenementParticipation;
+use App\Models\Pivots\EventParticipation;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -55,7 +55,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $GP_ID2
  * @property int|null $C_ID
  * @property-read Section|null $section
- * @property-read Collection<int, Cotisation> $cotisations
+ * @property-read Collection<int, Dues> $cotisations
  * @property-read Collection<int, Qualification> $qualifications
  */
 class Personnel extends Model
@@ -99,13 +99,13 @@ class Personnel extends Model
     /** The primary permission group of this person. */
     public function groupe(): BelongsTo
     {
-        return $this->belongsTo(Groupe::class, 'GP_ID', 'GP_ID');
+        return $this->belongsTo(Group::class, 'GP_ID', 'GP_ID');
     }
 
     /** The secondary permission group of this person (GP_ID2). */
     public function groupe2(): BelongsTo
     {
-        return $this->belongsTo(Groupe::class, 'GP_ID2', 'GP_ID');
+        return $this->belongsTo(Group::class, 'GP_ID2', 'GP_ID');
     }
 
     /** All sections this person holds a role in. */
@@ -118,8 +118,8 @@ class Personnel extends Model
     /** Events this person participated in. */
     public function evenements(): BelongsToMany
     {
-        return $this->belongsToMany(Evenement::class, 'evenement_participation', 'P_ID', 'E_CODE')
-            ->using(EvenementParticipation::class)
+        return $this->belongsToMany(Event::class, 'evenement_participation', 'P_ID', 'E_CODE')
+            ->using(EventParticipation::class)
             ->withPivot([
                 'EH_ID', 'EP_DATE', 'EP_BY', 'TP_ID', 'EP_COMMENT',
                 'EP_DATE_DEBUT', 'EP_DATE_FIN', 'EP_DEBUT', 'EP_FIN',
@@ -137,7 +137,7 @@ class Personnel extends Model
     /** Membership fee records for this person. */
     public function cotisations(): HasMany
     {
-        return $this->hasMany(Cotisation::class, 'P_ID', 'P_ID');
+        return $this->hasMany(Dues::class, 'P_ID', 'P_ID');
     }
 
     // ── Derived attributes & lookups (SSOT) ──────────────────────────────────

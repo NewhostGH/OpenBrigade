@@ -1,8 +1,7 @@
 <div class="ob-dash-stats">
 
     {{-- My participations --}}
-    <a class="ob-dash-stat-tile"
-       href="{{ route('personnel.show', $stats['pid']) }}">
+    <a class="ob-dash-stat-tile" href="{{ route('personnel.show', $stats['pid']) }}">
         <div class="ob-dash-stat-tile-header">
             <div class="ob-dash-stat-tile-icon ob-dash-stat-icon-blue">
                 <i class="fas fa-user"></i>
@@ -25,8 +24,7 @@
     </a>
 
     {{-- Section activities --}}
-    <a class="ob-dash-stat-tile"
-       href="{{ route('evenement.index') }}">
+    <a class="ob-dash-stat-tile" href="{{ route('event.index') }}">
         <div class="ob-dash-stat-tile-header">
             <div class="ob-dash-stat-tile-icon ob-dash-stat-icon-green">
                 <i class="fas fa-calendar-alt"></i>
@@ -49,8 +47,7 @@
     </a>
 
     {{-- New members --}}
-    <a class="ob-dash-stat-tile"
-       href="{{ route('personnel.index') }}">
+    <a class="ob-dash-stat-tile" href="{{ route('personnel.index') }}">
         <div class="ob-dash-stat-tile-header">
             <div class="ob-dash-stat-tile-icon ob-dash-stat-icon-orange">
                 <i class="fas fa-user-plus"></i>

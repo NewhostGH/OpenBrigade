@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
-class OrganisationController extends Controller
+class OrganizationController extends Controller
 {
     /**
      * Fixed reference data for the Agréments & Médailles tab.
@@ -27,7 +27,7 @@ class OrganisationController extends Controller
                 ['code' => 'A2',     'label' => 'Recherche cynophile'],
                 ['code' => 'B',      'label' => 'Actions de soutien aux populations sinistrées'],
                 ['code' => 'C',      'label' => 'Encadrement des bénévoles lors des actions de soutien'],
-                ['code' => 'D',      'label' => 'Dispositif prévisionnel de secours — agrément'],
+                ['code' => 'D',      'label' => 'Availabilitysitif prévisionnel de secours — agrément'],
                 ['code' => 'D-Aqua', 'label' => 'Sécurité de la pratique des activités aquatiques'],
             ],
         ],
@@ -83,7 +83,7 @@ class OrganisationController extends Controller
             'items' => [
                 ['code' => 'AUT',   'label' => 'Autorisation d\'exercice'],
                 ['code' => 'CONTR', 'label' => 'Contribution fédérale'],
-                ['code' => 'COTIS', 'label' => 'Cotisation fédérale'],
+                ['code' => 'COTIS', 'label' => 'Dues fédérale'],
             ],
         ],
         [
@@ -95,7 +95,7 @@ class OrganisationController extends Controller
         ],
     ];
 
-    // ── Organisation overview ─────────────────────────────────────────────────
+    // ── Organization overview ─────────────────────────────────────────────────
 
     public function index(): View
     {
@@ -112,7 +112,7 @@ class OrganisationController extends Controller
 
         $tree = $this->buildTree($sections, 0, $memberCounts);
 
-        return view('organisation.index', compact('tree', 'sectionId'));
+        return view('organization.index', compact('tree', 'sectionId'));
     }
 
     // ── Sections list + CRUD ──────────────────────────────────────────────────
@@ -132,7 +132,7 @@ class OrganisationController extends Controller
 
         $counts = $this->memberCounts();
 
-        return view('organisation.sections', compact('sections', 'counts'));
+        return view('organization.sections', compact('sections', 'counts'));
     }
 
     public function showSection(Section $section): View
@@ -167,14 +167,14 @@ class OrganisationController extends Controller
 
         $memberCount = (int) ($this->memberCounts()[$section->S_ID] ?? 0);
 
-        return view('organisation.section-show', compact(
+        return view('organization.section-show', compact(
             'section', 'orgByRole', 'agrementsMap', 'agrementCategories', 'rib', 'memberCount'
         ));
     }
 
     public function createSection(): View
     {
-        return view('organisation.section-form', [
+        return view('organization.section-form', [
             'section' => null,
             'parents' => $this->parentOptions(null),
             'canBeRoot' => ! $this->rootExists(null),
@@ -190,13 +190,13 @@ class OrganisationController extends Controller
 
         $section = Section::create($data);
 
-        return redirect()->route('organisation.sections.show', $section->S_ID)
+        return redirect()->route('organization.sections.show', $section->S_ID)
             ->with('success', 'Section créée.');
     }
 
     public function editSection(Section $section): View
     {
-        return view('organisation.section-form', [
+        return view('organization.section-form', [
             'section' => $section,
             'parents' => $this->parentOptions($section),
             'canBeRoot' => ! $this->rootExists($section),
@@ -210,7 +210,7 @@ class OrganisationController extends Controller
 
         $section->update($data);
 
-        return redirect()->route('organisation.sections.show', $section->S_ID)
+        return redirect()->route('organization.sections.show', $section->S_ID)
             ->with('success', 'Section mise à jour.');
     }
 
@@ -218,19 +218,19 @@ class OrganisationController extends Controller
     {
         $hasChildren = DB::table('section')->where('S_PARENT', $section->S_ID)->exists();
         if ($hasChildren) {
-            return redirect()->route('organisation.sections')
+            return redirect()->route('organization.sections')
                 ->with('error', 'Cette section a des sous-sections — déplacez-les d\'abord.');
         }
 
         $hasMembers = DB::table('pompier')->where('P_SECTION', $section->S_ID)->exists();
         if ($hasMembers) {
-            return redirect()->route('organisation.sections')
+            return redirect()->route('organization.sections')
                 ->with('error', 'Cette section contient des membres — réaffectez-les d\'abord.');
         }
 
         $section->delete();
 
-        return redirect()->route('organisation.sections')
+        return redirect()->route('organization.sections')
             ->with('success', 'Section supprimée.');
     }
 
@@ -270,7 +270,7 @@ class OrganisationController extends Controller
 
         $section->update($data);
 
-        return redirect()->route('organisation.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
+        return redirect()->route('organization.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
             ->with('success', 'Personnalisation enregistrée.');
     }
 
@@ -311,7 +311,7 @@ class OrganisationController extends Controller
 
         $section->update(['S_PDF_PAGE' => '']);
 
-        return redirect()->route('organisation.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
+        return redirect()->route('organization.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
             ->with('success', 'Papier à entête réinitialisé — le modèle par défaut sera utilisé.');
     }
 
@@ -324,11 +324,11 @@ class OrganisationController extends Controller
 
         $section->update(['S_PDF_BADGE' => '']);
 
-        return redirect()->route('organisation.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
+        return redirect()->route('organization.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
             ->with('success', 'Image de fond du badge réinitialisée.');
     }
 
-    // ── Cotisation / RIB tab ──────────────────────────────────────────────────
+    // ── Dues / RIB tab ──────────────────────────────────────────────────
 
     public function updateRib(Request $request, Section $section): RedirectResponse
     {
@@ -355,7 +355,7 @@ class OrganisationController extends Controller
             ]);
         }
 
-        return redirect()->route('organisation.sections.show', [$section->S_ID, 'tab' => 'cotisation'])
+        return redirect()->route('organization.sections.show', [$section->S_ID, 'tab' => 'cotisation'])
             ->with('success', 'RIB enregistré.');
     }
 
@@ -401,7 +401,7 @@ class OrganisationController extends Controller
 
     // ── Cartographie ──────────────────────────────────────────────────────────
 
-    public function cartographie(): View
+    public function map(): View
     {
         $rows = DB::table('gps as g')
             ->join('pompier as p', 'g.P_ID', '=', 'p.P_ID')
@@ -433,11 +433,11 @@ class OrganisationController extends Controller
                 'lat' => (float) $r->lat,
                 'lng' => (float) $r->lng,
                 'photo_url' => '',
-                'profile_url' => route('geolocalisation.index', ['section' => $r->P_SECTION]),
+                'profile_url' => route('geolocation.index', ['section' => $r->P_SECTION]),
             ];
         })->values()->toArray();
 
-        return view('organisation.cartographie', [
+        return view('organization.map', [
             'markers' => $markers,
             'count' => count($markers),
         ]);

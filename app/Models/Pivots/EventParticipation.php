@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * Composite primary key: (E_CODE, EH_ID, P_ID)
  * Tracks a personnel member's participation in an event time-slot.
  */
-class EvenementParticipation extends Pivot
+class EventParticipation extends Pivot
 {
     protected $table = 'evenement_participation';
 

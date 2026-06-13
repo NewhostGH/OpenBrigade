@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Evenement;
-use App\Models\Fonctionnalite;
-use App\Models\Groupe;
+use App\Models\Event;
+use App\Models\Group;
+use App\Models\LegacyFeature;
 use App\Models\Personnel;
 use App\Models\Section;
 use Illuminate\Database\Seeder;
@@ -34,7 +34,7 @@ class DevelopmentDataSeeder extends Seeder
             ]
         );
 
-        $groupe = Groupe::query()->updateOrCreate(
+        $groupe = Group::query()->updateOrCreate(
             ['GP_ID' => 900],
             [
                 'GP_DESCRIPTION' => 'DEV_MANAGER',
@@ -48,7 +48,7 @@ class DevelopmentDataSeeder extends Seeder
             ]
         );
 
-        $fonctionnalite = Fonctionnalite::query()->updateOrCreate(
+        $fonctionnalite = LegacyFeature::query()->updateOrCreate(
             ['F_ID' => 9000],
             [
                 'F_LIBELLE' => 'DEV_PANEL',
@@ -94,7 +94,7 @@ class DevelopmentDataSeeder extends Seeder
             ]
         );
 
-        Evenement::query()->updateOrCreate(
+        Event::query()->updateOrCreate(
             ['E_CODE' => 900000],
             [
                 'TE_CODE' => 'FOR',
@@ -141,10 +141,10 @@ class DevelopmentDataSeeder extends Seeder
                 ->create();
         }
 
-        if (Evenement::query()->where('E_CODE', '>=', 900001)->where('E_CODE', '<=', 900099)->count() === 0) {
+        if (Event::query()->where('E_CODE', '>=', 900001)->where('E_CODE', '<=', 900099)->count() === 0) {
             $codes = [900001, 900002, 900003];
             foreach ($codes as $code) {
-                Evenement::factory()->create([
+                Event::factory()->create([
                     'E_CODE' => $code,
                     'S_ID' => $section->S_ID,
                     'E_CHEF' => $manager->P_ID,

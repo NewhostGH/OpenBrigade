@@ -28,10 +28,10 @@ cp .env.example .env        # adjust credentials if needed
 docker compose up -d
 ```
 
-| Service                         | URL / port              | Notes                                                        |
-| ------------------------------- | ----------------------- | ------------------------------------------------------------ |
-| Application (`openbrigade_app`) | <http://localhost:8080> | `APP_PORT`, Apache → port 80                                 |
-| Database (`openbrigade_db`)     | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL`                             |
+| Service                         | URL / port              | Notes                                                                     |
+| ------------------------------- | ----------------------- | ------------------------------------------------------------------------- |
+| Application (`openbrigade_app`) | <http://localhost:8080> | `APP_PORT`, Apache → port 80                                              |
+| Database (`openbrigade_db`)     | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL`                                          |
 | DBGate (`openbrigade_dbgate`)   | <http://localhost:8888> | Web DB browser, `DBGATE_PORT` — dev only (`COMPOSE_PROFILES=development`) |
 
 After the containers are up, run migrations and seed development data:
@@ -119,11 +119,11 @@ transparently upgraded to a modern one.
 Three capabilities layer on top of the base login. Each has its own reference under
 [`docs/security/`](../security/):
 
-| Capability                    | Config           | Service / docs                                                        |
-| ----------------------------- | ---------------- | --------------------------------------------------------------------- |
-| TOTP two-factor (via Fortify) | `config/fortify.php` | [security/totp.md](../security/totp.md)                           |
-| LDAP authentication delegation| `config/ldap.php`    | `Auth/LdapAuthService` — [security/ldap.md](../security/ldap.md)  |
-| Password policies             | —                | `PasswordPolicyService` — [security/password-policies.md](../security/password-policies.md) |
+| Capability                     | Config               | Service / docs                                                                              |
+| ------------------------------ | -------------------- | ------------------------------------------------------------------------------------------- |
+| TOTP two-factor (via Fortify)  | `config/fortify.php` | [security/totp.md](../security/totp.md)                                                     |
+| LDAP authentication delegation | `config/ldap.php`    | `Auth/LdapAuthService` — [security/ldap.md](../security/ldap.md)                            |
+| Password policies              | —                    | `PasswordPolicyService` — [security/password-policies.md](../security/password-policies.md) |
 
 ### Reset a password
 
@@ -175,15 +175,15 @@ FontAwesome, Leaflet, etc. are npm packages bundled by Vite into `public/build/`
 file that matches the area, or create a new `resources/css/<module>.css` and add an
 `@import './<module>.css';` line at the bottom of `app.css`.
 
-| File                         | What goes there                                                        |
-| ---------------------------- | ---------------------------------------------------------------------- |
-| `app.css`                          | Import hub only                                                        |
-| `variables.css`                    | Design tokens (`--sidebar-*`, `--font-size-*`, colours)                |
-| `base.css`                         | `body`, resets, global utilities                                       |
-| `ob-layout.css`                    | Content offset, responsive `@media`                                    |
-| `ob-navbar.css` / `ob-sidebar.css` | Shell chrome                                                           |
-| `ob-components.css` + `ob-toolbar.css` / `ob-table.css` / `ob-badge.css` / `ob-avatar.css` / … | Reusable `ob-*` components, one file per component |
-| `ob-<module>.css`                  | One file per feature module (`ob-personnel.css`, `ob-planning.css`, …) |
+| File                                                                                           | What goes there                                                        |
+| ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `app.css`                                                                                      | Import hub only                                                        |
+| `variables.css`                                                                                | Design tokens (`--sidebar-*`, `--font-size-*`, colours)                |
+| `base.css`                                                                                     | `body`, resets, global utilities                                       |
+| `ob-layout.css`                                                                                | Content offset, responsive `@media`                                    |
+| `ob-navbar.css` / `ob-sidebar.css`                                                             | Shell chrome                                                           |
+| `ob-components.css` + `ob-toolbar.css` / `ob-table.css` / `ob-badge.css` / `ob-avatar.css` / … | Reusable `ob-*` components, one file per component                     |
+| `ob-<module>.css`                                                                              | One file per feature module (`ob-personnel.css`, `ob-planning.css`, …) |
 
 ### JS structure (`resources/js/`)
 

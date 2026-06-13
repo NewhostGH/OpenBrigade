@@ -1,0 +1,193 @@
+/* =============================================================================
+   ob-statistics.css — Statistics KPI dashboard & bilan annuel
+   ============================================================================= */
+
+/* ── KPI cards ──────────────────────────────────────────────────────────── */
+
+.ob-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.ob-kpi-card {
+    background: var(--component-bg);
+    border: 1px solid var(--component-border);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ob-kpi-card__label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ob-kpi-card__value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--page-text);
+    line-height: 1.1;
+}
+
+.ob-kpi-card__sub {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted-soft);
+}
+
+.ob-kpi-card--primary {
+    border-top: 3px solid var(--brand-bg);
+}
+
+.ob-kpi-card--success {
+    border-top: 3px solid var(--color-success-icon);
+}
+
+.ob-kpi-card--accent {
+    border-top: 3px solid var(--accent);
+}
+
+.ob-kpi-card--info {
+    border-top: 3px solid #0369a1;
+}
+
+/* ── Stats year switcher ─────────────────────────────────────────────────── */
+
+.ob-stats-year-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Bilan annuel print layout ───────────────────────────────────────────── */
+
+.ob-bilan-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 16px;
+    border-bottom: 2px solid var(--brand-bg);
+    margin-bottom: 24px;
+}
+
+.ob-bilan-header__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brand-bg);
+}
+
+.ob-bilan-header__meta {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted-soft);
+    text-align: right;
+}
+
+.ob-bilan-header-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted-soft);
+    border-bottom: 1px solid var(--component-border);
+    padding-bottom: 6px;
+    margin: 24px 0 12px;
+}
+
+.ob-bilan-card {
+    background: var(--component-bg);
+    border: 1px solid var(--component-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+}
+
+.ob-bilan-card__title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--page-text);
+    margin-bottom: 12px;
+}
+
+/* ── Bilan tab navigation ────────────────────────────────────────────────── */
+
+.ob-ob-bilan-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid var(--component-border);
+    padding-bottom: 0;
+}
+
+.ob-bilan-tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-muted-soft);
+    text-decoration: none;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border: 1px solid transparent;
+    border-bottom: none;
+    transition: color 0.15s, background 0.15s;
+    position: relative;
+    bottom: -2px;
+}
+
+.ob-bilan-tab:hover {
+    color: var(--brand-bg);
+    background: var(--component-bg);
+    border-color: var(--component-border);
+}
+
+.ob-bilan-tab--active {
+    color: var(--brand-bg);
+    background: var(--component-bg);
+    border-color: var(--component-border);
+    font-weight: 600;
+}
+
+.ob-bilan-content {
+    padding-bottom: 40px;
+}
+
+@media print {
+    .ob-space-left {
+        margin-left: 0 !important;
+    }
+
+    nav,
+    .ob-sidebar,
+    .ob-navbar,
+    #ob-sidebar,
+    .ob-commandbar {
+        display: none !important;
+    }
+
+    .btn-print-hide {
+        display: none !important;
+    }
+
+    .ob-bilan-header {
+        border-bottom-width: 3px;
+    }
+
+    .ob-bilan-card {
+        break-inside: avoid;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .ob-kpi-card {
+        break-inside: avoid;
+    }
+
+    .ob-kpi-grid {
+        break-inside: avoid;
+    }
+}

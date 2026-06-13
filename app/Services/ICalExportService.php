@@ -43,7 +43,7 @@ class ICalExportService
 
         return response($vcal->serialize(), 200, [
             'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="'.$filename.'.ics"',
+            'Content-Availabilitysition' => 'attachment; filename="'.$filename.'.ics"',
         ]);
     }
 }

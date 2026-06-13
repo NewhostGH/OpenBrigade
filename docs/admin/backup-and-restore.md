@@ -12,11 +12,11 @@ automatic retention. Reachable in the UI under **Configuration → Sauvegarde**
 Backups are written through a Laravel filesystem disk, configured in
 `config/backup.php`:
 
-| Setting | `.env` variable | Default | Meaning |
-|---|---|---|---|
-| `disk` | `BACKUP_DISK` | `local` | Filesystem disk backups are written to |
-| `path` | `BACKUP_PATH` | `backups` | Directory on that disk |
-| `keep` | `BACKUP_KEEP` | `30` | Files to keep; older ones are pruned after each backup |
+| Setting | `.env` variable | Default   | Meaning                                                |
+| ------- | --------------- | --------- | ------------------------------------------------------ |
+| `disk`  | `BACKUP_DISK`   | `local`   | Filesystem disk backups are written to                 |
+| `path`  | `BACKUP_PATH`   | `backups` | Directory on that disk                                 |
+| `keep`  | `BACKUP_KEEP`   | `30`      | Files to keep; older ones are pruned after each backup |
 
 With defaults, dumps land in `storage/app/backups/`. Each file is a `mysqldump`
 named with the database and a timestamp.

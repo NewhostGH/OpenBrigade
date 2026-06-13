@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Primary key: PS_ID
  * Represents a competency / skill / role definition.
  */
-class Poste extends Model
+class Position extends Model
 {
     protected $table = 'poste';
 

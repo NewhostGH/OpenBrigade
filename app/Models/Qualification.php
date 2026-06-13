@@ -49,6 +49,6 @@ class Qualification extends Model
     /** The competency / skill definition (poste). */
     public function poste(): BelongsTo
     {
-        return $this->belongsTo(Poste::class, 'PS_ID', 'PS_ID');
+        return $this->belongsTo(Position::class, 'PS_ID', 'PS_ID');
     }
 }

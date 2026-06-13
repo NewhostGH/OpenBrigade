@@ -34,7 +34,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $EH_FIN
  * @property float|string|null $EH_DUREE
  */
-class EvenementHoraire extends Model
+class EventSchedule extends Model
 {
     protected $table = 'evenement_horaire';
 
@@ -52,6 +52,6 @@ class EvenementHoraire extends Model
     /** The event this time slot belongs to. */
     public function evenement(): BelongsTo
     {
-        return $this->belongsTo(Evenement::class, 'E_CODE', 'E_CODE');
+        return $this->belongsTo(Event::class, 'E_CODE', 'E_CODE');
     }
 }

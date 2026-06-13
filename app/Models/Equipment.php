@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Legacy table: materiel
  * Primary key: MA_ID
  */
-class Materiel extends Model
+class Equipment extends Model
 {
     protected $table = 'materiel';
 
@@ -52,25 +52,25 @@ class Materiel extends Model
     /** Vehicle this item is stored on / assigned to (optional). */
     public function vehicule(): BelongsTo
     {
-        return $this->belongsTo(Vehicule::class, 'V_ID', 'V_ID');
+        return $this->belongsTo(Vehicle::class, 'V_ID', 'V_ID');
     }
 
     /** Parent item (for kits/sub-items). */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Materiel::class, 'MA_PARENT', 'MA_ID');
+        return $this->belongsTo(Equipment::class, 'MA_PARENT', 'MA_ID');
     }
 
     /** Child items. */
     public function children(): HasMany
     {
-        return $this->hasMany(Materiel::class, 'MA_PARENT', 'MA_ID');
+        return $this->hasMany(Equipment::class, 'MA_PARENT', 'MA_ID');
     }
 
     /** Events where this item was deployed. */
     public function evenements(): BelongsToMany
     {
-        return $this->belongsToMany(Evenement::class, 'evenement_materiel', 'MA_ID', 'E_CODE')
+        return $this->belongsToMany(Event::class, 'evenement_materiel', 'MA_ID', 'E_CODE')
             ->withPivot('EM_NB', 'EE_ID');
     }
 }

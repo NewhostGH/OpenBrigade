@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Primary key: EC_ID
  * Tracks consumable usage per event.
  */
-class EvenementConsommable extends Model
+class EventConsumable extends Model
 {
     protected $table = 'evenement_consommable';
 
@@ -42,12 +42,12 @@ class EvenementConsommable extends Model
     /** The event this consumption record belongs to. */
     public function evenement(): BelongsTo
     {
-        return $this->belongsTo(Evenement::class, 'E_CODE', 'E_CODE');
+        return $this->belongsTo(Event::class, 'E_CODE', 'E_CODE');
     }
 
     /** The consumable item used. */
     public function consommable(): BelongsTo
     {
-        return $this->belongsTo(Consommable::class, 'C_ID', 'C_ID');
+        return $this->belongsTo(Consumable::class, 'C_ID', 'C_ID');
     }
 }

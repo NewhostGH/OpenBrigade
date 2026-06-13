@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class MaterielController extends Controller
+class EquipmentController extends Controller
 {
     public function index(Request $request): View
     {
@@ -43,11 +43,11 @@ class MaterielController extends Controller
         $items = $query->paginate(50)->withQueryString();
         $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
-        return view('materiel.index', compact('items', 'search', 'filtSect', 'sections')
-            + ['columns' => $this->materielColumns()]);
+        return view('equipment.index', compact('items', 'search', 'filtSect', 'sections')
+            + ['columns' => $this->equipmentColumns()]);
     }
 
-    private function materielColumns(): array
+    private function equipmentColumns(): array
     {
         return [
             ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($m) => $m->TM_LIBELLE ?? '—', 'alwaysVisible' => true, 'mobile' => true],

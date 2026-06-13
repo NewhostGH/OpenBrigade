@@ -137,22 +137,22 @@ a legacy destination, use `route()` instead of `url('/legacy/...')`.
 
 ### Quick reference — legacy URL → native route
 
-| Legacy URL                               | Native route                                                    |
-| ---------------------------------------- | --------------------------------------------------------------- |
-| `evenement_display.php?evenement={code}` | `route('evenement.show', $code)`                                |
-| `evenement_choice.php`                   | `route('evenement.index')`                                      |
-| `personnel.php`                          | `route('personnel.index')`                                      |
-| `upd_personnel.php?pompier={id}`         | `route('personnel.show', $id)` / `route('personnel.edit', $id)` |
-| `upd_personnel.php?tab=2` (formations)   | `route('personnel.qualifications', $id)`                        |
-| `vehicule.php`                           | `route('vehicule.index')`                                       |
-| `consommable.php`                        | `route('consommable.index')`                                    |
-| `remplacements.php`                      | `route('remplacement.index')`                                   |
-| `tableau_garde.php`                      | `route('garde.index')`                                          |
-| `message.php`                            | `route('message.index')`                                        |
-| `documents.php`                          | `route('document.index')`                                       |
-| `upd_document.php` / `save_documents.php`| `route('document.index')` (upload/edit modals)                  |
-| `showfile.php` (library doc)             | `route('document.download', $id)`                               |
-| `bilans.php`                             | `route('statistique.index')`                                    |
+| Legacy URL                                | Native route                                                    |
+| ----------------------------------------- | --------------------------------------------------------------- |
+| `evenement_display.php?evenement={code}`  | `route('event.show', $code)`                                    |
+| `evenement_choice.php`                    | `route('event.index')`                                          |
+| `personnel.php`                           | `route('personnel.index')`                                      |
+| `upd_personnel.php?pompier={id}`          | `route('personnel.show', $id)` / `route('personnel.edit', $id)` |
+| `upd_personnel.php?tab=2` (formations)    | `route('personnel.qualifications', $id)`                        |
+| `vehicule.php`                            | `route('vehicle.index')`                                        |
+| `consommable.php`                         | `route('consumable.index')`                                     |
+| `remplacements.php`                       | `route('replacement.index')`                                    |
+| `tableau_garde.php`                       | `route('duty.index')`                                           |
+| `message.php`                             | `route('message.index')`                                        |
+| `documents.php`                           | `route('document.index')`                                       |
+| `upd_document.php` / `save_documents.php` | `route('document.index')` (upload/edit modals)                  |
+| `showfile.php` (library doc)              | `route('document.download', $id)`                               |
+| `bilans.php`                              | `route('statistics.index')`                                     |
 
 The complete legacy-file → new-implementation map is in
 [legacy-mapping.md](legacy-mapping.md).
@@ -166,16 +166,16 @@ these patterns rather than hand-rolling markup.
 
 ### Component inventory
 
-| Component   | Tag / class                          | File                                                 |
-| ----------- | ------------------------------------ | ---------------------------------------------------- |
-| Breadcrumb  | `<x-ob-breadcrumb>`                  | `resources/views/components/ob-breadcrumb.blade.php` |
-| Toolbar     | `<x-ob-toolbar>`                     | `resources/views/components/ob-toolbar.blade.php`    |
-| Command bar | `<x-ob-commandbar>`                  | `resources/views/components/ob-commandbar.blade.php` |
-| Table       | `<x-ob-table>`                       | `resources/views/components/ob-table.blade.php`      |
-| Section select | `<x-ob-section-select>`           | `resources/views/components/ob-section-select.blade.php` (see §10) |
-| Badge       | `<span class="ob-badge ob-badge-*">` | `resources/css/ob-badge.css`                         |
-| Widget card | `<div class="ob-widget-card">`       | `resources/css/ob-components.css`                    |
-| Avatar      | `Personnel::getAvatarUrl()`          | `app/Models/Concerns/HasAvatar.php`                  |
+| Component      | Tag / class                          | File                                                               |
+| -------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| Breadcrumb     | `<x-ob-breadcrumb>`                  | `resources/views/components/ob-breadcrumb.blade.php`               |
+| Toolbar        | `<x-ob-toolbar>`                     | `resources/views/components/ob-toolbar.blade.php`                  |
+| Command bar    | `<x-ob-commandbar>`                  | `resources/views/components/ob-commandbar.blade.php`               |
+| Table          | `<x-ob-table>`                       | `resources/views/components/ob-table.blade.php`                    |
+| Section select | `<x-ob-section-select>`              | `resources/views/components/ob-section-select.blade.php` (see §10) |
+| Badge          | `<span class="ob-badge ob-badge-*">` | `resources/css/ob-badge.css`                                       |
+| Widget card    | `<div class="ob-widget-card">`       | `resources/css/ob-components.css`                                  |
+| Avatar         | `Personnel::getAvatarUrl()`          | `app/Models/Concerns/HasAvatar.php`                                |
 
 ### List page skeleton
 
@@ -264,14 +264,14 @@ Permissions are a **section-scoped ACL with explicit allow *and* deny** at every
 tier. A feature (`F_ID`) is decided for a user in a section by the first matching
 rule — most specific wins (see `PermissionResolver`):
 
-| # | Rule                                                   | Source table             | Result |
-| - | ------------------------------------------------------ | ------------------------ | ------ |
-| 1 | per-person **deny**                                    | `ob_user_permission`     | DENY   |
-| 2 | per-person **allow**                                   | `ob_user_permission`     | ALLOW  |
-| 3 | section ceiling **deny** (any section in the chain)    | `ob_section_permission`  | DENY   |
-| 4 | group/role **deny** (any held group/role)              | `ob_group_permission`    | DENY   |
-| 5 | group/role **allow** (any held group/role)             | `ob_group_permission`    | ALLOW  |
-| 6 | nothing grants it                                      | —                        | DENY   |
+| #   | Rule                                                | Source table            | Result |
+| --- | --------------------------------------------------- | ----------------------- | ------ |
+| 1   | per-person **deny**                                 | `ob_user_permission`    | DENY   |
+| 2   | per-person **allow**                                | `ob_user_permission`    | ALLOW  |
+| 3   | section ceiling **deny** (any section in the chain) | `ob_section_permission` | DENY   |
+| 4   | group/role **deny** (any held group/role)           | `ob_group_permission`   | DENY   |
+| 5   | group/role **allow** (any held group/role)          | `ob_group_permission`   | ALLOW  |
+| 6   | nothing grants it                                   | —                       | DENY   |
 
 A row is "in scope" when its `section_id ≤ 0` (global, inherited everywhere) or it
 names a section in the active chain (section + ancestors). Global groups
@@ -403,6 +403,76 @@ for every section select across forms and filters.
 (`ob_user_assignment` with `section_id = 0`) grant permissions but never grant data
 access — only membership of a section itself does. The navbar and scope checking
 never look at roles.
+
+---
+
+## 11. Naming & language
+
+**The entire application layer is written in English.** The French that remains is
+strictly the legacy *data* layer — it is immutable, not a style choice.
+
+### English everywhere
+
+All identifiers are English: controller / model / service / Form Request class
+names, route names, URL path segments, Blade view folders and files, CSS/JS file
+names, CSS classes and ids, JS variables, and `config/navigation.php` `code`/`key`
+identifiers.
+
+### French stays only in the data layer
+
+The following are **data mirrored from legacy** and **must not** be renamed:
+
+- **Legacy table & column names** — `pompier`, `evenement`, `type_evenement`,
+  `P_NOM`, `E_CODE`, … (CONVENTIONS §2). A model bridges the two with
+  `protected $table = '<legacy french>'` and documents it at the top of the class
+  (e.g. `Event` → table `evenement`).
+- **Feature-flag keys** — `feature:vehicules`, `ob_feature.key` values — mirror
+  legacy `configuration.NAME`; renaming them breaks the legacy sync (see
+  ARCHITECTURE §"Feature flags").
+- **`/legacy/*.php` bridge targets** — point at frozen legacy scripts; keep their
+  original filenames.
+
+**User-facing copy stays French.** Menu labels, button text, flash and validation
+messages are French (`'label' => 'Cotisations'`). This rule governs *identifiers*,
+not translation.
+
+### URLs
+
+Lowercase, **leading `/` always**, **plural noun** for collections (`/events`),
+**kebab-case** for multi-word (`/payment-types`, `/annual-report`); uncountable
+nouns are not pluralised (`/equipment`).
+
+### Route names
+
+Singular, **dotted**, `resource.action` / `resource.subresource.action`; kebab-case
+within a segment; **no abbreviations** (`availability`, not `dispo`); every route
+carries a domain prefix (`my-permissions`, not bare). Keep §8's
+create-before-`Route::resource()` rule and the standard verb set
+(`index/create/store/show/edit/update/destroy`).
+
+### Class & file names
+
+- Controllers `EnglishSingular + Controller`; Models English singular PascalCase;
+  Services English + `Service`; Form Requests `Verb + Noun + Request`.
+- Views: `resources/views/<english-domain>/{index,show,form}.blade.php`; partials
+  `_name.blade.php` or `partials/`; one folder per domain.
+- Assets: `ob-<english-domain>[-<page>].(css|js)`.
+
+### Canonical domain dictionary (legacy french → english)
+
+| Legacy        | English         |     | Legacy          | English        |
+| ------------- | --------------- | --- | --------------- | -------------- |
+| evenement     | event           |     | organisation    | organization   |
+| vehicule      | vehicle         |     | statistique     | statistics     |
+| materiel      | equipment       |     | habilitation    | permissions    |
+| consommable   | consumable      |     | parametrage     | references     |
+| cotisation    | dues            |     | geolocalisation | geolocation    |
+| garde         | duty            |     | remplacement    | replacement    |
+| astreinte     | on-call         |     | disponibilite   | availability   |
+| equipe        | team            |     | indisponibilite | unavailability |
+| renfort       | reinforcement   |     | bilan           | annual-report  |
+| organigramme  | org-chart       |     | cartographie    | map            |
+| trombinoscope | photo-directory |     | mes-droits      | my-permissions |
 
 ---
 

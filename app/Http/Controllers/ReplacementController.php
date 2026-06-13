@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class RemplacementController extends Controller
+class ReplacementController extends Controller
 {
     public function index(Request $request): View
     {
@@ -50,14 +50,14 @@ class RemplacementController extends Controller
 
         $items = $query->paginate(30)->withQueryString();
 
-        return view('remplacement.index', compact('items', 'tab')
+        return view('replacement.index', compact('items', 'tab')
             + ['columns' => $this->remplacementColumns()]);
     }
 
     private function remplacementColumns(): array
     {
         return [
-            ['key' => 'activite', 'label' => 'Activité', 'type' => 'html', 'value' => fn ($r) => '<a href="'.route('evenement.show', $r->E_CODE).'" class="text-decoration-none">'.e($r->E_LIBELLE ?? $r->E_CODE).'</a>', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($r) => $r->E_LIBELLE ?? $r->E_CODE],
+            ['key' => 'activite', 'label' => 'Activité', 'type' => 'html', 'value' => fn ($r) => '<a href="'.route('event.show', $r->E_CODE).'" class="text-decoration-none">'.e($r->E_LIBELLE ?? $r->E_CODE).'</a>', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($r) => $r->E_LIBELLE ?? $r->E_CODE],
             ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'value' => fn ($r) => $r->EH_DATE_DEBUT ? Carbon::parse($r->EH_DATE_DEBUT)->locale('fr')->isoFormat('ddd D MMM YYYY') : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($r) => $r->EH_DATE_DEBUT ? Carbon::parse($r->EH_DATE_DEBUT)->format('d/m/Y') : ''],
             ['key' => 'remplace', 'label' => 'Remplacé', 'type' => 'text', 'value' => fn ($r) => $r->replaced_name, 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($r) => $r->replaced_name],
             ['key' => 'remplacant', 'label' => 'Remplaçant', 'type' => 'text', 'value' => fn ($r) => $r->substitute_name, 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($r) => $r->substitute_name],

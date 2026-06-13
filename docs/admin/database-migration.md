@@ -23,10 +23,10 @@ The migration timeline is:
 
 ### Table naming
 
-| Kind | Rule | Example |
-|---|---|---|
+| Kind                              | Rule                         | Example                                            |
+| --------------------------------- | ---------------------------- | -------------------------------------------------- |
 | Legacy tables (from the baseline) | Keep original eBrigade names | `pompier`, `configuration`, `personnel_cotisation` |
-| Native OpenBrigade tables | Prefixed `ob_` | `ob_backup_settings`, `ob_user_shortcuts` |
+| Native OpenBrigade tables         | Prefixed `ob_`               | `ob_backup_settings`, `ob_user_shortcuts`          |
 
 The `ob_` prefix makes it immediately clear which tables are inherited vs native. See
 [../dev/CONVENTIONS.md](../dev/CONVENTIONS.md) §2.
@@ -75,10 +75,10 @@ php artisan legacy:migration:validate
 
 ### Options
 
-| Option | Effect |
-|---|---|
-| `--table=<name>` | Validate only the named table(s); repeatable |
-| `--strict` | Also fail on row-count mismatches against a live legacy database |
+| Option           | Effect                                                           |
+| ---------------- | ---------------------------------------------------------------- |
+| `--table=<name>` | Validate only the named table(s); repeatable                     |
+| `--strict`       | Also fail on row-count mismatches against a live legacy database |
 
 ```bash
 # Validate specific tables only

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class ConsommableController extends Controller
+class ConsumableController extends Controller
 {
     public function index(Request $request): View
     {
@@ -57,7 +57,7 @@ class ConsommableController extends Controller
         $items = $query->paginate(50)->withQueryString();
         $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
-        return view('consommable.index', compact('items', 'search', 'filtSect', 'alert', 'sections')
+        return view('consumable.index', compact('items', 'search', 'filtSect', 'alert', 'sections')
             + ['columns' => $this->consommableColumns()]);
     }
 

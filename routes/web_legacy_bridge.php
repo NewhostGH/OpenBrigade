@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'about.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.about');
     Route::match(['GET', 'POST'], 'addons.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.addons');
-    Route::match(['GET', 'POST'], 'addons_save.php', fn () => redirect()->route('admin.fonctionnalites'))->middleware('permission:14')->name('legacy_bridge.addons_save');
+    Route::match(['GET', 'POST'], 'addons_save.php', fn () => redirect()->route('admin.features'))->middleware('permission:14')->name('legacy_bridge.addons_save');
     Route::match(['GET', 'POST'], 'alerte_create.php', [LegacyBridgeController::class, 'show'])->middleware('permission:43')->name('legacy_bridge.alerte_create');
     Route::match(['GET', 'POST'], 'alerte_send.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.alerte_send');
     Route::match(['GET', 'POST'], 'astreinte_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:26')->name('legacy_bridge.astreinte_edit');
     Route::match(['GET', 'POST'], 'astreinte_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:26')->name('legacy_bridge.astreinte_save');
-    Route::match(['GET', 'POST'], 'astreintes.php', fn () => redirect()->route('garde.astreintes'))->name('legacy_bridge.astreintes');
+    Route::match(['GET', 'POST'], 'astreintes.php', fn () => redirect()->route('duty.on-call'))->name('legacy_bridge.astreintes');
     Route::match(['GET', 'POST'], 'astreintes_updates.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.astreintes_updates');
     Route::match(['GET', 'POST'], 'audit.php', fn () => redirect()->route('admin.monitoring'))->name('legacy_bridge.audit');
     Route::match(['GET', 'POST'], 'auto_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.auto_garde');
     Route::match(['GET', 'POST'], 'automaticPiquet.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.automaticPiquet');
     Route::match(['GET', 'POST'], 'backup.php', fn () => redirect()->route('admin.backup'))->name('legacy_bridge.backup');
-    Route::match(['GET', 'POST'], 'bilan_participation.php', fn () => redirect()->route('statistique.index'))->name('legacy_bridge.bilan_participation');
+    Route::match(['GET', 'POST'], 'bilan_participation.php', fn () => redirect()->route('statistics.index'))->name('legacy_bridge.bilan_participation');
     Route::match(['GET', 'POST'], 'bilans.php', [LegacyBridgeController::class, 'show'])->middleware('permission:27')->name('legacy_bridge.bilans');
     Route::match(['GET', 'POST'], 'browscap.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.browscap');
     Route::match(['GET', 'POST'], 'buildsql.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.buildsql');
@@ -38,16 +38,16 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'config_prelevements.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.config_prelevements');
     Route::match(['GET', 'POST'], 'configuration.php', fn () => redirect()->route('admin.settings'))->name('legacy_bridge.configuration');
     Route::match(['GET', 'POST'], 'configuration_db.php', fn () => redirect()->route('dashboard'))->name('legacy_bridge.configuration_db');
-    Route::match(['GET', 'POST'], 'configuration_icone_grade.php', fn () => redirect()->route('admin.parametrage.grade'))->name('legacy_bridge.configuration_icone_grade');
+    Route::match(['GET', 'POST'], 'configuration_icone_grade.php', fn () => redirect()->route('admin.references.grade'))->name('legacy_bridge.configuration_icone_grade');
     Route::match(['GET', 'POST'], 'configuration_theme.php', fn () => redirect()->route('admin.settings'))->name('legacy_bridge.configuration_theme');
     Route::match(['GET', 'POST'], 'connected_users.php', fn () => redirect()->route('account.connected-users'))->name('legacy_bridge.connected_users');
-    Route::match(['GET', 'POST'], 'consommable.php', fn () => redirect()->route('consommable.index'))->name('legacy_bridge.consommable');
-    Route::match(['GET', 'POST'], 'consommable_load.php', fn () => redirect()->route('consommable.index'))->name('legacy_bridge.consommable_load');
+    Route::match(['GET', 'POST'], 'consommable.php', fn () => redirect()->route('consumable.index'))->name('legacy_bridge.consommable');
+    Route::match(['GET', 'POST'], 'consommable_load.php', fn () => redirect()->route('consumable.index'))->name('legacy_bridge.consommable_load');
     Route::match(['GET', 'POST'], 'consommable_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.consommable_xls');
     Route::match(['GET', 'POST'], 'cotisation_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.cotisation_edit');
-    Route::get('cotisations.php', fn () => redirect()->route('cotisations.index'))->name('legacy_bridge.cotisations');
+    Route::get('cotisations.php', fn () => redirect()->route('dues.index'))->name('legacy_bridge.cotisations');
     Route::match(['GET', 'POST'], 'cotisations_extract.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.cotisations_extract');
-    Route::get('cotisations_xls.php', fn () => redirect()->route('cotisations.export', request()->query()))->name('legacy_bridge.cotisations_xls');
+    Route::get('cotisations_xls.php', fn () => redirect()->route('dues.export', request()->query()))->name('legacy_bridge.cotisations_xls');
     Route::match(['GET', 'POST'], 'database_maintenance.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.database_maintenance');
     Route::match(['GET', 'POST'], 'debug_data.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.debug_data');
     Route::match(['GET', 'POST'], 'decrypt.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.decrypt');
@@ -70,17 +70,17 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'del_type_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:5')->name('legacy_bridge.del_type_garde');
     Route::match(['GET', 'POST'], 'del_type_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.del_type_materiel');
     Route::match(['GET', 'POST'], 'del_type_vehicule.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.del_type_vehicule');
-    Route::match(['GET', 'POST'], 'del_vehicule.php', fn () => redirect()->route('vehicule.index'))->name('legacy_bridge.del_vehicule');
+    Route::match(['GET', 'POST'], 'del_vehicule.php', fn () => redirect()->route('vehicle.index'))->name('legacy_bridge.del_vehicule');
     Route::match(['GET', 'POST'], 'delete_event_file.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.delete_event_file');
     Route::match(['GET', 'POST'], 'delete_file.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.delete_file');
     Route::match(['GET', 'POST'], 'delete_message.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.delete_message');
     Route::match(['GET', 'POST'], 'delete_statistique.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.delete_statistique');
     Route::match(['GET', 'POST'], 'deletePompier.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.deletePompier');
     Route::match(['GET', 'POST'], 'demande_renfort.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.demande_renfort');
-    Route::match(['GET', 'POST'], 'departement.php', fn () => redirect()->route('organisation.sections'))->name('legacy_bridge.departement');
+    Route::match(['GET', 'POST'], 'departement.php', fn () => redirect()->route('organization.sections'))->name('legacy_bridge.departement');
     Route::match(['GET', 'POST'], 'destinataires.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.destinataires');
     Route::match(['GET', 'POST'], 'diplome_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:54')->name('legacy_bridge.diplome_edit');
-    Route::match(['GET', 'POST'], 'dispo.php', fn () => redirect()->route('dispo.index'))->name('legacy_bridge.dispo');
+    Route::match(['GET', 'POST'], 'dispo.php', fn () => redirect()->route('availability.index'))->name('legacy_bridge.dispo');
     Route::match(['GET', 'POST'], 'document_modal.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.document_modal');
     Route::match(['GET', 'POST'], 'documents.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.documents');
     Route::match(['GET', 'POST'], 'download_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.download_addon');
@@ -101,8 +101,8 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
         $mode = $r->query('ec_mode', 'default');
 
         return $mode === 'MC'
-            ? redirect()->route('evenement.index', ['type' => 'MC'])
-            : redirect()->route('evenement.index');
+            ? redirect()->route('event.index', ['type' => 'MC'])
+            : redirect()->route('event.index');
     })->name('legacy_bridge.evenement_choice');
     Route::match(['GET', 'POST'], 'evenement_competences.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_competences');
     Route::match(['GET', 'POST'], 'evenement_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.evenement_consommable');
@@ -111,20 +111,20 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
         $code = $r->query('evenement');
 
         return $code
-            ? redirect()->route('evenement.show', $code)
-            : redirect()->route('evenement.index');
+            ? redirect()->route('event.show', $code)
+            : redirect()->route('event.index');
     })->name('legacy_bridge.evenement_detail');
     Route::match(['GET', 'POST'], 'evenement_diplome.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_diplome');
-    Route::match(['GET', 'POST'], 'evenement_display.php', fn () => redirect()->route('evenement.index'))->name('legacy_bridge.evenement_display');
+    Route::match(['GET', 'POST'], 'evenement_display.php', fn () => redirect()->route('event.index'))->name('legacy_bridge.evenement_display');
     Route::match(['GET', 'POST'], 'evenement_duplicate.php', [LegacyBridgeController::class, 'show'])->middleware('permission:15')->name('legacy_bridge.evenement_duplicate');
     Route::match(['GET', 'POST'], 'evenement_edit.php', function (Request $r) {
         $evt = $r->query('evenement') ?: $r->input('evenement');
         $action = $r->query('action') ?: $r->input('action', 'create');
         if ($action === 'create' || ! $evt) {
-            return redirect()->route('evenement.create');
+            return redirect()->route('event.create');
         }
 
-        return redirect()->route('evenement.edit', (int) $evt);
+        return redirect()->route('event.edit', (int) $evt);
     })->middleware('permission:15')->name('legacy_bridge.evenement_edit');
     Route::match(['GET', 'POST'], 'evenement_equipes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.evenement_equipes');
     Route::match(['GET', 'POST'], 'evenement_facturation.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_facturation');
@@ -134,7 +134,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'evenement_horaires.php', function (Request $r) {
         $ev = $r->query('evenement');
 
-        return $ev ? redirect()->route('evenement.show', $ev) : redirect()->route('evenement.index');
+        return $ev ? redirect()->route('event.show', $ev) : redirect()->route('event.index');
     })->name('legacy_bridge.evenement_horaires');
     Route::match(['GET', 'POST'], 'evenement_ical.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_ical');
     Route::match(['GET', 'POST'], 'evenement_info_participant.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.evenement_info_participant');
@@ -149,12 +149,12 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'evenement_rapport.php', function (Request $r) {
         $ev = $r->query('evenement');
 
-        return $ev ? redirect()->route('evenement.show', $ev) : redirect()->route('evenement.index');
+        return $ev ? redirect()->route('event.show', $ev) : redirect()->route('event.index');
     })->name('legacy_bridge.evenement_rapport');
     Route::match(['GET', 'POST'], 'evenement_save.php', function (Request $r) {
         $evt = $r->input('evenement') ?: $r->query('evenement');
 
-        return $evt ? redirect()->route('evenement.show', (int) $evt) : redirect()->route('evenement.index');
+        return $evt ? redirect()->route('event.show', (int) $evt) : redirect()->route('event.index');
     })->name('legacy_bridge.evenement_save');
     Route::match(['GET', 'POST'], 'evenement_tarif.php', [LegacyBridgeController::class, 'show'])->middleware('permission:15')->name('legacy_bridge.evenement_tarif');
     Route::match(['GET', 'POST'], 'evenement_tarif_formation.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.evenement_tarif_formation');
@@ -162,7 +162,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'evenement_vehicule_add.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_vehicule_add');
     Route::match(['GET', 'POST'], 'evenement_vehicule_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.evenement_vehicule_xls');
     Route::match(['GET', 'POST'], 'evenement_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:41')->name('legacy_bridge.evenement_xls');
-    Route::match(['GET', 'POST'], 'evenements.php', fn () => redirect()->route('evenement.index'))->name('legacy_bridge.evenements');
+    Route::match(['GET', 'POST'], 'evenements.php', fn () => redirect()->route('event.index'))->name('legacy_bridge.evenements');
     Route::match(['GET', 'POST'], 'export-html.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.export_html');
     Route::match(['GET', 'POST'], 'export-sql-liste.php', [LegacyBridgeController::class, 'show'])->middleware('permission:27')->name('legacy_bridge.export_sql_liste');
     Route::match(['GET', 'POST'], 'export-sql.php', [LegacyBridgeController::class, 'show'])->middleware('permission:27')->name('legacy_bridge.export_sql');
@@ -171,7 +171,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'export-xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.export_xls');
     Route::match(['GET', 'POST'], 'export.php', [LegacyBridgeController::class, 'show'])->middleware('permission:27')->name('legacy_bridge.export');
     Route::match(['GET', 'POST'], 'export_badges.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.export_badges');
-    Route::match(['GET', 'POST'], 'feuille_garde.php', fn () => redirect()->route('garde.index'))->name('legacy_bridge.feuille_garde');
+    Route::match(['GET', 'POST'], 'feuille_garde.php', fn () => redirect()->route('duty.index'))->name('legacy_bridge.feuille_garde');
     Route::match(['GET', 'POST'], 'formations_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.formations_xls');
     Route::match(['GET', 'POST'], 'geolocalize_all_persons.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.geolocalize_all_persons');
     Route::match(['GET', 'POST'], 'gmaps_evenement.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.gmaps_evenement');
@@ -180,7 +180,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'gps_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.gps_save');
     Route::match(['GET', 'POST'], 'gps_save2.php', [LegacyBridgeController::class, 'show'])->middleware('permission:76')->name('legacy_bridge.gps_save2');
     Route::match(['GET', 'POST'], 'grades_load.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.grades_load');
-    Route::match(['GET', 'POST'], 'habilitations.php', fn () => redirect()->route('admin.habilitations'))->name('legacy_bridge.habilitations');
+    Route::match(['GET', 'POST'], 'habilitations.php', fn () => redirect()->route('admin.permissions'))->name('legacy_bridge.habilitations');
     Route::match(['GET', 'POST'], 'habilitations_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:40')->name('legacy_bridge.habilitations_xls');
     Route::match(['GET', 'POST'], 'hierarchie_competence.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.hierarchie_competence');
     Route::match(['GET', 'POST'], 'histo_sms.php', [LegacyBridgeController::class, 'show'])->middleware('permission:23')->name('legacy_bridge.histo_sms');
@@ -192,9 +192,9 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'import_api.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.import_api');
     Route::match(['GET', 'POST'], 'index.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.index');
     Route::match(['GET', 'POST'], 'index_d.php', fn () => redirect()->route('dashboard'))->name('legacy_bridge.index_d');
-    Route::match(['GET', 'POST'], 'indispo.php', fn () => redirect()->route('indispo.index'))->name('legacy_bridge.indispo');
+    Route::match(['GET', 'POST'], 'indispo.php', fn () => redirect()->route('unavailability.index'))->name('legacy_bridge.indispo');
     Route::match(['GET', 'POST'], 'indispo_choice.php', [LegacyBridgeController::class, 'show'])->middleware('permission:11')->name('legacy_bridge.indispo_choice');
-    Route::match(['GET', 'POST'], 'indispo_display.php', fn () => redirect()->route('indispo.index'))->name('legacy_bridge.indispo_display');
+    Route::match(['GET', 'POST'], 'indispo_display.php', fn () => redirect()->route('unavailability.index'))->name('legacy_bridge.indispo_display');
     Route::match(['GET', 'POST'], 'indispo_list_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:56')->name('legacy_bridge.indispo_list_xls');
     Route::match(['GET', 'POST'], 'indispo_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:11')->name('legacy_bridge.indispo_save');
     Route::match(['GET', 'POST'], 'indispo_status.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.indispo_status');
@@ -205,10 +205,10 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'ins_poste.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.ins_poste');
     Route::match(['GET', 'POST'], 'ins_section.php', [LegacyBridgeController::class, 'show'])->middleware('permission:55')->name('legacy_bridge.ins_section');
     Route::match(['GET', 'POST'], 'ins_type_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.ins_type_materiel');
-    Route::match(['GET', 'POST'], 'ins_vehicule.php', fn () => redirect()->route('vehicule.create'))->name('legacy_bridge.ins_vehicule');
+    Route::match(['GET', 'POST'], 'ins_vehicule.php', fn () => redirect()->route('vehicle.create'))->name('legacy_bridge.ins_vehicule');
     Route::match(['GET', 'POST'], 'install_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.install_addon');
     Route::match(['GET', 'POST'], 'intervention_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.intervention_edit');
-    Route::match(['GET', 'POST'], 'jvectormap.php', fn () => redirect()->route('organisation.cartographie'))->name('legacy_bridge.jvectormap');
+    Route::match(['GET', 'POST'], 'jvectormap.php', fn () => redirect()->route('organization.map'))->name('legacy_bridge.jvectormap');
     Route::match(['GET', 'POST'], 'liste_victimes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.liste_victimes');
     Route::match(['GET', 'POST'], 'listecontacts.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.listecontacts');
     Route::match(['GET', 'POST'], 'listemails.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.listemails');
@@ -224,9 +224,9 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'mailer.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.mailer');
     Route::match(['GET', 'POST'], 'mailto.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.mailto');
     Route::match(['GET', 'POST'], 'map.php', [LegacyBridgeController::class, 'show'])->middleware('permission:76')->name('legacy_bridge.map');
-    Route::match(['GET', 'POST'], 'materiel.php', fn () => redirect()->route('materiel.index'))->name('legacy_bridge.materiel');
+    Route::match(['GET', 'POST'], 'materiel.php', fn () => redirect()->route('equipment.index'))->name('legacy_bridge.materiel');
     Route::match(['GET', 'POST'], 'materiel_embarquer.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.materiel_embarquer');
-    Route::match(['GET', 'POST'], 'materiel_load.php', fn () => redirect()->route('materiel.index'))->name('legacy_bridge.materiel_load');
+    Route::match(['GET', 'POST'], 'materiel_load.php', fn () => redirect()->route('equipment.index'))->name('legacy_bridge.materiel_load');
     Route::match(['GET', 'POST'], 'materiel_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.materiel_xls');
     Route::match(['GET', 'POST'], 'membres.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.membres');
     Route::match(['GET', 'POST'], 'menu_status_set.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.menu_status_set');
@@ -240,8 +240,8 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'note_frais_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:77')->name('legacy_bridge.note_frais_edit');
     Route::match(['GET', 'POST'], 'note_frais_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:77')->name('legacy_bridge.note_frais_save');
     Route::match(['GET', 'POST'], 'observations_modal.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.observations_modal');
-    Route::match(['GET', 'POST'], 'organigramme.php', fn () => redirect()->route('organisation.index'))->name('legacy_bridge.organigramme');
-    Route::match(['GET', 'POST'], 'parametrage.php', fn () => redirect()->route('admin.parametrage'))->name('legacy_bridge.parametrage');
+    Route::match(['GET', 'POST'], 'organigramme.php', fn () => redirect()->route('organization.index'))->name('legacy_bridge.organigramme');
+    Route::match(['GET', 'POST'], 'parametrage.php', fn () => redirect()->route('admin.references'))->name('legacy_bridge.parametrage');
     Route::match(['GET', 'POST'], 'paramfn.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.paramfn');
     Route::match(['GET', 'POST'], 'paramfn_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.paramfn_edit');
     Route::match(['GET', 'POST'], 'paramfn_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.paramfn_save');
@@ -273,7 +273,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'planning.php', [LegacyBridgeController::class, 'show'])->middleware('permission:56')->name('legacy_bridge.planning');
     Route::match(['GET', 'POST'], 'planning_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:56')->name('legacy_bridge.planning_xls');
     Route::match(['GET', 'POST'], 'poste.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.poste');
-    Route::match(['GET', 'POST'], 'prelevements.php', fn () => redirect()->route('cotisations.prelevements'))->name('legacy_bridge.prelevements');
+    Route::match(['GET', 'POST'], 'prelevements.php', fn () => redirect()->route('dues.direct-debits'))->name('legacy_bridge.prelevements');
     Route::match(['GET', 'POST'], 'push_monitor.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.push_monitor');
     Route::match(['GET', 'POST'], 'qrcode.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.qrcode');
     Route::match(['GET', 'POST'], 'qrcode_pic.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.qrcode_pic');
@@ -283,8 +283,8 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'rebuild_section_flat.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.rebuild_section_flat');
     Route::match(['GET', 'POST'], 'reminder.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.reminder');
     Route::match(['GET', 'POST'], 'remplacement_edit.php', [LegacyBridgeController::class, 'show'])->name('legacy_bridge.remplacement_edit');
-    Route::match(['GET', 'POST'], 'remplacements.php', fn () => redirect()->route('remplacement.index'))->name('legacy_bridge.remplacements');
-    Route::match(['GET', 'POST'], 'repo_events.php', fn () => redirect()->route('statistique.index'))->name('legacy_bridge.repo_events');
+    Route::match(['GET', 'POST'], 'remplacements.php', fn () => redirect()->route('replacement.index'))->name('legacy_bridge.remplacements');
+    Route::match(['GET', 'POST'], 'repo_events.php', fn () => redirect()->route('statistics.index'))->name('legacy_bridge.repo_events');
     Route::match(['GET', 'POST'], 'report_cotisations.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.report_cotisations');
     Route::match(['GET', 'POST'], 'repos_saisie.php', [LegacyBridgeController::class, 'show'])->middleware('permission:10')->name('legacy_bridge.repos_saisie');
     Route::match(['GET', 'POST'], 'repos_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.repos_save');
@@ -294,7 +294,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_company.php', [LegacyBridgeController::class, 'show'])->middleware('permission:29')->name('legacy_bridge.save_company');
     Route::match(['GET', 'POST'], 'save_configuration.php', fn () => redirect()->route('admin.settings'))->name('legacy_bridge.save_configuration');
     Route::match(['GET', 'POST'], 'save_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_consommable');
-    Route::get('save_cotisations.php', fn () => redirect()->route('cotisations.index'))->name('legacy_bridge.save_cotisations');
+    Route::get('save_cotisations.php', fn () => redirect()->route('dues.index'))->name('legacy_bridge.save_cotisations');
     Route::match(['GET', 'POST'], 'save_detail_facture.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_detail_facture');
     Route::match(['GET', 'POST'], 'save_dispo.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_dispo');
     Route::match(['GET', 'POST'], 'save_documents.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.save_documents'); // migrated → DocumentController
@@ -306,7 +306,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_folder.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.save_folder'); // migrated → DocumentController
     Route::match(['GET', 'POST'], 'save_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.save_garde');
     Route::match(['GET', 'POST'], 'save_grades.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_grades');
-    Route::match(['GET', 'POST'], 'save_habilitations.php', fn () => redirect()->route('admin.habilitations'))->name('legacy_bridge.save_habilitations');
+    Route::match(['GET', 'POST'], 'save_habilitations.php', fn () => redirect()->route('admin.permissions'))->name('legacy_bridge.save_habilitations');
     Route::match(['GET', 'POST'], 'save_hierarchie_competence.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_hierarchie_competence');
     Route::match(['GET', 'POST'], 'save_horaires.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_horaires');
     Route::match(['GET', 'POST'], 'save_info_adherent.php', [LegacyBridgeController::class, 'show'])->middleware('permission:53')->name('legacy_bridge.save_info_adherent');
@@ -318,7 +318,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_piquet.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.save_piquet');
     Route::match(['GET', 'POST'], 'save_poste.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_poste');
     Route::match(['GET', 'POST'], 'save_preferences.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_preferences');
-    Route::match(['GET', 'POST'], 'save_prelevements.php', fn () => redirect()->route('cotisations.prelevements'))->name('legacy_bridge.save_prelevements');
+    Route::match(['GET', 'POST'], 'save_prelevements.php', fn () => redirect()->route('dues.direct-debits'))->name('legacy_bridge.save_prelevements');
     Route::match(['GET', 'POST'], 'save_qualif.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_qualif');
     Route::match(['GET', 'POST'], 'save_qualif2.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_qualif2');
     Route::match(['GET', 'POST'], 'save_section.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_section');
@@ -330,12 +330,12 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_vehicule.php', function (Request $r) {
         $vid = (int) ($r->query('V_ID') ?: $r->input('V_ID', 0));
 
-        return $vid ? redirect()->route('vehicule.show', $vid) : redirect()->route('vehicule.index');
+        return $vid ? redirect()->route('vehicle.show', $vid) : redirect()->route('vehicle.index');
     })->name('legacy_bridge.save_vehicule');
     Route::match(['GET', 'POST'], 'scan_victime.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.scan_victime');
     Route::match(['GET', 'POST'], 'search_personnel.php', fn () => redirect()->route('personnel.index'))->name('legacy_bridge.search_personnel');
     Route::match(['GET', 'POST'], 'search_personnel_result.php', fn () => redirect()->route('personnel.index'))->name('legacy_bridge.search_personnel_result');
-    Route::match(['GET', 'POST'], 'section.php', fn () => redirect()->route('organisation.index'))->name('legacy_bridge.section');
+    Route::match(['GET', 'POST'], 'section.php', fn () => redirect()->route('organization.index'))->name('legacy_bridge.section');
     Route::match(['GET', 'POST'], 'section_stop.php', [LegacyBridgeController::class, 'show'])->middleware('permission:22')->name('legacy_bridge.section_stop');
     Route::match(['GET', 'POST'], 'send_id.php', function (Request $r) {
         $pid = (int) ($r->query('pid') ?: 0);
@@ -349,11 +349,11 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'sitac_options.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.sitac_options');
     Route::match(['GET', 'POST'], 'sitac_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.sitac_save');
     Route::match(['GET', 'POST'], 'specific_info.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.specific_info');
-    Route::match(['GET', 'POST'], 'tableau_garde.php', fn () => redirect()->route('garde.index'))->name('legacy_bridge.tableau_garde');
+    Route::match(['GET', 'POST'], 'tableau_garde.php', fn () => redirect()->route('duty.index'))->name('legacy_bridge.tableau_garde');
     Route::match(['GET', 'POST'], 'tableau_garde_create.php', [LegacyBridgeController::class, 'show'])->middleware('permission:5')->name('legacy_bridge.tableau_garde_create');
     Route::match(['GET', 'POST'], 'tableau_garde_status.php', [LegacyBridgeController::class, 'show'])->middleware('permission:5')->name('legacy_bridge.tableau_garde_status');
     Route::match(['GET', 'POST'], 'tableau_garde_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:61')->name('legacy_bridge.tableau_garde_xls');
-    Route::match(['GET', 'POST'], 'trombinoscope.php', fn () => redirect()->route('personnel.trombinoscope'))->name('legacy_bridge.trombinoscope');
+    Route::match(['GET', 'POST'], 'trombinoscope.php', fn () => redirect()->route('personnel.photo-directory'))->name('legacy_bridge.trombinoscope');
     Route::match(['GET', 'POST'], 'type_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.type_consommable');
     Route::match(['GET', 'POST'], 'type_evenement.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.type_evenement');
     Route::match(['GET', 'POST'], 'type_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.type_garde');
@@ -367,7 +367,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'upd_equipe.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.upd_equipe');
     Route::match(['GET', 'POST'], 'upd_folder.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.upd_folder'); // migrated → DocumentController
     Route::match(['GET', 'POST'], 'upd_grades.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.upd_grades');
-    Route::match(['GET', 'POST'], 'upd_habilitations.php', fn () => redirect()->route('admin.habilitations'))->name('legacy_bridge.upd_habilitations');
+    Route::match(['GET', 'POST'], 'upd_habilitations.php', fn () => redirect()->route('admin.permissions'))->name('legacy_bridge.upd_habilitations');
     Route::match(['GET', 'POST'], 'upd_hierarchie_competence.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.upd_hierarchie_competence');
     Route::match(['GET', 'POST'], 'upd_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.upd_materiel');
     Route::match(['GET', 'POST'], 'upd_materiel_selector.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.upd_materiel_selector');
@@ -391,8 +391,8 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
         $vid = (int) ($r->query('vehicule') ?? 0);
 
         return $vid > 0
-            ? redirect()->route('vehicule.show', $vid)
-            : redirect()->route('vehicule.index');
+            ? redirect()->route('vehicle.show', $vid)
+            : redirect()->route('vehicle.index');
     })->name('legacy_bridge.upd_vehicule');
     Route::match(['GET', 'POST'], 'update_app.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.update_app');
     Route::match(['GET', 'POST'], 'update_page.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.update_page');
@@ -400,12 +400,12 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'upload.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.upload');
     Route::match(['GET', 'POST'], 'user_info.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.user_info');
     Route::match(['GET', 'POST'], 'vcard.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.vcard');
-    Route::match(['GET', 'POST'], 'vehicule.php', fn () => redirect()->route('vehicule.index'))->name('legacy_bridge.vehicule');
-    Route::match(['GET', 'POST'], 'vehicule_load.php', fn () => redirect()->route('vehicule.index'))->name('legacy_bridge.vehicule_load');
+    Route::match(['GET', 'POST'], 'vehicule.php', fn () => redirect()->route('vehicle.index'))->name('legacy_bridge.vehicule');
+    Route::match(['GET', 'POST'], 'vehicule_load.php', fn () => redirect()->route('vehicle.index'))->name('legacy_bridge.vehicule_load');
     Route::match(['GET', 'POST'], 'vehicule_xls.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.vehicule_xls');
     Route::match(['GET', 'POST'], 'victimes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.victimes');
-    Route::match(['GET', 'POST'], 'virements.php', fn () => redirect()->route('cotisations.virements'))->name('legacy_bridge.virements');
-    Route::match(['GET', 'POST'], 'virements_extract.php', fn () => redirect()->route('cotisations.virements'))->name('legacy_bridge.virements_extract');
+    Route::match(['GET', 'POST'], 'virements.php', fn () => redirect()->route('dues.transfers'))->name('legacy_bridge.virements');
+    Route::match(['GET', 'POST'], 'virements_extract.php', fn () => redirect()->route('dues.transfers'))->name('legacy_bridge.virements_extract');
     Route::match(['GET', 'POST'], 'wizard.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.wizard');
     Route::match(['GET', 'POST'], 'zipcode.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.zipcode');
 });

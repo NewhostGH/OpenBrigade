@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Evenement;
+use App\Models\Event;
 use App\Models\Personnel;
 use App\Models\Section;
 use App\Services\ICalExportService;
@@ -15,7 +15,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-class EvenementController extends Controller
+class EventController extends Controller
 {
     // ── Event list ────────────────────────────────────────────────────────────
 
@@ -29,7 +29,7 @@ class EvenementController extends Controller
         $type = (string) $request->string('type', 'ALL');
         $filtSect = (int) $request->integer('section', 0);
 
-        $query = Evenement::query()
+        $query = Event::query()
             ->with(['horaires', 'section'])
             ->join('evenement_horaire as eh', 'evenement.E_CODE', '=', 'eh.E_CODE')
             ->join('type_evenement as te', 'evenement.TE_CODE', '=', 'te.TE_CODE')
@@ -97,7 +97,7 @@ class EvenementController extends Controller
 
         $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
 
-        return view('evenement.index', compact(
+        return view('event.index', compact(
             'items', 'period', 'search', 'type', 'filtSect', 'types', 'sections'
         ) + ['columns' => $this->evenementColumns()]);
     }
@@ -134,7 +134,7 @@ class EvenementController extends Controller
     {
         return [
             ['key' => 'icon', 'label' => '', 'type' => 'html', 'value' => fn ($e) => '<i class="fas fa-'.self::typeIcon($e->TE_CODE ?? '').'" style="color:var(--text-muted-soft)" title="'.e($e->TE_LIBELLE ?? '').'"></i>', 'alwaysVisible' => true, 'exportable' => false, 'mobile' => true],
-            ['key' => 'activite', 'label' => 'Activité', 'type' => 'html', 'value' => fn ($e) => '<a href="'.route('evenement.show', $e->E_CODE).'" class="text-decoration-none fw-semibold">'.e($e->E_LIBELLE ?? $e->E_CODE).'</a>', 'alwaysVisible' => true, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIBELLE ?? $e->E_CODE, 'sortField' => 'E_INTITULE', 'mobile' => true],
+            ['key' => 'activite', 'label' => 'Activité', 'type' => 'html', 'value' => fn ($e) => '<a href="'.route('event.show', $e->E_CODE).'" class="text-decoration-none fw-semibold">'.e($e->E_LIBELLE ?? $e->E_CODE).'</a>', 'alwaysVisible' => true, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIBELLE ?? $e->E_CODE, 'sortField' => 'E_INTITULE', 'mobile' => true],
             ['key' => 'lieu', 'label' => 'Lieu', 'type' => 'text', 'value' => fn ($e) => $e->E_LIEU ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIEU ?? ''],
             ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'value' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->locale('fr')->isoFormat('ddd D MMM YYYY').($e->first_time ? ' <span class="text-muted">'.substr($e->first_time, 0, 5).'</span>' : '') : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->format('d/m/Y') : ''],
             ['key' => 'statut', 'label' => 'Statut', 'type' => 'badge', 'value' => fn ($e) => $e->E_CANCELED ? 'ANNULEE' : ($e->E_CLOSED ? 'CLOSE' : 'OPEN'), 'badgeMap' => ['ANNULEE' => ['Annulée', 'ob-badge-bloqued'], 'CLOSE' => ['Clôturée', 'ob-badge-archive'], 'OPEN' => ['Ouverte', 'ob-badge-actif']], 'exportable' => true, 'exportValue' => fn ($e) => $e->E_CANCELED ? 'Annulée' : ($e->E_CLOSED ? 'Clôturée' : 'Ouverte'), 'mobile' => false],
@@ -145,7 +145,7 @@ class EvenementController extends Controller
 
     public function show(string $code): View
     {
-        $event = Evenement::with(['section', 'horaires', 'chef'])->findOrFail($code);
+        $event = Event::with(['section', 'horaires', 'chef'])->findOrFail($code);
 
         $typeLabel = DB::table('type_evenement')
             ->where('TE_CODE', $event->TE_CODE)
@@ -158,7 +158,7 @@ class EvenementController extends Controller
             ->get(['TP_ID', 'TP_LIBELLE']);
 
         // Teams with member/vehicle counts (also needed by participant modals).
-        $equipes = $this->loadEquipes($code);
+        $equipes = $this->loadTeams($code);
 
         // Enrolled participants — one row per person.
         $participants = DB::table('evenement_participation as ep')
@@ -217,7 +217,7 @@ class EvenementController extends Controller
             ->get();
 
         // All materials (for the assign modal).
-        $allMateriels = DB::table('materiel')
+        $allEquipments = DB::table('materiel')
             ->orderBy('MA_MODELE')
             ->get(['MA_ID', 'MA_MODELE', 'MA_NUMERO_SERIE']);
 
@@ -235,14 +235,14 @@ class EvenementController extends Controller
             )
             ->get();
 
-        return view('evenement.show', compact(
+        return view('event.show', compact(
             'event', 'typeLabel', 'participants', 'candidates', 'vehicules', 'allVehicles',
-            'functions', 'equipes', 'renforts', 'materiels', 'allMateriels'
+            'functions', 'equipes', 'renforts', 'materiels', 'allEquipments'
         ));
     }
 
     /** Teams (equipes) for an event with member + vehicle counts. */
-    private function loadEquipes(string|int $code): Collection
+    private function loadTeams(string|int $code): Collection
     {
         return DB::table('evenement_equipe as ee')
             ->where('ee.E_CODE', $code)
@@ -268,7 +268,7 @@ class EvenementController extends Controller
     {
         [$groupedTypes, $sections, $chefs] = $this->formLookups();
 
-        return view('evenement.form', [
+        return view('event.form', [
             'event' => null,
             'horaire' => null,
             'groupedTypes' => $groupedTypes,
@@ -340,7 +340,7 @@ class EvenementController extends Controller
             return $code;
         });
 
-        return redirect()->route('evenement.show', $code)
+        return redirect()->route('event.show', $code)
             ->with('success', 'Activité créée avec succès.');
     }
 
@@ -348,17 +348,17 @@ class EvenementController extends Controller
 
     public function edit(string $code): View
     {
-        $event = Evenement::with(['horaires'])->findOrFail($code);
+        $event = Event::with(['horaires'])->findOrFail($code);
         $horaires = $event->horaires->sortBy('EH_ID')->values();
 
         [$groupedTypes, $sections, $chefs] = $this->formLookups();
 
-        return view('evenement.form', compact('event', 'horaires', 'groupedTypes', 'sections', 'chefs'));
+        return view('event.form', compact('event', 'horaires', 'groupedTypes', 'sections', 'chefs'));
     }
 
     public function update(Request $request, string $code): RedirectResponse
     {
-        $event = Evenement::findOrFail($code);
+        $event = Event::findOrFail($code);
         $validated = $this->validateEventRequest($request, isCreate: false);
 
         DB::transaction(function () use ($event, $validated, $request) {
@@ -421,7 +421,7 @@ class EvenementController extends Controller
                 ->delete();
         });
 
-        return redirect()->route('evenement.show', $code)
+        return redirect()->route('event.show', $code)
             ->with('success', 'Activité mise à jour.');
     }
 
@@ -429,7 +429,7 @@ class EvenementController extends Controller
 
     public function destroy(string $code): RedirectResponse
     {
-        $event = Evenement::findOrFail($code);
+        $event = Event::findOrFail($code);
 
         DB::transaction(function () use ($event) {
             $c = $event->E_CODE;
@@ -441,7 +441,7 @@ class EvenementController extends Controller
             $event->delete();
         });
 
-        return redirect()->route('evenement.index')
+        return redirect()->route('event.index')
             ->with('success', 'Activité supprimée.');
     }
 
@@ -449,7 +449,7 @@ class EvenementController extends Controller
 
     public function participantStore(Request $request, string $code): RedirectResponse
     {
-        $event = Evenement::findOrFail($code);
+        $event = Event::findOrFail($code);
 
         $validated = $request->validate([
             'P_ID' => ['required', 'integer', 'exists:pompier,P_ID'],
@@ -466,7 +466,7 @@ class EvenementController extends Controller
             ->exists();
 
         if ($already) {
-            return redirect()->route('evenement.show', [$code, 'tab' => 'personnel'])
+            return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
                 ->with('error', 'Ce membre est déjà inscrit sur ce créneau.');
         }
 
@@ -489,13 +489,13 @@ class EvenementController extends Controller
             'EP_FLAG1' => 0,
         ]);
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'personnel'])
+        return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
             ->with('success', 'Participant ajouté.');
     }
 
     public function participantUpdate(Request $request, string $code, int $pid): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate([
             'TP_ID' => ['nullable', 'integer'],
@@ -514,28 +514,28 @@ class EvenementController extends Controller
                 'EP_ABSENT' => $request->boolean('EP_ABSENT') ? 1 : 0,
             ]);
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'personnel'])
+        return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
             ->with('success', 'Participation mise à jour.');
     }
 
     public function participantDestroy(string $code, int $pid): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         DB::table('evenement_participation')
             ->where('E_CODE', $code)
             ->where('P_ID', $pid)
             ->delete();
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'personnel'])
+        return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
             ->with('success', 'Participant retiré.');
     }
 
     // ── Équipes CRUD ──────────────────────────────────────────────────────────
 
-    public function equipeStore(Request $request, string $code): RedirectResponse
+    public function teamStore(Request $request, string $code): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate([
             'EE_NAME' => ['required', 'string', 'max:30'],
@@ -558,13 +558,13 @@ class EvenementController extends Controller
             'EE_SIGNATURE' => 0,
         ]);
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'equipes'])
+        return redirect()->route('event.show', [$code, 'tab' => 'equipes'])
             ->with('success', 'Équipe créée.');
     }
 
-    public function equipeUpdate(Request $request, string $code, int $ee): RedirectResponse
+    public function teamUpdate(Request $request, string $code, int $ee): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate([
             'EE_NAME' => ['required', 'string', 'max:30'],
@@ -583,13 +583,13 @@ class EvenementController extends Controller
                 'EE_ID_RADIO' => $validated['EE_ID_RADIO'] ?? null,
             ]);
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'equipes'])
+        return redirect()->route('event.show', [$code, 'tab' => 'equipes'])
             ->with('success', 'Équipe mise à jour.');
     }
 
-    public function equipeDestroy(string $code, int $ee): RedirectResponse
+    public function teamDestroy(string $code, int $ee): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         DB::transaction(function () use ($code, $ee) {
             DB::table('evenement_equipe')
@@ -602,54 +602,54 @@ class EvenementController extends Controller
                 ->update(['EE_ID' => null]);
         });
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'equipes'])
+        return redirect()->route('event.show', [$code, 'tab' => 'equipes'])
             ->with('success', 'Équipe supprimée.');
     }
 
     // ── Renforts (reinforcement sub-events) ──────────────────────────────────
 
-    public function renfortAttach(Request $request, string $code): RedirectResponse
+    public function reinforcementAttach(Request $request, string $code): RedirectResponse
     {
-        $event = Evenement::findOrFail($code);
+        $event = Event::findOrFail($code);
 
         $validated = $request->validate([
             'renfort' => ['required', 'integer', 'different:'.$code],
         ]);
 
-        $renfort = Evenement::findOrFail((int) $validated['renfort']);
+        $renfort = Event::findOrFail((int) $validated['renfort']);
 
         if ($renfort->E_PARENT) {
-            return redirect()->route('evenement.show', [$code, 'tab' => 'renforts'])
+            return redirect()->route('event.show', [$code, 'tab' => 'renforts'])
                 ->with('error', 'Cet événement est déjà rattaché à un autre événement principal.');
         }
         if ($renfort->E_CANCELED) {
-            return redirect()->route('evenement.show', [$code, 'tab' => 'renforts'])
+            return redirect()->route('event.show', [$code, 'tab' => 'renforts'])
                 ->with('error', 'Cet événement est annulé et ne peut pas être rattaché.');
         }
 
         $renfort->update(['E_PARENT' => $event->E_CODE]);
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'renforts'])
+        return redirect()->route('event.show', [$code, 'tab' => 'renforts'])
             ->with('success', 'Renfort rattaché.');
     }
 
-    public function renfortDetach(string $code, string $renfort): RedirectResponse
+    public function reinforcementDetach(string $code, string $renfort): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
-        Evenement::where('E_CODE', $renfort)
+        Event::where('E_CODE', $renfort)
             ->where('E_PARENT', $code)
             ->update(['E_PARENT' => null]);
 
-        return redirect()->route('evenement.show', [$code, 'tab' => 'renforts'])
+        return redirect()->route('event.show', [$code, 'tab' => 'renforts'])
             ->with('success', 'Renfort détaché.');
     }
 
     // ── Vehicle assignment ─────────────────────────────────────────────────────
 
-    public function vehiculeAttach(Request $request, string $code): RedirectResponse
+    public function vehicleAttach(Request $request, string $code): RedirectResponse
     {
-        $event = Evenement::findOrFail($code);
+        $event = Event::findOrFail($code);
 
         $validated = $request->validate([
             'V_ID' => ['required', 'integer', 'exists:vehicule,V_ID'],
@@ -657,22 +657,22 @@ class EvenementController extends Controller
 
         $already = $event->vehicules()->where('vehicule.V_ID', $validated['V_ID'])->exists();
         if ($already) {
-            return redirect()->route('evenement.show', $code)
+            return redirect()->route('event.show', $code)
                 ->with('error', 'Ce véhicule est déjà assigné à cette activité.');
         }
 
         $event->vehicules()->attach($validated['V_ID']);
 
-        return redirect()->route('evenement.show', $code)
+        return redirect()->route('event.show', $code)
             ->with('success', 'Véhicule assigné.');
     }
 
-    public function vehiculeDetach(string $code, int $vehicule): RedirectResponse
+    public function vehicleDetach(string $code, int $vehicule): RedirectResponse
     {
-        $event = Evenement::findOrFail($code);
+        $event = Event::findOrFail($code);
         $event->vehicules()->detach($vehicule);
 
-        return redirect()->route('evenement.show', $code)
+        return redirect()->route('event.show', $code)
             ->with('success', 'Véhicule désassigné.');
     }
 
@@ -708,9 +708,9 @@ class EvenementController extends Controller
 
     // ── Equipe member / material management ──────────────────────────────────
 
-    public function equipeAddParticipant(Request $request, string $code, int $ee): RedirectResponse
+    public function teamAddParticipant(Request $request, string $code, int $ee): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate(['P_ID' => ['required', 'integer', 'exists:pompier,P_ID']]);
 
@@ -722,9 +722,9 @@ class EvenementController extends Controller
         return back()->with('success', 'Participant ajouté à l\'équipe.');
     }
 
-    public function equipeAddMateriel(Request $request, string $code, int $ee): RedirectResponse
+    public function teamAddEquipment(Request $request, string $code, int $ee): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate([
             'MA_ID' => ['required', 'integer', 'exists:materiel,MA_ID'],
@@ -757,7 +757,7 @@ class EvenementController extends Controller
 
     public function participantTeam(Request $request, string $code, int $pid): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate(['EE_ID' => ['nullable', 'integer']]);
 
@@ -771,9 +771,9 @@ class EvenementController extends Controller
 
     // ── Matériel assignment ───────────────────────────────────────────────────
 
-    public function materielAttach(Request $request, string $code): RedirectResponse
+    public function equipmentAttach(Request $request, string $code): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate([
             'MA_ID' => ['required', 'integer', 'exists:materiel,MA_ID'],
@@ -800,9 +800,9 @@ class EvenementController extends Controller
         return back()->with('success', 'Matériel assigné.');
     }
 
-    public function materielUpdateQty(Request $request, string $code, int $ma): RedirectResponse
+    public function equipmentUpdateQty(Request $request, string $code, int $ma): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         $validated = $request->validate(['EM_NB' => ['required', 'integer', 'min:1', 'max:9999']]);
 
@@ -814,9 +814,9 @@ class EvenementController extends Controller
         return back()->with('success', 'Quantité mise à jour.');
     }
 
-    public function materielDetach(string $code, int $ma): RedirectResponse
+    public function equipmentDetach(string $code, int $ma): RedirectResponse
     {
-        Evenement::findOrFail($code);
+        Event::findOrFail($code);
 
         DB::table('evenement_materiel')
             ->where('E_CODE', $code)
@@ -830,7 +830,7 @@ class EvenementController extends Controller
 
     public function exportParticipants(string $code)
     {
-        $event = Evenement::findOrFail($code);
+        $event = Event::findOrFail($code);
 
         $participants = DB::table('evenement_participation as ep')
             ->join('pompier as p', 'ep.P_ID', '=', 'p.P_ID')
@@ -868,7 +868,7 @@ class EvenementController extends Controller
 
     public function exportIcal(string $code): Response
     {
-        $event = Evenement::with('horaires')->findOrFail($code);
+        $event = Event::with('horaires')->findOrFail($code);
 
         $vevents = [];
         foreach ($event->horaires as $h) {

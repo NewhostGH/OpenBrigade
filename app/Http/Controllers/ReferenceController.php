@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
-class ParametrageController extends Controller
+class ReferenceController extends Controller
 {
     // ── Overview ──────────────────────────────────────────────────────────────
 
@@ -23,12 +23,12 @@ class ParametrageController extends Controller
             'grade' => DB::table('grade')->count(),
         ];
 
-        return view('admin.parametrage.index', compact('counts'));
+        return view('admin.references.index', compact('counts'));
     }
 
     // ── Type Événement ────────────────────────────────────────────────────────
 
-    public function typeEvenementIndex(): View
+    public function eventTypeIndex(): View
     {
         $items = DB::table('type_evenement as te')
             ->leftJoin('categorie_evenement as c', 'c.CEV_CODE', '=', 'te.CEV_CODE')
@@ -40,10 +40,10 @@ class ParametrageController extends Controller
 
         $categories = DB::table('categorie_evenement')->orderBy('CEV_DESCRIPTION')->get();
 
-        return view('admin.parametrage.type-evenement', compact('items', 'categories'));
+        return view('admin.references.event-type', compact('items', 'categories'));
     }
 
-    public function typeEvenementStore(Request $request): RedirectResponse
+    public function eventTypeStore(Request $request): RedirectResponse
     {
         $v = $request->validate([
             'TE_CODE' => ['required', 'string', 'max:5', 'unique:type_evenement,TE_CODE'],
@@ -67,11 +67,11 @@ class ParametrageController extends Controller
             'CONVOCATIONS' => $request->boolean('CONVOCATIONS') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-evenement')
+        return redirect()->route('admin.references.event-type')
             ->with('success', 'Type d\'événement créé.');
     }
 
-    public function typeEvenementUpdate(Request $request, string $code): RedirectResponse
+    public function eventTypeUpdate(Request $request, string $code): RedirectResponse
     {
         $v = $request->validate([
             'TE_LIBELLE' => ['required', 'string', 'max:40'],
@@ -86,28 +86,28 @@ class ParametrageController extends Controller
             'CONVOCATIONS' => $request->boolean('CONVOCATIONS') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-evenement')
+        return redirect()->route('admin.references.event-type')
             ->with('success', 'Type d\'événement mis à jour.');
     }
 
-    public function typeEvenementDestroy(string $code): RedirectResponse
+    public function eventTypeDestroy(string $code): RedirectResponse
     {
         $used = DB::table('evenement')->where('TE_CODE', $code)->exists();
         if ($used) {
-            return redirect()->route('admin.parametrage.type-evenement')
+            return redirect()->route('admin.references.event-type')
                 ->with('error', 'Ce type est utilisé par des activités et ne peut pas être supprimé.');
         }
 
         DB::table('type_participation')->where('TE_CODE', $code)->delete();
         DB::table('type_evenement')->where('TE_CODE', $code)->delete();
 
-        return redirect()->route('admin.parametrage.type-evenement')
+        return redirect()->route('admin.references.event-type')
             ->with('success', 'Type d\'événement supprimé.');
     }
 
     // ── Type Participation ────────────────────────────────────────────────────
 
-    public function typeParticipationIndex(): View
+    public function participationTypeIndex(): View
     {
         $items = DB::table('type_participation as tp')
             ->join('type_evenement as te', 'tp.TE_CODE', '=', 'te.TE_CODE')
@@ -118,10 +118,10 @@ class ParametrageController extends Controller
 
         $eventTypes = DB::table('type_evenement')->orderBy('TE_LIBELLE')->get(['TE_CODE', 'TE_LIBELLE']);
 
-        return view('admin.parametrage.type-participation', compact('items', 'eventTypes'));
+        return view('admin.references.participation-type', compact('items', 'eventTypes'));
     }
 
-    public function typeParticipationStore(Request $request): RedirectResponse
+    public function participationTypeStore(Request $request): RedirectResponse
     {
         $v = $request->validate([
             'TE_CODE' => ['required', 'string', 'max:5', 'exists:type_evenement,TE_CODE'],
@@ -139,11 +139,11 @@ class ParametrageController extends Controller
             'EQ_ID' => 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-participation')
+        return redirect()->route('admin.references.participation-type')
             ->with('success', 'Fonction ajoutée.');
     }
 
-    public function typeParticipationUpdate(Request $request, int $id): RedirectResponse
+    public function participationTypeUpdate(Request $request, int $id): RedirectResponse
     {
         $v = $request->validate([
             'TP_LIBELLE' => ['required', 'string', 'max:40'],
@@ -155,31 +155,31 @@ class ParametrageController extends Controller
             'TP_NUM' => $v['TP_NUM'],
         ]);
 
-        return redirect()->route('admin.parametrage.type-participation')
+        return redirect()->route('admin.references.participation-type')
             ->with('success', 'Fonction mise à jour.');
     }
 
-    public function typeParticipationDestroy(int $id): RedirectResponse
+    public function participationTypeDestroy(int $id): RedirectResponse
     {
         DB::table('type_participation')->where('TP_ID', $id)->delete();
 
-        return redirect()->route('admin.parametrage.type-participation')
+        return redirect()->route('admin.references.participation-type')
             ->with('success', 'Fonction supprimée.');
     }
 
     // ── Type Matériel ─────────────────────────────────────────────────────────
 
-    public function typeMaterielIndex(): View
+    public function equipmentTypeIndex(): View
     {
         $items = DB::table('type_materiel')
             ->orderBy('TM_USAGE')
             ->orderBy('TM_DESCRIPTION')
             ->get();
 
-        return view('admin.parametrage.type-materiel', compact('items'));
+        return view('admin.references.equipment-type', compact('items'));
     }
 
-    public function typeMaterielStore(Request $request): RedirectResponse
+    public function equipmentTypeStore(Request $request): RedirectResponse
     {
         $v = $request->validate([
             'TM_CODE' => ['required', 'string', 'max:25'],
@@ -194,11 +194,11 @@ class ParametrageController extends Controller
             'TM_LOT' => 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-materiel')
+        return redirect()->route('admin.references.equipment-type')
             ->with('success', 'Type de matériel créé.');
     }
 
-    public function typeMaterielUpdate(Request $request, int $id): RedirectResponse
+    public function equipmentTypeUpdate(Request $request, int $id): RedirectResponse
     {
         $v = $request->validate([
             'TM_CODE' => ['required', 'string', 'max:25'],
@@ -212,37 +212,37 @@ class ParametrageController extends Controller
             'TM_USAGE' => $v['TM_USAGE'] ?: 'DIVERS',
         ]);
 
-        return redirect()->route('admin.parametrage.type-materiel')
+        return redirect()->route('admin.references.equipment-type')
             ->with('success', 'Type de matériel mis à jour.');
     }
 
-    public function typeMaterielDestroy(int $id): RedirectResponse
+    public function equipmentTypeDestroy(int $id): RedirectResponse
     {
         $used = DB::table('materiel')->where('TM_ID', $id)->exists();
         if ($used) {
-            return redirect()->route('admin.parametrage.type-materiel')
+            return redirect()->route('admin.references.equipment-type')
                 ->with('error', 'Ce type est utilisé et ne peut pas être supprimé.');
         }
 
         DB::table('type_materiel')->where('TM_ID', $id)->delete();
 
-        return redirect()->route('admin.parametrage.type-materiel')
+        return redirect()->route('admin.references.equipment-type')
             ->with('success', 'Type de matériel supprimé.');
     }
 
-    // ── Type Consommable ──────────────────────────────────────────────────────
+    // ── Type Consumable ──────────────────────────────────────────────────────
 
-    public function typeConsommableIndex(): View
+    public function consumableTypeIndex(): View
     {
         $items = DB::table('type_consommable')
             ->orderBy('CC_CODE')
             ->orderBy('TC_DESCRIPTION')
             ->get();
 
-        return view('admin.parametrage.type-consommable', compact('items'));
+        return view('admin.references.consumable-type', compact('items'));
     }
 
-    public function typeConsommableStore(Request $request): RedirectResponse
+    public function consumableTypeStore(Request $request): RedirectResponse
     {
         $v = $request->validate([
             'TC_DESCRIPTION' => ['required', 'string', 'max:60'],
@@ -261,11 +261,11 @@ class ParametrageController extends Controller
             'TC_PEREMPTION' => $request->boolean('TC_PEREMPTION') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-consommable')
+        return redirect()->route('admin.references.consumable-type')
             ->with('success', 'Type de consommable créé.');
     }
 
-    public function typeConsommableUpdate(Request $request, int $id): RedirectResponse
+    public function consumableTypeUpdate(Request $request, int $id): RedirectResponse
     {
         $v = $request->validate([
             'TC_DESCRIPTION' => ['required', 'string', 'max:60'],
@@ -284,37 +284,37 @@ class ParametrageController extends Controller
             'TC_PEREMPTION' => $request->boolean('TC_PEREMPTION') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-consommable')
+        return redirect()->route('admin.references.consumable-type')
             ->with('success', 'Type de consommable mis à jour.');
     }
 
-    public function typeConsommableDestroy(int $id): RedirectResponse
+    public function consumableTypeDestroy(int $id): RedirectResponse
     {
         $used = DB::table('consommable')->where('TC_ID', $id)->exists();
         if ($used) {
-            return redirect()->route('admin.parametrage.type-consommable')
+            return redirect()->route('admin.references.consumable-type')
                 ->with('error', 'Ce type est utilisé et ne peut pas être supprimé.');
         }
 
         DB::table('type_consommable')->where('TC_ID', $id)->delete();
 
-        return redirect()->route('admin.parametrage.type-consommable')
+        return redirect()->route('admin.references.consumable-type')
             ->with('success', 'Type de consommable supprimé.');
     }
 
     // ── Véhicule types ────────────────────────────────────────────────────────
 
-    public function typeVehiculeIndex(): View
+    public function vehicleTypeIndex(): View
     {
         $items = DB::table('type_vehicule')
             ->orderBy('TV_USAGE')
             ->orderBy('TV_CODE')
             ->get();
 
-        return view('admin.parametrage.type-vehicule', compact('items'));
+        return view('admin.references.vehicle-type', compact('items'));
     }
 
-    public function typeVehiculeStore(Request $request): RedirectResponse
+    public function vehicleTypeStore(Request $request): RedirectResponse
     {
         $v = $request->validate([
             'TV_CODE' => ['required', 'string', 'max:10', 'unique:type_vehicule,TV_CODE'],
@@ -330,11 +330,11 @@ class ParametrageController extends Controller
             'TV_NB' => $v['TV_NB'] ?? 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-vehicule')
+        return redirect()->route('admin.references.vehicle-type')
             ->with('success', 'Type de véhicule créé.');
     }
 
-    public function typeVehiculeUpdate(Request $request, string $code): RedirectResponse
+    public function vehicleTypeUpdate(Request $request, string $code): RedirectResponse
     {
         $v = $request->validate([
             'TV_LIBELLE' => ['required', 'string', 'max:60'],
@@ -348,21 +348,21 @@ class ParametrageController extends Controller
             'TV_NB' => $v['TV_NB'] ?? 0,
         ]);
 
-        return redirect()->route('admin.parametrage.type-vehicule')
+        return redirect()->route('admin.references.vehicle-type')
             ->with('success', 'Type de véhicule mis à jour.');
     }
 
-    public function typeVehiculeDestroy(string $code): RedirectResponse
+    public function vehicleTypeDestroy(string $code): RedirectResponse
     {
         $used = DB::table('vehicule')->where('TV_CODE', $code)->exists();
         if ($used) {
-            return redirect()->route('admin.parametrage.type-vehicule')
+            return redirect()->route('admin.references.vehicle-type')
                 ->with('error', 'Ce type est utilisé par des véhicules et ne peut pas être supprimé.');
         }
 
         DB::table('type_vehicule')->where('TV_CODE', $code)->delete();
 
-        return redirect()->route('admin.parametrage.type-vehicule')
+        return redirect()->route('admin.references.vehicle-type')
             ->with('success', 'Type de véhicule supprimé.');
     }
 
@@ -378,7 +378,7 @@ class ParametrageController extends Controller
                 'g.G_CATEGORY', 'cg.CG_DESCRIPTION as cat_label')
             ->get();
 
-        return view('admin.parametrage.grade', compact('grades'));
+        return view('admin.references.grade', compact('grades'));
     }
 
     public function gradeIconUpload(Request $request, string $grade): RedirectResponse
@@ -404,7 +404,7 @@ class ParametrageController extends Controller
 
         DB::table('grade')->where('G_GRADE', $grade)->update(['G_ICON' => $path]);
 
-        return redirect()->route('admin.parametrage.grade')
+        return redirect()->route('admin.references.grade')
             ->with('success', "Icône mise à jour pour {$grade}.");
     }
 
@@ -420,7 +420,7 @@ class ParametrageController extends Controller
 
         DB::table('grade')->where('G_GRADE', $grade)->update(['G_ICON' => null]);
 
-        return redirect()->route('admin.parametrage.grade')
+        return redirect()->route('admin.references.grade')
             ->with('success', "Icône supprimée pour {$grade}.");
     }
 }
