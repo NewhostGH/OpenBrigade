@@ -114,6 +114,17 @@ Password checking accepts **both** legacy MD5 hashes and modern `password_hash()
 values. On a successful login against a legacy MD5 hash, the stored hash is
 transparently upgraded to a modern one.
 
+### Additional auth stack
+
+Three capabilities layer on top of the base login. Each has its own reference under
+[`docs/security/`](../security/):
+
+| Capability                    | Config           | Service / docs                                                        |
+| ----------------------------- | ---------------- | --------------------------------------------------------------------- |
+| TOTP two-factor (via Fortify) | `config/fortify.php` | [security/totp.md](../security/totp.md)                           |
+| LDAP authentication delegation| `config/ldap.php`    | `Auth/LdapAuthService` — [security/ldap.md](../security/ldap.md)  |
+| Password policies             | —                | `PasswordPolicyService` — [security/password-policies.md](../security/password-policies.md) |
+
 ### Reset a password
 
 Local:
@@ -166,13 +177,13 @@ file that matches the area, or create a new `resources/css/<module>.css` and add
 
 | File                         | What goes there                                                        |
 | ---------------------------- | ---------------------------------------------------------------------- |
-| `app.css`                    | Import hub only                                                        |
-| `variables.css`              | Design tokens (`--sidebar-*`, `--font-size-*`, colours)                |
-| `base.css`                   | `body`, resets, global utilities                                       |
-| `layout.css`                 | Content offset, responsive `@media`                                    |
-| `navbar.css` / `sidebar.css` | Shell chrome                                                           |
-| `components.css`             | Reusable `ob-*` components (toolbar, table, badge, avatar…)            |
-| `<module>.css`               | One file per feature module (`ob-personnel.css`, `ob-planning.css`, …) |
+| `app.css`                          | Import hub only                                                        |
+| `variables.css`                    | Design tokens (`--sidebar-*`, `--font-size-*`, colours)                |
+| `base.css`                         | `body`, resets, global utilities                                       |
+| `ob-layout.css`                    | Content offset, responsive `@media`                                    |
+| `ob-navbar.css` / `ob-sidebar.css` | Shell chrome                                                           |
+| `ob-components.css` + `ob-toolbar.css` / `ob-table.css` / `ob-badge.css` / `ob-avatar.css` / … | Reusable `ob-*` components, one file per component |
+| `ob-<module>.css`                  | One file per feature module (`ob-personnel.css`, `ob-planning.css`, …) |
 
 ### JS structure (`resources/js/`)
 

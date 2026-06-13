@@ -172,8 +172,9 @@ these patterns rather than hand-rolling markup.
 | Toolbar     | `<x-ob-toolbar>`                     | `resources/views/components/ob-toolbar.blade.php`    |
 | Command bar | `<x-ob-commandbar>`                  | `resources/views/components/ob-commandbar.blade.php` |
 | Table       | `<x-ob-table>`                       | `resources/views/components/ob-table.blade.php`      |
-| Badge       | `<span class="ob-badge ob-badge-*">` | `resources/css/components.css`                       |
-| Widget card | `<div class="ob-widget-card">`       | `resources/css/components.css`                       |
+| Section select | `<x-ob-section-select>`           | `resources/views/components/ob-section-select.blade.php` (see §10) |
+| Badge       | `<span class="ob-badge ob-badge-*">` | `resources/css/ob-badge.css`                         |
+| Widget card | `<div class="ob-widget-card">`       | `resources/css/ob-components.css`                    |
 | Avatar      | `Personnel::getAvatarUrl()`          | `app/Models/Concerns/HasAvatar.php`                  |
 
 ### List page skeleton
