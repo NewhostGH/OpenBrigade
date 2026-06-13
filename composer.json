@@ -17,13 +17,14 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0",
-        "larastan/larastan": "^3.0"
+        "phpstan/phpstan-mockery": "*"
     },
     "autoload": {
         "psr-4": {
@@ -55,7 +56,7 @@
         ],
         "pint": "vendor/bin/pint",
         "test": "vendor/bin/pest",
-        "analyse": "vendor/bin/phpstan analyse"
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=512M"
     },
     "extra": {
         "laravel": {

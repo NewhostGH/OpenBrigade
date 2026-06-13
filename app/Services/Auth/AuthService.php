@@ -34,7 +34,7 @@ class AuthService implements ServiceInterface
      * confirmed TOTP enabled — the caller must redirect to the TOTP challenge.
      * Returns true on full success, false on failure.
      *
-     * @return bool|'totp_required'
+     * @return bool|'totp_required'|'totp_setup_required'
      */
     public function attemptLogin(string $login, string $plainPassword, bool $remember = false): bool|string
     {

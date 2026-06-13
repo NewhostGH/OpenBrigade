@@ -41,11 +41,13 @@ class LdapDomain extends Model
         'password' => 'encrypted',
     ];
 
+    /** @return HasMany<LdapAttributeMap, $this> */
     public function attributeMaps(): HasMany
     {
         return $this->hasMany(LdapAttributeMap::class, 'ldap_domain_id');
     }
 
+    /** @return HasMany<LdapOuRule, $this> */
     public function ouRules(): HasMany
     {
         return $this->hasMany(LdapOuRule::class, 'ldap_domain_id')->orderBy('priority');

@@ -28,7 +28,7 @@ use Illuminate\Validation\Rules\Password as PasswordRule;
  */
 class PasswordPolicyService implements ServiceInterface
 {
-    /** @var array<int,array{min_length:int,expiry_days:int,max_attempts:int,blocklist_check:bool}> keyed by group id or 0 for global */
+    /** @var array<int,array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool,require_2fa:bool}> keyed by group id or 0 for global */
     private array $cache = [];
 
     // ── Public API ─────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ class PasswordPolicyService implements ServiceInterface
     /**
      * Return the resolved policy for a user (group-specific or default).
      *
-     * @return array{min_length:int,expiry_days:int,max_attempts:int,blocklist_check:bool}
+     * @return array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool,require_2fa:bool}
      */
     public function policyForUser(?User $user): array
     {
@@ -69,7 +69,7 @@ class PasswordPolicyService implements ServiceInterface
      * Legacy accessor — returns the global default policy.
      * Callers that do not have a User object should use this.
      *
-     * @return array{min_length:int,expiry_days:int,max_attempts:int,blocklist_check:bool}
+     * @return array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool,require_2fa:bool}
      */
     public function policy(): array
     {
@@ -157,7 +157,7 @@ class PasswordPolicyService implements ServiceInterface
     /**
      * Compute the next expiry date for a given policy.
      *
-     * @param  array{min_length:int,expiry_days:int,max_attempts:int,blocklist_check:bool}|null  $policy
+     * @param  array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool,require_2fa:bool}|null  $policy
      * @return string|null ISO date (Y-m-d) or null when expiry is disabled.
      */
     public function nextExpiry(?array $policy = null): ?string
@@ -169,7 +169,7 @@ class PasswordPolicyService implements ServiceInterface
 
     // ── Internals ─────────────────────────────────────────────────────────────
 
-    /** @return array{min_length:int,expiry_days:int,max_attempts:int,blocklist_check:bool} */
+    /** @return array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool,require_2fa:bool} */
     private function defaultPolicy(): array
     {
         if (! array_key_exists(0, $this->cache)) {

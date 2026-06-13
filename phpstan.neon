@@ -1,11 +1,16 @@
 includes:
     - vendor/larastan/larastan/extension.neon
+    - vendor/phpstan/phpstan-mockery/extension.neon
 
 parameters:
     phpVersion: 80400
     level: 5
     paths:
         - app/
+        - routes/
+        - database/
+        - config/
+        - tests/
     excludePaths:
         - app/Legacy/ (?)
     checkModelProperties: true
@@ -16,3 +21,10 @@ parameters:
         -
             identifier: argument.type
             message: "#expects .*model property of App\\\\Models\\\\[A-Za-z]+, '[A-Za-z_]+\\.[^']*' given#"
+        # Pest binds $this in test closures to the Laravel TestCase at runtime, but
+        # PHPStan statically sees the base PHPUnit TestCase and cannot resolve the
+        # HTTP/auth helpers. No Pest PHPStan plugin exists to model this binding.
+        -
+            identifier: method.notFound
+            message: "#Call to an undefined method PHPUnit\\\\Framework\\\\TestCase::#"
+            path: tests/

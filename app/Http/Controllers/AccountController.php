@@ -60,7 +60,7 @@ class AccountController extends Controller
             ? json_decode(decrypt($user->two_factor_recovery_codes ?? '[]'), true)
             : [];
 
-        $require2fa = (bool) ($policy['require_2fa'] ?? false);
+        $require2fa = (bool) $policy['require_2fa'];
 
         return view('account.authentification', compact(
             'tab', 'isExpired', 'isFirstLogin', 'policy',

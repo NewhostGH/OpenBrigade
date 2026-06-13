@@ -76,10 +76,10 @@ class DashboardService
                     'col' => (int) $s->col,
                     'position' => (int) $s->position,
                     'visible' => (bool) $s->visible,
-                    'label' => self::WIDGET_LABELS[$key] ?? $key,
+                    'label' => self::WIDGET_LABELS[$key],
                 ];
             } else {
-                $result[] = array_merge($default, ['label' => self::WIDGET_LABELS[$key] ?? $key]);
+                $result[] = array_merge($default, ['label' => self::WIDGET_LABELS[$key]]);
             }
         }
 
