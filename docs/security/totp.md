@@ -63,11 +63,11 @@ feature is enabled; Fortify's own login routes and views are disabled.
 
 Added to the `pompier` table:
 
-| Column | Purpose |
-|---|---|
-| `two_factor_secret` | Encrypted TOTP secret (encrypted at rest) |
-| `two_factor_recovery_codes` | Encrypted JSON array of recovery codes |
-| `two_factor_confirmed_at` | Timestamp set when the user confirms enrolment |
+| Column                      | Purpose                                        |
+| --------------------------- | ---------------------------------------------- |
+| `two_factor_secret`         | Encrypted TOTP secret (encrypted at rest)      |
+| `two_factor_recovery_codes` | Encrypted JSON array of recovery codes         |
+| `two_factor_confirmed_at`   | Timestamp set when the user confirms enrolment |
 
 `two_factor_secret` and `two_factor_recovery_codes` are encrypted via
 Laravel's built-in encryption (using `APP_KEY`). Never expose them raw.
@@ -105,13 +105,13 @@ consumed, the user must regenerate them from `/account/2fa`.
 
 ## Troubleshooting
 
-**"Code invalide" even though the code is correct**
+### "Code invalide" even though the code is correct
 
 TOTP codes are time-based. Verify that the clock on the authenticator device
 is synchronised (NTP). A drift of more than ±30 seconds will cause failures.
 The Fortify provider allows a ±1 window (accepts the previous and next code).
 
-**Lost device — no recovery codes**
+### Lost device — no recovery codes
 
 An administrator with shell access can disable 2FA directly:
 

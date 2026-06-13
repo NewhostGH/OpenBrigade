@@ -12,19 +12,19 @@ can have different rules for password length, complexity, expiry, and lockout.
 
 Policies live in the `ob_password_policy` database table. Each row has:
 
-| Column | Description |
-|---|---|
-| `name` | Human-readable label |
-| `min_length` | Minimum character count (NCSC recommends ≥ 12) |
-| `require_uppercase` | Mandate at least one A–Z |
-| `require_lowercase` | Mandate at least one a–z |
-| `require_digits` | Mandate at least one 0–9 |
-| `require_special` | Mandate at least one non-alphanumeric character |
-| `expiry_days` | Days before the password expires (0 = never) |
-| `max_attempts` | Failed attempts before lockout (0 = disabled) |
-| `blocklist_check` | Reject common/known-bad passwords |
-| `require_2fa` | Force TOTP enrolment for users in groups using this policy |
-| `is_default` | Exactly one row may be the fallback for groups with no policy |
+| Column              | Description                                                   |
+| ------------------- | ------------------------------------------------------------- |
+| `name`              | Human-readable label                                          |
+| `min_length`        | Minimum character count (NCSC recommends ≥ 12)                |
+| `require_uppercase` | Mandate at least one A–Z                                      |
+| `require_lowercase` | Mandate at least one a–z                                      |
+| `require_digits`    | Mandate at least one 0–9                                      |
+| `require_special`   | Mandate at least one non-alphanumeric character               |
+| `expiry_days`       | Days before the password expires (0 = never)                  |
+| `max_attempts`      | Failed attempts before lockout (0 = disabled)                 |
+| `blocklist_check`   | Reject common/known-bad passwords                             |
+| `require_2fa`       | Force TOTP enrolment for users in groups using this policy    |
+| `is_default`        | Exactly one row may be the fallback for groups with no policy |
 
 ### Resolution order
 
@@ -47,9 +47,10 @@ inherits the default.
 
 ### NCSC (UK National Cyber Security Centre)
 
-https://www.ncsc.gov.uk/collection/passwords/updating-your-approach
+<https://www.ncsc.gov.uk/collection/passwords/updating-your-approach>
 
 Key points applied as defaults:
+
 - Minimum **12 characters** — length is the primary driver of strength.
 - **No complexity requirements** — forced complexity makes passwords weaker in
   practice (users substitute `a→@`, `s→$`, etc.).
@@ -62,19 +63,20 @@ Key points applied as defaults:
 
 ### ANSSI (Agence nationale de la sécurité des systèmes d'information)
 
-https://cyber.gouv.fr/publications/recommandations-relatives-lauthentification-multifacteur-et-aux-mots-de-passe
+<https://cyber.gouv.fr/publications/recommandations-relatives-lauthentification-multifacteur-et-aux-mots-de-passe>
 
 ANSSI uses a tiered model based on entropy and authentication context:
 
 | Tier | Min. length | Min. character types |
-|---|---|---|
-| 1 | 12 | 4 |
-| 2 | 14 | 3 |
-| 3 | 16 | 2 |
-| 4 | 20 | 1 |
+| ---- | ----------- | -------------------- |
+| 1    | 12          | 4                    |
+| 2    | 14          | 3                    |
+| 3    | 16          | 2                    |
+| 4    | 20          | 1                    |
 
 For privileged accounts (administrators), ANSSI requires MFA in addition to
 a strong password. Map this to:
+
 - Admin group policy: `min_length = 16`, at least 2 character-type requirements,
   and `require_2fa = true`.
 
@@ -101,9 +103,9 @@ default policy cannot be deleted.
 
 ### Recommended setup for most deployments
 
-| Group | Policy |
-|---|---|
-| Members | Default policy — NCSC profile (12 chars, blocklist, 10 attempts, no expiry) |
+| Group          | Policy                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------- |
+| Members        | Default policy — NCSC profile (12 chars, blocklist, 10 attempts, no expiry)                             |
 | Administrators | Admin policy — ANSSI tier 3 (16 chars, uppercase + digits, blocklist, 5 attempts, `require_2fa = true`) |
 
 ---
@@ -121,7 +123,7 @@ Place a plain-text file at `storage/app/private/blocklist.txt` (one password
 per line, case-insensitive). The file is read on every validation call; no
 cache clears are needed after updating it.
 
-```
+```text
 firefighter2024
 openbrigade
 monpompier

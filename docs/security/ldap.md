@@ -79,7 +79,7 @@ second bind as the end user.
 The `LDAP_USER_FILTER` must match exactly one entry per login. The default
 filter tries both `uid` and `mail` attributes:
 
-```
+```ldap
 (&(objectClass=person)(|(uid={login})(mail={login})))
 ```
 
@@ -118,11 +118,11 @@ If the button is disabled, `LDAP_ENABLED` is false. The button triggers
 Production deployments **must** use TLS or STARTTLS. LDAP over plain TCP
 exposes passwords in transit.
 
-| Option | Env | Notes |
-|---|---|---|
-| LDAPS | `LDAP_TLS=true`, `LDAP_PORT=636` | Wraps the entire connection in TLS. Recommended. |
+| Option   | Env                                   | Notes                                            |
+| -------- | ------------------------------------- | ------------------------------------------------ |
+| LDAPS    | `LDAP_TLS=true`, `LDAP_PORT=636`      | Wraps the entire connection in TLS. Recommended. |
 | STARTTLS | `LDAP_STARTTLS=true`, `LDAP_PORT=389` | Upgrades after connection. Check server support. |
-| None | (default) | Suitable only for local dev / localhost. |
+| None     | (default)                             | Suitable only for local dev / localhost.         |
 
 ---
 
