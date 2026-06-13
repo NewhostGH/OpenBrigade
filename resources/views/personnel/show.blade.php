@@ -705,13 +705,19 @@
                 <div class="ob-widget-card mb-3">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title"><i class="fas fa-shield-alt"></i> Droits d'accès</div>
-                        @if (auth()->user()->hasPermission(9))
-                            <div class="ob-widget-card-actions">
+                        <div class="ob-widget-card-actions d-flex gap-2">
+                            @if (auth()->user()->hasPermission(9) || auth()->user()->hasPermission(25))
+                                <a href="{{ route('personnel.send-credentials.show', $personnel->P_ID) }}"
+                                   class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-key me-1"></i>Identifiants
+                                </a>
+                            @endif
+                            @if (auth()->user()->hasPermission(9))
                                 <a href="{{ route('personnel.edit', $personnel->P_ID) }}" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-pen me-1"></i>Gérer
                                 </a>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     </div>
                     <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">

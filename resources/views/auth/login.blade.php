@@ -100,13 +100,14 @@
                     <div class="mb-3">
                         <div class="ob-login-brand-title">Mot de passe oublié ?</div>
                         <p class="ob-login-brand-sub mt-1 mb-0">
-                            Contactez votre administrateur pour réinitialiser votre mot de passe,
-                            {{-- TODO: Migrate code --}}
-                            ou utilisez la page <a href="{{ url('/legacy/change_password.php') }}">Changer mon mot de passe</a>
-                            si vous êtes déjà connecté.
+                            Utilisez le formulaire de récupération si votre adresse e-mail est enregistrée,
+                            ou contactez votre administrateur.
                         </p>
                     </div>
 
+                    <a href="{{ route('password.request') }}" class="btn btn-primary btn-sm mt-2 me-2">
+                        <i class="fas fa-envelope me-1"></i> Récupérer mon mot de passe
+                    </a>
                     <button type="button" id="showSignin" class="btn btn-secondary btn-sm mt-2">
                         <i class="fas fa-arrow-left me-1"></i> Retour
                     </button>
