@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Vehicle;
 use App\Services\FeatureService;
 use App\Services\SectionScopeService;
+use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +16,25 @@ use Illuminate\View\View;
 class VehicleController extends Controller
 {
     public function index(Request $request): View
+    {
+        $search = trim((string) $request->string('q'));
+        $filtSect = (int) $request->integer('section', 0);
+        $status = (string) $request->string('status', 'all');
+
+        $items = $this->buildFilteredQuery($request)
+            ->orderBy('vehicule.V_INDICATIF')
+            ->paginate(30)
+            ->withQueryString();
+
+        return view('vehicle.index', compact('items', 'search', 'filtSect', 'status')
+            + ['columns' => $this->vehicleColumns()]);
+    }
+
+    /**
+     * Build the section-scoped, filtered vehicle query shared by the list and
+     * the exports. Ordering and pagination are applied by the caller.
+     */
+    private function buildFilteredQuery(Request $request): Builder
     {
         $search = trim((string) $request->string('q'));
         $filtSect = (int) $request->integer('section', 0);
@@ -52,10 +73,42 @@ class VehicleController extends Controller
             });
         }
 
-        $items = $query->orderBy('vehicule.V_INDICATIF')->paginate(30)->withQueryString();
+        return $query;
+    }
 
-        return view('vehicle.index', compact('items', 'search', 'filtSect', 'status')
-            + ['columns' => $this->vehicleColumns()]);
+    /**
+     * Stream the filtered vehicle list as an XLSX download. Honours the active
+     * section / status / search filters and the ?cols= visible-column selection.
+     */
+    public function exportXls(Request $request)
+    {
+        return $this->export($request, 'xlsx');
+    }
+
+    /**
+     * Stream the filtered vehicle list as a CSV download.
+     */
+    public function exportCsv(Request $request)
+    {
+        return $this->export($request, 'csv');
+    }
+
+    private function export(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // The 'indicatif' / 'immat' columns are alwaysVisible, so resolveColumns
+        // skips them — prepend them explicitly to keep the export self-describing.
+        $columns = $service->resolveColumns($this->vehicleColumns(), $request, [
+            ['Indicatif',       fn ($v) => $v->V_INDICATIF ?? ''],
+            ['Immatriculation', fn ($v) => $v->V_IMMATRICULATION ?? ''],
+        ]);
+
+        $items = $this->buildFilteredQuery($request)->orderBy('vehicule.V_INDICATIF')->get();
+        $filename = 'Vehicules_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Véhicules', 'freezeHeader' => true]);
     }
 
     private function vehicleColumns(): array

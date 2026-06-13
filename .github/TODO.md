@@ -126,7 +126,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 
 - [x] Vehicle list, detail, CRUD, type management
 - [ ] Vehicle assignment to events
-- [ ] Vehicle exports (XLS)
+- [x] Vehicle exports (XLS / CSV) — `TableExportService`, section/status/search-aware, `?cols=` selection
 
 ### Inventaire — Equipment & Consumables (MAT / CONSO)
 

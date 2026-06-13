@@ -9,7 +9,9 @@
         ]" />
 
     <x-ob-toolbar title="Véhicules" :total="$items->total()" filter-action="{{ route('vehicle.index') }}"
-        filter-id="filterForm" filter-cols="2fr 1fr 1fr" :columns="$columns" table-id="vehiculeTable">
+        filter-id="filterForm" filter-cols="2fr 1fr 1fr" :columns="$columns" table-id="vehiculeTable"
+        :export-xls-url="route('vehicle.export.xls', request()->query())"
+        :export-csv-url="route('vehicle.export.csv', request()->query())">
 
         @if(auth()->user()->hasPermission(17))
             <a href="{{ route('vehicle.create') }}" class="btn btn-sm btn-primary">

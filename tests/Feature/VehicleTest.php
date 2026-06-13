@@ -75,6 +75,16 @@ test('unauthenticated users are redirected from /vehicles to login', function ()
     $this->get('/vehicles')->assertRedirect('/login');
 });
 
+test('unauthenticated users are redirected from the vehicle exports to login', function () {
+    $this->get('/vehicles/export/xls')->assertRedirect('/login');
+    $this->get('/vehicles/export/csv')->assertRedirect('/login');
+});
+
+test('the vehicle export routes are registered', function () {
+    expect(route('vehicle.export.xls'))->toContain('/vehicles/export/xls');
+    expect(route('vehicle.export.csv'))->toContain('/vehicles/export/csv');
+});
+
 // ── Legacy bridge redirects ──────────────────────────────────────────────────
 
 test('legacy vehicule.php redirects to vehicle.index', function () {
