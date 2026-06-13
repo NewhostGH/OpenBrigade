@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <th>Complexité</th>
                     <th>Expiration</th>
                     <th>Tentatives</th>
+                    <th>2FA</th>
                     <th>Groupes</th>
                     <th></th>
                 </tr>
@@ -105,6 +106,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 </td>
                 <td style="vertical-align:middle;font-size:var(--font-size-sm);">
                     {{ $pol->max_attempts > 0 ? $pol->max_attempts : '∞' }}
+                </td>
+                <td style="vertical-align:middle;font-size:var(--font-size-sm);">
+                    @if ($pol->require_2fa)
+                        <i class="fas fa-check text-success"></i>
+                    @else
+                        <span class="text-muted">—</span>
+                    @endif
                 </td>
                 <td style="vertical-align:middle;font-size:var(--font-size-sm);">
                     {{ $pol->groups_count > 0 ? $pol->groups_count : '—' }}

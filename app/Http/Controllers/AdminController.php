@@ -268,6 +268,7 @@ class AdminController extends Controller
             'require_digits' => ['sometimes', 'boolean'],
             'require_special' => ['sometimes', 'boolean'],
             'blocklist_check' => ['sometimes', 'boolean'],
+            'require_2fa' => ['sometimes', 'boolean'],
             'is_default' => ['sometimes', 'boolean'],
         ]);
 
@@ -276,6 +277,7 @@ class AdminController extends Controller
         $validated['require_digits'] = $request->boolean('require_digits');
         $validated['require_special'] = $request->boolean('require_special');
         $validated['blocklist_check'] = $request->boolean('blocklist_check');
+        $validated['require_2fa'] = $request->boolean('require_2fa');
         $validated['is_default'] = $request->boolean('is_default');
 
         if ($validated['is_default']) {
@@ -311,6 +313,7 @@ class AdminController extends Controller
             'require_digits' => ['sometimes', 'boolean'],
             'require_special' => ['sometimes', 'boolean'],
             'blocklist_check' => ['sometimes', 'boolean'],
+            'require_2fa' => ['sometimes', 'boolean'],
             'is_default' => ['sometimes', 'boolean'],
         ]);
 
@@ -319,6 +322,7 @@ class AdminController extends Controller
         $validated['require_digits'] = $request->boolean('require_digits');
         $validated['require_special'] = $request->boolean('require_special');
         $validated['blocklist_check'] = $request->boolean('blocklist_check');
+        $validated['require_2fa'] = $request->boolean('require_2fa');
         $validated['is_default'] = $request->boolean('is_default');
 
         if ($validated['is_default']) {

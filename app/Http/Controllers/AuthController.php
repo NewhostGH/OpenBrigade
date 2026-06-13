@@ -43,6 +43,15 @@ class AuthController extends Controller
             (bool) ($validated['remember'] ?? false)
         );
 
+        if ($ok === 'totp_required') {
+            return redirect()->route('totp.challenge');
+        }
+
+        if ($ok === 'totp_setup_required') {
+            return redirect()->route('totp.setup')
+                ->with('warning', __('Votre groupe requiert l\'authentification à deux facteurs. Veuillez configurer votre application TOTP.'));
+        }
+
         if (! $ok) {
             return back()
                 ->withErrors(['login' => __('Identifiant ou mot de passe incorrect.')])

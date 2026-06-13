@@ -179,6 +179,7 @@ class PasswordPolicyService implements ServiceInterface
                     'expiry_days' => 0,
                     'max_attempts' => 10,
                     'blocklist_check' => true,
+                    'require_2fa' => false,
                 ];
             }
         }

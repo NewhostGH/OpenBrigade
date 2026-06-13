@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $expiry_days
  * @property int $max_attempts
  * @property bool $blocklist_check
+ * @property bool $require_2fa
  * @property bool $is_default
  */
 class ObPasswordPolicy extends Model
@@ -41,6 +42,7 @@ class ObPasswordPolicy extends Model
         'expiry_days',
         'max_attempts',
         'blocklist_check',
+        'require_2fa',
         'is_default',
     ];
 
@@ -53,6 +55,7 @@ class ObPasswordPolicy extends Model
         'expiry_days' => 'integer',
         'max_attempts' => 'integer',
         'blocklist_check' => 'boolean',
+        'require_2fa' => 'boolean',
         'is_default' => 'boolean',
     ];
 
@@ -61,7 +64,7 @@ class ObPasswordPolicy extends Model
         return $this->hasMany(ObGroup::class, 'password_policy_id');
     }
 
-    /** @return array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool} */
+    /** @return array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool,require_2fa:bool} */
     public function toPolicy(): array
     {
         return [
@@ -73,6 +76,7 @@ class ObPasswordPolicy extends Model
             'expiry_days' => $this->expiry_days,
             'max_attempts' => $this->max_attempts,
             'blocklist_check' => $this->blocklist_check,
+            'require_2fa' => $this->require_2fa,
         ];
     }
 }

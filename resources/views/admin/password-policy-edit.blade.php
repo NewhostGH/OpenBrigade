@@ -144,6 +144,25 @@
 
                 <hr>
 
+                {{-- Require 2FA --}}
+                <h6 class="text-secondary mb-2"><i class="fas fa-mobile-alt me-1"></i> Double authentification</h6>
+
+                <div class="form-check mb-4">
+                    <input type="checkbox" id="require_2fa" name="require_2fa" value="1"
+                           class="form-check-input"
+                           {{ old('require_2fa', $policy?->require_2fa ?? false) ? 'checked' : '' }}>
+                    <label for="require_2fa" class="form-check-label fw-semibold">
+                        Exiger l'authentification à deux facteurs (TOTP)
+                    </label>
+                    <div class="form-text ms-0">
+                        Les utilisateurs dont le groupe applique cette politique seront redirigés vers
+                        la configuration TOTP à la prochaine connexion s'ils ne l'ont pas encore activée.
+                        Recommandé pour les groupes à privilèges élevés (NCSC / ANSSI).
+                    </div>
+                </div>
+
+                <hr>
+
                 {{-- Default flag --}}
                 <div class="form-check mb-4">
                     <input type="checkbox" id="is_default" name="is_default" value="1"

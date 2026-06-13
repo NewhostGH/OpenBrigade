@@ -33,6 +33,7 @@ use App\Http\Controllers\PluginController;
 use App\Http\Controllers\RemplacementController;
 use App\Http\Controllers\ShortcutController;
 use App\Http\Controllers\StatistiqueController;
+use App\Http\Controllers\TotpController;
 use App\Http\Controllers\VehiculeController;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +65,11 @@ Route::middleware('guest')->group(function () {
     // Legacy scripts sometimes point to login.php explicitly.
     Route::get('/index.php/login.php', fn () => redirect('/login'));
     Route::get('/login.php', fn () => redirect('/login'));
+
+    // TOTP challenge — shown after correct password when 2FA is enabled.
+    // Intentionally inside 'guest' so already-authenticated users are bounced.
+    Route::get('/totp/challenge', [TotpController::class, 'showChallenge'])->name('totp.challenge');
+    Route::post('/totp/challenge', [TotpController::class, 'verifyChallenge'])->name('totp.challenge.verify');
 
     // Self-service password reset (no auth required)
     Route::get('/password/reset', [PasswordResetController::class, 'showRequestForm'])->name('password.request');
@@ -309,6 +315,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/shortcuts/toggle', [ShortcutController::class, 'toggle'])->name('shortcuts.toggle');
 
     // Account — password change
+    // TOTP setup / management (requires full auth)
+    Route::get('/account/2fa', [TotpController::class, 'showSetup'])->name('totp.setup');
+    Route::post('/account/2fa/confirm', [TotpController::class, 'confirmSetup'])->name('totp.confirm');
+    Route::post('/account/2fa/codes', [TotpController::class, 'regenerateCodes'])->name('totp.codes.regenerate');
+    Route::delete('/account/2fa', [TotpController::class, 'disable'])->name('totp.disable');
+
     Route::get('/account/password', [AccountController::class, 'showChangePassword'])->name('account.password');
     Route::post('/account/password', [AccountController::class, 'changePassword'])->name('account.password.update');
 
