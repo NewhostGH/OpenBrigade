@@ -13,6 +13,11 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
+        // Views render the full layout, which pulls in @vite assets. CI does not
+        // build the frontend, so stub Vite to keep tests independent of a built
+        // manifest.
+        $this->withoutVite();
+
         // The navbar composer reads section/role context from the resolver on
         // every page render. Tests run without a database, so default to a
         // no-op resolver; individual tests can rebind it as needed.
