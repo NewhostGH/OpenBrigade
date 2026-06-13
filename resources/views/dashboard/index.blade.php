@@ -18,8 +18,7 @@
                 Votre mot de passe expire dans <strong>{{ $passwordExpiry['days'] }} jours</strong>
                 (le {{ $passwordExpiry['expiry'] }}).
             @endif
-            {{-- TODO: Migrate code — change_password.php has no native route yet --}}
-            <a href="{{ url('/legacy/change_password.php') }}" class="ms-2">Changer maintenant</a>
+            <a href="{{ route('account.password') }}" class="ms-2">Changer maintenant</a>
         </div>
     @endif
 

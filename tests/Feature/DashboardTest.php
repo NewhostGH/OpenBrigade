@@ -93,6 +93,7 @@ function dashboardPayloads(User $user): array
         'getMcEvents' => ['events' => []],
         'getSectionLinks' => ['links' => [], 'whatsappBase' => ''],
         'getAbout' => ['version' => '1.0.0', 'supportEmail' => '', 'canAdmin' => false],
+        'getWidgetLayout' => ['columns' => [1 => [], 2 => [], 3 => []], 'hidden' => []],
     ];
 }
 

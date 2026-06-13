@@ -18,8 +18,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use App\Services\Auth\AuthService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -47,6 +49,14 @@ class AuthController extends Controller
                 ->withInput($request->safe()->except('password'));
         }
 
+        // Redirect to change-password when the password is expired or was never set.
+        /** @var User|null $user */
+        $user = $request->user();
+        if ($user !== null && $this->isPasswordExpired($user)) {
+            return redirect()->route('account.password', ['expired' => 1])
+                ->with('warning', __('Votre mot de passe a expiré. Veuillez en choisir un nouveau.'));
+        }
+
         $intended = (string) $request->session()->pull('url.intended', '');
         if ($intended !== '') {
             // Collapse double index.php prefix produced by some legacy redirects.
@@ -68,6 +78,20 @@ class AuthController extends Controller
         }
 
         return redirect()->route('dashboard');
+    }
+
+    private function isPasswordExpired(User $user): bool
+    {
+        $expiry = $user->P_MDP_EXPIRY;
+        if ($expiry === null || $expiry === '') {
+            return false;
+        }
+
+        try {
+            return Carbon::parse($expiry)->startOfDay()->lte(now()->startOfDay());
+        } catch (\Exception) {
+            return false;
+        }
     }
 
     public function logout(): RedirectResponse

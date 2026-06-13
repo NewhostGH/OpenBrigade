@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BackupController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\MesDroitsController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ParametrageController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\PluginController;
@@ -62,6 +64,11 @@ Route::middleware('guest')->group(function () {
     // Legacy scripts sometimes point to login.php explicitly.
     Route::get('/index.php/login.php', fn () => redirect('/login'));
     Route::get('/login.php', fn () => redirect('/login'));
+
+    // Self-service password reset (no auth required)
+    Route::get('/password/reset', [PasswordResetController::class, 'showRequestForm'])->name('password.request');
+    Route::post('/password/reset', [PasswordResetController::class, 'sendResetToken'])->name('password.email');
+    Route::get('/password/reset/{token}', [PasswordResetController::class, 'confirmToken'])->name('password.reset');
 });
 
 Route::middleware('auth')->group(function () {
@@ -294,6 +301,24 @@ Route::middleware('auth')->group(function () {
         return redirect('/legacy/about.php');
     })->name('about');
     Route::post('/shortcuts/toggle', [ShortcutController::class, 'toggle'])->name('shortcuts.toggle');
+
+    // Account — password change
+    Route::get('/account/password', [AccountController::class, 'showChangePassword'])->name('account.password');
+    Route::post('/account/password', [AccountController::class, 'changePassword'])->name('account.password.update');
+
+    // Account — charter acceptance
+    Route::get('/account/charter', [AccountController::class, 'showCharter'])->name('account.charter');
+    Route::post('/account/charter/accept', [AccountController::class, 'acceptCharter'])->name('account.charter.accept');
+    Route::post('/account/charter/reject', [AccountController::class, 'rejectCharter'])->name('account.charter.reject');
+    Route::post('/account/charter/reset', [AccountController::class, 'resetCharter'])->name('account.charter.reset');
+
+    // Connected users (permission 20 = Audit)
+    Route::get('/admin/connected-users', [AccountController::class, 'connectedUsers'])->name('account.connected-users')->middleware('permission:20');
+
+    // Send credentials — admin action, nested under personnel
+    Route::get('personnel/{personnel}/send-credentials', [AccountController::class, 'showSendCredentials'])->name('personnel.send-credentials.show');
+    Route::post('personnel/{personnel}/send-credentials', [AccountController::class, 'sendCredentials'])->name('personnel.send-credentials');
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::match(['GET', 'POST'], '/index.php/logout', [AuthController::class, 'logout'])->name('logout.compat');
 

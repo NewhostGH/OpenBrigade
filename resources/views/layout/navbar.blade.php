@@ -224,8 +224,7 @@
                         </li>
                         <li>
                             <a class="dropdown-item dropdown-item-profil"
-                                {{-- TODO: Migrate code — change_password.php has no native route yet --}}
-                                href="{{ url('/legacy/change_password.php') }}">
+                                href="{{ route('account.password') }}">
                                 <i class="fas fa-key fa-fw ob-nav-item-icon"></i> Mot de passe
                             </a>
                         </li>
