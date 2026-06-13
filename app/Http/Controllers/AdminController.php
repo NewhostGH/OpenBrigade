@@ -119,7 +119,7 @@ class AdminController extends Controller
             12 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             33 => ['type' => 'todo',     'note' => 'Les données sensibles ne sont pas encore gérées dans Laravel.'],
             42 => ['type' => 'todo',     'note' => 'Les ACLs des fichiers ne sont pas encore gérées dans Laravel.'],
-            48 => ['type' => 'todo',     'note' => 'Les condition d\'utilisation ne sont pas encore implémentées dans Laravel.'],
+            48 => ['type' => 'obsolete', 'note' => 'La charte d\'utilisation est gérée nativement via Administration > Charte.'],
             16 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
             17 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
             34 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],

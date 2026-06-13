@@ -50,12 +50,7 @@ class RequireCharterAcceptance
             return $next($request);
         }
 
-        $accepted = DB::table('pompier')
-            ->where('P_ID', $user->P_ID)
-            ->whereNotNull('P_ACCEPT_DATE')
-            ->exists();
-
-        if (! $accepted) {
+        if (! $this->userHasAccepted((int) $user->P_ID)) {
             return redirect()->route('account.charter');
         }
 
@@ -68,6 +63,25 @@ class RequireCharterAcceptance
             return (bool) DB::table('configuration')->where('NAME', 'charte_active')->value('VALUE');
         } catch (\Throwable) {
             return false;
+        }
+    }
+
+    private function userHasAccepted(int $userId): bool
+    {
+        try {
+            $updatedAt = DB::table('configuration')->where('NAME', 'charte_updated_at')->value('VALUE');
+
+            $query = DB::table('pompier')
+                ->where('P_ID', $userId)
+                ->whereNotNull('P_ACCEPT_DATE');
+
+            if ($updatedAt !== null) {
+                $query->where('P_ACCEPT_DATE', '>=', $updatedAt);
+            }
+
+            return $query->exists();
+        } catch (\Throwable) {
+            return true; // fail-open: let the request through on DB error
         }
     }
 }

@@ -312,6 +312,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/charter/reject', [AccountController::class, 'rejectCharter'])->name('account.charter.reject');
     Route::post('/account/charter/reset', [AccountController::class, 'resetCharter'])->name('account.charter.reset');
 
+    // Admin — charter editor (permission 14)
+    Route::get('/admin/charter', [AccountController::class, 'showEditCharter'])->name('admin.charter')->middleware('permission:14');
+    Route::post('/admin/charter', [AccountController::class, 'saveCharter'])->name('admin.charter.save')->middleware('permission:14');
+
     // Connected users (permission 20 = Audit)
     Route::get('/admin/connected-users', [AccountController::class, 'connectedUsers'])->name('account.connected-users')->middleware('permission:20');
 

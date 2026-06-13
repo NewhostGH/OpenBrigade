@@ -82,13 +82,59 @@ class AccountController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $row = DB::table('pompier')->where('P_ID', $user->P_ID)->first(['P_ACCEPT_DATE', 'P_ACCEPT_DATE2']);
+        $row = DB::table('pompier')->where('P_ID', $user->P_ID)->first(['P_ACCEPT_DATE']);
         $acceptDate = $row?->P_ACCEPT_DATE;
-        $canReset = $user->hasPermission(14);
+        $canEdit = $user->hasPermission(14);
         $charteMeta = $this->buildCharteMeta();
         $rgpdExists = $this->rgpdFileExists();
+        $charteText = $this->loadCharterText();
+        $updatedAt = $this->charterUpdatedAt();
 
-        return view('auth.charter', compact('acceptDate', 'canReset', 'charteMeta', 'rgpdExists'));
+        return view('auth.charter', compact('acceptDate', 'canEdit', 'charteMeta', 'rgpdExists', 'charteText', 'updatedAt'));
+    }
+
+    public function showEditCharter(Request $request): View
+    {
+        /** @var User $user */
+        $user = $request->user();
+        abort_unless($user->hasPermission(14), 403);
+
+        $charteText = $this->loadCharterText() ?? '';
+        $updatedAt = $this->charterUpdatedAt();
+
+        return view('auth.edit-charter', compact('charteText', 'updatedAt'));
+    }
+
+    public function saveCharter(Request $request): RedirectResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+        abort_unless($user->hasPermission(14), 403);
+
+        $text = (string) $request->input('charte_text', '');
+        $forceReaccept = $request->boolean('force_reaccept');
+
+        $path = $this->charterTextPath();
+        if (! is_dir(dirname($path))) {
+            mkdir(dirname($path), 0755, true);
+        }
+        file_put_contents($path, $text);
+
+        if ($forceReaccept) {
+            DB::table('configuration')->updateOrInsert(
+                ['NAME' => 'charte_updated_at'],
+                ['VALUE' => now()->format('Y-m-d H:i:s'), 'HIDDEN' => 1, 'TAB' => 0, 'ORDERING' => 0],
+            );
+        }
+
+        $this->logHistory('CHARTE_EDIT', $user->P_ID, $user->P_ID);
+
+        $msg = __('Charte mise à jour.');
+        if ($forceReaccept) {
+            $msg .= ' '.__('Les utilisateurs devront réaccepter.');
+        }
+
+        return redirect()->route('admin.charter')->with('success', $msg);
     }
 
     public function acceptCharter(Request $request): RedirectResponse
@@ -195,6 +241,23 @@ class AccountController extends Controller
     private function charteActive(): bool
     {
         return (bool) DB::table('configuration')->where('NAME', 'charte_active')->value('VALUE');
+    }
+
+    private function charterUpdatedAt(): ?string
+    {
+        return DB::table('configuration')->where('NAME', 'charte_updated_at')->value('VALUE');
+    }
+
+    private function charterTextPath(): string
+    {
+        return storage_path('app/private/charte/charte.html');
+    }
+
+    private function loadCharterText(): ?string
+    {
+        $path = $this->charterTextPath();
+
+        return file_exists($path) ? (string) file_get_contents($path) : null;
     }
 
     private function logHistory(string $ltCode, int $actorId, int $whatId, string $complement = ''): void
