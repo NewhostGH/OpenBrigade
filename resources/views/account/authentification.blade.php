@@ -11,19 +11,6 @@
 
 <div class="mx-3 mt-3">
 
-    @if (session('warning'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-triangle me-1"></i> {{ session('warning') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check me-1"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
     <ul class="nav nav-tabs mb-0" role="tablist">
         <li class="nav-item">
             <a class="nav-link {{ $tab === 'password' ? 'active' : '' }}"
@@ -89,31 +76,18 @@
                             @error('new1')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            @php
-                                $hasComplexity = ! empty($policy['require_uppercase'])
-                                    || ! empty($policy['require_lowercase'])
-                                    || ! empty($policy['require_digits'])
-                                    || ! empty($policy['require_special']);
-                            @endphp
-                            @if ($policy['min_length'] > 0 || $hasComplexity)
-                                <div class="form-text">
-                                    @if ($policy['min_length'] > 0)
-                                        Minimum {{ $policy['min_length'] }} caractères.
-                                    @endif
-                                    @if (! empty($policy['require_uppercase']))
-                                        Au moins une majuscule.
-                                    @endif
-                                    @if (! empty($policy['require_lowercase']))
-                                        Au moins une minuscule.
-                                    @endif
-                                    @if (! empty($policy['require_digits']))
-                                        Au moins un chiffre.
-                                    @endif
-                                    @if (! empty($policy['require_special']))
-                                        Au moins un caractère spécial.
-                                    @endif
+
+                            {{-- Strength meter (populated by JS) --}}
+                            <div id="pw-meter" class="mt-2 d-none">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <div class="progress flex-grow-1" style="height:6px;">
+                                        <div id="pw-bar" class="progress-bar" role="progressbar"
+                                             style="width:0%;transition:width .2s,background-color .2s;"></div>
+                                    </div>
+                                    <small id="pw-label" class="text-muted" style="min-width:70px;font-size:var(--font-size-xs);"></small>
                                 </div>
-                            @endif
+                                <ul id="pw-criteria" class="list-unstyled mb-0" style="font-size:var(--font-size-xs);columns:2;gap:.5rem;"></ul>
+                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -326,5 +300,126 @@
     </div>
 
 </div>
+
+@push('scripts')
+@if ($tab === 'password')
+<script>
+(function () {
+    const policy = @json([
+        'minLength'        => $policy['min_length'],
+        'requireUppercase' => !empty($policy['require_uppercase']),
+        'requireLowercase' => !empty($policy['require_lowercase']),
+        'requireDigits'    => !empty($policy['require_digits']),
+        'requireSpecial'   => !empty($policy['require_special']),
+        'blocklist'        => !empty($policy['blocklist_check']),
+    ]);
+
+    const input   = document.getElementById('new1');
+    const meter   = document.getElementById('pw-meter');
+    const bar     = document.getElementById('pw-bar');
+    const label   = document.getElementById('pw-label');
+    const ulCrit  = document.getElementById('pw-criteria');
+
+    if (!input || !meter) return;
+
+    function isConsecutive(s) {
+        if (s.length < 5) return false;
+        const step = s.charCodeAt(1) - s.charCodeAt(0);
+        if (Math.abs(step) !== 1) return false;
+        for (let i = 2; i < s.length; i++) {
+            if (s.charCodeAt(i) - s.charCodeAt(i - 1) !== step) return false;
+        }
+        return true;
+    }
+
+    function buildCriteria(pw) {
+        const lower = pw.toLowerCase();
+        const items = [];
+
+        if (policy.minLength > 0) {
+            items.push({
+                label: `Au moins ${policy.minLength} caractère${policy.minLength > 1 ? 's' : ''}`,
+                pass: pw.length >= policy.minLength,
+            });
+        }
+        if (policy.requireUppercase) {
+            items.push({ label: 'Au moins une majuscule', pass: /[A-Z]/.test(pw) });
+        }
+        if (policy.requireLowercase) {
+            items.push({ label: 'Au moins une minuscule', pass: /[a-z]/.test(pw) });
+        }
+        if (policy.requireDigits) {
+            items.push({ label: 'Au moins un chiffre', pass: /[0-9]/.test(pw) });
+        }
+        if (policy.requireSpecial) {
+            items.push({ label: 'Au moins un caractère spécial', pass: /[\W_]/.test(pw) });
+        }
+        if (policy.blocklist) {
+            const trivial = /^(.)\1+$/.test(pw) || isConsecutive(lower);
+            items.push({ label: 'Pas de séquence triviale', pass: pw.length > 0 && !trivial });
+        }
+
+        return items;
+    }
+
+    const levels = [
+        null,
+        { label: 'Très faible', color: '#dc3545' },
+        { label: 'Faible',      color: '#fd7e14' },
+        { label: 'Moyen',       color: '#ffc107' },
+        { label: 'Fort',        color: '#198754' },
+    ];
+
+    function computeLevel(pw, criteria) {
+        if (pw.length === 0) return 0;
+        const required = criteria.length;
+        const passed   = criteria.filter(c => c.pass).length;
+        if (required === 0) return pw.length >= 12 ? 4 : pw.length >= 8 ? 3 : 2;
+        const ratio = passed / required;
+        // Extra bonus for length well beyond minimum
+        const longBonus = pw.length >= (policy.minLength || 12) + 8 ? 1 : 0;
+        if (ratio < 0.34) return 1;
+        if (ratio < 0.67) return 2;
+        if (ratio < 1.00) return 3;
+        return Math.min(4, 3 + longBonus);
+    }
+
+    function render(pw) {
+        const criteria = buildCriteria(pw);
+        const level    = computeLevel(pw, criteria);
+
+        if (pw.length === 0) {
+            meter.classList.add('d-none');
+            return;
+        }
+        meter.classList.remove('d-none');
+
+        // Bar
+        const pct = level * 25;
+        bar.style.width = pct + '%';
+        bar.style.backgroundColor = levels[level]?.color ?? '#ccc';
+
+        // Label
+        label.textContent = levels[level]?.label ?? '';
+        label.style.color = levels[level]?.color ?? 'inherit';
+
+        // Criteria list
+        ulCrit.innerHTML = criteria.map(c => `
+            <li class="d-flex align-items-center gap-1 mb-1">
+                <i class="fas ${c.pass ? 'fa-check-circle text-success' : 'fa-times-circle text-danger'}"
+                   style="font-size:11px;width:12px;"></i>
+                <span style="color:${c.pass ? 'inherit' : 'var(--bs-danger)'};">${c.label}</span>
+            </li>
+        `).join('');
+    }
+
+    input.addEventListener('input', () => render(input.value));
+
+    // Render on page load if value is pre-filled (e.g. browser autofill)
+    if (input.value) render(input.value);
+})();
+</script>
+@endif
+@endpush
 
 @endsection

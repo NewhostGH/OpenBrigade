@@ -11,6 +11,8 @@ namespace App\Services;
 
 use App\Models\ObPasswordPolicy;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 
 /**
  * Password policy rules and helpers.
@@ -76,13 +78,13 @@ class PasswordPolicyService implements ServiceInterface
 
     /**
      * Validate a candidate password against a policy.
-     * Pass the result of policyForUser() / policy() as $policy.
-     * Omit $policy to use the global default.
      *
      * @param  array<string,mixed>|null  $policy
+     * @param  bool  $checkHibp  When true, query Have I Been Pwned for breach exposure.
+     *                           Pass false for login-time checks to avoid latency.
      * @return string|null Error message, or null when valid.
      */
-    public function validate(string $password, string $matricule = '', ?array $policy = null): ?string
+    public function validate(string $password, string $matricule = '', ?array $policy = null, bool $checkHibp = true): ?string
     {
         $policy ??= $this->defaultPolicy();
 
@@ -118,8 +120,14 @@ class PasswordPolicyService implements ServiceInterface
             return __('Le mot de passe doit contenir au moins un caractère spécial (!, @, #, $, %…).');
         }
 
-        if (! empty($policy['blocklist_check']) && $this->isBlocklisted($password)) {
-            return __('Ce mot de passe est trop commun. Choisissez-en un plus original.');
+        if (! empty($policy['blocklist_check'])) {
+            if ($this->isTrivialPattern($password)) {
+                return __('Ce mot de passe est trop prévisible (séquence répétée ou consécutive). Choisissez-en un plus original.');
+            }
+
+            if ($checkHibp && $this->isCompromised($password)) {
+                return __('Ce mot de passe est apparu dans une fuite de données connues. Choisissez-en un autre.');
+            }
         }
 
         return null;
@@ -188,48 +196,43 @@ class PasswordPolicyService implements ServiceInterface
     }
 
     /**
-     * Returns true if the password is on the common-passwords blocklist
-     * or matches a trivially guessable pattern.
-     *
-     * Patterns checked:
-     *  - All same character (aaaaaaaa, 11111111)
-     *  - Consecutive ascending or descending characters (abcdefg, zyxwvu, 1234567, 7654321)
-     *  - Embedded top-100 common-password list
-     *  - Custom blocklist at storage/app/private/blocklist.txt (one entry per line)
+     * Returns true when the password matches a trivially guessable pattern:
+     *  - All same character (aaaaaaa, 1111111)
+     *  - Consecutive ascending or descending characters (abcdefg, zyxwvu,
+     *    123456, 7654321) with at least 5 characters
      */
-    private function isBlocklisted(string $password): bool
+    private function isTrivialPattern(string $password): bool
     {
-        $lower = strtolower($password);
-
         // All same character.
         if (preg_match('/^(.)\1+$/u', $password)) {
             return true;
         }
 
-        // Consecutive ascending or descending single-char sequence (≥ 5 chars).
-        if (mb_strlen($password) >= 5 && $this->isConsecutiveSequence($lower)) {
+        // Consecutive sequence.
+        if (mb_strlen($password) >= 5 && $this->isConsecutiveSequence(strtolower($password))) {
             return true;
-        }
-
-        // Embedded top-100 list.
-        if (in_array($lower, self::COMMON_PASSWORDS, true)) {
-            return true;
-        }
-
-        // Custom blocklist file.
-        $path = storage_path('app/private/blocklist.txt');
-        if (file_exists($path)) {
-            $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            if ($lines !== false) {
-                foreach ($lines as $line) {
-                    if (strtolower(trim($line)) === $lower) {
-                        return true;
-                    }
-                }
-            }
         }
 
         return false;
+    }
+
+    /**
+     * Returns true when the password has appeared in a known data breach
+     * (checked via the Have I Been Pwned k-anonymity API).
+     * Fails open — allows the password when the API is unreachable.
+     */
+    private function isCompromised(string $password): bool
+    {
+        try {
+            $validator = Validator::make(
+                ['p' => $password],
+                ['p' => PasswordRule::min(1)->uncompromised()]
+            );
+
+            return $validator->fails();
+        } catch (\Throwable) {
+            return false; // Fail open: API unavailable → let the password through.
+        }
     }
 
     /**
@@ -256,23 +259,4 @@ class PasswordPolicyService implements ServiceInterface
 
         return true;
     }
-
-    /** Top common / easily-guessed passwords (NCSC / HIBP-aligned subset). */
-    private const COMMON_PASSWORDS = [
-        'password', 'password1', 'password123', '123456', '12345678', '123456789',
-        '1234567890', '12345', '1234', '111111', '000000', 'abc123', 'qwerty',
-        'qwerty123', 'azerty', 'azerty123', '1q2w3e', '1q2w3e4r', 'iloveyou',
-        'letmein', 'monkey', 'dragon', 'master', 'welcome', 'login', 'admin',
-        'admin123', 'root', 'pass', 'test', 'guest', 'changeme', 'secret',
-        'sunshine', 'princess', 'batman', 'superman', 'football', 'baseball',
-        'soccer', 'hockey', 'hunter', 'shadow', 'mustang', 'michael', 'jessica',
-        'daniel', 'thomas', 'george', 'jordan', 'harley', 'ranger', 'dakota',
-        'trustno1', 'access', 'matrix', 'starwars', 'firewall', 'internet',
-        'computer', 'corvette', 'thunder', 'cookie', 'flower', 'hello', 'love',
-        'pass123', 'pass1234', '123qwe', 'qazwsx', 'zxcvbn', 'zxcvbnm',
-        'asdfgh', 'asdfghjkl', 'qwertyuiop', '1111', '2222', '3333', '4444',
-        '5555', '6666', '7777', '8888', '9999', '0000', '11111', '22222',
-        '112233', '123123', '121212', '654321', '666666', '987654321',
-        'abcd1234', 'abc1234', 'pass@123', 'motdepasse', 'pompier', 'brigade',
-    ];
 }

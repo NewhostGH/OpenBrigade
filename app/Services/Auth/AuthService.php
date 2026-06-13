@@ -74,7 +74,7 @@ class AuthService implements ServiceInterface
             // If the current password violates the resolved policy (e.g. admin
             // tightened rules since the password was set), force immediate expiry
             // so the user is redirected to change it after login.
-            $policyError = $policyService->validate($plainPassword, (string) ($user->P_CODE ?? ''), $policy);
+            $policyError = $policyService->validate($plainPassword, (string) ($user->P_CODE ?? ''), $policy, false);
             if ($policyError !== null) {
                 $currentExpiry = $user->P_MDP_EXPIRY;
                 $alreadyExpired = $currentExpiry !== null && $currentExpiry !== ''
