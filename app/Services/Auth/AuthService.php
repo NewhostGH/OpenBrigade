@@ -57,9 +57,9 @@ class AuthService implements ServiceInterface
             return false;
         }
 
-        $passwordOk = app(LdapAuthService::class)->isEnabled()
-            ? app(LdapAuthService::class)->authenticate($login, $plainPassword, $user)
-            : $this->validateLegacyPassword($plainPassword, (string) $user->P_MDP);
+        $ldap = app(LdapAuthService::class);
+        $passwordOk = $ldap->isEnabled() && $ldap->authenticate($login, $plainPassword, $user)
+            ?: $this->validateLegacyPassword($plainPassword, (string) $user->P_MDP);
 
         if (! $passwordOk) {
             $this->incrementPasswordFailure($user);
