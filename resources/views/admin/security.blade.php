@@ -19,26 +19,43 @@ document.addEventListener('DOMContentLoaded', function () {
     ['label' => 'Sécurité'],
 ]"/>
 
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
-
 <div class="mx-3 mt-3">
-<div class="row g-3">
 
-{{-- ── Mot de passe ─────────────────────────────────────────────────────── --}}
-<div class="col-12">
-<div class="ob-widget-card">
-    <div class="ob-widget-card-header">
-        <div class="ob-widget-card-title">
-            <i class="fas fa-key me-1"></i> Politique de mot de passe
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link {{ $tab === 'passwords' ? 'active' : '' }}"
+               href="{{ route('admin.security', ['tab' => 'passwords']) }}">
+                <i class="fas fa-key me-1"></i> Mot de passe
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ $tab === 'charter' ? 'active' : '' }}"
+               href="{{ route('admin.security', ['tab' => 'charter']) }}">
+                <i class="fas fa-file-contract me-1"></i> Charte
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ $tab === 'sessions' ? 'active' : '' }}"
+               href="{{ route('admin.security', ['tab' => 'sessions']) }}">
+                <i class="fas fa-clock me-1"></i> Sessions & audit
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ $tab === 'auth' ? 'active' : '' }}"
+               href="{{ route('admin.security', ['tab' => 'auth']) }}">
+                <i class="fas fa-id-badge me-1"></i> Authentification
+            </a>
+        </li>
+    </ul>
+
+    <div class="border border-top-0 rounded-bottom bg-white">
+
+        {{-- ── Mot de passe ──────────────────────────────────────────────────── --}}
+        @if ($tab === 'passwords')
+        <div class="ob-hab-toolbar px-3 pt-2 pb-0">
+            <span class="fw-semibold"><i class="fas fa-key me-1 text-secondary"></i> Politique de mot de passe</span>
+            <span class="text-muted" style="font-size:var(--font-size-xs);">Complexité, longueur minimale et expiration. Le verrouillage de compte est en cours d'implémentation.</span>
         </div>
-        <span class="ob-badge ob-badge-int">Actif</span>
-    </div>
-    <div class="ob-widget-card-body p-0">
         <table class="table table-sm table-hover mb-0">
             <tbody>
 
@@ -48,13 +65,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td class="ps-3" style="width:40%;vertical-align:middle;font-size:var(--font-size-sm);">
                         Niveau de complexité requis
                         <div class="text-muted" style="font-size:var(--font-size-xs);">
-                            Chiffres + lettres (1), + caractère spécial (2)
+                            0 = aucune, 1 = chiffres + lettres, 2 = + caractère spécial
                         </div>
                     </td>
                     <td style="vertical-align:middle;">
                         <form method="POST" action="{{ route('admin.settings.save', 15) }}" class="d-flex align-items-center gap-2">
                             @csrf @method('PATCH')
                             <input type="hidden" name="_back" value="security">
+                            <input type="hidden" name="_tab" value="passwords">
                             <select name="VALUE" class="form-select form-select-sm" style="max-width:220px;"
                                     onchange="this.form.submit()">
                                 <option value="0" {{ ($s?->VALUE ?? '0') == '0' ? 'selected' : '' }}>0 — Aucune</option>
@@ -75,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <form method="POST" action="{{ route('admin.settings.save', 16) }}" class="d-flex align-items-center gap-2">
                             @csrf @method('PATCH')
                             <input type="hidden" name="_back" value="security">
+                            <input type="hidden" name="_tab" value="passwords">
                             <input type="number" name="VALUE" min="0" max="64"
                                    value="{{ $s?->VALUE ?? '0' }}"
                                    class="form-control form-control-sm" style="max-width:100px;">
@@ -89,12 +108,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 @php $s = $settings->get(70); @endphp
                 <tr>
                     <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
-                        Expiration des mots de passe <span class="text-muted">(jours, 0 = désactivé)</span>
+                        Expiration <span class="text-muted">(jours, 0 = désactivé)</span>
                     </td>
                     <td style="vertical-align:middle;">
                         <form method="POST" action="{{ route('admin.settings.save', 70) }}" class="d-flex align-items-center gap-2">
                             @csrf @method('PATCH')
                             <input type="hidden" name="_back" value="security">
+                            <input type="hidden" name="_tab" value="passwords">
                             <input type="number" name="VALUE" min="0" max="3650"
                                    value="{{ $s?->VALUE ?? '0' }}"
                                    class="form-control form-control-sm" style="max-width:100px;">
@@ -109,9 +129,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 @php $s = $settings->get(17); @endphp
                 <tr class="text-muted">
                     <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
-                        Blocage du compte après X tentatives
+                        Blocage après X tentatives
                         <span class="ms-1 ob-badge ob-badge-ext" style="font-size:10px;">Non implémenté</span>
-                        <div style="font-size:var(--font-size-xs);">Le verrouillage automatique n'est pas encore actif.</div>
+                        <div style="font-size:var(--font-size-xs);">
+                            Le verrouillage automatique n'est pas encore actif.
+                        </div>
                     </td>
                     <td style="vertical-align:middle;">
                         <input type="number" value="{{ $s?->VALUE ?? '5' }}"
@@ -121,20 +143,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             </tbody>
         </table>
-    </div>
-</div>
-</div>
+        @endif
 
-{{-- ── Charte d'utilisation ─────────────────────────────────────────────── --}}
-<div class="col-12">
-<div class="ob-widget-card">
-    <div class="ob-widget-card-header">
-        <div class="ob-widget-card-title">
-            <i class="fas fa-file-contract me-1"></i> Charte d'utilisation
+        {{-- ── Charte ────────────────────────────────────────────────────────── --}}
+        @if ($tab === 'charter')
+        <div class="ob-hab-toolbar px-3 pt-2 pb-0">
+            <span class="fw-semibold"><i class="fas fa-file-contract me-1 text-secondary"></i> Charte d'utilisation</span>
+            <span class="text-muted" style="font-size:var(--font-size-xs);">Activation, personnalisation du texte et gestion des acceptances utilisateurs.</span>
         </div>
-        <span class="ob-badge ob-badge-int">Actif</span>
-    </div>
-    <div class="ob-widget-card-body p-0">
         <table class="table table-sm table-hover mb-0">
             <tbody>
 
@@ -151,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <form method="POST" action="{{ route('admin.settings.save', 48) }}">
                             @csrf @method('PATCH')
                             <input type="hidden" name="_back" value="security">
+                            <input type="hidden" name="_tab" value="charter">
                             <input type="hidden" name="toggle" value="1">
                             <div class="form-check form-switch">
                                 <input class="form-check-input ob-sec-toggle" type="checkbox"
@@ -161,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </td>
                 </tr>
 
-                {{-- Charter text editor link --}}
+                {{-- Charter text --}}
                 <tr>
                     <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
                         Texte de la charte
@@ -173,13 +190,15 @@ document.addEventListener('DOMContentLoaded', function () {
                             @endif
                         </div>
                     </td>
-                    <td style="vertical-align:middle;" class="d-flex gap-2 flex-wrap">
-                        <a href="{{ route('admin.security.charter') }}" class="btn btn-sm btn-outline-secondary">
-                            <i class="fas fa-edit me-1"></i> Modifier le texte
-                        </a>
-                        <a href="{{ route('account.charter') }}" class="btn btn-sm btn-outline-secondary" target="_blank">
-                            <i class="fas fa-eye me-1"></i> Aperçu
-                        </a>
+                    <td style="vertical-align:middle;">
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="{{ route('admin.security.charter') }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-edit me-1"></i> Modifier
+                            </a>
+                            <a href="{{ route('account.charter') }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                <i class="fas fa-eye me-1"></i> Aperçu
+                            </a>
+                        </div>
                     </td>
                 </tr>
 
@@ -196,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             @csrf
                             <button type="submit" class="btn btn-sm btn-outline-warning"
                                 onclick="return confirm('Forcer tous les utilisateurs à réaccepter la charte ?')">
-                                <i class="fas fa-redo me-1"></i> Forcer la réacceptation
+                                <i class="fas fa-redo me-1"></i> Forcer
                             </button>
                         </form>
                     </td>
@@ -204,19 +223,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             </tbody>
         </table>
-    </div>
-</div>
-</div>
+        @endif
 
-{{-- ── Sessions et audit ────────────────────────────────────────────────── --}}
-<div class="col-12">
-<div class="ob-widget-card">
-    <div class="ob-widget-card-header">
-        <div class="ob-widget-card-title">
-            <i class="fas fa-clock me-1"></i> Sessions et audit
+        {{-- ── Sessions & audit ─────────────────────────────────────────────── --}}
+        @if ($tab === 'sessions')
+        <div class="ob-hab-toolbar px-3 pt-2 pb-0">
+            <span class="fw-semibold"><i class="fas fa-clock me-1 text-secondary"></i> Sessions & audit</span>
+            <span class="text-muted" style="font-size:var(--font-size-xs);">Durée des sessions, conservation des connexions et des journaux, données confidentielles.</span>
         </div>
-    </div>
-    <div class="ob-widget-card-body p-0">
         <table class="table table-sm table-hover mb-0">
             <tbody>
 
@@ -247,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <form method="POST" action="{{ route('admin.settings.save', 34) }}" class="d-flex align-items-center gap-2">
                             @csrf @method('PATCH')
                             <input type="hidden" name="_back" value="security">
+                            <input type="hidden" name="_tab" value="sessions">
                             <input type="number" name="VALUE" min="1" max="365"
                                    value="{{ $s?->VALUE ?? '100' }}"
                                    class="form-control form-control-sm" style="max-width:100px;">
@@ -271,63 +286,115 @@ document.addEventListener('DOMContentLoaded', function () {
                     </td>
                 </tr>
 
+                {{-- Log actions (ID 25) — WIP --}}
+                @php $s = $settings->get(25); @endphp
+                <tr class="text-muted">
+                    <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
+                        Journalisation des actions
+                        <span class="ms-1 ob-badge ob-badge-ext" style="font-size:10px;">Non implémenté</span>
+                        <div style="font-size:var(--font-size-xs);">Enregistrement détaillé des actions des utilisateurs.</div>
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox"
+                                   {{ ($s?->VALUE ?? '0') == '1' ? 'checked' : '' }} disabled>
+                        </div>
+                    </td>
+                </tr>
+
+                {{-- Confidential data (ID 33) — WIP --}}
+                @php $s = $settings->get(33); @endphp
+                <tr class="text-muted">
+                    <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
+                        Données confidentielles (dossiers médicaux)
+                        <span class="ms-1 ob-badge ob-badge-ext" style="font-size:10px;">Non implémenté</span>
+                        <div style="font-size:var(--font-size-xs);">
+                            Autoriser l'enregistrement de données médicales sensibles. Implique le respect des obligations RGPD.
+                        </div>
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox"
+                                   {{ ($s?->VALUE ?? '0') == '1' ? 'checked' : '' }} disabled>
+                        </div>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
-    </div>
-</div>
-</div>
+        @endif
 
-{{-- ── Authentification renforcée — WIP ───────────────────────────────── --}}
-<div class="col-12">
-<div class="ob-widget-card">
-    <div class="ob-widget-card-header">
-        <div class="ob-widget-card-title">
-            <i class="fas fa-id-badge me-1"></i> Authentification renforcée
+        {{-- ── Authentification ─────────────────────────────────────────────── --}}
+        @if ($tab === 'auth')
+        <div class="p-3">
+
+            <div class="ob-hab-toolbar pb-1">
+                <span class="fw-semibold"><i class="fas fa-id-badge me-1 text-secondary"></i> Authentification renforcée</span>
+                <span class="text-muted" style="font-size:var(--font-size-xs);">2FA, fédération d'identité et message de première connexion. Ces fonctionnalités sont en cours d'implémentation.</span>
+            </div>
+
+            {{-- Info connexion (ID 69) — WIP --}}
+            @php $s = $settings->get(69); @endphp
+            <table class="table table-sm table-hover mb-4">
+                <tbody>
+                    <tr class="text-muted">
+                        <td class="ps-0" style="width:40%;vertical-align:middle;font-size:var(--font-size-sm);">
+                            Message lors de la première connexion
+                            <span class="ms-1 ob-badge ob-badge-ext" style="font-size:10px;">Non implémenté</span>
+                            <div style="font-size:var(--font-size-xs);">Afficher un message d'accueil personnalisé à la première connexion.</div>
+                        </td>
+                        <td style="vertical-align:middle;">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox"
+                                       {{ ($s?->VALUE ?? '0') == '1' ? 'checked' : '' }} disabled>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
+                        <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
+                            <i class="fas fa-mobile-alt me-1"></i> TOTP / 2FA
+                        </div>
+                        <div class="text-muted" style="font-size:var(--font-size-xs);">
+                            Authentification à deux facteurs par application (Google Authenticator, Authy…).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
+                        <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
+                            <i class="fas fa-server me-1"></i> LDAP / Active Directory
+                        </div>
+                        <div class="text-muted" style="font-size:var(--font-size-xs);">
+                            Authentification déléguée à un annuaire LDAP ou un AD d'entreprise.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
+                        <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
+                            <i class="fas fa-sign-in-alt me-1"></i> SSO — SAML 2.0 / OAuth
+                        </div>
+                        <div class="text-muted" style="font-size:var(--font-size-xs);">
+                            Authentification unique via un fournisseur d'identité (Keycloak, Azure AD…).
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
-        <span class="ob-badge ob-badge-ext">Non implémenté</span>
+        @endif
+
     </div>
-    <div class="ob-widget-card-body">
-        <div class="row g-3">
 
-            <div class="col-md-4">
-                <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
-                    <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
-                        <i class="fas fa-mobile-alt me-1"></i> TOTP / 2FA
-                    </div>
-                    <div class="text-muted" style="font-size:var(--font-size-xs);">
-                        Authentification à deux facteurs par application (Google Authenticator, Authy…).
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
-                    <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
-                        <i class="fas fa-server me-1"></i> LDAP / Active Directory
-                    </div>
-                    <div class="text-muted" style="font-size:var(--font-size-xs);">
-                        Authentification déléguée à un annuaire LDAP ou un AD d'entreprise.
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="p-3 rounded" style="border:1px dashed var(--border-color); opacity:.6;">
-                    <div class="fw-semibold mb-1" style="font-size:var(--font-size-sm);">
-                        <i class="fas fa-sign-in-alt me-1"></i> SSO — SAML 2.0 / OAuth
-                    </div>
-                    <div class="text-muted" style="font-size:var(--font-size-xs);">
-                        Authentification unique via un fournisseur d'identité (Keycloak, Azure AD…).
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
 </div>
-</div>
-
-</div>{{-- /.row --}}
-</div>{{-- /.mx-3 --}}
 
 @endsection

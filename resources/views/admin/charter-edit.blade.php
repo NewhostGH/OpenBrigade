@@ -6,16 +6,9 @@
 
 <x-ob-breadcrumb :items="[
     ['label' => 'Administration'],
-    ['label' => 'Sécurité', 'url' => route('admin.security')],
+    ['label' => 'Sécurité', 'url' => route('admin.security', ['tab' => 'charter'])],
     ['label' => 'Charte'],
 ]"/>
-
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
 
 <div class="mx-3 mt-3">
 <div class="row g-3">
@@ -70,7 +63,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-1"></i> Enregistrer
                         </button>
-                        <a href="{{ route('admin.security') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('admin.security', ['tab' => 'charter']) }}" class="btn btn-outline-secondary">
                             Annuler
                         </a>
                     </div>

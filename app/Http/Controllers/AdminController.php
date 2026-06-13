@@ -52,10 +52,15 @@ class AdminController extends Controller
     // ── Security settings ─────────────────────────────────────────────────────
 
     /** IDs that live on the dedicated security page, not on the generic settings page. */
-    private const SECURITY_IDS = [15, 16, 17, 70, 48, 34, 36, 49];
+    private const SECURITY_IDS = [15, 16, 17, 70, 48, 34, 36, 49, 25, 33, 69];
 
-    public function security(): View
+    public function security(Request $request): View
     {
+        $tab = $request->input('tab', 'passwords');
+        if (! in_array($tab, ['passwords', 'charter', 'sessions', 'auth'], true)) {
+            $tab = 'passwords';
+        }
+
         $settings = DB::table('configuration')
             ->whereIn('ID', self::SECURITY_IDS)
             ->get()
@@ -65,7 +70,7 @@ class AdminController extends Controller
             ->where('NAME', 'charte_updated_at')
             ->value('VALUE');
 
-        return view('admin.security', compact('settings', 'charterUpdatedAt'));
+        return view('admin.security', compact('settings', 'charterUpdatedAt', 'tab'));
     }
 
     // ── Application settings ──────────────────────────────────────────────────
@@ -83,7 +88,7 @@ class AdminController extends Controller
         $tabs = [
             1 => ['label' => 'Général',          'icon' => 'sliders-h'],
             2 => ['label' => 'Options',          'icon' => 'sliders-h'],
-            3 => ['label' => 'Sécurité',         'icon' => 'shield-alt'],
+            3 => ['label' => 'Technique',         'icon' => 'shield-alt'],
             4 => ['label' => 'Organisation',      'icon' => 'building'],
             5 => ['label' => 'Avancé',            'icon' => 'wrench'],
         ];
@@ -108,7 +113,7 @@ class AdminController extends Controller
             105 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             106 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             107 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
-            25 => ['type' => 'todo',     'note' => 'L\'historique des actions n\'est pas encore implémenté dans Laravel.'],
+            25 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             79 => ['type' => 'obsolete', 'note' => 'Le type d\'organisation n\'est plus utilisé. Ce réglage n\'a plus d\'effet.'],
             6 => ['type' => 'todo',     'note' => 'Le nom de l\'organisation n\'est pas encore utilisé dans Laravel.'],
             7 => ['type' => 'obsolete', 'note' => 'L\'URL du site est gérée par APP_URL dans .env. Ce réglage n\'a plus d\'effet.'],
@@ -137,8 +142,8 @@ class AdminController extends Controller
             10 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             11 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             12 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            33 => ['type' => 'todo',     'note' => 'Les données sensibles ne sont pas encore gérées dans Laravel.'],
-            42 => ['type' => 'todo',     'note' => 'Les ACLs des fichiers ne sont pas encore gérées dans Laravel.'],
+            33 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            42 => ['type' => 'obsolete', 'note' => 'Remplacé par le système de contrôle d\'accès des documents.'],
             48 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             15 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             16 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
@@ -155,7 +160,7 @@ class AdminController extends Controller
             21 => ['type' => 'obsolete', 'note' => 'Les répertoires de stockage sont configurés dans config/filesystems.php. Ce réglage n\'a plus d\'effet.'],
             44 => ['type' => 'obsolete', 'note' => 'Laravel utilise bcrypt automatiquement. Les anciens hachages MD5 sont migrés à la prochaine connexion. Ce réglage n\'a plus d\'effet.'],
             54 => ['type' => 'obsolete', 'note' => 'L\'affichage des erreurs est contrôlé par APP_DEBUG dans .env. Ce réglage n\'a plus d\'effet.'],
-            69 => ['type' => 'todo',     'note' => 'Le message de première connexion référence specific_info.php qui n\'existe pas encore dans Laravel.'],
+            69 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             67 => ['type' => 'obsolete', 'note' => 'Le verrou de crontab de mailing est géré par Laravel Queue. Ce réglage n\'a plus d\'effet.'],
         ];
 
@@ -178,7 +183,9 @@ class AdminController extends Controller
             ->update(['VALUE' => $value]);
 
         if ($request->input('_back') === 'security') {
-            return redirect()->route('admin.security')->with('success', 'Paramètre mis à jour.');
+            $secTab = $request->input('_tab', 'passwords');
+
+            return redirect()->route('admin.security', ['tab' => $secTab])->with('success', 'Paramètre mis à jour.');
         }
 
         return redirect()->route('admin.settings')

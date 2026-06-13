@@ -131,7 +131,7 @@ class AccountController extends Controller
             $msg .= ' '.__('Les utilisateurs devront réaccepter.');
         }
 
-        return redirect()->route('admin.security')->with('success', $msg);
+        return redirect()->route('admin.security', ['tab' => 'charter'])->with('success', $msg);
     }
 
     public function acceptCharter(Request $request): RedirectResponse
@@ -162,7 +162,7 @@ class AccountController extends Controller
 
         DB::table('pompier')->update(['P_ACCEPT_DATE' => null]);
 
-        return redirect()->route('admin.security')
+        return redirect()->route('admin.security', ['tab' => 'charter'])
             ->with('success', __("Tous les utilisateurs devront de nouveau accepter les conditions d'utilisation."));
     }
 
