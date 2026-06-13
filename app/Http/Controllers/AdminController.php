@@ -49,6 +49,25 @@ class AdminController extends Controller
             + ['columns' => $this->monitoringColumns()]);
     }
 
+    // ── Security settings ─────────────────────────────────────────────────────
+
+    /** IDs that live on the dedicated security page, not on the generic settings page. */
+    private const SECURITY_IDS = [15, 16, 17, 70, 48, 34, 36, 49];
+
+    public function security(): View
+    {
+        $settings = DB::table('configuration')
+            ->whereIn('ID', self::SECURITY_IDS)
+            ->get()
+            ->keyBy('ID');
+
+        $charterUpdatedAt = DB::table('configuration')
+            ->where('NAME', 'charte_updated_at')
+            ->value('VALUE');
+
+        return view('admin.security', compact('settings', 'charterUpdatedAt'));
+    }
+
     // ── Application settings ──────────────────────────────────────────────────
 
     public function settings(): View
@@ -56,6 +75,7 @@ class AdminController extends Controller
         $rows = DB::table('configuration')
             ->where('HIDDEN', 0)
             ->whereNotIn('ID', DB::table('ob_feature')->whereNotNull('legacy_config_id')->pluck('legacy_config_id'))
+            ->whereNotIn('ID', self::SECURITY_IDS)
             ->orderBy('TAB')
             ->orderBy('ORDERING')
             ->get();
@@ -119,12 +139,14 @@ class AdminController extends Controller
             12 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             33 => ['type' => 'todo',     'note' => 'Les données sensibles ne sont pas encore gérées dans Laravel.'],
             42 => ['type' => 'todo',     'note' => 'Les ACLs des fichiers ne sont pas encore gérées dans Laravel.'],
-            48 => ['type' => 'obsolete', 'note' => 'La charte d\'utilisation est gérée nativement via Administration > Charte.'],
-            16 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
-            17 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
-            34 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
-            36 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
-            49 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
+            48 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            15 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            16 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            17 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            70 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            34 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            36 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            49 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             50 => ['type' => 'obsolete', 'note' => 'La clé du webservice n\'est plus utilisée. Ce réglage n\'a plus d\'effet.'],
             80 => ['type' => 'todo',     'note' => 'La télémétrie n\'est pas encore implémentée dans Laravel.'],
             20 => ['type' => 'obsolete', 'note' => 'L\'URL de la page d\'identification est désormais fixe. Ce réglage n\'a plus d\'effet.'],
@@ -133,10 +155,8 @@ class AdminController extends Controller
             21 => ['type' => 'obsolete', 'note' => 'Les répertoires de stockage sont configurés dans config/filesystems.php. Ce réglage n\'a plus d\'effet.'],
             44 => ['type' => 'obsolete', 'note' => 'Laravel utilise bcrypt automatiquement. Les anciens hachages MD5 sont migrés à la prochaine connexion. Ce réglage n\'a plus d\'effet.'],
             54 => ['type' => 'obsolete', 'note' => 'L\'affichage des erreurs est contrôlé par APP_DEBUG dans .env. Ce réglage n\'a plus d\'effet.'],
-            15 => ['type' => 'todo',     'note' => 'La validation de la complexité du mot de passe n\'est pas encore implémentée dans Laravel.'],
             69 => ['type' => 'todo',     'note' => 'Le message de première connexion référence specific_info.php qui n\'existe pas encore dans Laravel.'],
             67 => ['type' => 'obsolete', 'note' => 'Le verrou de crontab de mailing est géré par Laravel Queue. Ce réglage n\'a plus d\'effet.'],
-            70 => ['type' => 'todo',     'note' => 'L\'expiration des mots de passe n\'est pas encore implémentée dans Laravel.'],
         ];
 
         return view('admin.settings', compact('grouped', 'tabs', 'activeTab', 'annotations'));
@@ -156,6 +176,10 @@ class AdminController extends Controller
         DB::table('configuration')
             ->where('ID', $id)
             ->update(['VALUE' => $value]);
+
+        if ($request->input('_back') === 'security') {
+            return redirect()->route('admin.security')->with('success', 'Paramètre mis à jour.');
+        }
 
         return redirect()->route('admin.settings')
             ->with('success', 'Paramètre mis à jour.')

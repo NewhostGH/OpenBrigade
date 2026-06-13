@@ -120,6 +120,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/sauvegarde/parametres', [BackupController::class, 'updateSettings'])->name('admin.backup.settings')->middleware('permission:14');
     // Maintenance (upgrade.php superseded by artisan migrate)
     Route::get('/admin/maintenance', [MaintenanceController::class, 'index'])->name('admin.maintenance')->middleware('permission:14');
+    Route::get('/admin/security', [AdminController::class, 'security'])->name('admin.security')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');
@@ -312,9 +313,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/charter/reject', [AccountController::class, 'rejectCharter'])->name('account.charter.reject');
     Route::post('/account/charter/reset', [AccountController::class, 'resetCharter'])->name('account.charter.reset');
 
-    // Admin — charter editor (permission 14)
-    Route::get('/admin/charter', [AccountController::class, 'showEditCharter'])->name('admin.charter')->middleware('permission:14');
-    Route::post('/admin/charter', [AccountController::class, 'saveCharter'])->name('admin.charter.save')->middleware('permission:14');
+    // Admin — charter editor (permission 14), nested under security
+    Route::get('/admin/security/charter', [AccountController::class, 'showEditCharter'])->name('admin.security.charter')->middleware('permission:14');
+    Route::post('/admin/security/charter', [AccountController::class, 'saveCharter'])->name('admin.security.charter.save')->middleware('permission:14');
 
     // Connected users (permission 20 = Audit)
     Route::get('/admin/connected-users', [AccountController::class, 'connectedUsers'])->name('account.connected-users')->middleware('permission:20');

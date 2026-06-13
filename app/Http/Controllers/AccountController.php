@@ -82,15 +82,12 @@ class AccountController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $row = DB::table('pompier')->where('P_ID', $user->P_ID)->first(['P_ACCEPT_DATE']);
-        $acceptDate = $row?->P_ACCEPT_DATE;
-        $canEdit = $user->hasPermission(14);
+        $acceptDate = DB::table('pompier')->where('P_ID', $user->P_ID)->value('P_ACCEPT_DATE');
         $charteMeta = $this->buildCharteMeta();
         $rgpdExists = $this->rgpdFileExists();
         $charteText = $this->loadCharterText();
-        $updatedAt = $this->charterUpdatedAt();
 
-        return view('auth.charter', compact('acceptDate', 'canEdit', 'charteMeta', 'rgpdExists', 'charteText', 'updatedAt'));
+        return view('auth.charter', compact('acceptDate', 'charteMeta', 'rgpdExists', 'charteText'));
     }
 
     public function showEditCharter(Request $request): View
@@ -102,7 +99,7 @@ class AccountController extends Controller
         $charteText = $this->loadCharterText() ?? '';
         $updatedAt = $this->charterUpdatedAt();
 
-        return view('auth.edit-charter', compact('charteText', 'updatedAt'));
+        return view('admin.charter-edit', compact('charteText', 'updatedAt'));
     }
 
     public function saveCharter(Request $request): RedirectResponse
@@ -134,7 +131,7 @@ class AccountController extends Controller
             $msg .= ' '.__('Les utilisateurs devront réaccepter.');
         }
 
-        return redirect()->route('admin.charter')->with('success', $msg);
+        return redirect()->route('admin.security')->with('success', $msg);
     }
 
     public function acceptCharter(Request $request): RedirectResponse
@@ -165,7 +162,8 @@ class AccountController extends Controller
 
         DB::table('pompier')->update(['P_ACCEPT_DATE' => null]);
 
-        return back()->with('success', __("Tous les utilisateurs devront de nouveau accepter les conditions d'utilisation."));
+        return redirect()->route('admin.security')
+            ->with('success', __("Tous les utilisateurs devront de nouveau accepter les conditions d'utilisation."));
     }
 
     // ── Send credentials ───────────────────────────────────────────────────────
