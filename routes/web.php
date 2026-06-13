@@ -121,6 +121,11 @@ Route::middleware('auth')->group(function () {
     // Maintenance (upgrade.php superseded by artisan migrate)
     Route::get('/admin/maintenance', [MaintenanceController::class, 'index'])->name('admin.maintenance')->middleware('permission:14');
     Route::get('/admin/security', [AdminController::class, 'security'])->name('admin.security')->middleware('permission:14');
+    Route::get('/admin/security/politique/create', [AdminController::class, 'policyCreate'])->name('admin.policy.create')->middleware('permission:14');
+    Route::post('/admin/security/politique', [AdminController::class, 'policyStore'])->name('admin.policy.store')->middleware('permission:14');
+    Route::get('/admin/security/politique/{id}/edit', [AdminController::class, 'policyEdit'])->name('admin.policy.edit')->middleware('permission:14');
+    Route::patch('/admin/security/politique/{id}', [AdminController::class, 'policyUpdate'])->name('admin.policy.update')->middleware('permission:14');
+    Route::delete('/admin/security/politique/{id}', [AdminController::class, 'policyDestroy'])->name('admin.policy.destroy')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');

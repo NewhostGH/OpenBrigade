@@ -33,7 +33,7 @@ class AccountController extends Controller
         $user = $request->user();
         $isExpired = $request->boolean('expired');
         $isFirstLogin = ((int) ($user->P_NB_CONNECT ?? 0)) <= 1;
-        $policy = $this->policyService->policy();
+        $policy = $this->policyService->policyForUser($user);
 
         return view('auth.change-password', compact('isExpired', 'isFirstLogin', 'policy'));
     }
@@ -58,7 +58,7 @@ class AccountController extends Controller
             return back()->withErrors(['new2' => __('Les deux mots de passe ne correspondent pas.')]);
         }
 
-        $error = $this->policyService->validate($new1, (string) ($user->P_CODE ?? ''));
+        $error = $this->policyService->validate($new1, (string) ($user->P_CODE ?? ''), $this->policyService->policyForUser($user));
         if ($error !== null) {
             return back()->withErrors(['new1' => $error]);
         }

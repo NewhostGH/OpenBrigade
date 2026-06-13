@@ -52,97 +52,85 @@ document.addEventListener('DOMContentLoaded', function () {
 
         {{-- ── Mot de passe ──────────────────────────────────────────────────── --}}
         @if ($tab === 'passwords')
-        <div class="ob-hab-toolbar px-3 pt-2 pb-0">
-            <span class="fw-semibold"><i class="fas fa-key me-1 text-secondary"></i> Politique de mot de passe</span>
-            <span class="text-muted" style="font-size:var(--font-size-xs);">Complexité, longueur minimale et expiration. Le verrouillage de compte est en cours d'implémentation.</span>
+        <div class="ob-hab-toolbar px-3 pt-2 pb-2">
+            <span class="fw-semibold"><i class="fas fa-key me-1 text-secondary"></i> Politiques de mot de passe</span>
+            <span class="text-muted" style="font-size:var(--font-size-xs);">
+                Longueur, complexité, expiration et verrouillage — assignables par groupe d'habilitation.
+            </span>
+            <a href="{{ route('admin.policy.create') }}" class="btn btn-sm btn-outline-primary ms-auto">
+                <i class="fas fa-plus me-1"></i> Nouvelle politique
+            </a>
         </div>
+
+        @if ($policies->isEmpty())
+        <div class="px-3 pb-3 text-muted" style="font-size:var(--font-size-sm);">
+            Aucune politique définie.
+        </div>
+        @else
         <table class="table table-sm table-hover mb-0">
+            <thead>
+                <tr style="font-size:var(--font-size-xs);text-transform:uppercase;color:var(--text-muted);">
+                    <th class="ps-3">Nom</th>
+                    <th>Long. min.</th>
+                    <th>Complexité</th>
+                    <th>Expiration</th>
+                    <th>Tentatives</th>
+                    <th>Groupes</th>
+                    <th></th>
+                </tr>
+            </thead>
             <tbody>
-
-                {{-- Quality (ID 15) --}}
-                @php $s = $settings->get(15); @endphp
-                <tr>
-                    <td class="ps-3" style="width:40%;vertical-align:middle;font-size:var(--font-size-sm);">
-                        Niveau de complexité requis
-                        <div class="text-muted" style="font-size:var(--font-size-xs);">
-                            0 = aucune, 1 = chiffres + lettres, 2 = + caractère spécial
-                        </div>
-                    </td>
-                    <td style="vertical-align:middle;">
-                        <form method="POST" action="{{ route('admin.settings.save', 15) }}" class="d-flex align-items-center gap-2">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="_back" value="security">
-                            <input type="hidden" name="_tab" value="passwords">
-                            <select name="VALUE" class="form-select form-select-sm" style="max-width:220px;"
-                                    onchange="this.form.submit()">
-                                <option value="0" {{ ($s?->VALUE ?? '0') == '0' ? 'selected' : '' }}>0 — Aucune</option>
-                                <option value="1" {{ ($s?->VALUE ?? '0') == '1' ? 'selected' : '' }}>1 — Chiffres et lettres</option>
-                                <option value="2" {{ ($s?->VALUE ?? '0') == '2' ? 'selected' : '' }}>2 — + Caractère spécial</option>
-                            </select>
-                        </form>
-                    </td>
-                </tr>
-
-                {{-- Length (ID 16) --}}
-                @php $s = $settings->get(16); @endphp
-                <tr>
-                    <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
-                        Longueur minimale <span class="text-muted">(0 = aucune)</span>
-                    </td>
-                    <td style="vertical-align:middle;">
-                        <form method="POST" action="{{ route('admin.settings.save', 16) }}" class="d-flex align-items-center gap-2">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="_back" value="security">
-                            <input type="hidden" name="_tab" value="passwords">
-                            <input type="number" name="VALUE" min="0" max="64"
-                                   value="{{ $s?->VALUE ?? '0' }}"
-                                   class="form-control form-control-sm" style="max-width:100px;">
-                            <button type="submit" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-save"></i>
+            @foreach ($policies as $pol)
+            <tr>
+                <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
+                    {{ $pol->name }}
+                    @if ($pol->is_default)
+                        <span class="badge bg-primary ms-1" style="font-size:.65em;">défaut</span>
+                    @endif
+                </td>
+                <td style="vertical-align:middle;font-size:var(--font-size-sm);">{{ $pol->min_length }}</td>
+                <td style="vertical-align:middle;font-size:var(--font-size-xs);">
+                    @php
+                        $rules = array_filter([
+                            $pol->require_uppercase ? 'A–Z' : null,
+                            $pol->require_lowercase ? 'a–z' : null,
+                            $pol->require_digits    ? '0–9' : null,
+                            $pol->require_special   ? '!@#' : null,
+                        ]);
+                    @endphp
+                    {{ $rules ? implode(' · ', $rules) : '—' }}
+                </td>
+                <td style="vertical-align:middle;font-size:var(--font-size-sm);">
+                    {{ $pol->expiry_days > 0 ? $pol->expiry_days . 'j' : '—' }}
+                </td>
+                <td style="vertical-align:middle;font-size:var(--font-size-sm);">
+                    {{ $pol->max_attempts > 0 ? $pol->max_attempts : '∞' }}
+                </td>
+                <td style="vertical-align:middle;font-size:var(--font-size-sm);">
+                    {{ $pol->groups_count > 0 ? $pol->groups_count : '—' }}
+                </td>
+                <td style="vertical-align:middle;" class="pe-3">
+                    <div class="d-flex gap-1 justify-content-end">
+                        <a href="{{ route('admin.policy.edit', $pol->id) }}"
+                           class="btn btn-xs btn-outline-secondary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        @if (! $pol->is_default)
+                        <form method="POST" action="{{ route('admin.policy.destroy', $pol->id) }}">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-xs btn-outline-danger"
+                                    onclick="return confirm('Supprimer cette politique ?')">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </form>
-                    </td>
-                </tr>
-
-                {{-- Expiry (ID 70) --}}
-                @php $s = $settings->get(70); @endphp
-                <tr>
-                    <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
-                        Expiration <span class="text-muted">(jours, 0 = désactivé)</span>
-                    </td>
-                    <td style="vertical-align:middle;">
-                        <form method="POST" action="{{ route('admin.settings.save', 70) }}" class="d-flex align-items-center gap-2">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="_back" value="security">
-                            <input type="hidden" name="_tab" value="passwords">
-                            <input type="number" name="VALUE" min="0" max="3650"
-                                   value="{{ $s?->VALUE ?? '0' }}"
-                                   class="form-control form-control-sm" style="max-width:100px;">
-                            <button type="submit" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-save"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-
-                {{-- Failure (ID 17) — WIP --}}
-                @php $s = $settings->get(17); @endphp
-                <tr class="text-muted">
-                    <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
-                        Blocage après X tentatives
-                        <span class="ms-1 ob-badge ob-badge-ext" style="font-size:10px;">Non implémenté</span>
-                        <div style="font-size:var(--font-size-xs);">
-                            Le verrouillage automatique n'est pas encore actif.
-                        </div>
-                    </td>
-                    <td style="vertical-align:middle;">
-                        <input type="number" value="{{ $s?->VALUE ?? '5' }}"
-                               class="form-control form-control-sm" style="max-width:100px;" disabled>
-                    </td>
-                </tr>
-
+                        @endif
+                    </div>
+                </td>
+            </tr>
+            @endforeach
             </tbody>
         </table>
+        @endif
         @endif
 
         {{-- ── Charte ────────────────────────────────────────────────────────── --}}

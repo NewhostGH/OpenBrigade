@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ObGroup;
+use App\Models\ObPasswordPolicy;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,7 +54,7 @@ class AdminController extends Controller
     // ── Security settings ─────────────────────────────────────────────────────
 
     /** IDs that live on the dedicated security page, not on the generic settings page. */
-    private const SECURITY_IDS = [15, 16, 17, 70, 48, 34, 36, 49, 25, 33, 69];
+    private const SECURITY_IDS = [48, 34, 36, 49, 25, 33, 69];
 
     public function security(Request $request): View
     {
@@ -70,7 +72,11 @@ class AdminController extends Controller
             ->where('NAME', 'charte_updated_at')
             ->value('VALUE');
 
-        return view('admin.security', compact('settings', 'charterUpdatedAt', 'tab'));
+        $policies = $tab === 'passwords'
+            ? ObPasswordPolicy::withCount('groups')->orderByDesc('is_default')->orderBy('name')->get()
+            : collect();
+
+        return view('admin.security', compact('settings', 'charterUpdatedAt', 'tab', 'policies'));
     }
 
     // ── Application settings ──────────────────────────────────────────────────
@@ -236,6 +242,125 @@ class AdminController extends Controller
         return redirect()->route('admin.settings')
             ->with('success', 'Image supprimée.')
             ->with('_settings_tab', $tab);
+    }
+
+    // ── Password policy CRUD ──────────────────────────────────────────────────
+
+    public function policyCreate(): View
+    {
+        $groups = ObGroup::orderBy('name')->get();
+
+        return view('admin.password-policy-edit', [
+            'policy' => null,
+            'groups' => $groups,
+        ]);
+    }
+
+    public function policyStore(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:80'],
+            'min_length' => ['required', 'integer', 'min:6', 'max:128'],
+            'expiry_days' => ['required', 'integer', 'min:0', 'max:3650'],
+            'max_attempts' => ['required', 'integer', 'min:0', 'max:100'],
+            'require_uppercase' => ['sometimes', 'boolean'],
+            'require_lowercase' => ['sometimes', 'boolean'],
+            'require_digits' => ['sometimes', 'boolean'],
+            'require_special' => ['sometimes', 'boolean'],
+            'blocklist_check' => ['sometimes', 'boolean'],
+            'is_default' => ['sometimes', 'boolean'],
+        ]);
+
+        $validated['require_uppercase'] = $request->boolean('require_uppercase');
+        $validated['require_lowercase'] = $request->boolean('require_lowercase');
+        $validated['require_digits'] = $request->boolean('require_digits');
+        $validated['require_special'] = $request->boolean('require_special');
+        $validated['blocklist_check'] = $request->boolean('blocklist_check');
+        $validated['is_default'] = $request->boolean('is_default');
+
+        if ($validated['is_default']) {
+            ObPasswordPolicy::where('is_default', true)->update(['is_default' => false]);
+        }
+
+        $policy = ObPasswordPolicy::create($validated);
+        $this->syncPolicyGroups($policy, $request->input('group_ids', []));
+
+        return redirect()->route('admin.security', ['tab' => 'passwords'])
+            ->with('success', 'Politique créée.');
+    }
+
+    public function policyEdit(int $id): View
+    {
+        $policy = ObPasswordPolicy::findOrFail($id);
+        $groups = ObGroup::orderBy('name')->get();
+
+        return view('admin.password-policy-edit', compact('policy', 'groups'));
+    }
+
+    public function policyUpdate(Request $request, int $id): RedirectResponse
+    {
+        $policy = ObPasswordPolicy::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:80'],
+            'min_length' => ['required', 'integer', 'min:6', 'max:128'],
+            'expiry_days' => ['required', 'integer', 'min:0', 'max:3650'],
+            'max_attempts' => ['required', 'integer', 'min:0', 'max:100'],
+            'require_uppercase' => ['sometimes', 'boolean'],
+            'require_lowercase' => ['sometimes', 'boolean'],
+            'require_digits' => ['sometimes', 'boolean'],
+            'require_special' => ['sometimes', 'boolean'],
+            'blocklist_check' => ['sometimes', 'boolean'],
+            'is_default' => ['sometimes', 'boolean'],
+        ]);
+
+        $validated['require_uppercase'] = $request->boolean('require_uppercase');
+        $validated['require_lowercase'] = $request->boolean('require_lowercase');
+        $validated['require_digits'] = $request->boolean('require_digits');
+        $validated['require_special'] = $request->boolean('require_special');
+        $validated['blocklist_check'] = $request->boolean('blocklist_check');
+        $validated['is_default'] = $request->boolean('is_default');
+
+        if ($validated['is_default']) {
+            ObPasswordPolicy::where('id', '!=', $id)
+                ->where('is_default', true)
+                ->update(['is_default' => false]);
+        }
+
+        $policy->update($validated);
+        $this->syncPolicyGroups($policy, $request->input('group_ids', []));
+
+        return redirect()->route('admin.security', ['tab' => 'passwords'])
+            ->with('success', 'Politique mise à jour.');
+    }
+
+    public function policyDestroy(int $id): RedirectResponse
+    {
+        $policy = ObPasswordPolicy::findOrFail($id);
+        abort_if($policy->is_default, 422, 'La politique par défaut ne peut pas être supprimée.');
+
+        // Detach groups before deleting (nullOnDelete FK handles it, but be explicit).
+        ObGroup::where('password_policy_id', $id)->update(['password_policy_id' => null]);
+        $policy->delete();
+
+        return redirect()->route('admin.security', ['tab' => 'passwords'])
+            ->with('success', 'Politique supprimée.');
+    }
+
+    /** @param string[] $groupIds */
+    private function syncPolicyGroups(ObPasswordPolicy $policy, array $groupIds): void
+    {
+        $ids = array_map('intval', $groupIds);
+
+        // Clear existing assignments for this policy, then re-assign selected groups.
+        ObGroup::where('password_policy_id', $policy->id)
+            ->whereNotIn('id', $ids)
+            ->update(['password_policy_id' => null]);
+
+        if ($ids !== []) {
+            ObGroup::whereIn('id', $ids)
+                ->update(['password_policy_id' => $policy->id]);
+        }
     }
 
     private function monitoringColumns(): array

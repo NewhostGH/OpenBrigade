@@ -39,6 +39,14 @@ class AuthService implements ServiceInterface
             return false;
         }
 
+        // Enforce max_attempts lockout before checking the password.
+        $policyService = app(PasswordPolicyService::class);
+        $policy = $policyService->policyForUser($user);
+        $failures = (int) ($user->P_PASSWORD_FAILURE ?? 0);
+        if ($policy['max_attempts'] > 0 && $failures >= $policy['max_attempts']) {
+            return false;
+        }
+
         if (! $this->validateLegacyPassword($plainPassword, (string) $user->P_MDP)) {
             $this->incrementPasswordFailure($user);
 
@@ -84,7 +92,8 @@ class AuthService implements ServiceInterface
      */
     public function updatePassword(User $user, string $plain): void
     {
-        $expiry = app(PasswordPolicyService::class)->nextExpiry();
+        $policyService = app(PasswordPolicyService::class);
+        $expiry = $policyService->nextExpiry($policyService->policyForUser($user));
 
         $user->forceFill([
             'P_MDP' => password_hash($plain, PASSWORD_DEFAULT),
