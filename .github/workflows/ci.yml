@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -27,7 +27,7 @@ jobs:
           extensions: mbstring, xml, ctype, json, intl, pdo_mysql, zip, gd, ldap
 
       - name: Cache Composer
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache/files
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
