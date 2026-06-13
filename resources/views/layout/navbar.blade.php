@@ -224,8 +224,8 @@
                         </li>
                         <li>
                             <a class="dropdown-item dropdown-item-profil"
-                                href="{{ route('account.password') }}">
-                                <i class="fas fa-key fa-fw ob-nav-item-icon"></i> Mot de passe
+                                href="{{ route('account.auth') }}">
+                                <i class="fas fa-shield-alt fa-fw ob-nav-item-icon"></i> Authentification
                             </a>
                         </li>
                         <li>

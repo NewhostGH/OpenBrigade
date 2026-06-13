@@ -56,7 +56,7 @@
                         <span class="input-group-text">caractères</span>
                     </div>
                     <div class="form-text">
-                        NCSC&nbsp;: ≥&nbsp;12 · ANSSI&nbsp;: ≥&nbsp;12 (4 types), ≥&nbsp;14 (3 types), ≥&nbsp;16 (2 types), ≥&nbsp;20 (1 type).
+                        Recommandé : ≥&nbsp;12 caractères pour un compte standard, ≥&nbsp;16 pour un compte à privilèges.
                     </div>
                     @error('min_length') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
@@ -66,8 +66,8 @@
                 {{-- Complexity --}}
                 <h6 class="text-secondary mb-2"><i class="fas fa-sliders-h me-1"></i> Complexité</h6>
                 <p class="text-muted small mb-3">
-                    Le NCSC déconseille les règles de complexité — privilégiez la longueur.
-                    L'ANSSI les accepte en complément d'un minimum de longueur réduit.
+                    Les règles de complexité peuvent rendre les mots de passe moins mémorables sans les rendre plus sûrs.
+                    Privilégiez la longueur ; n'activez la complexité que pour les comptes à privilèges élevés.
                 </p>
 
                 @foreach ([
@@ -89,8 +89,8 @@
                 {{-- Expiry --}}
                 <h6 class="text-secondary mb-2"><i class="fas fa-calendar-times me-1"></i> Expiration</h6>
                 <p class="text-muted small mb-3">
-                    Le NCSC et l'ANSSI déconseillent le renouvellement forcé — il affaiblit les mots de passe choisis.
-                    Réservez l'expiration aux comptes compromis.
+                    Le renouvellement forcé conduit les utilisateurs à choisir des mots de passe prévisibles.
+                    Réservez l'expiration aux comptes dont le mot de passe a été compromis.
                 </p>
 
                 <div class="mb-4">
@@ -120,7 +120,7 @@
                                min="0" max="100">
                         <span class="input-group-text">tentatives</span>
                     </div>
-                    <div class="form-text">NCSC&nbsp;: entre 5 et 10 · 0 = pas de verrouillage.</div>
+                    <div class="form-text">Recommandé : entre 5 et 10 tentatives. 0 = pas de verrouillage.</div>
                     @error('max_attempts') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
 
@@ -137,7 +137,7 @@
                         Bloquer les mots de passe courants
                     </label>
                     <div class="form-text ms-0">
-                        Vérifie contre la liste des mots de passe les plus fréquents (recommandé NCSC/ANSSI).
+                        Vérifie contre une liste de mots de passe courants et détecte les séquences triviales.
                         Complétez avec <code>storage/app/private/blocklist.txt</code> pour des entrées supplémentaires.
                     </div>
                 </div>
@@ -157,7 +157,7 @@
                     <div class="form-text ms-0">
                         Les utilisateurs dont le groupe applique cette politique seront redirigés vers
                         la configuration TOTP à la prochaine connexion s'ils ne l'ont pas encore activée.
-                        Recommandé pour les groupes à privilèges élevés (NCSC / ANSSI).
+                        Recommandé pour les groupes à privilèges élevés.
                     </div>
                 </div>
 
@@ -230,21 +230,6 @@
             </div>
         </div>
 
-        <div class="ob-widget-card mt-3">
-            <div class="ob-widget-card-header">
-                <div class="ob-widget-card-title">
-                    <i class="fas fa-info-circle me-1"></i> Références
-                </div>
-            </div>
-            <div class="ob-widget-card-body" style="font-size:var(--font-size-xs);">
-                <p class="text-muted mb-2">
-                    <strong>NCSC</strong> — Privilegiez la longueur sur la complexité ; pas de rotation forcée ; liste noire des mots de passe courants ; verrouillage après 5–10 tentatives.
-                </p>
-                <p class="text-muted mb-0">
-                    <strong>ANSSI</strong> — Gradué&nbsp;: ≥12 + 4 types / ≥14 + 3 / ≥16 + 2 / ≥20 + 1. Activer MFA pour les comptes à privilèges.
-                </p>
-            </div>
-        </div>
     </div>
 
 </div>

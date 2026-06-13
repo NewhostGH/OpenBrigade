@@ -188,20 +188,35 @@ class PasswordPolicyService implements ServiceInterface
     }
 
     /**
-     * Returns true if the password is on the common-passwords blocklist.
-     * This is a minimal embedded list; extend via storage/app/private/blocklist.txt
-     * (one password per line) for organisation-specific additions.
+     * Returns true if the password is on the common-passwords blocklist
+     * or matches a trivially guessable pattern.
+     *
+     * Patterns checked:
+     *  - All same character (aaaaaaaa, 11111111)
+     *  - Consecutive ascending or descending characters (abcdefg, zyxwvu, 1234567, 7654321)
+     *  - Embedded top-100 common-password list
+     *  - Custom blocklist at storage/app/private/blocklist.txt (one entry per line)
      */
     private function isBlocklisted(string $password): bool
     {
         $lower = strtolower($password);
 
-        // Check the embedded top-100 list first (fast, no I/O).
+        // All same character.
+        if (preg_match('/^(.)\1+$/u', $password)) {
+            return true;
+        }
+
+        // Consecutive ascending or descending single-char sequence (≥ 5 chars).
+        if (mb_strlen($password) >= 5 && $this->isConsecutiveSequence($lower)) {
+            return true;
+        }
+
+        // Embedded top-100 list.
         if (in_array($lower, self::COMMON_PASSWORDS, true)) {
             return true;
         }
 
-        // Check a custom blocklist file if it exists.
+        // Custom blocklist file.
         $path = storage_path('app/private/blocklist.txt');
         if (file_exists($path)) {
             $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -215,6 +230,31 @@ class PasswordPolicyService implements ServiceInterface
         }
 
         return false;
+    }
+
+    /**
+     * Returns true when every character in $s follows the same +1 or -1 Unicode
+     * code-point step — e.g. "abcde", "zyxwv", "12345", "9876543".
+     */
+    private function isConsecutiveSequence(string $s): bool
+    {
+        $chars = preg_split('//u', $s, -1, PREG_SPLIT_NO_EMPTY);
+        if ($chars === false || count($chars) < 2) {
+            return false;
+        }
+
+        $step = mb_ord($chars[1]) - mb_ord($chars[0]);
+        if ($step !== 1 && $step !== -1) {
+            return false;
+        }
+
+        for ($i = 2; $i < count($chars); $i++) {
+            if (mb_ord($chars[$i]) - mb_ord($chars[$i - 1]) !== $step) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /** Top common / easily-guessed passwords (NCSC / HIBP-aligned subset). */

@@ -315,15 +315,15 @@ Route::middleware('auth')->group(function () {
     })->name('about');
     Route::post('/shortcuts/toggle', [ShortcutController::class, 'toggle'])->name('shortcuts.toggle');
 
-    // Account — password change
-    // TOTP setup / management (requires full auth)
-    Route::get('/account/2fa', [TotpController::class, 'showSetup'])->name('totp.setup');
-    Route::post('/account/2fa/confirm', [TotpController::class, 'confirmSetup'])->name('totp.confirm');
-    Route::post('/account/2fa/codes', [TotpController::class, 'regenerateCodes'])->name('totp.codes.regenerate');
-    Route::delete('/account/2fa', [TotpController::class, 'disable'])->name('totp.disable');
-
-    Route::get('/account/password', [AccountController::class, 'showChangePassword'])->name('account.password');
-    Route::post('/account/password', [AccountController::class, 'changePassword'])->name('account.password.update');
+    // Account — combined authentication page (password + 2FA)
+    Route::get('/account/authentification', [AccountController::class, 'showAuth'])->name('account.auth');
+    Route::post('/account/authentification', [AccountController::class, 'changePassword'])->name('account.password.update');
+    Route::post('/account/authentification/2fa/confirm', [TotpController::class, 'confirmSetup'])->name('totp.confirm');
+    Route::post('/account/authentification/2fa/codes', [TotpController::class, 'regenerateCodes'])->name('totp.codes.regenerate');
+    Route::delete('/account/authentification/2fa', [TotpController::class, 'disable'])->name('totp.disable');
+    // Legacy redirects
+    Route::redirect('/account/password', '/account/authentification')->name('account.password');
+    Route::redirect('/account/2fa', '/account/authentification?tab=2fa')->name('totp.setup');
 
     // Account — charter acceptance
     Route::get('/account/charter', [AccountController::class, 'showCharter'])->name('account.charter');

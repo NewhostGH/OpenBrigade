@@ -11,8 +11,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\Auth\AuthService;
+use App\Services\PasswordPolicyService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
 use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
@@ -83,6 +85,13 @@ class TotpController extends Controller
             return redirect()->route('login');
         }
 
+        // Check for password expiry (same gate as in AuthController after normal login).
+        $expiry = $completedUser->P_MDP_EXPIRY;
+        if ($expiry !== null && $expiry !== '' && Carbon::parse($expiry)->startOfDay()->lte(now()->startOfDay())) {
+            return redirect()->route('account.auth', ['tab' => 'password', 'expired' => 1])
+                ->with('warning', __('Votre mot de passe a expiré. Veuillez en choisir un nouveau.'));
+        }
+
         $intended = (string) $request->session()->pull('url.intended', '');
 
         return $intended !== ''
@@ -133,7 +142,7 @@ class TotpController extends Controller
             'two_factor_confirmed_at' => now(),
         ])->save();
 
-        return redirect()->route('totp.setup')
+        return redirect()->route('account.auth', ['tab' => '2fa'])
             ->with('success', __('Authentification à deux facteurs activée.'));
     }
 
@@ -144,12 +153,12 @@ class TotpController extends Controller
         $user = $request->user();
 
         if (! $user->hasEnabledTwoFactorAuthentication()) {
-            return redirect()->route('totp.setup');
+            return redirect()->route('account.auth', ['tab' => '2fa']);
         }
 
         app(GenerateNewRecoveryCodes::class)($user);
 
-        return redirect()->route('totp.setup')
+        return redirect()->route('account.auth', ['tab' => '2fa'])
             ->with('success', __('Codes de récupération régénérés. Conservez-les en lieu sûr.'));
     }
 
@@ -158,6 +167,12 @@ class TotpController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
+
+        // Refuse if the user's policy mandates 2FA.
+        $policy = app(PasswordPolicyService::class)->policyForUser($user);
+        if (! empty($policy['require_2fa'])) {
+            return back()->withErrors(['code' => __('Votre groupe requiert l\'authentification à deux facteurs. Vous ne pouvez pas la désactiver.')]);
+        }
 
         $code = (string) $request->input('code', '');
         if ($code === '') {
@@ -171,7 +186,7 @@ class TotpController extends Controller
 
         app(DisableTwoFactorAuthentication::class)($user);
 
-        return redirect()->route('totp.setup')
+        return redirect()->route('account.auth', ['tab' => '2fa'])
             ->with('success', __('Authentification à deux facteurs désactivée.'));
     }
 }

@@ -66,16 +66,28 @@
                             @error('new1')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            @if ($policy['min_length'] > 0 || $policy['quality'] > 0)
+                            @php
+                                $hasComplexity = ! empty($policy['require_uppercase'])
+                                    || ! empty($policy['require_lowercase'])
+                                    || ! empty($policy['require_digits'])
+                                    || ! empty($policy['require_special']);
+                            @endphp
+                            @if ($policy['min_length'] > 0 || $hasComplexity)
                                 <div class="form-text">
                                     @if ($policy['min_length'] > 0)
                                         Minimum {{ $policy['min_length'] }} caractères.
                                     @endif
-                                    @if ($policy['quality'] >= 1)
-                                        Doit contenir des lettres et des chiffres.
+                                    @if (! empty($policy['require_uppercase']))
+                                        Au moins une majuscule.
                                     @endif
-                                    @if ($policy['quality'] >= 2)
-                                        Doit aussi contenir un caractère spécial.
+                                    @if (! empty($policy['require_lowercase']))
+                                        Au moins une minuscule.
+                                    @endif
+                                    @if (! empty($policy['require_digits']))
+                                        Au moins un chiffre.
+                                    @endif
+                                    @if (! empty($policy['require_special']))
+                                        Au moins un caractère spécial.
                                     @endif
                                 </div>
                             @endif

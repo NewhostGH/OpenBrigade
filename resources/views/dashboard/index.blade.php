@@ -18,7 +18,7 @@
                 Votre mot de passe expire dans <strong>{{ $passwordExpiry['days'] }} jours</strong>
                 (le {{ $passwordExpiry['expiry'] }}).
             @endif
-            <a href="{{ route('account.password') }}" class="ms-2">Changer maintenant</a>
+            <a href="{{ route('account.auth', ['tab' => 'password']) }}" class="ms-2">Changer maintenant</a>
         </div>
     @endif
 

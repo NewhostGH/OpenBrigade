@@ -48,7 +48,7 @@ class AuthController extends Controller
         }
 
         if ($ok === 'totp_setup_required') {
-            return redirect()->route('totp.setup')
+            return redirect()->route('account.auth', ['tab' => '2fa'])
                 ->with('warning', __('Votre groupe requiert l\'authentification à deux facteurs. Veuillez configurer votre application TOTP.'));
         }
 
@@ -62,7 +62,7 @@ class AuthController extends Controller
         /** @var User|null $user */
         $user = $request->user();
         if ($user !== null && $this->isPasswordExpired($user)) {
-            return redirect()->route('account.password', ['expired' => 1])
+            return redirect()->route('account.auth', ['tab' => 'password', 'expired' => 1])
                 ->with('warning', __('Votre mot de passe a expiré. Veuillez en choisir un nouveau.'));
         }
 

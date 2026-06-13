@@ -20,6 +20,7 @@ namespace App\Services\Auth;
 use App\Models\User;
 use App\Services\PasswordPolicyService;
 use App\Services\ServiceInterface;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -69,6 +70,19 @@ class AuthService implements ServiceInterface
         $this->resetPasswordFailure($user);
         if (! app(LdapAuthService::class)->isEnabled()) {
             $this->refreshLegacyHashIfNeeded($user, $plainPassword);
+
+            // If the current password violates the resolved policy (e.g. admin
+            // tightened rules since the password was set), force immediate expiry
+            // so the user is redirected to change it after login.
+            $policyError = $policyService->validate($plainPassword, (string) ($user->P_CODE ?? ''), $policy);
+            if ($policyError !== null) {
+                $currentExpiry = $user->P_MDP_EXPIRY;
+                $alreadyExpired = $currentExpiry !== null && $currentExpiry !== ''
+                    && Carbon::parse($currentExpiry)->startOfDay()->lte(now()->startOfDay());
+                if (! $alreadyExpired) {
+                    $user->forceFill(['P_MDP_EXPIRY' => now()->subDay()->format('Y-m-d')])->save();
+                }
+            }
         }
 
         // TOTP challenge — confirmed enrolment takes priority.

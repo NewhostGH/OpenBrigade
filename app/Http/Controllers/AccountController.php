@@ -17,6 +17,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
 
 class AccountController extends Controller
 {
@@ -25,17 +26,46 @@ class AccountController extends Controller
         private readonly PasswordPolicyService $policyService,
     ) {}
 
-    // ── Password change ────────────────────────────────────────────────────────
+    // ── Authentication page (password + 2FA) ──────────────────────────────────
 
-    public function showChangePassword(Request $request): View
+    public function showAuth(Request $request): View
     {
         /** @var User $user */
         $user = $request->user();
+
+        $tab = $request->input('tab', 'password');
+        if (! in_array($tab, ['password', '2fa'], true)) {
+            $tab = 'password';
+        }
+
         $isExpired = $request->boolean('expired');
         $isFirstLogin = ((int) ($user->P_NB_CONNECT ?? 0)) <= 1;
         $policy = $this->policyService->policyForUser($user);
 
-        return view('auth.change-password', compact('isExpired', 'isFirstLogin', 'policy'));
+        // Provision a TOTP secret lazily when the 2FA tab is shown.
+        if ($tab === '2fa' && empty($user->two_factor_secret)) {
+            app(EnableTwoFactorAuthentication::class)($user);
+            $user->refresh();
+        }
+
+        $qrSvg = $tab === '2fa' && ! empty($user->two_factor_secret)
+            ? $user->twoFactorQrCodeSvg()
+            : null;
+
+        $secret = $tab === '2fa' && ! empty($user->two_factor_secret)
+            ? decrypt($user->two_factor_secret)
+            : null;
+
+        $recoveryCodes = ($tab === '2fa' && $user->two_factor_confirmed_at)
+            ? json_decode(decrypt($user->two_factor_recovery_codes ?? '[]'), true)
+            : [];
+
+        $require2fa = (bool) ($policy['require_2fa'] ?? false);
+
+        return view('account.authentification', compact(
+            'tab', 'isExpired', 'isFirstLogin', 'policy',
+            'qrSvg', 'secret', 'recoveryCodes', 'require2fa', 'user',
+        ));
     }
 
     public function changePassword(Request $request): RedirectResponse
@@ -71,7 +101,7 @@ class AccountController extends Controller
                 ->with('success', __('Mot de passe modifié avec succès.'));
         }
 
-        return redirect()->route('personnel.show', $user->P_ID)
+        return redirect()->route('account.auth', ['tab' => 'password'])
             ->with('success', __('Mot de passe modifié avec succès.'));
     }
 
