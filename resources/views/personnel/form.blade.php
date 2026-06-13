@@ -681,9 +681,6 @@
                             @endif
 
                             @if ($isEdit && ($personnel->P_ACCEPT_DATE || $personnel->P_ACCEPT_DATE2))
-                                <div class="col-12">
-                                    <p class="ob-section-title mb-1 mt-2">Charte d'utilisation</p>
-                                </div>
                                 @if ($personnel->P_ACCEPT_DATE)
                                     <div class="col-md-5">
                                         <label class="form-label form-label-sm text-muted">Charte acceptée le</label>
