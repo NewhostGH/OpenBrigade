@@ -73,7 +73,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Homonym management (`homonymes_*.php`)
 - [ ] Contact / email lists (`listecontacts.php`, `listemails.php`)
 - [ ] Custom member fields (`specific_info.php`)
-- [ ] Remaining exports (`formations_xls.php`, `qualifications_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)
+- [x] Qualifications export (`qualifications_xls.php`) — XLS / CSV via `TableExportService`, section-scoped, filter & `?cols=` aware
+- [ ] Remaining exports (`formations_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)
 
 ### Activité — Events & Interventions (ACT)
 

@@ -32,6 +32,7 @@ use App\Services\PersonnelExportService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -337,9 +338,21 @@ class PersonnelController extends Controller
      */
     public function qualifications(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
+        $filter = (string) $request->string('filter', 'all'); // all|expiring|expired
 
+        $items = $this->buildQualificationsQuery($request)->paginate(50)->withQueryString();
+
+        return view('personnel.qualifications', compact('items', 'filter')
+            + ['columns' => $this->qualificationsColumns()]);
+    }
+
+    /**
+     * Section-scoped qualifications query (with status + filter) shared by the
+     * list and the exports.
+     */
+    private function buildQualificationsQuery(Request $request): Builder
+    {
+        $sectionId = (int) auth()->user()->P_SECTION;
         $filter = (string) $request->string('filter', 'all'); // all|expiring|expired
 
         $today = now()->toDateString();
@@ -370,10 +383,41 @@ class PersonnelController extends Controller
             $query->whereRaw("q.Q_EXPIRATION IS NOT NULL AND q.Q_EXPIRATION < '{$today}'");
         }
 
-        $items = $query->paginate(50)->withQueryString();
+        return $query;
+    }
 
-        return view('personnel.qualifications', compact('items', 'filter')
-            + ['columns' => $this->qualificationsColumns()]);
+    /**
+     * Stream the qualifications list as an XLSX download (qualifications_xls.php
+     * parity). Honours the active filter and the ?cols= selection.
+     */
+    public function exportQualificationsXls(Request $request)
+    {
+        return $this->exportQualifications($request, 'xlsx');
+    }
+
+    /**
+     * Stream the qualifications list as a CSV download.
+     */
+    public function exportQualificationsCsv(Request $request)
+    {
+        return $this->exportQualifications($request, 'csv');
+    }
+
+    private function exportQualifications(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // 'personnel' / 'type' are alwaysVisible, so resolveColumns skips them.
+        $columns = $service->resolveColumns($this->qualificationsColumns(), $request, [
+            ['Personnel', fn ($q) => $q->P_PRENOM.' '.strtoupper((string) $q->P_NOM)],
+            ['Type',      fn ($q) => $q->PS_TYPE ?? ''],
+        ]);
+
+        $items = $this->buildQualificationsQuery($request)->get();
+        $filename = 'Qualifications_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Qualifications', 'freezeHeader' => true]);
     }
 
     private function qualificationsColumns(): array

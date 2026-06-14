@@ -327,6 +327,8 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.gps.update')->middleware('permission:0');
     Route::get('/personnel/photos', [PersonnelController::class, 'trombinoscope'])->name('personnel.photo-directory')->middleware('permission:0');
     Route::get('/qualifications', [PersonnelController::class, 'qualifications'])->name('personnel.qualifications')->middleware(['permission:56', 'feature:competences']);
+    Route::get('/qualifications/export/xls', [PersonnelController::class, 'exportQualificationsXls'])->name('personnel.qualifications.export.xls')->middleware(['permission:56', 'feature:competences']);
+    Route::get('/qualifications/export/csv', [PersonnelController::class, 'exportQualificationsCsv'])->name('personnel.qualifications.export.csv')->middleware(['permission:56', 'feature:competences']);
     Route::get('/companies', [CompanyController::class, 'index'])->name('company.index')->middleware(['permission:29', 'feature:client']);
     Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {
