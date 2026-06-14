@@ -95,6 +95,14 @@ test('the event list export routes are registered before the {code} wildcard', f
     expect(route('event.export.csv'))->toContain('/events/export/csv');
 });
 
+test('unauthenticated users are redirected from the per-event vehicle export to login', function () {
+    $this->get('/events/EVT001/export/vehicles')->assertRedirect('/login');
+});
+
+test('the per-event vehicle export route is registered', function () {
+    expect(route('event.export.vehicles', 'EVT001'))->toContain('/events/EVT001/export/vehicles');
+});
+
 // ── Legacy bridge redirects ──────────────────────────────────────────────────
 
 test('legacy evenements.php redirects to event.index', function () {

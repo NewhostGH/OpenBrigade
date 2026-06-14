@@ -914,6 +914,38 @@ class EventController extends Controller
         );
     }
 
+    public function exportVehicles(string $code)
+    {
+        $event = Event::findOrFail($code);
+
+        $vehicules = DB::table('evenement_vehicule as ev')
+            ->join('vehicule as v', 'ev.V_ID', '=', 'v.V_ID')
+            ->leftJoin('type_vehicule as tv', 'tv.TV_CODE', '=', 'v.TV_CODE')
+            ->where('ev.E_CODE', $code)
+            ->orderBy('v.V_INDICATIF')
+            ->orderBy('v.V_IMMATRICULATION')
+            ->select(
+                'v.V_INDICATIF', 'v.V_IMMATRICULATION', 'v.V_MODELE',
+                'tv.TV_LIBELLE', 'ev.EV_KM'
+            )
+            ->get();
+
+        $columns = [
+            ['Indicatif',       fn ($v) => $v->V_INDICATIF ?? ''],
+            ['Immatriculation', fn ($v) => $v->V_IMMATRICULATION ?? ''],
+            ['Type',            fn ($v) => $v->TV_LIBELLE ?? ''],
+            ['Modèle',          fn ($v) => $v->V_MODELE ?? ''],
+            ['Km',              fn ($v) => $v->EV_KM ?? ''],
+        ];
+
+        return (new TableExportService)->toXlsx(
+            $columns,
+            $vehicules,
+            'Activite_'.$event->E_CODE.'_Vehicules_'.date('Ymd'),
+            ['sheetTitle' => 'Véhicules', 'freezeHeader' => true]
+        );
+    }
+
     public function exportIcal(string $code): Response
     {
         $event = Event::with('horaires')->findOrFail($code);

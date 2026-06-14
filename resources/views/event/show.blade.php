@@ -480,12 +480,20 @@
     <div id="section-vehicules" data-evt-section class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title"><i class="fas fa-truck"></i> Véhicules</div>
-            @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
-                <button type="button" class="btn btn-sm btn-success"
-                        data-bs-toggle="modal" data-bs-target="#assignVehiculeModal">
-                    <i class="fas fa-plus me-1"></i> Assigner
-                </button>
-            @endif
+            <div class="d-flex gap-2">
+                @if(count($vehicules) > 0)
+                    <a href="{{ route('event.export.vehicles', $event->E_CODE) }}"
+                       class="btn btn-sm btn-outline-secondary" title="Exporter la liste des véhicules">
+                        <i class="fas fa-file-excel me-1"></i> XLS
+                    </a>
+                @endif
+                @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
+                    <button type="button" class="btn btn-sm btn-success"
+                            data-bs-toggle="modal" data-bs-target="#assignVehiculeModal">
+                        <i class="fas fa-plus me-1"></i> Assigner
+                    </button>
+                @endif
+            </div>
         </div>
         <div class="ob-widget-card-body p-0">
             @if(count($vehicules) === 0)

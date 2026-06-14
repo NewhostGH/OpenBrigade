@@ -113,6 +113,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/events/{code}/equipment/{ma}', [EventController::class, 'equipmentDetach'])->name('event.equipment.detach')->middleware('permission:15');
     // Exports
     Route::get('/events/{code}/export/participants', [EventController::class, 'exportParticipants'])->name('event.export.participants')->middleware('permission:0');
+    Route::get('/events/{code}/export/vehicles', [EventController::class, 'exportVehicles'])->name('event.export.vehicles')->middleware('permission:0');
     Route::get('/events/{code}/ical', [EventController::class, 'exportIcal'])->name('event.ical')->middleware('permission:0');
     Route::get('/duty', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
     Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
