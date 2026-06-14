@@ -101,7 +101,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Use the new calendar library when implemented (see PLA)
 - [ ] Automatic piquet/guard generation
 - [ ] Rest periods (`repos_*.php`)
-- [ ] Guard exports (XLS, PDF)
+- [x] Guard exports — XLS / CSV (monthly on-call/astreinte roster via `TableExportService`, section-scoped, `?cols=` aware)
+- [ ] Guard exports — PDF
 - [ ] Type de garde management (`type_garde.php`)
 - [ ] Demande de renfort (`demande_renfort.php`)
 

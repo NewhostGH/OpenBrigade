@@ -76,6 +76,16 @@ test('unauthenticated users are redirected from /duty to login', function () {
     $this->get('/duty')->assertRedirect('/login');
 });
 
+test('unauthenticated users are redirected from the on-call exports to login', function () {
+    $this->get('/duty/on-call/export/xls')->assertRedirect('/login');
+    $this->get('/duty/on-call/export/csv')->assertRedirect('/login');
+});
+
+test('the on-call export routes are registered', function () {
+    expect(route('duty.on-call.export.xls'))->toContain('/duty/on-call/export/xls');
+    expect(route('duty.on-call.export.csv'))->toContain('/duty/on-call/export/csv');
+});
+
 // ── Legacy bridge redirects ──────────────────────────────────────────────────
 
 test('legacy tableau_garde.php redirects to garde.index', function () {

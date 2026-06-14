@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -92,9 +94,29 @@ class DutyController extends Controller
      */
     public function onCall(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
+        [$month, $year, $first] = $this->onCallPeriod($request);
 
+        $slots = $this->buildOnCallQuery($request)->paginate(50)->withQueryString();
+
+        $prevMonth = $month === 1 ? 12 : $month - 1;
+        $prevYear = $month === 1 ? $year - 1 : $year;
+        $nextMonth = $month === 12 ? 1 : $month + 1;
+        $nextYear = $month === 12 ? $year + 1 : $year;
+
+        return view('duty.on-call', compact(
+            'slots', 'month', 'year', 'first',
+            'prevMonth', 'prevYear', 'nextMonth', 'nextYear'
+        ) + ['columns' => $this->onCallColumns()]);
+    }
+
+    /**
+     * Resolve and normalise the requested on-call month/year (wrapping at the
+     * year boundary), returning [month, year, firstDayOfMonth].
+     *
+     * @return array{0:int,1:int,2:Carbon}
+     */
+    private function onCallPeriod(Request $request): array
+    {
         $month = (int) $request->integer('month', now()->month);
         $year = (int) $request->integer('year', now()->year);
 
@@ -107,10 +129,20 @@ class DutyController extends Controller
             $year++;
         }
 
-        $first = Carbon::create($year, $month, 1)->startOfDay();
+        return [$month, $year, Carbon::create($year, $month, 1)->startOfDay()];
+    }
+
+    /**
+     * Section-scoped on-call (astreinte) slots for the requested month, shared
+     * by the list and the exports. Pagination is applied by the caller.
+     */
+    private function buildOnCallQuery(Request $request): Builder
+    {
+        $sectionId = (int) auth()->user()->P_SECTION;
+        [, , $first] = $this->onCallPeriod($request);
         $last = $first->copy()->endOfMonth();
 
-        $slots = DB::table('astreinte as a')
+        return DB::table('astreinte as a')
             ->join('pompier as p', 'a.P_ID', '=', 'p.P_ID')
             ->join('groupe as g', 'a.GP_ID', '=', 'g.GP_ID')
             ->where('a.S_ID', $sectionId)
@@ -120,19 +152,42 @@ class DutyController extends Controller
                 'a.AS_ID', 'a.AS_DEBUT', 'a.AS_FIN',
                 'p.P_ID', 'p.P_NOM', 'p.P_PRENOM',
                 'g.GP_ID', 'g.GP_DESCRIPTION'
-            )
-            ->paginate(50)
-            ->withQueryString();
+            );
+    }
 
-        $prevMonth = $month === 1 ? 12 : $month - 1;
-        $prevYear = $month === 1 ? $year - 1 : $year;
-        $nextMonth = $month === 12 ? 1 : $month + 1;
-        $nextYear = $month === 12 ? $year + 1 : $year;
+    /**
+     * Stream the month's on-call roster as an XLSX download (guard export).
+     */
+    public function exportOnCallXls(Request $request)
+    {
+        return $this->exportOnCall($request, 'xlsx');
+    }
 
-        return view('duty.on-call', compact(
-            'slots', 'month', 'year', 'first',
-            'prevMonth', 'prevYear', 'nextMonth', 'nextYear'
-        ) + ['columns' => $this->onCallColumns()]);
+    /**
+     * Stream the month's on-call roster as a CSV download.
+     */
+    public function exportOnCallCsv(Request $request)
+    {
+        return $this->exportOnCall($request, 'csv');
+    }
+
+    private function exportOnCall(Request $request, string $format)
+    {
+        [$month, $year] = $this->onCallPeriod($request);
+
+        $service = new TableExportService;
+        // 'debut' / 'personnel' are alwaysVisible, so resolveColumns skips them.
+        $columns = $service->resolveColumns($this->onCallColumns(), $request, [
+            ['Début',     fn ($s) => Carbon::parse($s->AS_DEBUT)->format('d/m/Y H:i')],
+            ['Personnel', fn ($s) => $s->P_PRENOM.' '.strtoupper((string) $s->P_NOM)],
+        ]);
+
+        $items = $this->buildOnCallQuery($request)->get();
+        $filename = 'Astreintes_'.sprintf('%04d-%02d', $year, $month);
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Astreintes', 'freezeHeader' => true]);
     }
 
     private function onCallColumns(): array

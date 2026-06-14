@@ -27,6 +27,14 @@
        class="btn btn-sm btn-outline-secondary">
         <i class="fas fa-chevron-right"></i>
     </a>
+    <a href="{{ route('duty.on-call.export.xls', ['month' => $month, 'year' => $year]) }}"
+       class="btn btn-sm btn-outline-secondary ms-auto" title="Exporter le mois en XLS">
+        <i class="fas fa-file-excel me-1"></i> XLS
+    </a>
+    <a href="{{ route('duty.on-call.export.csv', ['month' => $month, 'year' => $year]) }}"
+       class="btn btn-sm btn-outline-secondary" title="Exporter le mois en CSV">
+        <i class="fas fa-file-csv me-1"></i> CSV
+    </a>
 </div>
 
 <x-ob-commandbar table-id="astreintesTable" :total="$slots->total()" total-label="astreinte">

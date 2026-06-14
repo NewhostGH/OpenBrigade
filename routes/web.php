@@ -117,6 +117,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{code}/ical', [EventController::class, 'exportIcal'])->name('event.ical')->middleware('permission:0');
     Route::get('/duty', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
     Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
+    Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');
+    Route::get('/duty/on-call/export/csv', [DutyController::class, 'exportOnCallCsv'])->name('duty.on-call.export.csv')->middleware('permission:52');
     Route::get('/unavailability', [UnavailabilityController::class, 'index'])->name('unavailability.index')->middleware('permission:11');
     Route::get('/replacements', [ReplacementController::class, 'index'])->name('replacement.index')->middleware(['permission:0', 'feature:remplacements']);
     Route::get('/availability', [AvailabilityController::class, 'index'])->name('availability.index')->middleware('permission:38');
