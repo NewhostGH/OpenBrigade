@@ -426,8 +426,8 @@ class DashboardService
     // ── Operational notices / news ──────────────────────────────────────────
 
     public function getInfos(User $user): array
-    {
-        $sectionId = (int) $user->P_SECTION;
+    {fqkslf,kla,qfao
+        $sectionId = (int) $user->P_SECTIklfqklfklajlkjfljsON;
         $today = date('Y-m-d');
 
         $consignes = [];
