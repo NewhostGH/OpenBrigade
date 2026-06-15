@@ -224,12 +224,7 @@ class PersonnelExportService
             return null;
         }
 
-        $publicRelative = 'images/user-specific/trombi/'.$personnel->P_PHOTO;
-        if (file_exists(public_path($publicRelative))) {
-            return asset($publicRelative);
-        }
-
-        return null;
+        return route('personnel.photo', $personnel->P_ID);
     }
 
     private function getActivities(int $pid, string $cevCode, string $from, string $to)

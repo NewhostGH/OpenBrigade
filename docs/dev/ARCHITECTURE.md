@@ -152,8 +152,28 @@ Asset structure and the build pipeline are documented in
 
 - `logs/` — application logs
 - `framework/` — cache, sessions, compiled views
-- `app/public/` — user uploads (symlinked into `public/`)
 - `app/backups/` — database dumps written by the backup feature
+- `app/private/documents/{S_ID}/{DF_ID}/` — document-library files (auth-gated via `DocumentController`)
+- `app/private/trombi/` — personnel portrait photos (auth-gated via `PersonnelController::photo()`)
+- `app/private/sections/{S_ID}/pdf/` — section letterhead PDFs (auth-gated via `OrganizationController`)
+- `app/private/sections/{S_ID}/images/` — section badge images (auth-gated via `OrganizationController`)
+- `app/photos/{S_ID}/{album_id}/` — photo-album images (auth-gated via `PhotoController::photoServe()`)
+
+### Public vs private storage policy
+
+**`public/`** must only contain files that belong to the application itself and carry no
+expectation of privacy — UI assets, default avatars, app-bundled PDFs:
+
+| Path | Contents |
+| ---- | -------- |
+| `public/build/` | Vite-compiled JS/CSS bundles |
+| `public/images/` | App UI images (`boy.png`, `girl.png`, `autre.png`, grade icons, theme) |
+| `public/pdf/` | App-bundled PDF templates (`pdf_page.pdf`) |
+
+**Everything user-uploaded goes into `storage/app/private/…`** and is served exclusively
+through an authenticated controller action. Direct URL guessing must not grant access to
+any user data. Run `php artisan storage:migrate` (see `MigrateStorage` command) to
+relocate files from legacy public paths into the canonical private tree.
 
 ---
 

@@ -443,8 +443,8 @@ class PersonnelController extends Controller
 
         if ($filename !== '') {
             $filename = basename($filename);
-            // TODO: Migrate code — trombi photos live in archive/legacy_app; move to storage/ after decommission
             $paths = [
+                storage_path('app/private/trombi/'.$filename),
                 base_path('archive/legacy_app/images/user-specific/trombi/'.$filename),
                 public_path('images/user-specific/trombi/'.$filename),
             ];
@@ -1035,7 +1035,7 @@ class PersonnelController extends Controller
             $file = $request->file('photo_upload');
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = $personnel->P_ID.'_'.time().'.'.$extension;
-            $destDir = public_path('images/user-specific/trombi');
+            $destDir = storage_path('app/private/trombi');
 
             if (! is_dir($destDir)) {
                 mkdir($destDir, 0755, true);
@@ -1202,7 +1202,7 @@ class PersonnelController extends Controller
             $file = $request->file('photo_upload');
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = $personnel->P_ID.'_'.time().'.'.$extension;
-            $destDir = public_path('images/user-specific/trombi');
+            $destDir = storage_path('app/private/trombi');
 
             if (! is_dir($destDir)) {
                 mkdir($destDir, 0755, true);
