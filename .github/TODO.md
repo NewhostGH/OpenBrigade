@@ -48,7 +48,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 
 - [x] `SectionScopeService` — visible-set authority, navbar switcher, `<x-ob-section-select>`
 - [x] Wired into Personnel, Véhicules, Cotisations, Organisation controllers
-- [ ] Extend scoping to remaining section-tied controllers (Evenement, Garde, Materiel, Consommable, Document, Message, Statistique)
+- [x] Extend scoping to remaining section-tied controllers (Evenement, Garde, Materiel, Consommable, Message) — Document was already done; Statistique is single-section by design (deferred)
 
 ---
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -12,6 +13,10 @@ use Illuminate\View\View;
 
 class ConsumableController extends Controller
 {
+    public function __construct(
+        private readonly SectionScopeService $sectionScope,
+    ) {}
+
     public function index(Request $request): View
     {
         $search = trim((string) $request->string('q'));
@@ -31,16 +36,17 @@ class ConsumableController extends Controller
      */
     private function buildFilteredQuery(Request $request): Builder
     {
-        $sectionId = (int) auth()->user()->P_SECTION;
         $search = trim((string) $request->string('q'));
         $filtSect = (int) $request->integer('section', 0);
         $alert = (bool) $request->boolean('alert', false);
-        $target = $filtSect > 0 ? $filtSect : $sectionId;
         $today = now()->toDateString();
 
         $query = DB::table('consommable as c')
-            ->leftJoin('type_consommable as tc', 'c.TC_ID', '=', 'tc.TC_ID')
-            ->where('c.S_ID', $target)
+            ->leftJoin('type_consommable as tc', 'c.TC_ID', '=', 'tc.TC_ID');
+
+        $this->sectionScope->apply($query, 'c.S_ID', $filtSect);
+
+        $query
             ->select(
                 'c.C_ID', 'c.C_DESCRIPTION', 'c.C_NOMBRE',
                 'c.C_MINIMUM', 'c.C_DATE_PEREMPTION', 'c.C_LIEU_STOCKAGE',

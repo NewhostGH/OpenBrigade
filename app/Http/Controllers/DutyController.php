@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -11,6 +12,10 @@ use Illuminate\View\View;
 
 class DutyController extends Controller
 {
+    public function __construct(
+        private readonly SectionScopeService $sectionScope,
+    ) {}
+
     /**
      * On-call roster (tableau de garde) for a given week.
      *
@@ -138,15 +143,17 @@ class DutyController extends Controller
      */
     private function buildOnCallQuery(Request $request): Builder
     {
-        $sectionId = (int) auth()->user()->P_SECTION;
+        $filtSect = (int) $request->integer('section', 0);
         [, , $first] = $this->onCallPeriod($request);
         $last = $first->copy()->endOfMonth();
 
-        return DB::table('astreinte as a')
+        $query = DB::table('astreinte as a')
             ->join('pompier as p', 'a.P_ID', '=', 'p.P_ID')
-            ->join('groupe as g', 'a.GP_ID', '=', 'g.GP_ID')
-            ->where('a.S_ID', $sectionId)
-            ->whereBetween('a.AS_DEBUT', [$first->toDateTimeString(), $last->toDateTimeString()])
+            ->join('groupe as g', 'a.GP_ID', '=', 'g.GP_ID');
+
+        $this->sectionScope->apply($query, 'a.S_ID', $filtSect);
+
+        return $query->whereBetween('a.AS_DEBUT', [$first->toDateTimeString(), $last->toDateTimeString()])
             ->orderBy('a.AS_DEBUT')
             ->select(
                 'a.AS_ID', 'a.AS_DEBUT', 'a.AS_FIN',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -12,6 +13,10 @@ use Illuminate\View\View;
 
 class EquipmentController extends Controller
 {
+    public function __construct(
+        private readonly SectionScopeService $sectionScope,
+    ) {}
+
     public function index(Request $request): View
     {
         $search = trim((string) $request->string('q'));
@@ -29,15 +34,16 @@ class EquipmentController extends Controller
      */
     private function buildFilteredQuery(Request $request): Builder
     {
-        $sectionId = (int) auth()->user()->P_SECTION;
         $search = trim((string) $request->string('q'));
         $filtSect = (int) $request->integer('section', 0);
-        $target = $filtSect > 0 ? $filtSect : $sectionId;
 
         $query = DB::table('materiel as m')
             ->leftJoin('type_materiel as tm', 'm.TM_ID', '=', 'tm.TM_ID')
-            ->leftJoin('section as s', 'm.S_ID', '=', 's.S_ID')
-            ->where('m.S_ID', $target)
+            ->leftJoin('section as s', 'm.S_ID', '=', 's.S_ID');
+
+        $this->sectionScope->apply($query, 'm.S_ID', $filtSect);
+
+        $query
             ->select(
                 'm.MA_ID', 'm.MA_MODELE', 'm.MA_NUMERO_SERIE',
                 'm.MA_LIEU_STOCKAGE', 'm.MA_REV_DATE', 'm.MA_NB',

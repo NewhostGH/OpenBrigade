@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\Personnel;
 use App\Models\Section;
 use App\Services\ICalExportService;
+use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,10 @@ use Illuminate\View\View;
 
 class EventController extends Controller
 {
+    public function __construct(
+        private readonly SectionScopeService $sectionScope,
+    ) {}
+
     // ── Event list ────────────────────────────────────────────────────────────
 
     public function index(Request $request): View
@@ -48,7 +53,6 @@ class EventController extends Controller
      */
     private function buildFilteredQuery(Request $request): Builder
     {
-        $sectionId = (int) auth()->user()->P_SECTION;
         $period = (string) $request->string('period', 'upcoming');
         $search = trim((string) $request->string('q'));
         $type = (string) $request->string('type', 'ALL');
@@ -92,11 +96,7 @@ class EventController extends Controller
             $query->where('evenement.TE_CODE', $type);
         }
 
-        if ($filtSect > 0) {
-            $query->where('evenement.S_ID', $filtSect);
-        } else {
-            $query->where('evenement.S_ID', $sectionId);
-        }
+        $this->sectionScope->apply($query, 'evenement.S_ID', $filtSect);
 
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {

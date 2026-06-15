@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SectionScopeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class MessageController extends Controller
 {
+    public function __construct(
+        private readonly SectionScopeService $sectionScope,
+    ) {}
+
     /**
      * Message board — consignes opérationnelles and news (actualités).
      */
     public function index(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
-
         // Which category: consigne | amicale (actualité) | all
         $category = (string) $request->string('category', 'consigne');
         $allowed = ['consigne', 'amicale', 'all'];
@@ -24,8 +26,11 @@ class MessageController extends Controller
         }
 
         $query = DB::table('message as m')
-            ->leftJoin('pompier as p', 'm.P_ID', '=', 'p.P_ID')
-            ->where('m.S_ID', $sectionId)
+            ->leftJoin('pompier as p', 'm.P_ID', '=', 'p.P_ID');
+
+        $this->sectionScope->apply($query, 'm.S_ID');
+
+        $query
             ->where(function ($q) {
                 $today = now()->toDateString();
                 $q->whereNull('m.M_DUREE')
