@@ -106,13 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
             @include('admin.permissions.partials.overrides')
         @endif
 
-    </div>
-
-    <p class="text-muted small mt-3">
-        <i class="fas fa-circle-info me-1"></i>
-        L'attribution <em>personne → section → rôle</em> se fait depuis la fiche du personnel.
-        L'appartenance aux groupes globaux reste sur la fiche (groupe principal / secondaire).
-    </p>
+    </div>-
 </div>
 
 @endsection
