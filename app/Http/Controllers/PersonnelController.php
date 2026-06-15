@@ -444,7 +444,7 @@ class PersonnelController extends Controller
         if ($filename !== '') {
             $filename = basename($filename);
             $paths = [
-                storage_path('app/private/trombi/'.$filename),
+                storage_path('app/private/profile_pictures/'.$filename),
                 base_path('archive/legacy_app/images/user-specific/trombi/'.$filename),
                 public_path('images/user-specific/trombi/'.$filename),
             ];
@@ -997,7 +997,7 @@ class PersonnelController extends Controller
             'P_LICENCE_EXPIRY' => 'nullable|date',
             'DATE_NPAI' => 'nullable|date',
             'OBSERVATION' => 'nullable|string',
-            'photo_upload' => 'nullable|image|max:4096',
+            'photo_upload' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,ico|max:4096',
         ]);
 
         $validated['P_HIDE'] = $request->boolean('P_HIDE');
@@ -1035,7 +1035,7 @@ class PersonnelController extends Controller
             $file = $request->file('photo_upload');
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = $personnel->P_ID.'_'.time().'.'.$extension;
-            $destDir = storage_path('app/private/trombi');
+            $destDir = storage_path('app/private/profile_pictures');
 
             if (! is_dir($destDir)) {
                 mkdir($destDir, 0755, true);
@@ -1170,7 +1170,7 @@ class PersonnelController extends Controller
             // Notes
             'OBSERVATION' => 'nullable|string',
             // Photo
-            'photo_upload' => 'nullable|image|max:4096',
+            'photo_upload' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,ico|max:4096',
         ]);
 
         // Boolean flags (unchecked checkboxes are not submitted)
@@ -1202,7 +1202,7 @@ class PersonnelController extends Controller
             $file = $request->file('photo_upload');
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = $personnel->P_ID.'_'.time().'.'.$extension;
-            $destDir = storage_path('app/private/trombi');
+            $destDir = storage_path('app/private/profile_pictures');
 
             if (! is_dir($destDir)) {
                 mkdir($destDir, 0755, true);

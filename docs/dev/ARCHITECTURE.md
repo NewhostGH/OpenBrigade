@@ -154,7 +154,7 @@ Asset structure and the build pipeline are documented in
 - `framework/` — cache, sessions, compiled views
 - `app/backups/` — database dumps written by the backup feature
 - `app/private/documents/{S_ID}/{DF_ID}/` — document-library files (auth-gated via `DocumentController`)
-- `app/private/trombi/` — personnel portrait photos (auth-gated via `PersonnelController::photo()`)
+- `app/private/profile_pictures/` — personnel portrait photos (auth-gated via `PersonnelController::photo()`)
 - `app/private/sections/{S_ID}/pdf/` — section letterhead PDFs (auth-gated via `OrganizationController`)
 - `app/private/sections/{S_ID}/images/` — section badge images (auth-gated via `OrganizationController`)
 - `app/photos/{S_ID}/{album_id}/` — photo-album images (auth-gated via `PhotoController::photoServe()`)

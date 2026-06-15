@@ -73,8 +73,8 @@
                                     <tr>
                                         <td class="align-middle text-center">
                                             <a href="{{ route('personnel.show', $row->P_ID) }}">
-                                                @if ($row->P_PHOTO && file_exists(public_path('trombi/' . $row->P_PHOTO)))
-                                                    <img src="{{ asset('trombi/' . $row->P_PHOTO) }}" class="rounded"
+                                                @if ($row->P_PHOTO)
+                                                    <img src="{{ route('personnel.photo', $row->P_ID) }}" class="rounded"
                                                         style="height:34px; width:34px; object-fit:cover;" alt="">
                                                 @else
                                                     <i class="fas fa-user-circle fa-2x text-muted"></i>

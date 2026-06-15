@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\File;
  *
  * Covers:
  *  - Document library: {legacy_root}/user-data/files_section/… → storage/app/private/documents/…
- *  - Personnel photos: public/images/user-specific/trombi/…   → storage/app/private/trombi/…
+ *  - Personnel photos: public/images/user-specific/profile_pictures/…   → storage/app/private/profile_pictures/…
  */
 class MigrateStorage extends Command
 {
@@ -30,7 +30,7 @@ class MigrateStorage extends Command
         $this->info('── Document library ──────────────────────────────────────────');
         $this->migrateDocuments($documents, $dry);
 
-        $this->info('── Personnel photos (trombi) ─────────────────────────────────');
+        $this->info('── Personnel photos (profile_pictures) ─────────────────────────────────');
         $this->migrateTrombi($dry);
 
         return self::SUCCESS;
@@ -71,7 +71,7 @@ class MigrateStorage extends Command
     {
         $moved = 0;
         $missing = 0;
-        $canonical_dir = storage_path('app/private/trombi');
+        $canonical_dir = storage_path('app/private/profile_pictures');
 
         Personnel::query()->whereNotNull('P_PHOTO')->where('P_PHOTO', '!=', '')->select(['P_ID', 'P_PHOTO'])->lazy()->each(
             function (Personnel $p) use ($dry, $canonical_dir, &$moved, &$missing) {
@@ -83,8 +83,8 @@ class MigrateStorage extends Command
                 }
 
                 $sources = [
-                    public_path('images/user-specific/trombi/'.$filename),
-                    base_path('archive/legacy_app/images/user-specific/trombi/'.$filename),
+                    public_path('images/user-specific/profile_pictures/'.$filename),
+                    base_path('archive/legacy_app/images/user-specific/profile_pictures/'.$filename),
                 ];
 
                 foreach ($sources as $src) {
