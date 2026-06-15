@@ -19,7 +19,11 @@
 
 @section('content')
 
-@php $obsolete = $obsolete ?? []; @endphp
+@php
+    $obsolete   = $obsolete   ?? [];
+    $userAllows = $userAllows  ?? [];
+    $userDenies = $userDenies  ?? [];
+@endphp
 
 <x-ob-breadcrumb :items="[
         ['label' => 'Mon compte'],
@@ -81,7 +85,9 @@
             <div class="ob-widget-card-actions" style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">
                 <i class="fas fa-check text-success"></i> Effectif &nbsp;
                 <i class="fas fa-minus text-muted"></i> Non accordé &nbsp;
-                <i class="fas fa-lock text-muted"></i> Plafonné par la section
+                <i class="fas fa-lock text-muted"></i> Plafonné par la section &nbsp;
+                <i class="fas fa-user-check" style="color:var(--color-primary);"></i> Dérogation personnelle (accordée) &nbsp;
+                <i class="fas fa-user-times text-danger"></i> Dérogation personnelle (refusée)
             </div>
         </div>
         <div class="p-3">
@@ -108,15 +114,18 @@
                             </tr>
                             @foreach ($features as $f)
                                 @php
-                                    $isDenied = in_array((int) $f->F_ID, $denied, true);
-                                    $sources = $origins[(int) $f->F_ID] ?? [];
-                                    $granted = !$isDenied && !empty($sources);
-                                    $isObsolete = in_array((int) $f->F_ID, $obsolete, true);
+                                    $fid        = (int) $f->F_ID;
+                                    $isDenied   = in_array($fid, $denied, true);
+                                    $hasUserAllow = in_array($fid, $userAllows, true);
+                                    $hasUserDeny  = in_array($fid, $userDenies, true);
+                                    $sources    = $origins[$fid] ?? [];
+                                    $granted    = !$isDenied && !$hasUserDeny && ($hasUserAllow || !empty($sources));
+                                    $isObsolete = in_array($fid, $obsolete, true);
                                 @endphp
-                                <tr class="ob-hab-feat {{ $isDenied ? 'ob-hab-row-capped' : '' }}">
+                                <tr class="ob-hab-feat {{ $isDenied ? 'ob-hab-row-capped' : ($hasUserDeny ? 'ob-hab-row-denied' : '') }}">
                                     <td class="ob-hab-feat-cell" title="{{ $f->F_DESCRIPTION }}">
                                         {{ $f->F_LIBELLE }}
-                                        <span class="text-muted ms-1" style="font-size:10px;">#{{ $f->F_ID }}</span>
+                                        <span class="text-muted ms-1" style="font-size:10px;">#{{ $fid }}</span>
                                         @if ($f->F_FLAG)<span class="ob-badge ob-badge-bloqued ms-1"
                                         style="font-size:9px;">sensible</span>@endif
                                         @if ($isObsolete)<span class="ob-badge ob-badge-archive ms-1" style="font-size:9px;"
@@ -125,6 +134,10 @@
                                     <td class="ob-hab-cell">
                                         @if ($isDenied)
                                             <i class="fas fa-lock text-muted" title="Plafonné par la section"></i>
+                                        @elseif ($hasUserDeny)
+                                            <i class="fas fa-user-times text-danger" title="Dérogation personnelle — refus"></i>
+                                        @elseif ($hasUserAllow)
+                                            <i class="fas fa-user-check" style="color:var(--color-primary);" title="Dérogation personnelle — accordée"></i>
                                         @elseif ($granted)
                                             <i class="fas fa-check text-success"></i>
                                         @else
@@ -133,7 +146,14 @@
                                     </td>
                                     <td class="ob-hab-feat-cell"
                                         style="position:static;min-width:0;font-size:11px;color:var(--text-muted-soft);">
-                                        {{ $granted ? implode(' · ', $sources) : '—' }}</td>
+                                        @if ($hasUserDeny)
+                                            <span style="color:var(--color-danger);font-style:italic;">Dérogation personnelle — refus</span>
+                                        @elseif ($hasUserAllow)
+                                            <span style="color:var(--color-primary);font-style:italic;">Dérogation personnelle</span>{{ !empty($sources) ? ' · ' . implode(' · ', $sources) : '' }}
+                                        @else
+                                            {{ $granted ? implode(' · ', $sources) : '—' }}
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

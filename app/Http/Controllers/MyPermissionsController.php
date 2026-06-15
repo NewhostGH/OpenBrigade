@@ -63,6 +63,28 @@ class MyPermissionsController extends Controller
 
         $denied = $this->resolver->effectiveDenied($sectionId);
 
+        // Personal allow/deny overrides from ob_user_permission.
+        $chain = $this->resolver->sectionChain($sectionId);
+        $userAllows = [];
+        $userDenies = [];
+        foreach (DB::table('ob_user_permission')->where('person_id', (int) $user->P_ID)->get() as $row) {
+            $sid = $row->section_id !== null ? (int) $row->section_id : null;
+            $inScope = ($sid === null || $sid <= 0) || $chain === [] || in_array($sid, $chain, true);
+            if (! $inScope) {
+                continue;
+            }
+            $fid = (int) $row->feature_id;
+            if ($row->effect === 'deny') {
+                $userDenies[$fid] = true;
+            } else {
+                $userAllows[$fid] = true;
+            }
+        }
+        // Deny wins within the tier.
+        foreach (array_keys($userDenies) as $fid) {
+            unset($userAllows[$fid]);
+        }
+
         $features = DB::table('fonctionnalite as f')
             ->leftJoin('type_fonctionnalite as tf', 'tf.TF_ID', '=', 'f.TF_ID')
             ->orderBy('f.TF_ID')
@@ -77,6 +99,8 @@ class MyPermissionsController extends Controller
             'featuresByCategory' => $features->groupBy('category'),
             'origins' => $origins,
             'denied' => $denied,
+            'userAllows' => array_keys($userAllows),
+            'userDenies' => array_keys($userDenies),
             'obsolete' => array_map('intval', config('habilitations.obsolete_features', [])),
         ]);
     }

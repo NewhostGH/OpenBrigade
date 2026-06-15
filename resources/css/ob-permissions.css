@@ -154,6 +154,13 @@ tbody.ob-hab-collapsed .ob-hab-chevron {
     color: var(--text-muted-soft);
 }
 
+.ob-hab-row-denied .ob-hab-feat-cell {
+    color: var(--color-danger, #dc3545);
+    text-decoration: line-through;
+    text-decoration-color: var(--color-danger, #dc3545);
+    opacity: 0.7;
+}
+
 /* ── Tri-state allow/deny/neutral selector ──────────────────────────────── */
 .ob-hab-effect {
     border: 1px solid var(--border-color, #d8d3ea);
