@@ -14,6 +14,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\DuesController;
 use App\Http\Controllers\DutyController;
+use App\Http\Controllers\DutyTypeController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeatureController;
@@ -91,6 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{code}/edit', [EventController::class, 'edit'])->name('event.edit')->middleware('permission:15');
     Route::put('/events/{code}', [EventController::class, 'update'])->name('event.update')->middleware('permission:15');
     Route::delete('/events/{code}', [EventController::class, 'destroy'])->name('event.destroy')->middleware('permission:19');
+    Route::post('/events/{code}/duplicate', [EventController::class, 'duplicate'])->name('event.duplicate')->middleware('permission:15');
     // Participant management — inscription, fonction, équipe (permission 10 = inscrire)
     Route::post('/events/{code}/participants', [EventController::class, 'participantStore'])->name('event.participant.store')->middleware('permission:10');
     Route::patch('/events/{code}/participants/{pid}', [EventController::class, 'participantUpdate'])->name('event.participant.update')->middleware('permission:10');
@@ -120,6 +122,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
     Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');
     Route::get('/duty/on-call/export/csv', [DutyController::class, 'exportOnCallCsv'])->name('duty.on-call.export.csv')->middleware('permission:52');
+    Route::get('/garde/types', [DutyTypeController::class, 'index'])->name('duty.types.index')->middleware('permission:5');
+    Route::post('/garde/types', [DutyTypeController::class, 'store'])->name('duty.types.store')->middleware('permission:5');
+    Route::patch('/garde/types/{id}', [DutyTypeController::class, 'update'])->name('duty.types.update')->middleware('permission:5');
+    Route::delete('/garde/types/{id}', [DutyTypeController::class, 'destroy'])->name('duty.types.destroy')->middleware('permission:5');
     Route::get('/unavailability', [UnavailabilityController::class, 'index'])->name('unavailability.index')->middleware('permission:11');
     Route::get('/replacements', [ReplacementController::class, 'index'])->name('replacement.index')->middleware(['permission:0', 'feature:remplacements']);
     Route::get('/replacements/export/xls', [ReplacementController::class, 'exportXls'])->name('replacement.export.xls')->middleware(['permission:0', 'feature:remplacements']);

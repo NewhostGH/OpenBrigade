@@ -17,6 +17,11 @@
                 <i class="fas fa-plus me-1"></i> Nouvelle astreinte
             </a>
         @endif
+        @if(auth()->user()->hasPermission(5))
+            <a href="{{ route('duty.types.index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-cog me-1"></i> Types de garde
+            </a>
+        @endif
     </div>
 
     {{-- Week navigation --}}
