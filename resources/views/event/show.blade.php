@@ -35,6 +35,11 @@
                     <i class="fas fa-calendar-plus me-1"></i> iCal
                 </a>
                 @if(auth()->user()->hasPermission(15))
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="modal" data-bs-target="#duplicateModal"
+                            title="Dupliquer cette activité">
+                        <i class="fas fa-copy me-1"></i> Dupliquer
+                    </button>
                     <a href="{{ route('event.edit', $event->E_CODE) }}"
                        class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-edit me-1"></i> Modifier
@@ -1017,6 +1022,63 @@
                 <div class="modal-footer py-2">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-sm btn-primary">Rattacher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- ── Duplicate modal ─────────────────────────────────────────────────────── --}}
+@if(auth()->user()->hasPermission(15))
+<div class="modal fade" id="duplicateModal" tabindex="-1" aria-labelledby="duplicateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('event.duplicate', $event->E_CODE) }}">
+                @csrf
+                <div class="modal-header py-2">
+                    <h6 class="modal-title" id="duplicateModalLabel">
+                        <i class="fas fa-copy me-1"></i> Dupliquer l'activité
+                    </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-3" style="font-size:var(--font-size-sm)">
+                        Une copie de <strong>{{ $event->E_LIBELLE ?? $event->E_CODE }}</strong> sera créée
+                        à la date indiquée. Le statut sera remis à « Ouvert ».
+                    </p>
+                    <div class="mb-3">
+                        <label for="dup_new_date" class="form-label">
+                            Date de début <span class="text-danger">*</span>
+                        </label>
+                        <input id="dup_new_date" type="date" name="new_date"
+                               class="form-control form-control-sm"
+                               value="{{ now()->addWeek()->toDateString() }}"
+                               required>
+                        <div class="form-text">Les autres horaires seront décalés du même nombre de jours.</div>
+                    </div>
+                    <div class="mb-2 form-check">
+                        <input class="form-check-input" type="checkbox" name="copy_participants"
+                               id="dup_participants" value="1">
+                        <label class="form-check-label" for="dup_participants"
+                               style="font-size:var(--font-size-sm)">
+                            Copier les participants et les équipes
+                        </label>
+                    </div>
+                    <div class="mb-0 form-check">
+                        <input class="form-check-input" type="checkbox" name="copy_vehicles"
+                               id="dup_vehicles" value="1">
+                        <label class="form-check-label" for="dup_vehicles"
+                               style="font-size:var(--font-size-sm)">
+                            Copier les véhicules et le matériel
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-copy me-1"></i> Dupliquer
+                    </button>
                 </div>
             </form>
         </div>

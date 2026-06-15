@@ -984,6 +984,108 @@ class EventController extends Controller
         );
     }
 
+    // ── Duplication ───────────────────────────────────────────────────────────
+
+    public function duplicate(Request $request, string $code): RedirectResponse
+    {
+        $source = Event::with(['horaires'])->findOrFail($code);
+
+        $validated = $request->validate([
+            'new_date' => ['required', 'date'],
+            'copy_participants' => ['boolean'],
+            'copy_vehicles' => ['boolean'],
+        ]);
+
+        $newDate = Carbon::parse($validated['new_date']);
+
+        $firstSchedule = $source->horaires->sortBy('EH_DATE_DEBUT')->first();
+        $dayShift = $firstSchedule
+            ? $newDate->diffInDays(Carbon::parse($firstSchedule->EH_DATE_DEBUT), false)
+            : 0;
+
+        $newCode = DB::transaction(function () use ($source, $dayShift, $validated) {
+            $newCode = (int) DB::table('evenement')->max('E_CODE') + 1;
+
+            $row = DB::table('evenement')->where('E_CODE', $source->E_CODE)->first();
+            $data = (array) $row;
+            unset($data['E_CODE']);
+            $data['E_CODE'] = $newCode;
+            $data['E_CLOSED'] = 0;
+            $data['E_CANCELED'] = 0;
+            $data['E_CREATED_BY'] = auth()->id();
+            $data['E_CREATE_DATE'] = now();
+
+            DB::table('evenement')->insert($data);
+
+            foreach ($source->horaires as $h) {
+                $debut = Carbon::parse($h->EH_DATE_DEBUT)->addDays($dayShift)->toDateString();
+                $fin = $h->EH_DATE_FIN
+                    ? Carbon::parse($h->EH_DATE_FIN)->addDays($dayShift)->toDateString()
+                    : $debut;
+
+                DB::table('evenement_horaire')->insert([
+                    'E_CODE' => $newCode,
+                    'EH_ID' => $h->EH_ID,
+                    'EH_DATE_DEBUT' => $debut,
+                    'EH_DATE_FIN' => $fin,
+                    'EH_DEBUT' => $h->EH_DEBUT ?? '00:00:00',
+                    'EH_FIN' => $h->EH_FIN ?? '00:00:00',
+                    'EH_DUREE' => $h->EH_DUREE ?? 0,
+                    'EH_DESCRIPTION' => $h->EH_DESCRIPTION ?? '',
+                ]);
+            }
+
+            if ($validated['copy_participants'] ?? false) {
+                $rows = DB::table('evenement_participation')
+                    ->where('E_CODE', $source->E_CODE)->get();
+                foreach ($rows as $r) {
+                    $p = (array) $r;
+                    $p['E_CODE'] = $newCode;
+                    DB::table('evenement_participation')->insert($p);
+                }
+
+                $teams = DB::table('evenement_equipe')
+                    ->where('E_CODE', $source->E_CODE)->get();
+                foreach ($teams as $t) {
+                    $p = (array) $t;
+                    $p['E_CODE'] = $newCode;
+                    DB::table('evenement_equipe')->insert($p);
+                }
+
+                $chefs = DB::table('evenement_chef')
+                    ->where('E_CODE', $source->E_CODE)->get();
+                foreach ($chefs as $c) {
+                    $p = (array) $c;
+                    $p['E_CODE'] = $newCode;
+                    DB::table('evenement_chef')->insert($p);
+                }
+            }
+
+            if ($validated['copy_vehicles'] ?? false) {
+                $rows = DB::table('evenement_vehicule')
+                    ->where('E_CODE', $source->E_CODE)->get();
+                foreach ($rows as $r) {
+                    $p = (array) $r;
+                    $p['E_CODE'] = $newCode;
+                    DB::table('evenement_vehicule')->insert($p);
+                }
+
+                $rows = DB::table('evenement_materiel')
+                    ->where('E_CODE', $source->E_CODE)->get();
+                foreach ($rows as $r) {
+                    $p = (array) $r;
+                    $p['E_CODE'] = $newCode;
+                    DB::table('evenement_materiel')->insert($p);
+                }
+            }
+
+            return $newCode;
+        });
+
+        return redirect()->route('event.show', $newCode)
+            ->with('success', 'Activité dupliquée avec succès.');
+    }
+
     // ── Shared validation ────────────────────────────────────────────────────
 
     private function validateEventRequest(Request $request, bool $isCreate): array
