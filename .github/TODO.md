@@ -69,9 +69,9 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Tenues / uniforms (`personnel_tenues.php`)
 - [ ] User preferences (`personnel_preferences.php`)
 - [ ] Salarié data (`upd_personnel_salarie.php`)
-- [ ] Emergency contacts (`personnel_contact.php`)
+- [x] Emergency contacts (`personnel_contact.php`)
 - [ ] Homonym management (`homonymes_*.php`)
-- [ ] Contact / email lists (`listecontacts.php`, `listemails.php`)
+- [x] Contact / email lists (`listecontacts.php`, `listemails.php`) — emails.txt + contacts.csv bulk export from personnel list
 - [ ] Custom member fields (`specific_info.php`)
 - [x] Qualifications export (`qualifications_xls.php`) — XLS / CSV via `TableExportService`, section-scoped, filter & `?cols=` aware
 - [ ] Remaining exports (`formations_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)

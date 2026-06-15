@@ -323,6 +323,10 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.export.xls')->middleware('permission:0');
     Route::get('personnel/export/csv', [PersonnelController::class, 'exportCsv'])
         ->name('personnel.export.csv')->middleware('permission:0');
+    Route::post('personnel/export/emails', [PersonnelController::class, 'exportEmailList'])
+        ->name('personnel.export.emails')->middleware('permission:0');
+    Route::post('personnel/export/contacts', [PersonnelController::class, 'exportContactsCsv'])
+        ->name('personnel.export.contacts')->middleware('permission:0');
     Route::get('personnel/create', [PersonnelController::class, 'create'])
         ->name('personnel.create')->middleware('permission:1');
     Route::post('personnel', [PersonnelController::class, 'store'])

@@ -134,8 +134,12 @@
             <i class="fas fa-at me-1"></i> Mail
         </button>
         <button type="button" class="btn btn-sm btn-light"
-                onclick="personnelAction('listemails')" title="Télécharger liste emails">
-            <i class="fas fa-download me-1"></i> Télécharger
+                onclick="personnelAction('emails')" title="Télécharger liste emails (.txt)">
+            <i class="fas fa-envelope-open-text me-1"></i> Emails.txt
+        </button>
+        <button type="button" class="btn btn-sm btn-light"
+                onclick="personnelAction('contacts')" title="Télécharger carnet d'adresses (.csv)">
+            <i class="fas fa-address-book me-1"></i> Contacts.csv
         </button>
     </x-slot:actions>
 
@@ -154,5 +158,14 @@
 @endsection
 
 @push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('personnelTable_form');
+    if (form) {
+        form.dataset.exportEmailsUrl   = @json(route('personnel.export.emails'));
+        form.dataset.exportContactsUrl = @json(route('personnel.export.contacts'));
+    }
+});
+</script>
 @vite('resources/js/ob-personnel-index.js')
 @endpush

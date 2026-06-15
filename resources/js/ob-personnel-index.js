@@ -11,12 +11,13 @@
         document.getElementById('SelectionMail').value = ids.join(',');
 
         const form = document.getElementById('personnelTable_form');
-        // TODO: Migrate code
-        form.action = {
-            badge:      '/legacy/pdf.php?pdf=badge',
-            listemails: '/legacy/listemails.php',
-        }[action] || '/legacy/mail_create.php';
-        // TODO: Migrate code
+        const actions = {
+            badge:    '/legacy/pdf.php?pdf=badge',
+            emails:   form.dataset.exportEmailsUrl,
+            contacts: form.dataset.exportContactsUrl,
+        };
+        form.action = actions[action] || '/legacy/mail_create.php';
+        form.method = (action === 'emails' || action === 'contacts') ? 'POST' : form.dataset.origMethod || 'POST';
         form.submit();
     };
 

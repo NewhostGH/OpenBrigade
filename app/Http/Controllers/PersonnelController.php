@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class PersonnelController extends Controller
 {
@@ -933,6 +934,62 @@ class PersonnelController extends Controller
             'P_CITY', 'P_ADDRESS', 'P_ZIP_CODE', 'P_PROFESSION', 'P_SEXE',
             'P_LICENCE', 'P_LICENCE_EXPIRY',
         ];
+    }
+
+    public function exportEmailList(Request $request): Response
+    {
+        $ids = $this->resolveExportIds($request);
+        abort_if(empty($ids), 422, 'Aucune personne sélectionnée.');
+
+        $people = DB::table('pompier')
+            ->whereIn('P_ID', $ids)
+            ->whereNotNull('P_EMAIL')
+            ->where('P_EMAIL', '!=', '')
+            ->orderBy('P_NOM')
+            ->select('P_NOM', 'P_PRENOM', 'P_EMAIL')
+            ->get();
+
+        $lines = $people->map(fn ($p) => '"'.ucfirst(mb_strtolower($p->P_PRENOM)).' '.strtoupper($p->P_NOM).'" <'.$p->P_EMAIL.'>')->implode("\r\n");
+
+        return response($lines, 200, [
+            'Content-Type' => 'text/plain; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="emails.txt"',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Pragma' => 'no-cache',
+        ]);
+    }
+
+    public function exportContactsCsv(Request $request): Response
+    {
+        $ids = $this->resolveExportIds($request);
+        abort_if(empty($ids), 422, 'Aucune personne sélectionnée.');
+
+        $people = DB::table('pompier')
+            ->whereIn('P_ID', $ids)
+            ->whereNotNull('P_EMAIL')
+            ->where('P_EMAIL', '!=', '')
+            ->orderBy('P_NOM')
+            ->select('P_NOM', 'P_PRENOM', 'P_EMAIL')
+            ->get();
+
+        $csv = "Prénom,Nom,Adresse de messagerie\r\n";
+        foreach ($people as $p) {
+            $csv .= ucfirst(mb_strtolower($p->P_PRENOM)).','.strtoupper($p->P_NOM).','.$p->P_EMAIL."\r\n";
+        }
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="contacts.csv"',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Pragma' => 'no-cache',
+        ]);
+    }
+
+    private function resolveExportIds(Request $request): array
+    {
+        $raw = $request->input('SelectionMail', $request->input('destid', ''));
+
+        return array_filter(array_map('intval', explode(',', (string) $raw)));
     }
 
     public function exportVcard(Personnel $personnel)
