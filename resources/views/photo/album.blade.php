@@ -22,6 +22,11 @@
     @endif
 
     @if ($canManage)
+        @if (!$photos->isEmpty())
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="selectModeToggle">
+                <i class="fas fa-check-square me-1"></i> Sélectionner
+            </button>
+        @endif
         <button type="button" class="btn btn-sm btn-primary"
                 data-bs-toggle="modal" data-bs-target="#photoAddModal">
             <i class="fas fa-plus me-1"></i> Ajouter des photos
@@ -102,9 +107,31 @@
                         <i class="fas fa-star fa-xs"></i>
                     </span>
                 @endif
+
+                <span class="ob-photo-select-check" aria-hidden="true">
+                    <i class="fas fa-check"></i>
+                </span>
             </div>
         @endforeach
     </div>
+
+    @if ($canManage)
+        {{-- Floating bulk-action bar (shown in select mode) --}}
+        <div id="bulkBar" class="ob-bulk-bar d-none">
+            <span id="bulkCount" class="ob-bulk-count">0 sélectionnée(s)</span>
+            <span class="d-flex gap-2 ms-auto">
+                <button type="button" class="btn btn-sm btn-secondary" id="bulkCancel">Annuler</button>
+                <button type="submit" form="bulkDeleteForm" class="btn btn-sm btn-danger" id="bulkDelete" disabled>
+                    <i class="fas fa-trash me-1"></i> Supprimer la sélection
+                </button>
+            </span>
+        </div>
+        <form method="POST" action="{{ route('photo.bulk-destroy', $album) }}"
+              id="bulkDeleteForm" data-confirm="Supprimer les photos sélectionnées ?">
+            @csrf @method('DELETE')
+            <div id="bulkHiddenInputs"></div>
+        </form>
+    @endif
 @endif
 
 @if ($canManage)
@@ -427,6 +454,96 @@ document.addEventListener('DOMContentLoaded', function () {
             if (uploadLabel)  { uploadLabel.textContent = 'Envoyer'; }
         });
     }
+
+    // ── Select / bulk-delete mode ──────────────────────────────────────────────
+    var selectToggle  = document.getElementById('selectModeToggle');
+    var bulkBar       = document.getElementById('bulkBar');
+    var bulkCount     = document.getElementById('bulkCount');
+    var bulkDelete    = document.getElementById('bulkDelete');
+    var bulkCancel    = document.getElementById('bulkCancel');
+    var bulkHiddens   = document.getElementById('bulkHiddenInputs');
+    var bulkForm      = document.getElementById('bulkDeleteForm');
+    var photoGrid     = document.querySelector('.ob-photo-grid');
+    var inSelectMode  = false;
+    var selectedPhotoIds = new Set();
+
+    function enterSelectMode() {
+        inSelectMode = true;
+        if (photoGrid) photoGrid.classList.add('ob-photo-grid--select');
+        if (bulkBar)   bulkBar.classList.remove('d-none');
+        if (selectToggle) {
+            selectToggle.innerHTML = '<i class="fas fa-times me-1"></i> Annuler';
+            selectToggle.classList.replace('btn-outline-secondary', 'btn-warning');
+        }
+        selectedPhotoIds.clear();
+        updateBulkBar();
+    }
+
+    function exitSelectMode() {
+        inSelectMode = false;
+        if (photoGrid) photoGrid.classList.remove('ob-photo-grid--select');
+        if (bulkBar)   bulkBar.classList.add('d-none');
+        if (selectToggle) {
+            selectToggle.innerHTML = '<i class="fas fa-check-square me-1"></i> Sélectionner';
+            selectToggle.classList.replace('btn-warning', 'btn-outline-secondary');
+        }
+        document.querySelectorAll('.ob-photo-item--selected').forEach(function (el) {
+            el.classList.remove('ob-photo-item--selected');
+        });
+        selectedPhotoIds.clear();
+        updateBulkBar();
+    }
+
+    function updateBulkBar() {
+        var n = selectedPhotoIds.size;
+        if (bulkCount) bulkCount.textContent = n + ' sélectionnée' + (n > 1 ? 's' : '');
+        if (bulkDelete) bulkDelete.disabled = n === 0;
+        if (bulkHiddens) {
+            bulkHiddens.innerHTML = '';
+            selectedPhotoIds.forEach(function (id) {
+                var inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'photo_ids[]';
+                inp.value = id;
+                bulkHiddens.appendChild(inp);
+            });
+        }
+    }
+
+    if (selectToggle) {
+        selectToggle.addEventListener('click', function () {
+            inSelectMode ? exitSelectMode() : enterSelectMode();
+        });
+    }
+    if (bulkCancel) {
+        bulkCancel.addEventListener('click', exitSelectMode);
+    }
+    if (bulkForm) {
+        bulkForm.addEventListener('submit', function (e) {
+            if (selectedPhotoIds.size === 0) { e.preventDefault(); return; }
+            if (!window.confirm(bulkForm.dataset.confirm || 'Supprimer les photos sélectionnées ?')) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    document.querySelectorAll('.ob-photo-item').forEach(function (card) {
+        card.addEventListener('click', function (e) {
+            if (!inSelectMode) return;
+            // Prevent lightbox or other link activation.
+            e.preventDefault();
+            e.stopPropagation();
+            var id = parseInt(card.dataset.photoId, 10);
+            if (selectedPhotoIds.has(id)) {
+                selectedPhotoIds.delete(id);
+                card.classList.remove('ob-photo-item--selected');
+            } else {
+                selectedPhotoIds.add(id);
+                card.classList.add('ob-photo-item--selected');
+            }
+            updateBulkBar();
+        }, true);
+    });
 });
 </script>
 @endpush

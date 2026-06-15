@@ -131,6 +131,28 @@ class PhotoController extends Controller
         return back()->with('success', 'Légende enregistrée.');
     }
 
+    /** Bulk-delete selected photos from an album (perm 47). */
+    public function photoBulkDestroy(Request $request, ObPhotoAlbum $album): RedirectResponse
+    {
+        abort_unless($this->sectionScope->allows((int) $album->S_ID), 403);
+
+        $v = $request->validate([
+            'photo_ids' => ['required', 'array', 'min:1'],
+            'photo_ids.*' => ['integer'],
+        ]);
+
+        $deleted = 0;
+        foreach ($v['photo_ids'] as $rawId) {
+            $photo = ObPhoto::where('id', (int) $rawId)->where('album_id', $album->id)->first();
+            if ($photo) {
+                $this->photos->deletePhoto($photo);
+                $deleted++;
+            }
+        }
+
+        return back()->with('success', "{$deleted} photo(s) supprimée(s).");
+    }
+
     /** Delete one photo. */
     public function photoDestroy(ObPhoto $photo): RedirectResponse
     {
