@@ -98,6 +98,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 
 - [x] Roster display and assignment
 - [x] Guard sheet and replacement management
+- [x] Replacement-request list export (XLS / CSV) — mine/section tabs, via `TableExportService`
 - [ ] Use the new calendar library when implemented (see PLA)
 - [ ] Automatic piquet/guard generation
 - [ ] Rest periods (`repos_*.php`)

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -11,10 +13,23 @@ class ReplacementController extends Controller
 {
     public function index(Request $request): View
     {
+        $tab = (string) $request->string('tab', 'mine'); // mine | section
+
+        $items = $this->buildFilteredQuery($request)->paginate(30)->withQueryString();
+
+        return view('replacement.index', compact('items', 'tab')
+            + ['columns' => $this->remplacementColumns()]);
+    }
+
+    /**
+     * Replacement-request query for the active tab (mine | section), shared by
+     * the list and the exports. Pagination is applied by the caller.
+     */
+    private function buildFilteredQuery(Request $request): Builder
+    {
         $user = auth()->user();
         $pid = (int) $user->P_ID;
         $sectionId = (int) $user->P_SECTION;
-
         $tab = (string) $request->string('tab', 'mine'); // mine | section
 
         $query = DB::table('remplacement as r')
@@ -48,10 +63,35 @@ class ReplacementController extends Controller
             });
         }
 
-        $items = $query->paginate(30)->withQueryString();
+        return $query;
+    }
 
-        return view('replacement.index', compact('items', 'tab')
-            + ['columns' => $this->remplacementColumns()]);
+    public function exportXls(Request $request)
+    {
+        return $this->export($request, 'xlsx');
+    }
+
+    public function exportCsv(Request $request)
+    {
+        return $this->export($request, 'csv');
+    }
+
+    private function export(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // 'activite' / 'remplace' are alwaysVisible, so resolveColumns skips them.
+        $columns = $service->resolveColumns($this->remplacementColumns(), $request, [
+            ['Activité', fn ($r) => $r->E_LIBELLE ?? $r->E_CODE],
+            ['Remplacé', fn ($r) => $r->replaced_name],
+        ]);
+
+        $items = $this->buildFilteredQuery($request)->get();
+        $tab = (string) $request->string('tab', 'mine');
+        $filename = 'Remplacements_'.$tab.'_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Remplacements', 'freezeHeader' => true]);
     }
 
     private function remplacementColumns(): array

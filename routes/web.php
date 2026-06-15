@@ -121,6 +121,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/duty/on-call/export/csv', [DutyController::class, 'exportOnCallCsv'])->name('duty.on-call.export.csv')->middleware('permission:52');
     Route::get('/unavailability', [UnavailabilityController::class, 'index'])->name('unavailability.index')->middleware('permission:11');
     Route::get('/replacements', [ReplacementController::class, 'index'])->name('replacement.index')->middleware(['permission:0', 'feature:remplacements']);
+    Route::get('/replacements/export/xls', [ReplacementController::class, 'exportXls'])->name('replacement.export.xls')->middleware(['permission:0', 'feature:remplacements']);
+    Route::get('/replacements/export/csv', [ReplacementController::class, 'exportCsv'])->name('replacement.export.csv')->middleware(['permission:0', 'feature:remplacements']);
     Route::get('/availability', [AvailabilityController::class, 'index'])->name('availability.index')->middleware('permission:38');
     Route::get('/admin/monitoring', [AdminController::class, 'monitoring'])->name('admin.monitoring')->middleware('permission:49');
     // Backup & restore
