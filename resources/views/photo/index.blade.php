@@ -14,6 +14,12 @@
                 data-bs-toggle="modal" data-bs-target="#albumCreateModal">
             <i class="fas fa-plus me-1"></i> Nouvel album
         </button>
+        @if ($imageFolders->isNotEmpty())
+            <button type="button" class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="modal" data-bs-target="#autoAlbumModal">
+                <i class="fas fa-magic me-1"></i> Auto-albums
+            </button>
+        @endif
     @endif
 
     <x-slot:filters>
@@ -26,11 +32,17 @@
         <i class="fas fa-images fa-3x mb-3 d-block text-secondary opacity-50"></i>
         Aucun album photo.
         @if ($canManage)
-            <div class="mt-2">
+            <div class="mt-2 d-flex gap-2 justify-content-center flex-wrap">
                 <button class="btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal" data-bs-target="#albumCreateModal">
                     Créer le premier album
                 </button>
+                @if ($imageFolders->isNotEmpty())
+                    <button class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="modal" data-bs-target="#autoAlbumModal">
+                        <i class="fas fa-magic me-1"></i> Importer depuis la bibliothèque
+                    </button>
+                @endif
             </div>
         @endif
     </div>
@@ -39,7 +51,8 @@
         @foreach ($albums as $album)
             <div class="col">
                 <div class="ob-photo-album-card card h-100 shadow-sm">
-                    <a href="{{ route('photo.album', $album) }}" class="ob-photo-album-cover">
+                    {{-- Cover — full clickable block link --}}
+                    <a href="{{ route('photo.album', $album) }}" class="ob-photo-album-cover" tabindex="-1">
                         @if ($album->coverPhoto)
                             <img src="{{ $album->coverPhoto->url() }}" alt="{{ e($album->name) }}"
                                  class="card-img-top ob-photo-cover-img">
@@ -50,8 +63,8 @@
                         @endif
                     </a>
                     <div class="card-body p-2">
-                        <a href="{{ route('photo.album', $album) }}"
-                           class="ob-photo-album-name text-decoration-none fw-semibold stretched-link">
+                        {{-- Plain link — NOT stretched-link so footer buttons remain clickable --}}
+                        <a href="{{ route('photo.album', $album) }}" class="ob-photo-album-name text-decoration-none">
                             {{ $album->name }}
                         </a>
                         @if ($album->description)
@@ -65,9 +78,11 @@
                             <i class="fas fa-image fa-xs me-1"></i>{{ $album->photos_count }}
                         </span>
                         @if ($canManage)
-                            <span class="d-flex gap-1">
-                                <button type="button" class="btn btn-link btn-sm p-0 text-secondary"
-                                        title="Modifier" data-album-edit
+                            <span class="ob-photo-album-actions">
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary py-0 px-2"
+                                        title="Modifier l'album"
+                                        data-album-edit
                                         data-id="{{ $album->id }}"
                                         data-name="{{ $album->name }}"
                                         data-desc="{{ $album->description }}">
@@ -76,7 +91,9 @@
                                 <form method="POST" action="{{ route('photo.album.destroy', $album) }}"
                                       data-confirm="Supprimer l'album « {{ $album->name }} » et toutes ses photos ?">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-link btn-sm p-0 text-danger" title="Supprimer">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger py-0 px-2"
+                                            title="Supprimer l'album">
                                         <i class="fas fa-trash fa-xs"></i>
                                     </button>
                                 </form>
@@ -145,6 +162,48 @@
             </form>
         </div>
     </div>
+
+    @if ($imageFolders->isNotEmpty())
+        {{-- Auto-album from document folders --}}
+        <div class="modal fade" id="autoAlbumModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <form method="POST" action="{{ route('photo.auto-albums') }}" class="modal-content">
+                    @csrf
+                    <input type="hidden" name="section" value="{{ $sectionId }}">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-magic me-2"></i>Auto-albums depuis la bibliothèque</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted mb-3" style="font-size:var(--font-size-sm);">
+                            Chaque dossier sélectionné sera converti en album photo avec toutes ses images.
+                        </p>
+                        <div class="list-group">
+                            @foreach ($imageFolders as $folder)
+                                <label class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2">
+                                    <input class="form-check-input flex-shrink-0 mt-0" type="checkbox"
+                                           name="folder_ids[]" value="{{ $folder['id'] }}">
+                                    <span>
+                                        <i class="fas fa-folder text-warning me-2"></i>
+                                        <strong>{{ $folder['name'] }}</strong>
+                                        <span class="ms-2 text-muted" style="font-size:var(--font-size-xs);">
+                                            {{ $folder['image_count'] }} image{{ $folder['image_count'] > 1 ? 's' : '' }}
+                                        </span>
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fas fa-magic me-1"></i> Créer les albums
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
 @endif
 
 @endsection

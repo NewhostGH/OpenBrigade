@@ -265,6 +265,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/photos/{album}', [PhotoController::class, 'albumUpdate'])->name('photo.album.update')->middleware('permission:47');
     Route::delete('/photos/{album}', [PhotoController::class, 'albumDestroy'])->name('photo.album.destroy')->middleware('permission:47');
     Route::post('/photos/{album}/upload', [PhotoController::class, 'photoStore'])->name('photo.store')->middleware('permission:47');
+    Route::post('/photos/auto-albums', [PhotoController::class, 'autoAlbumCreate'])->name('photo.auto-albums')->middleware('permission:47');
     Route::get('/photos/{album}/pick-docs', [PhotoController::class, 'pickDocuments'])->name('photo.pick-docs')->middleware('permission:47');
     Route::post('/photos/{album}/from-docs', [PhotoController::class, 'storeFromDocuments'])->name('photo.from-docs')->middleware('permission:47');
     Route::patch('/photos/{album}/cover', [PhotoController::class, 'setCover'])->name('photo.cover')->middleware('permission:47');

@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\DocumentFolder;
 use App\Models\ObDocumentAcl;
 use App\Services\DocumentService;
+use App\Services\PhotoService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
@@ -322,9 +323,20 @@ class DocumentController extends Controller
             return $out;
         }
 
-        $out = ($d->can_view ?? false)
-            ? '<a href="'.e(route('document.download', $d->D_ID)).'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>'
-            : '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>';
+        $ext = strtolower(pathinfo($d->D_NAME, PATHINFO_EXTENSION));
+        $isImage = in_array($ext, PhotoService::IMAGE_EXTENSIONS, true);
+        $dlUrl = e(route('document.download', $d->D_ID));
+
+        if ($d->can_view ?? false) {
+            $out = '<a href="'.$dlUrl.'" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Télécharger"><i class="fas fa-download fa-xs"></i></a>';
+            if ($isImage) {
+                $out .= ' <button type="button" class="btn btn-sm btn-outline-primary py-0 px-1" title="Aperçu"'
+                    .' data-lb-src="'.$dlUrl.'" data-lb-title="'.e($d->D_NAME).'">'
+                    .'<i class="fas fa-eye fa-xs"></i></button>';
+            }
+        } else {
+            $out = '<span class="text-muted" title="Accès restreint"><i class="fas fa-lock fa-xs"></i></span>';
+        }
         if ($d->can_write ?? false) {
             $out .= ' <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1" title="Renommer / modifier"'
                 .' data-doc-edit data-id="'.$d->D_ID.'" data-name="'.e($d->D_NAME).'" data-type="'.e($d->TD_CODE).'" data-folder="'.(int) $d->DF_ID.'">'

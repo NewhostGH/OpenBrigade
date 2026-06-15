@@ -40,6 +40,7 @@ class PhotoController extends Controller
             'albums' => $this->photos->albums($sectionId),
             'sectionId' => $sectionId,
             'canManage' => $canManage,
+            'imageFolders' => $canManage ? $this->photos->imageFolders($sectionId) : collect(),
         ]);
     }
 
@@ -150,6 +151,62 @@ class PhotoController extends Controller
         $this->photos->setCover($album, $photo);
 
         return back()->with('success', 'Couverture mise à jour.');
+    }
+
+    /** POST: create albums automatically from selected document-library folders. */
+    public function autoAlbumCreate(Request $request): RedirectResponse
+    {
+        $sectionId = $this->resolveSectionId($request);
+        $v = $request->validate([
+            'folder_ids' => ['required', 'array', 'min:1'],
+            'folder_ids.*' => ['integer'],
+        ]);
+
+        $userId = (int) $request->user()->P_ID;
+        $created = 0;
+        $imported = 0;
+
+        foreach ($v['folder_ids'] as $rawId) {
+            $folderId = (int) $rawId;
+
+            $docs = Document::library()
+                ->where('S_ID', $sectionId)
+                ->where('DF_ID', $folderId)
+                ->with('folder')
+                ->get()
+                ->filter(fn (Document $d) => in_array(
+                    strtolower(pathinfo($d->D_NAME, PATHINFO_EXTENSION)),
+                    PhotoService::IMAGE_EXTENSIONS,
+                    true,
+                ));
+
+            if ($docs->isEmpty()) {
+                continue;
+            }
+
+            $first = $docs->first();
+            $folder = $first->folder;
+            $albumName = $folder instanceof DocumentFolder ? $folder->DF_NAME : 'Racine';
+
+            $album = $this->photos->createAlbum($sectionId, $albumName, null, $userId);
+            $created++;
+
+            foreach ($docs as $doc) {
+                $srcPath = $this->documentService->filePath(
+                    (int) $doc->S_ID, (int) $doc->DF_ID, $doc->D_NAME
+                );
+
+                if (! file_exists($srcPath)) {
+                    continue;
+                }
+
+                $this->photos->importFromPath($srcPath, $sectionId, $album, $doc->D_NAME, $userId);
+                $imported++;
+            }
+        }
+
+        return redirect()->route('photo.index', ['section' => $sectionId])
+            ->with('success', "{$created} album(s) créé(s) avec {$imported} photo(s) importée(s).");
     }
 
     /** JSON list of image documents available to import from the doc library. */

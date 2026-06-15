@@ -50,9 +50,9 @@
             <div class="ob-photo-item {{ (int) $album->cover_photo_id === (int) $photo->id ? 'ob-photo-item--cover' : '' }}"
                  data-photo-id="{{ $photo->id }}">
                 <a href="{{ $photo->url() }}"
-                   data-toggle="lightbox"
-                   data-gallery="album-{{ $album->id }}"
-                   data-title="{{ e($photo->caption ?? $photo->filename) }}"
+                   data-lb-src="{{ $photo->url() }}"
+                   data-lb-gallery="album-{{ $album->id }}"
+                   data-lb-title="{{ $photo->caption ?? $photo->filename }}"
                    class="ob-photo-thumb-link">
                     <img src="{{ $photo->url() }}" alt="{{ e($photo->caption ?? $photo->filename) }}"
                          class="ob-photo-thumb" loading="lazy">
@@ -234,16 +234,6 @@
 @endsection
 
 @push('scripts')
-<script type="module">
-import Lightbox from 'bs5-lightbox';
-const options = { keyboard: true, size: 'xl' };
-document.querySelectorAll('[data-toggle="lightbox"]').forEach(function (el) {
-    el.addEventListener('click', function (e) {
-        e.preventDefault();
-        new Lightbox(el, options).show();
-    });
-});
-</script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 

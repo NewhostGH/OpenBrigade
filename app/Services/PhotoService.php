@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Document;
+use App\Models\DocumentFolder;
 use App\Models\ObPhoto;
 use App\Models\ObPhotoAlbum;
 use Illuminate\Http\UploadedFile;
@@ -135,6 +136,43 @@ class PhotoService implements ServiceInterface
                 true,
             ))
             ->values();
+    }
+
+    /**
+     * Document library folders (for this section) that contain at least one
+     * image file, sorted alphabetically. Used by the auto-album feature.
+     *
+     * @return Collection<int, array{id: int, name: string, image_count: int}>
+     */
+    public function imageFolders(int $sectionId): Collection
+    {
+        $imageDocs = Document::library()
+            ->where('S_ID', $sectionId)
+            ->with('folder')
+            ->get()
+            ->filter(fn (Document $d) => in_array(
+                strtolower(pathinfo($d->D_NAME, PATHINFO_EXTENSION)),
+                self::IMAGE_EXTENSIONS,
+                true,
+            ));
+
+        $byFolder = [];
+        foreach ($imageDocs as $doc) {
+            $fid = (int) $doc->DF_ID;
+            if (! isset($byFolder[$fid])) {
+                $folder = $doc->folder;
+                $byFolder[$fid] = [
+                    'id' => $fid,
+                    'name' => $folder instanceof DocumentFolder ? $folder->DF_NAME : 'Racine',
+                    'image_count' => 0,
+                ];
+            }
+            $byFolder[$fid]['image_count']++;
+        }
+
+        usort($byFolder, fn (array $a, array $b) => strcmp($a['name'], $b['name']));
+
+        return collect($byFolder);
     }
 
     /**

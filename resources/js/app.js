@@ -10,3 +10,4 @@ import './ob-shortcuts.js';
 /* ── OB UI components ─────────────────────────────────────────────── */
 import './ob-toolbar.js';
 import './ob-table.js';
+import './ob-lightbox.js';
