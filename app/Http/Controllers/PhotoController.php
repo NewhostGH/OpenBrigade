@@ -131,6 +131,21 @@ class PhotoController extends Controller
         return back()->with('success', 'Légende enregistrée.');
     }
 
+    /** Persist a new photo order — expects JSON body {"ids":[…]}. */
+    public function reorder(Request $request, ObPhotoAlbum $album): JsonResponse
+    {
+        abort_unless($this->sectionScope->allows((int) $album->S_ID), 403);
+
+        $v = $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer'],
+        ]);
+
+        $this->photos->reorder($album, $v['ids']);
+
+        return response()->json(['ok' => true]);
+    }
+
     /** Bulk-delete selected photos from an album (perm 47). */
     public function photoBulkDestroy(Request $request, ObPhotoAlbum $album): RedirectResponse
     {

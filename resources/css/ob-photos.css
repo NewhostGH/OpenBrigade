@@ -514,3 +514,22 @@ html.ob-lb-open {
     font-weight: 600;
     color: var(--bs-body-color);
 }
+
+/* ── Drag-and-drop reorder ──────────────────────────────────────────────── */
+
+.ob-photo-item[draggable] {
+    cursor: grab;
+}
+
+.ob-photo-item[draggable]:active {
+    cursor: grabbing;
+}
+
+.ob-photo-dragging {
+    opacity: 0.4;
+}
+
+.ob-photo-dragover {
+    outline: 2.5px dashed var(--color-primary, #5a4fcf);
+    outline-offset: -2px;
+}

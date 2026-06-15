@@ -169,7 +169,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Album CRUD — create, rename/describe, delete (with photo file cleanup)
 - [x] Photo upload (multi-file per album), caption edit, set cover, delete
 - [x] bs5-lightbox integration — full-screen gallery with keyboard nav, grouped per album
-- [ ] Drag-and-drop reorder of photos within an album (`sort_order`)
+- [x] Drag-and-drop reorder of photos within an album (`sort_order`) — HTML5 native drag, AJAX PATCH to `photo.reorder`, `PhotoService::reorder()` persists positions; drag cursor + dragover outline via CSS
 - [x] Bulk delete photos — select-mode toggle, per-card checkmark overlay, floating bulk-action bar, `photo.bulk-destroy` route + controller action (perm 47)
 - [x] Photo download (single + zip album) — `photo.download` per photo (perm 44), `photo.album.download` ZIP stream with collision-safe filenames; download button on each card + toolbar button
 

@@ -106,6 +106,21 @@ class PhotoService implements ServiceInterface
     }
 
     /** Delete one photo's file and row; fix the album cover if needed. */
+    /**
+     * Persist a new photo order for an album.
+     *
+     * @param  int[]  $orderedIds  Photo IDs in the desired display order.
+     */
+    public function reorder(ObPhotoAlbum $album, array $orderedIds): void
+    {
+        $position = 0;
+        foreach ($orderedIds as $id) {
+            ObPhoto::where('id', (int) $id)
+                ->where('album_id', $album->id)
+                ->update(['sort_order' => $position++]);
+        }
+    }
+
     public function deletePhoto(ObPhoto $photo): void
     {
         $album = $photo->album;

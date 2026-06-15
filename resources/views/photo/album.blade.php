@@ -59,7 +59,8 @@
     <div class="mx-3 ob-photo-grid">
         @foreach ($photos as $photo)
             <div class="ob-photo-item {{ (int) $album->cover_photo_id === (int) $photo->id ? 'ob-photo-item--cover' : '' }}"
-                 data-photo-id="{{ $photo->id }}">
+                 data-photo-id="{{ $photo->id }}"
+                 @if ($canManage) draggable="true" @endif>
                 <a href="{{ $photo->url() }}"
                    data-lb-src="{{ $photo->url() }}"
                    data-lb-gallery="album-{{ $album->id }}"
@@ -544,6 +545,79 @@ document.addEventListener('DOMContentLoaded', function () {
             updateBulkBar();
         }, true);
     });
+
+    // ── Drag-and-drop photo reorder (managers only) ───────────────────────────
+    @if ($canManage)
+    var reorderUrl = '{{ route('photo.reorder', $album) }}';
+    var csrfToken  = document.querySelector('meta[name="csrf-token"]')
+        ? document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        : '{{ csrf_token() }}';
+
+    var dragSrc = null;
+
+    function getDraggableCards() {
+        return photoGrid ? Array.from(photoGrid.querySelectorAll('.ob-photo-item[draggable]')) : [];
+    }
+
+    function initDragAndDrop() {
+        getDraggableCards().forEach(function (card) {
+            card.addEventListener('dragstart', function (e) {
+                if (inSelectMode) { e.preventDefault(); return; }
+                dragSrc = card;
+                e.dataTransfer.effectAllowed = 'move';
+                card.classList.add('ob-photo-dragging');
+            });
+            card.addEventListener('dragend', function () {
+                card.classList.remove('ob-photo-dragging');
+                getDraggableCards().forEach(function (c) { c.classList.remove('ob-photo-dragover'); });
+                dragSrc = null;
+            });
+            card.addEventListener('dragover', function (e) {
+                if (!dragSrc || dragSrc === card || inSelectMode) return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                getDraggableCards().forEach(function (c) { c.classList.remove('ob-photo-dragover'); });
+                card.classList.add('ob-photo-dragover');
+            });
+            card.addEventListener('dragleave', function () {
+                card.classList.remove('ob-photo-dragover');
+            });
+            card.addEventListener('drop', function (e) {
+                if (!dragSrc || dragSrc === card || inSelectMode) return;
+                e.preventDefault();
+                card.classList.remove('ob-photo-dragover');
+
+                // Re-order DOM: insert dragSrc before the drop target.
+                var cards = getDraggableCards();
+                var srcIdx = cards.indexOf(dragSrc);
+                var dstIdx = cards.indexOf(card);
+                if (srcIdx < dstIdx) {
+                    card.after(dragSrc);
+                } else {
+                    card.before(dragSrc);
+                }
+
+                // Persist new order.
+                var ids = getDraggableCards().map(function (c) {
+                    return parseInt(c.dataset.photoId, 10);
+                });
+                fetch(reorderUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: ids }),
+                });
+            });
+        });
+    }
+
+    if (photoGrid) {
+        initDragAndDrop();
+    }
+    @endif
 });
 </script>
 @endpush
