@@ -21,11 +21,12 @@ class ObGroup extends Model
 
     protected $keyType = 'int';
 
-    protected $fillable = ['id', 'name', 'kind', 'usage', 'ordering', 'is_system', 'password_policy_id'];
+    protected $fillable = ['id', 'name', 'kind', 'usage', 'org_type', 'ordering', 'is_system', 'password_policy_id'];
 
     protected $casts = [
         'is_system' => 'boolean',
         'ordering' => 'integer',
+        'org_type' => 'integer',
     ];
 
     public const KIND_GROUP = 'group';
@@ -57,6 +58,11 @@ class ObGroup extends Model
 
     public function isProtected(): bool
     {
-        return $this->is_system || in_array((int) $this->id, [-1, 0, 4], true);
+        $reserved = array_merge(
+            array_map('intval', array_keys((array) config('habilitations.base_groups', []))),
+            [(int) config('habilitations.block_group_id', -1)],
+        );
+
+        return $this->is_system || in_array((int) $this->id, $reserved, true);
     }
 }

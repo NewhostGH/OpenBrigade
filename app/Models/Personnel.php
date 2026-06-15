@@ -53,6 +53,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $P_PHOTO
  * @property int|null $GP_ID
  * @property int|null $GP_ID2
+ * @property bool $P_SUPERADMIN
  * @property int|null $C_ID
  * @property-read Section|null $section
  * @property-read Collection<int, Dues> $cotisations
@@ -88,6 +89,7 @@ class Personnel extends Model
         'SUSPENDU' => 'boolean',
         'GP_FLAG1' => 'boolean',
         'GP_FLAG2' => 'boolean',
+        'P_SUPERADMIN' => 'boolean',
     ];
 
     /** The section this person is directly attached to. */

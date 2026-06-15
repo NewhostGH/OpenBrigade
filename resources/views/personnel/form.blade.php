@@ -678,6 +678,26 @@
                                     </div>
                                 </div>
 
+                                {{-- ── Super-administrateur ───────────────── --}}
+                                @if (auth()->user()->isSuperAdmin())
+                                <div class="col-12">
+                                    <label class="form-label form-label-sm">Super-administrateur</label>
+                                    <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
+                                        Accès total à l'application, sans aucune restriction de section. À
+                                        n'accorder qu'à des comptes de confiance. Le dernier
+                                        super-administrateur ne peut pas être retiré.
+                                    </p>
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" class="form-check-input" role="switch"
+                                               id="P_SUPERADMIN" name="P_SUPERADMIN" value="1"
+                                               @checked(old('P_SUPERADMIN', $isEdit ? $personnel->P_SUPERADMIN : false))>
+                                        <label class="form-check-label" for="P_SUPERADMIN" style="font-size:var(--font-size-sm);">
+                                            Ce membre est super-administrateur
+                                        </label>
+                                    </div>
+                                </div>
+                                @endif
+
                             @endif
 
                             @if ($isEdit && ($personnel->P_ACCEPT_DATE || $personnel->P_ACCEPT_DATE2))

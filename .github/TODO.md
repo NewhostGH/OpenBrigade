@@ -185,6 +185,13 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Section list + CRUD, organigramme tree
 - [x] Cartographie — Leaflet map of sections
 - [x] Groups and roles (habilitations) — section-scoped, ceiling-based model
+- [x] Rebuilt base habilitations — super-admin account flag (`pompier.P_SUPERADMIN`,
+  uncappable, last-one protected), four capability base groups (Admin/Auditor/User/Guest),
+  classified permission catalog (`ob_permission`), per-org-type section roles, and a
+  production/dev seeding split (`CoreSeeder` vs `DevelopmentDataSeeder`)
+- [ ] **Organisation-type setup wizard** — let an admin pick the organisation type
+  (`config('brigade.organisation_types')`) and activate that type's seeded role set
+  (`ob_group.org_type`); roles for every type are already seeded by `BaseHabilitations`
 - [x] Section show page — tabs Informations, Organigramme, Personnalisation (letterhead, badge, lock delay, devis/facture texts, signature), Agréments & Médailles
 - [ ] Section Cotisation tab — RIB file upload and remaining fields (IBAN/BIC manual entry is done)
 - [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)

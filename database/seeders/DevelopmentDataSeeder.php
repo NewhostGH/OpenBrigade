@@ -3,18 +3,28 @@
 namespace Database\Seeders;
 
 use App\Models\Event;
-use App\Models\Group;
-use App\Models\LegacyFeature;
 use App\Models\Personnel;
 use App\Models\Section;
+use App\Support\Habilitations\BaseHabilitations;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Throwaway fixtures for local development and tests only (never production —
+ * gated in {@see DatabaseSeeder}). The canonical habilitation data and the
+ * super-admin account are owned by {@see CoreSeeder}; this seeder only attaches
+ * dev personnel to the already-seeded base groups/roles.
+ */
 class DevelopmentDataSeeder extends Seeder
 {
     public function run(): void
     {
+        $base = new BaseHabilitations;
+        $adminGroupId = (int) collect(config('habilitations.base_groups'))->search(fn ($d) => $d['default'] === 'admin');
+        $userGroupId = (int) collect(config('habilitations.base_groups'))->search(fn ($d) => $d['default'] === 'user');
+        $chefRoleId = $base->roleId(0, 0); // generic "Chef de section"
+
         // Deterministic core records used as anchors in local development.
         $section = Section::query()->updateOrCreate(
             ['S_ID' => 900],
@@ -34,36 +44,7 @@ class DevelopmentDataSeeder extends Seeder
             ]
         );
 
-        $groupe = Group::query()->updateOrCreate(
-            ['GP_ID' => 900],
-            [
-                'GP_DESCRIPTION' => 'DEV_MANAGER',
-                'TR_CONFIG' => 1,
-                'TR_SUB_POSSIBLE' => 1,
-                'TR_ALL_POSSIBLE' => 0,
-                'TR_WIDGET' => 1,
-                'GP_USAGE' => 'internes',
-                'GP_ASTREINTE' => 0,
-                'GP_ORDER' => 10,
-            ]
-        );
-
-        $fonctionnalite = LegacyFeature::query()->updateOrCreate(
-            ['F_ID' => 9000],
-            [
-                'F_LIBELLE' => 'DEV_PANEL',
-                'F_TYPE' => 0,
-                'TF_ID' => 0,
-                'F_FLAG' => 0,
-                'F_DESCRIPTION' => 'Development-only dashboard permission',
-            ]
-        );
-
-        DB::table('habilitation')->updateOrInsert(
-            ['GP_ID' => $groupe->GP_ID, 'F_ID' => $fonctionnalite->F_ID],
-            ['GP_ID' => $groupe->GP_ID, 'F_ID' => $fonctionnalite->F_ID]
-        );
-
+        // Dev manager → Admin group + Chef of the dev section.
         $manager = Personnel::query()->updateOrCreate(
             ['P_CODE' => 'dev.manager'],
             [
@@ -78,8 +59,9 @@ class DevelopmentDataSeeder extends Seeder
                 'P_MDP' => Hash::make('password'),
                 'P_SECTION' => $section->S_ID,
                 'C_ID' => 0,
-                'GP_ID' => $groupe->GP_ID,
+                'GP_ID' => $adminGroupId,
                 'GP_ID2' => 0,
+                'P_SUPERADMIN' => 0,
                 'P_EMAIL' => 'dev.manager@openbrigade.local',
                 'P_HIDE' => 0,
                 'P_NB_CONNECT' => 0,
@@ -93,6 +75,10 @@ class DevelopmentDataSeeder extends Seeder
                 'P_MAITRE' => 0,
             ]
         );
+        DB::table('ob_personnel_group')->insertOrIgnore(['person_id' => $manager->P_ID, 'group_id' => $adminGroupId]);
+        DB::table('ob_user_assignment')->insertOrIgnore([
+            'person_id' => $manager->P_ID, 'section_id' => $section->S_ID, 'group_id' => $chefRoleId,
+        ]);
 
         Event::query()->updateOrCreate(
             ['E_CODE' => 900000],
@@ -124,21 +110,26 @@ class DevelopmentDataSeeder extends Seeder
             ]
         );
 
+        // Dev members → User group.
         if (Personnel::query()->where('P_CODE', 'like', 'dev.user%')->count() === 0) {
             $sequence = 1000;
-            Personnel::factory()
+            $users = Personnel::factory()
                 ->count(5)
-                ->state(function () use (&$sequence, $section, $groupe): array {
+                ->state(function () use (&$sequence, $section, $userGroupId): array {
                     $code = 'dev.user.'.$sequence;
                     $sequence++;
 
                     return [
                         'P_SECTION' => $section->S_ID,
-                        'GP_ID' => $groupe->GP_ID,
+                        'GP_ID' => $userGroupId,
                         'P_CODE' => $code,
                     ];
                 })
                 ->create();
+
+            foreach ($users as $u) {
+                DB::table('ob_personnel_group')->insertOrIgnore(['person_id' => $u->P_ID, 'group_id' => $userGroupId]);
+            }
         }
 
         if (Event::query()->where('E_CODE', '>=', 900001)->where('E_CODE', '<=', 900099)->count() === 0) {

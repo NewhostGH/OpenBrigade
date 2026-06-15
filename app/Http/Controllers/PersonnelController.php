@@ -28,6 +28,7 @@ use App\Models\Position;
 use App\Models\Qualification;
 use App\Models\Section;
 use App\Services\FeatureService;
+use App\Services\PermissionResolver;
 use App\Services\PersonnelExportService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
@@ -46,6 +47,7 @@ class PersonnelController extends Controller
     public function __construct(
         private readonly FeatureService $features,
         private readonly SectionScopeService $sectionScope,
+        private readonly PermissionResolver $resolver,
     ) {}
 
     public function index(Request $request): View
@@ -692,6 +694,37 @@ class PersonnelController extends Controller
         }
     }
 
+    /**
+     * Grant/revoke the super-admin account flag (pompier.P_SUPERADMIN).
+     *
+     * Only a super-admin may mint or remove another. The last remaining
+     * super-admin can never be demoted (returns a warning instead of changing
+     * anything) so the organisation can't lock itself out.
+     *
+     * @return string|null a warning to surface when the change was refused
+     */
+    private function syncSuperAdmin(Request $request, Personnel $personnel): ?string
+    {
+        if (! $request->user()->isSuperAdmin()) {
+            return null; // only super-admins manage the flag
+        }
+
+        $desired = $request->boolean('P_SUPERADMIN');
+        $current = (bool) $personnel->P_SUPERADMIN;
+
+        if ($desired === $current) {
+            return null;
+        }
+
+        if (! $desired && $this->resolver->isLastSuperAdmin((int) $personnel->P_ID)) {
+            return 'Impossible de retirer le dernier super-administrateur.';
+        }
+
+        $personnel->forceFill(['P_SUPERADMIN' => $desired])->save();
+
+        return null;
+    }
+
     // ── Qualifications (competences) CRUD ────────────────────────────────────
 
     public function storeQualification(Request $request, Personnel $personnel)
@@ -1048,6 +1081,7 @@ class PersonnelController extends Controller
         $this->syncSections($request, $personnel);
         $this->syncRoles($request, $personnel);
         $this->syncGroups($request, $personnel);
+        $this->syncSuperAdmin($request, $personnel);
 
         return redirect()
             ->route('personnel.show', $personnel)
@@ -1220,9 +1254,12 @@ class PersonnelController extends Controller
         $this->syncSections($request, $personnel);
         $this->syncRoles($request, $personnel);
         $this->syncGroups($request, $personnel);
+        $warning = $this->syncSuperAdmin($request, $personnel);
 
-        return redirect()
+        $redirect = redirect()
             ->route('personnel.show', $personnel)
             ->with('success', 'Fiche personnel mise à jour.');
+
+        return $warning !== null ? $redirect->with('error', $warning) : $redirect;
     }
 }

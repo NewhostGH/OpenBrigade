@@ -316,6 +316,39 @@ Rules:
 See [project_habilitations memory] and `tests/Unit/PermissionResolverTest.php` for the
 resolution algorithm and worked examples.
 
+### Super-admin, base groups & the permission catalog
+
+The base habilitation data is owned natively, not back-filled from legacy. The single
+source of truth is `config/habilitations.php` + `App\Support\Habilitations\BaseHabilitations`
+(the builder both the rebuild migration and `CoreSeeder` call, so they never drift).
+
+- **Super-admin is the account flag `pompier.P_SUPERADMIN`** — *not* a group. It
+  short-circuits `PermissionResolver::allows()` to ALLOW everything (after the
+  `isBlocked` check), **uncappable** by any section ceiling. At least one always
+  exists: only a super-admin may grant/remove the flag, and the controllers refuse to
+  clear/delete the **last** one (`PermissionResolver::isLastSuperAdmin`). Gate with
+  `auth()->user()->isSuperAdmin()`; never read `P_SUPERADMIN` to decide a normal feature
+  (use `hasPermission()` — the flag is already folded into the resolver).
+- **Four base groups** — Admin, Auditor, User, Guest (reserved ids in
+  `config('habilitations.base_groups')`). They are `is_system` / `isProtected()`, so the
+  admin UI can't rename or delete them. Their grants are **seeded with defaults** derived
+  from the permission classification and then **freely editable** per-permission in the
+  matrix — never re-derived at runtime.
+- **`ob_permission`** is the canonical permission catalog (`id` = legacy
+  `fonctionnalite.F_ID`, so the grant tables keep referencing it). Each row is classified
+  on two axes — `domain` (`config` | `data`) and `is_read` — plus `is_critical`
+  (legacy `F_FLAG`). This classification drives the **seeded** base-group defaults only
+  (Admin = all non-critical, Auditor = reads, User = non-critical data, Guest = data
+  reads); critical permissions stay super-admin territory. It is **not** a runtime
+  enforcement path.
+- **Section roles are per organisation type** (`ob_group.org_type`, keyed by
+  `config('brigade.organisation_types')`). The seeder creates the role set for every
+  type; a future setup wizard will activate one type's set.
+- **Seeding is split by environment.** `DatabaseSeeder` always runs `CoreSeeder`
+  (production-canonical: base groups, catalog, super-admin — idempotent) and runs
+  `DevelopmentDataSeeder` (throwaway fixtures) **only** outside production. Put
+  canonical data in `CoreSeeder` via `BaseHabilitations`; never in `DevelopmentDataSeeder`.
+
 **Permissions vs. feature flags.** `hasPermission()` answers *"may this user do
 X?"*; feature flags answer *"is capability X switched on for this brigade?"* They
 are orthogonal and a gated screen needs **both**. Feature flags go through one

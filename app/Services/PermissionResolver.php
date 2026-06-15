@@ -63,6 +63,11 @@ class PermissionResolver
             return false;
         }
 
+        // Super-admin (account flag) bypasses every tier — uncappable.
+        if ($this->isSuperAdmin($user)) {
+            return true;
+        }
+
         $chain = $this->sectionChain($sId);
 
         // 1 & 2 — per-person override is the most specific tier.
@@ -94,6 +99,11 @@ class PermissionResolver
     {
         if ($this->isBlocked($user)) {
             return [];
+        }
+
+        // Super-admin sees every catalog permission.
+        if ($this->isSuperAdmin($user)) {
+            return DB::table('ob_permission')->pluck('id')->map(fn ($v) => (int) $v)->all();
         }
 
         $chain = $this->sectionChain($sId);
@@ -215,6 +225,33 @@ class PermissionResolver
     protected function isBlocked(User $user): bool
     {
         return (int) $user->GP_ID === -1 || (int) ($user->GP_ID2 ?? $user->GP_ID) === -1;
+    }
+
+    /** Super-admin is the account flag pompier.P_SUPERADMIN — uncappable full access. */
+    public function isSuperAdmin(User $user): bool
+    {
+        return (bool) ($user->P_SUPERADMIN ?? false);
+    }
+
+    /** Active super-admin accounts (excludes blocked and former members). */
+    public function superAdminCount(): int
+    {
+        return (int) DB::table('pompier')
+            ->where('P_SUPERADMIN', 1)
+            ->where('GP_ID', '!=', -1)
+            ->where('P_OLD_MEMBER', 0)
+            ->count();
+    }
+
+    /** True when $personId is the only remaining active super-admin. */
+    public function isLastSuperAdmin(int $personId): bool
+    {
+        $isSuper = DB::table('pompier')
+            ->where('P_ID', $personId)
+            ->where('P_SUPERADMIN', 1)
+            ->exists();
+
+        return $isSuper && $this->superAdminCount() <= 1;
     }
 
     /** @return int[] group ids from ob_personnel_group (excludes the blocked sentinel -1) */

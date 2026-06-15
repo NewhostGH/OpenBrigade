@@ -9,11 +9,17 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      *
-     * Reference data (organisation types, grades, etc.) is migrated
-     * from sql/specific/ into individual seeder classes incrementally.
+     * CoreSeeder holds the production-canonical data (habilitation base groups,
+     * permission catalog, super-admin account) and runs everywhere.
+     * DevelopmentDataSeeder adds throwaway fixtures and runs only outside
+     * production.
      */
     public function run(): void
     {
-        $this->call(DevelopmentDataSeeder::class);
+        $this->call(CoreSeeder::class);
+
+        if (app()->environment(['local', 'development', 'testing'])) {
+            $this->call(DevelopmentDataSeeder::class);
+        }
     }
 }

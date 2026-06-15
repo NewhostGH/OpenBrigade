@@ -38,6 +38,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property int|null $P_SECTION
  * @property int|null $GP_ID
  * @property int|null $GP_ID2
+ * @property bool $P_SUPERADMIN
  * @property Carbon|null $P_LAST_CONNECT
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
@@ -59,6 +60,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'P_LAST_CONNECT' => 'datetime',
+        'P_SUPERADMIN' => 'boolean',
     ];
 
     public function getAuthIdentifierName(): string
@@ -108,12 +110,18 @@ class User extends Authenticatable
         return app(PermissionResolver::class)->allows($this, $fid, $sectionId);
     }
 
+    /** Super-admin is the account flag pompier.P_SUPERADMIN — uncappable full access. */
+    public function isSuperAdmin(): bool
+    {
+        return app(PermissionResolver::class)->isSuperAdmin($this);
+    }
+
     /**
-     * Returns true if the user belongs to the super-admin group (GP_ID = -1 is blocked;
-     * GP_ID = 1 is conventionally the admin group in the legacy schema).
+     * Returns true for a super-admin or anyone holding the habilitations-management
+     * permission (security/habilitations, F_ID 9).
      */
     public function isAdmin(): bool
     {
-        return $this->hasPermission(52); // 52 = habilitations management
+        return $this->isSuperAdmin() || $this->hasPermission(9);
     }
 }

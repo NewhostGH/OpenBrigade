@@ -201,3 +201,32 @@ test('effectiveFeatureIds includes a user-allowed feature no group grants', func
     $r->userPerms = [['section_id' => 0, 'feature_id' => 77, 'effect' => 'allow']];
     expect($r->effectiveFeatureIds(resolverFakeUser(), 2))->toEqualCanonicalizing([3, 42, 77]);
 });
+
+// ── Super-admin account flag (uncappable, bypasses every tier) ─────────────────
+
+test('isSuperAdmin reflects the P_SUPERADMIN account flag', function () {
+    $r = new PermissionResolver;
+    expect($r->isSuperAdmin((new User)->forceFill(['P_ID' => 1, 'P_SUPERADMIN' => true])))->toBeTrue();
+    expect($r->isSuperAdmin((new User)->forceFill(['P_ID' => 2, 'P_SUPERADMIN' => false])))->toBeFalse();
+});
+
+test('a super-admin is allowed every feature, even uncapped by a ceiling', function () {
+    // The fake denies 53 at the root and grants nothing to feature 9999; the
+    // super-admin flag short-circuits both. (isBlocked is stubbed false here.)
+    $r = fakeResolver();
+    $super = resolverFakeUser()->forceFill(['P_SUPERADMIN' => true]);
+    expect($r->allows($super, 53, 3))->toBeTrue();
+    expect($r->allows($super, 9999, 3))->toBeTrue();
+});
+
+test('a blocked account is denied even when the super-admin flag is set', function () {
+    // Real resolver: isBlocked (GP_ID -1) is evaluated before the super-admin
+    // short-circuit, so a blocked super-admin gets nothing. Both branches return
+    // before any DB lookup.
+    $r = new PermissionResolver;
+    $blocked = (new User)->forceFill(['P_ID' => 1, 'GP_ID' => -1, 'P_SUPERADMIN' => true]);
+    expect($r->allows($blocked, 1))->toBeFalse();
+
+    $super = (new User)->forceFill(['P_ID' => 1, 'GP_ID' => 10, 'P_SUPERADMIN' => true]);
+    expect($r->allows($super, 1))->toBeTrue();
+});
