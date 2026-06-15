@@ -293,6 +293,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/organization/sections/{section}/badge', [OrganizationController::class, 'sectionBadge'])->name('organization.sections.badge')->middleware('permission:0');
     Route::delete('/organization/sections/{section}/badge', [OrganizationController::class, 'resetBadge'])->name('organization.sections.badge.reset')->middleware('permission:52');
     Route::patch('/organization/sections/{section}/rib', [OrganizationController::class, 'updateRib'])->name('organization.sections.rib')->middleware('permission:52');
+    Route::get('/organization/sections/{section}/rib/download', [OrganizationController::class, 'downloadRib'])->name('organization.sections.rib.download')->middleware('permission:52');
     Route::put('/organization/sections/{section}/agrement/{code}', [OrganizationController::class, 'upsertAgrement'])->name('organization.sections.agrement.upsert')->middleware('permission:52');
     Route::delete('/organization/sections/{section}/agrement/{code}', [OrganizationController::class, 'destroyAgrement'])->name('organization.sections.agrement.destroy')->middleware('permission:52');
     // Cartographie — native Leaflet map (replaces jvectormap.php)

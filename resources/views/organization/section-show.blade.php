@@ -527,20 +527,22 @@
     ═══════════════════════════════════════════════════════════════════════════ --}}
     @elseif ($activeTab === 'cotisation')
 
-        <form method="POST" action="{{ route('organization.sections.rib', $section->S_ID) }}">
+        <form method="POST" action="{{ route('organization.sections.rib', $section->S_ID) }}"
+              enctype="multipart/form-data">
             @csrf @method('PATCH')
 
             @if ($errors->any())
                 <div class="alert alert-danger py-2 px-3 mb-3" style="font-size:var(--font-size-sm);">{{ $errors->first() }}</div>
             @endif
 
+            {{-- IBAN / BIC --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-university me-2"></i>RIB</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-university me-2"></i>Coordonnées bancaires</div>
                 </div>
                 <div class="ob-widget-card-body">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <label class="form-label form-label-sm" for="IBAN">IBAN</label>
                             <input type="text" id="IBAN" name="IBAN" maxlength="34"
                                    class="form-control form-control-sm font-monospace"
@@ -553,17 +555,94 @@
                                    class="form-control form-control-sm font-monospace"
                                    value="{{ old('BIC', $rib?->BIC) }}">
                         </div>
-                        @if ($rib?->UPDATE_DATE)
-                            <div class="col-12">
-                                <span class="text-muted" style="font-size:var(--font-size-xs);">
-                                    Dernière mise à jour :
-                                    {{ \Carbon\Carbon::parse($rib->UPDATE_DATE)->format('d/m/Y H:i') }}
-                                </span>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
+
+            {{-- Legacy RIB fields --}}
+            <div class="ob-widget-card mb-3">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title"><i class="fas fa-hashtag me-2"></i>RIB (coordonnées françaises)</div>
+                    <div class="ob-widget-card-actions" style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">
+                        Utilisé pour les prélèvements
+                    </div>
+                </div>
+                <div class="ob-widget-card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label form-label-sm" for="CODE_BANQUE">Code banque</label>
+                            <input type="text" id="CODE_BANQUE" name="CODE_BANQUE" maxlength="30"
+                                   class="form-control form-control-sm font-monospace"
+                                   placeholder="12345"
+                                   value="{{ old('CODE_BANQUE', $rib?->CODE_BANQUE) }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label form-label-sm" for="ETABLISSEMENT">Établissement</label>
+                            <input type="text" id="ETABLISSEMENT" name="ETABLISSEMENT" maxlength="5"
+                                   class="form-control form-control-sm font-monospace"
+                                   placeholder="12345"
+                                   value="{{ old('ETABLISSEMENT', $rib?->ETABLISSEMENT) }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label form-label-sm" for="GUICHET">Guichet</label>
+                            <input type="text" id="GUICHET" name="GUICHET" maxlength="5"
+                                   class="form-control form-control-sm font-monospace"
+                                   placeholder="12345"
+                                   value="{{ old('GUICHET', $rib?->GUICHET) }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label form-label-sm" for="COMPTE">Compte</label>
+                            <input type="text" id="COMPTE" name="COMPTE" maxlength="11"
+                                   class="form-control form-control-sm font-monospace"
+                                   placeholder="00123456789"
+                                   value="{{ old('COMPTE', $rib?->COMPTE) }}">
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label form-label-sm" for="CLE_RIB">Clé</label>
+                            <input type="text" id="CLE_RIB" name="CLE_RIB" maxlength="2"
+                                   class="form-control form-control-sm font-monospace"
+                                   placeholder="42"
+                                   value="{{ old('CLE_RIB', $rib?->CLE_RIB) }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- RIB file upload --}}
+            <div class="ob-widget-card mb-3">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title"><i class="fas fa-file-pdf me-2"></i>Document RIB</div>
+                </div>
+                <div class="ob-widget-card-body">
+                    @if ($rib?->CB_FILE)
+                        <div class="mb-2 d-flex align-items-center gap-2">
+                            <i class="fas fa-paperclip text-muted"></i>
+                            <a href="{{ route('organization.sections.rib.download', $section->S_ID) }}"
+                               class="text-decoration-none" style="font-size:var(--font-size-sm);">
+                                Télécharger le document enregistré
+                            </a>
+                            <span class="text-muted" style="font-size:var(--font-size-xs);">
+                                ({{ strtoupper(pathinfo($rib->CB_FILE, PATHINFO_EXTENSION)) }})
+                            </span>
+                        </div>
+                    @endif
+                    <div>
+                        <label class="form-label form-label-sm" for="rib_file">
+                            {{ $rib?->CB_FILE ? 'Remplacer le document' : 'Téléverser un document' }}
+                        </label>
+                        <input type="file" id="rib_file" name="rib_file"
+                               class="form-control form-control-sm"
+                               accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="form-text">PDF, JPG ou PNG · max 5 Mo</div>
+                    </div>
+                </div>
+            </div>
+
+            @if ($rib?->UPDATE_DATE)
+                <p class="text-muted mb-3" style="font-size:var(--font-size-xs);">
+                    Dernière mise à jour : {{ \Carbon\Carbon::parse($rib->UPDATE_DATE)->format('d/m/Y H:i') }}
+                </p>
+            @endif
 
             <div class="mb-4">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Enregistrer</button>

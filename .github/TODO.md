@@ -193,7 +193,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
   (`config('brigade.organisation_types')`) and activate that type's seeded role set
   (`ob_group.org_type`); roles for every type are already seeded by `BaseHabilitations`
 - [x] Section show page — tabs Informations, Organigramme, Personnalisation (letterhead, badge, lock delay, devis/facture texts, signature), Agréments & Médailles
-- [ ] Section Cotisation tab — RIB file upload and remaining fields (IBAN/BIC manual entry is done)
+- [x] Section Cotisation tab — RIB file upload and remaining fields — `CODE_BANQUE`, `ETABLISSEMENT`, `GUICHET`, `COMPTE`, `CLE_RIB` fields added; RIB file upload (PDF/JPG/PNG, stored in private storage, migration `2026_06_15_180000`); download route `organization.sections.rib.download`
 - [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
 - [ ] Rank and grade management
 - [ ] Position (poste) management

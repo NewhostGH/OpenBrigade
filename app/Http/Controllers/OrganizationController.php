@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrganizationController extends Controller
 {
@@ -335,28 +336,66 @@ class OrganizationController extends Controller
         $validated = $request->validate([
             'IBAN' => ['nullable', 'string', 'max:34'],
             'BIC' => ['nullable', 'string', 'max:11'],
+            'CODE_BANQUE' => ['nullable', 'string', 'max:30'],
+            'ETABLISSEMENT' => ['nullable', 'string', 'max:5'],
+            'GUICHET' => ['nullable', 'string', 'max:5'],
+            'COMPTE' => ['nullable', 'string', 'max:11'],
+            'CLE_RIB' => ['nullable', 'string', 'max:2'],
+            'rib_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
         $iban = preg_replace('/\s+/', '', strtoupper($validated['IBAN'] ?? ''));
         $bic = trim(strtoupper($validated['BIC'] ?? ''));
+
+        $existing = DB::table('compte_bancaire')
+            ->where('CB_TYPE', 'S')
+            ->where('CB_ID', $section->S_ID)
+            ->first();
+
+        $filePath = $existing?->CB_FILE;
+
+        if ($request->hasFile('rib_file')) {
+            if ($filePath) {
+                Storage::disk('local')->delete($filePath);
+            }
+            $filePath = $request->file('rib_file')
+                ->storeAs("sections/{$section->S_ID}", 'rib_'.time().'.'.$request->file('rib_file')->getClientOriginalExtension(), 'local');
+        }
 
         DB::table('compte_bancaire')
             ->where('CB_TYPE', 'S')
             ->where('CB_ID', $section->S_ID)
             ->delete();
 
-        if ($iban || $bic) {
-            DB::table('compte_bancaire')->insert([
-                'CB_TYPE' => 'S',
-                'CB_ID' => $section->S_ID,
-                'IBAN' => $iban,
-                'BIC' => $bic,
-                'UPDATE_DATE' => now(),
-            ]);
-        }
+        DB::table('compte_bancaire')->insert([
+            'CB_TYPE' => 'S',
+            'CB_ID' => $section->S_ID,
+            'IBAN' => $iban,
+            'BIC' => $bic,
+            'CODE_BANQUE' => strtoupper(trim($validated['CODE_BANQUE'] ?? '')),
+            'ETABLISSEMENT' => strtoupper(trim($validated['ETABLISSEMENT'] ?? '')),
+            'GUICHET' => strtoupper(trim($validated['GUICHET'] ?? '')),
+            'COMPTE' => strtoupper(trim($validated['COMPTE'] ?? '')),
+            'CLE_RIB' => strtoupper(trim($validated['CLE_RIB'] ?? '')),
+            'CB_FILE' => $filePath,
+            'UPDATE_DATE' => now(),
+        ]);
 
         return redirect()->route('organization.sections.show', [$section->S_ID, 'tab' => 'cotisation'])
             ->with('success', 'RIB enregistré.');
+    }
+
+    /** Serve the stored RIB file for download. */
+    public function downloadRib(Section $section): StreamedResponse
+    {
+        $rib = DB::table('compte_bancaire')
+            ->where('CB_TYPE', 'S')
+            ->where('CB_ID', $section->S_ID)
+            ->first();
+
+        abort_if(! $rib || ! $rib->CB_FILE || ! Storage::disk('local')->exists($rib->CB_FILE), 404);
+
+        return Storage::disk('local')->download($rib->CB_FILE, 'RIB_'.$section->S_CODE.'.'.pathinfo($rib->CB_FILE, PATHINFO_EXTENSION));
     }
 
     // ── Agréments AJAX ────────────────────────────────────────────────────────
