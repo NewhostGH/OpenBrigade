@@ -74,7 +74,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Contact / email lists (`listecontacts.php`, `listemails.php`) — emails.txt + contacts.csv bulk export from personnel list
 - [ ] Custom member fields (`specific_info.php`)
 - [x] Qualifications export (`qualifications_xls.php`) — XLS / CSV via `TableExportService`, section-scoped, filter & `?cols=` aware
-- [ ] Remaining exports (`formations_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)
+- [x] Remaining exports (`personnel_reunion_xls.php`) — per-member meeting participation XLS from the personnel show page; `formations_xls.php` and `export_badges.php` depend on the training/formation CRUD not yet built
+- [ ] Remaining exports (`formations_xls.php`, `export_badges.php`) — waiting on training CRUD
 
 ### Activité — Events & Interventions (ACT)
 

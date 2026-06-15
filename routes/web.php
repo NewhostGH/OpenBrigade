@@ -354,6 +354,8 @@ Route::middleware('auth')->group(function () {
     // Per-member exports
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');
+    Route::get('personnel/{personnel}/export/meetings', [PersonnelController::class, 'exportMeetingsXls'])
+        ->name('personnel.export.meetings')->middleware('permission:0');
     Route::get('personnel/{personnel}/logbook-data', [PersonnelController::class, 'logbookData'])
         ->name('personnel.logbook')->middleware('permission:0');
     Route::get('personnel/{personnel}/card-data', [PersonnelController::class, 'cardData'])

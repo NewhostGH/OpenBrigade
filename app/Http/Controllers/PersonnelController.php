@@ -992,6 +992,135 @@ class PersonnelController extends Controller
         return array_filter(array_map('intval', explode(',', (string) $raw)));
     }
 
+    public function exportMeetingsXls(Personnel $personnel): Response
+    {
+        $user = auth()->user();
+        abort_unless(
+            (int) $user->P_ID === (int) $personnel->P_ID || $user->hasPermission(2),
+            403
+        );
+
+        $rows = DB::select("
+            SELECT e.E_LIBELLE, e.E_LIEU,
+                   DATE_FORMAT(eh.EH_DATE_DEBUT,'%d-%m-%Y') AS datedeb,
+                   DATE_FORMAT(eh.EH_DATE_FIN,'%d-%m-%Y')   AS datefin,
+                   DATE_FORMAT(eh.EH_DEBUT,'%H:%i')         AS eh_debut,
+                   DATE_FORMAT(eh.EH_FIN,'%H:%i')           AS eh_fin,
+                   DATE_FORMAT(ep.EP_DATE_DEBUT,'%d-%m-%Y') AS epdatedeb,
+                   DATE_FORMAT(ep.EP_DATE_FIN,'%d-%m-%Y')   AS epdatefin,
+                   DATE_FORMAT(ep.EP_DEBUT,'%H:%i')         AS ep_debut,
+                   DATE_FORMAT(ep.EP_FIN,'%H:%i')           AS ep_fin,
+                   CASE WHEN (ep.EP_KM <= 30 OR ep.EP_KM IS NULL)
+                        THEN DATE_FORMAT(SUBTIME(eh.EH_DEBUT,'0:30:0'),'%H:%i')
+                        ELSE DATE_FORMAT(SUBTIME(eh.EH_DEBUT,'1:0:0'),'%H:%i') END AS depart,
+                   CASE WHEN (ep.EP_KM <= 30 OR ep.EP_KM IS NULL)
+                        THEN DATE_FORMAT(ADDTIME(ep.EP_FIN,'0:30:0'),'%H:%i')
+                        ELSE DATE_FORMAT(ADDTIME(eh.EH_FIN,'1:0:0'),'%H:%i') END AS retour,
+                   CASE WHEN (ep.EP_KM <= 30 OR ep.EP_KM IS NULL)
+                        THEN DATE_FORMAT(SUBTIME(ep.EP_DEBUT,'0:30:0'),'%H:%i')
+                        ELSE DATE_FORMAT(SUBTIME(ep.EP_DEBUT,'1:0:0'),'%H:%i') END AS depart_p,
+                   CASE WHEN (ep.EP_KM <= 30 OR ep.EP_KM IS NULL)
+                        THEN DATE_FORMAT(ADDTIME(ep.EP_FIN,'0:30:0'),'%H:%i')
+                        ELSE DATE_FORMAT(ADDTIME(ep.EP_FIN,'1:0:0'),'%H:%i') END AS retour_p,
+                   CASE WHEN (ep.EP_KM <= 30 OR ep.EP_KM IS NULL)
+                        THEN ep.EP_DUREE + 1 ELSE ep.EP_DUREE + 2 END AS duree_p,
+                   CASE WHEN (ep.EP_KM <= 30 OR ep.EP_KM IS NULL)
+                        THEN eh.EH_DUREE + 1 ELSE eh.EH_DUREE + 2 END AS duree,
+                   ep.EP_ASA, ep.EP_DAS, ep.EP_KM
+            FROM evenement e
+            JOIN evenement_participation ep ON ep.E_CODE = e.E_CODE
+            JOIN evenement_horaire eh       ON eh.E_CODE = ep.E_CODE AND eh.EH_ID = ep.EH_ID
+            WHERE ep.P_ID = ?
+              AND e.E_CANCELED = 0
+              AND e.TE_CODE = 'REU'
+            ORDER BY eh.EH_DATE_DEBUT DESC, eh.EH_DEBUT DESC
+        ", [$personnel->P_ID]);
+
+        $nom = strtoupper($personnel->P_NOM);
+        $prenom = ucfirst(mb_strtolower($personnel->P_PRENOM));
+        $city = $personnel->P_CITY ?? '';
+
+        $totKmAller = 0.0;
+        $totKmRetour = 0.0;
+        $totDuree = 0.0;
+        $totKm = 0.0;
+
+        /** @var list<array<string,mixed>> $items */
+        $items = [];
+        foreach ($rows as $r) {
+            $hasOverride = ! empty($r->epdatedeb);
+            $datedeb = $hasOverride ? (string) $r->epdatedeb : (string) $r->datedeb;
+            $datefin = $hasOverride ? (string) $r->epdatefin : (string) $r->datefin;
+            $depart = $hasOverride ? (string) $r->depart_p : (string) $r->depart;
+            $retour = $hasOverride ? (string) $r->retour_p : (string) $r->retour;
+            $duree = (float) ($hasOverride ? $r->duree_p : $r->duree);
+            $km = (float) ($r->EP_KM ?? 0);
+            $kmAller = round($km / 2, 1);
+
+            $totKmAller += $kmAller;
+            $totKmRetour += $kmAller;
+            $totDuree += $duree;
+            $totKm += $km;
+
+            $items[] = [
+                'libelle' => (string) ($r->E_LIBELLE ?? ''),
+                'nom' => $nom,
+                'prenom' => $prenom,
+                'depart' => $city,
+                'lieu' => (string) ($r->E_LIEU ?? ''),
+                'datedeb' => $datedeb,
+                'hdep' => $depart,
+                'kmaller' => $kmAller,
+                'datefin' => $datefin,
+                'hret' => $retour,
+                'retour' => $city,
+                'kmretour' => $kmAller,
+                'asa' => $r->EP_ASA ? 'oui' : '',
+                'das' => $r->EP_DAS ? 'oui' : '',
+                'duree' => $duree,
+                'km' => $km,
+            ];
+        }
+
+        $items[] = [
+            'libelle' => 'TOTAL '.count($rows).' participations',
+            'nom' => '', 'prenom' => '', 'depart' => '', 'lieu' => '',
+            'datedeb' => '', 'hdep' => '', 'kmaller' => $totKmAller,
+            'datefin' => '', 'hret' => '', 'retour' => '', 'kmretour' => $totKmRetour,
+            'asa' => '', 'das' => '', 'duree' => $totDuree,   'km' => $totKm,
+        ];
+
+        $fn = fn (string $key) => fn (array $r): mixed => $r[$key];
+        $columns = [
+            ['Nature du déplacement', $fn('libelle')],
+            ['Nom',                   $fn('nom')],
+            ['Prénom',                $fn('prenom')],
+            ['Lieu de départ',        $fn('depart')],
+            ['Lieu de réunion',       $fn('lieu')],
+            ['Date départ',           $fn('datedeb')],
+            ['Heure départ',          $fn('hdep')],
+            ['km aller',              $fn('kmaller')],
+            ['Date retour',           $fn('datefin')],
+            ['Heure retour',          $fn('hret')],
+            ['Lieu retour',           $fn('retour')],
+            ['km retour',             $fn('kmretour')],
+            ['ASA',                   $fn('asa')],
+            ['DAS',                   $fn('das')],
+            ["Nombre d'heures",       $fn('duree')],
+            ['Total km',              $fn('km')],
+        ];
+
+        $service = new TableExportService;
+        $filename = 'Reunions_'.Str::ascii($nom.'_'.$prenom).'_'.date('Ymd');
+
+        return $service->toXlsx($columns, $items, $filename, [
+            'sheetTitle' => mb_substr($nom.' '.$prenom, 0, 30),
+            'freezeHeader' => true,
+            'repeatHeader' => true,
+            'zoomScale' => 85,
+        ]);
+    }
+
     public function exportVcard(Personnel $personnel)
     {
         $personnel->load('section');

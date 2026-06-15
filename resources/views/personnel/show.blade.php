@@ -522,6 +522,12 @@
                                 <span class="ob-badge ob-badge-archive ms-1">{{ $participation->count() }}</span>
                             @endif
                         </div>
+                        <div class="ob-widget-card-actions">
+                            <a href="{{ route('personnel.export.meetings', $personnel) }}"
+                               class="btn btn-sm btn-light" title="Exporter les réunions (XLS)">
+                                <i class="fas fa-file-excel text-success"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ob-widget-card-body p-0">
                         @if ($participation->isNotEmpty())
