@@ -13,8 +13,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use ZipArchive;
 
 /**
  * Section photo-album library — browse albums and photos.
@@ -285,6 +287,54 @@ class PhotoController extends Controller
         abort_unless(Storage::disk('local')->exists($photo->diskPath()), 404);
 
         return Storage::disk('local')->response($photo->diskPath());
+    }
+
+    /** Download a single photo as an attachment. */
+    public function photoDownload(ObPhoto $photo): StreamedResponse
+    {
+        abort_unless($this->sectionScope->allows((int) $photo->S_ID), 403);
+        abort_unless(Storage::disk('local')->exists($photo->diskPath()), 404);
+
+        return Storage::disk('local')->download($photo->diskPath(), $photo->filename);
+    }
+
+    /** Download all photos in an album as a ZIP archive. */
+    public function albumDownload(ObPhotoAlbum $album): StreamedResponse
+    {
+        abort_unless($this->sectionScope->allows((int) $album->S_ID), 403);
+
+        $photos = $album->photos()->orderBy('sort_order')->orderBy('id')->get();
+        abort_if($photos->isEmpty(), 404);
+
+        $zipPath = tempnam(sys_get_temp_dir(), 'ob_album_').'.zip';
+        $zip = new ZipArchive;
+        $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        $disk = Storage::disk('local');
+        $seen = [];
+        foreach ($photos as $photo) {
+            if (! $disk->exists($photo->diskPath())) {
+                continue;
+            }
+            $name = $photo->filename;
+            $base = pathinfo($name, PATHINFO_FILENAME);
+            $ext = pathinfo($name, PATHINFO_EXTENSION);
+            $i = 1;
+            while (in_array($name, $seen, true)) {
+                $name = "{$base}_{$i}.{$ext}";
+                $i++;
+            }
+            $seen[] = $name;
+            $zip->addFile($disk->path($photo->diskPath()), $name);
+        }
+        $zip->close();
+
+        $albumSlug = Str::slug($album->name) ?: 'album';
+
+        return response()->streamDownload(static function () use ($zipPath) {
+            readfile($zipPath);
+            @unlink($zipPath);
+        }, "{$albumSlug}.zip", ['Content-Type' => 'application/zip']);
     }
 
     private function resolveSectionId(Request $request): int

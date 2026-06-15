@@ -15,6 +15,12 @@
         <i class="fas fa-arrow-left me-1"></i> Albums
     </a>
 
+    @if (!$photos->isEmpty())
+        <a href="{{ route('photo.album.download', $album) }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-file-zipper me-1"></i> Télécharger l'album
+        </a>
+    @endif
+
     @if ($canManage)
         <button type="button" class="btn btn-sm btn-primary"
                 data-bs-toggle="modal" data-bs-target="#photoAddModal">
@@ -62,8 +68,12 @@
                     <span class="ob-photo-caption-overlay">{{ $photo->caption }}</span>
                 @endif
 
-                @if ($canManage)
-                    <div class="ob-photo-actions">
+                <div class="ob-photo-actions">
+                    <a href="{{ route('photo.download', $photo) }}"
+                       class="btn btn-xs btn-light" title="Télécharger">
+                        <i class="fas fa-download fa-xs"></i>
+                    </a>
+                    @if ($canManage)
                         <button type="button" class="btn btn-xs btn-light"
                                 title="Légende" data-caption-edit
                                 data-id="{{ $photo->id }}"
@@ -84,8 +94,8 @@
                                 <i class="fas fa-trash fa-xs"></i>
                             </button>
                         </form>
-                    </div>
-                @endif
+                    @endif
+                </div>
 
                 @if ((int) $album->cover_photo_id === (int) $photo->id)
                     <span class="ob-photo-cover-badge" title="Photo de couverture">

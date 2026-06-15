@@ -28,6 +28,7 @@ class ObPhotoAlbum extends Model
         'created_by' => 'integer',
     ];
 
+    /** @return HasMany<ObPhoto, $this> */
     public function photos(): HasMany
     {
         return $this->hasMany(ObPhoto::class, 'album_id')->orderBy('sort_order')->orderBy('id');

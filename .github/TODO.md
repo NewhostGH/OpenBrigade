@@ -171,7 +171,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] bs5-lightbox integration — full-screen gallery with keyboard nav, grouped per album
 - [ ] Drag-and-drop reorder of photos within an album (`sort_order`)
 - [ ] Bulk delete photos
-- [ ] Photo download (single + zip album)
+- [x] Photo download (single + zip album) — `photo.download` per photo (perm 44), `photo.album.download` ZIP stream with collision-safe filenames; download button on each card + toolbar button
 
 ### Statistique (STAT)
 
