@@ -337,6 +337,9 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.qualification.update')->middleware('permission:0');
     Route::delete('personnel/{personnel}/qualifications/{psId}', [PersonnelController::class, 'destroyQualification'])
         ->name('personnel.qualification.destroy')->middleware('permission:0');
+    // Contact handles (social/communication identifiers)
+    Route::post('personnel/{personnel}/contacts', [PersonnelController::class, 'updateContacts'])
+        ->name('personnel.contacts.update')->middleware('permission:0');
     // Duess CRUD — nested under personnel
     Route::post('personnel/{personnel}/dues', [PersonnelController::class, 'storeDues'])
         ->name('personnel.dues.store')->middleware('permission:0');

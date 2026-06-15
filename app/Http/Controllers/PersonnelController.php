@@ -34,6 +34,7 @@ use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -555,6 +556,15 @@ class PersonnelController extends Controller
             ['id' => 'section-historique',    'icon' => 'fas fa-history',       'label' => 'Historique'],
         ];
 
+        // Contact handles (contact_type + personnel_contact).
+        $contactHandles = DB::table('contact_type as ct')
+            ->leftJoin('personnel_contact as pc', function ($j) use ($personnel) {
+                $j->on('pc.CT_ID', '=', 'ct.CT_ID')->where('pc.P_ID', '=', $personnel->P_ID);
+            })
+            ->orderBy('ct.CT_ID')
+            ->select('ct.CT_ID', 'ct.CONTACT_TYPE', 'ct.CT_ICON', 'pc.CONTACT_VALUE')
+            ->get();
+
         return view('personnel.show', [
             'personnel' => $personnel,
             'groupe2' => $personnel->groupe2,
@@ -571,7 +581,51 @@ class PersonnelController extends Controller
             'roleAssignments' => $roleAssignments,
             'personnelGroups' => $personnelGroups,
             'personnelSections' => $personnelSections,
+            'contactHandles' => $contactHandles,
         ]);
+    }
+
+    /** Save social/communication handles for a person. */
+    public function updateContacts(Request $request, Personnel $personnel): RedirectResponse
+    {
+        $user = auth()->user();
+        if ((int) $user->P_ID !== (int) $personnel->P_ID) {
+            abort_unless($user->hasPermission(2), 403);
+        }
+
+        $contactTypes = DB::table('contact_type')->pluck('CT_ID')->all();
+
+        foreach ($contactTypes as $ctId) {
+            $key = 'c'.$ctId;
+            $value = trim((string) $request->input($key, ''));
+
+            $existing = DB::table('personnel_contact')
+                ->where('P_ID', $personnel->P_ID)
+                ->where('CT_ID', $ctId)
+                ->value('CONTACT_VALUE');
+
+            if ($value === '' && $existing !== null) {
+                DB::table('personnel_contact')
+                    ->where('P_ID', $personnel->P_ID)
+                    ->where('CT_ID', $ctId)
+                    ->delete();
+            } elseif ($value !== '' && $existing === null) {
+                DB::table('personnel_contact')->insert([
+                    'CT_ID' => $ctId,
+                    'P_ID' => $personnel->P_ID,
+                    'CONTACT_VALUE' => $value,
+                    'CONTACT_DATE' => now(),
+                ]);
+            } elseif ($value !== '' && $value !== $existing) {
+                DB::table('personnel_contact')
+                    ->where('P_ID', $personnel->P_ID)
+                    ->where('CT_ID', $ctId)
+                    ->update(['CONTACT_VALUE' => $value, 'CONTACT_DATE' => now()]);
+            }
+        }
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Identifiants de contact mis à jour.');
     }
 
     /**

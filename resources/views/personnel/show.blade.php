@@ -831,6 +831,41 @@
                 </div>
             </div>{{-- /section-historique --}}
 
+            {{-- ▸ Identifiants de contact ────────────────────────────────── --}}
+            @if(isset($contactHandles) && $contactHandles->isNotEmpty())
+            <div id="section-contacts" data-pers-section>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-address-card"></i> Identifiants de contact</div>
+                    </div>
+                    <div class="ob-widget-card-body">
+                        <form method="POST" action="{{ route('personnel.contacts.update', $personnel) }}">
+                            @csrf
+                            <div class="row g-2">
+                                @foreach($contactHandles as $ct)
+                                <div class="col-md-6">
+                                    <label class="form-label form-label-sm">
+                                        <i class="{{ $ct->CT_ICON ?? 'fas fa-link' }} me-1"></i>
+                                        {{ $ct->CONTACT_TYPE }}
+                                    </label>
+                                    <input type="text" name="c{{ $ct->CT_ID }}"
+                                           value="{{ $ct->CONTACT_VALUE ?? '' }}"
+                                           class="form-control form-control-sm"
+                                           placeholder="Identifiant {{ $ct->CONTACT_TYPE }}">
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-save me-1"></i> Enregistrer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>{{-- /section-contacts --}}
+            @endif
+
         </div>{{-- /content --}}
     </div>{{-- /sidebar layout --}}
 

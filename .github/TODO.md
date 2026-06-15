@@ -201,7 +201,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Section deactivation / radiation (`section_stop.php`, `radier_section.php`)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)
-- [ ] Habilitations export (`habilitations_xls.php`)
+- [x] Habilitations export (`habilitations_xls.php`)
 
 ### Configuration — Admin (ADMIN)
 
