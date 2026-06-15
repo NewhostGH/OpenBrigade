@@ -51,44 +51,44 @@ app/
 - **Services** (`app/Services/`) — reusable business logic; implement
   `ServiceInterface` where appropriate.
 
-  | Service                  | Responsibility                                                                                     |
-  | ------------------------ | -------------------------------------------------------------------------------------------------- |
-  | `Auth/AuthService`       | Login against `pompier`, legacy-hash upgrade                                                       |
-  | `Auth/LdapAuthService`   | LDAP authentication delegation (see [../security/ldap.md](../security/ldap.md))                    |
-  | `NavigationService`      | Render `config/navigation.php` with permission + feature filtering                                 |
-  | `FeatureService`         | Read/toggle feature-module flags (`ob_feature`), kept in sync with legacy `configuration`          |
-  | `DashboardService`       | Aggregate dashboard widget data                                                                    |
-  | `BrigadeService`         | Brigade identity / global settings                                                                 |
-  | `PermissionResolver`     | Section-scoped, ceiling-based permission resolution (see CONVENTIONS §9)                           |
-  | `SectionScopeService`    | Data-isolation authority for `multi_site` — per-request visible section set (see CONVENTIONS §10)  |
+  | Service                  | Responsibility                                                                                                                             |
+  | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `Auth/AuthService`       | Login against `pompier`, legacy-hash upgrade                                                                                               |
+  | `Auth/LdapAuthService`   | LDAP authentication delegation (see [../security/ldap.md](../security/ldap.md))                                                            |
+  | `NavigationService`      | Render `config/navigation.php` with permission + feature filtering                                                                         |
+  | `FeatureService`         | Read/toggle feature-module flags (`ob_feature`), kept in sync with legacy `configuration`                                                  |
+  | `DashboardService`       | Aggregate dashboard widget data                                                                                                            |
+  | `BrigadeService`         | Brigade identity / global settings                                                                                                         |
+  | `PermissionResolver`     | Section-scoped, ceiling-based permission resolution (see CONVENTIONS §9)                                                                   |
+  | `SectionScopeService`    | Data-isolation authority for `multi_site` — per-request visible section set (see CONVENTIONS §10)                                          |
   | `PasswordPolicyService`  | Per-group password policy (length, expiry, attempts, blocklist) — see [../security/password-policies.md](../security/password-policies.md) |
-  | `DocumentService`        | Document library — folders/files for a section (uses `DocumentAclService`)                         |
-  | `DocumentAclService`     | Per-folder document ACL resolution (principal sets + ancestor chain)                               |
-  | `NotificationService`    | Plain-text email dispatch, honouring the `mail_allowed` flag                                       |
-  | `TableExportService`     | Universal XLSX / CSV export                                                                        |
-  | `ICalExportService`      | iCal export                                                                                        |
-  | `PersonnelExportService` | vCard / PDF data (livret, carte adhérent — rendered client-side with pdf-lib + section letterhead) |
+  | `DocumentService`        | Document library — folders/files for a section (uses `DocumentAclService`)                                                                 |
+  | `DocumentAclService`     | Per-folder document ACL resolution (principal sets + ancestor chain)                                                                       |
+  | `NotificationService`    | Plain-text email dispatch, honouring the `mail_allowed` flag                                                                               |
+  | `TableExportService`     | Universal XLSX / CSV export                                                                                                                |
+  | `ICalExportService`      | iCal export                                                                                                                                |
+  | `PersonnelExportService` | vCard / PDF data (livret, carte adhérent — rendered client-side with pdf-lib + section letterhead)                                         |
 
 - **Models** — Eloquent; derived values live here as accessors. Two models may map to
   the same legacy table — shared behaviour goes in a `Concerns/` trait.
 
 ## `config/`
 
-| File                                                      | Purpose                                                                        |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `app.php`                                                 | Application identity (name, env, debug, URL)                                   |
-| `auth.php`                                                | Auth guards/providers — `users` provider → `App\Models\User` (table `pompier`) |
+| File                                                      | Purpose                                                                                           |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `app.php`                                                 | Application identity (name, env, debug, URL)                                                      |
+| `auth.php`                                                | Auth guards/providers — `users` provider → `App\Models\User` (table `pompier`)                    |
 | `fortify.php`                                             | Laravel Fortify config — enables TOTP two-factor (see [../security/totp.md](../security/totp.md)) |
-| `ldap.php`                                                | LDAP connections + auth settings (see [../security/ldap.md](../security/ldap.md)) |
-| `habilitations.php`                                       | Obsolete-feature list for the permission matrices (SSOT for those)             |
-| `documents.php`                                           | Document library — storage subpath, supported extensions, size cap, feature IDs |
-| `brigade.php`                                             | Brigade-specific settings (version, features)                                  |
-| `personnel.php`                                           | Personnel lookup maps (statuts, badges, civilités) — SSOT for those            |
-| `navigation.php`                                          | Top-level menu definition (rendered by `NavigationService`)                    |
-| `legacy_bridge.php`                                       | Which legacy `.php` pages the bridge still serves                              |
-| `backup.php`                                              | Backup destination, schedule, retention                                        |
-| `database.php`                                            | Connections (default + optional `legacy` for parity validation)                |
-| `cache.php` / `queue.php` / `session.php` / `logging.php` | Framework subsystems                                                           |
+| `ldap.php`                                                | LDAP connections + auth settings (see [../security/ldap.md](../security/ldap.md))                 |
+| `habilitations.php`                                       | Obsolete-feature list for the permission matrices (SSOT for those)                                |
+| `documents.php`                                           | Document library — storage subpath, supported extensions, size cap, feature IDs                   |
+| `brigade.php`                                             | Brigade-specific settings (version, features)                                                     |
+| `personnel.php`                                           | Personnel lookup maps (statuts, badges, civilités) — SSOT for those                               |
+| `navigation.php`                                          | Top-level menu definition (rendered by `NavigationService`)                                       |
+| `legacy_bridge.php`                                       | Which legacy `.php` pages the bridge still serves                                                 |
+| `backup.php`                                              | Backup destination, schedule, retention                                                           |
+| `database.php`                                            | Connections (default + optional `legacy` for parity validation)                                   |
+| `cache.php` / `queue.php` / `session.php` / `logging.php` | Framework subsystems                                                                              |
 
 > New lookup maps and external URLs belong in `config/` (SSOT, rule 1) — never inline.
 
@@ -164,11 +164,11 @@ Asset structure and the build pipeline are documented in
 **`public/`** must only contain files that belong to the application itself and carry no
 expectation of privacy — UI assets, default avatars, app-bundled PDFs:
 
-| Path | Contents |
-| ---- | -------- |
-| `public/build/` | Vite-compiled JS/CSS bundles |
+| Path             | Contents                                                               |
+| ---------------- | ---------------------------------------------------------------------- |
+| `public/build/`  | Vite-compiled JS/CSS bundles                                           |
 | `public/images/` | App UI images (`boy.png`, `girl.png`, `autre.png`, grade icons, theme) |
-| `public/pdf/` | App-bundled PDF templates (`pdf_page.pdf`) |
+| `public/pdf/`    | App-bundled PDF templates (`pdf_page.pdf`)                             |
 
 **Everything user-uploaded goes into `storage/app/private/…`** and is served exclusively
 through an authenticated controller action. Direct URL guessing must not grant access to
