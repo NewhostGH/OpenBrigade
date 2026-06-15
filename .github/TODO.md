@@ -84,7 +84,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Exports (XLS + iCal)
 - [ ] Editable PDF for conventions
 - [ ] Main courante (incident log)
-- [ ] Event duplication (`evenement_duplicate.php`)
+- [x] Event duplication (`evenement_duplicate.php`)
 - [ ] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`)
 - [ ] Required competences / diplomas per event (`evenement_competences.php`, `evenement_diplome.php`)
 - [ ] Participant notifications (`evenement_notify.php`)
@@ -104,7 +104,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Rest periods (`repos_*.php`)
 - [x] Guard exports — XLS / CSV (monthly on-call/astreinte roster via `TableExportService`, section-scoped, `?cols=` aware)
 - [ ] Guard exports — PDF
-- [ ] Type de garde management (`type_garde.php`)
+- [x] Type de garde management (`type_garde.php`)
 - [ ] Demande de renfort (`demande_renfort.php`)
 
 ### Planning (PLA)

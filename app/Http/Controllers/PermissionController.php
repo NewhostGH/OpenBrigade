@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ObGroup;
 use App\Services\FeatureService;
 use App\Services\PermissionResolver;
+use App\Services\TableExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -311,6 +312,63 @@ class PermissionController extends Controller
         $group->delete();
 
         return redirect()->route('admin.permissions', ['tab' => $tab])->with('success', 'Supprimé.');
+    }
+
+    /** Export members of a group/role as XLS or CSV. */
+    public function exportGroup(Request $request, int $gpId): mixed
+    {
+        $group = ObGroup::findOrFail($gpId);
+        $format = $request->string('format', 'xlsx')->toString();
+        $sectionId = (int) $request->integer('section', 0);
+
+        if ($group->kind === ObGroup::KIND_ROLE) {
+            $query = DB::table('ob_user_assignment as ua')
+                ->join('pompier as p', 'p.P_ID', '=', 'ua.person_id')
+                ->join('section as s', 's.S_ID', '=', 'p.P_SECTION')
+                ->where('ua.group_id', $gpId);
+            if ($sectionId > 0) {
+                $query->where('ua.section_id', $sectionId);
+            }
+            $query->select(
+                'p.P_NOM', 'p.P_PRENOM', 'p.P_STATUT', 'p.P_EMAIL', 'p.P_PHONE',
+                's.S_CODE', 's.S_DESCRIPTION',
+                DB::raw('(SELECT s2.S_CODE FROM section s2 WHERE s2.S_ID = ua.section_id) as ROLE_SECTION')
+            )->orderBy('p.P_NOM')->orderBy('p.P_PRENOM');
+        } else {
+            $query = DB::table('ob_personnel_group as pg')
+                ->join('pompier as p', 'p.P_ID', '=', 'pg.person_id')
+                ->join('section as s', 's.S_ID', '=', 'p.P_SECTION')
+                ->where('pg.group_id', $gpId)
+                ->select(
+                    'p.P_NOM', 'p.P_PRENOM', 'p.P_STATUT', 'p.P_EMAIL', 'p.P_PHONE',
+                    's.S_CODE', 's.S_DESCRIPTION',
+                    DB::raw('NULL as ROLE_SECTION')
+                )
+                ->orderBy('p.P_NOM')->orderBy('p.P_PRENOM');
+        }
+
+        $members = $query->get();
+
+        $columns = [
+            ['Nom',     fn ($r) => strtoupper($r->P_NOM ?? '')],
+            ['Prénom',  fn ($r) => ucfirst(mb_strtolower($r->P_PRENOM ?? ''))],
+            ['Statut',  fn ($r) => $r->P_STATUT ?? ''],
+            ['Email',   fn ($r) => $r->P_EMAIL ?? ''],
+            ['Téléphone', fn ($r) => $r->P_PHONE ?? ''],
+            ['Section', fn ($r) => trim(($r->S_CODE ?? '').' '.($r->S_DESCRIPTION ?? ''))],
+        ];
+
+        if ($group->kind === ObGroup::KIND_ROLE) {
+            $columns[] = ['Section du rôle', fn ($r) => $r->ROLE_SECTION ?? ''];
+        }
+
+        $filename = 'Habilitations_'.preg_replace('/[^A-Za-z0-9_-]/', '_', $group->name).'_'.date('Ymd');
+
+        $service = new TableExportService;
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $members, $filename)
+            : $service->toXlsx($columns, $members, $filename, ['sheetTitle' => $group->name, 'freezeHeader' => true]);
     }
 
     /** @param array<string,mixed> $v */

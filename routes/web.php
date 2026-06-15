@@ -204,6 +204,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/permissions/group', [PermissionController::class, 'groupStore'])->name('admin.permissions.group.store')->middleware('permission:9');
     Route::patch('/admin/permissions/group/{gpId}', [PermissionController::class, 'groupUpdate'])->name('admin.permissions.group.update')->middleware('permission:9');
     Route::delete('/admin/permissions/group/{gpId}', [PermissionController::class, 'groupDestroy'])->name('admin.permissions.group.destroy')->middleware('permission:9');
+    Route::get('/admin/permissions/group/{gpId}/export', [PermissionController::class, 'exportGroup'])->name('admin.permissions.group.export')->middleware('permission:9');
     // Active section / role context switch (navbar)
     Route::get('/context/section', [ContextController::class, 'section'])->name('context.section')->middleware('permission:0');
     Route::get('/context/role', [ContextController::class, 'role'])->name('context.role')->middleware('permission:0');

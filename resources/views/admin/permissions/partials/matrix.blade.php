@@ -68,6 +68,10 @@
                             <th class="ob-hab-colhead" data-col="{{ $c->id }}">
                                 {{ $c->name }} <span style="opacity:.6;">({{ $c->id }})</span>
                                 @if ($c->is_system)<span class="ob-badge ob-badge-archive ms-1" style="font-size:8px;">sys</span>@endif
+                                <a href="{{ route('admin.permissions.group.export', ['gpId' => $c->id, 'format' => 'xlsx']) }}"
+                                   class="ms-1" title="Exporter les membres (XLS)" style="font-size:11px; text-decoration:none;">
+                                    <i class="fas fa-file-excel text-success"></i>
+                                </a>
                             </th>
                         @endforeach
                     </tr>
