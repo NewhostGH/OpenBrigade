@@ -192,7 +192,7 @@ class PersonnelExportService
         $file = basename(trim((string) $section?->S_PDF_PAGE));
 
         if ($section && $file !== ''
-            && Storage::disk('public')->exists("sections/{$section->S_ID}/pdf/{$file}")) {
+            && Storage::disk('local')->exists("sections/{$section->S_ID}/pdf/{$file}")) {
             $url = route('organization.sections.letterhead', $section->S_ID);
         }
 
@@ -211,7 +211,7 @@ class PersonnelExportService
         $file = basename(trim((string) $section?->S_PDF_BADGE));
 
         if ($section && $file !== ''
-            && Storage::disk('public')->exists("sections/{$section->S_ID}/images/{$file}")) {
+            && Storage::disk('local')->exists("sections/{$section->S_ID}/images/{$file}")) {
             return route('organization.sections.badge', $section->S_ID);
         }
 

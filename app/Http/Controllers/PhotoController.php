@@ -8,7 +8,9 @@ use App\Services\PhotoService;
 use App\Services\SectionScopeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Section photo-album library — browse albums and photos.
@@ -143,6 +145,15 @@ class PhotoController extends Controller
         $this->photos->setCover($album, $photo);
 
         return back()->with('success', 'Couverture mise à jour.');
+    }
+
+    /** Serve a photo file — auth + section-scope enforced, no direct URL guessing. */
+    public function photoServe(ObPhoto $photo): StreamedResponse
+    {
+        abort_unless($this->sectionScope->allows((int) $photo->S_ID), 403);
+        abort_unless(Storage::disk('local')->exists($photo->diskPath()), 404);
+
+        return Storage::disk('local')->response($photo->diskPath());
     }
 
     private function resolveSectionId(Request $request): int

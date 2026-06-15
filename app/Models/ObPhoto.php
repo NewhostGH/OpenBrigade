@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\PhotoController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * One photo inside an album. The file lives at
- * storage/app/public/photos/{S_ID}/{album_id}/{filename}.
+ * storage/app/photos/{S_ID}/{album_id}/{filename} (local disk, not public).
+ * Access is gated by {@see PhotoController::photoServe()}.
  *
  * @property int $id
  * @property int $album_id
@@ -36,13 +37,13 @@ class ObPhoto extends Model
         return $this->belongsTo(ObPhotoAlbum::class, 'album_id');
     }
 
-    /** Public URL served via the storage:link symlink. */
+    /** Auth-gated URL — served through PhotoController::photoServe(). */
     public function url(): string
     {
-        return Storage::url("photos/{$this->S_ID}/{$this->album_id}/{$this->filename}");
+        return route('photo.serve', $this->id);
     }
 
-    /** Relative disk path under storage/app/public. */
+    /** Relative path on the local disk (storage/app/). */
     public function diskPath(): string
     {
         return "photos/{$this->S_ID}/{$this->album_id}/{$this->filename}";

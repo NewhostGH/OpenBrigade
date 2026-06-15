@@ -71,7 +71,7 @@ class PhotoService implements ServiceInterface
     {
         $name = $this->sanitizeFilename($file->getClientOriginalName());
         $path = "photos/{$sectionId}/{$album->id}";
-        Storage::disk('public')->putFileAs($path, $file, $name);
+        Storage::disk('local')->putFileAs($path, $file, $name);
 
         $photo = ObPhoto::create([
             'album_id' => $album->id,
@@ -124,8 +124,8 @@ class PhotoService implements ServiceInterface
 
     private function deletePhotoFile(ObPhoto $photo): void
     {
-        if (Storage::disk('public')->exists($photo->diskPath())) {
-            Storage::disk('public')->delete($photo->diskPath());
+        if (Storage::disk('local')->exists($photo->diskPath())) {
+            Storage::disk('local')->delete($photo->diskPath());
         }
     }
 }

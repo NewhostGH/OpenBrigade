@@ -256,7 +256,7 @@ class OrganizationController extends Controller
 
         foreach (['S_PDF_PAGE' => 'pdf', 'S_PDF_BADGE' => 'images', 'S_IMAGE_SIGNATURE' => 'images'] as $field => $subDir) {
             if ($request->hasFile($field)) {
-                $path = $request->file($field)->store("sections/{$section->S_ID}/{$subDir}", 'public');
+                $path = $request->file($field)->store("sections/{$section->S_ID}/{$subDir}", 'local');
                 $data[$field] = basename($path);
             } else {
                 unset($data[$field]);
@@ -281,7 +281,7 @@ class OrganizationController extends Controller
         $file = basename(trim((string) $section->S_PDF_PAGE));
         abort_if($file === '', 404);
 
-        $path = Storage::disk('public')->path("sections/{$section->S_ID}/pdf/{$file}");
+        $path = Storage::disk('local')->path("sections/{$section->S_ID}/pdf/{$file}");
         abort_unless(file_exists($path), 404);
 
         return response()->file($path, ['Content-Type' => 'application/pdf']);
@@ -292,7 +292,7 @@ class OrganizationController extends Controller
         $file = basename(trim((string) $section->S_PDF_BADGE));
         abort_if($file === '', 404);
 
-        $path = Storage::disk('public')->path("sections/{$section->S_ID}/images/{$file}");
+        $path = Storage::disk('local')->path("sections/{$section->S_ID}/images/{$file}");
         abort_unless(file_exists($path), 404);
 
         return response()->file($path);
@@ -306,7 +306,7 @@ class OrganizationController extends Controller
     {
         $file = basename(trim((string) $section->S_PDF_PAGE));
         if ($file !== '') {
-            Storage::disk('public')->delete("sections/{$section->S_ID}/pdf/{$file}");
+            Storage::disk('local')->delete("sections/{$section->S_ID}/pdf/{$file}");
         }
 
         $section->update(['S_PDF_PAGE' => '']);
@@ -319,7 +319,7 @@ class OrganizationController extends Controller
     {
         $file = basename(trim((string) $section->S_PDF_BADGE));
         if ($file !== '') {
-            Storage::disk('public')->delete("sections/{$section->S_ID}/images/{$file}");
+            Storage::disk('local')->delete("sections/{$section->S_ID}/images/{$file}");
         }
 
         $section->update(['S_PDF_BADGE' => '']);

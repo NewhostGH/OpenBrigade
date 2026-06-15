@@ -266,6 +266,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/photos/{album}', [PhotoController::class, 'albumDestroy'])->name('photo.album.destroy')->middleware('permission:47');
     Route::post('/photos/{album}/upload', [PhotoController::class, 'photoStore'])->name('photo.store')->middleware('permission:47');
     Route::patch('/photos/{album}/cover', [PhotoController::class, 'setCover'])->name('photo.cover')->middleware('permission:47');
+    Route::get('/photo/{photo}/file', [PhotoController::class, 'photoServe'])->name('photo.serve')->middleware('permission:44');
     Route::patch('/photo/{photo}', [PhotoController::class, 'photoUpdate'])->name('photo.update')->middleware('permission:47');
     Route::delete('/photo/{photo}', [PhotoController::class, 'photoDestroy'])->name('photo.destroy')->middleware('permission:47');
     Route::get('/organization', fn () => redirect()->route('organization.org-chart'))->name('organization.index');
