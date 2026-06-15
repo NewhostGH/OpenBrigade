@@ -332,6 +332,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/qualifications/export/xls', [PersonnelController::class, 'exportQualificationsXls'])->name('personnel.qualifications.export.xls')->middleware(['permission:56', 'feature:competences']);
     Route::get('/qualifications/export/csv', [PersonnelController::class, 'exportQualificationsCsv'])->name('personnel.qualifications.export.csv')->middleware(['permission:56', 'feature:competences']);
     Route::get('/companies', [CompanyController::class, 'index'])->name('company.index')->middleware(['permission:29', 'feature:client']);
+    Route::get('/companies/export/xls', [CompanyController::class, 'exportXls'])->name('company.export.xls')->middleware(['permission:29', 'feature:client']);
+    Route::get('/companies/export/csv', [CompanyController::class, 'exportCsv'])->name('company.export.csv')->middleware(['permission:29', 'feature:client']);
     Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {
         // TODO: Migrate code

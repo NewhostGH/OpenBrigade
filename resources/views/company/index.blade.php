@@ -15,7 +15,9 @@
     filter-id="filterForm"
     filter-cols="2fr 1fr"
     :columns="$columns"
-    table-id="companyTable">
+    table-id="companyTable"
+    :export-xls-url="route('company.export.xls', request()->query())"
+    :export-csv-url="route('company.export.csv', request()->query())">
 
     @if(auth()->user()->hasPermission(29))
         {{-- TODO: Migrate code --}}

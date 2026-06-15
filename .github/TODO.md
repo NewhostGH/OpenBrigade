@@ -118,6 +118,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 ### Client (CLI)
 
 - [x] Company/client list and detail
+- [x] Client list export (XLS / CSV) — section-scoped, search/type-filtered, `?cols=` aware via `TableExportService`
 - [ ] Billing and financial exports
 - [ ] PDF attestations (fiscale, formation)
 - [ ] Billable elements (`element_facturable.php`)
