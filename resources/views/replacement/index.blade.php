@@ -24,7 +24,9 @@
     title="Remplacements de garde"
     :total="$items->total()"
     :columns="$columns"
-    table-id="remplacementTable">
+    table-id="remplacementTable"
+    :export-xls-url="route('replacement.export.xls', request()->query())"
+    :export-csv-url="route('replacement.export.csv', request()->query())">
 
     {{-- TODO: Migrate code --}}
     <a href="{{ url('/legacy/remplacement_edit.php') }}" class="btn btn-sm btn-primary">
