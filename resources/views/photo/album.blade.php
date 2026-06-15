@@ -17,8 +17,8 @@
 
     @if ($canManage)
         <button type="button" class="btn btn-sm btn-primary"
-                data-bs-toggle="modal" data-bs-target="#photoUploadModal">
-            <i class="fas fa-upload me-1"></i> Ajouter
+                data-bs-toggle="modal" data-bs-target="#photoAddModal">
+            <i class="fas fa-plus me-1"></i> Ajouter des photos
         </button>
         <button type="button" class="btn btn-sm btn-outline-secondary"
                 data-bs-toggle="modal" data-bs-target="#albumEditModal">
@@ -38,7 +38,7 @@
         @if ($canManage)
             <div class="mt-2">
                 <button class="btn btn-sm btn-outline-primary"
-                        data-bs-toggle="modal" data-bs-target="#photoUploadModal">
+                        data-bs-toggle="modal" data-bs-target="#photoAddModal">
                     Ajouter des photos
                 </button>
             </div>
@@ -47,18 +47,20 @@
 @else
     <div class="mx-3 ob-photo-grid">
         @foreach ($photos as $photo)
-            <div class="ob-photo-item" data-photo-id="{{ $photo->id }}">
+            <div class="ob-photo-item {{ (int) $album->cover_photo_id === (int) $photo->id ? 'ob-photo-item--cover' : '' }}"
+                 data-photo-id="{{ $photo->id }}">
                 <a href="{{ $photo->url() }}"
                    data-toggle="lightbox"
                    data-gallery="album-{{ $album->id }}"
-                   data-title="{{ e($photo->caption ?? '') }}"
+                   data-title="{{ e($photo->caption ?? $photo->filename) }}"
                    class="ob-photo-thumb-link">
                     <img src="{{ $photo->url() }}" alt="{{ e($photo->caption ?? $photo->filename) }}"
                          class="ob-photo-thumb" loading="lazy">
-                    @if ($photo->caption)
-                        <span class="ob-photo-caption-overlay">{{ $photo->caption }}</span>
-                    @endif
                 </a>
+
+                @if ($photo->caption)
+                    <span class="ob-photo-caption-overlay">{{ $photo->caption }}</span>
+                @endif
 
                 @if ($canManage)
                     <div class="ob-photo-actions">
@@ -68,11 +70,10 @@
                                 data-caption="{{ $photo->caption }}">
                             <i class="fas fa-quote-right fa-xs"></i>
                         </button>
-                        <form method="POST" action="{{ route('photo.cover', $album) }}"
-                              class="d-inline">
+                        <form method="POST" action="{{ route('photo.cover', $album) }}" class="d-inline">
                             @csrf @method('PATCH')
                             <input type="hidden" name="photo_id" value="{{ $photo->id }}">
-                            <button type="submit" class="btn btn-xs btn-light" title="Définir comme couverture">
+                            <button type="submit" class="btn btn-xs btn-light" title="Couverture de l'album">
                                 <i class="fas fa-star fa-xs {{ (int) $album->cover_photo_id === (int) $photo->id ? 'text-warning' : '' }}"></i>
                             </button>
                         </form>
@@ -85,35 +86,97 @@
                         </form>
                     </div>
                 @endif
+
+                @if ((int) $album->cover_photo_id === (int) $photo->id)
+                    <span class="ob-photo-cover-badge" title="Photo de couverture">
+                        <i class="fas fa-star fa-xs"></i>
+                    </span>
+                @endif
             </div>
         @endforeach
     </div>
 @endif
 
 @if ($canManage)
-    {{-- Upload photos --}}
-    <div class="modal fade" id="photoUploadModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form method="POST" action="{{ route('photo.store', $album) }}"
-                  enctype="multipart/form-data" class="modal-content">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-upload me-2"></i>Ajouter des photos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+    {{-- Combined "Ajouter des photos" modal — two tabs: Upload + Doc library --}}
+    <div class="modal fade" id="photoAddModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header pb-0 border-0">
+                    <ul class="nav nav-tabs" id="photoAddTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-upload" data-bs-toggle="tab"
+                                    data-bs-target="#pane-upload" type="button" role="tab">
+                                <i class="fas fa-upload me-1"></i> Téléverser
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-library" data-bs-toggle="tab"
+                                    data-bs-target="#pane-library" type="button" role="tab"
+                                    data-load-url="{{ route('photo.pick-docs', $album) }}">
+                                <i class="fas fa-folder-open me-1"></i> Bibliothèque de documents
+                            </button>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn-close ms-auto mb-auto" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
-                <div class="modal-body">
-                    <label class="form-label" for="photoFiles">Fichier(s)</label>
-                    <input type="file" id="photoFiles" name="photos[]" class="form-control"
-                           multiple accept="{{ implode(',', array_map(fn($e) => '.'.$e, config('photos.supported_extensions'))) }}" required>
-                    <div class="form-text">
-                        {{ implode(', ', config('photos.supported_extensions')) }} — max {{ config('photos.max_size_mb') }} Mo par fichier.
+
+                <div class="tab-content modal-body pt-3">
+                    {{-- ── Tab 1: Upload ── --}}
+                    <div class="tab-pane fade show active" id="pane-upload" role="tabpanel">
+                        <form method="POST" action="{{ route('photo.store', $album) }}"
+                              enctype="multipart/form-data" id="uploadForm">
+                            @csrf
+                            <div class="ob-drop-zone" id="dropZone">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-secondary opacity-50"></i>
+                                <p class="mb-1">Glissez vos photos ici ou</p>
+                                <label class="btn btn-sm btn-outline-primary mb-0" for="photoFiles">
+                                    Choisir des fichiers
+                                </label>
+                                <input type="file" id="photoFiles" name="photos[]" class="d-none"
+                                       multiple accept="{{ implode(',', array_map(fn($e) => '.'.$e, config('photos.supported_extensions'))) }}">
+                                <p class="mt-2 mb-0 text-muted" style="font-size:var(--font-size-xs);">
+                                    {{ implode(', ', config('photos.supported_extensions')) }} · max {{ config('photos.max_size_mb') }} Mo
+                                </p>
+                            </div>
+                            <div id="uploadPreview" class="ob-upload-preview mt-3 d-none"></div>
+                            <div class="d-flex justify-content-end mt-3 gap-2">
+                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" id="uploadSubmit" class="btn btn-sm btn-primary" disabled>
+                                    <i class="fas fa-upload me-1"></i> <span id="uploadLabel">Envoyer</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {{-- ── Tab 2: Document library picker ── --}}
+                    <div class="tab-pane fade" id="pane-library" role="tabpanel">
+                        <div id="docPickerState">
+                            <div class="text-center py-4 text-muted" id="docPickerLoading">
+                                <div class="spinner-border spinner-border-sm me-2"></div> Chargement…
+                            </div>
+                            <div id="docPickerEmpty" class="text-center py-4 text-muted d-none">
+                                <i class="fas fa-folder-open fa-2x mb-2 d-block opacity-50"></i>
+                                Aucune image trouvée dans la bibliothèque de documents de cette section.
+                            </div>
+                            <div id="docPickerGrid" class="ob-doc-picker-grid d-none"></div>
+                        </div>
+                        <form method="POST" action="{{ route('photo.from-docs', $album) }}" id="docPickerForm">
+                            @csrf
+                            <div id="docPickerHiddenInputs"></div>
+                            <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
+                                <span class="text-muted" style="font-size:var(--font-size-xs);" id="docPickerCount">Aucune sélection</span>
+                                <span class="d-flex gap-2">
+                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" id="docPickerSubmit" class="btn btn-sm btn-primary" disabled>
+                                        <i class="fas fa-file-import me-1"></i> Importer
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Envoyer</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -146,7 +209,7 @@
         </div>
     </div>
 
-    {{-- Edit caption (filled by JS) --}}
+    {{-- Caption modal (filled by JS) --}}
     <div class="modal fade" id="captionModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <form method="POST" id="captionForm" class="modal-content">
@@ -183,28 +246,187 @@ document.querySelectorAll('[data-toggle="lightbox"]').forEach(function (el) {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Caption edit modal.
+
+    // ── Caption modal ──────────────────────────────────────────────────────────
     var captionModalEl = document.getElementById('captionModal');
     var captionForm    = document.getElementById('captionForm');
     var captionInput   = document.getElementById('captionInput');
-    var base           = '{{ url("/photo") }}';
+    var photoBase      = '{{ url("/photo") }}';
 
     if (captionModalEl) {
         document.querySelectorAll('[data-caption-edit]').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                captionForm.action = base + '/' + btn.dataset.id;
+                captionForm.action = photoBase + '/' + btn.dataset.id;
                 captionInput.value = btn.dataset.caption || '';
                 bootstrap.Modal.getOrCreateInstance(captionModalEl).show();
             });
         });
     }
 
-    // Confirm before delete.
+    // ── Confirm before delete ──────────────────────────────────────────────────
     document.querySelectorAll('[data-confirm]').forEach(function (form) {
         form.addEventListener('submit', function (e) {
             if (!window.confirm(form.dataset.confirm)) { e.preventDefault(); }
         });
     });
+
+    // ── Upload tab: drag-and-drop + file preview ───────────────────────────────
+    var dropZone     = document.getElementById('dropZone');
+    var photoFiles   = document.getElementById('photoFiles');
+    var uploadPreview = document.getElementById('uploadPreview');
+    var uploadSubmit = document.getElementById('uploadSubmit');
+    var uploadLabel  = document.getElementById('uploadLabel');
+
+    if (dropZone) {
+        ['dragenter', 'dragover'].forEach(function (evt) {
+            dropZone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                dropZone.classList.add('ob-drop-zone--over');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function (evt) {
+            dropZone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                dropZone.classList.remove('ob-drop-zone--over');
+            });
+        });
+        dropZone.addEventListener('drop', function (e) {
+            photoFiles.files = e.dataTransfer.files;
+            handleFileSelection(photoFiles.files);
+        });
+    }
+
+    if (photoFiles) {
+        photoFiles.addEventListener('change', function () {
+            handleFileSelection(photoFiles.files);
+        });
+    }
+
+    function handleFileSelection(files) {
+        if (!files || files.length === 0) {
+            uploadPreview.classList.add('d-none');
+            uploadPreview.innerHTML = '';
+            uploadSubmit.disabled = true;
+            return;
+        }
+        uploadPreview.innerHTML = '';
+        Array.from(files).forEach(function (f) {
+            if (!f.type.startsWith('image/')) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var div = document.createElement('div');
+                div.className = 'ob-upload-thumb';
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = f.name;
+                var label = document.createElement('span');
+                label.textContent = f.name.length > 18 ? f.name.slice(0, 15) + '…' : f.name;
+                div.appendChild(img);
+                div.appendChild(label);
+                uploadPreview.appendChild(div);
+            };
+            reader.readAsDataURL(f);
+        });
+        uploadPreview.classList.remove('d-none');
+        var n = files.length;
+        uploadLabel.textContent = 'Envoyer ' + n + ' photo' + (n > 1 ? 's' : '');
+        uploadSubmit.disabled = false;
+    }
+
+    // ── Doc picker tab: lazy-load on first open ────────────────────────────────
+    var libTab       = document.getElementById('tab-library');
+    var docGrid      = document.getElementById('docPickerGrid');
+    var docLoading   = document.getElementById('docPickerLoading');
+    var docEmpty     = document.getElementById('docPickerEmpty');
+    var docCount     = document.getElementById('docPickerCount');
+    var docSubmit    = document.getElementById('docPickerSubmit');
+    var docHiddens   = document.getElementById('docPickerHiddenInputs');
+    var docsLoaded   = false;
+    var selectedIds  = new Set();
+
+    if (libTab) {
+        libTab.addEventListener('shown.bs.tab', function () {
+            if (docsLoaded) return;
+            docsLoaded = true;
+            fetch(libTab.dataset.loadUrl, {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (docs) {
+                docLoading.classList.add('d-none');
+                if (!docs || docs.length === 0) {
+                    docEmpty.classList.remove('d-none');
+                    return;
+                }
+                docs.forEach(function (doc) {
+                    var item = document.createElement('div');
+                    item.className = 'ob-doc-item';
+                    item.dataset.id = doc.id;
+                    item.innerHTML =
+                        '<div class="ob-doc-thumb">' +
+                          '<img src="' + doc.thumb_url + '" alt="' + escHtml(doc.name) + '" loading="lazy">' +
+                        '</div>' +
+                        '<div class="ob-doc-info">' +
+                          '<span class="ob-doc-name" title="' + escHtml(doc.name) + '">' + escHtml(doc.name) + '</span>' +
+                          (doc.folder ? '<span class="ob-doc-folder">' + escHtml(doc.folder) + '</span>' : '') +
+                        '</div>' +
+                        '<div class="ob-doc-check"><i class="fas fa-check"></i></div>';
+                    item.addEventListener('click', function () {
+                        toggleDoc(item, doc.id);
+                    });
+                    docGrid.appendChild(item);
+                });
+                docGrid.classList.remove('d-none');
+            })
+            .catch(function () {
+                docLoading.innerHTML = '<span class="text-danger">Erreur lors du chargement.</span>';
+            });
+        });
+    }
+
+    function toggleDoc(item, id) {
+        if (selectedIds.has(id)) {
+            selectedIds.delete(id);
+            item.classList.remove('ob-doc-item--selected');
+        } else {
+            selectedIds.add(id);
+            item.classList.add('ob-doc-item--selected');
+        }
+        updateDocSelection();
+    }
+
+    function updateDocSelection() {
+        var n = selectedIds.size;
+        docCount.textContent = n > 0 ? n + ' fichier' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : '') : 'Aucune sélection';
+        docSubmit.disabled = n === 0;
+        docHiddens.innerHTML = '';
+        selectedIds.forEach(function (id) {
+            var inp = document.createElement('input');
+            inp.type = 'hidden';
+            inp.name = 'doc_ids[]';
+            inp.value = id;
+            docHiddens.appendChild(inp);
+        });
+    }
+
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Reset state when the main modal closes.
+    var addModal = document.getElementById('photoAddModal');
+    if (addModal) {
+        addModal.addEventListener('hidden.bs.modal', function () {
+            if (photoFiles) { photoFiles.value = ''; }
+            if (uploadPreview) { uploadPreview.innerHTML = ''; uploadPreview.classList.add('d-none'); }
+            if (uploadSubmit) { uploadSubmit.disabled = true; }
+            if (uploadLabel)  { uploadLabel.textContent = 'Envoyer'; }
+        });
+    }
 });
 </script>
 @endpush

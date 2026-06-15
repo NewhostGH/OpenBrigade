@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
+use App\Models\DocumentFolder;
 use App\Models\ObPhoto;
 use App\Models\ObPhotoAlbum;
+use App\Services\DocumentService;
 use App\Services\PhotoService;
 use App\Services\SectionScopeService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +27,7 @@ class PhotoController extends Controller
     public function __construct(
         private readonly PhotoService $photos,
         private readonly SectionScopeService $sectionScope,
+        private readonly DocumentService $documentService,
     ) {}
 
     /** Album grid — one card per album with cover photo and count. */
@@ -145,6 +150,75 @@ class PhotoController extends Controller
         $this->photos->setCover($album, $photo);
 
         return back()->with('success', 'Couverture mise à jour.');
+    }
+
+    /** JSON list of image documents available to import from the doc library. */
+    public function pickDocuments(ObPhotoAlbum $album): JsonResponse
+    {
+        abort_unless($this->sectionScope->allows((int) $album->S_ID), 403);
+
+        $docs = $this->photos->imageDocuments((int) $album->S_ID)
+            ->map(function (Document $d): array {
+                $folder = $d->folder;
+
+                return [
+                    'id' => $d->D_ID,
+                    'name' => $d->D_NAME,
+                    'folder' => $folder instanceof DocumentFolder ? $folder->DF_NAME : '',
+                    'thumb_url' => route('document.download', $d->D_ID),
+                ];
+            });
+
+        return response()->json($docs->values());
+    }
+
+    /** Import selected document-library images into an album. */
+    public function storeFromDocuments(Request $request, ObPhotoAlbum $album): RedirectResponse
+    {
+        abort_unless($this->sectionScope->allows((int) $album->S_ID), 403);
+
+        $v = $request->validate([
+            'doc_ids' => ['required', 'array', 'min:1'],
+            'doc_ids.*' => ['integer'],
+        ]);
+
+        $sectionId = (int) $album->S_ID;
+        $userId = (int) $request->user()->P_ID;
+        $count = 0;
+
+        foreach ($v['doc_ids'] as $docId) {
+            $doc = Document::library()
+                ->where('S_ID', $sectionId)
+                ->where('D_ID', (int) $docId)
+                ->first();
+
+            if (! $doc) {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($doc->D_NAME, PATHINFO_EXTENSION));
+            if (! in_array($ext, PhotoService::IMAGE_EXTENSIONS, true)) {
+                continue;
+            }
+
+            $srcPath = $this->documentService->filePath(
+                (int) $doc->S_ID, (int) $doc->DF_ID, $doc->D_NAME
+            );
+
+            if (! file_exists($srcPath)) {
+                continue;
+            }
+
+            $this->photos->importFromPath($srcPath, $sectionId, $album, $doc->D_NAME, $userId);
+            $count++;
+        }
+
+        return back()->with(
+            $count > 0 ? 'success' : 'warning',
+            $count > 0
+                ? "{$count} photo(s) importée(s) depuis la bibliothèque."
+                : 'Aucun fichier importé (fichiers introuvables ou format non supporté).',
+        );
     }
 
     /** Serve a photo file — auth + section-scope enforced, no direct URL guessing. */

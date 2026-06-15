@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Document;
 use App\Models\ObPhoto;
 use App\Models\ObPhotoAlbum;
 use Illuminate\Http\UploadedFile;
@@ -19,6 +20,9 @@ class PhotoService implements ServiceInterface
 {
     /** Supported upload extensions (lower-case). */
     public const SUPPORTED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+    /** Subset of SUPPORTED_EXTENSIONS used for document-picker filtering. */
+    public const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
     /** Maximum upload size in MB. */
     public const MAX_SIZE_MB = 20;
@@ -112,6 +116,65 @@ class PhotoService implements ServiceInterface
             $next = $album->photos()->first();
             $album->update(['cover_photo_id' => $next instanceof ObPhoto ? $next->id : null]);
         }
+    }
+
+    /**
+     * Library image documents (jpg/png/gif/webp) for a section, folder eager-loaded.
+     *
+     * @return Collection<int, Document>
+     */
+    public function imageDocuments(int $sectionId): Collection
+    {
+        return Document::library()
+            ->where('S_ID', $sectionId)
+            ->with('folder')
+            ->get()
+            ->filter(fn (Document $d) => in_array(
+                strtolower(pathinfo($d->D_NAME, PATHINFO_EXTENSION)),
+                self::IMAGE_EXTENSIONS,
+                true,
+            ))
+            ->values();
+    }
+
+    /**
+     * Copy a file already on disk (e.g. from the document library) into the
+     * photo album storage, create the ObPhoto row, and auto-set the cover.
+     */
+    public function importFromPath(
+        string $sourcePath,
+        int $sectionId,
+        ObPhotoAlbum $album,
+        string $filename,
+        int $userId,
+    ): ObPhoto {
+        $name = $this->sanitizeFilename($filename);
+        $destDir = storage_path("app/photos/{$sectionId}/{$album->id}");
+
+        if (! is_dir($destDir)) {
+            mkdir($destDir, 0755, true);
+        }
+
+        // Avoid overwriting an existing file.
+        if (file_exists("{$destDir}/{$name}")) {
+            $info = pathinfo($name);
+            $name = $info['filename'].'_'.time().'.'.($info['extension'] ?? 'jpg');
+        }
+
+        copy($sourcePath, "{$destDir}/{$name}");
+
+        $photo = ObPhoto::create([
+            'album_id' => $album->id,
+            'S_ID' => $sectionId,
+            'filename' => $name,
+            'created_by' => $userId,
+        ]);
+
+        if ($album->cover_photo_id === null) {
+            $album->update(['cover_photo_id' => $photo->id]);
+        }
+
+        return $photo;
     }
 
     /** Sanitise an uploaded filename: strip unsafe chars, keep extension. */

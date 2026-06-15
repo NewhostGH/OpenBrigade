@@ -2,6 +2,13 @@
 # Abort the commit if any step fails.
 set -e
 
+# On Windows the WinGet PHP 8.x install has no php.ini by default.
+# Point to a minimal ini we keep in TEMP so extensions are available.
+OB_INI="$TEMP/ob-php.ini"
+if [ -f "$OB_INI" ]; then
+    export PHPRC="$OB_INI"
+fi
+
 # 1. Lint: the Vite bundle must compile cleanly.
 npm run build --silent > /dev/null
 

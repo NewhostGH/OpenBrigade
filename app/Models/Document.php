@@ -65,6 +65,7 @@ class Document extends Model
         return $this->belongsTo(DocumentSecurity::class, 'DS_ID', 'DS_ID');
     }
 
+    /** @return BelongsTo<DocumentFolder, $this> */
     public function folder(): BelongsTo
     {
         return $this->belongsTo(DocumentFolder::class, 'DF_ID', 'DF_ID');

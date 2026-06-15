@@ -43,11 +43,12 @@
     color: var(--bs-body-color);
 }
 
-/* Album detail — photo grid */
+/* ── Album detail — photo grid ───────────────────────────────────────────── */
+
 .ob-photo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.625rem;
     margin-bottom: 2rem;
 }
 
@@ -57,6 +58,18 @@
     overflow: hidden;
     border-radius: var(--bs-border-radius);
     background: var(--bs-tertiary-bg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.15s ease;
+}
+
+.ob-photo-item:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Highlight the cover photo */
+.ob-photo-item--cover {
+    outline: 2.5px solid var(--bs-warning);
+    outline-offset: -2px;
 }
 
 .ob-photo-thumb-link {
@@ -70,54 +83,207 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.2s ease, opacity 0.15s ease;
+    transition: transform 0.22s ease, opacity 0.15s ease;
     display: block;
 }
 
 .ob-photo-item:hover .ob-photo-thumb {
-    transform: scale(1.06);
-    opacity: 0.9;
+    transform: scale(1.05);
+    opacity: 0.88;
 }
 
-/* Caption overlay on hover */
+/* Caption gradient always at bottom */
 .ob-photo-caption-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 0.25rem 0.4rem;
+    padding: 0.35rem 0.5rem 0.3rem;
     font-size: 11px;
     line-height: 1.3;
     color: #fff;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
     pointer-events: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Per-photo action buttons (shown on hover) */
+/* Per-photo action buttons (revealed on hover) */
 .ob-photo-actions {
     position: absolute;
-    top: 4px;
-    right: 4px;
+    top: 5px;
+    right: 5px;
     display: none;
-    gap: 2px;
+    gap: 3px;
     flex-direction: row;
+    z-index: 2;
 }
 
 .ob-photo-item:hover .ob-photo-actions {
     display: flex;
 }
 
+/* Cover badge — bottom-left star */
+.ob-photo-cover-badge {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    color: var(--bs-warning);
+    font-size: 11px;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
 .btn-xs {
-    padding: 0.15rem 0.3rem;
+    padding: 0.15rem 0.35rem;
     font-size: 10px;
     line-height: 1.4;
     border-radius: var(--bs-border-radius-sm);
 }
 
-/* Lightbox size overrides */
+/* Lightbox size override */
 .modal.lightbox .modal-dialog {
     max-width: min(1100px, 96vw);
+}
+
+/* ── Upload drop zone ────────────────────────────────────────────────────── */
+
+.ob-drop-zone {
+    border: 2px dashed var(--bs-border-color);
+    border-radius: var(--bs-border-radius-lg);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: var(--bs-secondary-color);
+    transition: border-color 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+}
+
+.ob-drop-zone--over {
+    border-color: var(--bs-primary);
+    background: color-mix(in srgb, var(--bs-primary) 5%, transparent);
+}
+
+/* Upload file preview strip */
+.ob-upload-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ob-upload-thumb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 80px;
+}
+
+.ob-upload-thumb img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--bs-border-radius-sm);
+    border: 1px solid var(--bs-border-color);
+}
+
+.ob-upload-thumb span {
+    font-size: 10px;
+    color: var(--bs-secondary-color);
+    text-align: center;
+    line-height: 1.2;
+    word-break: break-all;
+}
+
+/* ── Document picker grid ────────────────────────────────────────────────── */
+
+.ob-doc-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.625rem;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.ob-doc-item {
+    position: relative;
+    border: 2px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    background: var(--bs-tertiary-bg);
+}
+
+.ob-doc-item:hover {
+    border-color: var(--bs-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ob-doc-item--selected {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--bs-primary) 20%, transparent);
+}
+
+.ob-doc-thumb {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--bs-secondary-bg);
+}
+
+.ob-doc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+.ob-doc-info {
+    padding: 0.3rem 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.ob-doc-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--bs-body-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.ob-doc-folder {
+    font-size: 9px;
+    color: var(--bs-secondary-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+/* Check badge on selected item */
+.ob-doc-check {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--bs-primary);
+    color: #fff;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ob-doc-item--selected .ob-doc-check {
+    display: flex;
 }
