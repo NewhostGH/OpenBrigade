@@ -28,10 +28,13 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 ## Authentication & account (AUTH)
 
 - [x] Login / logout (legacy-hash upgrade)
-- [ ] Password change (`change_password.php`, `save_password.php`)
-- [ ] Lost password / send credentials (`lost_password.php`, `send_id.php`)
-- [ ] Charter acceptance on first login (`charte.php`)
-- [ ] Connected users view (`connected_users.php`)
+- [X] Password change (`change_password.php`, `save_password.php`)
+- [X] Lost password / send credentials (`lost_password.php`, `send_id.php`) -> Mailing not setup yet
+- [X] Charter acceptance on first login (`charte.php`)
+- [X] Connected users view (`connected_users.php`)
+- [x] TOTP two-factor authentication (laravel/fortify) — `TotpController`, `docs/security/totp.md`
+- [x] LDAP authentication delegation — multi-domain, OU rules, attribute mapping, local-password fallback; `docs/security/ldap.md`
+- [x] Per-group password policies (NCSC/ANSSI-aligned) — complexity/history/expiry, HIBP check, strength meter, enforcement middleware; `PasswordPolicyService`, `docs/security/password-policies.md`
 
 ## Cross-cutting (done)
 
@@ -70,7 +73,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Homonym management (`homonymes_*.php`)
 - [ ] Contact / email lists (`listecontacts.php`, `listemails.php`)
 - [ ] Custom member fields (`specific_info.php`)
-- [ ] Remaining exports (`formations_xls.php`, `qualifications_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)
+- [x] Qualifications export (`qualifications_xls.php`) — XLS / CSV via `TableExportService`, section-scoped, filter & `?cols=` aware
+- [ ] Remaining exports (`formations_xls.php`, `personnel_reunion_xls.php`, `export_badges.php`)
 
 ### Activité — Events & Interventions (ACT)
 
@@ -87,7 +91,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Event report (`evenement_rapport.php`)
 - [ ] Per-event trombinoscope (`evenement_trombinoscope.php`)
 - [ ] Event billing & tariffs (`evenement_facturation*.php`, `evenement_tarif*.php`)
-- [ ] Remaining exports (`evenement_xls.php`, `evenement_vehicule_xls.php`)
+- [x] Event list export (`evenement_xls.php`) — XLS / CSV via `TableExportService`, period/type/section/search-aware
+- [x] Per-event vehicle export (`evenement_vehicule_xls.php`) — XLS via `TableExportService`, button in the event detail Véhicules card
 
 ### Garde — On-call roster (GAR)
 
@@ -96,7 +101,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Use the new calendar library when implemented (see PLA)
 - [ ] Automatic piquet/guard generation
 - [ ] Rest periods (`repos_*.php`)
-- [ ] Guard exports (XLS, PDF)
+- [x] Guard exports — XLS / CSV (monthly on-call/astreinte roster via `TableExportService`, section-scoped, `?cols=` aware)
+- [ ] Guard exports — PDF
 - [ ] Type de garde management (`type_garde.php`)
 - [ ] Demande de renfort (`demande_renfort.php`)
 
@@ -112,6 +118,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 ### Client (CLI)
 
 - [x] Company/client list and detail
+- [x] Client list export (XLS / CSV) — section-scoped, search/type-filtered, `?cols=` aware via `TableExportService`
 - [ ] Billing and financial exports
 - [ ] PDF attestations (fiscale, formation)
 - [ ] Billable elements (`element_facturable.php`)
@@ -123,7 +130,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 
 - [x] Vehicle list, detail, CRUD, type management
 - [ ] Vehicle assignment to events
-- [ ] Vehicle exports (XLS)
+- [x] Vehicle exports (XLS / CSV) — `TableExportService`, section/status/search-aware, `?cols=` selection
 
 ### Inventaire — Equipment & Consumables (MAT / CONSO)
 
@@ -132,7 +139,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Type management (matériel, consommable)
 - [ ] Equipment category management
 - [ ] Embarkation tracking (`materiel_embarquer.php`)
-- [ ] Equipment/consumable exports (XLS)
+- [x] Equipment/consumable exports (XLS / CSV) — `TableExportService`, section/search-aware, `?cols=` selection
 
 ### Communication (COMM)
 
@@ -216,19 +223,20 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 Authoritative list: the `todo` annotations in `AdminController::settings()`
 (settings marked `obsolete` there are intentionally retired — no work needed).
 
-- [ ] Password policies — complexity, history, expiry (IDs 15, 16, 17, 70)
-- [ ] Session policies (IDs 34, 36, 49)
+- [x] Password policies — complexity, history, expiry (IDs 15, 16, 17, 70) — handled via Administration > Sécurité (annotated obsolete in `AdminController::settings()`)
+- [x] Session policies (IDs 34, 36, 49) — handled via Administration > Sécurité
+- [x] Action history (ID 25) — handled via Administration > Sécurité
+- [x] Sensitive data handling (ID 33), file ACLs (ID 42), terms of use (ID 48) — handled via Sécurité / document ACL system
+- [x] First-login banner (ID 69) — handled via Administration > Sécurité
 - [ ] Organisation identity — name, description, contact mail, logo, login image (IDs 6, 8, 39, 40, 71, 75)
 - [ ] Timezone (ID 76), default currency (IDs 98, 99)
 - [ ] Numbering prefix / length (IDs 100, 101)
-- [ ] Action history (ID 25)
 - [ ] Email notifications (ID 28)
 - [ ] Mandatory profile photos (ID 68)
 - [ ] Maintenance mode and text (IDs 37, 41)
 - [ ] API enable / URL / token (IDs 64, 65, 66) — see Phase 3
 - [ ] SMS provider settings (IDs 9, 10, 11, 12) — see COMM
-- [ ] Sensitive data handling (ID 33), file ACLs (ID 42), terms of use (ID 48)
-- [ ] First-login banner (ID 69), telemetry opt-in (ID 80)
+- [ ] Telemetry opt-in (ID 80)
 - [ ] Database optimization (ID 14)
 
 ---

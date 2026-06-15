@@ -2,10 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LdapAttributeMap;
+use App\Models\LdapDomain;
+use App\Models\LdapOuRule;
+use App\Models\ObGroup;
+use App\Models\ObPasswordPolicy;
+use App\Models\Section;
+use App\Services\Auth\LdapAuthService;
+use App\Services\FeatureService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -49,6 +59,211 @@ class AdminController extends Controller
             + ['columns' => $this->monitoringColumns()]);
     }
 
+    // ── Security settings ─────────────────────────────────────────────────────
+
+    /** IDs that live on the dedicated security page, not on the generic settings page. */
+    private const SECURITY_IDS = [48, 34, 36, 49, 25, 33, 69];
+
+    private const SECURITY_TABS = ['passwords', 'charter', 'sessions', 'auth', 'network'];
+
+    public function security(Request $request): View
+    {
+        $tab = $request->input('tab', 'passwords');
+        if (! in_array($tab, self::SECURITY_TABS, true)) {
+            $tab = 'passwords';
+        }
+
+        $settings = DB::table('configuration')
+            ->whereIn('ID', self::SECURITY_IDS)
+            ->get()
+            ->keyBy('ID');
+
+        $charterUpdatedAt = DB::table('configuration')
+            ->where('NAME', 'charte_updated_at')
+            ->value('VALUE');
+
+        $policies = $tab === 'passwords'
+            ? ObPasswordPolicy::withCount('groups')->orderByDesc('is_default')->orderBy('name')->get()
+            : collect();
+
+        $ldapDomains = ($tab === 'auth' || $tab === 'network')
+            ? LdapDomain::orderBy('priority')->get()
+            : collect();
+
+        return view('admin.security', compact('settings', 'charterUpdatedAt', 'tab', 'policies', 'ldapDomains'));
+    }
+
+    // ── LDAP domain management ────────────────────────────────────────────────
+
+    public function ldapStore(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'enabled' => 'boolean',
+            'priority' => 'integer|min:0|max:999',
+            'host' => 'required|string|max:255',
+            'port' => 'integer|min:1|max:65535',
+            'base_dn' => 'required|string|max:500',
+            'username' => 'nullable|string|max:500',
+            'password' => 'nullable|string|max:500',
+            'timeout' => 'integer|min:1|max:60',
+            'use_tls' => 'boolean',
+            'use_starttls' => 'boolean',
+            'auth_method' => 'required|in:bind,upn',
+            'upn_suffix' => 'nullable|string|max:200',
+            'user_filter' => 'nullable|string|max:500',
+            'restrict_to_ou' => 'boolean',
+        ]);
+
+        $data['enabled'] = (bool) ($data['enabled'] ?? false);
+        $data['use_tls'] = (bool) ($data['use_tls'] ?? false);
+        $data['use_starttls'] = (bool) ($data['use_starttls'] ?? false);
+        $data['restrict_to_ou'] = (bool) ($data['restrict_to_ou'] ?? false);
+        $data['user_filter'] ??= '(&(objectClass=person)(|(uid={login})(mail={login})))';
+
+        $domain = LdapDomain::create($data);
+
+        return redirect()->route('admin.ldap.edit', $domain->id)->with('success', 'Domaine LDAP créé.');
+    }
+
+    public function ldapEdit(int $id): View
+    {
+        $domain = LdapDomain::with(['attributeMaps', 'ouRules.group', 'ouRules.role', 'ouRules.section'])->findOrFail($id);
+        $groups = ObGroup::groups()->orderBy('name')->get();
+        $roles = ObGroup::roles()->orderBy('name')->get();
+        $multiSite = app(FeatureService::class)->isEnabled('multi_site');
+        $sections = $multiSite
+            ? Section::where('S_INACTIVE', false)->orderBy('S_CODE')->get()
+            : collect();
+
+        $localFields = [
+            'P_NOM' => 'Nom',
+            'P_PRENOM' => 'Prénom',
+            'P_EMAIL' => 'Email',
+            'P_CODE' => 'Matricule / Identifiant',
+            'P_GRADE' => 'Grade',
+        ];
+
+        return view('admin.ldap-domain-edit', compact('domain', 'groups', 'roles', 'sections', 'multiSite', 'localFields'));
+    }
+
+    public function ldapUpdate(Request $request, int $id): RedirectResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'enabled' => 'boolean',
+            'priority' => 'integer|min:0|max:999',
+            'host' => 'required|string|max:255',
+            'port' => 'integer|min:1|max:65535',
+            'base_dn' => 'required|string|max:500',
+            'username' => 'nullable|string|max:500',
+            'password' => 'nullable|string|max:500',
+            'timeout' => 'integer|min:1|max:60',
+            'use_tls' => 'boolean',
+            'use_starttls' => 'boolean',
+            'auth_method' => 'required|in:bind,upn',
+            'upn_suffix' => 'nullable|string|max:200',
+            'user_filter' => 'nullable|string|max:500',
+            'restrict_to_ou' => 'boolean',
+        ]);
+
+        $data['enabled'] = (bool) ($data['enabled'] ?? false);
+        $data['use_tls'] = (bool) ($data['use_tls'] ?? false);
+        $data['use_starttls'] = (bool) ($data['use_starttls'] ?? false);
+        $data['restrict_to_ou'] = (bool) ($data['restrict_to_ou'] ?? false);
+
+        // Keep existing password if not changed.
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
+        $domain->update($data);
+
+        return back()->with('success', 'Domaine mis à jour.');
+    }
+
+    public function ldapDestroy(int $id): RedirectResponse
+    {
+        LdapDomain::findOrFail($id)->delete();
+
+        return redirect()->route('admin.security', ['tab' => 'auth'])->with('success', 'Domaine LDAP supprimé.');
+    }
+
+    public function ldapTest(int $id): JsonResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+        $error = app(LdapAuthService::class)->testDomain($domain);
+
+        return $error === null
+            ? response()->json(['ok' => true,  'message' => 'Connexion réussie.'])
+            : response()->json(['ok' => false, 'message' => $error]);
+    }
+
+    public function ldapAttrStore(Request $request, int $id): RedirectResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+
+        $data = $request->validate([
+            'ldap_attr' => 'required|string|max:100',
+            'local_field' => 'required|string|max:50',
+            'overwrite' => 'boolean',
+        ]);
+
+        $data['overwrite'] = (bool) ($data['overwrite'] ?? false);
+
+        $domain->attributeMaps()->create($data);
+
+        return back()->with('success', 'Correspondance ajoutée.');
+    }
+
+    public function ldapAttrDestroy(int $id, int $attrId): RedirectResponse
+    {
+        LdapAttributeMap::where('ldap_domain_id', $id)->findOrFail($attrId)->delete();
+
+        return back()->with('success', 'Correspondance supprimée.');
+    }
+
+    public function ldapOuStore(Request $request, int $id): RedirectResponse
+    {
+        $domain = LdapDomain::findOrFail($id);
+
+        $data = $request->validate([
+            'ou_dn' => 'required|string|max:500',
+            'extra_filter' => 'nullable|string|max:500',
+            'action' => 'required|in:allow,deny,assign',
+            'group_id' => 'nullable|integer|exists:ob_group,id',
+            'role_id' => 'nullable|integer|exists:ob_group,id',
+            'section_id' => 'nullable|integer|exists:section,S_ID',
+            'priority' => 'integer|min:0|max:999',
+        ]);
+
+        $domain->ouRules()->create($data);
+
+        return back()->with('success', 'Règle OU ajoutée.');
+    }
+
+    public function ldapOuDestroy(int $id, int $ruleId): RedirectResponse
+    {
+        LdapOuRule::where('ldap_domain_id', $id)->findOrFail($ruleId)->delete();
+
+        return back()->with('success', 'Règle supprimée.');
+    }
+
+    public function testHibp(): JsonResponse
+    {
+        try {
+            $response = Http::timeout(5)->withHeaders(['Add-Padding' => 'true'])->get('https://api.pwnedpasswords.com/range/00000');
+
+            return $response->successful()
+                ? response()->json(['ok' => true,  'message' => 'Connexion réussie (HTTP '.$response->status().').'])
+                : response()->json(['ok' => false, 'message' => 'Réponse HTTP '.$response->status().'.']);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
     // ── Application settings ──────────────────────────────────────────────────
 
     public function settings(): View
@@ -56,6 +271,7 @@ class AdminController extends Controller
         $rows = DB::table('configuration')
             ->where('HIDDEN', 0)
             ->whereNotIn('ID', DB::table('ob_feature')->whereNotNull('legacy_config_id')->pluck('legacy_config_id'))
+            ->whereNotIn('ID', self::SECURITY_IDS)
             ->orderBy('TAB')
             ->orderBy('ORDERING')
             ->get();
@@ -63,7 +279,7 @@ class AdminController extends Controller
         $tabs = [
             1 => ['label' => 'Général',          'icon' => 'sliders-h'],
             2 => ['label' => 'Options',          'icon' => 'sliders-h'],
-            3 => ['label' => 'Sécurité',         'icon' => 'shield-alt'],
+            3 => ['label' => 'Technique',         'icon' => 'shield-alt'],
             4 => ['label' => 'Organisation',      'icon' => 'building'],
             5 => ['label' => 'Avancé',            'icon' => 'wrench'],
         ];
@@ -88,7 +304,7 @@ class AdminController extends Controller
             105 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             106 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             107 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
-            25 => ['type' => 'todo',     'note' => 'L\'historique des actions n\'est pas encore implémenté dans Laravel.'],
+            25 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             79 => ['type' => 'obsolete', 'note' => 'Le type d\'organisation n\'est plus utilisé. Ce réglage n\'a plus d\'effet.'],
             6 => ['type' => 'todo',     'note' => 'Le nom de l\'organisation n\'est pas encore utilisé dans Laravel.'],
             7 => ['type' => 'obsolete', 'note' => 'L\'URL du site est gérée par APP_URL dans .env. Ce réglage n\'a plus d\'effet.'],
@@ -117,14 +333,16 @@ class AdminController extends Controller
             10 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             11 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             12 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            33 => ['type' => 'todo',     'note' => 'Les données sensibles ne sont pas encore gérées dans Laravel.'],
-            42 => ['type' => 'todo',     'note' => 'Les ACLs des fichiers ne sont pas encore gérées dans Laravel.'],
-            48 => ['type' => 'todo',     'note' => 'Les condition d\'utilisation ne sont pas encore implémentées dans Laravel.'],
-            16 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
-            17 => ['type' => 'todo',     'note' => 'Les politiques de mot de passe ne sont pas encore implémentées dans Laravel.'],
-            34 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
-            36 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
-            49 => ['type' => 'todo',     'note' => 'Les politiques de sessions ne sont pas encore implémentées dans Laravel.'],
+            33 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            42 => ['type' => 'obsolete', 'note' => 'Remplacé par le système de contrôle d\'accès des documents.'],
+            48 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            15 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            16 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            17 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            70 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            34 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            36 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
+            49 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             50 => ['type' => 'obsolete', 'note' => 'La clé du webservice n\'est plus utilisée. Ce réglage n\'a plus d\'effet.'],
             80 => ['type' => 'todo',     'note' => 'La télémétrie n\'est pas encore implémentée dans Laravel.'],
             20 => ['type' => 'obsolete', 'note' => 'L\'URL de la page d\'identification est désormais fixe. Ce réglage n\'a plus d\'effet.'],
@@ -133,10 +351,8 @@ class AdminController extends Controller
             21 => ['type' => 'obsolete', 'note' => 'Les répertoires de stockage sont configurés dans config/filesystems.php. Ce réglage n\'a plus d\'effet.'],
             44 => ['type' => 'obsolete', 'note' => 'Laravel utilise bcrypt automatiquement. Les anciens hachages MD5 sont migrés à la prochaine connexion. Ce réglage n\'a plus d\'effet.'],
             54 => ['type' => 'obsolete', 'note' => 'L\'affichage des erreurs est contrôlé par APP_DEBUG dans .env. Ce réglage n\'a plus d\'effet.'],
-            15 => ['type' => 'todo',     'note' => 'La validation de la complexité du mot de passe n\'est pas encore implémentée dans Laravel.'],
-            69 => ['type' => 'todo',     'note' => 'Le message de première connexion référence specific_info.php qui n\'existe pas encore dans Laravel.'],
+            69 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             67 => ['type' => 'obsolete', 'note' => 'Le verrou de crontab de mailing est géré par Laravel Queue. Ce réglage n\'a plus d\'effet.'],
-            70 => ['type' => 'todo',     'note' => 'L\'expiration des mots de passe n\'est pas encore implémentée dans Laravel.'],
         ];
 
         return view('admin.settings', compact('grouped', 'tabs', 'activeTab', 'annotations'));
@@ -156,6 +372,12 @@ class AdminController extends Controller
         DB::table('configuration')
             ->where('ID', $id)
             ->update(['VALUE' => $value]);
+
+        if ($request->input('_back') === 'security') {
+            $secTab = $request->input('_tab', 'passwords');
+
+            return redirect()->route('admin.security', ['tab' => $secTab])->with('success', 'Paramètre mis à jour.');
+        }
 
         return redirect()->route('admin.settings')
             ->with('success', 'Paramètre mis à jour.')
@@ -205,6 +427,131 @@ class AdminController extends Controller
         return redirect()->route('admin.settings')
             ->with('success', 'Image supprimée.')
             ->with('_settings_tab', $tab);
+    }
+
+    // ── Password policy CRUD ──────────────────────────────────────────────────
+
+    public function policyCreate(): View
+    {
+        $groups = ObGroup::orderBy('name')->get();
+
+        return view('admin.password-policy-edit', [
+            'policy' => null,
+            'groups' => $groups,
+        ]);
+    }
+
+    public function policyStore(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:80'],
+            'min_length' => ['required', 'integer', 'min:6', 'max:128'],
+            'expiry_days' => ['required', 'integer', 'min:0', 'max:3650'],
+            'max_attempts' => ['required', 'integer', 'min:0', 'max:100'],
+            'require_uppercase' => ['sometimes', 'boolean'],
+            'require_lowercase' => ['sometimes', 'boolean'],
+            'require_digits' => ['sometimes', 'boolean'],
+            'require_special' => ['sometimes', 'boolean'],
+            'blocklist_check' => ['sometimes', 'boolean'],
+            'require_2fa' => ['sometimes', 'boolean'],
+            'is_default' => ['sometimes', 'boolean'],
+        ]);
+
+        $validated['require_uppercase'] = $request->boolean('require_uppercase');
+        $validated['require_lowercase'] = $request->boolean('require_lowercase');
+        $validated['require_digits'] = $request->boolean('require_digits');
+        $validated['require_special'] = $request->boolean('require_special');
+        $validated['blocklist_check'] = $request->boolean('blocklist_check');
+        $validated['require_2fa'] = $request->boolean('require_2fa');
+        $validated['is_default'] = $request->boolean('is_default');
+
+        if ($validated['is_default']) {
+            ObPasswordPolicy::where('is_default', true)->update(['is_default' => false]);
+        }
+
+        $policy = ObPasswordPolicy::create($validated);
+        $this->syncPolicyGroups($policy, $request->input('group_ids', []));
+
+        return redirect()->route('admin.security', ['tab' => 'passwords'])
+            ->with('success', 'Politique créée.');
+    }
+
+    public function policyEdit(int $id): View
+    {
+        $policy = ObPasswordPolicy::findOrFail($id);
+        $groups = ObGroup::orderBy('name')->get();
+
+        return view('admin.password-policy-edit', compact('policy', 'groups'));
+    }
+
+    public function policyUpdate(Request $request, int $id): RedirectResponse
+    {
+        $policy = ObPasswordPolicy::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:80'],
+            'min_length' => ['required', 'integer', 'min:6', 'max:128'],
+            'expiry_days' => ['required', 'integer', 'min:0', 'max:3650'],
+            'max_attempts' => ['required', 'integer', 'min:0', 'max:100'],
+            'require_uppercase' => ['sometimes', 'boolean'],
+            'require_lowercase' => ['sometimes', 'boolean'],
+            'require_digits' => ['sometimes', 'boolean'],
+            'require_special' => ['sometimes', 'boolean'],
+            'blocklist_check' => ['sometimes', 'boolean'],
+            'require_2fa' => ['sometimes', 'boolean'],
+            'is_default' => ['sometimes', 'boolean'],
+        ]);
+
+        $validated['require_uppercase'] = $request->boolean('require_uppercase');
+        $validated['require_lowercase'] = $request->boolean('require_lowercase');
+        $validated['require_digits'] = $request->boolean('require_digits');
+        $validated['require_special'] = $request->boolean('require_special');
+        $validated['blocklist_check'] = $request->boolean('blocklist_check');
+        $validated['require_2fa'] = $request->boolean('require_2fa');
+        $validated['is_default'] = $request->boolean('is_default');
+
+        if ($validated['is_default']) {
+            ObPasswordPolicy::where('id', '!=', $id)
+                ->where('is_default', true)
+                ->update(['is_default' => false]);
+        }
+
+        $policy->update($validated);
+        $this->syncPolicyGroups($policy, $request->input('group_ids', []));
+
+        return redirect()->route('admin.security', ['tab' => 'passwords'])
+            ->with('success', 'Politique mise à jour.');
+    }
+
+    public function policyDestroy(int $id): RedirectResponse
+    {
+        $policy = ObPasswordPolicy::findOrFail($id);
+        abort_if($policy->is_default, 422, 'La politique par défaut ne peut pas être supprimée.');
+
+        // Detach groups before deleting (nullOnDelete FK handles it, but be explicit).
+        ObGroup::where('password_policy_id', $id)->update(['password_policy_id' => null]);
+        $policy->delete();
+
+        return redirect()->route('admin.security', ['tab' => 'passwords'])
+            ->with('success', 'Politique supprimée.');
+    }
+
+    // ── LDAP ─────────────────────────────────────────────────────────────────
+
+    /** @param string[] $groupIds */
+    private function syncPolicyGroups(ObPasswordPolicy $policy, array $groupIds): void
+    {
+        $ids = array_map('intval', $groupIds);
+
+        // Clear existing assignments for this policy, then re-assign selected groups.
+        ObGroup::where('password_policy_id', $policy->id)
+            ->whereNotIn('id', $ids)
+            ->update(['password_policy_id' => null]);
+
+        if ($ids !== []) {
+            ObGroup::whereIn('id', $ids)
+                ->update(['password_policy_id' => $policy->id]);
+        }
     }
 
     private function monitoringColumns(): array

@@ -70,3 +70,5 @@ docs/wireframes/
 storage/app/public/theme
 storage/app/public/sections
 archive/legacy_app/user-data/
+composer.phar
+.phpunit.cache

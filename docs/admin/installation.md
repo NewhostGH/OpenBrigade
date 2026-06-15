@@ -10,13 +10,13 @@ frontend assets built by **Vite**.
 
 ## Requirements
 
-| Dependency | Version |
-|---|---|
-| PHP | 8.4 (ext: `mbstring`, `xml`, `ctype`, `json`, `intl`, `pdo_mysql`, `zip`, `gd`; optional `ldap`) |
-| Composer | 2.x |
-| Node.js | 18+ (build-time only) |
-| MySQL / MariaDB | 5.7+ / 10.3+ |
-| Web server | Nginx 1.24+ or Apache 2.4+ (document root → `public/`) |
+| Dependency      | Version                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| PHP             | 8.4 (ext: `mbstring`, `xml`, `ctype`, `json`, `intl`, `pdo_mysql`, `zip`, `gd`; optional `ldap`) |
+| Composer        | 2.x                                                                                              |
+| Node.js         | 18+ (build-time only)                                                                            |
+| MySQL / MariaDB | 5.7+ / 10.3+                                                                                     |
+| Web server      | Nginx 1.24+ or Apache 2.4+ (document root → `public/`)                                           |
 
 ---
 
@@ -35,11 +35,11 @@ docker compose exec app php artisan migrate --seed
 docker compose exec app sh -lc "npm ci && npm run build"
 ```
 
-| Service | Default URL |
-|---|---|
-| Application | <http://localhost:8080> (`APP_PORT`) |
-| Database | `localhost:3306` (`DB_PORT_EXTERNAL`) |
-| CloudBeaver | <http://localhost:8081> (`CB_PORT`) |
+| Service     | Default URL                           |
+| ----------- | ------------------------------------- |
+| Application | <http://localhost:8080> (`APP_PORT`)  |
+| Database    | `localhost:3306` (`DB_PORT_EXTERNAL`) |
+| CloudBeaver | <http://localhost:8081> (`CB_PORT`)   |
 
 For production behind a reverse proxy, set `APP_URL`, terminate TLS at the proxy, and
 do **not** expose the database/CloudBeaver ports publicly.

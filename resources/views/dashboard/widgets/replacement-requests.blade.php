@@ -5,7 +5,7 @@
             <i class="fas fa-user-clock"></i> Demande de remplaçant
         </div>
         <a class="ob-widget-card-link"
-           href="{{ route('remplacement.index') }}">
+           href="{{ route('replacement.index') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>
@@ -20,7 +20,7 @@
                     @endif
                 </div>
             </div>
-            <a href="{{ route('remplacement.index') }}"
+            <a href="{{ route('replacement.index') }}"
                style="text-decoration:none">
                 <span class="ob-dash-alert-badge" style="color:var(--color-purple-dark)">{{ $replacementRequests['count'] }}</span>
             </a>

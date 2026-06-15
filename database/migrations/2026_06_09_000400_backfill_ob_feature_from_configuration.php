@@ -19,10 +19,6 @@ use Illuminate\Support\Facades\DB;
  */
 return new class extends Migration
 {
-    /** Feature keys that already have a native Laravel implementation. */
-    private const NATIVE = [
-    ];
-
     /** Functional domain per feature key. */
     private const KEY_GROUPS = [
         'logistique' => ['vehicules', 'materiel', 'consommables'],
@@ -80,7 +76,7 @@ return new class extends Migration
                     'name' => $name,
                     'description' => $row->DESCRIPTION ?: null,
                     'group' => $keyToGroup[$key] ?? null,
-                    'status' => in_array($key, self::NATIVE, true) ? 'native' : 'wip',
+                    'status' => 'wip',
                     'icon' => self::ICONS[$key] ?? null,
                     'enabled' => ((string) $row->VALUE === '1'),
                     'ordering' => (int) $row->ORDERING,

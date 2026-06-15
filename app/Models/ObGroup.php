@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -20,7 +21,7 @@ class ObGroup extends Model
 
     protected $keyType = 'int';
 
-    protected $fillable = ['id', 'name', 'kind', 'usage', 'ordering', 'is_system'];
+    protected $fillable = ['id', 'name', 'kind', 'usage', 'ordering', 'is_system', 'password_policy_id'];
 
     protected $casts = [
         'is_system' => 'boolean',
@@ -35,6 +36,11 @@ class ObGroup extends Model
     public function permissions(): HasMany
     {
         return $this->hasMany(ObGroupPermission::class, 'group_id');
+    }
+
+    public function passwordPolicy(): BelongsTo
+    {
+        return $this->belongsTo(ObPasswordPolicy::class, 'password_policy_id');
     }
 
     /** @param Builder $query */

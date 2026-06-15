@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TypeDocument;
+use App\Models\DocumentType;
 use App\Services\DocumentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,7 +39,7 @@ class DocumentTypeController extends Controller
             'syndicate' => ['nullable', 'boolean'],
         ]);
 
-        TypeDocument::create([
+        DocumentType::create([
             'TD_CODE' => strtoupper($v['code']),
             'TD_LIBELLE' => $v['libelle'],
             'TD_SECURITY' => (int) ($v['security'] ?? 0),
@@ -49,7 +49,7 @@ class DocumentTypeController extends Controller
         return redirect()->route('document.types')->with('success', 'Type créé.');
     }
 
-    public function update(Request $request, TypeDocument $type): RedirectResponse
+    public function update(Request $request, DocumentType $type): RedirectResponse
     {
         $v = $request->validate([
             'libelle' => ['required', 'string', 'max:50'],
@@ -66,7 +66,7 @@ class DocumentTypeController extends Controller
         return redirect()->route('document.types')->with('success', 'Type mis à jour.');
     }
 
-    public function destroy(TypeDocument $type): RedirectResponse
+    public function destroy(DocumentType $type): RedirectResponse
     {
         if ($this->documents->typeInUse($type->TD_CODE)) {
             return redirect()->route('document.types')

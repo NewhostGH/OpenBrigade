@@ -17,21 +17,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cotisation;
+use App\Models\Dues;
 use App\Models\ObGroup;
 use App\Models\ObPersonnelGroup;
 use App\Models\ObPersonnelSection;
 use App\Models\ObUserAssignment;
+use App\Models\PaymentType;
 use App\Models\Personnel;
-use App\Models\Poste;
+use App\Models\Position;
 use App\Models\Qualification;
 use App\Models\Section;
-use App\Models\TypePaiement;
 use App\Services\FeatureService;
 use App\Services\PersonnelExportService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -110,7 +111,7 @@ class PersonnelController extends Controller
                 'key' => 'grade',
                 'label' => 'Grade',
                 'type' => 'image',
-                'value' => fn ($p) => route('personnel.grade_image', ['grade' => $p->P_GRADE ?: 'NR']),
+                'value' => fn ($p) => route('personnel.grade-image', ['grade' => $p->P_GRADE ?: 'NR']),
                 'imageAlt' => fn ($p) => $p->P_GRADE ?: '',
                 'imageClass' => 'ob-grade-img',
                 'imageError' => "this.outerHTML='<small class=\"text-muted\">' + this.alt + '</small>'",
@@ -337,9 +338,21 @@ class PersonnelController extends Controller
      */
     public function qualifications(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
+        $filter = (string) $request->string('filter', 'all'); // all|expiring|expired
 
+        $items = $this->buildQualificationsQuery($request)->paginate(50)->withQueryString();
+
+        return view('personnel.qualifications', compact('items', 'filter')
+            + ['columns' => $this->qualificationsColumns()]);
+    }
+
+    /**
+     * Section-scoped qualifications query (with status + filter) shared by the
+     * list and the exports.
+     */
+    private function buildQualificationsQuery(Request $request): Builder
+    {
+        $sectionId = (int) auth()->user()->P_SECTION;
         $filter = (string) $request->string('filter', 'all'); // all|expiring|expired
 
         $today = now()->toDateString();
@@ -370,10 +383,41 @@ class PersonnelController extends Controller
             $query->whereRaw("q.Q_EXPIRATION IS NOT NULL AND q.Q_EXPIRATION < '{$today}'");
         }
 
-        $items = $query->paginate(50)->withQueryString();
+        return $query;
+    }
 
-        return view('personnel.qualifications', compact('items', 'filter')
-            + ['columns' => $this->qualificationsColumns()]);
+    /**
+     * Stream the qualifications list as an XLSX download (qualifications_xls.php
+     * parity). Honours the active filter and the ?cols= selection.
+     */
+    public function exportQualificationsXls(Request $request)
+    {
+        return $this->exportQualifications($request, 'xlsx');
+    }
+
+    /**
+     * Stream the qualifications list as a CSV download.
+     */
+    public function exportQualificationsCsv(Request $request)
+    {
+        return $this->exportQualifications($request, 'csv');
+    }
+
+    private function exportQualifications(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // 'personnel' / 'type' are alwaysVisible, so resolveColumns skips them.
+        $columns = $service->resolveColumns($this->qualificationsColumns(), $request, [
+            ['Personnel', fn ($q) => $q->P_PRENOM.' '.strtoupper((string) $q->P_NOM)],
+            ['Type',      fn ($q) => $q->PS_TYPE ?? ''],
+        ]);
+
+        $items = $this->buildQualificationsQuery($request)->get();
+        $filename = 'Qualifications_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Qualifications', 'freezeHeader' => true]);
     }
 
     private function qualificationsColumns(): array
@@ -449,11 +493,11 @@ class PersonnelController extends Controller
             ->limit(50)
             ->get();
 
-        $postes = Poste::query()
+        $postes = Position::query()
             ->orderBy('TYPE')
             ->get(['PS_ID', 'TYPE', 'DESCRIPTION', 'PS_EXPIRABLE']);
 
-        $typesPaiement = TypePaiement::query()
+        $typesPaiement = PaymentType::query()
             ->orderBy('TP_DESCRIPTION')
             ->get(['TP_ID', 'TP_DESCRIPTION']);
 
@@ -501,7 +545,7 @@ class PersonnelController extends Controller
             ['id' => 'section-dotation',      'icon' => 'fas fa-box',           'label' => 'Dotation'],
             ['id' => 'section-documents',     'icon' => 'fas fa-file-alt',      'label' => 'Documents'],
             ['id' => 'section-notedfrais',    'icon' => 'fas fa-receipt',       'label' => 'Notes de frais'],
-            ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day',  'label' => 'Disponibilité'],
+            ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day',  'label' => 'Availabilitynibilité'],
             ['id' => 'section-calendrier',    'icon' => 'fas fa-calendar',      'label' => 'Calendrier'],
             ['id' => 'section-absences',      'icon' => 'fas fa-user-times',    'label' => 'Absences'],
             ['id' => 'section-geo',           'icon' => 'fas fa-map-marker-alt', 'label' => 'Géolocalisation'],
@@ -712,7 +756,7 @@ class PersonnelController extends Controller
 
     // ── Cotisations CRUD ─────────────────────────────────────────────────────
 
-    public function storeCotisation(Request $request, Personnel $personnel)
+    public function storeDues(Request $request, Personnel $personnel)
     {
         $validated = $request->validate([
             'ANNEE' => ['required', 'integer', 'min:1990', 'max:2100'],
@@ -728,13 +772,13 @@ class PersonnelController extends Controller
         $validated['REMBOURSEMENT'] = $request->boolean('REMBOURSEMENT') ? 1 : 0;
         $validated['TP_ID'] = $validated['TP_ID'] ?? 0;
 
-        Cotisation::create($validated);
+        Dues::create($validated);
 
         return redirect()->route('personnel.show', $personnel)
             ->with('success', 'Cotisation enregistrée.');
     }
 
-    public function updateCotisation(Request $request, Personnel $personnel, int $pcId)
+    public function updateDues(Request $request, Personnel $personnel, int $pcId)
     {
         $validated = $request->validate([
             'ANNEE' => ['required', 'integer', 'min:1990', 'max:2100'],
@@ -749,17 +793,17 @@ class PersonnelController extends Controller
         $validated['REMBOURSEMENT'] = $request->boolean('REMBOURSEMENT') ? 1 : 0;
         $validated['TP_ID'] = $validated['TP_ID'] ?? 0;
 
-        Cotisation::where('PC_ID', $pcId)
+        Dues::where('PC_ID', $pcId)
             ->where('P_ID', $personnel->P_ID)
             ->update($validated);
 
         return redirect()->route('personnel.show', $personnel)
-            ->with('success', 'Cotisation mise à jour.');
+            ->with('success', 'Dues mise à jour.');
     }
 
-    public function destroyCotisation(Personnel $personnel, int $pcId)
+    public function destroyDues(Personnel $personnel, int $pcId)
     {
-        Cotisation::where('PC_ID', $pcId)
+        Dues::where('PC_ID', $pcId)
             ->where('P_ID', $personnel->P_ID)
             ->delete();
 
@@ -814,22 +858,22 @@ class PersonnelController extends Controller
 
         return response($vcf, 200, [
             'Content-Type' => 'text/vcard; charset=UTF-8',
-            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Content-Availabilitysition' => "attachment; filename=\"{$filename}\"",
         ]);
     }
 
-    public function livretData(Personnel $personnel)
+    public function logbookData(Personnel $personnel)
     {
         $personnel->load('section');
 
-        return response()->json((new PersonnelExportService)->livretData($personnel));
+        return response()->json((new PersonnelExportService)->logbookData($personnel));
     }
 
-    public function carteData(Personnel $personnel)
+    public function cardData(Personnel $personnel)
     {
         $personnel->load('section');
 
-        return response()->json((new PersonnelExportService)->carteData($personnel));
+        return response()->json((new PersonnelExportService)->cardData($personnel));
     }
 
     // ── Shared query builder (used by index() and the XLS/CSV exports) ─────────

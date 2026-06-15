@@ -54,12 +54,17 @@ app/
   | Service                  | Responsibility                                                                                     |
   | ------------------------ | -------------------------------------------------------------------------------------------------- |
   | `Auth/AuthService`       | Login against `pompier`, legacy-hash upgrade                                                       |
+  | `Auth/LdapAuthService`   | LDAP authentication delegation (see [../security/ldap.md](../security/ldap.md))                    |
   | `NavigationService`      | Render `config/navigation.php` with permission + feature filtering                                 |
   | `FeatureService`         | Read/toggle feature-module flags (`ob_feature`), kept in sync with legacy `configuration`          |
   | `DashboardService`       | Aggregate dashboard widget data                                                                    |
   | `BrigadeService`         | Brigade identity / global settings                                                                 |
   | `PermissionResolver`     | Section-scoped, ceiling-based permission resolution (see CONVENTIONS §9)                           |
   | `SectionScopeService`    | Data-isolation authority for `multi_site` — per-request visible section set (see CONVENTIONS §10)  |
+  | `PasswordPolicyService`  | Per-group password policy (length, expiry, attempts, blocklist) — see [../security/password-policies.md](../security/password-policies.md) |
+  | `DocumentService`        | Document library — folders/files for a section (uses `DocumentAclService`)                         |
+  | `DocumentAclService`     | Per-folder document ACL resolution (principal sets + ancestor chain)                               |
+  | `NotificationService`    | Plain-text email dispatch, honouring the `mail_allowed` flag                                       |
   | `TableExportService`     | Universal XLSX / CSV export                                                                        |
   | `ICalExportService`      | iCal export                                                                                        |
   | `PersonnelExportService` | vCard / PDF data (livret, carte adhérent — rendered client-side with pdf-lib + section letterhead) |
@@ -73,6 +78,10 @@ app/
 | --------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | `app.php`                                                 | Application identity (name, env, debug, URL)                                   |
 | `auth.php`                                                | Auth guards/providers — `users` provider → `App\Models\User` (table `pompier`) |
+| `fortify.php`                                             | Laravel Fortify config — enables TOTP two-factor (see [../security/totp.md](../security/totp.md)) |
+| `ldap.php`                                                | LDAP connections + auth settings (see [../security/ldap.md](../security/ldap.md)) |
+| `habilitations.php`                                       | Obsolete-feature list for the permission matrices (SSOT for those)             |
+| `documents.php`                                           | Document library — storage subpath, supported extensions, size cap, feature IDs |
 | `brigade.php`                                             | Brigade-specific settings (version, features)                                  |
 | `personnel.php`                                           | Personnel lookup maps (statuts, badges, civilités) — SSOT for those            |
 | `navigation.php`                                          | Top-level menu definition (rendered by `NavigationService`)                    |
@@ -92,7 +101,17 @@ database/
 │   ├── 2026_05_07_..._create_sessions_table.php
 │   ├── 2026_05_12_..._convert_database_to_utf8.php
 │   ├── 2026_05_28_..._create_user_shortcuts_table.php  (ob_user_shortcuts)
+│   ├── 2026_06_04_..._alter_qualification_q_val_to_varchar.php
 │   ├── 2026_06_08_..._create_ob_backup_settings_table.php
+│   ├── 2026_06_08_..._create_ob_habilitation_tables.php + ..._backfill_ob_habilitations_from_legacy.php
+│   ├── 2026_06_09_..._create_ob_personnel_assignments.php + ..._backfill_ob_personnel_assignments.php
+│   ├── 2026_06_09_..._add_urgence_person_id_to_pompier.php
+│   ├── 2026_06_09_..._create_ob_feature.php + ..._backfill_ob_feature_from_configuration.php
+│   ├── 2026_06_11_..._create_ob_dashboard_layout_table.php + ..._extend_ob_acl.php
+│   ├── 2026_06_12_..._create_ob_document_acl.php
+│   ├── 2026_06_13_..._create_ob_password_policy_table.php
+│   ├── 2026_06_13_..._add_totp_support.php
+│   ├── 2026_06_13_..._create_ldap_domains.php
 │   └── legacy/
 │       └── reference.sql        Legacy schema reference (parity validation source)
 ├── seeders/                     DatabaseSeeder, DevelopmentDataSeeder
@@ -120,7 +139,7 @@ resources/
 ├── views/
 │   ├── layout/          app, navbar, sidebar shells
 │   ├── components/      ob-breadcrumb, ob-toolbar, ob-commandbar, ob-table
-│   ├── <module>/        One folder per domain (personnel, evenement, vehicule, …)
+│   ├── <module>/        One English folder per domain (personnel, event, vehicle, …; see CONVENTIONS §11)
 │   └── admin/           Settings, parametrage, habilitations, backup, maintenance
 ├── css/                 app.css import hub + per-module ob-*.css (Vite)
 └── js/                  app.js global entry + per-page ob-*.js (Vite)

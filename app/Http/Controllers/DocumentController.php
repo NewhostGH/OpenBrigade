@@ -253,7 +253,7 @@ class DocumentController extends Controller
         $inline = strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf';
 
         return response()->file($path, [
-            'Content-Disposition' => ($inline ? 'inline' : 'attachment')
+            'Content-Availabilitysition' => ($inline ? 'inline' : 'attachment')
                 .'; filename="'.basename($document->D_NAME).'"',
         ]);
     }

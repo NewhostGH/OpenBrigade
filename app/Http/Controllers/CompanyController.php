@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TableExportService;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -10,9 +12,24 @@ class CompanyController extends Controller
 {
     public function index(Request $request): View
     {
-        $user = auth()->user();
-        $sectionId = (int) $user->P_SECTION;
+        $search = trim((string) $request->string('q'));
+        $type = (string) $request->string('type', 'ALL');
 
+        $items = $this->buildFilteredQuery($request)->paginate(50)->withQueryString();
+
+        $types = DB::table('type_company')->orderBy('TC_LIBELLE')->get(['TC_CODE', 'TC_LIBELLE']);
+
+        return view('company.index', compact('items', 'search', 'type', 'types')
+            + ['columns' => $this->companyColumns()]);
+    }
+
+    /**
+     * Section-scoped, searched/typed company query shared by the list and the
+     * exports. Pagination is applied by the caller.
+     */
+    private function buildFilteredQuery(Request $request): Builder
+    {
+        $sectionId = (int) auth()->user()->P_SECTION;
         $search = trim((string) $request->string('q'));
         $type = (string) $request->string('type', 'ALL');
 
@@ -38,12 +55,33 @@ class CompanyController extends Controller
             $query->where('c.TC_CODE', $type);
         }
 
-        $items = $query->paginate(50)->withQueryString();
+        return $query;
+    }
 
-        $types = DB::table('type_company')->orderBy('TC_LIBELLE')->get(['TC_CODE', 'TC_LIBELLE']);
+    public function exportXls(Request $request)
+    {
+        return $this->export($request, 'xlsx');
+    }
 
-        return view('company.index', compact('items', 'search', 'type', 'types')
-            + ['columns' => $this->companyColumns()]);
+    public function exportCsv(Request $request)
+    {
+        return $this->export($request, 'csv');
+    }
+
+    private function export(Request $request, string $format)
+    {
+        $service = new TableExportService;
+        // 'nom' is alwaysVisible, so resolveColumns skips it — prepend it.
+        $columns = $service->resolveColumns($this->companyColumns(), $request, [
+            ['Nom', fn ($c) => $c->C_NAME ?? ''],
+        ]);
+
+        $items = $this->buildFilteredQuery($request)->get();
+        $filename = 'Clients_'.date('Ymd');
+
+        return $format === 'csv'
+            ? $service->toCsv($columns, $items, $filename)
+            : $service->toXlsx($columns, $items, $filename, ['sheetTitle' => 'Clients', 'freezeHeader' => true]);
     }
 
     private function companyColumns(): array

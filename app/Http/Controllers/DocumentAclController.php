@@ -30,7 +30,7 @@ class DocumentAclController extends Controller
 
         $groups = ObGroup::query()->where('kind', ObGroup::KIND_GROUP)->orderBy('ordering')->orderBy('id')->get(['id', 'name']);
         $roles = ObGroup::query()->where('kind', ObGroup::KIND_ROLE)->orderBy('ordering')->orderBy('id')->get(['id', 'name']);
-        $people = DB::table('pompier')->where('P_SECTION', $sectionId)->where('SUSPENDU', 0)
+        $people = DB::table('pompier')->where('P_SECTION', $sectionId)->whereNull('P_FIN')
             ->orderBy('P_NOM')->orderBy('P_PRENOM')->get(['P_ID', 'P_NOM', 'P_PRENOM']);
 
         // Label maps for rendering the current ACEs.

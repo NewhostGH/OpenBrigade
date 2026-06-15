@@ -16,7 +16,7 @@ use App\Services\PermissionResolver;
  * Ceilings:       section 1 denies 53 ; section 3 denies 42
  * (group denies and user overrides are empty unless a test sets them)
  */
-function fakeResolver(): PermissionResolver
+function fakeResolver()
 {
     return new class extends PermissionResolver
     {

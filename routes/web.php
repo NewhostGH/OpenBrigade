@@ -1,38 +1,41 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\ConsommableController;
+use App\Http\Controllers\ConsumableController;
 use App\Http\Controllers\ContextController;
-use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DispoController;
 use App\Http\Controllers\DocumentAclController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentTypeController;
-use App\Http\Controllers\EvenementController;
+use App\Http\Controllers\DuesController;
+use App\Http\Controllers\DutyController;
+use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeatureController;
-use App\Http\Controllers\GardeController;
-use App\Http\Controllers\GeolocalisationController;
-use App\Http\Controllers\HabilitationController;
-use App\Http\Controllers\IndispoController;
+use App\Http\Controllers\GeolocationController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
 use App\Http\Controllers\MaintenanceController;
-use App\Http\Controllers\MaterielController;
-use App\Http\Controllers\MesDroitsController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\OrganisationController;
-use App\Http\Controllers\ParametrageController;
+use App\Http\Controllers\MyPermissionsController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\PluginController;
-use App\Http\Controllers\RemplacementController;
+use App\Http\Controllers\ReferenceController;
+use App\Http\Controllers\ReplacementController;
 use App\Http\Controllers\ShortcutController;
-use App\Http\Controllers\StatistiqueController;
-use App\Http\Controllers\VehiculeController;
+use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\TotpController;
+use App\Http\Controllers\UnavailabilityController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,133 +66,172 @@ Route::middleware('guest')->group(function () {
     // Legacy scripts sometimes point to login.php explicitly.
     Route::get('/index.php/login.php', fn () => redirect('/login'));
     Route::get('/login.php', fn () => redirect('/login'));
+
+    // TOTP challenge — shown after correct password when 2FA is enabled.
+    // Intentionally inside 'guest' so already-authenticated users are bounced.
+    Route::get('/totp/challenge', [TotpController::class, 'showChallenge'])->name('totp.challenge');
+    Route::post('/totp/challenge', [TotpController::class, 'verifyChallenge'])->name('totp.challenge.verify');
+
+    // Self-service password reset (no auth required)
+    Route::get('/password/reset', [PasswordResetController::class, 'showRequestForm'])->name('password.request');
+    Route::post('/password/reset', [PasswordResetController::class, 'sendResetToken'])->name('password.email');
+    Route::get('/password/reset/{token}', [PasswordResetController::class, 'confirmToken'])->name('password.reset');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/layout', [DashboardController::class, 'saveLayout'])->name('dashboard.layout.save');
-    Route::get('/evenements', [EvenementController::class, 'index'])->name('evenement.index')->middleware('permission:0');
-    Route::get('/evenements/create', [EvenementController::class, 'create'])->name('evenement.create')->middleware('permission:15');
-    Route::post('/evenements', [EvenementController::class, 'store'])->name('evenement.store')->middleware('permission:15');
-    Route::get('/evenements/{code}', [EvenementController::class, 'show'])->name('evenement.show')->middleware('permission:0');
-    Route::get('/evenements/{code}/edit', [EvenementController::class, 'edit'])->name('evenement.edit')->middleware('permission:15');
-    Route::put('/evenements/{code}', [EvenementController::class, 'update'])->name('evenement.update')->middleware('permission:15');
-    Route::delete('/evenements/{code}', [EvenementController::class, 'destroy'])->name('evenement.destroy')->middleware('permission:19');
+    Route::get('/events', [EventController::class, 'index'])->name('event.index')->middleware('permission:0');
+    // List exports (static segments before the {code} wildcard).
+    Route::get('/events/export/xls', [EventController::class, 'exportListXls'])->name('event.export.xls')->middleware('permission:0');
+    Route::get('/events/export/csv', [EventController::class, 'exportListCsv'])->name('event.export.csv')->middleware('permission:0');
+    Route::get('/events/create', [EventController::class, 'create'])->name('event.create')->middleware('permission:15');
+    Route::post('/events', [EventController::class, 'store'])->name('event.store')->middleware('permission:15');
+    Route::get('/events/{code}', [EventController::class, 'show'])->name('event.show')->middleware('permission:0');
+    Route::get('/events/{code}/edit', [EventController::class, 'edit'])->name('event.edit')->middleware('permission:15');
+    Route::put('/events/{code}', [EventController::class, 'update'])->name('event.update')->middleware('permission:15');
+    Route::delete('/events/{code}', [EventController::class, 'destroy'])->name('event.destroy')->middleware('permission:19');
     // Participant management — inscription, fonction, équipe (permission 10 = inscrire)
-    Route::post('/evenements/{code}/participants', [EvenementController::class, 'participantStore'])->name('evenement.participant.store')->middleware('permission:10');
-    Route::patch('/evenements/{code}/participants/{pid}', [EvenementController::class, 'participantUpdate'])->name('evenement.participant.update')->middleware('permission:10');
-    Route::patch('/evenements/{code}/participants/{pid}/equipe', [EvenementController::class, 'participantTeam'])->name('evenement.participant.team')->middleware('permission:10');
-    Route::delete('/evenements/{code}/participants/{pid}', [EvenementController::class, 'participantDestroy'])->name('evenement.participant.destroy')->middleware('permission:10');
+    Route::post('/events/{code}/participants', [EventController::class, 'participantStore'])->name('event.participant.store')->middleware('permission:10');
+    Route::patch('/events/{code}/participants/{pid}', [EventController::class, 'participantUpdate'])->name('event.participant.update')->middleware('permission:10');
+    Route::patch('/events/{code}/participants/{pid}/team', [EventController::class, 'participantTeam'])->name('event.participant.team')->middleware('permission:10');
+    Route::delete('/events/{code}/participants/{pid}', [EventController::class, 'participantDestroy'])->name('event.participant.destroy')->middleware('permission:10');
     // Équipes CRUD — teams within an event (permission 15 = gérer activité)
-    Route::post('/evenements/{code}/equipes', [EvenementController::class, 'equipeStore'])->name('evenement.equipe.store')->middleware('permission:15');
-    Route::put('/evenements/{code}/equipes/{ee}', [EvenementController::class, 'equipeUpdate'])->name('evenement.equipe.update')->middleware('permission:15');
-    Route::delete('/evenements/{code}/equipes/{ee}', [EvenementController::class, 'equipeDestroy'])->name('evenement.equipe.destroy')->middleware('permission:15');
-    Route::post('/evenements/{code}/equipes/{ee}/participants', [EvenementController::class, 'equipeAddParticipant'])->name('evenement.equipe.participant.add')->middleware('permission:10');
-    Route::post('/evenements/{code}/equipes/{ee}/materiels', [EvenementController::class, 'equipeAddMateriel'])->name('evenement.equipe.materiel.add')->middleware('permission:15');
+    Route::post('/events/{code}/teams', [EventController::class, 'teamStore'])->name('event.team.store')->middleware('permission:15');
+    Route::put('/events/{code}/teams/{ee}', [EventController::class, 'teamUpdate'])->name('event.team.update')->middleware('permission:15');
+    Route::delete('/events/{code}/teams/{ee}', [EventController::class, 'teamDestroy'])->name('event.team.destroy')->middleware('permission:15');
+    Route::post('/events/{code}/teams/{ee}/participants', [EventController::class, 'teamAddParticipant'])->name('event.team.participant.add')->middleware('permission:10');
+    Route::post('/events/{code}/teams/{ee}/equipment', [EventController::class, 'teamAddEquipment'])->name('event.team.equipment.add')->middleware('permission:15');
     // Renforts — attach/detach reinforcement sub-events (permission 15)
-    Route::post('/evenements/{code}/renforts', [EvenementController::class, 'renfortAttach'])->name('evenement.renfort.attach')->middleware('permission:15');
-    Route::delete('/evenements/{code}/renforts/{renfort}', [EvenementController::class, 'renfortDetach'])->name('evenement.renfort.detach')->middleware('permission:15');
+    Route::post('/events/{code}/reinforcements', [EventController::class, 'reinforcementAttach'])->name('event.reinforcement.attach')->middleware('permission:15');
+    Route::delete('/events/{code}/reinforcements/{reinforcement}', [EventController::class, 'reinforcementDetach'])->name('event.reinforcement.detach')->middleware('permission:15');
     // Véhicules — attach/detach vehicles (permission 15)
-    Route::post('/evenements/{code}/vehicules', [EvenementController::class, 'vehiculeAttach'])->name('evenement.vehicule.attach')->middleware('permission:15');
-    Route::delete('/evenements/{code}/vehicules/{vehicule}', [EvenementController::class, 'vehiculeDetach'])->name('evenement.vehicule.detach')->middleware('permission:15');
+    Route::post('/events/{code}/vehicles', [EventController::class, 'vehicleAttach'])->name('event.vehicle.attach')->middleware('permission:15');
+    Route::delete('/events/{code}/vehicles/{vehicle}', [EventController::class, 'vehicleDetach'])->name('event.vehicle.detach')->middleware('permission:15');
     // Matériel — assign/update-qty/detach equipment (permission 15)
-    Route::post('/evenements/{code}/materiels', [EvenementController::class, 'materielAttach'])->name('evenement.materiel.attach')->middleware('permission:15');
-    Route::patch('/evenements/{code}/materiels/{ma}', [EvenementController::class, 'materielUpdateQty'])->name('evenement.materiel.qty')->middleware('permission:15');
-    Route::delete('/evenements/{code}/materiels/{ma}', [EvenementController::class, 'materielDetach'])->name('evenement.materiel.detach')->middleware('permission:15');
+    Route::post('/events/{code}/equipment', [EventController::class, 'equipmentAttach'])->name('event.equipment.attach')->middleware('permission:15');
+    Route::patch('/events/{code}/equipment/{ma}', [EventController::class, 'equipmentUpdateQty'])->name('event.equipment.qty')->middleware('permission:15');
+    Route::delete('/events/{code}/equipment/{ma}', [EventController::class, 'equipmentDetach'])->name('event.equipment.detach')->middleware('permission:15');
     // Exports
-    Route::get('/evenements/{code}/export/participants', [EvenementController::class, 'exportParticipants'])->name('evenement.export.participants')->middleware('permission:0');
-    Route::get('/evenements/{code}/ical', [EvenementController::class, 'exportIcal'])->name('evenement.ical')->middleware('permission:0');
-    Route::get('/garde', [GardeController::class, 'index'])->name('garde.index')->middleware('permission:61');
-    Route::get('/garde/astreintes', [GardeController::class, 'astreintes'])->name('garde.astreintes')->middleware('permission:52');
-    Route::get('/indisponibilites', [IndispoController::class, 'index'])->name('indispo.index')->middleware('permission:11');
-    Route::get('/remplacements', [RemplacementController::class, 'index'])->name('remplacement.index')->middleware(['permission:0', 'feature:remplacements']);
-    Route::get('/disponibilites', [DispoController::class, 'index'])->name('dispo.index')->middleware('permission:38');
+    Route::get('/events/{code}/export/participants', [EventController::class, 'exportParticipants'])->name('event.export.participants')->middleware('permission:0');
+    Route::get('/events/{code}/export/vehicles', [EventController::class, 'exportVehicles'])->name('event.export.vehicles')->middleware('permission:0');
+    Route::get('/events/{code}/ical', [EventController::class, 'exportIcal'])->name('event.ical')->middleware('permission:0');
+    Route::get('/duty', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
+    Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
+    Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');
+    Route::get('/duty/on-call/export/csv', [DutyController::class, 'exportOnCallCsv'])->name('duty.on-call.export.csv')->middleware('permission:52');
+    Route::get('/unavailability', [UnavailabilityController::class, 'index'])->name('unavailability.index')->middleware('permission:11');
+    Route::get('/replacements', [ReplacementController::class, 'index'])->name('replacement.index')->middleware(['permission:0', 'feature:remplacements']);
+    Route::get('/availability', [AvailabilityController::class, 'index'])->name('availability.index')->middleware('permission:38');
     Route::get('/admin/monitoring', [AdminController::class, 'monitoring'])->name('admin.monitoring')->middleware('permission:49');
     // Backup & restore
-    Route::get('/admin/sauvegarde', [BackupController::class, 'index'])->name('admin.backup')->middleware('permission:14');
-    Route::post('/admin/sauvegarde', [BackupController::class, 'store'])->name('admin.backup.store')->middleware('permission:14');
-    Route::get('/admin/sauvegarde/{filename}/download', [BackupController::class, 'download'])->name('admin.backup.download')->middleware('permission:14');
-    Route::delete('/admin/sauvegarde/{filename}', [BackupController::class, 'destroy'])->name('admin.backup.destroy')->middleware('permission:14');
-    Route::post('/admin/sauvegarde/restore', [BackupController::class, 'restore'])->name('admin.backup.restore')->middleware('permission:14');
-    Route::patch('/admin/sauvegarde/parametres', [BackupController::class, 'updateSettings'])->name('admin.backup.settings')->middleware('permission:14');
+    Route::get('/admin/backup', [BackupController::class, 'index'])->name('admin.backup')->middleware('permission:14');
+    Route::post('/admin/backup', [BackupController::class, 'store'])->name('admin.backup.store')->middleware('permission:14');
+    Route::get('/admin/backup/{filename}/download', [BackupController::class, 'download'])->name('admin.backup.download')->middleware('permission:14');
+    Route::delete('/admin/backup/{filename}', [BackupController::class, 'destroy'])->name('admin.backup.destroy')->middleware('permission:14');
+    Route::post('/admin/backup/restore', [BackupController::class, 'restore'])->name('admin.backup.restore')->middleware('permission:14');
+    Route::patch('/admin/backup/settings', [BackupController::class, 'updateSettings'])->name('admin.backup.settings')->middleware('permission:14');
     // Maintenance (upgrade.php superseded by artisan migrate)
     Route::get('/admin/maintenance', [MaintenanceController::class, 'index'])->name('admin.maintenance')->middleware('permission:14');
+    Route::get('/admin/security', [AdminController::class, 'security'])->name('admin.security')->middleware('permission:14');
+    Route::get('/admin/security/politique/create', [AdminController::class, 'policyCreate'])->name('admin.policy.create')->middleware('permission:14');
+    Route::post('/admin/security/politique', [AdminController::class, 'policyStore'])->name('admin.policy.store')->middleware('permission:14');
+    Route::get('/admin/security/politique/{id}/edit', [AdminController::class, 'policyEdit'])->name('admin.policy.edit')->middleware('permission:14');
+    Route::patch('/admin/security/politique/{id}', [AdminController::class, 'policyUpdate'])->name('admin.policy.update')->middleware('permission:14');
+    Route::delete('/admin/security/politique/{id}', [AdminController::class, 'policyDestroy'])->name('admin.policy.destroy')->middleware('permission:14');
+    Route::post('/admin/security/ldap', [AdminController::class, 'ldapStore'])->name('admin.ldap.store')->middleware('permission:14');
+    Route::get('/admin/security/ldap/{id}/edit', [AdminController::class, 'ldapEdit'])->name('admin.ldap.edit')->middleware('permission:14');
+    Route::patch('/admin/security/ldap/{id}', [AdminController::class, 'ldapUpdate'])->name('admin.ldap.update')->middleware('permission:14');
+    Route::delete('/admin/security/ldap/{id}', [AdminController::class, 'ldapDestroy'])->name('admin.ldap.destroy')->middleware('permission:14');
+    Route::post('/admin/security/ldap/{id}/test', [AdminController::class, 'ldapTest'])->name('admin.ldap.test')->middleware('permission:14');
+    Route::post('/admin/security/ldap/{id}/attr', [AdminController::class, 'ldapAttrStore'])->name('admin.ldap.attr.store')->middleware('permission:14');
+    Route::delete('/admin/security/ldap/{id}/attr/{attrId}', [AdminController::class, 'ldapAttrDestroy'])->name('admin.ldap.attr.destroy')->middleware('permission:14');
+    Route::post('/admin/security/ldap/{id}/ou', [AdminController::class, 'ldapOuStore'])->name('admin.ldap.ou.store')->middleware('permission:14');
+    Route::delete('/admin/security/ldap/{id}/ou/{ruleId}', [AdminController::class, 'ldapOuDestroy'])->name('admin.ldap.ou.destroy')->middleware('permission:14');
+    Route::post('/admin/security/network/test-hibp', [AdminController::class, 'testHibp'])->name('admin.network.test-hibp')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');
     Route::delete('/admin/settings/{id}/file', [AdminController::class, 'deleteSetting'])->name('admin.settings.delete-file')->middleware('permission:14');
 
     // ── Fonctionnalités & Modules — unified feature registry (ob_feature) ──────
-    Route::get('/admin/fonctionnalites', [FeatureController::class, 'index'])->name('admin.fonctionnalites')->middleware('permission:14');
-    Route::patch('/admin/fonctionnalites/{feature}', [FeatureController::class, 'toggle'])->name('admin.fonctionnalites.toggle')->middleware('permission:14');
+    Route::get('/admin/features', [FeatureController::class, 'index'])->name('admin.features')->middleware('permission:14');
+    Route::patch('/admin/features/{feature}', [FeatureController::class, 'toggle'])->name('admin.features.toggle')->middleware('permission:14');
 
     // ── Plugins — community plugin marketplace (WIP placeholder) ──────────────
     Route::get('/admin/plugins', [PluginController::class, 'index'])->name('admin.plugins')->middleware('permission:14');
 
     // ── Paramétrage — reference table CRUD ────────────────────────────────────
-    Route::get('/admin/parametrage', [ParametrageController::class, 'index'])->name('admin.parametrage')->middleware('permission:5');
+    Route::get('/admin/references', [ReferenceController::class, 'index'])->name('admin.references')->middleware('permission:5');
     // Type événement
-    Route::get('/admin/parametrage/type-evenement', [ParametrageController::class, 'typeEvenementIndex'])->name('admin.parametrage.type-evenement')->middleware('permission:5');
-    Route::post('/admin/parametrage/type-evenement', [ParametrageController::class, 'typeEvenementStore'])->name('admin.parametrage.type-evenement.store')->middleware('permission:5');
-    Route::patch('/admin/parametrage/type-evenement/{code}', [ParametrageController::class, 'typeEvenementUpdate'])->name('admin.parametrage.type-evenement.update')->middleware('permission:5');
-    Route::delete('/admin/parametrage/type-evenement/{code}', [ParametrageController::class, 'typeEvenementDestroy'])->name('admin.parametrage.type-evenement.destroy')->middleware('permission:5');
+    Route::get('/admin/references/event-type', [ReferenceController::class, 'eventTypeIndex'])->name('admin.references.event-type')->middleware('permission:5');
+    Route::post('/admin/references/event-type', [ReferenceController::class, 'eventTypeStore'])->name('admin.references.event-type.store')->middleware('permission:5');
+    Route::patch('/admin/references/event-type/{code}', [ReferenceController::class, 'eventTypeUpdate'])->name('admin.references.event-type.update')->middleware('permission:5');
+    Route::delete('/admin/references/event-type/{code}', [ReferenceController::class, 'eventTypeDestroy'])->name('admin.references.event-type.destroy')->middleware('permission:5');
     // Type participation
-    Route::get('/admin/parametrage/type-participation', [ParametrageController::class, 'typeParticipationIndex'])->name('admin.parametrage.type-participation')->middleware('permission:5');
-    Route::post('/admin/parametrage/type-participation', [ParametrageController::class, 'typeParticipationStore'])->name('admin.parametrage.type-participation.store')->middleware('permission:5');
-    Route::patch('/admin/parametrage/type-participation/{id}', [ParametrageController::class, 'typeParticipationUpdate'])->name('admin.parametrage.type-participation.update')->middleware('permission:5');
-    Route::delete('/admin/parametrage/type-participation/{id}', [ParametrageController::class, 'typeParticipationDestroy'])->name('admin.parametrage.type-participation.destroy')->middleware('permission:5');
+    Route::get('/admin/references/participation-type', [ReferenceController::class, 'participationTypeIndex'])->name('admin.references.participation-type')->middleware('permission:5');
+    Route::post('/admin/references/participation-type', [ReferenceController::class, 'participationTypeStore'])->name('admin.references.participation-type.store')->middleware('permission:5');
+    Route::patch('/admin/references/participation-type/{id}', [ReferenceController::class, 'participationTypeUpdate'])->name('admin.references.participation-type.update')->middleware('permission:5');
+    Route::delete('/admin/references/participation-type/{id}', [ReferenceController::class, 'participationTypeDestroy'])->name('admin.references.participation-type.destroy')->middleware('permission:5');
     // Type matériel
-    Route::get('/admin/parametrage/type-materiel', [ParametrageController::class, 'typeMaterielIndex'])->name('admin.parametrage.type-materiel')->middleware('permission:5');
-    Route::post('/admin/parametrage/type-materiel', [ParametrageController::class, 'typeMaterielStore'])->name('admin.parametrage.type-materiel.store')->middleware('permission:5');
-    Route::patch('/admin/parametrage/type-materiel/{id}', [ParametrageController::class, 'typeMaterielUpdate'])->name('admin.parametrage.type-materiel.update')->middleware('permission:5');
-    Route::delete('/admin/parametrage/type-materiel/{id}', [ParametrageController::class, 'typeMaterielDestroy'])->name('admin.parametrage.type-materiel.destroy')->middleware('permission:5');
+    Route::get('/admin/references/equipment-type', [ReferenceController::class, 'equipmentTypeIndex'])->name('admin.references.equipment-type')->middleware('permission:5');
+    Route::post('/admin/references/equipment-type', [ReferenceController::class, 'equipmentTypeStore'])->name('admin.references.equipment-type.store')->middleware('permission:5');
+    Route::patch('/admin/references/equipment-type/{id}', [ReferenceController::class, 'equipmentTypeUpdate'])->name('admin.references.equipment-type.update')->middleware('permission:5');
+    Route::delete('/admin/references/equipment-type/{id}', [ReferenceController::class, 'equipmentTypeDestroy'])->name('admin.references.equipment-type.destroy')->middleware('permission:5');
     // Type consommable
-    Route::get('/admin/parametrage/type-consommable', [ParametrageController::class, 'typeConsommableIndex'])->name('admin.parametrage.type-consommable')->middleware('permission:5');
-    Route::post('/admin/parametrage/type-consommable', [ParametrageController::class, 'typeConsommableStore'])->name('admin.parametrage.type-consommable.store')->middleware('permission:5');
-    Route::patch('/admin/parametrage/type-consommable/{id}', [ParametrageController::class, 'typeConsommableUpdate'])->name('admin.parametrage.type-consommable.update')->middleware('permission:5');
-    Route::delete('/admin/parametrage/type-consommable/{id}', [ParametrageController::class, 'typeConsommableDestroy'])->name('admin.parametrage.type-consommable.destroy')->middleware('permission:5');
+    Route::get('/admin/references/consumable-type', [ReferenceController::class, 'consumableTypeIndex'])->name('admin.references.consumable-type')->middleware('permission:5');
+    Route::post('/admin/references/consumable-type', [ReferenceController::class, 'consumableTypeStore'])->name('admin.references.consumable-type.store')->middleware('permission:5');
+    Route::patch('/admin/references/consumable-type/{id}', [ReferenceController::class, 'consumableTypeUpdate'])->name('admin.references.consumable-type.update')->middleware('permission:5');
+    Route::delete('/admin/references/consumable-type/{id}', [ReferenceController::class, 'consumableTypeDestroy'])->name('admin.references.consumable-type.destroy')->middleware('permission:5');
     // Type véhicule
-    Route::get('/admin/parametrage/type-vehicule', [ParametrageController::class, 'typeVehiculeIndex'])->name('admin.parametrage.type-vehicule')->middleware('permission:5');
-    Route::post('/admin/parametrage/type-vehicule', [ParametrageController::class, 'typeVehiculeStore'])->name('admin.parametrage.type-vehicule.store')->middleware('permission:5');
-    Route::patch('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeUpdate'])->name('admin.parametrage.type-vehicule.update')->middleware('permission:5');
-    Route::delete('/admin/parametrage/type-vehicule/{code}', [ParametrageController::class, 'typeVehiculeDestroy'])->name('admin.parametrage.type-vehicule.destroy')->middleware('permission:5');
-    // Habilitations — full ACL: section ceilings + group/role grants + per-user overrides
-    Route::get('/admin/habilitations', [HabilitationController::class, 'index'])->name('admin.habilitations')->middleware('permission:9');
-    Route::post('/admin/habilitations/grant', [HabilitationController::class, 'setGrant'])->name('admin.habilitations.grant.set')->middleware('permission:9');
-    Route::post('/admin/habilitations/derogation', [HabilitationController::class, 'setUserGrant'])->name('admin.habilitations.user.set')->middleware('permission:9');
-    Route::post('/admin/habilitations/plafond', [HabilitationController::class, 'toggleCeiling'])->name('admin.habilitations.ceiling.toggle')->middleware('permission:9');
-    Route::post('/admin/habilitations/groupe', [HabilitationController::class, 'groupStore'])->name('admin.habilitations.group.store')->middleware('permission:9');
-    Route::patch('/admin/habilitations/groupe/{gpId}', [HabilitationController::class, 'groupUpdate'])->name('admin.habilitations.group.update')->middleware('permission:9');
-    Route::delete('/admin/habilitations/groupe/{gpId}', [HabilitationController::class, 'groupDestroy'])->name('admin.habilitations.group.destroy')->middleware('permission:9');
+    Route::get('/admin/references/vehicle-type', [ReferenceController::class, 'vehicleTypeIndex'])->name('admin.references.vehicle-type')->middleware('permission:5');
+    Route::post('/admin/references/vehicle-type', [ReferenceController::class, 'vehicleTypeStore'])->name('admin.references.vehicle-type.store')->middleware('permission:5');
+    Route::patch('/admin/references/vehicle-type/{code}', [ReferenceController::class, 'vehicleTypeUpdate'])->name('admin.references.vehicle-type.update')->middleware('permission:5');
+    Route::delete('/admin/references/vehicle-type/{code}', [ReferenceController::class, 'vehicleTypeDestroy'])->name('admin.references.vehicle-type.destroy')->middleware('permission:5');
+    // Permissions — full ACL: section ceilings + group/role grants + per-user overrides
+    Route::get('/admin/permissions', [PermissionController::class, 'index'])->name('admin.permissions')->middleware('permission:9');
+    Route::post('/admin/permissions/grant', [PermissionController::class, 'setGrant'])->name('admin.permissions.grant.set')->middleware('permission:9');
+    Route::post('/admin/permissions/override', [PermissionController::class, 'setUserGrant'])->name('admin.permissions.user.set')->middleware('permission:9');
+    Route::post('/admin/permissions/ceiling', [PermissionController::class, 'toggleCeiling'])->name('admin.permissions.ceiling.toggle')->middleware('permission:9');
+    Route::post('/admin/permissions/group', [PermissionController::class, 'groupStore'])->name('admin.permissions.group.store')->middleware('permission:9');
+    Route::patch('/admin/permissions/group/{gpId}', [PermissionController::class, 'groupUpdate'])->name('admin.permissions.group.update')->middleware('permission:9');
+    Route::delete('/admin/permissions/group/{gpId}', [PermissionController::class, 'groupDestroy'])->name('admin.permissions.group.destroy')->middleware('permission:9');
     // Active section / role context switch (navbar)
-    Route::get('/contexte/section', [ContextController::class, 'section'])->name('context.section')->middleware('permission:0');
-    Route::get('/contexte/role', [ContextController::class, 'role'])->name('context.role')->middleware('permission:0');
+    Route::get('/context/section', [ContextController::class, 'section'])->name('context.section')->middleware('permission:0');
+    Route::get('/context/role', [ContextController::class, 'role'])->name('context.role')->middleware('permission:0');
     // User-facing "Mes droits" (effective permissions preview)
-    Route::get('/mes-droits', [MesDroitsController::class, 'index'])->name('mes-droits')->middleware('permission:0');
+    Route::get('/my-permissions', [MyPermissionsController::class, 'index'])->name('my-permissions')->middleware('permission:0');
     // Grade icons
-    Route::get('/admin/parametrage/grade', [ParametrageController::class, 'gradeIndex'])->name('admin.parametrage.grade')->middleware('permission:5');
-    Route::post('/admin/parametrage/grade/{grade}/icon', [ParametrageController::class, 'gradeIconUpload'])->name('admin.parametrage.grade.icon.upload')->middleware('permission:5');
-    Route::delete('/admin/parametrage/grade/{grade}/icon', [ParametrageController::class, 'gradeIconDestroy'])->name('admin.parametrage.grade.icon.destroy')->middleware('permission:5');
+    Route::get('/admin/references/grade', [ReferenceController::class, 'gradeIndex'])->name('admin.references.grade')->middleware('permission:5');
+    Route::post('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconUpload'])->name('admin.references.grade.icon.upload')->middleware('permission:5');
+    Route::delete('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconDestroy'])->name('admin.references.grade.icon.destroy')->middleware('permission:5');
     Route::middleware('feature:cotisations')->group(function () {
-        Route::get('/cotisations', [CotisationController::class, 'index'])->name('cotisations.index')->middleware('permission:53');
-        Route::post('/cotisations', [CotisationController::class, 'batchSave'])->name('cotisations.save')->middleware('permission:53');
-        Route::get('/cotisations/export', [CotisationController::class, 'export'])->name('cotisations.export')->middleware('permission:53');
-        Route::get('/cotisations/prelevements', [CotisationController::class, 'prelevements'])->name('cotisations.prelevements')->middleware('permission:53');
-        Route::post('/cotisations/prelevements', [CotisationController::class, 'savePrelevements'])->name('cotisations.prelevements.save')->middleware('permission:53');
-        Route::get('/cotisations/virements', [CotisationController::class, 'virements'])->name('cotisations.virements')->middleware('permission:53');
+        Route::get('/dues', [DuesController::class, 'index'])->name('dues.index')->middleware('permission:53');
+        Route::post('/dues', [DuesController::class, 'batchSave'])->name('dues.save')->middleware('permission:53');
+        Route::get('/dues/export', [DuesController::class, 'export'])->name('dues.export')->middleware('permission:53');
+        Route::get('/dues/direct-debits', [DuesController::class, 'directDebits'])->name('dues.direct-debits')->middleware('permission:53');
+        Route::post('/dues/direct-debits', [DuesController::class, 'saveDirectDebits'])->name('dues.direct-debits.save')->middleware('permission:53');
+        Route::get('/dues/transfers', [DuesController::class, 'transfers'])->name('dues.transfers')->middleware('permission:53');
     });
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index')->middleware('permission:0');
     Route::middleware('feature:vehicules')->group(function () {
-        Route::get('/vehicules', [VehiculeController::class, 'index'])->name('vehicule.index')->middleware('permission:42');
-        Route::get('/vehicules/create', [VehiculeController::class, 'create'])->name('vehicule.create')->middleware('permission:17');
-        Route::post('/vehicules', [VehiculeController::class, 'store'])->name('vehicule.store')->middleware('permission:17');
-        Route::get('/vehicules/{vehicule}', [VehiculeController::class, 'show'])->name('vehicule.show')->middleware('permission:42');
-        Route::get('/vehicules/{vehicule}/edit', [VehiculeController::class, 'edit'])->name('vehicule.edit')->middleware('permission:17');
-        Route::put('/vehicules/{vehicule}', [VehiculeController::class, 'update'])->name('vehicule.update')->middleware('permission:17');
-        Route::delete('/vehicules/{vehicule}', [VehiculeController::class, 'destroy'])->name('vehicule.destroy')->middleware('permission:19');
+        Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicle.index')->middleware('permission:42');
+        // List exports (static segments before the {vehicle} wildcard).
+        Route::get('/vehicles/export/xls', [VehicleController::class, 'exportXls'])->name('vehicle.export.xls')->middleware('permission:42');
+        Route::get('/vehicles/export/csv', [VehicleController::class, 'exportCsv'])->name('vehicle.export.csv')->middleware('permission:42');
+        Route::get('/vehicles/create', [VehicleController::class, 'create'])->name('vehicle.create')->middleware('permission:17');
+        Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicle.store')->middleware('permission:17');
+        Route::get('/vehicles/{vehicle}', [VehicleController::class, 'show'])->name('vehicle.show')->middleware('permission:42');
+        Route::get('/vehicles/{vehicle}/edit', [VehicleController::class, 'edit'])->name('vehicle.edit')->middleware('permission:17');
+        Route::put('/vehicles/{vehicle}', [VehicleController::class, 'update'])->name('vehicle.update')->middleware('permission:17');
+        Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicle.destroy')->middleware('permission:19');
     });
-    Route::get('/materiels', [MaterielController::class, 'index'])->name('materiel.index')->middleware(['permission:42', 'feature:materiel']);
-    Route::get('/consommables', [ConsommableController::class, 'index'])->name('consommable.index')->middleware(['permission:42', 'feature:consommables']);
+    Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index')->middleware(['permission:42', 'feature:materiel']);
+    Route::get('/equipment/export/xls', [EquipmentController::class, 'exportXls'])->name('equipment.export.xls')->middleware(['permission:42', 'feature:materiel']);
+    Route::get('/equipment/export/csv', [EquipmentController::class, 'exportCsv'])->name('equipment.export.csv')->middleware(['permission:42', 'feature:materiel']);
+    Route::get('/consumables', [ConsumableController::class, 'index'])->name('consumable.index')->middleware(['permission:42', 'feature:consommables']);
+    Route::get('/consumables/export/xls', [ConsumableController::class, 'exportXls'])->name('consumable.export.xls')->middleware(['permission:42', 'feature:consommables']);
+    Route::get('/consumables/export/csv', [ConsumableController::class, 'exportCsv'])->name('consumable.export.csv')->middleware(['permission:42', 'feature:consommables']);
     Route::get('/documents', [DocumentController::class, 'index'])->name('document.index')->middleware('permission:44');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download')->middleware('permission:44');
     Route::get('/documents/export/{format}', [DocumentController::class, 'export'])->name('document.export')->middleware('permission:44');
@@ -224,38 +266,38 @@ Route::middleware('auth')->group(function () {
     Route::patch('/photos/{album}/cover', [PhotoController::class, 'setCover'])->name('photo.cover')->middleware('permission:47');
     Route::patch('/photo/{photo}', [PhotoController::class, 'photoUpdate'])->name('photo.update')->middleware('permission:47');
     Route::delete('/photo/{photo}', [PhotoController::class, 'photoDestroy'])->name('photo.destroy')->middleware('permission:47');
-    Route::get('/organisation', fn () => redirect()->route('organisation.organigramme'))->name('organisation.index');
-    Route::get('/organisation/organigramme', [OrganisationController::class, 'index'])->name('organisation.organigramme')->middleware('permission:52');
+    Route::get('/organization', fn () => redirect()->route('organization.org-chart'))->name('organization.index');
+    Route::get('/organization/org-chart', [OrganizationController::class, 'index'])->name('organization.org-chart')->middleware('permission:52');
     // Sections — native list + CRUD (replaces departement.php)
-    Route::get('/organisation/sections', [OrganisationController::class, 'sections'])->name('organisation.sections')->middleware('permission:52');
-    Route::get('/organisation/sections/create', [OrganisationController::class, 'createSection'])->name('organisation.sections.create')->middleware('permission:52');
-    Route::post('/organisation/sections', [OrganisationController::class, 'storeSection'])->name('organisation.sections.store')->middleware('permission:52');
-    Route::get('/organisation/sections/{section}', [OrganisationController::class, 'showSection'])->name('organisation.sections.show')->middleware('permission:52');
-    Route::get('/organisation/sections/{section}/edit', [OrganisationController::class, 'editSection'])->name('organisation.sections.edit')->middleware('permission:52');
-    Route::patch('/organisation/sections/{section}', [OrganisationController::class, 'updateSection'])->name('organisation.sections.update')->middleware('permission:52');
-    Route::delete('/organisation/sections/{section}', [OrganisationController::class, 'destroySection'])->name('organisation.sections.destroy')->middleware('permission:52');
-    Route::patch('/organisation/sections/{section}/personalisation', [OrganisationController::class, 'updatePersonalisation'])->name('organisation.sections.personalisation')->middleware('permission:52');
+    Route::get('/organization/sections', [OrganizationController::class, 'sections'])->name('organization.sections')->middleware('permission:52');
+    Route::get('/organization/sections/create', [OrganizationController::class, 'createSection'])->name('organization.sections.create')->middleware('permission:52');
+    Route::post('/organization/sections', [OrganizationController::class, 'storeSection'])->name('organization.sections.store')->middleware('permission:52');
+    Route::get('/organization/sections/{section}', [OrganizationController::class, 'showSection'])->name('organization.sections.show')->middleware('permission:52');
+    Route::get('/organization/sections/{section}/edit', [OrganizationController::class, 'editSection'])->name('organization.sections.edit')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}', [OrganizationController::class, 'updateSection'])->name('organization.sections.update')->middleware('permission:52');
+    Route::delete('/organization/sections/{section}', [OrganizationController::class, 'destroySection'])->name('organization.sections.destroy')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/personalisation', [OrganizationController::class, 'updatePersonalisation'])->name('organization.sections.personalisation')->middleware('permission:52');
     // PDF assets — permission:0 because any member generating a livret/carte needs them
-    Route::get('/organisation/sections/{section}/letterhead', [OrganisationController::class, 'sectionLetterhead'])->name('organisation.sections.letterhead')->middleware('permission:0');
-    Route::delete('/organisation/sections/{section}/letterhead', [OrganisationController::class, 'resetLetterhead'])->name('organisation.sections.letterhead.reset')->middleware('permission:52');
-    Route::get('/organisation/sections/{section}/badge', [OrganisationController::class, 'sectionBadge'])->name('organisation.sections.badge')->middleware('permission:0');
-    Route::delete('/organisation/sections/{section}/badge', [OrganisationController::class, 'resetBadge'])->name('organisation.sections.badge.reset')->middleware('permission:52');
-    Route::patch('/organisation/sections/{section}/rib', [OrganisationController::class, 'updateRib'])->name('organisation.sections.rib')->middleware('permission:52');
-    Route::put('/organisation/sections/{section}/agrement/{code}', [OrganisationController::class, 'upsertAgrement'])->name('organisation.sections.agrement.upsert')->middleware('permission:52');
-    Route::delete('/organisation/sections/{section}/agrement/{code}', [OrganisationController::class, 'destroyAgrement'])->name('organisation.sections.agrement.destroy')->middleware('permission:52');
+    Route::get('/organization/sections/{section}/letterhead', [OrganizationController::class, 'sectionLetterhead'])->name('organization.sections.letterhead')->middleware('permission:0');
+    Route::delete('/organization/sections/{section}/letterhead', [OrganizationController::class, 'resetLetterhead'])->name('organization.sections.letterhead.reset')->middleware('permission:52');
+    Route::get('/organization/sections/{section}/badge', [OrganizationController::class, 'sectionBadge'])->name('organization.sections.badge')->middleware('permission:0');
+    Route::delete('/organization/sections/{section}/badge', [OrganizationController::class, 'resetBadge'])->name('organization.sections.badge.reset')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/rib', [OrganizationController::class, 'updateRib'])->name('organization.sections.rib')->middleware('permission:52');
+    Route::put('/organization/sections/{section}/agrement/{code}', [OrganizationController::class, 'upsertAgrement'])->name('organization.sections.agrement.upsert')->middleware('permission:52');
+    Route::delete('/organization/sections/{section}/agrement/{code}', [OrganizationController::class, 'destroyAgrement'])->name('organization.sections.agrement.destroy')->middleware('permission:52');
     // Cartographie — native Leaflet map (replaces jvectormap.php)
-    Route::get('/organisation/cartographie', [OrganisationController::class, 'cartographie'])->name('organisation.cartographie')->middleware(['permission:27', 'feature:carte']);
-    Route::get('/statistiques', fn () => redirect()->route('statistique.dashboard'))->name('statistique.index');
-    Route::get('/statistiques/dashboard', [StatistiqueController::class, 'index'])->name('statistique.dashboard')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel', fn () => redirect()->route('statistique.bilan.generalites'))->name('statistique.bilan');
-    Route::get('/statistiques/bilan-annuel/generalites', [StatistiqueController::class, 'bilanGeneralites'])->name('statistique.bilan.generalites')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel/activites', [StatistiqueController::class, 'bilanActivites'])->name('statistique.bilan.activites')->middleware('permission:27');
-    Route::get('/statistiques/bilan-annuel/formations', [StatistiqueController::class, 'bilanFormations'])->name('statistique.bilan.formations')->middleware('permission:27');
+    Route::get('/organization/map', [OrganizationController::class, 'map'])->name('organization.map')->middleware(['permission:27', 'feature:carte']);
+    Route::get('/statistics', fn () => redirect()->route('statistics.dashboard'))->name('statistics.index');
+    Route::get('/statistics/dashboard', [StatisticsController::class, 'index'])->name('statistics.dashboard')->middleware('permission:27');
+    Route::get('/statistics/annual-report', fn () => redirect()->route('statistics.annual-report.overview'))->name('statistics.annual-report');
+    Route::get('/statistics/annual-report/overview', [StatisticsController::class, 'reportOverview'])->name('statistics.annual-report.overview')->middleware('permission:27');
+    Route::get('/statistics/annual-report/activities', [StatisticsController::class, 'reportActivities'])->name('statistics.annual-report.activities')->middleware('permission:27');
+    Route::get('/statistics/annual-report/training', [StatisticsController::class, 'reportTraining'])->name('statistics.annual-report.training')->middleware('permission:27');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');
     Route::get('personnel/grade/{grade}', [PersonnelController::class, 'gradeImage'])
-        ->name('personnel.grade_image')
+        ->name('personnel.grade-image')
         ->where('grade', '[A-Z0-9]+')
         ->middleware('permission:0');
     // Personnel list exports (static segments before resource wildcard)
@@ -277,34 +319,66 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.qualification.update')->middleware('permission:0');
     Route::delete('personnel/{personnel}/qualifications/{psId}', [PersonnelController::class, 'destroyQualification'])
         ->name('personnel.qualification.destroy')->middleware('permission:0');
-    // Cotisations CRUD — nested under personnel
-    Route::post('personnel/{personnel}/cotisations', [PersonnelController::class, 'storeCotisation'])
-        ->name('personnel.cotisation.store')->middleware('permission:0');
-    Route::patch('personnel/{personnel}/cotisations/{pcId}', [PersonnelController::class, 'updateCotisation'])
-        ->name('personnel.cotisation.update')->middleware('permission:0');
-    Route::delete('personnel/{personnel}/cotisations/{pcId}', [PersonnelController::class, 'destroyCotisation'])
-        ->name('personnel.cotisation.destroy')->middleware('permission:0');
+    // Duess CRUD — nested under personnel
+    Route::post('personnel/{personnel}/dues', [PersonnelController::class, 'storeDues'])
+        ->name('personnel.dues.store')->middleware('permission:0');
+    Route::patch('personnel/{personnel}/dues/{pcId}', [PersonnelController::class, 'updateDues'])
+        ->name('personnel.dues.update')->middleware('permission:0');
+    Route::delete('personnel/{personnel}/dues/{pcId}', [PersonnelController::class, 'destroyDues'])
+        ->name('personnel.dues.destroy')->middleware('permission:0');
     // Per-member exports
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');
-    Route::get('personnel/{personnel}/livret-data', [PersonnelController::class, 'livretData'])
-        ->name('personnel.livret')->middleware('permission:0');
-    Route::get('personnel/{personnel}/carte-data', [PersonnelController::class, 'carteData'])
-        ->name('personnel.carte')->middleware('permission:0');
+    Route::get('personnel/{personnel}/logbook-data', [PersonnelController::class, 'logbookData'])
+        ->name('personnel.logbook')->middleware('permission:0');
+    Route::get('personnel/{personnel}/card-data', [PersonnelController::class, 'cardData'])
+        ->name('personnel.card')->middleware('permission:0');
     // Géolocalisation
-    Route::get('/geolocalisation', [GeolocalisationController::class, 'index'])
-        ->name('geolocalisation.index')->middleware(['permission:0', 'feature:geolocalize_enabled']);
-    Route::post('personnel/{personnel}/gps', [GeolocalisationController::class, 'updateGps'])
+    Route::get('/geolocation', [GeolocationController::class, 'index'])
+        ->name('geolocation.index')->middleware(['permission:0', 'feature:geolocalize_enabled']);
+    Route::post('personnel/{personnel}/gps', [GeolocationController::class, 'updateGps'])
         ->name('personnel.gps.update')->middleware('permission:0');
-    Route::get('/trombinoscope', [PersonnelController::class, 'trombinoscope'])->name('personnel.trombinoscope')->middleware('permission:0');
+    Route::get('/personnel/photos', [PersonnelController::class, 'trombinoscope'])->name('personnel.photo-directory')->middleware('permission:0');
     Route::get('/qualifications', [PersonnelController::class, 'qualifications'])->name('personnel.qualifications')->middleware(['permission:56', 'feature:competences']);
-    Route::get('/clients', [CompanyController::class, 'index'])->name('company.index')->middleware(['permission:29', 'feature:client']);
+    Route::get('/qualifications/export/xls', [PersonnelController::class, 'exportQualificationsXls'])->name('personnel.qualifications.export.xls')->middleware(['permission:56', 'feature:competences']);
+    Route::get('/qualifications/export/csv', [PersonnelController::class, 'exportQualificationsCsv'])->name('personnel.qualifications.export.csv')->middleware(['permission:56', 'feature:competences']);
+    Route::get('/companies', [CompanyController::class, 'index'])->name('company.index')->middleware(['permission:29', 'feature:client']);
+    Route::get('/companies/export/xls', [CompanyController::class, 'exportXls'])->name('company.export.xls')->middleware(['permission:29', 'feature:client']);
+    Route::get('/companies/export/csv', [CompanyController::class, 'exportCsv'])->name('company.export.csv')->middleware(['permission:29', 'feature:client']);
     Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {
         // TODO: Migrate code
         return redirect('/legacy/about.php');
     })->name('about');
     Route::post('/shortcuts/toggle', [ShortcutController::class, 'toggle'])->name('shortcuts.toggle');
+
+    // Account — combined authentication page (password + 2FA)
+    Route::get('/account/authentification', [AccountController::class, 'showAuth'])->name('account.auth');
+    Route::post('/account/authentification', [AccountController::class, 'changePassword'])->name('account.password.update');
+    Route::post('/account/authentification/2fa/confirm', [TotpController::class, 'confirmSetup'])->name('totp.confirm');
+    Route::post('/account/authentification/2fa/codes', [TotpController::class, 'regenerateCodes'])->name('totp.codes.regenerate');
+    Route::delete('/account/authentification/2fa', [TotpController::class, 'disable'])->name('totp.disable');
+    // Legacy redirects
+    Route::redirect('/account/password', '/account/authentification')->name('account.password');
+    Route::redirect('/account/2fa', '/account/authentification?tab=2fa')->name('totp.setup');
+
+    // Account — charter acceptance
+    Route::get('/account/charter', [AccountController::class, 'showCharter'])->name('account.charter');
+    Route::post('/account/charter/accept', [AccountController::class, 'acceptCharter'])->name('account.charter.accept');
+    Route::post('/account/charter/reject', [AccountController::class, 'rejectCharter'])->name('account.charter.reject');
+    Route::post('/account/charter/reset', [AccountController::class, 'resetCharter'])->name('account.charter.reset');
+
+    // Admin — charter editor (permission 14), nested under security
+    Route::get('/admin/security/charter', [AccountController::class, 'showEditCharter'])->name('admin.security.charter')->middleware('permission:14');
+    Route::post('/admin/security/charter', [AccountController::class, 'saveCharter'])->name('admin.security.charter.save')->middleware('permission:14');
+
+    // Connected users (permission 20 = Audit)
+    Route::get('/admin/connected-users', [AccountController::class, 'connectedUsers'])->name('account.connected-users')->middleware('permission:20');
+
+    // Send credentials — admin action, nested under personnel
+    Route::get('personnel/{personnel}/send-credentials', [AccountController::class, 'showSendCredentials'])->name('personnel.send-credentials.show');
+    Route::post('personnel/{personnel}/send-credentials', [AccountController::class, 'sendCredentials'])->name('personnel.send-credentials');
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::match(['GET', 'POST'], '/index.php/logout', [AuthController::class, 'logout'])->name('logout.compat');
 

@@ -45,6 +45,6 @@ class ObUserPermission extends Model
 
     public function feature(): BelongsTo
     {
-        return $this->belongsTo(Fonctionnalite::class, 'feature_id', 'F_ID');
+        return $this->belongsTo(LegacyFeature::class, 'feature_id', 'F_ID');
     }
 }

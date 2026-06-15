@@ -89,6 +89,16 @@ test('unauthenticated users are redirected from personnel edit to login', functi
     $this->get('/personnel/1/edit')->assertRedirect('/login');
 });
 
+test('unauthenticated users are redirected from the qualifications exports to login', function () {
+    $this->get('/qualifications/export/xls')->assertRedirect('/login');
+    $this->get('/qualifications/export/csv')->assertRedirect('/login');
+});
+
+test('the qualifications export routes are registered', function () {
+    expect(route('personnel.qualifications.export.xls'))->toContain('/qualifications/export/xls');
+    expect(route('personnel.qualifications.export.csv'))->toContain('/qualifications/export/csv');
+});
+
 // ── Legacy bridge redirects ──────────────────────────────────────────────────
 
 test('legacy personnel.php redirects to personnel.index', function () {

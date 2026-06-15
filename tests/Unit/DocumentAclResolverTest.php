@@ -18,7 +18,7 @@ use App\Services\DocumentAclService;
  *   document100: allow role  20  → WRITE
  * User principals: user 5, group 10, role 20.
  */
-function aclResolver(): DocumentAclService
+function aclResolver()
 {
     return new class extends DocumentAclService
     {

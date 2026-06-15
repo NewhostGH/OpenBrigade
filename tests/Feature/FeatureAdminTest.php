@@ -64,16 +64,16 @@ test('admin can view the fonctionnalités screen', function () {
     $feature = ObFeature::query()->first();
 
     $this->actingAs(featureFakeUser())
-        ->get('/admin/fonctionnalites')
+        ->get('/admin/features')
         ->assertOk()
-        ->assertViewIs('admin.fonctionnalites')
+        ->assertViewIs('admin.features')
         ->assertViewHasAll(['features', 'groups'])
         ->assertSee($feature->name);
 });
 
 test('a user without permission 14 gets 403', function () {
     $this->actingAs(featureFakeUser(can: false))
-        ->get('/admin/fonctionnalites')
+        ->get('/admin/features')
         ->assertForbidden();
 });
 
@@ -93,7 +93,7 @@ test('toggling a feature persists to ob_feature and the legacy configuration row
         $target = ! $original;
 
         $this->actingAs(featureFakeUser())
-            ->patch(route('admin.fonctionnalites.toggle', $feature), [
+            ->patch(route('admin.features.toggle', $feature), [
                 'enabled' => $target ? '1' : '0',
             ])
             ->assertRedirect();
@@ -126,14 +126,14 @@ test('the feature gate returns 404 when disabled and not 404 when enabled', func
         forgetFeatureService();
 
         $this->actingAs(featureFakeUser())
-            ->get('/vehicules')
+            ->get('/vehicles')
             ->assertNotFound();
 
         // Enabled → the gate lets the request through (any non-404 status).
         $feature->update(['enabled' => true]);
         forgetFeatureService();
 
-        $status = $this->actingAs(featureFakeUser())->get('/vehicules')->getStatusCode();
+        $status = $this->actingAs(featureFakeUser())->get('/vehicles')->getStatusCode();
         expect($status)->not->toBe(404);
     } finally {
         $feature->update(['enabled' => $original]);

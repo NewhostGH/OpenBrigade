@@ -40,16 +40,16 @@ at folder granularity (they are binary assets copied as-is).
 
 ## Dashboard / home
 
-| Legacy file        | New implementation                                                            |
-| ------------------ | ----------------------------------------------------------------------------- |
-| `index.php`        | `app/Http/Controllers/DashboardController.php` + `resources/views/dashboard/` |
-| `index_d.php`      | `DashboardController.php`                                                     |
+| Legacy file        | New implementation                                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `index.php`        | `app/Http/Controllers/DashboardController.php` + `resources/views/dashboard/`                                                  |
+| `index_d.php`      | `DashboardController.php`                                                                                                      |
 | `save_accueil.php` | `DashboardController::saveLayout()` — `POST /dashboard/layout`, persists widget order/column per user in `ob_dashboard_layout` |
-| `myagenda.php`     | `PlanningController.php` (personal agenda merged into the planning view)      |
-| `noscript.php`     | **WIP**                                                                       |
-| `error.php`        | **WIP**                                                                       |
-| `config.php`       | N/A — replaced by Laravel `config/` + `.env`                                  |
-| `wizard.php`       | **WIP** (first-run setup)                                                     |
+| `myagenda.php`     | `PlanningController.php` (personal agenda merged into the planning view)                                                       |
+| `noscript.php`     | **WIP**                                                                                                                        |
+| `error.php`        | **WIP**                                                                                                                        |
+| `config.php`       | N/A — replaced by Laravel `config/` + `.env`                                                                                   |
+| `wizard.php`       | **WIP** (first-run setup)                                                                                                      |
 
 ## Events (événements)
 
@@ -90,7 +90,7 @@ at folder granularity (they are binary assets copied as-is).
 | `evenement_facturation_num.php`    | **WIP**                                                                                      |
 | `evenement_tarif.php`              | **WIP**                                                                                      |
 | `evenement_tarif_formation.php`    | **WIP**                                                                                      |
-| `repo_events.php`                  | `StatistiqueController.php` — bridge redirects to `statistique.index`                        |
+| `repo_events.php`                  | `StatistiqueController.php` — bridge redirects to `statistics.index`                         |
 | `bilan_participation.php`          | **WIP** (see Statistiques)                                                                   |
 
 ## Personnel / members
@@ -325,20 +325,20 @@ at folder granularity (they are binary assets copied as-is).
 
 ## Documents
 
-| Legacy file                                   | New implementation                                                                         |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Legacy file                                   | New implementation                                                                          |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | `documents.php`                               | `DocumentController@index` + `DocumentService` + `document/index.blade.php` (ob-* explorer) |
-| `document_modal.php`                          | `document/index.blade.php` (upload/edit modals)                                            |
-| `upd_document.php` / `save_documents.php`     | `DocumentController@store/update/destroy` (permission 47)                                  |
-| `save_folder.php` / `upd_folder.php`          | `DocumentController@folderStore/folderUpdate/folderDestroy`                                |
-| `delete_file.php`                             | `DocumentController.php`                                                                   |
-| `delete_event_file.php`                       | **WIP**                                                                                    |
-| `upload.php`                                  | `DocumentController.php`                                                                   |
-| `showfile.php`                                | `DocumentController@download` for library docs; still bridged for entity files            |
-| `config_doc.php`                              | Not library config — PDF attestation/convention text (tracked under the PDF/billing items) |
-| Document type config                          | `DocumentTypeController.php` + `document/types.blade.php` (`type_document` CRUD, perm 47)  |
-| `observations_modal.php`                      | **WIP**                                                                                    |
-| `document_folders` / `document_security` docs | see `archive/legacy_app/documentation/` below                                              |
+| `document_modal.php`                          | `document/index.blade.php` (upload/edit modals)                                             |
+| `upd_document.php` / `save_documents.php`     | `DocumentController@store/update/destroy` (permission 47)                                   |
+| `save_folder.php` / `upd_folder.php`          | `DocumentController@folderStore/folderUpdate/folderDestroy`                                 |
+| `delete_file.php`                             | `DocumentController.php`                                                                    |
+| `delete_event_file.php`                       | **WIP**                                                                                     |
+| `upload.php`                                  | `DocumentController.php`                                                                    |
+| `showfile.php`                                | `DocumentController@download` for library docs; still bridged for entity files              |
+| `config_doc.php`                              | Not library config — PDF attestation/convention text (tracked under the PDF/billing items)  |
+| Document type config                          | `DocumentTypeController.php` + `document/types.blade.php` (`type_document` CRUD, perm 47)   |
+| `observations_modal.php`                      | **WIP**                                                                                     |
+| `document_folders` / `document_security` docs | see `archive/legacy_app/documentation/` below                                               |
 
 ## Messaging / mail / SMS / alerts / chat
 

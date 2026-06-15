@@ -45,7 +45,7 @@ class PersonnelExportService
 
     // ── Livret data (client-side PDF) ─────────────────────────────────────────
 
-    public function livretData(Personnel $personnel): array
+    public function logbookData(Personnel $personnel): array
     {
         $pid = (int) $personnel->P_ID;
 
@@ -164,7 +164,7 @@ class PersonnelExportService
 
     // ── Carte data (client-side PDF) ──────────────────────────────────────────
 
-    public function carteData(Personnel $personnel): array
+    public function cardData(Personnel $personnel): array
     {
         return [
             'nom' => mb_strtoupper($personnel->P_NOM),
@@ -184,7 +184,7 @@ class PersonnelExportService
      * Letterhead ("Papier à entête") config for client-side pdf-lib rendering.
      * Falls back to the generic public/pdf/pdf_page.pdf when the section has
      * no custom letterhead. Margins follow the legacy eBrigade defaults.
-     * Public: also used by the bilan annuel PDFs (StatistiqueController).
+     * Public: also used by the bilan annuel PDFs (StatisticsController).
      */
     public function letterheadConfig(?Section $section): array
     {
@@ -193,7 +193,7 @@ class PersonnelExportService
 
         if ($section && $file !== ''
             && Storage::disk('public')->exists("sections/{$section->S_ID}/pdf/{$file}")) {
-            $url = route('organisation.sections.letterhead', $section->S_ID);
+            $url = route('organization.sections.letterhead', $section->S_ID);
         }
 
         return [
@@ -212,7 +212,7 @@ class PersonnelExportService
 
         if ($section && $file !== ''
             && Storage::disk('public')->exists("sections/{$section->S_ID}/images/{$file}")) {
-            return route('organisation.sections.badge', $section->S_ID);
+            return route('organization.sections.badge', $section->S_ID);
         }
 
         return null;

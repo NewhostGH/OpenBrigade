@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BackupController;
-use App\Http\Controllers\HabilitationController;
 use App\Http\Controllers\MaintenanceController;
-use App\Http\Controllers\ParametrageController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ReferenceController;
 use App\Models\BackupSetting;
 use App\Models\User;
 use App\Services\NavigationService;
@@ -71,9 +71,9 @@ test('unauthenticated users are redirected from admin pages to login', function 
 })->with([
     '/admin/settings',
     '/admin/monitoring',
-    '/admin/parametrage',
-    '/admin/habilitations',
-    '/admin/sauvegarde',
+    '/admin/references',
+    '/admin/permissions',
+    '/admin/backup',
     '/admin/maintenance',
     '/admin/plugins',
 ]);
@@ -85,9 +85,9 @@ test('users without the required permission get 403', function (string $path) {
 })->with([
     '/admin/settings',
     '/admin/monitoring',
-    '/admin/parametrage',
-    '/admin/habilitations',
-    '/admin/sauvegarde',
+    '/admin/references',
+    '/admin/permissions',
+    '/admin/backup',
     '/admin/maintenance',
     '/admin/plugins',
 ]);
@@ -138,8 +138,8 @@ test('monitoring page renders the admin.monitoring view', function () {
 
 // ── Paramétrage ──────────────────────────────────────────────────────────────
 
-test('parametrage index renders the admin.parametrage.index view', function () {
-    adminStubView(ParametrageController::class, 'index', 'admin.parametrage.index', [
+test('parametrage index renders the admin.references.index view', function () {
+    adminStubView(ReferenceController::class, 'index', 'admin.references.index', [
         'counts' => [
             'type_evenement' => 0,
             'type_participation' => 0,
@@ -149,15 +149,15 @@ test('parametrage index renders the admin.parametrage.index view', function () {
         ],
     ]);
 
-    $this->actingAs(adminFakeUser())->get('/admin/parametrage')
+    $this->actingAs(adminFakeUser())->get('/admin/references')
         ->assertOk()
-        ->assertViewIs('admin.parametrage.index');
+        ->assertViewIs('admin.references.index');
 });
 
-// ── Habilitations ────────────────────────────────────────────────────────────
+// ── Permissions ────────────────────────────────────────────────────────────
 
-test('habilitations index renders the admin.habilitations.index view', function () {
-    adminStubView(HabilitationController::class, 'index', 'admin.habilitations.index', [
+test('habilitations index renders the admin.permissions.index view', function () {
+    adminStubView(PermissionController::class, 'index', 'admin.permissions.index', [
         'tab' => 'ceiling',
         'featuresByCategory' => collect([]),
         'sections' => collect([]),
@@ -171,9 +171,9 @@ test('habilitations index renders the admin.habilitations.index view', function 
         'sectionDenied' => [],
     ]);
 
-    $this->actingAs(adminFakeUser())->get('/admin/habilitations')
+    $this->actingAs(adminFakeUser())->get('/admin/permissions')
         ->assertOk()
-        ->assertViewIs('admin.habilitations.index');
+        ->assertViewIs('admin.permissions.index');
 });
 
 // ── Backup ───────────────────────────────────────────────────────────────────
@@ -191,7 +191,7 @@ test('backup index renders the admin.backup.index view', function () {
         ]),
     ]);
 
-    $this->actingAs(adminFakeUser())->get('/admin/sauvegarde')
+    $this->actingAs(adminFakeUser())->get('/admin/backup')
         ->assertOk()
         ->assertViewIs('admin.backup.index');
 });
@@ -224,11 +224,11 @@ test('legacy admin pages redirect to their native routes', function (string $leg
     ['/legacy/configuration.php',              'admin.settings'],
     ['/legacy/save_configuration.php',         'admin.settings'],
     ['/legacy/configuration_theme.php',        'admin.settings'],
-    ['/legacy/configuration_icone_grade.php',  'admin.parametrage.grade'],
-    ['/legacy/parametrage.php',                'admin.parametrage'],
-    ['/legacy/habilitations.php',              'admin.habilitations'],
-    ['/legacy/save_habilitations.php',         'admin.habilitations'],
-    ['/legacy/upd_habilitations.php',          'admin.habilitations'],
+    ['/legacy/configuration_icone_grade.php',  'admin.references.grade'],
+    ['/legacy/parametrage.php',                'admin.references'],
+    ['/legacy/habilitations.php',              'admin.permissions'],
+    ['/legacy/save_habilitations.php',         'admin.permissions'],
+    ['/legacy/upd_habilitations.php',          'admin.permissions'],
     ['/legacy/audit.php',                      'admin.monitoring'],
     ['/legacy/history.php',                    'admin.monitoring'],
     ['/legacy/backup.php',                     'admin.backup'],

@@ -33,7 +33,7 @@ Artisan::command('legacy:migration:validate {--table=* : Validate only specific 
     }
 
     preg_match_all('/CREATE\\s+TABLE\\s+`?([A-Za-z0-9_]+)`?/i', $referenceSql, $matches);
-    $tables = array_values(array_unique($matches[1] ?? []));
+    $tables = array_values(array_unique($matches[1]));
 
     if ($tables === []) {
         $this->error('No tables discovered from reference SQL file.');
@@ -53,12 +53,12 @@ Artisan::command('legacy:migration:validate {--table=* : Validate only specific 
         }
     }
 
-    $legacyDsn = env('LEGACY_DB_DSN');
-    $legacyHost = env('LEGACY_DB_HOST');
-    $legacyPort = env('LEGACY_DB_PORT', '3306');
-    $legacyDatabase = env('LEGACY_DB_DATABASE');
-    $legacyUser = env('LEGACY_DB_USERNAME');
-    $legacyPassword = env('LEGACY_DB_PASSWORD');
+    $legacyDsn = config('legacy.db.dsn');
+    $legacyHost = config('legacy.db.host');
+    $legacyPort = config('legacy.db.port', '3306');
+    $legacyDatabase = config('legacy.db.database');
+    $legacyUser = config('legacy.db.username');
+    $legacyPassword = config('legacy.db.password');
 
     $legacyPdo = null;
     $compareWithLegacy = false;

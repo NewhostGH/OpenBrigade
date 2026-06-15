@@ -120,3 +120,18 @@
     color: var(--text-muted-soft);
     margin-top: 1.5rem;
 }
+
+/* ── Charter acceptance standalone page ──────────────────────────────────── */
+.ob-charter-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: var(--bg-app, #f0f2f5);
+}
+.ob-charter-wrap {
+    width: 100%;
+    max-width: 780px;
+}

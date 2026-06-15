@@ -22,9 +22,9 @@
 
 /* ── Feature module CSS (one file per section) ────────────────────── */
 @import './ob-personnel.css';
-@import './ob-organisation.css';
+@import './ob-organization.css';
 @import './ob-planning.css';
-@import './ob-habilitations.css';
-@import './ob-statistique.css';
+@import './ob-permissions.css';
+@import './ob-statistics.css';
 @import './ob-documents.css';
 @import './ob-photos.css';

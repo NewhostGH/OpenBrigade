@@ -27,7 +27,9 @@
     title="Qualifications de la section"
     :total="$items->total()"
     :columns="$columns"
-    table-id="qualificationsTable">
+    table-id="qualificationsTable"
+    :export-xls-url="route('personnel.qualifications.export.xls', request()->query())"
+    :export-csv-url="route('personnel.qualifications.export.csv', request()->query())">
 </x-ob-toolbar>
 
 <x-ob-commandbar table-id="qualificationsTable" :total="$items->total()" total-label="qualification">

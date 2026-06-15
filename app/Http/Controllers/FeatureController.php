@@ -24,7 +24,7 @@ class FeatureController extends Controller
             'systeme' => ['label' => 'Système',        'icon' => 'cog'],
         ];
 
-        return view('admin.fonctionnalites', compact('features', 'groups'));
+        return view('admin.features', compact('features', 'groups'));
     }
 
     public function toggle(Request $request, ObFeature $feature): RedirectResponse

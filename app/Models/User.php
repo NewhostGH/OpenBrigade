@@ -21,23 +21,31 @@ use App\Models\Concerns\HasAvatar;
 use App\Services\PermissionResolver;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 
 /**
  * Auth-side model for the legacy `pompier` table (domain concerns live on
  * {@see Personnel}, which maps to the same table).
  *
  * @property int $P_ID
+ * @property string|null $P_CODE
  * @property string|null $P_MDP
  * @property Carbon|string|null $P_MDP_EXPIRY
+ * @property int|null $P_NB_CONNECT
+ * @property int|null $P_PASSWORD_FAILURE
+ * @property Carbon|string|null $P_ACCEPT_DATE
  * @property string|null $P_STATUT
  * @property int|null $P_SECTION
  * @property int|null $GP_ID
  * @property int|null $GP_ID2
  * @property Carbon|null $P_LAST_CONNECT
+ * @property string|null $two_factor_secret
+ * @property string|null $two_factor_recovery_codes
+ * @property Carbon|string|null $two_factor_confirmed_at
  */
 class User extends Authenticatable
 {
-    use HasAvatar;
+    use HasAvatar, TwoFactorAuthenticatable;
 
     protected $table = 'pompier';
 

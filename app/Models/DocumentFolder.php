@@ -49,6 +49,6 @@ class DocumentFolder extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(TypeDocument::class, 'TD_CODE', 'TD_CODE');
+        return $this->belongsTo(DocumentType::class, 'TD_CODE', 'TD_CODE');
     }
 }

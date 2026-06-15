@@ -85,14 +85,15 @@ function dashboardPayloads(User $user): array
         'getInfos' => ['consignes' => [], 'actualites' => []],
         'getBirthdays' => ['days' => []],
         'getVehiclesAlerts' => ['items' => []],
-        'getConsommablesAlerts' => ['items' => []],
+        'getConsumablesAlerts' => ['items' => []],
         'getCpAlerts' => ['count' => 0, 'items' => []],
         'getHorairesAlerts' => ['rows' => []],
-        'getRemplacementsAlerts' => ['count' => 0, 'type' => ''],
+        'getReplacementsAlerts' => ['count' => 0, 'type' => ''],
         'getTraining' => ['asTrainee' => [], 'asTrainer' => [], 'year' => date('Y')],
         'getMcEvents' => ['events' => []],
         'getSectionLinks' => ['links' => [], 'whatsappBase' => ''],
         'getAbout' => ['version' => '1.0.0', 'supportEmail' => '', 'canAdmin' => false],
+        'getWidgetLayout' => ['columns' => [1 => [], 2 => [], 3 => []], 'hidden' => []],
     ];
 }
 

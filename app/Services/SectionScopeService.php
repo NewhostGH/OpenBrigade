@@ -331,7 +331,7 @@ class SectionScopeService implements ServiceInterface
 
     private function allSections(): Collection
     {
-        // Canonical org-chart sibling order (same as the Organisation pages).
+        // Canonical org-chart sibling order (same as the Organization pages).
         return $this->sections ??= DB::table('section')
             ->orderBy('S_ORDER')
             ->orderBy('S_CODE')

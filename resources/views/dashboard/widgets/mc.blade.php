@@ -16,7 +16,7 @@
                 </div>
                 <div class="ob-dash-event-info">
                     <a class="ob-dash-event-title"
-                       href="{{ route('evenement.show', $e->E_CODE) }}">
+                       href="{{ route('event.show', $e->E_CODE) }}">
                         {{ $e->E_LIBELLE }}
                     </a>
                     <div class="ob-dash-event-meta">{{ $e->DEBUTDATE }}–{{ $e->FINDATE }}</div>

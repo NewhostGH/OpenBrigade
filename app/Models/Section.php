@@ -89,24 +89,24 @@ class Section extends Model
     /** Events belonging to this section. */
     public function evenements(): HasMany
     {
-        return $this->hasMany(Evenement::class, 'S_ID', 'S_ID');
+        return $this->hasMany(Event::class, 'S_ID', 'S_ID');
     }
 
     /** Vehicles belonging to this section. */
     public function vehicules(): HasMany
     {
-        return $this->hasMany(Vehicule::class, 'S_ID', 'S_ID');
+        return $this->hasMany(Vehicle::class, 'S_ID', 'S_ID');
     }
 
-    /** Materiel items belonging to this section. */
+    /** Equipment items belonging to this section. */
     public function materiels(): HasMany
     {
-        return $this->hasMany(Materiel::class, 'S_ID', 'S_ID');
+        return $this->hasMany(Equipment::class, 'S_ID', 'S_ID');
     }
 
     /** Consumable stock items belonging to this section. */
     public function consommables(): HasMany
     {
-        return $this->hasMany(Consommable::class, 'S_ID', 'S_ID');
+        return $this->hasMany(Consumable::class, 'S_ID', 'S_ID');
     }
 }

@@ -11,7 +11,7 @@
 // ── 1. No inline <style> blocks in Blade views ───────────────────────────────
 //
 // All CSS must live in resources/css/<module>.css and be bundled via Vite.
-// Rule: Convention §3 — "No <style> blocks in Blade views."
+// Rule: Convention §4 — "No <style> blocks in Blade views."
 test('no inline style blocks in blade views', function () {
     $views = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator(resource_path('views'))
@@ -34,7 +34,7 @@ test('no inline style blocks in blade views', function () {
 
     expect($violations)
         ->toBeEmpty(
-            "Inline <style> blocks found in Blade views (Convention §3).\n"
+            "Inline <style> blocks found in Blade views (Convention §4).\n"
             ."Move CSS to resources/css/<module>.css and bundle via Vite.\n\n"
             .implode("\n", $violations)
         );
@@ -46,7 +46,7 @@ test('no inline style blocks in blade views', function () {
 // archive/legacy_app path must have "TODO: Migrate code" on the same line or
 // the immediately preceding non-blank line.
 //
-// Rule: Convention §5 — "Legacy references must be flagged."
+// Rule: Convention §7 — "Legacy references must be flagged."
 test('all legacy references are flagged with TODO: Migrate code', function () {
     $dirs = [
         resource_path('views'),
@@ -126,7 +126,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
 
     expect($violations)
         ->toBeEmpty(
-            "Legacy references without TODO: Migrate code marker (Convention §5).\n"
+            "Legacy references without TODO: Migrate code marker (Convention §7).\n"
             ."Add {{-- TODO: Migrate code --}} (Blade) or // TODO: Migrate code (PHP)\n"
             ."on the line immediately before the reference.\n\n"
             .implode("\n", $violations)
@@ -139,7 +139,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
 // A link like url('/ins_personnel.php') routes to nowhere — the file is only
 // reachable under /legacy/. This was the navbar quick-add bug.
 //
-// Rule: Convention §5 — "A legacy URL without /legacy/ prefix is a routing bug."
+// Rule: Convention §7 — "A legacy URL without /legacy/ prefix is a routing bug."
 test('no legacy php files referenced without /legacy/ prefix', function () {
     $views = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator(resource_path('views'))
@@ -164,7 +164,7 @@ test('no legacy php files referenced without /legacy/ prefix', function () {
 
     expect($violations)
         ->toBeEmpty(
-            "Legacy PHP files referenced without /legacy/ prefix (Convention §5).\n"
+            "Legacy PHP files referenced without /legacy/ prefix (Convention §7).\n"
             ."Change url('/ins_foo.php') → url('/legacy/ins_foo.php').\n\n"
             .implode("\n", $violations)
         );
