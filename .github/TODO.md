@@ -68,7 +68,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Trainings & diplomas CRUD (`personnel_formation.php`, `diplome_edit.php`)
 - [ ] Tenues / uniforms (`personnel_tenues.php`)
 - [ ] User preferences (`personnel_preferences.php`)
-- [ ] Salarié data (`upd_personnel_salarie.php`)
+- [x] Salarié data (`upd_personnel_salarie.php`) — TS_ contract/hours fields card on personnel show page (perm 2)
 - [x] Emergency contacts (`personnel_contact.php`)
 - [ ] Homonym management (`homonymes_*.php`)
 - [x] Contact / email lists (`listecontacts.php`, `listemails.php`) — emails.txt + contacts.csv bulk export from personnel list

@@ -872,6 +872,64 @@
             </div>{{-- /section-contacts --}}
             @endif
 
+            {{-- ▸ Salarié ────────────────────────────────────────────────── --}}
+            @if (auth()->user()->hasPermission(2))
+            <div id="section-salarie" data-pers-section>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title"><i class="fas fa-briefcase"></i> Données salarié</div>
+                    </div>
+                    <div class="ob-widget-card-body">
+                        <form method="POST" action="{{ route('personnel.salarie.update', $personnel) }}">
+                            @csrf
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Heures / semaine</label>
+                                    <input type="number" step="0.01" name="TS_HEURES" class="form-control form-control-sm"
+                                           value="{{ old('TS_HEURES', $personnel->TS_HEURES) }}" min="0" max="999">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Heures / jour</label>
+                                    <input type="number" step="0.01" name="TS_HEURES_PAR_JOUR" class="form-control form-control-sm"
+                                           value="{{ old('TS_HEURES_PAR_JOUR', $personnel->TS_HEURES_PAR_JOUR) }}" min="0" max="99">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Jours CP / an</label>
+                                    <input type="number" step="0.01" name="TS_JOURS_CP_PAR_AN" class="form-control form-control-sm"
+                                           value="{{ old('TS_JOURS_CP_PAR_AN', $personnel->TS_JOURS_CP_PAR_AN) }}" min="0" max="999">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Heures / an</label>
+                                    <input type="number" step="0.01" name="TS_HEURES_PAR_AN" class="form-control form-control-sm"
+                                           value="{{ old('TS_HEURES_PAR_AN', $personnel->TS_HEURES_PAR_AN) }}" min="0" max="9999">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Heures à récupérer</label>
+                                    <input type="number" step="0.01" name="TS_HEURES_A_RECUPERER" class="form-control form-control-sm"
+                                           value="{{ old('TS_HEURES_A_RECUPERER', $personnel->TS_HEURES_A_RECUPERER) }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Reliquat CP</label>
+                                    <input type="number" step="0.01" name="TS_RELIQUAT_CP" class="form-control form-control-sm"
+                                           value="{{ old('TS_RELIQUAT_CP', $personnel->TS_RELIQUAT_CP) }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-label" style="font-size:var(--font-size-sm);">Reliquat RTT</label>
+                                    <input type="number" step="0.01" name="TS_RELIQUAT_RTT" class="form-control form-control-sm"
+                                           value="{{ old('TS_RELIQUAT_RTT', $personnel->TS_RELIQUAT_RTT) }}">
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-save me-1"></i> Enregistrer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>{{-- /section-salarie --}}
+            @endif
+
         </div>{{-- /content --}}
     </div>{{-- /sidebar layout --}}
 

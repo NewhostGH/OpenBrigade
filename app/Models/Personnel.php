@@ -55,6 +55,19 @@ use Illuminate\Support\Carbon;
  * @property int|null $GP_ID2
  * @property bool $P_SUPERADMIN
  * @property int|null $C_ID
+ * @property string|null $P_PROFESSION
+ * @property string|null $P_SEXE
+ * @property string|null $P_LICENCE
+ * @property string|null $P_LICENCE_EXPIRY
+ * @property string|null $P_FIN
+ * @property string|null $TS_CODE
+ * @property float|null $TS_HEURES
+ * @property float|null $TS_HEURES_PAR_JOUR
+ * @property float|null $TS_JOURS_CP_PAR_AN
+ * @property float|null $TS_HEURES_PAR_AN
+ * @property float|null $TS_HEURES_A_RECUPERER
+ * @property float|null $TS_RELIQUAT_CP
+ * @property float|null $TS_RELIQUAT_RTT
  * @property-read Section|null $section
  * @property-read Collection<int, Dues> $cotisations
  * @property-read Collection<int, Qualification> $qualifications

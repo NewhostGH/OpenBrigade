@@ -344,6 +344,8 @@ Route::middleware('auth')->group(function () {
     // Contact handles (social/communication identifiers)
     Route::post('personnel/{personnel}/contacts', [PersonnelController::class, 'updateContacts'])
         ->name('personnel.contacts.update')->middleware('permission:0');
+    Route::post('personnel/{personnel}/salarie', [PersonnelController::class, 'updateSalarie'])
+        ->name('personnel.salarie.update')->middleware('permission:2');
     // Duess CRUD — nested under personnel
     Route::post('personnel/{personnel}/dues', [PersonnelController::class, 'storeDues'])
         ->name('personnel.dues.store')->middleware('permission:0');

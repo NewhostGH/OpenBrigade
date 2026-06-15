@@ -555,6 +555,7 @@ class PersonnelController extends Controller
             ['id' => 'section-geo',           'icon' => 'fas fa-map-marker-alt', 'label' => 'Géolocalisation'],
             ['id' => 'section-acces',         'icon' => 'fas fa-shield-alt',    'label' => 'Accès'],
             ['id' => 'section-historique',    'icon' => 'fas fa-history',       'label' => 'Historique'],
+            ['id' => 'section-salarie',       'icon' => 'fas fa-briefcase',     'label' => 'Salarié'],
         ];
 
         // Contact handles (contact_type + personnel_contact).
@@ -627,6 +628,29 @@ class PersonnelController extends Controller
 
         return redirect()->route('personnel.show', $personnel)
             ->with('success', 'Identifiants de contact mis à jour.');
+    }
+
+    public function updateSalarie(Request $request, Personnel $personnel): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(2), 403);
+
+        $validated = $request->validate([
+            'TS_HEURES' => ['nullable', 'numeric', 'min:0', 'max:999'],
+            'TS_HEURES_PAR_JOUR' => ['nullable', 'numeric', 'min:0', 'max:99'],
+            'TS_JOURS_CP_PAR_AN' => ['nullable', 'numeric', 'min:0', 'max:999'],
+            'TS_HEURES_PAR_AN' => ['nullable', 'numeric', 'min:0', 'max:9999'],
+            'TS_HEURES_A_RECUPERER' => ['nullable', 'numeric', 'min:-9999', 'max:9999'],
+            'TS_RELIQUAT_CP' => ['nullable', 'numeric', 'min:-9999', 'max:9999'],
+            'TS_RELIQUAT_RTT' => ['nullable', 'numeric', 'min:-9999', 'max:9999'],
+        ]);
+
+        DB::table('pompier')->where('P_ID', $personnel->P_ID)->update(array_map(
+            fn ($v) => $v === '' || $v === null ? null : (float) $v,
+            $validated
+        ));
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Données salarié mises à jour.');
     }
 
     /**
