@@ -9,18 +9,24 @@
     @vite('resources/css/app.css')
 </head>
 
+@php
+    $loginOrgName   = isset($appIdentity) ? $appIdentity->shortName() : config('app.name');
+    $loginLogoUrl   = isset($appIdentity) ? ($appIdentity->logoUrl() ?? asset('images/logo.png')) : asset('images/logo.png');
+    $loginSplashUrl = isset($appIdentity) ? $appIdentity->splashUrl() : null;
+@endphp
 <body class="ob-login-body">
 <div class="container-fluid ob-login-shell">
     <div class="row min-vh-100">
 
         {{-- ── Left branding panel ─────────────────────────────────────────── --}}
-        <aside class="col-lg-8 d-flex flex-column justify-content-center align-items-center ob-login-left px-4 py-5">
-            <img src="{{ asset('images/logo.png') }}"
-                 alt="{{ config('app.name') }}"
+        <aside class="col-lg-8 d-flex flex-column justify-content-center align-items-center ob-login-left px-4 py-5"
+               @if ($loginSplashUrl) style="background-image:url('{{ $loginSplashUrl }}');background-size:cover;background-position:center;" @endif>
+            <img src="{{ $loginLogoUrl }}"
+                 alt="{{ $loginOrgName }}"
                  style="max-height:80px; max-width:90%;"
                  onerror="this.style.display='none'">
             <p class="ob-login-left-title mt-4">
-                Organisez le personnel et les activités avec {{ config('app.name') }}
+                Organisez le personnel et les activités avec {{ $loginOrgName }}
             </p>
         </aside>
 
@@ -32,7 +38,7 @@
                 <div class="ob-login-signin-panel">
                     <div class="mb-4">
                         <div class="ob-login-brand-title">Bienvenue</div>
-                        <div class="ob-login-brand-sub">Connectez-vous à {{ config('app.name') }}</div>
+                        <div class="ob-login-brand-sub">Connectez-vous à {{ $loginOrgName }}</div>
                     </div>
 
                     @if (session('success'))

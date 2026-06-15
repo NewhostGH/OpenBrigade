@@ -3,9 +3,13 @@
         <div class="ob-div-scroll">
             <ul class="nav flex-column ob-nav-lateral collapse navbar-collapse noprint" id="navLateral">
                 <a class="ob-nav-logo ob-logo-lateral" href="{{ route('dashboard') }}" title="Accueil">
-                    <img height="32" width="32" src="{{ asset('images/logo.png') }}"
-                         onerror="this.style.display='none'">
-                    <span>{{ config('app.name') }}</span>
+                    @if (isset($appIdentity) && $appIdentity->logoUrl())
+                        <img height="32" width="32" src="{{ $appIdentity->logoUrl() }}" alt="">
+                    @else
+                        <img height="32" width="32" src="{{ asset('images/logo.png') }}"
+                             onerror="this.style.display='none'">
+                    @endif
+                    <span>{{ isset($appIdentity) ? $appIdentity->shortName() : config('app.name') }}</span>
                 </a>
 
                 {{-- ── Sidebar search ─────────────────────────────────── --}}

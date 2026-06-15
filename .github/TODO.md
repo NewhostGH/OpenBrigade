@@ -236,7 +236,7 @@ Authoritative list: the `todo` annotations in `AdminController::settings()`
 - [x] Action history (ID 25) — handled via Administration > Sécurité
 - [x] Sensitive data handling (ID 33), file ACLs (ID 42), terms of use (ID 48) — handled via Sécurité / document ACL system
 - [x] First-login banner (ID 69) — handled via Administration > Sécurité
-- [ ] Organisation identity — name, description, contact mail, logo, login image (IDs 6, 8, 39, 40, 71, 75)
+- [x] Organisation identity — name, description, contact mail, logo, login image (IDs 6, 8, 39, 40, 71, 75) — `AppIdentityService` reads and memoises all 6 settings; sidebar uses org name + logo; login page uses org name + splash background image
 - [ ] Timezone (ID 76), default currency (IDs 98, 99)
 - [ ] Numbering prefix / length (IDs 100, 101)
 - [ ] Email notifications (ID 28)

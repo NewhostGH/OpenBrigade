@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Services\AppIdentityService;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
 use App\Services\FeatureService;
@@ -25,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(AuthService::class, function ($app) {
             return new AuthService;
         });
+
+        $this->app->singleton(AppIdentityService::class);
 
         // Register singleton services (instantiated once per container)
         $this->app->singleton(BrigadeService::class, function ($app) {
@@ -114,6 +117,11 @@ class AppServiceProvider extends ServiceProvider
             $nav = app(NavigationService::class);
             $user = auth()->user();
             $view->with('navGroups', $nav->getNavGroups($user));
+            $view->with('appIdentity', app(AppIdentityService::class));
+        });
+
+        View::composer('auth.login', function ($view): void {
+            $view->with('appIdentity', app(AppIdentityService::class));
         });
     }
 }
