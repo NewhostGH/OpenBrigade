@@ -10,7 +10,7 @@
     <div class="ob-doc-folder {{ $isActive ? 'active' : '' }}" style="padding-left:{{ 0.4 + $depth * 0.85 }}rem;">
         @if ($hasChildren)
             <button type="button" class="ob-doc-tree-toggle {{ $isOpen ? 'open' : '' }}" data-tree-toggle aria-label="Déplier / replier">
-                <i class="fas fa-chevron-right fa-xs"></i>
+                <i class="fas fa-chevron-right"></i>
             </button>
         @else
             <span class="ob-doc-tree-spacer"></span>

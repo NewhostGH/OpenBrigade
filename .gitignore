@@ -57,18 +57,17 @@ _ide_helper_models.php
 .phpunit.result.cache
 phpunit.xml
 *.cache
+composer.phar
+.phpunit.cache
 
-# Idea stores
-.idea/*
+# Dev ideas
+docs/wireframes/
 
 # User storage
 storage/framework
 storage/public
 storage/logs
 public/images/user-specific
-docs/wireframes/
-storage/app/public/theme
-storage/app/public/sections
 archive/legacy_app/user-data/
-composer.phar
-.phpunit.cache
+storage/app/private
+storage/app/public/theme

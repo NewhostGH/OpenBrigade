@@ -33,6 +33,11 @@
     white-space: nowrap;
 }
 
+/* Icons inside folder links render at normal scale even though row text is font-size-sm */
+.ob-doc-folder-link > i {
+    font-size: 1rem;
+}
+
 /* Manage controls stay hidden until the row is hovered, to keep the tree tidy. */
 .ob-doc-folder-actions {
     display: inline-flex;

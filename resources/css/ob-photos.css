@@ -55,6 +55,7 @@
 /* Card footer actions — positioned above card z-stack, large enough to tap */
 .ob-photo-album-actions {
     display: flex;
+    align-items: center;
     gap: 0.25rem;
     position: relative;
     z-index: 2;

@@ -64,10 +64,9 @@
                 <div class="ob-widget-card-title"><i class="fas fa-folder-open me-2"></i>Dossiers</div>
             </div>
             <div class="ob-widget-card-body p-0 ob-doc-tree">
-                <div class="ob-doc-folder {{ $folderId === 0 ? 'active' : '' }}">
-                    <span class="ob-doc-tree-spacer"></span>
+                <div class="ob-doc-folder {{ $folderId === 0 ? 'active' : '' }}" style="padding-left: 0.4rem;">
                     <a href="{{ route('document.index', ['section' => $sectionId]) }}" class="ob-doc-folder-link">
-                        <i class="fas fa-home fa-fw me-1 text-muted"></i>Racine
+                        <i class="fas fa-home fa-fw me-1"></i>Racine
                     </a>
                 </div>
                 @foreach ($tree as $node)
