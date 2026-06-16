@@ -197,8 +197,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Section Cotisation tab — RIB file upload and remaining fields — `CODE_BANQUE`, `ETABLISSEMENT`, `GUICHET`, `COMPTE`, `CLE_RIB` fields added; RIB file upload (PDF/JPG/PNG, stored in private storage, migration `2026_06_15_180000`); download route `organization.sections.rib.download`
 - [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
 - [ ] Rank and grade management
-- [ ] Position (poste) management
-- [ ] Team (equipe) management
+- [x] Position (poste) management — `Compétences` page at `/admin/references/position`; CRUD with boolean flags (formation, secourisme, expirable, diplôme, etc.); edit modal per row; delete blocked if used in qualifications or event requirements; perm 18
+- [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
 - [ ] Section deactivation / radiation (`section_stop.php`, `radier_section.php`)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)

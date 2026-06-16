@@ -22,6 +22,8 @@ class ReferenceController extends Controller
             'type_consommable' => DB::table('type_consommable')->count(),
             'categorie_evenement' => DB::table('categorie_evenement')->count(),
             'grade' => DB::table('grade')->count(),
+            'equipe' => DB::table('equipe')->count(),
+            'poste' => DB::table('poste')->count(),
         ];
 
         return view('admin.references.index', compact('counts'));
@@ -486,5 +488,167 @@ class ReferenceController extends Controller
 
         return redirect()->route('admin.references.grade')
             ->with('success', "Icône supprimée pour {$grade}.");
+    }
+
+    // ── Equipe (team / competence group) ──────────────────────────────────────
+
+    public function teamIndex(): View
+    {
+        $teams = DB::table('equipe as e')
+            ->selectRaw('e.EQ_ID, e.EQ_NOM, e.EQ_ORDER, COUNT(p.PS_ID) as NB_POSTES')
+            ->leftJoin('poste as p', 'p.EQ_ID', '=', 'e.EQ_ID')
+            ->groupBy('e.EQ_ID', 'e.EQ_NOM', 'e.EQ_ORDER')
+            ->orderBy('e.EQ_ORDER')
+            ->get();
+
+        return view('admin.references.team', compact('teams'));
+    }
+
+    public function teamStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'EQ_NOM' => ['required', 'string', 'max:50', 'unique:equipe,EQ_NOM'],
+            'EQ_ORDER' => ['required', 'integer', 'min:0', 'max:9999'],
+        ]);
+
+        DB::table('equipe')->insert([
+            'EQ_NOM' => $v['EQ_NOM'],
+            'EQ_ORDER' => $v['EQ_ORDER'],
+        ]);
+
+        return redirect()->route('admin.references.team')
+            ->with('success', 'Type de compétence créé.');
+    }
+
+    public function teamUpdate(Request $request, int $id): RedirectResponse
+    {
+        $v = $request->validate([
+            'EQ_NOM' => ['required', 'string', 'max:50', 'unique:equipe,EQ_NOM,'.$id.',EQ_ID'],
+            'EQ_ORDER' => ['required', 'integer', 'min:0', 'max:9999'],
+        ]);
+
+        DB::table('equipe')->where('EQ_ID', $id)->update([
+            'EQ_NOM' => $v['EQ_NOM'],
+            'EQ_ORDER' => $v['EQ_ORDER'],
+        ]);
+
+        return redirect()->route('admin.references.team')
+            ->with('success', 'Type de compétence mis à jour.');
+    }
+
+    public function teamDestroy(int $id): RedirectResponse
+    {
+        $nb = DB::table('poste')->where('EQ_ID', $id)->count();
+        if ($nb > 0) {
+            return redirect()->route('admin.references.team')
+                ->with('error', 'Ce type contient des compétences et ne peut pas être supprimé.');
+        }
+
+        DB::table('equipe')->where('EQ_ID', $id)->delete();
+
+        return redirect()->route('admin.references.team')
+            ->with('success', 'Type de compétence supprimé.');
+    }
+
+    // ── Poste (position / competence definition) ───────────────────────────────
+
+    public function positionIndex(Request $request): View
+    {
+        $teams = DB::table('equipe')->orderBy('EQ_ORDER')->get();
+        $filterEq = $request->integer('eq', 0);
+
+        $query = DB::table('poste as p')
+            ->join('equipe as e', 'e.EQ_ID', '=', 'p.EQ_ID')
+            ->select('p.PS_ID', 'p.EQ_ID', 'e.EQ_NOM', 'p.TYPE', 'p.DESCRIPTION',
+                'p.PS_FORMATION', 'p.PS_EXPIRABLE', 'p.DAYS_WARNING',
+                'p.PS_DIPLOMA', 'p.PS_SECOURISME', 'p.PS_RECYCLE', 'p.PS_AUDIT',
+                'p.PS_USER_MODIFIABLE', 'p.PS_NATIONAL')
+            ->orderBy('e.EQ_ORDER')
+            ->orderBy('p.TYPE');
+
+        if ($filterEq > 0) {
+            $query->where('p.EQ_ID', $filterEq);
+        }
+
+        $positions = $query->get();
+
+        return view('admin.references.position', compact('teams', 'positions', 'filterEq'));
+    }
+
+    public function positionStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'EQ_ID' => ['required', 'integer', 'exists:equipe,EQ_ID'],
+            'TYPE' => ['required', 'string', 'max:20'],
+            'DESCRIPTION' => ['required', 'string', 'max:60'],
+        ]);
+
+        DB::table('poste')->insert([
+            'EQ_ID' => $v['EQ_ID'],
+            'TYPE' => strtoupper($v['TYPE']),
+            'DESCRIPTION' => $v['DESCRIPTION'],
+            'PS_FORMATION' => $request->boolean('PS_FORMATION') ? 1 : 0,
+            'PS_EXPIRABLE' => $request->boolean('PS_EXPIRABLE') ? 1 : 0,
+            'DAYS_WARNING' => $request->boolean('PS_EXPIRABLE') ? max(0, (int) $request->input('DAYS_WARNING', 60)) : 0,
+            'PS_DIPLOMA' => $request->boolean('PS_DIPLOMA') ? 1 : 0,
+            'PS_SECOURISME' => $request->boolean('PS_SECOURISME') ? 1 : 0,
+            'PS_RECYCLE' => $request->boolean('PS_RECYCLE') ? 1 : 0,
+            'PS_AUDIT' => $request->boolean('PS_AUDIT') ? 1 : 0,
+            'PS_USER_MODIFIABLE' => $request->boolean('PS_USER_MODIFIABLE') ? 1 : 0,
+            'PS_NATIONAL' => $request->boolean('PS_NATIONAL') ? 1 : 0,
+            'PS_NUMERO' => 0,
+            'PS_PRINTABLE' => 0,
+            'PS_PRINT_IMAGE' => 0,
+            'F_ID' => 4,
+            'PH_CODE' => null,
+            'PH_LEVEL' => null,
+        ]);
+
+        return redirect()->route('admin.references.position', ['eq' => $v['EQ_ID']])
+            ->with('success', 'Compétence créée.');
+    }
+
+    public function positionUpdate(Request $request, int $id): RedirectResponse
+    {
+        $v = $request->validate([
+            'EQ_ID' => ['required', 'integer', 'exists:equipe,EQ_ID'],
+            'TYPE' => ['required', 'string', 'max:20'],
+            'DESCRIPTION' => ['required', 'string', 'max:60'],
+        ]);
+
+        DB::table('poste')->where('PS_ID', $id)->update([
+            'EQ_ID' => $v['EQ_ID'],
+            'TYPE' => strtoupper($v['TYPE']),
+            'DESCRIPTION' => $v['DESCRIPTION'],
+            'PS_FORMATION' => $request->boolean('PS_FORMATION') ? 1 : 0,
+            'PS_EXPIRABLE' => $request->boolean('PS_EXPIRABLE') ? 1 : 0,
+            'DAYS_WARNING' => $request->boolean('PS_EXPIRABLE') ? max(0, (int) $request->input('DAYS_WARNING', 60)) : 0,
+            'PS_DIPLOMA' => $request->boolean('PS_DIPLOMA') ? 1 : 0,
+            'PS_SECOURISME' => $request->boolean('PS_SECOURISME') ? 1 : 0,
+            'PS_RECYCLE' => $request->boolean('PS_RECYCLE') ? 1 : 0,
+            'PS_AUDIT' => $request->boolean('PS_AUDIT') ? 1 : 0,
+            'PS_USER_MODIFIABLE' => $request->boolean('PS_USER_MODIFIABLE') ? 1 : 0,
+            'PS_NATIONAL' => $request->boolean('PS_NATIONAL') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.references.position', ['eq' => $v['EQ_ID']])
+            ->with('success', 'Compétence mise à jour.');
+    }
+
+    public function positionDestroy(int $id): RedirectResponse
+    {
+        $nb = DB::table('qualification')->where('PS_ID', $id)->count()
+            + DB::table('evenement_competences')->where('PS_ID', $id)->count();
+
+        if ($nb > 0) {
+            return redirect()->route('admin.references.position')
+                ->with('error', 'Cette compétence est utilisée et ne peut pas être supprimée.');
+        }
+
+        $eqId = DB::table('poste')->where('PS_ID', $id)->value('EQ_ID');
+        DB::table('poste')->where('PS_ID', $id)->delete();
+
+        return redirect()->route('admin.references.position', ['eq' => $eqId])
+            ->with('success', 'Compétence supprimée.');
     }
 }

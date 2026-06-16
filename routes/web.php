@@ -227,6 +227,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/references/grade', [ReferenceController::class, 'gradeIndex'])->name('admin.references.grade')->middleware('permission:5');
     Route::post('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconUpload'])->name('admin.references.grade.icon.upload')->middleware('permission:5');
     Route::delete('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconDestroy'])->name('admin.references.grade.icon.destroy')->middleware('permission:5');
+    // Equipe (competence group) and Poste (position/competence definition)
+    Route::get('/admin/references/team', [ReferenceController::class, 'teamIndex'])->name('admin.references.team')->middleware('permission:18');
+    Route::post('/admin/references/team', [ReferenceController::class, 'teamStore'])->name('admin.references.team.store')->middleware('permission:18');
+    Route::patch('/admin/references/team/{id}', [ReferenceController::class, 'teamUpdate'])->name('admin.references.team.update')->middleware('permission:18');
+    Route::delete('/admin/references/team/{id}', [ReferenceController::class, 'teamDestroy'])->name('admin.references.team.destroy')->middleware('permission:18');
+    Route::get('/admin/references/position', [ReferenceController::class, 'positionIndex'])->name('admin.references.position')->middleware('permission:18');
+    Route::post('/admin/references/position', [ReferenceController::class, 'positionStore'])->name('admin.references.position.store')->middleware('permission:18');
+    Route::patch('/admin/references/position/{id}', [ReferenceController::class, 'positionUpdate'])->name('admin.references.position.update')->middleware('permission:18');
+    Route::delete('/admin/references/position/{id}', [ReferenceController::class, 'positionDestroy'])->name('admin.references.position.destroy')->middleware('permission:18');
     Route::middleware('feature:cotisations')->group(function () {
         Route::get('/dues', [DuesController::class, 'index'])->name('dues.index')->middleware('permission:53');
         Route::post('/dues', [DuesController::class, 'batchSave'])->name('dues.save')->middleware('permission:53');
