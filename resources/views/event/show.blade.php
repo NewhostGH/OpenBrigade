@@ -704,6 +704,59 @@
         </div>
     </div>
 
+    {{-- ── Section: Demande de renfort ──────────────────────────────────── --}}
+    @php
+        $hasRenfort = ($renfortRequest && ($renfortRequest->NB_VEHICULES > 0 || $renfortRequest->POINT_REGROUPEMENT || $renfortRequest->DEMANDE_SPECIFIQUE))
+                      || $renfortVehicleTypes->isNotEmpty()
+                      || $renfortMaterials->isNotEmpty();
+    @endphp
+    @if($hasRenfort || auth()->user()->hasPermission(15))
+    <div id="section-renfort-request" data-evt-section class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
+                <i class="fas fa-ambulance"></i> Demande de renfort
+            </div>
+            @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
+                <a href="{{ route('event.renfort-request', $event->E_CODE) }}" class="btn btn-sm btn-outline-primary noprint">
+                    <i class="fas fa-edit me-1"></i> Gérer
+                </a>
+            @endif
+        </div>
+        <div class="ob-widget-card-body">
+            @if(!$hasRenfort)
+                <p class="ob-widget-empty mb-0">Aucune demande de renfort enregistrée.</p>
+            @else
+                @if($renfortRequest && $renfortRequest->NB_VEHICULES > 0)
+                    <div class="mb-1" style="font-size:var(--font-size-sm)">
+                        <strong>Véhicules :</strong> {{ $renfortRequest->NB_VEHICULES }} au total
+                        @foreach($renfortVehicleTypes as $vt)
+                            · {{ $vt->TV_CODE }} ({{ $vt->NB_VEHICULES }})
+                        @endforeach
+                    </div>
+                @endif
+                @if($renfortMaterials->isNotEmpty())
+                    <div class="mb-1" style="font-size:var(--font-size-sm)">
+                        <strong>Matériel :</strong>
+                        @foreach($renfortMaterials as $m)
+                            <span class="badge bg-light text-dark border me-1">{{ $m->TM_CODE ?? $m->CAT_DESCRIPTION ?? $m->TYPE_MATERIEL }}</span>
+                        @endforeach
+                    </div>
+                @endif
+                @if($renfortRequest && $renfortRequest->POINT_REGROUPEMENT)
+                    <div class="mb-1" style="font-size:var(--font-size-sm)">
+                        <strong>Point de regroupement :</strong> {{ $renfortRequest->POINT_REGROUPEMENT }}
+                    </div>
+                @endif
+                @if($renfortRequest && $renfortRequest->DEMANDE_SPECIFIQUE)
+                    <div style="font-size:var(--font-size-sm)">
+                        <strong>Demande spécifique :</strong> {{ $renfortRequest->DEMANDE_SPECIFIQUE }}
+                    </div>
+                @endif
+            @endif
+        </div>
+    </div>
+    @endif
+
     {{-- ── Section: Postes requis ────────────────────────────────────────── --}}
     @if($requiredPositions->isNotEmpty() || auth()->user()->hasPermission(15))
     <div id="section-postes" data-evt-section class="ob-widget-card mb-3">

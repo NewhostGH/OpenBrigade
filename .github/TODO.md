@@ -106,7 +106,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Guard exports — XLS / CSV (monthly on-call/astreinte roster via `TableExportService`, section-scoped, `?cols=` aware)
 - [ ] Guard exports — PDF
 - [x] Type de garde management (`type_garde.php`)
-- [ ] Demande de renfort (`demande_renfort.php`)
+- [x] Demande de renfort (`demande_renfort.php`) — `Demande de renfort` card on event show (vehicle counts, material categories, meeting point, specific request); dedicated manage page at `/events/{code}/renfort-request` with per-type vehicle inputs and category checkboxes; perm 15 to edit
 
 ### Planning (PLA)
 

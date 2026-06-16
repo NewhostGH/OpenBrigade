@@ -283,6 +283,27 @@ class EventController extends Controller
             )
             ->get();
 
+        // Reinforcement request summary (for the show card preview).
+        $renfortRequest = DB::table('demande_renfort_vehicule')
+            ->where('E_CODE', $code)
+            ->where('TV_CODE', '0')
+            ->first(['NB_VEHICULES', 'POINT_REGROUPEMENT', 'DEMANDE_SPECIFIQUE']);
+
+        $renfortVehicleTypes = DB::table('demande_renfort_vehicule as drv')
+            ->join('type_vehicule as tv', 'tv.TV_CODE', '=', 'drv.TV_CODE')
+            ->where('drv.E_CODE', $code)
+            ->where('drv.TV_CODE', '<>', '0')
+            ->where('drv.NB_VEHICULES', '>', 0)
+            ->select('drv.TV_CODE', 'drv.NB_VEHICULES', 'tv.TV_LIBELLE')
+            ->get();
+
+        $renfortMaterials = DB::table('demande_renfort_materiel as drm')
+            ->leftJoin('type_materiel as tm', 'tm.TM_ID', '=', DB::raw('CAST(drm.TYPE_MATERIEL AS UNSIGNED)'))
+            ->leftJoin('categorie_materiel as cm', 'cm.TM_USAGE', '=', 'drm.TYPE_MATERIEL')
+            ->where('drm.E_CODE', $code)
+            ->select('drm.TYPE_MATERIEL', 'tm.TM_CODE', 'tm.TM_DESCRIPTION', 'cm.CM_DESCRIPTION as CAT_DESCRIPTION')
+            ->get();
+
         // Required positions (postes requis) — with actual qualified headcount.
         $activeCount = DB::table('evenement_participation')
             ->where('E_CODE', $code)
@@ -329,7 +350,8 @@ class EventController extends Controller
         return view('event.show', compact(
             'event', 'typeLabel', 'participants', 'candidates', 'vehicules', 'allVehicles',
             'functions', 'equipes', 'renforts', 'materiels', 'allEquipments',
-            'requiredPositions', 'availablePositions', 'activeCount'
+            'requiredPositions', 'availablePositions', 'activeCount',
+            'renfortRequest', 'renfortVehicleTypes', 'renfortMaterials'
         ));
     }
 
@@ -1160,6 +1182,85 @@ class EventController extends Controller
             'E_WEBEX_START' => ['nullable', 'date_format:H:i'],
             'E_AUTOCLOSE_BEFORE' => ['nullable', 'integer', 'min:0', 'max:999'],
         ]);
+    }
+
+    /** Reinforcement request management page. */
+    public function reinforcementRequest(string $code): View
+    {
+        $event = Event::findOrFail($code);
+        abort_unless(auth()->user()->hasPermission(0), 403);
+
+        $global = DB::table('demande_renfort_vehicule')
+            ->where('E_CODE', $code)->where('TV_CODE', '0')
+            ->first(['NB_VEHICULES', 'POINT_REGROUPEMENT', 'DEMANDE_SPECIFIQUE']);
+
+        $vehicleTypes = DB::table('type_vehicule')
+            ->orderBy('TV_USAGE')->orderBy('TV_LIBELLE')
+            ->get(['TV_CODE', 'TV_LIBELLE', 'TV_USAGE']);
+
+        $assignedVehicleCodes = DB::table('demande_renfort_vehicule')
+            ->where('E_CODE', $code)->where('TV_CODE', '<>', '0')
+            ->pluck('NB_VEHICULES', 'TV_CODE');
+
+        $materialCategories = DB::table('categorie_materiel')
+            ->whereNotIn('TM_USAGE', ['Habillement', 'Promo-Com', 'ALL', 'Divers'])
+            ->orderBy('TM_USAGE')
+            ->get(['TM_USAGE', 'CM_DESCRIPTION', 'PICTURE']);
+
+        $assignedCategories = DB::table('demande_renfort_materiel')
+            ->where('E_CODE', $code)
+            ->whereIn('TYPE_MATERIEL', $materialCategories->pluck('TM_USAGE'))
+            ->pluck('TYPE_MATERIEL');
+
+        return view('event.renfort-request',
+            compact('event', 'global', 'vehicleTypes', 'assignedVehicleCodes', 'materialCategories', 'assignedCategories'));
+    }
+
+    /** Save the reinforcement request for an event. */
+    public function reinforcementRequestUpdate(Request $request, string $code): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+
+        $validated = $request->validate([
+            'nb_vehicules' => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'point_regroupement' => ['nullable', 'string', 'max:250'],
+            'demande_specifique' => ['nullable', 'string', 'max:600'],
+            'vehicle_types' => ['nullable', 'array'],
+            'vehicle_types.*' => ['nullable', 'integer', 'min:0', 'max:999'],
+            'categories' => ['nullable', 'array'],
+        ]);
+
+        DB::transaction(function () use ($validated, $code, $request) {
+            DB::table('demande_renfort_vehicule')->where('E_CODE', $code)->delete();
+            DB::table('demande_renfort_materiel')->where('E_CODE', $code)->delete();
+
+            $nbVeh = (int) ($validated['nb_vehicules'] ?? 0);
+            DB::table('demande_renfort_vehicule')->insert([
+                'E_CODE' => $code,
+                'TV_CODE' => '0',
+                'NB_VEHICULES' => $nbVeh,
+                'POINT_REGROUPEMENT' => $validated['point_regroupement'] ?? null,
+                'DEMANDE_SPECIFIQUE' => $validated['demande_specifique'] ?? null,
+            ]);
+
+            foreach ($validated['vehicle_types'] ?? [] as $tvCode => $nb) {
+                $nb = (int) $nb;
+                if ($nb > 0) {
+                    DB::table('demande_renfort_vehicule')->insert([
+                        'E_CODE' => $code, 'TV_CODE' => $tvCode, 'NB_VEHICULES' => $nb,
+                    ]);
+                }
+            }
+
+            foreach ($request->input('categories', []) as $usage) {
+                DB::table('demande_renfort_materiel')->insert([
+                    'E_CODE' => $code, 'TYPE_MATERIEL' => $usage,
+                ]);
+            }
+        });
+
+        return redirect()->route('event.show', $code)->with('success', 'Demande de renfort enregistrée.');
     }
 
     /**
