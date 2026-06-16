@@ -80,8 +80,8 @@ at folder granularity (they are binary assets copied as-is).
 | `evenement_vehicule_xls.php`       | `EventController.php` (per-event vehicle XLS)                                                |
 | `evenement_competences.php`        | `EventController.php` (`Postes requis` — required positions vs enrolled headcount)          |
 | `evenement_diplome.php`            | **WIP**                                                                                      |
-| `evenement_options.php`            | **WIP**                                                                                      |
-| `evenement_option_choix.php`       | **WIP**                                                                                      |
+| `evenement_options.php`            | `EventController.php` (`optionGroupStore/Update/Destroy`, `optionStore/Update/Destroy`, `dropdownChoiceStore/Destroy`) + `event/show.blade.php` (Options d'inscription card + modals) |
+| `evenement_option_choix.php`       | `EventController.php` (`participantChoicesSave`) + `event/show.blade.php` (`#choicesModal-{P_ID}` per participant)                                                                    |
 | `evenement_notify.php`             | **WIP**                                                                                      |
 | `evenement_rapport.php`            | **WIP**                                                                                      |
 | `evenement_trombinoscope.php`      | `EventController.php` (`trombinoscope`) + `event/trombinoscope.blade.php`                   |

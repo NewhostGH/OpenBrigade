@@ -81,7 +81,7 @@ whole Communication menu, reminders and guard generation).
 
 - [ ] Participant notifications (`evenement_notify.php`) — needs the notification layer
 - [ ] Main courante (incident log)
-- [ ] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`)
+- [x] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`)
 - [ ] Event report (`evenement_rapport.php`)
 - [ ] Editable PDF for conventions
 - [ ] Event billing & tariffs (`evenement_facturation*.php`, `evenement_tarif*.php`)
