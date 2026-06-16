@@ -110,7 +110,7 @@
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
-                <i class="{{ $tvIcon }}" title="{{ $typeVehicule->TV_LIBELLE ?? $vehicule->TV_CODE }}"></i>
+                <i class="{{ $tvIcon }}" title="{{ $vehicleType->TV_LIBELLE ?? $vehicule->TV_CODE }}"></i>
                 <span>{{ $vehicule->V_IMMATRICULATION ?: '—' }}</span>
                 @if($vehicule->V_INDICATIF)
                     <span class="text-muted fw-normal">— {{ $vehicule->V_INDICATIF }}</span>
@@ -140,7 +140,7 @@
                         <dd class="mb-0">
                             <i class="{{ $tvIcon }} me-1"
                                 style="color:var(--text-muted-soft); width:14px; text-align:center;"></i>
-                            {{ $typeVehicule->TV_LIBELLE ?? ($vehicule->TV_CODE ?: '—') }}
+                            {{ $vehicleType->TV_LIBELLE ?? ($vehicule->TV_CODE ?: '—') }}
                         </dd>
 
                         @if($vehicule->V_MODELE || $vehicule->V_ANNEE)
@@ -251,30 +251,67 @@
         </div>
     </div>
 
-    {{-- ── Recent events ────────────────────────────────────────────────────── --}}
+    {{-- ── Event history ───────────────────────────────────────────────────── --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-history"></i> Dernières activités</div>
+            <div class="ob-widget-card-title">
+                <i class="fas fa-history"></i> Activités
+                @if($vehicleStats && $vehicleStats->total_events)
+                    <span class="ob-badge ob-badge-archive ms-1">{{ $vehicleStats->total_events }}</span>
+                @endif
+            </div>
+            {{-- Year filter --}}
+            @if($eventYears->isNotEmpty())
+                <form method="GET" class="d-flex align-items-center gap-1">
+                    <select name="year" class="form-select form-select-sm" style="width:auto;"
+                            onchange="this.form.submit()">
+                        @foreach($eventYears as $y)
+                            <option value="{{ $y }}" @selected($y == $year)>{{ $y }}</option>
+                        @endforeach
+                    </select>
+                </form>
+            @endif
         </div>
+
+        {{-- Stats row --}}
+        @if($vehicleStats && ($vehicleStats->total_events || $vehicleStats->total_km))
+            <div class="ob-widget-card-body border-bottom py-2 px-3 d-flex gap-4" style="font-size:var(--font-size-sm);">
+                <span>
+                    <span class="text-muted">Total engagements :</span>
+                    <strong>{{ number_format((int)$vehicleStats->total_events, 0, ',', '\u{202f}') }}</strong>
+                </span>
+                @if($vehicleStats->total_km)
+                    <span>
+                        <span class="text-muted">Km cumulés :</span>
+                        <strong>{{ number_format((int)$vehicleStats->total_km, 0, ',', '\u{202f}') }} km</strong>
+                    </span>
+                @endif
+            </div>
+        @endif
+
         <div class="ob-widget-card-body p-0">
-            @if($recentEvents->isEmpty())
-                <p class="ob-widget-empty p-3">Aucune activité enregistrée.</p>
+            @if($eventHistory->isEmpty())
+                <p class="ob-widget-empty p-3">Aucune activité en {{ $year }}.</p>
             @else
                 <table class="table table-sm table-hover mb-0">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
                         <tr>
                             <th>Activité</th>
+                            <th>Fonction</th>
                             <th>Date</th>
                             <th class="text-end">Km</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($recentEvents as $ev)
+                        @foreach($eventHistory as $ev)
                             <tr>
                                 <td style="font-size:var(--font-size-sm)">
                                     <a href="{{ route('event.show', $ev->E_CODE) }}" class="text-decoration-none">
                                         {{ $ev->E_LIBELLE ?? $ev->E_CODE }}
                                     </a>
+                                </td>
+                                <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
+                                    {{ $ev->TFV_NAME ?? '—' }}
                                 </td>
                                 <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                                     {{ $ev->EH_DATE_DEBUT ? \Carbon\Carbon::parse($ev->EH_DATE_DEBUT)->format('d/m/Y') : '—' }}
@@ -286,6 +323,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                @if($eventHistory->hasPages())
+                    <div class="p-2 border-top">{{ $eventHistory->links() }}</div>
+                @endif
             @endif
         </div>
     </div>

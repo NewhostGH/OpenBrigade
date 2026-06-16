@@ -407,18 +407,45 @@ class VehicleController extends Controller
             ->where('TV_CODE', $vehicule->TV_CODE)
             ->first();
 
-        // Last 10 events this vehicle was on
-        $recentEvents = DB::table('evenement_vehicule as ev')
+        // Event history with year filter
+        $year = (int) request('year', (int) now()->format('Y'));
+
+        $eventHistory = DB::table('evenement_vehicule as ev')
             ->join('evenement as e', 'ev.E_CODE', '=', 'e.E_CODE')
             ->join('evenement_horaire as eh', function ($j) {
                 $j->on('eh.E_CODE', '=', 'ev.E_CODE')
                     ->on('eh.EH_ID', '=', 'ev.EH_ID');
             })
+            ->leftJoin('type_fonction_vehicule as tfv', 'tfv.TFV_ID', '=', 'ev.TFV_ID')
             ->where('ev.V_ID', $vehicule->V_ID)
+            ->whereRaw('YEAR(eh.EH_DATE_DEBUT) = ?', [$year])
             ->orderByDesc('eh.EH_DATE_DEBUT')
-            ->limit(10)
-            ->select('e.E_CODE', 'e.E_LIBELLE', 'eh.EH_DATE_DEBUT', 'ev.EV_KM')
-            ->get();
+            ->select('e.E_CODE', 'e.E_LIBELLE', 'eh.EH_DATE_DEBUT', 'ev.EV_KM', 'tfv.TFV_NAME')
+            ->paginate(20)
+            ->withQueryString();
+
+        // Total stats across all time
+        $vehicleStats = DB::table('evenement_vehicule as ev')
+            ->join('evenement_horaire as eh', function ($j) {
+                $j->on('eh.E_CODE', '=', 'ev.E_CODE')
+                    ->on('eh.EH_ID', '=', 'ev.EH_ID');
+            })
+            ->where('ev.V_ID', $vehicule->V_ID)
+            ->selectRaw('COUNT(DISTINCT ev.E_CODE) as total_events, SUM(NULLIF(ev.EV_KM, 0)) as total_km')
+            ->first();
+
+        // Years with data for the filter selector
+        $eventYears = DB::table('evenement_vehicule as ev')
+            ->join('evenement_horaire as eh', function ($j) {
+                $j->on('eh.E_CODE', '=', 'ev.E_CODE')
+                    ->on('eh.EH_ID', '=', 'ev.EH_ID');
+            })
+            ->where('ev.V_ID', $vehicule->V_ID)
+            ->whereNotNull('eh.EH_DATE_DEBUT')
+            ->selectRaw('YEAR(eh.EH_DATE_DEBUT) as y')
+            ->groupByRaw('YEAR(eh.EH_DATE_DEBUT)')
+            ->orderByDesc('y')
+            ->pluck('y');
 
         // Materials assigned to this vehicle
         $materiels = DB::table('materiel as m')
@@ -443,7 +470,8 @@ class VehicleController extends Controller
 
         return view('vehicle.show', compact(
             'vehicule', 'position', 'vehicleType',
-            'recentEvents', 'materiels', 'documents'
+            'eventHistory', 'vehicleStats', 'eventYears', 'year',
+            'materiels', 'documents'
         ));
     }
 }

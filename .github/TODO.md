@@ -132,7 +132,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 ### Logistique — Vehicles (VEH)
 
 - [x] Vehicle list, detail, CRUD, type management
-- [ ] Vehicle assignment to events
+- [x] Vehicle assignment to events — full event history on vehicle show page; year filter, function type column, total km stats, pagination; pre-existing `$typeVehicule`→`$vehicleType` bug fixed
 - [x] Vehicle exports (XLS / CSV) — `TableExportService`, section/status/search-aware, `?cols=` selection
 
 ### Inventaire — Equipment & Consumables (MAT / CONSO)
