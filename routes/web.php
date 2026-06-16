@@ -411,6 +411,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('personnel/{personnel}/trainings/{pfId}', [PersonnelController::class, 'destroyTraining'])
         ->name('personnel.training.destroy')->middleware('permission:0');
     // Per-member exports
+    Route::get('personnel/{personnel}/export/formations', [PersonnelController::class, 'exportFormationsXls'])
+        ->name('personnel.export.formations')->middleware('permission:0');
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');
     Route::get('personnel/{personnel}/export/meetings', [PersonnelController::class, 'exportMeetingsXls'])

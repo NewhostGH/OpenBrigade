@@ -438,12 +438,20 @@
                                 <span class="ob-badge ob-badge-archive ms-1">{{ $formations->count() }}</span>
                             @endif
                         </div>
-                        @if(auth()->user()->hasPermission(4))
-                            <button type="button" class="btn btn-sm btn-success noprint"
-                                    data-bs-toggle="modal" data-bs-target="#addTrainingModal">
-                                <i class="fas fa-plus me-1"></i> Ajouter
-                            </button>
-                        @endif
+                        <div class="d-flex gap-2">
+                            @if($formations->isNotEmpty())
+                                <a href="{{ route('personnel.export.formations', $personnel) }}"
+                                   class="btn btn-sm btn-outline-secondary noprint" title="Exporter en XLS">
+                                    <i class="fas fa-file-excel"></i>
+                                </a>
+                            @endif
+                            @if(auth()->user()->hasPermission(4))
+                                <button type="button" class="btn btn-sm btn-success noprint"
+                                        data-bs-toggle="modal" data-bs-target="#addTrainingModal">
+                                    <i class="fas fa-plus me-1"></i> Ajouter
+                                </button>
+                            @endif
+                        </div>
                     </div>
                     <div class="ob-widget-card-body p-0">
                         @if($formations->isNotEmpty())

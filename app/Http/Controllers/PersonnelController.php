@@ -1051,6 +1051,44 @@ class PersonnelController extends Controller
             ->with('success', 'Formation supprimée.');
     }
 
+    public function exportFormationsXls(Personnel $personnel)
+    {
+        $user = auth()->user();
+        abort_unless(
+            (int) $user->P_ID === (int) $personnel->P_ID || $user->hasPermission(40),
+            403
+        );
+
+        $rows = DB::table('personnel_formation as pf')
+            ->join('type_formation as tf', 'tf.TF_CODE', '=', 'pf.TF_CODE')
+            ->join('poste as ps', 'ps.PS_ID', '=', 'pf.PS_ID')
+            ->where('pf.P_ID', $personnel->P_ID)
+            ->select(
+                'ps.TYPE as PS_TYPE', 'pf.PF_DATE', 'tf.TF_LIBELLE',
+                'pf.PF_DIPLOME', 'pf.PF_LIEU', 'pf.PF_RESPONSABLE', 'pf.PF_COMMENT'
+            )
+            ->orderByDesc('pf.PF_DATE')
+            ->get();
+
+        $columns = [
+            ['Type',            fn ($r) => $r->PS_TYPE],
+            ['Date',            fn ($r) => $r->PF_DATE ? Carbon::parse($r->PF_DATE)->format('d/m/Y') : ''],
+            ['Type de formation', fn ($r) => $r->TF_LIBELLE],
+            ['N° diplôme',      fn ($r) => $r->PF_DIPLOME ?? ''],
+            ['Lieu',            fn ($r) => $r->PF_LIEU ?? ''],
+            ['Délivré par',     fn ($r) => $r->PF_RESPONSABLE ?? ''],
+            ['Commentaire',     fn ($r) => $r->PF_COMMENT ?? ''],
+        ];
+
+        $name = 'Formations_'.strtoupper($personnel->P_NOM).'_'.$personnel->P_PRENOM.'_'.date('Ymd');
+
+        return (new TableExportService)->toXlsx($columns, $rows, $name, [
+            'sheetTitle' => 'Formations',
+            'freezeHeader' => true,
+            'repeatHeader' => true,
+        ]);
+    }
+
     // ── Exports ─────────────────────────────────────────────────────────────────
 
     public function exportXls(Request $request)
