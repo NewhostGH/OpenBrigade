@@ -1003,6 +1003,88 @@
     </div>
     @endif
 
+    {{-- ── Section: Main courante ──────────────────────────────────────────── --}}
+    @if($eventLog->isNotEmpty() || auth()->user()->hasPermission(15))
+    <div id="section-log" data-evt-section class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
+                <i class="fas fa-clipboard-list"></i> Main courante
+                @if($eventLog->isNotEmpty())
+                    <span class="badge bg-secondary ms-1">{{ $eventLog->count() }}</span>
+                @endif
+            </div>
+            @if(auth()->user()->hasPermission(15))
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                    data-bs-toggle="modal" data-bs-target="#addLogModal">
+                <i class="fas fa-plus me-1"></i> Ajouter
+            </button>
+            @endif
+        </div>
+        <div class="ob-widget-card-body p-0">
+            @if($eventLog->isEmpty())
+                <p class="text-muted px-3 py-2 mb-0" style="font-size:var(--font-size-sm)">Aucune entrée.</p>
+            @else
+            <table class="table table-sm table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th style="width:120px">Début</th>
+                        <th style="width:130px">Type</th>
+                        <th>Titre / Commentaire</th>
+                        <th style="width:130px">Auteur</th>
+                        @if(auth()->user()->hasPermission(15))
+                        <th style="width:60px"></th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($eventLog as $log)
+                    <tr @if($log->EL_IMPORTANT) class="table-warning" @endif>
+                        <td style="font-size:var(--font-size-sm);white-space:nowrap">
+                            {{ $log->EL_DEBUT ? \Carbon\Carbon::parse($log->EL_DEBUT)->format('d/m H:i') : '—' }}
+                            @if($log->EL_IMPORTANT)
+                                <i class="fas fa-exclamation-circle text-danger ms-1" title="Important"></i>
+                            @endif
+                        </td>
+                        <td style="font-size:var(--font-size-sm)">
+                            {{ $log->TEL_DESCRIPTION ?? $log->TEL_CODE ?? '—' }}
+                        </td>
+                        <td style="font-size:var(--font-size-sm)">
+                            @if($log->EL_TITLE)
+                                <span class="fw-semibold">{{ $log->EL_TITLE }}</span>
+                            @endif
+                            @if($log->EL_COMMENTAIRE)
+                                @if($log->EL_TITLE)<br>@endif
+                                <span class="text-muted">{{ $log->EL_COMMENTAIRE }}</span>
+                            @endif
+                        </td>
+                        <td style="font-size:var(--font-size-sm)">
+                            {{ $log->P_PRENOM ? $log->P_PRENOM.' '.$log->P_NOM : '—' }}
+                        </td>
+                        @if(auth()->user()->hasPermission(15))
+                        <td>
+                            <button type="button" class="btn btn-xs btn-outline-secondary"
+                                    onclick="openEditLogModal({{ json_encode($log) }})"
+                                    title="Modifier"><i class="fas fa-edit"></i></button>
+                            <form method="POST"
+                                  action="{{ route('event.log.destroy', [$event->E_CODE, $log->EL_ID]) }}"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Supprimer cette entrée ?')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-xs btn-outline-danger" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                        @endif
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endif
+        </div>
+    </div>
+    @endif
+
     </div>  {{-- close content sections --}}
 
 </div>  {{-- close mx-3 mt-3 --}}
@@ -1010,6 +1092,123 @@
 {{-- ══════════════════════════════════════════════════════════════════════════
      MODALS
 ════════════════════════════════════════════════════════════════════════════ --}}
+
+{{-- Main courante modals --}}
+@if(auth()->user()->hasPermission(15))
+
+{{-- Add log entry --}}
+<div class="modal fade" id="addLogModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Ajouter une entrée</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('event.log.store', $event->E_CODE) }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Type <span class="text-danger">*</span></label>
+                        <select name="TEL_CODE" class="form-select form-select-sm" required>
+                            <option value="">— choisir —</option>
+                            @foreach($logTypes as $lt)
+                                <option value="{{ $lt->TEL_CODE }}">{{ $lt->TEL_DESCRIPTION }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Début <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="EL_DEBUT" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col">
+                            <label class="form-label" style="font-size:var(--font-size-sm)">Fin</label>
+                            <input type="datetime-local" name="EL_FIN" class="form-control form-control-sm">
+                        </div>
+                        <div class="col">
+                            <label class="form-label" style="font-size:var(--font-size-sm)">SLL</label>
+                            <input type="datetime-local" name="EL_SLL" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Titre</label>
+                        <input type="text" name="EL_TITLE" class="form-control form-control-sm" maxlength="255">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Commentaire</label>
+                        <textarea name="EL_COMMENTAIRE" class="form-control form-control-sm" rows="3" maxlength="2000"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="EL_IMPORTANT" value="1" id="addLogImportant">
+                        <label class="form-check-label" for="addLogImportant" style="font-size:var(--font-size-sm)">Important</label>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Edit log entry --}}
+<div class="modal fade" id="editLogModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Modifier une entrée</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="editLogForm">
+                @csrf @method('PATCH')
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Type <span class="text-danger">*</span></label>
+                        <select name="TEL_CODE" id="editLogTelCode" class="form-select form-select-sm" required>
+                            <option value="">— choisir —</option>
+                            @foreach($logTypes as $lt)
+                                <option value="{{ $lt->TEL_CODE }}">{{ $lt->TEL_DESCRIPTION }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Début <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="EL_DEBUT" id="editLogDebut" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col">
+                            <label class="form-label" style="font-size:var(--font-size-sm)">Fin</label>
+                            <input type="datetime-local" name="EL_FIN" id="editLogFin" class="form-control form-control-sm">
+                        </div>
+                        <div class="col">
+                            <label class="form-label" style="font-size:var(--font-size-sm)">SLL</label>
+                            <input type="datetime-local" name="EL_SLL" id="editLogSll" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Titre</label>
+                        <input type="text" name="EL_TITLE" id="editLogTitle" class="form-control form-control-sm" maxlength="255">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Commentaire</label>
+                        <textarea name="EL_COMMENTAIRE" id="editLogComment" class="form-control form-control-sm" rows="3" maxlength="2000"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="EL_IMPORTANT" value="1" id="editLogImportant">
+                        <label class="form-check-label" for="editLogImportant" style="font-size:var(--font-size-sm)">Important</label>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@endif {{-- permission 15 for log modals --}}
 
 {{-- Assign matériel --}}
 @if(auth()->user()->hasPermission(15))
@@ -1707,4 +1906,21 @@
 @push('scripts')
 <script>window.EVT_SHOW_CONFIG = { participantsUrl: '{{ url('/evenements/' . $event->E_CODE . '/participants') }}', equipesUrl: '{{ url('/evenements/' . $event->E_CODE . '/equipes') }}' };</script>
 @vite('resources/js/ob-event-show.js')
+@if(auth()->user()->hasPermission(15))
+<script>
+function openEditLogModal(log) {
+    const fmt = (dt) => dt ? dt.replace(' ', 'T').substring(0, 16) : '';
+    document.getElementById('editLogTelCode').value  = log.TEL_CODE   ?? '';
+    document.getElementById('editLogDebut').value    = fmt(log.EL_DEBUT);
+    document.getElementById('editLogFin').value      = fmt(log.EL_FIN);
+    document.getElementById('editLogSll').value      = fmt(log.EL_SLL);
+    document.getElementById('editLogTitle').value    = log.EL_TITLE   ?? '';
+    document.getElementById('editLogComment').value  = log.EL_COMMENTAIRE ?? '';
+    document.getElementById('editLogImportant').checked = !!parseInt(log.EL_IMPORTANT);
+    document.getElementById('editLogForm').action =
+        '{{ url('/events') }}/' + {{ json_encode($event->E_CODE) }} + '/log/' + log.EL_ID;
+    new bootstrap.Modal(document.getElementById('editLogModal')).show();
+}
+</script>
+@endif
 @endpush

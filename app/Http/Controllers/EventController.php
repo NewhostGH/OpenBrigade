@@ -384,12 +384,30 @@ class EventController extends Controller
                 return $opt;
             });
 
+        // Main courante (incident log)
+        $eventLog = DB::table('evenement_log as el')
+            ->leftJoin('type_evenement_log as tel', 'tel.TEL_CODE', '=', 'el.TEL_CODE')
+            ->leftJoin('pompier as p', 'p.P_ID', '=', 'el.EL_AUTHOR')
+            ->where('el.E_CODE', $code)
+            ->orderByDesc('el.EL_DEBUT')
+            ->select(
+                'el.EL_ID', 'el.TEL_CODE', 'el.EL_DEBUT', 'el.EL_FIN', 'el.EL_SLL',
+                'el.EL_TITLE', 'el.EL_COMMENTAIRE', 'el.EL_IMPORTANT',
+                'el.EL_DATE_ADD', 'el.EL_AUTHOR',
+                'tel.TEL_DESCRIPTION',
+                'p.P_NOM', 'p.P_PRENOM'
+            )
+            ->get();
+
+        $logTypes = DB::table('type_evenement_log')->orderBy('TEL_CODE')->get(['TEL_CODE', 'TEL_DESCRIPTION']);
+
         return view('event.show', compact(
             'event', 'typeLabel', 'participants', 'candidates', 'vehicules', 'allVehicles',
             'functions', 'equipes', 'renforts', 'materiels', 'allMateriels',
             'requiredPositions', 'availablePositions', 'activeCount',
             'renfortRequest', 'renfortVehicleTypes', 'renfortMaterials',
-            'optionGroups', 'eventOptions'
+            'optionGroups', 'eventOptions',
+            'eventLog', 'logTypes'
         ));
     }
 
@@ -1586,5 +1604,74 @@ class EventController extends Controller
         }
 
         return back()->with('success', 'Choix enregistrés.');
+    }
+
+    // ── Main courante ─────────────────────────────────────────────────────────
+
+    public function logStore(Request $request, string $code): RedirectResponse
+    {
+        $event = Event::findOrFail($code);
+
+        $validated = $request->validate([
+            'TEL_CODE' => ['required', 'string', 'max:10', 'exists:type_evenement_log,TEL_CODE'],
+            'EL_DEBUT' => ['required', 'date_format:Y-m-d\TH:i'],
+            'EL_FIN' => ['nullable', 'date_format:Y-m-d\TH:i'],
+            'EL_SLL' => ['nullable', 'date_format:Y-m-d\TH:i'],
+            'EL_TITLE' => ['nullable', 'string', 'max:255'],
+            'EL_COMMENTAIRE' => ['nullable', 'string', 'max:2000'],
+            'EL_IMPORTANT' => ['boolean'],
+        ]);
+
+        DB::table('evenement_log')->insert([
+            'E_CODE' => $event->E_CODE,
+            'TEL_CODE' => $validated['TEL_CODE'],
+            'EL_DEBUT' => $validated['EL_DEBUT'],
+            'EL_FIN' => $validated['EL_FIN'] ?? null,
+            'EL_SLL' => $validated['EL_SLL'] ?? null,
+            'EL_TITLE' => $validated['EL_TITLE'] ?? null,
+            'EL_COMMENTAIRE' => $validated['EL_COMMENTAIRE'] ?? null,
+            'EL_IMPORTANT' => (int) ($validated['EL_IMPORTANT'] ?? 0),
+            'EL_AUTHOR' => auth()->id(),
+            'EL_DATE_ADD' => now(),
+        ]);
+
+        return back()->with('success', 'Entrée de main courante ajoutée.');
+    }
+
+    public function logUpdate(Request $request, string $code, int $logId): RedirectResponse
+    {
+        $event = Event::findOrFail($code);
+
+        $log = DB::table('evenement_log')->where('EL_ID', $logId)->where('E_CODE', $event->E_CODE)->firstOrFail();
+
+        $validated = $request->validate([
+            'TEL_CODE' => ['required', 'string', 'max:10', 'exists:type_evenement_log,TEL_CODE'],
+            'EL_DEBUT' => ['required', 'date_format:Y-m-d\TH:i'],
+            'EL_FIN' => ['nullable', 'date_format:Y-m-d\TH:i'],
+            'EL_SLL' => ['nullable', 'date_format:Y-m-d\TH:i'],
+            'EL_TITLE' => ['nullable', 'string', 'max:255'],
+            'EL_COMMENTAIRE' => ['nullable', 'string', 'max:2000'],
+            'EL_IMPORTANT' => ['boolean'],
+        ]);
+
+        DB::table('evenement_log')->where('EL_ID', $logId)->update([
+            'TEL_CODE' => $validated['TEL_CODE'],
+            'EL_DEBUT' => $validated['EL_DEBUT'],
+            'EL_FIN' => $validated['EL_FIN'] ?? null,
+            'EL_SLL' => $validated['EL_SLL'] ?? null,
+            'EL_TITLE' => $validated['EL_TITLE'] ?? null,
+            'EL_COMMENTAIRE' => $validated['EL_COMMENTAIRE'] ?? null,
+            'EL_IMPORTANT' => (int) ($validated['EL_IMPORTANT'] ?? 0),
+        ]);
+
+        return back()->with('success', 'Entrée modifiée.');
+    }
+
+    public function logDestroy(string $code, int $logId): RedirectResponse
+    {
+        $event = Event::findOrFail($code);
+        DB::table('evenement_log')->where('EL_ID', $logId)->where('E_CODE', $event->E_CODE)->delete();
+
+        return back()->with('success', 'Entrée supprimée.');
     }
 }

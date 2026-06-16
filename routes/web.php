@@ -137,6 +137,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/events/{code}/options/{optionId}/choices/{choiceId}', [EventController::class, 'dropdownChoiceDestroy'])->name('event.option.choice.destroy')->middleware('permission:15');
     // Participant choices (perm 15, event chef, or self — checked in controller)
     Route::post('/events/{code}/participant-choices/{pid}', [EventController::class, 'participantChoicesSave'])->name('event.participant-choices.save');
+    // Main courante (incident log)
+    Route::post('/events/{code}/log', [EventController::class, 'logStore'])->name('event.log.store')->middleware('permission:15');
+    Route::patch('/events/{code}/log/{logId}', [EventController::class, 'logUpdate'])->name('event.log.update')->middleware('permission:15');
+    Route::delete('/events/{code}/log/{logId}', [EventController::class, 'logDestroy'])->name('event.log.destroy')->middleware('permission:15');
     Route::get('/duty', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
     Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
     Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');
