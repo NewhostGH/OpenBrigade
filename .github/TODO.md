@@ -54,7 +54,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Section-scope test for the root: assert `PermissionResolver::sectionChain(site)` includes `0` and that a deny ceiling on the root cascades to its child sites (the resolver unit tests stub `sectionChain`, so add a DB-backed feature test)
 - [x] `GeolocationController::index` — replaced exact `P_SECTION =` match with `SectionScopeService::apply()` so the map honours section isolation, navbar scope and root subtree
 - [x] `PermissionController::exportGroup` — fixed `section_id > 0` guard to `!== null` so root section (`S_ID = 0`) is included; absent/empty = no filter convention
-- [ ] Decide the fate of the legacy `section_flat` denormalised table (`rebuild_section_flat.php`): `SectionScopeService` now walks the `section` tree recursively, so `section_flat` is likely dead weight — confirm nothing reads it and drop it (table + legacy rebuild) if so
+- [ ] `section_flat` still read by `DashboardService` (lines 402, 666) for `NIV` depth ordering in `getDuty()` and hours widget — refactor those two queries to derive depth from `section` tree before dropping the table and `rebuild_section_flat.php`
 
 ---
 
@@ -148,7 +148,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Type management (matériel, consommable)
 - [x] Equipment category management — `categorie_materiel` CRUD in ReferenceController; TM_USAGE field in equipment-type form uses category dropdown; icon preview with FontAwesome
 - [ ] Embarkation tracking (`materiel_embarquer.php`)
-- [ ] Consumable category CRUD (`edit_categorie_consommable.php` / `save_` / `del_`) — the equipment side has `categorie_materiel` management, but consumables still have no category management UI
+- [x] Consumable category CRUD (`edit_categorie_consommable.php`) — `/admin/references/consumable-category`; inline edit (name, description, icon, order); delete blocked if used by consumable types; badge count on each row; card in references index; perm 5
 - [x] Equipment/consumable exports (XLS / CSV) — `TableExportService`, section/search-aware, `?cols=` selection
 
 ### Communication (COMM)
@@ -207,7 +207,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Rank and grade management
 - [x] Position (poste) management — `Compétences` page at `/admin/references/position`; CRUD with boolean flags (formation, secourisme, expirable, diplôme, etc.); edit modal per row; delete blocked if used in qualifications or event requirements; perm 18
 - [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
-- [ ] Protect the organizational root section (`S_ID = 0`): block delete / reparent / inactivation in `OrganizationController` (it is the org-identity row that owns the `S_ID = 0` config); the org form already pins its parent to `-1`, but delete/inactivate are not yet guarded
+- [x] Protect the organizational root section (`S_ID = 0`): `destroySection` returns 302 with error; `updateSection` forces `S_INACTIVE = false`; reparent already pinned to `-1`
 - [ ] Section deactivation / radiation (`section_stop.php`, `radier_section.php`)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)

@@ -187,6 +187,9 @@ at folder granularity (they are binary assets copied as-is).
 | `upd_vehicule.php`       | `VehicleController.php` (`edit`/`update`)                                                   |
 | `save_vehicule.php`      | `VehicleController.php` (`store`/`update`)                                                  |
 | `del_vehicule.php`       | `VehicleController.php` (`destroy`)                                                         |
+| `edit_categorie_consommable.php` | `ReferenceController::consumableCategory*` + `admin/references/consumable-category.blade.php` |
+| `save_edit_categorie_consommable.php` | `ReferenceController::consumableCategoryStore/Update` |
+| `del_categorie_consommable.php` | `ReferenceController::consumableCategoryDestroy` |
 | `vehicule_xls.php`       | `VehicleController.php` (XLS/CSV list export)                                               |
 | `vehicule_load.php` (event history tab) | `VehicleController::show()` — full year-filtered paginated event history with function type + km stats (was last-10-only) |
 | `paramfnv.php`           | `ReferenceController.php` (`vehicleFunction*`) + `admin/references/vehicle-function.blade.php` |

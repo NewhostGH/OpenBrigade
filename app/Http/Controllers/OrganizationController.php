@@ -211,10 +211,9 @@ class OrganizationController extends Controller
     public function updateSection(Request $request, Section $section): RedirectResponse
     {
         $data = $this->validateSection($request, $section);
-        // Empty parent → top-level site (0); the system root (S_ID = 0) keeps its
-        // -1 virtual parent and is never reparented from this form.
+        // Root section (S_ID = 0) keeps its -1 virtual parent and can never be inactivated.
         $data['S_PARENT'] = (int) $section->S_ID === 0 ? -1 : (int) ($data['S_PARENT'] ?? 0);
-        $data['S_INACTIVE'] = $request->boolean('S_INACTIVE');
+        $data['S_INACTIVE'] = (int) $section->S_ID === 0 ? false : $request->boolean('S_INACTIVE');
 
         $section->update($data);
 
@@ -224,6 +223,11 @@ class OrganizationController extends Controller
 
     public function destroySection(Section $section): RedirectResponse
     {
+        if ((int) $section->S_ID === 0) {
+            return redirect()->route('organization.sections')
+                ->with('error', 'La section racine de l\'organisation ne peut pas être supprimée.');
+        }
+
         $hasChildren = DB::table('section')->where('S_PARENT', $section->S_ID)->exists();
         if ($hasChildren) {
             return redirect()->route('organization.sections')

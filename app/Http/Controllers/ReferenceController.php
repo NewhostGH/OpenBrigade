@@ -20,6 +20,7 @@ class ReferenceController extends Controller
             'type_materiel' => DB::table('type_materiel')->count(),
             'categorie_materiel' => DB::table('categorie_materiel')->count(),
             'type_consommable' => DB::table('type_consommable')->count(),
+            'categorie_consommable' => DB::table('categorie_consommable')->where('CC_CODE', '<>', 'ALL')->count(),
             'categorie_evenement' => DB::table('categorie_evenement')->count(),
             'grade' => DB::table('grade')->count(),
             'equipe' => DB::table('equipe')->count(),
@@ -386,6 +387,80 @@ class ReferenceController extends Controller
 
         return redirect()->route('admin.references.consumable-type')
             ->with('success', 'Type de consommable supprimé.');
+    }
+
+    // ── Catégorie Consommable ────────────────────────────────────────────────
+
+    public function consumableCategoryIndex(): View
+    {
+        $items = DB::table('categorie_consommable')
+            ->where('CC_CODE', '<>', 'ALL')
+            ->orderBy('CC_ORDER')
+            ->orderBy('CC_CODE')
+            ->get(['CC_CODE', 'CC_NAME', 'CC_DESCRIPTION', 'CC_IMAGE', 'CC_ORDER']);
+
+        $usageCounts = DB::table('type_consommable')
+            ->select('CC_CODE', DB::raw('COUNT(*) as nb'))
+            ->groupBy('CC_CODE')
+            ->pluck('nb', 'CC_CODE');
+
+        return view('admin.references.consumable-category', compact('items', 'usageCounts'));
+    }
+
+    public function consumableCategoryStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'CC_CODE' => ['required', 'string', 'max:12', 'unique:categorie_consommable,CC_CODE', 'regex:/^[A-Z0-9_]+$/'],
+            'CC_NAME' => ['required', 'string', 'max:40'],
+            'CC_DESCRIPTION' => ['nullable', 'string', 'max:60'],
+            'CC_IMAGE' => ['nullable', 'string', 'max:60'],
+            'CC_ORDER' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        DB::table('categorie_consommable')->insert([
+            'CC_CODE' => strtoupper($v['CC_CODE']),
+            'CC_NAME' => $v['CC_NAME'],
+            'CC_DESCRIPTION' => $v['CC_DESCRIPTION'] ?? '',
+            'CC_IMAGE' => $v['CC_IMAGE'] ?: 'boxes',
+            'CC_ORDER' => $v['CC_ORDER'] ?? 0,
+        ]);
+
+        return redirect()->route('admin.references.consumable-category')
+            ->with('success', 'Catégorie créée.');
+    }
+
+    public function consumableCategoryUpdate(Request $request, string $code): RedirectResponse
+    {
+        $v = $request->validate([
+            'CC_NAME' => ['required', 'string', 'max:40'],
+            'CC_DESCRIPTION' => ['nullable', 'string', 'max:60'],
+            'CC_IMAGE' => ['nullable', 'string', 'max:60'],
+            'CC_ORDER' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        DB::table('categorie_consommable')->where('CC_CODE', $code)->update([
+            'CC_NAME' => $v['CC_NAME'],
+            'CC_DESCRIPTION' => $v['CC_DESCRIPTION'] ?? '',
+            'CC_IMAGE' => $v['CC_IMAGE'] ?: 'boxes',
+            'CC_ORDER' => $v['CC_ORDER'] ?? 0,
+        ]);
+
+        return redirect()->route('admin.references.consumable-category')
+            ->with('success', 'Catégorie mise à jour.');
+    }
+
+    public function consumableCategoryDestroy(string $code): RedirectResponse
+    {
+        $used = DB::table('type_consommable')->where('CC_CODE', $code)->exists();
+        if ($used) {
+            return redirect()->route('admin.references.consumable-category')
+                ->with('error', 'Cette catégorie est utilisée par des types de consommable et ne peut pas être supprimée.');
+        }
+
+        DB::table('categorie_consommable')->where('CC_CODE', $code)->delete();
+
+        return redirect()->route('admin.references.consumable-category')
+            ->with('success', 'Catégorie supprimée.');
     }
 
     // ── Véhicule types ────────────────────────────────────────────────────────
