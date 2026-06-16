@@ -50,6 +50,7 @@ at folder granularity (they are binary assets copied as-is).
 | `error.php`        | **WIP**                                                                                                                        |
 | `config.php`       | N/A — replaced by Laravel `config/` + `.env`                                                                                   |
 | `wizard.php`       | **WIP** (first-run setup)                                                                                                      |
+| `rebuild_section_flat.php` | **Retired** — `section_flat` table dropped; depth derived from `section.S_PARENT` tree at query time in `DashboardService` |
 
 ## Events (événements)
 

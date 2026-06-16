@@ -64,7 +64,7 @@ whole Communication menu, reminders and guard generation).
 
 ### Data isolation by section (multi_site)
 
-- [ ] `section_flat` still read by `DashboardService` (lines 402, 666) for `NIV`
+- [x] `section_flat` still read by `DashboardService` (lines 402, 666) for `NIV`
   depth ordering in `getDuty()` and the hours widget — refactor those two
   queries to derive depth from the `section` tree before dropping the table and
   `rebuild_section_flat.php`.
