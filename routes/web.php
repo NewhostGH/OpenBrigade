@@ -271,6 +271,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/vehicles/{vehicle}/edit', [VehicleController::class, 'edit'])->name('vehicle.edit')->middleware('permission:17');
         Route::put('/vehicles/{vehicle}', [VehicleController::class, 'update'])->name('vehicle.update')->middleware('permission:17');
         Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicle.destroy')->middleware('permission:19');
+        Route::post('/vehicles/{vehicle}/equipment', [VehicleController::class, 'equipmentAttach'])->name('vehicle.equipment.attach')->middleware('permission:17');
+        Route::delete('/vehicles/{vehicle}/equipment/{maId}', [VehicleController::class, 'equipmentDetach'])->name('vehicle.equipment.detach')->middleware('permission:17');
     });
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index')->middleware(['permission:42', 'feature:materiel']);
     Route::get('/equipment/export/xls', [EquipmentController::class, 'exportXls'])->name('equipment.export.xls')->middleware(['permission:42', 'feature:materiel']);

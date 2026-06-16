@@ -147,7 +147,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Consumable stock management
 - [x] Type management (matériel, consommable)
 - [x] Equipment category management — `categorie_materiel` CRUD in ReferenceController; TM_USAGE field in equipment-type form uses category dropdown; icon preview with FontAwesome
-- [ ] Embarkation tracking (`materiel_embarquer.php`)
+- [x] Embarkation tracking (`materiel_embarquer.php`) — assign/unassign equipment to vehicle from vehicle show page; `equipmentAttach`/`Detach` in `VehicleController`; perm 17; available equipment grouped by type in select; detach button per row
 - [x] Consumable category CRUD (`edit_categorie_consommable.php`) — `/admin/references/consumable-category`; inline edit (name, description, icon, order); delete blocked if used by consumable types; badge count on each row; card in references index; perm 5
 - [x] Equipment/consumable exports (XLS / CSV) — `TableExportService`, section/search-aware, `?cols=` selection
 

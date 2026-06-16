@@ -460,6 +460,19 @@ class VehicleController extends Controller
             )
             ->get();
 
+        // Equipment available to embark (same section, not already on a vehicle, not habillement)
+        $availableEquipment = auth()->user()->hasPermission(17)
+            ? DB::table('materiel as m')
+                ->leftJoin('type_materiel as tm', 'm.TM_ID', '=', 'tm.TM_ID')
+                ->where('m.S_ID', $vehicule->S_ID)
+                ->whereNull('m.V_ID')
+                ->where(fn ($q) => $q->whereNull('tm.TM_USAGE')->orWhere('tm.TM_USAGE', '<>', 'Habillement'))
+                ->orderBy('tm.TM_DESCRIPTION')
+                ->orderBy('m.MA_MODELE')
+                ->select('m.MA_ID', 'm.MA_MODELE', 'm.MA_NUMERO_SERIE', 'tm.TM_CODE', 'tm.TM_DESCRIPTION')
+                ->get()
+            : collect();
+
         // Documents linked to this vehicle
         $documents = DB::table('document as d')
             ->leftJoin('type_document as td', 'd.TD_CODE', '=', 'td.TD_CODE')
@@ -471,7 +484,44 @@ class VehicleController extends Controller
         return view('vehicle.show', compact(
             'vehicule', 'position', 'vehicleType',
             'eventHistory', 'vehicleStats', 'eventYears', 'year',
-            'materiels', 'documents'
+            'materiels', 'availableEquipment', 'documents'
         ));
+    }
+
+    public function equipmentAttach(Request $request, Vehicle $vehicule): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(17), 403);
+
+        $v = $request->validate(['MA_ID' => ['required', 'integer']]);
+
+        // Verify the equipment belongs to the same section and isn't already on a vehicle.
+        $mat = DB::table('materiel')
+            ->where('MA_ID', $v['MA_ID'])
+            ->where('S_ID', $vehicule->S_ID)
+            ->whereNull('V_ID')
+            ->first();
+
+        if (! $mat) {
+            return redirect()->route('vehicle.show', $vehicule->V_ID)
+                ->with('error', 'Ce matériel n\'est pas disponible.');
+        }
+
+        DB::table('materiel')->where('MA_ID', $mat->MA_ID)->update(['V_ID' => $vehicule->V_ID]);
+
+        return redirect()->route('vehicle.show', $vehicule->V_ID)
+            ->with('success', 'Matériel embarqué.');
+    }
+
+    public function equipmentDetach(Vehicle $vehicule, int $maId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(17), 403);
+
+        DB::table('materiel')
+            ->where('MA_ID', $maId)
+            ->where('V_ID', $vehicule->V_ID)
+            ->update(['V_ID' => null]);
+
+        return redirect()->route('vehicle.show', $vehicule->V_ID)
+            ->with('success', 'Matériel débarqué.');
     }
 }

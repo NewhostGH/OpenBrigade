@@ -339,6 +339,31 @@
                     <span class="ob-badge ob-badge-archive ms-1">{{ $materiels->count() }}</span>
                 @endif
             </div>
+            @if(auth()->user()->hasPermission(17) && $availableEquipment->isNotEmpty())
+                <form method="POST" action="{{ route('vehicle.equipment.attach', $vehicule->V_ID) }}"
+                      class="d-flex align-items-center gap-1">
+                    @csrf
+                    <select name="MA_ID" class="form-select form-select-sm" style="max-width:280px;" required>
+                        <option value="">— Embarquer du matériel —</option>
+                        @php $prevType = null; @endphp
+                        @foreach($availableEquipment as $eq)
+                            @if($eq->TM_DESCRIPTION !== $prevType)
+                                @if($prevType !== null)</optgroup>@endif
+                                <optgroup label="{{ $eq->TM_DESCRIPTION ?? $eq->TM_CODE ?? 'Autre' }}">
+                                @php $prevType = $eq->TM_DESCRIPTION; @endphp
+                            @endif
+                            <option value="{{ $eq->MA_ID }}">
+                                {{ $eq->MA_MODELE ?: '—' }}
+                                @if($eq->MA_NUMERO_SERIE) — {{ $eq->MA_NUMERO_SERIE }} @endif
+                            </option>
+                        @endforeach
+                        @if($prevType !== null)</optgroup>@endif
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-outline-primary flex-shrink-0">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </form>
+            @endif
         </div>
         <div class="ob-widget-card-body p-0">
             @if($materiels->isEmpty())
@@ -352,19 +377,33 @@
                             <th>N° série</th>
                             <th>Inventaire</th>
                             <th class="text-end">Qté</th>
+                            @if(auth()->user()->hasPermission(17))<th></th>@endif
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($materiels as $mat)
                             <tr>
-                                <td style="font-size:var(--font-size-sm)">{{ $mat->TM_DESCRIPTION ?? $mat->TM_CODE ?? '—' }}
-                                </td>
+                                <td style="font-size:var(--font-size-sm)">{{ $mat->TM_DESCRIPTION ?? $mat->TM_CODE ?? '—' }}</td>
                                 <td style="font-size:var(--font-size-sm)">{{ $mat->MA_MODELE ?: '—' }}</td>
                                 <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                                     {{ $mat->MA_NUMERO_SERIE ?: '—' }}</td>
                                 <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                                     {{ $mat->MA_INVENTAIRE ?: '—' }}</td>
                                 <td class="text-end" style="font-size:var(--font-size-sm)">{{ $mat->MA_NB ?? 1 }}</td>
+                                @if(auth()->user()->hasPermission(17))
+                                    <td class="text-end">
+                                        <form method="POST"
+                                              action="{{ route('vehicle.equipment.detach', [$vehicule->V_ID, $mat->MA_ID]) }}"
+                                              onsubmit="return confirm('Débarquer ce matériel ?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-outline-danger"
+                                                    style="font-size:var(--font-size-xs);padding:1px 6px;"
+                                                    title="Débarquer">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

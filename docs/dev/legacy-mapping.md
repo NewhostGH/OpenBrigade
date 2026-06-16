@@ -187,6 +187,7 @@ at folder granularity (they are binary assets copied as-is).
 | `upd_vehicule.php`       | `VehicleController.php` (`edit`/`update`)                                                   |
 | `save_vehicule.php`      | `VehicleController.php` (`store`/`update`)                                                  |
 | `del_vehicule.php`       | `VehicleController.php` (`destroy`)                                                         |
+| `materiel_embarquer.php` | `VehicleController::equipmentAttach/Detach` — assign/unassign equipment from vehicle show page |
 | `edit_categorie_consommable.php` | `ReferenceController::consumableCategory*` + `admin/references/consumable-category.blade.php` |
 | `save_edit_categorie_consommable.php` | `ReferenceController::consumableCategoryStore/Update` |
 | `del_categorie_consommable.php` | `ReferenceController::consumableCategoryDestroy` |
