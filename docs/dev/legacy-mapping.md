@@ -30,13 +30,13 @@ at folder granularity (they are binary assets copied as-is).
 | `login.php`           | `app/Http/Controllers/AuthController.php` + `resources/views/auth/login.blade.php` |
 | `identification.php`  | `AuthController.php` (login attempt)                                               |
 | `deconnexion.php`     | `AuthController.php` (logout)                                                      |
-| `change_password.php` | **WIP**                                                                            |
-| `save_password.php`   | **WIP**                                                                            |
-| `lost_password.php`   | **WIP**                                                                            |
-| `lost_session.php`    | **WIP**                                                                            |
-| `send_id.php`         | **WIP**                                                                            |
-| `charte.php`          | **WIP**                                                                            |
-| `connected_users.php` | **WIP** (see `admin/monitoring`)                                                   |
+| `change_password.php` | `AccountController.php` (`authentification` / password change)                     |
+| `save_password.php`   | `AccountController.php`                                                             |
+| `lost_password.php`   | `PasswordResetController.php` (mailing not yet configured)                         |
+| `lost_session.php`    | `PasswordResetController.php`                                                       |
+| `send_id.php`         | `PasswordResetController.php`                                                       |
+| `charte.php`          | `AuthController.php` (`charter`) + `resources/views/auth/charter.blade.php`        |
+| `connected_users.php` | `AdminController.php` (`monitoring`)                                               |
 
 ## Dashboard / home
 
@@ -55,43 +55,43 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file                        | New implementation                                                                           |
 | ---------------------------------- | -------------------------------------------------------------------------------------------- |
-| `evenements.php`                   | `app/Http/Controllers/EvenementController.php` + `resources/views/evenement/index.blade.php` |
-| `evenement_edit.php`               | `EvenementController.php` (`create`/`edit`) + `evenement/form.blade.php`                     |
-| `evenement_save.php`               | `EvenementController.php` (`store`/`update`)                                                 |
-| `evenement_detail.php`             | `EvenementController.php` (`show`) + `evenement/show.blade.php`                              |
-| `evenement_display.php`            | `EvenementController.php` (`show`)                                                           |
-| `evenement_modal.php`              | `evenement/show.blade.php`                                                                   |
-| `evenement_choice.php`             | `EvenementController.php`                                                                    |
-| `evenement_duplicate.php`          | **WIP**                                                                                      |
-| `evenement_inscription.php`        | `EvenementController.php` (`participantStore`)                                               |
-| `evenement_info_participant.php`   | `EvenementController.php` (`participantUpdate`)                                              |
-| `evenement_equipes.php`            | `EvenementController.php` (`equipe*`)                                                        |
-| `evenement_materiel_add.php`       | `EvenementController.php` (`materielAttach`)                                                 |
-| `evenement_vehicule_add.php`       | `EvenementController.php` (`vehiculeAttach`)                                                 |
-| `evenement_consommable.php`        | `EvenementController.php` (consommables)                                                     |
-| `evenement_consommable_add.php`    | `EvenementController.php`                                                                    |
-| `evenement_add_renfort.php`        | `EvenementController.php` (`renfortAttach`)                                                  |
-| `evenement_multi_renforts.php`     | `EvenementController.php` (`renfortAttach`)                                                  |
-| `evenement_horaires.php`           | `EvenementController.php` (horaires)                                                         |
-| `evenement_garde.php`              | `app/Http/Controllers/GardeController.php`                                                   |
-| `evenement_ical.php`               | `EvenementController.php` (`exportIcal`)                                                     |
-| `evenement_list_xls.php`           | `EvenementController.php` (`exportParticipants`)                                             |
-| `evenement_xls.php`                | `EvenementController.php` (export)                                                           |
-| `evenement_vehicule_xls.php`       | **WIP**                                                                                      |
-| `evenement_competences.php`        | **WIP**                                                                                      |
+| `evenements.php`                   | `app/Http/Controllers/EventController.php` + `resources/views/event/index.blade.php`         |
+| `evenement_edit.php`               | `EventController.php` (`create`/`edit`) + `event/form.blade.php`                            |
+| `evenement_save.php`               | `EventController.php` (`store`/`update`)                                                     |
+| `evenement_detail.php`             | `EventController.php` (`show`) + `event/show.blade.php`                                      |
+| `evenement_display.php`            | `EventController.php` (`show`)                                                               |
+| `evenement_modal.php`              | `event/show.blade.php`                                                                       |
+| `evenement_choice.php`             | `EventController.php`                                                                        |
+| `evenement_duplicate.php`          | `EventController.php` (`duplicate`) — copy with date-shift, optional participants/vehicles  |
+| `evenement_inscription.php`        | `EventController.php` (`participantStore`)                                                   |
+| `evenement_info_participant.php`   | `EventController.php` (`participantUpdate`)                                                  |
+| `evenement_equipes.php`            | `EventController.php` (`equipe*`)                                                            |
+| `evenement_materiel_add.php`       | `EventController.php` (`materielAttach`)                                                     |
+| `evenement_vehicule_add.php`       | `EventController.php` (`vehiculeAttach`)                                                     |
+| `evenement_consommable.php`        | `EventController.php` (consommables)                                                         |
+| `evenement_consommable_add.php`    | `EventController.php`                                                                        |
+| `evenement_add_renfort.php`        | `EventController.php` (`renfortAttach`)                                                      |
+| `evenement_multi_renforts.php`     | `EventController.php` (`renfortAttach`)                                                      |
+| `evenement_horaires.php`           | `EventController.php` (horaires)                                                             |
+| `evenement_garde.php`              | `app/Http/Controllers/DutyController.php`                                                    |
+| `evenement_ical.php`               | `EventController.php` (`exportIcal`)                                                         |
+| `evenement_list_xls.php`           | `EventController.php` (`exportParticipants`)                                                 |
+| `evenement_xls.php`                | `EventController.php` (`exportListXls`/`exportListCsv`)                                      |
+| `evenement_vehicule_xls.php`       | `EventController.php` (per-event vehicle XLS)                                                |
+| `evenement_competences.php`        | `EventController.php` (`Postes requis` — required positions vs enrolled headcount)          |
 | `evenement_diplome.php`            | **WIP**                                                                                      |
 | `evenement_options.php`            | **WIP**                                                                                      |
 | `evenement_option_choix.php`       | **WIP**                                                                                      |
 | `evenement_notify.php`             | **WIP**                                                                                      |
 | `evenement_rapport.php`            | **WIP**                                                                                      |
-| `evenement_trombinoscope.php`      | **WIP**                                                                                      |
+| `evenement_trombinoscope.php`      | `EventController.php` (`trombinoscope`) + `event/trombinoscope.blade.php`                   |
 | `evenement_facturation.php`        | **WIP**                                                                                      |
 | `evenement_facturation_detail.php` | **WIP**                                                                                      |
 | `evenement_facturation_num.php`    | **WIP**                                                                                      |
 | `evenement_tarif.php`              | **WIP**                                                                                      |
 | `evenement_tarif_formation.php`    | **WIP**                                                                                      |
-| `repo_events.php`                  | `StatistiqueController.php` — bridge redirects to `statistics.index`                         |
-| `bilan_participation.php`          | **WIP** (see Statistiques)                                                                   |
+| `repo_events.php`                  | `StatisticsController.php` — bridge redirects to `statistics.index`                          |
+| `bilan_participation.php`          | `StatisticsController.php` (bilan annuel, WIP parity)                                        |
 
 ## Personnel / members
 
@@ -107,46 +107,46 @@ at folder granularity (they are binary assets copied as-is).
 | `deletePompier.php`            | `PersonnelController.php` (`destroy`)                                                                |
 | `personnel_xls.php`            | `PersonnelController.php` (`exportXls`)                                                              |
 | `personnel_evenement_xls.php`  | `PersonnelController.php` (`exportCsv`/`exportXls`)                                                  |
-| `personnel_reunion_xls.php`    | **WIP**                                                                                              |
+| `personnel_reunion_xls.php`    | `PersonnelController.php` (per-member meeting participation XLS)                                      |
 | `save_info_adherent.php`       | `PersonnelController.php` (`update`)                                                                 |
-| `upd_personnel_salarie.php`    | **WIP**                                                                                              |
-| `personnel_contact.php`        | **WIP**                                                                                              |
-| `personnel_maitre.php`         | **WIP**                                                                                              |
-| `personnel_tenues.php`         | **WIP**                                                                                              |
-| `save_personnel_tenues.php`    | **WIP**                                                                                              |
-| `personnel_preferences.php`    | **WIP**                                                                                              |
-| `save_preferences.php`         | **WIP**                                                                                              |
-| `personnel_formation.php`      | **WIP**                                                                                              |
+| `upd_personnel_salarie.php`    | `PersonnelController.php` (salarié contract/hours card)                                              |
+| `personnel_contact.php`        | `PersonnelController.php` (`updateContacts` — contact handles card)                                  |
+| `personnel_maitre.php`         | **WIP** (animaux module)                                                                             |
+| `personnel_tenues.php`         | `PersonnelController.php` (`tenues`) + `personnel/tenues.blade.php`                                  |
+| `save_personnel_tenues.php`    | `PersonnelController.php` (`tenues` save)                                                            |
+| `personnel_preferences.php`    | `PersonnelController.php` (`preferences`) + `personnel/preferences.blade.php`                       |
+| `save_preferences.php`         | `PersonnelController.php` (`preferences` save)                                                      |
+| `personnel_formation.php`      | **WIP** (training/diploma CRUD not built)                                                            |
 | `save_personnel_formation.php` | **WIP**                                                                                              |
 | `del_personnel_formation.php`  | **WIP**                                                                                              |
-| `formations_xls.php`           | **WIP**                                                                                              |
+| `formations_xls.php`           | **WIP** (waiting on training CRUD)                                                                   |
 | `diplome_edit.php`             | **WIP**                                                                                              |
 | `qualifications.php`           | `PersonnelController.php` (`*Qualification`) + `personnel/qualifications.blade.php`                  |
-| `qualifications_xls.php`       | **WIP**                                                                                              |
+| `qualifications_xls.php`       | `PersonnelController.php` (qualifications XLS/CSV, section-scoped)                                    |
 | `save_qualif.php`              | `PersonnelController.php` (`storeQualification`)                                                     |
 | `save_qualif2.php`             | `PersonnelController.php` (`updateQualification`)                                                    |
-| `listecontacts.php`            | **WIP**                                                                                              |
-| `listemails.php`               | **WIP**                                                                                              |
+| `listecontacts.php`            | `PersonnelController.php` (contacts.csv bulk export)                                                 |
+| `listemails.php`               | `PersonnelController.php` (emails.txt bulk export)                                                   |
 | `search_personnel.php`         | `PersonnelController.php` (`index` filters)                                                          |
 | `search_personnel_result.php`  | `PersonnelController.php`                                                                            |
 | `livesearch.php`               | **WIP**                                                                                              |
 | `user_info.php`                | **WIP**                                                                                              |
-| `specific_info.php`            | **WIP**                                                                                              |
-| `homonymes_manage.php`         | **WIP**                                                                                              |
-| `homonymes_modal.php`          | **WIP**                                                                                              |
+| `specific_info.php`            | **WIP** (custom member fields)                                                                       |
+| `homonymes_manage.php`         | `PersonnelController.php` (`merge` — homonym detection + merge tool)                                 |
+| `homonymes_modal.php`          | `personnel/merge.blade.php`                                                                          |
 | `vcard.php`                    | `PersonnelController.php` (`exportVcard`) + `app/Services/PersonnelExportService.php` (`buildVcard`) |
 | `vcard_class.php`              | `PersonnelExportService.php` (Sabre VObject)                                                         |
 | `trombinoscope.php`            | `PersonnelController.php` (`trombinoscope`)                                                          |
-| `organigramme.php`             | `app/Http/Controllers/OrganisationController.php`                                                    |
+| `organigramme.php`             | `app/Http/Controllers/OrganizationController.php`                                                    |
 
 ## Habilitations (access rights)
 
 | Legacy file                      | New implementation                                                                                                                                             |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `habilitations.php`              | `app/Http/Controllers/HabilitationController.php` + `resources/views/admin/habilitations/index.blade.php` + `app/Services/PermissionResolver.php` (resolution) |
-| `save_habilitations.php`         | `HabilitationController.php` (`toggle`/`group*`)                                                                                                               |
-| `upd_habilitations.php`          | `HabilitationController.php`                                                                                                                                   |
-| `habilitations_xls.php`          | **WIP**                                                                                                                                                        |
+| `habilitations.php`              | `app/Http/Controllers/PermissionController.php` + `resources/views/admin/permissions/index.blade.php` + `app/Services/PermissionResolver.php` (resolution); "Mes droits" preview in `MyPermissionsController.php` |
+| `save_habilitations.php`         | `PermissionController.php` (`setGrant`/`setUserGrant`/`toggleCeiling`/`group*`)                                                                                |
+| `upd_habilitations.php`          | `PermissionController.php`                                                                                                                                     |
+| `habilitations_xls.php`          | `PermissionController.php` (`exportGroup` — per group/role member export XLS/CSV)                                                                              |
 | `hierarchie_competence.php`      | **WIP**                                                                                                                                                        |
 | `save_hierarchie_competence.php` | **WIP**                                                                                                                                                        |
 | `upd_hierarchie_competence.php`  | **WIP**                                                                                                                                                        |
@@ -155,80 +155,80 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file                | New implementation                                                                                 |
 | -------------------------- | -------------------------------------------------------------------------------------------------- |
-| `section.php`              | `app/Http/Controllers/OrganisationController.php` + `resources/views/organisation/index.blade.php` |
-| `ins_section.php`          | `OrganisationController.php`                                                                       |
-| `upd_section.php`          | `OrganisationController.php`                                                                       |
-| `save_section.php`         | `OrganisationController.php`                                                                       |
-| `del_section.php`          | `OrganisationController.php`                                                                       |
+| `section.php`              | `app/Http/Controllers/OrganizationController.php` + `resources/views/organization/index.blade.php` |
+| `ins_section.php`          | `OrganizationController.php` (`storeSection`)                                                      |
+| `upd_section.php`          | `OrganizationController.php` (`updateSection`)                                                     |
+| `save_section.php`         | `OrganizationController.php`                                                                       |
+| `del_section.php`          | `OrganizationController.php` (`destroySection`)                                                    |
 | `section_stop.php`         | **WIP**                                                                                            |
 | `radier_section.php`       | **WIP**                                                                                            |
 | `rebuild_section_flat.php` | **WIP**                                                                                            |
 | `choice_section_order.php` | **WIP**                                                                                            |
-| `equipe.php`               | `OrganisationController.php`                                                                       |
-| `ins_groupe.php`           | `OrganisationController.php`                                                                       |
-| `del_groupe.php`           | `OrganisationController.php`                                                                       |
-| `upd_equipe.php`           | `OrganisationController.php`                                                                       |
-| `save_equipe.php`          | `OrganisationController.php`                                                                       |
-| `del_equipe.php`           | `OrganisationController.php`                                                                       |
-| `poste.php`                | `OrganisationController.php`                                                                       |
-| `ins_poste.php`            | `OrganisationController.php`                                                                       |
-| `upd_poste.php`            | `OrganisationController.php`                                                                       |
-| `save_poste.php`           | `OrganisationController.php`                                                                       |
-| `del_poste.php`            | `OrganisationController.php`                                                                       |
+| `equipe.php`               | `ReferenceController.php` (`team*`) + `admin/references/team.blade.php`                            |
+| `ins_groupe.php`           | `ReferenceController.php`                                                                          |
+| `del_groupe.php`           | `ReferenceController.php`                                                                          |
+| `upd_equipe.php`           | `ReferenceController.php` (`teamUpdate`)                                                           |
+| `save_equipe.php`          | `ReferenceController.php` (`teamStore`)                                                            |
+| `del_equipe.php`           | `ReferenceController.php` (`teamDestroy`)                                                          |
+| `poste.php`                | `ReferenceController.php` (`position*`) + `admin/references/position.blade.php`                    |
+| `ins_poste.php`            | `ReferenceController.php`                                                                          |
+| `upd_poste.php`            | `ReferenceController.php` (`positionUpdate`)                                                       |
+| `save_poste.php`           | `ReferenceController.php` (`positionStore`)                                                        |
+| `del_poste.php`            | `ReferenceController.php` (`positionDestroy`)                                                      |
 | `upd_responsable.php`      | **WIP**                                                                                            |
 
 ## Vehicles
 
 | Legacy file              | New implementation                                                                          |
 | ------------------------ | ------------------------------------------------------------------------------------------- |
-| `vehicule.php`           | `app/Http/Controllers/VehiculeController.php` + `resources/views/vehicule/index.blade.php`  |
-| `vehicule_load.php`      | `VehiculeController.php` (`show`) + `vehicule/show.blade.php`                               |
-| `ins_vehicule.php`       | `VehiculeController.php` (`create`/`store`) + `vehicule/form.blade.php`                     |
-| `upd_vehicule.php`       | `VehiculeController.php` (`edit`/`update`)                                                  |
-| `save_vehicule.php`      | `VehiculeController.php` (`store`/`update`)                                                 |
-| `del_vehicule.php`       | `VehiculeController.php` (`destroy`)                                                        |
-| `vehicule_xls.php`       | **WIP**                                                                                     |
-| `paramfnv.php`           | **WIP** (vehicle functions/options)                                                         |
-| `paramfnv_edit.php`      | **WIP**                                                                                     |
-| `paramfnv_save.php`      | **WIP**                                                                                     |
-| `type_vehicule.php`      | `ParametrageController.php` (`typeVehicule*`) + `admin/parametrage/type-vehicule.blade.php` |
-| `save_type_vehicule.php` | `ParametrageController.php` (`typeVehiculeStore`)                                           |
-| `upd_type_vehicule.php`  | `ParametrageController.php` (`typeVehiculeUpdate`)                                          |
-| `del_type_vehicule.php`  | `ParametrageController.php` (`typeVehiculeDestroy`)                                         |
+| `vehicule.php`           | `app/Http/Controllers/VehicleController.php` + `resources/views/vehicle/index.blade.php`    |
+| `vehicule_load.php`      | `VehicleController.php` (`show`) + `vehicle/show.blade.php`                                 |
+| `ins_vehicule.php`       | `VehicleController.php` (`create`/`store`) + `vehicle/form.blade.php`                       |
+| `upd_vehicule.php`       | `VehicleController.php` (`edit`/`update`)                                                   |
+| `save_vehicule.php`      | `VehicleController.php` (`store`/`update`)                                                  |
+| `del_vehicule.php`       | `VehicleController.php` (`destroy`)                                                         |
+| `vehicule_xls.php`       | `VehicleController.php` (XLS/CSV list export)                                               |
+| `paramfnv.php`           | `ReferenceController.php` (`vehicleFunction*`) + `admin/references/vehicle-function.blade.php` |
+| `paramfnv_edit.php`      | `ReferenceController.php`                                                                   |
+| `paramfnv_save.php`      | `ReferenceController.php` (`vehicleFunctionStore`/`Update`)                                 |
+| `type_vehicule.php`      | `ReferenceController.php` (`typeVehicule*`) + `admin/references/type-vehicule.blade.php`    |
+| `save_type_vehicule.php` | `ReferenceController.php` (`typeVehiculeStore`)                                             |
+| `upd_type_vehicule.php`  | `ReferenceController.php` (`typeVehiculeUpdate`)                                            |
+| `del_type_vehicule.php`  | `ReferenceController.php` (`typeVehiculeDestroy`)                                           |
 
 ## Equipment (matériel)
 
 | Legacy file                 | New implementation                                                                          |
 | --------------------------- | ------------------------------------------------------------------------------------------- |
-| `materiel.php`              | `app/Http/Controllers/MaterielController.php` + `resources/views/materiel/index.blade.php`  |
-| `materiel_load.php`         | `MaterielController.php`                                                                    |
-| `ins_materiel.php`          | `MaterielController.php`                                                                    |
-| `upd_materiel.php`          | `MaterielController.php`                                                                    |
-| `upd_materiel_selector.php` | `MaterielController.php`                                                                    |
-| `save_materiel.php`         | `MaterielController.php`                                                                    |
-| `del_materiel.php`          | `MaterielController.php`                                                                    |
+| `materiel.php`              | `app/Http/Controllers/EquipmentController.php` + `resources/views/equipment/index.blade.php` |
+| `materiel_load.php`         | `EquipmentController.php`                                                                   |
+| `ins_materiel.php`          | `EquipmentController.php`                                                                   |
+| `upd_materiel.php`          | `EquipmentController.php`                                                                   |
+| `upd_materiel_selector.php` | `EquipmentController.php`                                                                   |
+| `save_materiel.php`         | `EquipmentController.php`                                                                   |
+| `del_materiel.php`          | `EquipmentController.php`                                                                   |
 | `materiel_embarquer.php`    | **WIP**                                                                                     |
-| `materiel_xls.php`          | **WIP**                                                                                     |
-| `type_materiel.php`         | `ParametrageController.php` (`typeMateriel*`) + `admin/parametrage/type-materiel.blade.php` |
-| `ins_type_materiel.php`     | `ParametrageController.php` (`typeMaterielStore`)                                           |
-| `save_type_materiel.php`    | `ParametrageController.php` (`typeMaterielStore`)                                           |
-| `upd_type_materiel.php`     | `ParametrageController.php` (`typeMaterielUpdate`)                                          |
-| `del_type_materiel.php`     | `ParametrageController.php` (`typeMaterielDestroy`)                                         |
+| `materiel_xls.php`          | `EquipmentController.php` (XLS/CSV export)                                                  |
+| `type_materiel.php`         | `ReferenceController.php` (`typeMateriel*` + `categorieMateriel*`) + `admin/references/`    |
+| `ins_type_materiel.php`     | `ReferenceController.php` (`typeMaterielStore`)                                             |
+| `save_type_materiel.php`    | `ReferenceController.php` (`typeMaterielStore`)                                             |
+| `upd_type_materiel.php`     | `ReferenceController.php` (`typeMaterielUpdate`)                                            |
+| `del_type_materiel.php`     | `ReferenceController.php` (`typeMaterielDestroy`)                                           |
 
 ## Consumables
 
 | Legacy file                           | New implementation                                                                                |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `consommable.php`                     | `app/Http/Controllers/ConsommableController.php` + `resources/views/consommable/index.blade.php`  |
-| `consommable_load.php`                | `ConsommableController.php`                                                                       |
-| `save_consommable.php`                | `ConsommableController.php`                                                                       |
-| `upd_consommable.php`                 | `ConsommableController.php`                                                                       |
-| `del_consommable.php`                 | `ConsommableController.php`                                                                       |
-| `consommable_xls.php`                 | **WIP**                                                                                           |
-| `type_consommable.php`                | `ParametrageController.php` (`typeConsommable*`) + `admin/parametrage/type-consommable.blade.php` |
-| `save_type_consommable.php`           | `ParametrageController.php` (`typeConsommableStore`)                                              |
-| `upd_type_consommable.php`            | `ParametrageController.php` (`typeConsommableUpdate`)                                             |
-| `del_type_consommable.php`            | `ParametrageController.php` (`typeConsommableDestroy`)                                            |
+| `consommable.php`                     | `app/Http/Controllers/ConsumableController.php` + `resources/views/consumable/index.blade.php`    |
+| `consommable_load.php`                | `ConsumableController.php`                                                                        |
+| `save_consommable.php`                | `ConsumableController.php`                                                                        |
+| `upd_consommable.php`                 | `ConsumableController.php`                                                                        |
+| `del_consommable.php`                 | `ConsumableController.php`                                                                        |
+| `consommable_xls.php`                 | `ConsumableController.php` (XLS/CSV export)                                                       |
+| `type_consommable.php`                | `ReferenceController.php` (`typeConsommable*`) + `admin/references/type-consommable.blade.php`    |
+| `save_type_consommable.php`           | `ReferenceController.php` (`typeConsommableStore`)                                               |
+| `upd_type_consommable.php`            | `ReferenceController.php` (`typeConsommableUpdate`)                                              |
+| `del_type_consommable.php`            | `ReferenceController.php` (`typeConsommableDestroy`)                                             |
 | `edit_categorie_consommable.php`      | **WIP**                                                                                           |
 | `save_edit_categorie_consommable.php` | **WIP**                                                                                           |
 | `del_edit_categorie_consommable.php`  | **WIP**                                                                                           |
@@ -237,17 +237,17 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file                   | New implementation                                                                              |
 | ----------------------------- | ----------------------------------------------------------------------------------------------- |
-| `cotisations.php`             | `app/Http/Controllers/CotisationController.php` + `resources/views/cotisations/index.blade.php` |
-| `cotisation_edit.php`         | `CotisationController.php` (`batchSave`)                                                        |
-| `save_cotisations.php`        | `CotisationController.php` (`batchSave`)                                                        |
-| `cotisations_xls.php`         | `CotisationController.php` (`export`)                                                           |
-| `cotisations_extract.php`     | `CotisationController.php` (`export`)                                                           |
+| `cotisations.php`             | `app/Http/Controllers/DuesController.php` + `resources/views/dues/index.blade.php`              |
+| `cotisation_edit.php`         | `DuesController.php` (`batchSave`)                                                              |
+| `save_cotisations.php`        | `DuesController.php` (`batchSave`)                                                              |
+| `cotisations_xls.php`         | `DuesController.php` (`export`)                                                                 |
+| `cotisations_extract.php`     | `DuesController.php` (`export`)                                                                 |
 | `report_cotisations.php`      | **WIP**                                                                                         |
-| `prelevements.php`            | `CotisationController.php` (`prelevements`) + `cotisations/prelevements.blade.php`              |
-| `save_prelevements.php`       | `CotisationController.php` (`savePrelevements`)                                                 |
+| `prelevements.php`            | `DuesController.php` (`directDebits`) + `dues/direct-debits.blade.php`                          |
+| `save_prelevements.php`       | `DuesController.php` (`saveDirectDebits`)                                                       |
 | `config_prelevements.php`     | **WIP**                                                                                         |
-| `virements.php`               | `CotisationController.php` (`virements`) + `cotisations/virements.blade.php`                    |
-| `virements_extract.php`       | `CotisationController.php` (`virements`) — bridge redirects to `cotisations.virements`          |
+| `virements.php`               | `DuesController.php` (`transfers`) + `dues/transfers.blade.php`                                 |
+| `virements_extract.php`       | `DuesController.php` (`transfers`) — bridge redirects to `dues.transfers`                       |
 | `element_facturable.php`      | **WIP**                                                                                         |
 | `save_element_facturable.php` | **WIP**                                                                                         |
 | `del_element_facturable.php`  | **WIP**                                                                                         |
@@ -265,52 +265,52 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file                      | New implementation                                                               |
 | -------------------------------- | -------------------------------------------------------------------------------- |
-| `grades_load.php`                | `ParametrageController.php` (`gradeIndex`) + `admin/parametrage/grade.blade.php` |
-| `edit_grades.php`                | `ParametrageController.php` (`gradeIndex`)                                       |
-| `save_grades.php`                | `ParametrageController.php`                                                      |
-| `upd_grades.php`                 | `ParametrageController.php`                                                      |
-| `del_grade.php`                  | `ParametrageController.php`                                                      |
-| `configuration_icone_grade.php`  | `ParametrageController.php` (`gradeIconUpload`/`gradeIconDestroy`)               |
-| `edit_categorie_grades.php`      | **WIP**                                                                          |
-| `save_edit_categorie_grades.php` | **WIP**                                                                          |
-| `del_categorie_grade.php`        | **WIP**                                                                          |
+| `grades_load.php`                | `ReferenceController.php` (`gradeIndex`) + `admin/references/grade.blade.php`     |
+| `edit_grades.php`                | `ReferenceController.php` (`gradeIndex`)                                         |
+| `save_grades.php`                | `ReferenceController.php`                                                        |
+| `upd_grades.php`                 | `ReferenceController.php`                                                        |
+| `del_grade.php`                  | `ReferenceController.php`                                                        |
+| `configuration_icone_grade.php`  | `ReferenceController.php` (`gradeIconUpload`/`gradeIconDestroy`)                 |
+| `edit_categorie_grades.php`      | `ReferenceController.php` (`gradeCategory*`) + `admin/references/grade-category.blade.php` |
+| `save_edit_categorie_grades.php` | `ReferenceController.php` (`gradeCategoryStore`/`Update`)                        |
+| `del_categorie_grade.php`        | `ReferenceController.php` (`gradeCategoryDestroy` — blocked if grades assigned)  |
 
 ## Duty / on-call (gardes, astreintes, piquets)
 
 | Legacy file                | New implementation                                                                                       |
 | -------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `astreintes.php`           | `app/Http/Controllers/GardeController.php` (`astreintes`) + `resources/views/garde/astreintes.blade.php` |
-| `astreinte_edit.php`       | `GardeController.php`                                                                                    |
-| `astreinte_save.php`       | `GardeController.php`                                                                                    |
-| `astreintes_updates.php`   | `GardeController.php`                                                                                    |
-| `feuille_garde.php`        | `GardeController.php` (`index`) + `garde/index.blade.php`                                                |
-| `save_garde.php`           | `GardeController.php`                                                                                    |
-| `tableau_garde.php`        | `GardeController.php` (`index`) — bridge redirects to `garde.index`                                      |
+| `astreintes.php`           | `app/Http/Controllers/DutyController.php` (`astreintes`) + `resources/views/duty/astreintes.blade.php`   |
+| `astreinte_edit.php`       | `DutyController.php`                                                                                     |
+| `astreinte_save.php`       | `DutyController.php`                                                                                     |
+| `astreintes_updates.php`   | `DutyController.php`                                                                                     |
+| `feuille_garde.php`        | `DutyController.php` (`index`) + `duty/index.blade.php`                                                  |
+| `save_garde.php`           | `DutyController.php`                                                                                     |
+| `tableau_garde.php`        | `DutyController.php` (`index`) — bridge redirects to `duty.index`                                        |
 | `tableau_garde_create.php` | **WIP**                                                                                                  |
 | `tableau_garde_status.php` | **WIP**                                                                                                  |
-| `tableau_garde_xls.php`    | **WIP**                                                                                                  |
-| `auto_garde.php`           | **WIP**                                                                                                  |
+| `tableau_garde_xls.php`    | `DutyController.php` (monthly on-call/astreinte roster XLS/CSV)                                          |
+| `auto_garde.php`           | **WIP** (automatic guard generation)                                                                    |
 | `automaticPiquet.php`      | **WIP**                                                                                                  |
 | `save_piquet.php`          | **WIP**                                                                                                  |
-| `type_garde.php`           | **WIP**                                                                                                  |
-| `save_type_garde.php`      | **WIP**                                                                                                  |
-| `del_type_garde.php`       | **WIP**                                                                                                  |
-| `demande_renfort.php`      | **WIP**                                                                                                  |
+| `type_garde.php`           | `DutyTypeController.php` (`index`) + `duty/types.blade.php`                                              |
+| `save_type_garde.php`      | `DutyTypeController.php` (`store`/`update`)                                                              |
+| `del_type_garde.php`       | `DutyTypeController.php` (`destroy` — blocked if guards exist)                                           |
+| `demande_renfort.php`      | `EventController.php` (`renfortRequest` card + manage page); transmit-to-section still **WIP**           |
 
 ## Availability / unavailability / replacements
 
 | Legacy file             | New implementation                                                                                 |
 | ----------------------- | -------------------------------------------------------------------------------------------------- |
-| `dispo.php`             | `app/Http/Controllers/DispoController.php` + `resources/views/dispo/index.blade.php`               |
-| `save_dispo.php`        | `DispoController.php`                                                                              |
-| `indispo.php`           | `app/Http/Controllers/IndispoController.php` + `resources/views/indispo/index.blade.php`           |
-| `indispo_choice.php`    | `IndispoController.php`                                                                            |
-| `indispo_display.php`   | `IndispoController.php`                                                                            |
-| `indispo_save.php`      | `IndispoController.php`                                                                            |
-| `indispo_status.php`    | `IndispoController.php`                                                                            |
+| `dispo.php`             | `app/Http/Controllers/AvailabilityController.php` + `resources/views/availability/index.blade.php` |
+| `save_dispo.php`        | `AvailabilityController.php`                                                                       |
+| `indispo.php`           | `app/Http/Controllers/UnavailabilityController.php` + `resources/views/unavailability/index.blade.php` |
+| `indispo_choice.php`    | `UnavailabilityController.php`                                                                     |
+| `indispo_display.php`   | `UnavailabilityController.php`                                                                     |
+| `indispo_save.php`      | `UnavailabilityController.php`                                                                     |
+| `indispo_status.php`    | `UnavailabilityController.php`                                                                     |
 | `indispo_list_xls.php`  | **WIP**                                                                                            |
-| `remplacements.php`     | `app/Http/Controllers/RemplacementController.php` + `resources/views/remplacement/index.blade.php` |
-| `remplacement_edit.php` | `RemplacementController.php`                                                                       |
+| `remplacements.php`     | `app/Http/Controllers/ReplacementController.php` + `resources/views/replacement/index.blade.php`   |
+| `remplacement_edit.php` | `ReplacementController.php` (+ list XLS/CSV export)                                                |
 | `intervention_edit.php` | **WIP**                                                                                            |
 | `repos_saisie.php`      | **WIP**                                                                                            |
 | `repos_save.php`        | **WIP**                                                                                            |
@@ -365,18 +365,18 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file                   | New implementation                                                                                              |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `gps.php`                     | `app/Http/Controllers/GeolocalisationController.php` + `resources/views/personnel/geolocalisation.blade.php`    |
-| `gps_save.php`                | `GeolocalisationController.php`                                                                                 |
-| `gps_save2.php`               | `GeolocalisationController.php`                                                                                 |
-| `gmaps_personnel.php`         | `GeolocalisationController.php`                                                                                 |
+| `gps.php`                     | `app/Http/Controllers/GeolocationController.php` + `resources/views/personnel/geolocation.blade.php`            |
+| `gps_save.php`                | `GeolocationController.php`                                                                                     |
+| `gps_save2.php`               | `GeolocationController.php`                                                                                     |
+| `gmaps_personnel.php`         | `GeolocationController.php`                                                                                     |
 | `gmaps_evenement.php`         | **WIP**                                                                                                         |
-| `geolocalize_all_persons.php` | `GeolocalisationController.php`                                                                                 |
+| `geolocalize_all_persons.php` | `GeolocationController.php`                                                                                     |
 | `localize.php`                | **WIP**                                                                                                         |
 | `localize_me.php`             | **WIP**                                                                                                         |
 | `localize_send.php`           | **WIP**                                                                                                         |
 | `map.php`                     | **WIP**                                                                                                         |
-| `jvectormap.php`              | `OrganisationController.php` (`cartographie`) + `resources/views/organisation/cartographie.blade.php` (Leaflet) |
-| `departement.php`             | `OrganisationController.php` (`sections` + CRUD) + `resources/views/organisation/sections.blade.php`            |
+| `jvectormap.php`              | `OrganizationController.php` (`cartographie`) + `resources/views/organization/cartographie.blade.php` (Leaflet) |
+| `departement.php`             | `OrganizationController.php` (`sections` + CRUD) + `resources/views/organization/sections.blade.php`            |
 | `zipcode.php`                 | **WIP**                                                                                                         |
 | `buildzipcode.php`            | **WIP**                                                                                                         |
 
@@ -384,9 +384,9 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file               | New implementation                                                                                       |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `bilans.php`              | `app/Http/Controllers/StatistiqueController.php` + `resources/views/statistique/index.blade.php`         |
-| `bilan_participation.php` | `StatistiqueController.php`                                                                              |
-| `delete_statistique.php`  | `StatistiqueController.php`                                                                              |
+| `bilans.php`              | `app/Http/Controllers/StatisticsController.php` + `resources/views/statistics/index.blade.php`           |
+| `bilan_participation.php` | `StatisticsController.php`                                                                              |
+| `delete_statistique.php`  | `StatisticsController.php`                                                                              |
 | `history.php`             | `app/Http/Controllers/AdminController.php` (`monitoring`) + `resources/views/admin/monitoring.blade.php` |
 | `audit.php`               | `AdminController.php` (`monitoring`)                                                                     |
 
@@ -398,14 +398,14 @@ at folder granularity (they are binary assets copied as-is).
 | `save_configuration.php`  | `AdminController.php` (`saveSetting`/`uploadSetting`/`deleteSetting`)                                |
 | `configuration_db.php`    | `MaintenanceController.php`                                                                          |
 | `configuration_theme.php` | `AdminController.php` (`uploadSetting`/`deleteSetting` — theme images)                               |
-| `parametrage.php`         | `app/Http/Controllers/ParametrageController.php` (`index`) + `admin/parametrage/index.blade.php`     |
+| `parametrage.php`         | `app/Http/Controllers/ReferenceController.php` (`index`) + `admin/references/index.blade.php`        |
 | `company.php`             | `app/Http/Controllers/CompanyController.php` + `resources/views/company/index.blade.php`             |
 | `save_company.php`        | `CompanyController.php`                                                                              |
 | `upd_company.php`         | `CompanyController.php`                                                                              |
 | `ins_company.php`         | `CompanyController.php`                                                                              |
 | `del_company.php`         | `CompanyController.php`                                                                              |
 | `upd_company_role.php`    | **WIP**                                                                                              |
-| `company_xls.php`         | **WIP**                                                                                              |
+| `company_xls.php`         | `CompanyController.php` (client list XLS/CSV export)                                                  |
 | `menu_status_set.php`     | `app/Http/Controllers/ShortcutController.php`                                                        |
 
 ## Backup / restore / maintenance / upgrade
@@ -503,12 +503,12 @@ rather than ported as standalone files.
 | `fonctions_parameters.php`  | `ParametrageController.php` / `AdminController.php`                   |
 | `fonctions_menu.php`        | `resources/views/layout/sidebar.blade.php` + `ShortcutController.php` |
 | `fonctions_infos.php`       | `DashboardController.php` (widgets)                                   |
-| `fonctions_chart.php`       | `StatistiqueController.php`                                           |
-| `fonctions_gardes.php`      | `GardeController.php`                                                 |
+| `fonctions_chart.php`       | `StatisticsController.php`                                            |
+| `fonctions_gardes.php`      | `DutyController.php`                                                  |
 | `fonctions_gardes_auto.php` | **WIP**                                                               |
 | `fonctions_documents.php`   | `DocumentController.php`                                              |
-| `fonctions_map.php`         | `GeolocalisationController.php`                                       |
-| `fonctions_bank.php`        | `CotisationController.php` (partial)                                  |
+| `fonctions_map.php`         | `GeolocationController.php`                                           |
+| `fonctions_bank.php`        | `DuesController.php` (partial)                                        |
 | `fonctions_import.php`      | **WIP**                                                               |
 | `fonctions_unzip.php`       | **WIP**                                                               |
 | `fonctions_mail.php`        | **WIP**                                                               |

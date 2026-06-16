@@ -54,6 +54,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Section-scope test for the root: assert `PermissionResolver::sectionChain(site)` includes `0` and that a deny ceiling on the root cascades to its child sites (the resolver unit tests stub `sectionChain`, so add a DB-backed feature test)
 - [x] `GeolocationController::index` — replaced exact `P_SECTION =` match with `SectionScopeService::apply()` so the map honours section isolation, navbar scope and root subtree
 - [x] `PermissionController::exportGroup` — fixed `section_id > 0` guard to `!== null` so root section (`S_ID = 0`) is included; absent/empty = no filter convention
+- [ ] Decide the fate of the legacy `section_flat` denormalised table (`rebuild_section_flat.php`): `SectionScopeService` now walks the `section` tree recursively, so `section_flat` is likely dead weight — confirm nothing reads it and drop it (table + legacy rebuild) if so
 
 ---
 
@@ -147,6 +148,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Type management (matériel, consommable)
 - [x] Equipment category management — `categorie_materiel` CRUD in ReferenceController; TM_USAGE field in equipment-type form uses category dropdown; icon preview with FontAwesome
 - [ ] Embarkation tracking (`materiel_embarquer.php`)
+- [ ] Consumable category CRUD (`edit_categorie_consommable.php` / `save_` / `del_`) — the equipment side has `categorie_materiel` management, but consumables still have no category management UI
 - [x] Equipment/consumable exports (XLS / CSV) — `TableExportService`, section/search-aware, `?cols=` selection
 
 ### Communication (COMM)
