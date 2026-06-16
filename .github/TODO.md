@@ -1,7 +1,8 @@
 # OpenBrigade Migration TODO
 
 Working tracker for migrating the legacy eBrigade app (`archive/legacy_app/`) into
-the native Laravel application, menu by menu.
+the native Laravel application, menu by menu. Large, forward-looking ideas that go
+beyond the migration live in [IDEAS.md](IDEAS.md).
 
 Rules and process live elsewhere — read them first:
 [CONVENTIONS.md](../docs/dev/CONVENTIONS.md) (how code is written),
@@ -55,6 +56,44 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] `GeolocationController::index` — replaced exact `P_SECTION =` match with `SectionScopeService::apply()` so the map honours section isolation, navbar scope and root subtree
 - [x] `PermissionController::exportGroup` — fixed `section_id > 0` guard to `!== null` so root section (`S_ID = 0`) is included; absent/empty = no filter convention
 - [ ] `section_flat` still read by `DashboardService` (lines 402, 666) for `NIV` depth ordering in `getDuty()` and hours widget — refactor those two queries to derive depth from `section` tree before dropping the table and `rebuild_section_flat.php`
+
+---
+
+## Cross-cutting — Production readiness
+
+Foundational, app-wide concerns not tied to a single legacy screen. Several
+menu features (COMM, reminders, guard generation) depend on the first two.
+
+- [ ] **Notification / messaging infrastructure** — one unified layer (Laravel
+  Notifications + `app/Mail` mailables + channels) instead of per-screen
+  email/SMS/alert/push code. Configure a mail transport, queue the sends, and
+  build reusable templates; this unblocks password-reset mail and the whole
+  COMM menu. Add an SMS channel abstraction (provider-agnostic) consumed by the
+  later SMS-gateway work.
+- [ ] **Queues + scheduler** — wire a queue connection + worker (`app/Jobs`) so
+  mail/SMS/exports run async, and a Laravel scheduler (`routes/console.php` /
+  `Console\Kernel`) for recurring jobs: qualification/medical-aptitude expiry
+  reminders, automatic guard/piquet generation, backups, retention purges.
+- [ ] **RGPD / data-privacy compliance** — the app holds medical aptitude, home
+  addresses, emergency contacts and member geolocation. Implement: data-subject
+  export (portability), right-to-erasure workflow, retention policy + automated
+  purge, consent tracking, a processing register, and access logging on
+  sensitive records. Encrypt sensitive columns at rest.
+- [ ] **Observability** — structured logging, error tracking (Sentry/Flare or
+  similar), a health-check endpoint, and basic uptime/performance monitoring.
+- [ ] **Security headers & upload safety** — CSP/HSTS/security headers
+  middleware, rate limiting on auth and sensitive endpoints, and validation +
+  type/size + malware scanning on all uploads (profile photos, RIB, documents,
+  album photos).
+- [ ] **Error / empty pages** — polished custom 404 / 403 / 500 / maintenance
+  and no-JS pages (replaces legacy `error.php` / `noscript.php`).
+- [ ] **i18n / l10n scaffolding (French only for now)** — move hard-coded UI
+  strings into a `lang/fr` layer and route them through Laravel localization, so
+  copy is centralized and a second locale is later a drop-in. No translations
+  yet — implementation + French strings only.
+- [ ] **Backup robustness** — an automated backup schedule exists but is a
+  no-op: make it actually run (DB + uploads), store off-site/retained, and add a
+  periodic restore-drill check.
 
 ---
 
@@ -291,3 +330,25 @@ Authoritative list: the `todo` annotations in `AdminController::settings()`
 - [ ] Delete `archive/legacy_app/` and all bridge configuration
 - [ ] Execute production cutover plan
 - [ ] Update README and docs to the fully-migrated state
+
+---
+
+## Release strategy
+
+How the app is built, shipped and upgraded in production.
+
+- [ ] **CD pipeline** — extend the existing CI (`.github/workflows/ci.yml`) into
+  a deploy pipeline (build assets, run migrations, zero-downtime release,
+  rollback path); gate on the green checks (pint/phpstan/test).
+- [ ] **Migration & release runbook** — documented deploy steps, DB-migration
+  policy (forward-only, backward-compatible where possible), and a rollback
+  procedure.
+- [ ] **Environments** — clearly defined local / staging / production configs
+  and secrets management; staging mirrors production for UAT.
+- [ ] **Versioning & changelog** — adopt semantic versioning + a maintained
+  `CHANGELOG.md`; tag releases.
+- [ ] **In-app update / maintenance flow** — successor to legacy `update_app.php`
+  / `upgrade.php`: surface migration status, run pending migrations, and toggle
+  maintenance mode from the admin UI.
+- [ ] **Release verification** — post-deploy smoke checks (health endpoint,
+  critical workflows) and monitoring hooks tied to the observability work.
