@@ -83,6 +83,7 @@ at folder granularity (they are binary assets copied as-is).
 | `evenement_diplome.php`            | **WIP**                                                                                      |
 | `evenement_options.php`            | `EventController.php` (`optionGroupStore/Update/Destroy`, `optionStore/Update/Destroy`, `dropdownChoiceStore/Destroy`) + `event/show.blade.php` (Options d'inscription card + modals) |
 | `evenement_option_choix.php`       | `EventController.php` (`participantChoicesSave`) + `event/show.blade.php` (`#choicesModal-{P_ID}` per participant)                                                                    |
+| `evenement_log` (inline in `evenement_display.php`) | `EventController.php` (`logStore/Update/Destroy`) + `event/show.blade.php` (Main courante card + add/edit modals) |
 | `evenement_notify.php`             | **WIP**                                                                                      |
 | `evenement_rapport.php`            | **WIP**                                                                                      |
 | `evenement_trombinoscope.php`      | `EventController.php` (`trombinoscope`) + `event/trombinoscope.blade.php`                   |

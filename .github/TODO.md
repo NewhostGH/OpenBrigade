@@ -82,7 +82,7 @@ whole Communication menu, reminders and guard generation).
 ### Activité — Events & Interventions (ACT)
 
 - [ ] Participant notifications (`evenement_notify.php`) — needs the notification layer
-- [ ] Main courante (incident log)
+- [x] Main courante (incident log) — `evenement_log` card on event show: list + add/edit/delete modals (perm 15)
 - [x] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`)
 - [ ] Event report (`evenement_rapport.php`)
 - [ ] Editable PDF for conventions
