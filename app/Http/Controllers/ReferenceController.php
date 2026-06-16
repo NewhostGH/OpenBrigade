@@ -432,6 +432,122 @@ class ReferenceController extends Controller
             ->with('success', 'Type de véhicule supprimé.');
     }
 
+    // ── Vehicle function types ────────────────────────────────────────────────
+
+    public function vehicleFunctionIndex(): View
+    {
+        $items = DB::table('type_fonction_vehicule')
+            ->orderBy('TFV_ORDER')
+            ->orderBy('TFV_NAME')
+            ->get();
+
+        return view('admin.references.vehicle-function', compact('items'));
+    }
+
+    public function vehicleFunctionStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'TFV_NAME' => ['required', 'string', 'max:50', 'unique:type_fonction_vehicule,TFV_NAME'],
+            'TFV_DESCRIPTION' => ['nullable', 'string', 'max:100'],
+            'TFV_ORDER' => ['required', 'integer', 'min:0', 'max:9999'],
+        ]);
+
+        DB::table('type_fonction_vehicule')->insert([
+            'TFV_NAME' => $v['TFV_NAME'],
+            'TFV_DESCRIPTION' => $v['TFV_DESCRIPTION'] ?? '',
+            'TFV_ORDER' => $v['TFV_ORDER'],
+        ]);
+
+        return redirect()->route('admin.references.vehicle-function')
+            ->with('success', 'Fonction véhicule créée.');
+    }
+
+    public function vehicleFunctionUpdate(Request $request, int $id): RedirectResponse
+    {
+        $v = $request->validate([
+            'TFV_NAME' => ['required', 'string', 'max:50', 'unique:type_fonction_vehicule,TFV_NAME,'.$id.',TFV_ID'],
+            'TFV_DESCRIPTION' => ['nullable', 'string', 'max:100'],
+            'TFV_ORDER' => ['required', 'integer', 'min:0', 'max:9999'],
+        ]);
+
+        DB::table('type_fonction_vehicule')->where('TFV_ID', $id)->update([
+            'TFV_NAME' => $v['TFV_NAME'],
+            'TFV_DESCRIPTION' => $v['TFV_DESCRIPTION'] ?? '',
+            'TFV_ORDER' => $v['TFV_ORDER'],
+        ]);
+
+        return redirect()->route('admin.references.vehicle-function')
+            ->with('success', 'Fonction véhicule mise à jour.');
+    }
+
+    public function vehicleFunctionDestroy(int $id): RedirectResponse
+    {
+        DB::table('type_fonction_vehicule')->where('TFV_ID', $id)->delete();
+
+        return redirect()->route('admin.references.vehicle-function')
+            ->with('success', 'Fonction véhicule supprimée.');
+    }
+
+    // ── Grade categories ──────────────────────────────────────────────────────
+
+    public function gradeCategoryIndex(): View
+    {
+        $categories = DB::table('categorie_grade')
+            ->orderBy('CG_CODE')
+            ->get();
+
+        $gradeCounts = DB::table('grade')
+            ->selectRaw('G_CATEGORY, COUNT(*) as nb')
+            ->groupBy('G_CATEGORY')
+            ->pluck('nb', 'G_CATEGORY');
+
+        return view('admin.references.grade-category', compact('categories', 'gradeCounts'));
+    }
+
+    public function gradeCategoryStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'CG_CODE' => ['required', 'string', 'max:10', 'unique:categorie_grade,CG_CODE'],
+            'CG_DESCRIPTION' => ['required', 'string', 'max:50'],
+        ]);
+
+        DB::table('categorie_grade')->insert([
+            'CG_CODE' => strtoupper($v['CG_CODE']),
+            'CG_DESCRIPTION' => $v['CG_DESCRIPTION'],
+        ]);
+
+        return redirect()->route('admin.references.grade-category')
+            ->with('success', 'Catégorie de grade créée.');
+    }
+
+    public function gradeCategoryUpdate(Request $request, string $code): RedirectResponse
+    {
+        $v = $request->validate([
+            'CG_DESCRIPTION' => ['required', 'string', 'max:50'],
+        ]);
+
+        DB::table('categorie_grade')->where('CG_CODE', $code)->update([
+            'CG_DESCRIPTION' => $v['CG_DESCRIPTION'],
+        ]);
+
+        return redirect()->route('admin.references.grade-category')
+            ->with('success', 'Catégorie mise à jour.');
+    }
+
+    public function gradeCategoryDestroy(string $code): RedirectResponse
+    {
+        $nb = DB::table('grade')->where('G_CATEGORY', $code)->count();
+        if ($nb > 0) {
+            return redirect()->route('admin.references.grade-category')
+                ->with('error', "Cette catégorie contient {$nb} grade(s) et ne peut pas être supprimée.");
+        }
+
+        DB::table('categorie_grade')->where('CG_CODE', $code)->delete();
+
+        return redirect()->route('admin.references.grade-category')
+            ->with('success', 'Catégorie supprimée.');
+    }
+
     // ── Grade icons ───────────────────────────────────────────────────────────
 
     public function gradeIndex(): View

@@ -223,6 +223,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/context/role', [ContextController::class, 'role'])->name('context.role')->middleware('permission:0');
     // User-facing "Mes droits" (effective permissions preview)
     Route::get('/my-permissions', [MyPermissionsController::class, 'index'])->name('my-permissions')->middleware('permission:0');
+    // Vehicle function types
+    Route::get('/admin/references/vehicle-function', [ReferenceController::class, 'vehicleFunctionIndex'])->name('admin.references.vehicle-function')->middleware('permission:5');
+    Route::post('/admin/references/vehicle-function', [ReferenceController::class, 'vehicleFunctionStore'])->name('admin.references.vehicle-function.store')->middleware('permission:5');
+    Route::patch('/admin/references/vehicle-function/{id}', [ReferenceController::class, 'vehicleFunctionUpdate'])->name('admin.references.vehicle-function.update')->middleware('permission:5');
+    Route::delete('/admin/references/vehicle-function/{id}', [ReferenceController::class, 'vehicleFunctionDestroy'])->name('admin.references.vehicle-function.destroy')->middleware('permission:5');
+    // Grade categories
+    Route::get('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryIndex'])->name('admin.references.grade-category')->middleware('permission:5');
+    Route::post('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryStore'])->name('admin.references.grade-category.store')->middleware('permission:5');
+    Route::patch('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryUpdate'])->name('admin.references.grade-category.update')->middleware('permission:5');
+    Route::delete('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryDestroy'])->name('admin.references.grade-category.destroy')->middleware('permission:5');
     // Grade icons
     Route::get('/admin/references/grade', [ReferenceController::class, 'gradeIndex'])->name('admin.references.grade')->middleware('permission:5');
     Route::post('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconUpload'])->name('admin.references.grade.icon.upload')->middleware('permission:5');

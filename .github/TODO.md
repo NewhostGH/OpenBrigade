@@ -218,7 +218,9 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Full ACL with groups — allow/deny at every tier (user override > section deny > group/role deny > group/role allow > default deny); `ob_user_permission` + `ob_group_permission.effect`; tri-state matrices + 4th "Dérogations" tab; resolver precedence tests. See CONVENTIONS §9.
 - [x] Surface user-level overrides in "Mes droits" — personal allow/deny rows from `ob_user_permission` shown in the preview table with dedicated icons and strikethrough styling
 - [ ] Plugins marketplace — `/admin/plugins` is a placeholder; install/download flow to design
-- [ ] `paramfn` / `paramfnv` (billable + vehicle function params) and grade category CRUD — still on the legacy bridge
+- [x] `paramfnv` vehicle function types (`type_fonction_vehicule`) — CRUD at `/admin/references/vehicle-function`; inline list with name/description/order; perm 5
+- [x] Grade category (`categorie_grade`) CRUD — at `/admin/references/grade-category`; inline description edit; delete blocked if grades assigned; badge count; link to grade icons page; perm 5
+- [ ] `paramfn` participation function enhanced fields (`PS_ID`/`PS_ID2` required competence, `INSTRUCTOR` flag per `type_participation` row) — these extra fields still default to 0; legacy `paramfn.php` bridge still used for the full edit
 - [ ] Maintenance utilities (`update_app.php`, `buildsql.php`, `decrypt.php`, `import_api.php`, `debug_data.php`)
 
 ### Opérations d'urgence (DPS / SITAC / Victimes)

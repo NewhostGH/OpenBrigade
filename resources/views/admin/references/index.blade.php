@@ -20,7 +20,9 @@
             ['route' => 'admin.references.equipment-category',  'icon' => 'layer-group',    'label' => 'Catégories matériel',  'count' => $counts['categorie_materiel'], 'desc' => 'EPI, outillage, véhicule…'],
             ['route' => 'admin.references.equipment-type',     'icon' => 'toolbox',        'label' => 'Types de matériel',    'count' => $counts['type_materiel'],     'desc' => 'EPI, outillage…'],
             ['route' => 'admin.references.consumable-type',  'icon' => 'boxes',          'label' => 'Types de consommable', 'count' => $counts['type_consommable'],  'desc' => 'Carburant, médicaments…'],
-            ['route' => 'admin.references.vehicle-type',     'icon' => 'truck',          'label' => 'Types de véhicule',    'count' => 0,                            'desc' => 'VSAV, FPT, VL…'],
+            ['route' => 'admin.references.vehicle-type',      'icon' => 'truck',          'label' => 'Types de véhicule',    'count' => 0,                            'desc' => 'VSAV, FPT, VL…'],
+            ['route' => 'admin.references.vehicle-function',  'icon' => 'car',            'label' => 'Fonctions véhicule',   'count' => 0,                            'desc' => 'Chef de bord, Équipier véhicule…'],
+            ['route' => 'admin.references.grade-category',    'icon' => 'layer-group',    'label' => 'Catégories de grade',  'count' => 0,                            'desc' => 'Officiers, Sous-officiers…'],
             ['route' => 'admin.references.grade',             'icon' => 'medal',          'label' => 'Icônes de grades',     'count' => $counts['grade'],             'desc' => 'Images associées à chaque grade'],
         ];
         @endphp
