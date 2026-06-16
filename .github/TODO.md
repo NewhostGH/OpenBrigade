@@ -107,6 +107,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Guard exports — PDF
 - [x] Type de garde management (`type_garde.php`)
 - [x] Demande de renfort (`demande_renfort.php`) — `Demande de renfort` card on event show (vehicle counts, material categories, meeting point, specific request); dedicated manage page at `/events/{code}/renfort-request` with per-type vehicle inputs and category checkboxes; perm 15 to edit
+- [ ] Demande de renfort — transmit the request to another section (email, or in-app message/notification): currently the request is only stored/displayed on the event; add a way to actually communicate it to the target section so they can respond with renfort sub-events
 
 ### Planning (PLA)
 

@@ -121,4 +121,25 @@
     </form>
 </div>
 
+@push('scripts')
+<script>
+(function () {
+    const totalInput = document.querySelector('input[name="nb_vehicules"]');
+    const typeInputs = Array.from(document.querySelectorAll('input[name^="vehicle_types["]'));
+    if (!totalInput || typeInputs.length === 0) return;
+
+    // The total may legitimately exceed the per-type breakdown (e.g. "5 vehicles,
+    // any type"). We only auto-raise it to the sum so the total is never lower
+    // than the detail; a manually-entered higher total is preserved.
+    function syncTotal() {
+        const sum = typeInputs.reduce((acc, el) => acc + (parseInt(el.value, 10) || 0), 0);
+        if ((parseInt(totalInput.value, 10) || 0) < sum) {
+            totalInput.value = sum;
+        }
+    }
+    typeInputs.forEach(el => el.addEventListener('input', syncTotal));
+})();
+</script>
+@endpush
+
 @endsection

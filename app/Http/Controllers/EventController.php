@@ -265,7 +265,7 @@ class EventController extends Controller
             ->get();
 
         // All materials (for the assign modal).
-        $allEquipments = DB::table('materiel')
+        $allMateriels = DB::table('materiel')
             ->orderBy('MA_MODELE')
             ->get(['MA_ID', 'MA_MODELE', 'MA_NUMERO_SERIE']);
 
@@ -349,7 +349,7 @@ class EventController extends Controller
 
         return view('event.show', compact(
             'event', 'typeLabel', 'participants', 'candidates', 'vehicules', 'allVehicles',
-            'functions', 'equipes', 'renforts', 'materiels', 'allEquipments',
+            'functions', 'equipes', 'renforts', 'materiels', 'allMateriels',
             'requiredPositions', 'availablePositions', 'activeCount',
             'renfortRequest', 'renfortVehicleTypes', 'renfortMaterials'
         ));
@@ -1066,7 +1066,7 @@ class EventController extends Controller
 
         $firstSchedule = $source->horaires->sortBy('EH_DATE_DEBUT')->first();
         $dayShift = $firstSchedule
-            ? $newDate->diffInDays(Carbon::parse($firstSchedule->EH_DATE_DEBUT), false)
+            ? (int) Carbon::parse($firstSchedule->EH_DATE_DEBUT)->startOfDay()->diffInDays($newDate->copy()->startOfDay(), false)
             : 0;
 
         $newCode = DB::transaction(function () use ($source, $dayShift, $validated) {
@@ -1169,7 +1169,7 @@ class EventController extends Controller
             'E_TEL' => ['nullable', 'string', 'max:15'],
             'horaires' => ['required', 'array', 'min:1'],
             'horaires.*.EH_DATE_DEBUT' => ['required', 'date'],
-            'horaires.*.EH_DATE_FIN' => ['nullable', 'date'],
+            'horaires.*.EH_DATE_FIN' => ['nullable', 'date', 'after_or_equal:horaires.*.EH_DATE_DEBUT'],
             'horaires.*.EH_DEBUT' => ['nullable', 'date_format:H:i'],
             'horaires.*.EH_FIN' => ['nullable', 'date_format:H:i'],
             'E_COMMENT' => ['nullable', 'string', 'max:5000'],
