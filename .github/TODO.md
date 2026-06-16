@@ -87,7 +87,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Main courante (incident log)
 - [x] Event duplication (`evenement_duplicate.php`)
 - [ ] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`)
-- [ ] Required competences / diplomas per event (`evenement_competences.php`, `evenement_diplome.php`)
+- [x] Required competences / diplomas per event (`evenement_competences.php`) — `Postes requis` card on event show: required positions from `evenement_competences`, with actual vs required headcount (counts enrolled participants holding each qualification); inline qty update; delete; add via modal; perm 15
 - [ ] Participant notifications (`evenement_notify.php`)
 - [ ] Event report (`evenement_rapport.php`)
 - [x] Per-event trombinoscope (`evenement_trombinoscope.php`) — photo grid of non-absent participants, grouped by function, with grade image and profile link; button in event show header

@@ -283,9 +283,53 @@ class EventController extends Controller
             )
             ->get();
 
+        // Required positions (postes requis) — with actual qualified headcount.
+        $activeCount = DB::table('evenement_participation')
+            ->where('E_CODE', $code)
+            ->where('EP_ABSENT', 0)
+            ->distinct()
+            ->count('P_ID');
+
+        $requiredPositions = DB::table('evenement_competences as ec')
+            ->leftJoin('poste as p', 'p.PS_ID', '=', 'ec.PS_ID')
+            ->where('ec.E_CODE', $code)
+            ->where('ec.EH_ID', 1)
+            ->orderByRaw('ec.PS_ID = 0 DESC')
+            ->orderBy('p.TYPE')
+            ->select('ec.PS_ID', 'ec.NB', 'p.TYPE', 'p.DESCRIPTION')
+            ->get()
+            ->map(function ($row) use ($code, $activeCount) {
+                if ($row->PS_ID == 0) {
+                    $row->actual = $activeCount;
+                    $row->label = 'Total participants';
+                } else {
+                    $row->actual = DB::table('evenement_participation as ep')
+                        ->where('ep.E_CODE', $code)
+                        ->where('ep.EP_ABSENT', 0)
+                        ->whereExists(function ($q) use ($row) {
+                            $q->select(DB::raw(1))
+                                ->from('qualification as q')
+                                ->whereColumn('q.P_ID', 'ep.P_ID')
+                                ->where('q.PS_ID', $row->PS_ID);
+                        })
+                        ->distinct()
+                        ->count('ep.P_ID');
+                    $row->label = $row->TYPE.' – '.$row->DESCRIPTION;
+                }
+
+                return $row;
+            });
+
+        // Available positions not yet listed as required (for the add form).
+        $availablePositions = DB::table('poste')
+            ->whereNotIn('PS_ID', $requiredPositions->pluck('PS_ID'))
+            ->orderBy('TYPE')
+            ->get(['PS_ID', 'TYPE', 'DESCRIPTION']);
+
         return view('event.show', compact(
             'event', 'typeLabel', 'participants', 'candidates', 'vehicules', 'allVehicles',
-            'functions', 'equipes', 'renforts', 'materiels', 'allEquipments'
+            'functions', 'equipes', 'renforts', 'materiels', 'allEquipments',
+            'requiredPositions', 'availablePositions', 'activeCount'
         ));
     }
 
@@ -1140,5 +1184,59 @@ class EventController extends Controller
             });
 
         return view('event.trombinoscope', compact('event', 'participants'));
+    }
+
+    /** Add a required position to an event (or set global count if ps_id=0). */
+    public function storeRequiredPosition(Request $request, string $code): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+
+        $validated = $request->validate([
+            'ps_id' => ['required', 'integer', 'min:0'],
+            'nb' => ['required', 'integer', 'min:1', 'max:9999'],
+        ]);
+
+        DB::table('evenement_competences')->upsert(
+            [['E_CODE' => $event->E_CODE, 'EH_ID' => 1, 'PS_ID' => $validated['ps_id'], 'NB' => $validated['nb']]],
+            ['E_CODE', 'EH_ID', 'PS_ID'],
+            ['NB']
+        );
+
+        return back()->with('success', 'Poste requis ajouté.');
+    }
+
+    /** Update the required count for a position. */
+    public function updateRequiredPosition(Request $request, string $code, int $psId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+
+        $nb = (int) $request->validate(['nb' => ['required', 'integer', 'min:0', 'max:9999']])['nb'];
+
+        if ($nb === 0) {
+            DB::table('evenement_competences')
+                ->where('E_CODE', $event->E_CODE)->where('EH_ID', 1)->where('PS_ID', $psId)
+                ->delete();
+        } else {
+            DB::table('evenement_competences')
+                ->where('E_CODE', $event->E_CODE)->where('EH_ID', 1)->where('PS_ID', $psId)
+                ->update(['NB' => $nb]);
+        }
+
+        return back()->with('success', 'Poste requis mis à jour.');
+    }
+
+    /** Remove a required position from an event. */
+    public function destroyRequiredPosition(string $code, int $psId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+
+        DB::table('evenement_competences')
+            ->where('E_CODE', $event->E_CODE)->where('EH_ID', 1)->where('PS_ID', $psId)
+            ->delete();
+
+        return back()->with('success', 'Poste requis supprimé.');
     }
 }

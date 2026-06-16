@@ -704,6 +704,93 @@
         </div>
     </div>
 
+    {{-- ── Section: Postes requis ────────────────────────────────────────── --}}
+    @if($requiredPositions->isNotEmpty() || auth()->user()->hasPermission(15))
+    <div id="section-postes" data-evt-section class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
+                <i class="fas fa-tasks"></i> Postes requis
+                @if($requiredPositions->isNotEmpty())
+                    <span class="ob-badge ob-badge-archive ms-1">{{ $requiredPositions->count() }}</span>
+                @endif
+            </div>
+            @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
+                <button type="button" class="btn btn-sm btn-success"
+                        data-bs-toggle="modal" data-bs-target="#addPosteModal">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </button>
+            @endif
+        </div>
+        <div class="ob-widget-card-body p-0">
+            @if($requiredPositions->isEmpty())
+                <p class="ob-widget-empty p-3">Aucun poste requis défini.</p>
+            @else
+                <table class="table table-sm table-hover mb-0 align-middle">
+                    <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
+                        <tr>
+                            <th>Poste / Qualification</th>
+                            <th class="text-center" style="width:80px">Inscrits</th>
+                            <th class="text-center" style="width:80px">Requis</th>
+                            <th class="text-center" style="width:50px">Statut</th>
+                            @if(auth()->user()->hasPermission(15))<th style="width:50px"></th>@endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($requiredPositions as $rp)
+                        @php
+                            $enough = $rp->NB == 0 || $rp->actual >= $rp->NB;
+                            $excess = $rp->NB > 0 && $rp->actual > $rp->NB;
+                        @endphp
+                        <tr>
+                            <td style="font-size:var(--font-size-sm)">
+                                {{ $rp->label }}
+                            </td>
+                            <td class="text-center fw-semibold">{{ $rp->actual }}</td>
+                            <td class="text-center">
+                                @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
+                                    <form method="POST" action="{{ route('event.required-position.update', [$event->E_CODE, $rp->PS_ID]) }}" class="d-inline">
+                                        @csrf @method('PATCH')
+                                        <input type="number" name="nb" value="{{ $rp->NB }}" min="0" max="9999"
+                                               style="width:60px;text-align:center" class="form-control form-control-sm d-inline"
+                                               onchange="this.form.submit()" title="0 = supprimer">
+                                    </form>
+                                @else
+                                    {{ $rp->NB ?: '∞' }}
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if($rp->NB == 0)
+                                    <i class="fas fa-check-circle text-success" title="Pas de limite"></i>
+                                @elseif($excess)
+                                    <i class="fas fa-check-circle text-primary" title="Plus que nécessaire"></i>
+                                @elseif($enough)
+                                    <i class="fas fa-check-circle text-success" title="Suffisant"></i>
+                                @else
+                                    <i class="fas fa-exclamation-circle text-danger" title="Insuffisant"></i>
+                                @endif
+                            </td>
+                            @if(auth()->user()->hasPermission(15))
+                            <td class="text-center">
+                                @if(!$event->E_CLOSED && !$event->E_CANCELED)
+                                <form method="POST" action="{{ route('event.required-position.destroy', [$event->E_CODE, $rp->PS_ID]) }}"
+                                      onsubmit="return confirm('Supprimer ce poste requis ?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger" title="Supprimer">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                                @endif
+                            </td>
+                            @endif
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    </div>
+    @endif
+
     </div>  {{-- close content sections --}}
 
 </div>  {{-- close mx-3 mt-3 --}}
@@ -1082,6 +1169,52 @@
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-sm btn-primary">
                         <i class="fas fa-copy me-1"></i> Dupliquer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- Add required position modal --}}
+@if(auth()->user()->hasPermission(15))
+<div class="modal fade" id="addPosteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Ajouter un poste requis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('event.required-position.store', $event->E_CODE) }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">
+                            Poste / Qualification <span class="text-danger">*</span>
+                        </label>
+                        <select name="ps_id" class="form-select form-select-sm" required>
+                            <option value="">— choisir —</option>
+                            <option value="0" @if($requiredPositions->where('PS_ID', 0)->isNotEmpty()) disabled @endif>
+                                Total participants (global)
+                            </option>
+                            @foreach($availablePositions as $pos)
+                                <option value="{{ $pos->PS_ID }}">{{ $pos->TYPE }} – {{ $pos->DESCRIPTION }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">
+                            Nombre requis <span class="text-danger">*</span>
+                        </label>
+                        <input type="number" name="nb" class="form-control form-control-sm"
+                               min="1" max="9999" value="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus me-1"></i> Ajouter
                     </button>
                 </div>
             </form>
