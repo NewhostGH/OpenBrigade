@@ -45,9 +45,7 @@ class GeolocationController extends Controller
                 'g.DATE_LOC'
             );
 
-        if ($sectionId !== null) {
-            $query->where('p.P_SECTION', $sectionId);
-        }
+        app(SectionScopeService::class)->apply($query, 'p.P_SECTION', $sectionId);
 
         $members = $query->orderBy('p.P_NOM')->get();
 

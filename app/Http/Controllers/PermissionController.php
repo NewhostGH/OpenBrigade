@@ -326,14 +326,15 @@ class PermissionController extends Controller
     {
         $group = ObGroup::findOrFail($gpId);
         $format = $request->string('format', 'xlsx')->toString();
-        $sectionId = (int) $request->integer('section', 0);
+        $sectionRaw = $request->input('section');
+        $sectionId = ($sectionRaw !== null && $sectionRaw !== '') ? (int) $sectionRaw : null;
 
         if ($group->kind === ObGroup::KIND_ROLE) {
             $query = DB::table('ob_user_assignment as ua')
                 ->join('pompier as p', 'p.P_ID', '=', 'ua.person_id')
                 ->join('section as s', 's.S_ID', '=', 'p.P_SECTION')
                 ->where('ua.group_id', $gpId);
-            if ($sectionId > 0) {
+            if ($sectionId !== null) {
                 $query->where('ua.section_id', $sectionId);
             }
             $query->select(

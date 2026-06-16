@@ -52,8 +52,8 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Organizational root section (`S_ID = 0`, `S_PARENT = -1`) is now a first-class, selectable & assignable section; `-1` (`SectionScopeService::ALL`) is the dedicated "all / global" sentinel everywhere (request filters, resolver chain/scope, `ob_user_assignment` / `ob_user_permission` global rows). Migration `2026_06_16_000100` re-sentinels existing global rows `0 → -1`. Navbar switcher reflects the explicit choice (`chosenSectionId`) so "Toutes mes sections" highlights correctly
 - [ ] **Seed the organizational root section** (`S_ID = 0`, `S_PARENT = -1`) in `CoreSeeder` — fresh installs currently have no root row, so the switcher/selectors can't show it and `SuperAdminProvisioner::rootSectionId()` returns null. Existing (legacy-imported) DBs already have it
 - [ ] Section-scope test for the root: assert `PermissionResolver::sectionChain(site)` includes `0` and that a deny ceiling on the root cascades to its child sites (the resolver unit tests stub `sectionChain`, so add a DB-backed feature test)
-- [ ] `GeolocationController::index` filters by exact `P_SECTION` only — wire it through `SectionScopeService` so the map honours section isolation and the navbar scope (incl. the root subtree)
-- [ ] `PermissionController::exportGroup` still uses `section_id > 0` to filter role members — allow targeting the root section (`0`); use the `-1`/absent = no-filter convention
+- [x] `GeolocationController::index` — replaced exact `P_SECTION =` match with `SectionScopeService::apply()` so the map honours section isolation, navbar scope and root subtree
+- [x] `PermissionController::exportGroup` — fixed `section_id > 0` guard to `!== null` so root section (`S_ID = 0`) is included; absent/empty = no filter convention
 
 ---
 
