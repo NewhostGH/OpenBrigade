@@ -548,6 +548,16 @@ class PersonnelController extends Controller
                 'p.P_STATUT', 'p.P_OLD_MEMBER', 's.S_CODE', 's.S_DESCRIPTION')
             ->get();
 
+        // Clothing (tenues/dotation) assigned to this person.
+        $tenues = DB::table('materiel as m')
+            ->join('type_materiel as tm', 'tm.TM_ID', '=', 'm.TM_ID')
+            ->leftJoin('taille_vetement as tv', 'tv.TV_ID', '=', 'm.TV_ID')
+            ->where('m.AFFECTED_TO', $personnel->P_ID)
+            ->where('tm.TM_USAGE', 'Habillement')
+            ->orderBy('tm.TM_CODE')
+            ->select('m.MA_ID', 'm.MA_MODELE', 'm.MA_ANNEE', 'm.MA_NB', 'tm.TM_CODE', 'tm.TM_DESCRIPTION', 'tv.TV_NAME')
+            ->get();
+
         $sideNav = [
             ['id' => 'section-info',          'icon' => 'fas fa-user',          'label' => 'Information'],
             ['id' => 'section-competences',   'icon' => 'fas fa-certificate',   'label' => 'Compétences',
@@ -556,7 +566,8 @@ class PersonnelController extends Controller
                 'badge' => $cotisations->count() ?: null],
             ['id' => 'section-participation', 'icon' => 'fas fa-calendar-check', 'label' => 'Participation',
                 'badge' => $participation->count() ?: null],
-            ['id' => 'section-dotation',      'icon' => 'fas fa-box',           'label' => 'Dotation'],
+            ['id' => 'section-dotation',      'icon' => 'fas fa-box',           'label' => 'Dotation',
+                'badge' => $tenues->count() ?: null],
             ['id' => 'section-documents',     'icon' => 'fas fa-file-alt',      'label' => 'Documents'],
             ['id' => 'section-notedfrais',    'icon' => 'fas fa-receipt',       'label' => 'Notes de frais'],
             ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day',  'label' => 'Availabilitynibilité'],
@@ -600,6 +611,7 @@ class PersonnelController extends Controller
             'personnelSections' => $personnelSections,
             'contactHandles' => $contactHandles,
             'homonyms' => $homonyms,
+            'tenues' => $tenues,
         ]);
     }
 
@@ -1598,5 +1610,107 @@ class PersonnelController extends Controller
 
         return redirect()->route('personnel.show', $personnel)
             ->with('success', 'Fusion effectuée avec succès.');
+    }
+
+    /** Clothing / uniform dotation management for a member. */
+    public function tenues(Personnel $personnel): View
+    {
+        $user = auth()->user();
+        $canFullUpdate = $user->hasPermission(70);
+        $canSizeOnly = ! $canFullUpdate && auth()->id() == $personnel->P_ID;
+        abort_unless($canFullUpdate || $canSizeOnly || $user->hasPermission(0), 403);
+
+        $assigned = DB::table('materiel as m')
+            ->join('type_materiel as tm', 'tm.TM_ID', '=', 'm.TM_ID')
+            ->leftJoin('taille_vetement as tv', 'tv.TV_ID', '=', 'm.TV_ID')
+            ->leftJoin('type_taille as tt', 'tt.TT_CODE', '=', 'tm.TT_CODE')
+            ->where('m.AFFECTED_TO', $personnel->P_ID)
+            ->where('tm.TM_USAGE', 'Habillement')
+            ->orderBy('tm.TM_CODE')
+            ->select('m.MA_ID', 'm.MA_MODELE', 'm.MA_ANNEE', 'm.MA_NB', 'm.TV_ID',
+                'tm.TM_ID', 'tm.TM_CODE', 'tm.TM_DESCRIPTION', 'tm.TT_CODE', 'tt.TT_NAME',
+                'tv.TV_NAME as current_size')
+            ->get();
+
+        $available = collect();
+        if ($canFullUpdate) {
+            $available = DB::table('type_materiel as tm')
+                ->leftJoin('type_taille as tt', 'tt.TT_CODE', '=', 'tm.TT_CODE')
+                ->where('tm.TM_USAGE', 'Habillement')
+                ->whereNotIn('tm.TM_ID', $assigned->pluck('TM_ID'))
+                ->orderBy('tm.TM_CODE')
+                ->select('tm.TM_ID', 'tm.TM_CODE', 'tm.TM_DESCRIPTION', 'tm.TT_CODE', 'tt.TT_NAME')
+                ->get();
+        }
+
+        $sizesByCode = DB::table('taille_vetement')
+            ->orderBy('TT_CODE')->orderBy('TV_ORDER')
+            ->get(['TV_ID', 'TT_CODE', 'TV_NAME'])
+            ->groupBy('TT_CODE');
+
+        return view('personnel.tenues',
+            compact('personnel', 'assigned', 'available', 'sizesByCode', 'canFullUpdate', 'canSizeOnly'));
+    }
+
+    /** Save clothing dotation changes for a member. */
+    public function tenuesUpdate(Request $request, Personnel $personnel): RedirectResponse
+    {
+        $user = auth()->user();
+        $canFullUpdate = $user->hasPermission(70);
+        $canSizeOnly = ! $canFullUpdate && auth()->id() == $personnel->P_ID;
+        abort_unless($canFullUpdate || $canSizeOnly, 403);
+
+        foreach ($request->input('items', []) as $maId => $data) {
+            $maId = (int) $maId;
+            $nb = (int) ($data['nb'] ?? 0);
+            $tvId = ((int) ($data['tv_id'] ?? 0)) ?: null;
+
+            if ($canFullUpdate && $nb === 0) {
+                DB::table('materiel')->where('MA_ID', $maId)->where('AFFECTED_TO', $personnel->P_ID)->delete();
+            } elseif ($canFullUpdate) {
+                $annee = (int) ($data['annee'] ?? 0);
+                DB::table('materiel')
+                    ->where('MA_ID', $maId)->where('AFFECTED_TO', $personnel->P_ID)
+                    ->update([
+                        'MA_MODELE' => substr($data['modele'] ?? '', 0, 40),
+                        'MA_ANNEE' => ($annee >= 1900 && $annee <= 2050) ? $annee : null,
+                        'MA_NB' => $nb,
+                        'TV_ID' => $tvId,
+                        'MA_UPDATE_BY' => auth()->id(),
+                        'MA_UPDATE_DATE' => now()->toDateString(),
+                    ]);
+            } elseif ($canSizeOnly) {
+                DB::table('materiel')
+                    ->where('MA_ID', $maId)->where('AFFECTED_TO', $personnel->P_ID)
+                    ->update(['TV_ID' => $tvId]);
+            }
+        }
+
+        if ($canFullUpdate) {
+            foreach ($request->input('new', []) as $tmId => $data) {
+                $nb = (int) ($data['nb'] ?? 0);
+                if ($nb <= 0) {
+                    continue;
+                }
+                $tvId = ((int) ($data['tv_id'] ?? 0)) ?: null;
+                $annee = (int) ($data['annee'] ?? 0);
+                DB::table('materiel')->insert([
+                    'TM_ID' => (int) $tmId,
+                    'MA_MODELE' => substr($data['modele'] ?? '', 0, 40),
+                    'MA_ANNEE' => ($annee >= 1900 && $annee <= 2050) ? $annee : null,
+                    'MA_NB' => $nb,
+                    'TV_ID' => $tvId,
+                    'AFFECTED_TO' => $personnel->P_ID,
+                    'S_ID' => $personnel->P_SECTION,
+                    'VP_ID' => 'PRE',
+                    'MA_UPDATE_BY' => auth()->id(),
+                    'MA_UPDATE_DATE' => now()->toDateString(),
+                    'MA_ADDED' => now(),
+                ]);
+            }
+        }
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Dotation mise à jour.');
     }
 }

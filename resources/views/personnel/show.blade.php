@@ -591,13 +591,42 @@
             <div id="section-dotation" data-pers-section>
                 <div class="ob-widget-card mb-3">
                     <div class="ob-widget-card-header">
-                        <div class="ob-widget-card-title"><i class="fas fa-box"></i> Dotation</div>
-                        <button class="btn btn-sm btn-success noprint" disabled title="Fonctionnalité à venir">
-                            <i class="fas fa-plus me-1"></i> Ajouter
-                        </button>
+                        <div class="ob-widget-card-title"><i class="fas fa-box me-1"></i> Dotation habillement</div>
+                        <div class="ob-widget-card-actions">
+                            @if(auth()->user()->hasPermission(70) || auth()->id() == $personnel->P_ID)
+                            <a href="{{ route('personnel.tenues', $personnel) }}" class="btn btn-sm btn-outline-primary noprint">
+                                <i class="fas fa-edit me-1"></i> Gérer
+                            </a>
+                            @endif
+                        </div>
                     </div>
-                    <div class="ob-widget-card-body">
-                        <p class="ob-widget-empty mb-0">Aucune dotation enregistrée.</p>
+                    <div class="ob-widget-card-body p-0">
+                        @if($tenues->isEmpty())
+                            <p class="ob-widget-empty mb-0">Aucune dotation habillement enregistrée.</p>
+                        @else
+                            <table class="ob-table ob-table-sm w-100 mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Modèle</th>
+                                        <th>Année</th>
+                                        <th>Taille</th>
+                                        <th class="text-end">Nb</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tenues as $t)
+                                    <tr>
+                                        <td>{{ $t->TM_CODE }}</td>
+                                        <td>{{ $t->MA_MODELE }}</td>
+                                        <td>{{ $t->MA_ANNEE }}</td>
+                                        <td>{{ $t->TV_NAME ?? '—' }}</td>
+                                        <td class="text-end">{{ $t->MA_NB }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
                 </div>
             </div>{{-- /section-dotation --}}

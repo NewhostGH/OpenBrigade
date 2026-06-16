@@ -66,7 +66,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Géolocalisation — Leaflet map
 - [ ] Rework grade system
 - [ ] Trainings & diplomas CRUD (`personnel_formation.php`, `diplome_edit.php`)
-- [ ] Tenues / uniforms (`personnel_tenues.php`)
+- [x] Tenues / uniforms (`personnel_tenues.php`) — dotation habillement card on personnel show + dedicated manage page (`/personnel/{id}/tenues`); perm 70 = full edit (add/update/delete items, model/year/size/nb); self = size-only update; read-only view for others
 - [ ] User preferences (`personnel_preferences.php`)
 - [x] Salarié data (`upd_personnel_salarie.php`) — TS_ contract/hours fields card on personnel show page (perm 2)
 - [x] Emergency contacts (`personnel_contact.php`)

@@ -373,6 +373,11 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.merge.show')->middleware('permission:2');
     Route::post('personnel/{personnel}/merge/{doublon}', [PersonnelController::class, 'doMerge'])
         ->name('personnel.merge')->middleware('permission:2');
+    // Tenues / uniform dotation
+    Route::get('personnel/{personnel}/tenues', [PersonnelController::class, 'tenues'])
+        ->name('personnel.tenues')->middleware('permission:0');
+    Route::post('personnel/{personnel}/tenues', [PersonnelController::class, 'tenuesUpdate'])
+        ->name('personnel.tenues.update')->middleware('permission:0');
     // Géolocalisation
     Route::get('/geolocation', [GeolocationController::class, 'index'])
         ->name('geolocation.index')->middleware(['permission:0', 'feature:geolocalize_enabled']);
