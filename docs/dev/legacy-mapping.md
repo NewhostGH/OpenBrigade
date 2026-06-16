@@ -117,11 +117,11 @@ at folder granularity (they are binary assets copied as-is).
 | `save_personnel_tenues.php`    | `PersonnelController.php` (`tenues` save)                                                            |
 | `personnel_preferences.php`    | `PersonnelController.php` (`preferences`) + `personnel/preferences.blade.php`                       |
 | `save_preferences.php`         | `PersonnelController.php` (`preferences` save)                                                      |
-| `personnel_formation.php`      | **WIP** (training/diploma CRUD not built)                                                            |
-| `save_personnel_formation.php` | **WIP**                                                                                              |
-| `del_personnel_formation.php`  | **WIP**                                                                                              |
-| `formations_xls.php`           | **WIP** (waiting on training CRUD)                                                                   |
-| `diplome_edit.php`             | **WIP**                                                                                              |
+| `personnel_formation.php`      | `PersonnelController.php` (`storeTraining`/`updateTraining`/`destroyTraining`) + `personnel/show.blade.php` (Formations card + modals) |
+| `save_personnel_formation.php` | `PersonnelController.php` (`storeTraining`/`updateTraining`)                                                                           |
+| `del_personnel_formation.php`  | `PersonnelController.php` (`destroyTraining`)                                                                                          |
+| `formations_xls.php`           | **WIP** (training CRUD now done; export to implement)                                                                                  |
+| `diplome_edit.php`             | **WIP** (complex PDF field-positioning admin screen)                                                                                   |
 | `qualifications.php`           | `PersonnelController.php` (`*Qualification`) + `personnel/qualifications.blade.php`                  |
 | `qualifications_xls.php`       | `PersonnelController.php` (qualifications XLS/CSV, section-scoped)                                    |
 | `save_qualif.php`              | `PersonnelController.php` (`storeQualification`)                                                     |

@@ -73,7 +73,8 @@ whole Communication menu, reminders and guard generation).
 
 ### Personnel (PERSO)
 
-- [ ] Trainings & diplomas CRUD (`personnel_formation.php`, `diplome_edit.php`)
+- [x] Trainings CRUD (`personnel_formation.php`) — formations card on personnel show page
+- [ ] Diploma print layout config (`diplome_edit.php`) — complex PDF field positioning admin screen
 - [ ] Custom member fields (`specific_info.php`)
 - [ ] Remaining exports (`formations_xls.php`, `export_badges.php`) — waiting on training CRUD
 
