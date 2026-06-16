@@ -46,7 +46,7 @@
     @else
         <div class="ob-hab-legend">
             <span><i class="fas fa-check text-success"></i> autorise</span>
-            <span><i class="fas fa-ban text-danger"></i> refuse (prioritaire sur les autres groupes)</span>
+            <span><i class="fas fa-ban text-danger"></i> refuse</span>
             <span><span class="text-muted">·</span> neutre</span>
         </div>
 
@@ -71,6 +71,10 @@
                                 <a href="{{ route('admin.permissions.group.export', ['gpId' => $c->id, 'format' => 'xlsx']) }}"
                                    class="ms-1" title="Exporter les membres (XLS)" style="font-size:11px; text-decoration:none;">
                                     <i class="fas fa-file-excel text-success"></i>
+                                </a>
+                                <a href="{{ route('admin.permissions.group.export', ['gpId' => $c->id, 'format' => 'csv']) }}"
+                                   title="Exporter les membres (CSV)" style="font-size:11px; text-decoration:none;">
+                                    <i class="fas fa-file-csv text-secondary"></i>
                                 </a>
                             </th>
                         @endforeach
@@ -100,11 +104,7 @@
                                 @foreach ($columns as $c)
                                     @php $effect = $grants->get("{$c->id}|{$f->F_ID}"); @endphp
                                     <td class="ob-hab-cell" data-col="{{ $c->id }}">
-                                        @if ($c->is_system)
-                                            @if ($effect === 'allow')<i class="fas fa-check text-success"></i>
-                                            @elseif ($effect === 'deny')<i class="fas fa-ban text-danger"></i>
-                                            @else<i class="fas fa-minus text-muted" style="font-size:10px;"></i>@endif
-                                        @elseif ($kind === 'role' && $capped)
+                                        @if ($kind === 'role' && $capped)
                                             <i class="fas fa-lock text-muted" title="Refusé par la section affichée"></i>
                                         @else
                                             @include('admin.permissions.partials.effect-cell', [

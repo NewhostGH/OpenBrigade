@@ -153,8 +153,10 @@ class PermissionController extends Controller
         $group = ObGroup::find((int) $v['group_id']);
         abort_if($group === null, 404);
 
-        if ($group->isProtected()) {
-            return $this->backToTab($v, 'error', 'Ce groupe système est en lecture seule.');
+        // System groups are protected against rename/delete, but their grants
+        // are meant to be tuned freely. Only the "blocked" sentinel rejects them.
+        if ((int) $group->id === (int) config('habilitations.block_group_id', -1)) {
+            return $this->backToTab($v, 'error', 'Ce groupe est réservé et ne peut pas être modifié.');
         }
 
         $effect = $v['effect'] ?? null;

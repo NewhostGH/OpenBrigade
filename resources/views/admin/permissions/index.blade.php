@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Habilitations — ' . config('app.name'))
+@section('title', 'Permissions — ' . config('app.name'))
 
 @push('scripts')
 <script>
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <x-ob-breadcrumb :items="[
     ['label' => 'Administration'],
-    ['label' => 'Habilitations'],
+    ['label' => 'Permissions'],
 ]"/>
 
 <div class="mx-3 mt-3">

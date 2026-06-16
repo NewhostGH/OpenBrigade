@@ -50,7 +50,11 @@ class ObSectionSelect extends Component
             return;
         }
 
-        foreach ($scope->options() as $opt) {
+        // Always offer the full base set (memberships + descendants, or every
+        // section for a super-admin). The navbar choice is a view filter, not a
+        // cap on which section may be picked, so it must not hide ancestors
+        // (e.g. the root section) from this dropdown.
+        foreach ($scope->options(ignoreChosen: true) as $opt) {
             $label = (string) $opt['S_CODE'];
             if ($opt['S_DESCRIPTION']) {
                 $label .= ($label !== '' ? ' — ' : '').Str::limit($opt['S_DESCRIPTION'], 22);

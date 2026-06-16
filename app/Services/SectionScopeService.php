@@ -66,6 +66,12 @@ class SectionScopeService implements ServiceInterface
             return $this->baseVisible = [];
         }
 
+        // Super-admin (account flag) is uncappable — sees every section's data,
+        // mirroring the PermissionResolver short-circuit.
+        if ($this->resolver->isSuperAdmin($user)) {
+            return $this->baseVisible = null;
+        }
+
         return $this->baseVisible = $this->expand($this->memberSectionIds($user));
     }
 
@@ -83,11 +89,14 @@ class SectionScopeService implements ServiceInterface
         }
 
         $base = $this->baseVisibleSectionIds();
+        $chosen = $this->resolver->chosenSectionId();
+
+        // Unrestricted base (multi_site off, or super-admin): a navbar choice may
+        // still voluntarily narrow it; otherwise stay unrestricted.
         if ($base === null) {
-            return $this->visible = null;
+            return $this->visible = $chosen !== null ? $this->expand([$chosen]) : null;
         }
 
-        $chosen = $this->resolver->chosenSectionId();
         if ($chosen !== null) {
             $base = array_values(array_intersect($base, $this->expand([$chosen])));
         }
@@ -143,12 +152,16 @@ class SectionScopeService implements ServiceInterface
         return $query;
     }
 
-    /** May the user attach data to / read data from this section? */
+    /**
+     * May the user attach data to / read data from this section? Gated by the
+     * base set (true membership), not the navbar choice — a transient view
+     * filter must never block assigning a record to a section the user owns.
+     */
     public function allows(int $sectionId): bool
     {
-        $visible = $this->visibleSectionIds();
+        $base = $this->baseVisibleSectionIds();
 
-        return $visible === null || in_array($sectionId, $visible, true);
+        return $base === null || in_array($sectionId, $base, true);
     }
 
     /**
@@ -162,22 +175,22 @@ class SectionScopeService implements ServiceInterface
             return $sectionId;
         }
 
-        $visible = $this->visibleSectionIds();
-        if ($visible === null) {
+        $base = $this->baseVisibleSectionIds();
+        if ($base === null) {
             return $sectionId;
         }
 
         $chosen = $this->resolver->chosenSectionId();
-        if ($chosen !== null && in_array($chosen, $visible, true)) {
+        if ($chosen !== null && in_array($chosen, $base, true)) {
             return $chosen;
         }
 
         $home = auth()->user()?->P_SECTION;
-        if ($home !== null && in_array((int) $home, $visible, true)) {
+        if ($home !== null && in_array((int) $home, $base, true)) {
             return (int) $home;
         }
 
-        return $visible[0] ?? null;
+        return $base[0] ?? null;
     }
 
     /** Default section for new records: navbar choice, else home section. */
