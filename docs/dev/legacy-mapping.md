@@ -188,6 +188,7 @@ at folder granularity (they are binary assets copied as-is).
 | `save_vehicule.php`      | `VehicleController.php` (`store`/`update`)                                                  |
 | `del_vehicule.php`       | `VehicleController.php` (`destroy`)                                                         |
 | `vehicule_xls.php`       | `VehicleController.php` (XLS/CSV list export)                                               |
+| `vehicule_load.php` (event history tab) | `VehicleController::show()` — full year-filtered paginated event history with function type + km stats (was last-10-only) |
 | `paramfnv.php`           | `ReferenceController.php` (`vehicleFunction*`) + `admin/references/vehicle-function.blade.php` |
 | `paramfnv_edit.php`      | `ReferenceController.php`                                                                   |
 | `paramfnv_save.php`      | `ReferenceController.php` (`vehicleFunctionStore`/`Update`)                                 |

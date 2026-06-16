@@ -63,6 +63,9 @@ composer.phar
 # Dev ideas
 docs/wireframes/
 
+# Per-commit UI verification checklists (local only — not for review)
+docs/dev/verify/
+
 # User storage
 storage/framework
 storage/public
