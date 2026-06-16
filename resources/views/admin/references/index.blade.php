@@ -15,6 +15,7 @@
         $sections = [
             ['route' => 'admin.references.event-type',    'icon' => 'calendar-alt',  'label' => 'Types d\'activité',    'count' => $counts['type_evenement'],    'desc' => 'Opération, Formation, Garde…'],
             ['route' => 'admin.references.participation-type','icon' => 'users',          'label' => 'Fonctions activité',   'count' => $counts['type_participation'],'desc' => 'Chef de groupe, Équipier…'],
+            ['route' => 'admin.references.equipment-category',  'icon' => 'layer-group',    'label' => 'Catégories matériel',  'count' => $counts['categorie_materiel'], 'desc' => 'EPI, outillage, véhicule…'],
             ['route' => 'admin.references.equipment-type',     'icon' => 'toolbox',        'label' => 'Types de matériel',    'count' => $counts['type_materiel'],     'desc' => 'EPI, outillage…'],
             ['route' => 'admin.references.consumable-type',  'icon' => 'boxes',          'label' => 'Types de consommable', 'count' => $counts['type_consommable'],  'desc' => 'Carburant, médicaments…'],
             ['route' => 'admin.references.vehicle-type',     'icon' => 'truck',          'label' => 'Types de véhicule',    'count' => 0,                            'desc' => 'VSAV, FPT, VL…'],

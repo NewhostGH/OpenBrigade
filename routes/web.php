@@ -186,6 +186,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/references/equipment-type', [ReferenceController::class, 'equipmentTypeStore'])->name('admin.references.equipment-type.store')->middleware('permission:5');
     Route::patch('/admin/references/equipment-type/{id}', [ReferenceController::class, 'equipmentTypeUpdate'])->name('admin.references.equipment-type.update')->middleware('permission:5');
     Route::delete('/admin/references/equipment-type/{id}', [ReferenceController::class, 'equipmentTypeDestroy'])->name('admin.references.equipment-type.destroy')->middleware('permission:5');
+    // Catégorie matériel
+    Route::get('/admin/references/equipment-category', [ReferenceController::class, 'equipmentCategoryIndex'])->name('admin.references.equipment-category')->middleware('permission:5');
+    Route::post('/admin/references/equipment-category', [ReferenceController::class, 'equipmentCategoryStore'])->name('admin.references.equipment-category.store')->middleware('permission:5');
+    Route::patch('/admin/references/equipment-category/{usage}', [ReferenceController::class, 'equipmentCategoryUpdate'])->name('admin.references.equipment-category.update')->middleware('permission:5');
+    Route::delete('/admin/references/equipment-category/{usage}', [ReferenceController::class, 'equipmentCategoryDestroy'])->name('admin.references.equipment-category.destroy')->middleware('permission:5');
     // Type consommable
     Route::get('/admin/references/consumable-type', [ReferenceController::class, 'consumableTypeIndex'])->name('admin.references.consumable-type')->middleware('permission:5');
     Route::post('/admin/references/consumable-type', [ReferenceController::class, 'consumableTypeStore'])->name('admin.references.consumable-type.store')->middleware('permission:5');

@@ -139,7 +139,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] Equipment list and detail/edit
 - [x] Consumable stock management
 - [x] Type management (matériel, consommable)
-- [ ] Equipment category management
+- [x] Equipment category management — `categorie_materiel` CRUD in ReferenceController; TM_USAGE field in equipment-type form uses category dropdown; icon preview with FontAwesome
 - [ ] Embarkation tracking (`materiel_embarquer.php`)
 - [x] Equipment/consumable exports (XLS / CSV) — `TableExportService`, section/search-aware, `?cols=` selection
 

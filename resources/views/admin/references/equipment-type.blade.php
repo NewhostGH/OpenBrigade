@@ -39,10 +39,16 @@
                                class="form-control form-control-sm" maxlength="60" required>
                     </div>
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Usage</label>
-                        <input type="text" name="TM_USAGE" value="{{ old('TM_USAGE', 'DIVERS') }}"
-                               class="form-control form-control-sm text-uppercase" style="width:120px;" maxlength="15"
-                               placeholder="DIVERS">
+                        <label class="form-label form-label-sm">Catégorie</label>
+                        <select name="TM_USAGE" class="form-select form-select-sm" style="width:160px;">
+                            @forelse($categories as $cat)
+                                <option value="{{ $cat->TM_USAGE }}" {{ old('TM_USAGE', 'DIVERS') === $cat->TM_USAGE ? 'selected' : '' }}>
+                                    {{ $cat->TM_USAGE }} — {{ $cat->CM_DESCRIPTION }}
+                                </option>
+                            @empty
+                                <option value="DIVERS">DIVERS</option>
+                            @endforelse
+                        </select>
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
@@ -90,8 +96,15 @@
                                        class="form-control form-control-sm" style="width:120px;" maxlength="25" required>
                                 <input type="text" name="TM_DESCRIPTION" value="{{ $item->TM_DESCRIPTION }}"
                                        class="form-control form-control-sm" maxlength="60" required>
-                                <input type="text" name="TM_USAGE" value="{{ $item->TM_USAGE }}"
-                                       class="form-control form-control-sm text-uppercase" style="width:110px;" maxlength="15">
+                                <select name="TM_USAGE" class="form-select form-select-sm" style="width:160px;">
+                                    @forelse($categories as $cat)
+                                        <option value="{{ $cat->TM_USAGE }}" {{ $item->TM_USAGE === $cat->TM_USAGE ? 'selected' : '' }}>
+                                            {{ $cat->TM_USAGE }}
+                                        </option>
+                                    @empty
+                                        <option value="{{ $item->TM_USAGE }}">{{ $item->TM_USAGE }}</option>
+                                    @endforelse
+                                </select>
                                 <button type="submit" class="btn btn-sm btn-outline-primary flex-shrink-0">
                                     <i class="fas fa-save"></i>
                                 </button>

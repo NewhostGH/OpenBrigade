@@ -18,6 +18,7 @@ class ReferenceController extends Controller
             'type_evenement' => DB::table('type_evenement')->count(),
             'type_participation' => DB::table('type_participation')->count(),
             'type_materiel' => DB::table('type_materiel')->count(),
+            'categorie_materiel' => DB::table('categorie_materiel')->count(),
             'type_consommable' => DB::table('type_consommable')->count(),
             'categorie_evenement' => DB::table('categorie_evenement')->count(),
             'grade' => DB::table('grade')->count(),
@@ -176,7 +177,11 @@ class ReferenceController extends Controller
             ->orderBy('TM_DESCRIPTION')
             ->get();
 
-        return view('admin.references.equipment-type', compact('items'));
+        $categories = DB::table('categorie_materiel')
+            ->orderBy('TM_USAGE')
+            ->get(['TM_USAGE', 'CM_DESCRIPTION', 'PICTURE']);
+
+        return view('admin.references.equipment-type', compact('items', 'categories'));
     }
 
     public function equipmentTypeStore(Request $request): RedirectResponse
@@ -228,6 +233,65 @@ class ReferenceController extends Controller
 
         return redirect()->route('admin.references.equipment-type')
             ->with('success', 'Type de matériel supprimé.');
+    }
+
+    // ── Catégorie Matériel ───────────────────────────────────────────────────
+
+    public function equipmentCategoryIndex(): View
+    {
+        $items = DB::table('categorie_materiel')
+            ->orderBy('TM_USAGE')
+            ->get(['TM_USAGE', 'CM_DESCRIPTION', 'PICTURE']);
+
+        return view('admin.references.equipment-category', compact('items'));
+    }
+
+    public function equipmentCategoryStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'TM_USAGE' => ['required', 'string', 'max:15', 'unique:categorie_materiel,TM_USAGE', 'regex:/^[A-Z0-9_]+$/'],
+            'CM_DESCRIPTION' => ['required', 'string', 'max:60'],
+            'PICTURE' => ['nullable', 'string', 'max:60'],
+        ]);
+
+        DB::table('categorie_materiel')->insert([
+            'TM_USAGE' => strtoupper($v['TM_USAGE']),
+            'CM_DESCRIPTION' => $v['CM_DESCRIPTION'],
+            'PICTURE' => $v['PICTURE'] ?: 'cog',
+        ]);
+
+        return redirect()->route('admin.references.equipment-category')
+            ->with('success', 'Catégorie créée.');
+    }
+
+    public function equipmentCategoryUpdate(Request $request, string $usage): RedirectResponse
+    {
+        $v = $request->validate([
+            'CM_DESCRIPTION' => ['required', 'string', 'max:60'],
+            'PICTURE' => ['nullable', 'string', 'max:60'],
+        ]);
+
+        DB::table('categorie_materiel')->where('TM_USAGE', $usage)->update([
+            'CM_DESCRIPTION' => $v['CM_DESCRIPTION'],
+            'PICTURE' => $v['PICTURE'] ?: 'cog',
+        ]);
+
+        return redirect()->route('admin.references.equipment-category')
+            ->with('success', 'Catégorie mise à jour.');
+    }
+
+    public function equipmentCategoryDestroy(string $usage): RedirectResponse
+    {
+        $used = DB::table('type_materiel')->where('TM_USAGE', $usage)->exists();
+        if ($used) {
+            return redirect()->route('admin.references.equipment-category')
+                ->with('error', 'Cette catégorie est utilisée par des types de matériel et ne peut pas être supprimée.');
+        }
+
+        DB::table('categorie_materiel')->where('TM_USAGE', $usage)->delete();
+
+        return redirect()->route('admin.references.equipment-category')
+            ->with('success', 'Catégorie supprimée.');
     }
 
     // ── Type Consumable ──────────────────────────────────────────────────────
