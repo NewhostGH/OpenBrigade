@@ -120,7 +120,7 @@ at folder granularity (they are binary assets copied as-is).
 | `personnel_formation.php`      | `PersonnelController.php` (`storeTraining`/`updateTraining`/`destroyTraining`) + `personnel/show.blade.php` (Formations card + modals) |
 | `save_personnel_formation.php` | `PersonnelController.php` (`storeTraining`/`updateTraining`)                                                                           |
 | `del_personnel_formation.php`  | `PersonnelController.php` (`destroyTraining`)                                                                                          |
-| `formations_xls.php`           | **WIP** (training CRUD now done; export to implement)                                                                                  |
+| `formations_xls.php`           | `PersonnelController::exportFormationsXls()` — GET `/personnel/{id}/export/formations`, XLS button in Formations card                  |
 | `diplome_edit.php`             | **WIP** (complex PDF field-positioning admin screen)                                                                                   |
 | `qualifications.php`           | `PersonnelController.php` (`*Qualification`) + `personnel/qualifications.blade.php`                  |
 | `qualifications_xls.php`       | `PersonnelController.php` (qualifications XLS/CSV, section-scoped)                                    |

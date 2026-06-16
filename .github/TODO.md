@@ -76,7 +76,8 @@ whole Communication menu, reminders and guard generation).
 - [x] Trainings CRUD (`personnel_formation.php`) — formations card on personnel show page
 - [ ] Diploma print layout config (`diplome_edit.php`) — complex PDF field positioning admin screen
 - [ ] Custom member fields (`specific_info.php`)
-- [ ] Remaining exports (`formations_xls.php`, `export_badges.php`) — waiting on training CRUD
+- [x] `formations_xls.php` — per-member formations XLS export (button in Formations card)
+- [ ] `export_badges.php` — member badge/ID card PDF export
 
 ### Activité — Events & Interventions (ACT)
 
