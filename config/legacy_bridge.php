@@ -1429,7 +1429,7 @@ return [
             'route' => 'rebuild_section_flat',
             'permission' => 14,
             'type' => 'page',
-            'bridgeable' => true,
+            'bridgeable' => false,
         ],
         'reminder.php' => [
             'route' => 'reminder',

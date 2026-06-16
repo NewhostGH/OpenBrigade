@@ -398,22 +398,25 @@ class DashboardService
         $sectionId = (int) $user->P_SECTION;
         $familyUp = $this->getSectionFamilyUp($sectionId);
 
+        // depth map: root ancestor has lowest value, current section has highest
+        $depthMap = array_flip(array_reverse($familyUp));
+
         $rows = DB::table('pompier as p')
-            ->join('section_flat as sf', 'p.P_SECTION', '=', 'sf.S_ID')
-            ->join('section as se', 'se.S_ID', '=', 'sf.S_ID')
+            ->join('section as se', 'se.S_ID', '=', 'p.P_SECTION')
             ->join('ob_user_assignment as a', function ($j) {
-                $j->on('a.person_id', '=', 'p.P_ID')->on('a.section_id', '=', 'sf.S_ID');
+                $j->on('a.person_id', '=', 'p.P_ID')->on('a.section_id', '=', 'p.P_SECTION');
             })
             ->join('groupe as g', 'g.GP_ID', '=', 'a.group_id')
             ->where('g.TR_WIDGET', 1)
-            ->whereIn('sf.S_ID', $familyUp)
+            ->whereIn('p.P_SECTION', $familyUp)
             ->select(
                 'p.P_ID', 'p.P_PRENOM', 'p.P_NOM', 'p.P_PHOTO', 'p.P_CIVILITE',
                 'se.S_ID', 'se.S_DESCRIPTION', 'se.S_PHONE2',
                 'p.P_PHONE', 'g.GP_ID', 'g.GP_DESCRIPTION'
             )
-            ->orderBy('sf.NIV')
             ->get()->toArray();
+
+        usort($rows, fn ($a, $b) => ($depthMap[$a->S_ID] ?? 999) <=> ($depthMap[$b->S_ID] ?? 999));
 
         foreach ($rows as &$row) {
             $row->avatarSrc = Personnel::avatarUrl($row->P_ID, $row->P_PHOTO, $row->P_CIVILITE);
@@ -659,11 +662,11 @@ class DashboardService
         $today = date('Y-m-d');
 
         $rows = DB::select("
-            SELECT p.P_ID, p.P_NOM, p.P_PRENOM, sf.s_code, hv.ANNEE, hv.SEMAINE,
+            SELECT p.P_ID, p.P_NOM, p.P_PRENOM, s.S_CODE AS s_code, hv.ANNEE, hv.SEMAINE,
                    FLOOR(SUM(h.H_DUREE_MINUTES) / 60) AS heures,
                    MOD(SUM(h.H_DUREE_MINUTES), 60) AS minutes
             FROM pompier p
-            JOIN section_flat sf ON p.P_SECTION = sf.S_ID
+            JOIN section s ON p.P_SECTION = s.S_ID
             JOIN horaires h ON p.P_ID = h.P_ID
             JOIN horaires_validation hv ON hv.P_ID = h.P_ID
                 AND hv.HS_CODE = 'ATTV'
@@ -671,10 +674,10 @@ class DashboardService
                     (YEAR(h.H_DATE) = hv.ANNEE AND WEEK(h.H_DATE,1) = hv.SEMAINE)
                     OR (WEEK(h.H_DATE,1) = 53 AND hv.SEMAINE = 1 AND YEAR(h.H_DATE)+1 = hv.ANNEE)
                 )
-            WHERE sf.s_id IN (".implode(',', $family).")
+            WHERE s.S_ID IN (".implode(',', $family).")
               AND DATE_FORMAT(h.H_DATE,'%Y-%m-%d') < '$today'
               AND DATEDIFF('$today', DATE_FORMAT(h.H_DATE,'%Y-%m-%d')) < 100
-            GROUP BY p.P_ID, p.P_NOM, p.P_PRENOM, sf.s_code, hv.ANNEE, hv.SEMAINE
+            GROUP BY p.P_ID, p.P_NOM, p.P_PRENOM, s.S_CODE, hv.ANNEE, hv.SEMAINE
             ORDER BY p.P_NOM, p.P_PRENOM, hv.ANNEE DESC, hv.SEMAINE DESC
         ");
 
