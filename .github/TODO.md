@@ -49,6 +49,11 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [x] `SectionScopeService` — visible-set authority, navbar switcher, `<x-ob-section-select>`
 - [x] Wired into Personnel, Véhicules, Cotisations, Organisation controllers
 - [x] Extend scoping to remaining section-tied controllers (Evenement, Garde, Materiel, Consommable, Message) — Document was already done; Statistique is single-section by design (deferred)
+- [x] Organizational root section (`S_ID = 0`, `S_PARENT = -1`) is now a first-class, selectable & assignable section; `-1` (`SectionScopeService::ALL`) is the dedicated "all / global" sentinel everywhere (request filters, resolver chain/scope, `ob_user_assignment` / `ob_user_permission` global rows). Migration `2026_06_16_000100` re-sentinels existing global rows `0 → -1`. Navbar switcher reflects the explicit choice (`chosenSectionId`) so "Toutes mes sections" highlights correctly
+- [ ] **Seed the organizational root section** (`S_ID = 0`, `S_PARENT = -1`) in `CoreSeeder` — fresh installs currently have no root row, so the switcher/selectors can't show it and `SuperAdminProvisioner::rootSectionId()` returns null. Existing (legacy-imported) DBs already have it
+- [ ] Section-scope test for the root: assert `PermissionResolver::sectionChain(site)` includes `0` and that a deny ceiling on the root cascades to its child sites (the resolver unit tests stub `sectionChain`, so add a DB-backed feature test)
+- [ ] `GeolocationController::index` filters by exact `P_SECTION` only — wire it through `SectionScopeService` so the map honours section isolation and the navbar scope (incl. the root subtree)
+- [ ] `PermissionController::exportGroup` still uses `section_id > 0` to filter role members — allow targeting the root section (`0`); use the `-1`/absent = no-filter convention
 
 ---
 
@@ -200,6 +205,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Rank and grade management
 - [x] Position (poste) management — `Compétences` page at `/admin/references/position`; CRUD with boolean flags (formation, secourisme, expirable, diplôme, etc.); edit modal per row; delete blocked if used in qualifications or event requirements; perm 18
 - [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
+- [ ] Protect the organizational root section (`S_ID = 0`): block delete / reparent / inactivation in `OrganizationController` (it is the org-identity row that owns the `S_ID = 0` config); the org form already pins its parent to `-1`, but delete/inactivate are not yet guarded
 - [ ] Section deactivation / radiation (`section_stop.php`, `radier_section.php`)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)
