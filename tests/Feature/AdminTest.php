@@ -144,8 +144,12 @@ test('parametrage index renders the admin.references.index view', function () {
             'type_evenement' => 0,
             'type_participation' => 0,
             'type_materiel' => 0,
+            'categorie_materiel' => 0,
             'type_consommable' => 0,
+            'categorie_evenement' => 0,
             'grade' => 0,
+            'equipe' => 0,
+            'poste' => 0,
         ],
     ]);
 
