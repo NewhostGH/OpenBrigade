@@ -28,6 +28,11 @@
                 <a href="{{ route('personnel.edit', $personnel) }}" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-edit me-1"></i> Modifier
                 </a>
+                @if(auth()->id() === $personnel->P_ID || auth()->user()->hasPermission(2))
+                <a href="{{ route('personnel.preferences', $personnel) }}" class="btn btn-sm btn-outline-secondary noprint" title="Préférences">
+                    <i class="fas fa-sliders-h"></i>
+                </a>
+                @endif
                 <div class="dropdown">
                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                             data-bs-toggle="dropdown" title="Exporter">

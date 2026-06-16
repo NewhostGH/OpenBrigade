@@ -67,7 +67,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Rework grade system
 - [ ] Trainings & diplomas CRUD (`personnel_formation.php`, `diplome_edit.php`)
 - [x] Tenues / uniforms (`personnel_tenues.php`) — dotation habillement card on personnel show + dedicated manage page (`/personnel/{id}/tenues`); perm 70 = full edit (add/update/delete items, model/year/size/nb); self = size-only update; read-only view for others
-- [ ] User preferences (`personnel_preferences.php`)
+- [x] User preferences (`personnel_preferences.php`) — `/personnel/{id}/preferences` page; PP_ID 1 (tooltips toggle), PP_ID 4 (org chart order), PP_ID 15 (items per page); self-edit or perm 2; upsert into `personnel_preferences`; preferences icon in personnel show header
 - [x] Salarié data (`upd_personnel_salarie.php`) — TS_ contract/hours fields card on personnel show page (perm 2)
 - [x] Emergency contacts (`personnel_contact.php`)
 - [x] Homonym management (`homonymes_*.php`) — detect same-name records on personnel show; side-by-side merge page with selective data transfer (competences, formations, participations), radiate/delete options (perm 2/3)

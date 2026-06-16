@@ -1728,4 +1728,69 @@ class PersonnelController extends Controller
         return redirect()->route('personnel.show', $personnel)
             ->with('success', 'Dotation mise à jour.');
     }
+
+    // ── User preferences ──────────────────────────────────────────────────────
+
+    public function preferences(Personnel $personnel): View
+    {
+        $this->authorizePreferences($personnel);
+
+        $prefs = DB::table('personnel_preferences')
+            ->where('P_ID', $personnel->P_ID)
+            ->pluck('PP_VALUE', 'PP_ID');
+
+        $defaults = [
+            1 => '0',
+            4 => 'hierarchique',
+            15 => '20',
+        ];
+
+        $values = array_merge($defaults, $prefs->toArray());
+
+        return view('personnel.preferences', compact('personnel', 'values'));
+    }
+
+    public function preferencesUpdate(Request $request, Personnel $personnel): RedirectResponse
+    {
+        $this->authorizePreferences($personnel);
+
+        $map = [
+            1 => $request->boolean('pp_1') ? '1' : '0',
+            4 => in_array($request->input('pp_4'), ['hierarchique', 'alphabetique'])
+                ? $request->input('pp_4') : 'hierarchique',
+            15 => in_array($request->input('pp_15'), ['10', '20', '40'])
+                ? $request->input('pp_15') : '20',
+        ];
+
+        foreach ($map as $ppId => $value) {
+            $exists = DB::table('personnel_preferences')
+                ->where('P_ID', $personnel->P_ID)
+                ->where('PP_ID', $ppId)
+                ->exists();
+
+            if ($exists) {
+                DB::table('personnel_preferences')
+                    ->where('P_ID', $personnel->P_ID)
+                    ->where('PP_ID', $ppId)
+                    ->update(['PP_VALUE' => $value, 'PP_DATE' => now()]);
+            } else {
+                DB::table('personnel_preferences')->insert([
+                    'P_ID' => $personnel->P_ID,
+                    'PP_ID' => $ppId,
+                    'PP_VALUE' => $value,
+                    'PP_DATE' => now(),
+                ]);
+            }
+        }
+
+        return redirect()->route('personnel.preferences', $personnel)
+            ->with('success', 'Préférences enregistrées.');
+    }
+
+    private function authorizePreferences(Personnel $personnel): void
+    {
+        $isSelf = auth()->id() === $personnel->P_ID;
+        $isAdmin = auth()->user()->hasPermission(2);
+        abort_unless($isSelf || $isAdmin, 403);
+    }
 }

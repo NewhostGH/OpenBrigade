@@ -404,6 +404,10 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.tenues')->middleware('permission:0');
     Route::post('personnel/{personnel}/tenues', [PersonnelController::class, 'tenuesUpdate'])
         ->name('personnel.tenues.update')->middleware('permission:0');
+    Route::get('personnel/{personnel}/preferences', [PersonnelController::class, 'preferences'])
+        ->name('personnel.preferences')->middleware('permission:0');
+    Route::patch('personnel/{personnel}/preferences', [PersonnelController::class, 'preferencesUpdate'])
+        ->name('personnel.preferences.update')->middleware('permission:0');
     // Géolocalisation
     Route::get('/geolocation', [GeolocationController::class, 'index'])
         ->name('geolocation.index')->middleware(['permission:0', 'feature:geolocalize_enabled']);
