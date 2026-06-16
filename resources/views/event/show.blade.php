@@ -215,6 +215,9 @@
                             <th>Grade</th>
                             <th>Fonction</th>
                             <th>Équipe</th>
+                            @if($eventOptions->isNotEmpty())
+                                <th style="width:40px"></th>
+                            @endif
                             @if(auth()->user()->hasPermission(10))
                                 <th style="width:72px"></th>
                             @endif
@@ -264,6 +267,20 @@
                                     <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                                         {{ $p->EE_NAME ?? '—' }}
                                     </td>
+                                @endif
+                                @php $pIsSelf = auth()->id() === (int)$p->P_ID; @endphp
+                                @if($eventOptions->isNotEmpty() && (auth()->user()->hasPermission(15) || $pIsSelf))
+                                    <td class="text-center">
+                                        <button type="button"
+                                                class="btn btn-xs btn-light py-0 px-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#choicesModal-{{ $p->P_ID }}"
+                                                title="Options d'inscription">
+                                            <i class="fas fa-sliders-h"></i>
+                                        </button>
+                                    </td>
+                                @elseif($eventOptions->isNotEmpty())
+                                    <td></td>
                                 @endif
                                 @if(auth()->user()->hasPermission(10))
                                     <td class="text-end pe-2">
@@ -844,6 +861,148 @@
     </div>
     @endif
 
+    {{-- ── Section: Options d'inscription ──────────────────────────────── --}}
+    @if($eventOptions->isNotEmpty() || auth()->user()->hasPermission(15))
+    <div id="section-options" data-evt-section class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
+                <i class="fas fa-sliders-h"></i> Options d'inscription
+                @if($eventOptions->isNotEmpty())
+                    <span class="ob-badge ob-badge-archive ms-1">{{ $eventOptions->count() }}</span>
+                @endif
+            </div>
+            @if(auth()->user()->hasPermission(15) && !$event->E_CLOSED && !$event->E_CANCELED)
+                <div class="d-flex gap-1">
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            data-bs-toggle="modal" data-bs-target="#addOptionGroupModal">
+                        <i class="fas fa-layer-group me-1"></i> Groupe
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success"
+                            data-bs-toggle="modal" data-bs-target="#addOptionModal">
+                        <i class="fas fa-plus me-1"></i> Option
+                    </button>
+                </div>
+            @endif
+        </div>
+        <div class="ob-widget-card-body p-0">
+            @if($eventOptions->isEmpty())
+                <p class="ob-widget-empty p-3">Aucune option d'inscription définie.</p>
+            @else
+                <table class="table table-sm table-hover mb-0 align-middle">
+                    <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Groupe</th>
+                            <th>Type</th>
+                            <th class="text-center" style="width:70px">Réponses</th>
+                            @if(auth()->user()->hasPermission(15))<th style="width:80px"></th>@endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($eventOptions as $opt)
+                        <tr>
+                            <td style="font-size:var(--font-size-sm)">
+                                <strong>{{ $opt->EO_TITLE }}</strong>
+                                @if($opt->EO_COMMENT)
+                                    <br><span class="text-muted" style="font-size:0.8em">{{ $opt->EO_COMMENT }}</span>
+                                @endif
+                                @if($opt->EO_TYPE === 'dropdown' && $opt->dropdown_choices->isNotEmpty())
+                                    <br>
+                                    @foreach($opt->dropdown_choices->skip(1) as $dc)
+                                        <span class="ob-badge ob-badge-info me-1" style="font-size:0.75em">{{ $dc->EOD_TEXTE }}</span>
+                                    @endforeach
+                                @endif
+                            </td>
+                            <td style="font-size:var(--font-size-sm)">{{ $opt->EOG_TITLE ?? '—' }}</td>
+                            <td style="font-size:var(--font-size-sm)">
+                                @php $typeLabels = ['checkbox'=>'Case à cocher','text'=>'Texte','textnum'=>'Numérique','dropdown'=>'Liste','date'=>'Date','hour'=>'Heure']; @endphp
+                                <span class="ob-badge ob-badge-secondary">{{ $typeLabels[$opt->EO_TYPE] ?? $opt->EO_TYPE }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="ob-badge ob-badge-archive">{{ $opt->response_count }}</span>
+                            </td>
+                            @if(auth()->user()->hasPermission(15))
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button type="button" class="btn btn-xs btn-light"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editOptionModal-{{ $opt->EO_ID }}"
+                                            title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    @if(!$event->E_CLOSED && !$event->E_CANCELED)
+                                    <form method="POST"
+                                          action="{{ route('event.option.destroy', [$event->E_CODE, $opt->EO_ID]) }}"
+                                          onsubmit="return confirm('Supprimer cette option et tous les choix saisis ?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-xs btn-light text-danger" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    @endif
+                                </div>
+                            </td>
+                            @endif
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    </div>
+    @endif
+
+    {{-- ── Section: Groupes d'options ─────────────────────────────────── --}}
+    @if($optionGroups->isNotEmpty() && auth()->user()->hasPermission(15))
+    <div id="section-option-groups" data-evt-section class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title">
+                <i class="fas fa-layer-group"></i> Groupes d'options
+                <span class="ob-badge ob-badge-archive ms-1">{{ $optionGroups->count() }}</span>
+            </div>
+        </div>
+        <div class="ob-widget-card-body p-0">
+            <table class="table table-sm table-hover mb-0 align-middle">
+                <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
+                    <tr>
+                        <th>Nom du groupe</th>
+                        <th class="text-center" style="width:70px">Ordre</th>
+                        <th style="width:100px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($optionGroups as $grp)
+                    <tr>
+                        <td style="font-size:var(--font-size-sm)">{{ $grp->EOG_TITLE }}</td>
+                        <td class="text-center" style="font-size:var(--font-size-sm)">{{ $grp->EOG_ORDER }}</td>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center">
+                                <button type="button" class="btn btn-xs btn-light"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editGroupModal-{{ $grp->EOG_ID }}"
+                                        title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                @if(!$event->E_CLOSED && !$event->E_CANCELED)
+                                <form method="POST"
+                                      action="{{ route('event.option-group.destroy', [$event->E_CODE, $grp->EOG_ID]) }}"
+                                      onsubmit="return confirm('Supprimer ce groupe ? Les options seront dégroupées.')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-xs btn-light text-danger" title="Supprimer">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+
     </div>  {{-- close content sections --}}
 
 </div>  {{-- close mx-3 mt-3 --}}
@@ -1274,6 +1433,273 @@
         </div>
     </div>
 </div>
+@endif
+
+{{-- ══ Event options modals ══════════════════════════════════════════════════ --}}
+@if(auth()->user()->hasPermission(15))
+
+{{-- Add option group --}}
+<div class="modal fade" id="addOptionGroupModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Nouveau groupe d'options</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('event.option-group.store', $event->E_CODE) }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Nom <span class="text-danger">*</span></label>
+                        <input name="EOG_TITLE" type="text" class="form-control form-control-sm" maxlength="80" required>
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Ordre</label>
+                        <input name="EOG_ORDER" type="number" class="form-control form-control-sm" min="1" max="99" value="1">
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Edit option group (one modal per group) --}}
+@foreach($optionGroups as $grp)
+<div class="modal fade" id="editGroupModal-{{ $grp->EOG_ID }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Modifier le groupe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('event.option-group.update', [$event->E_CODE, $grp->EOG_ID]) }}">
+                @csrf @method('PATCH')
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Nom <span class="text-danger">*</span></label>
+                        <input name="EOG_TITLE" type="text" class="form-control form-control-sm" maxlength="80" value="{{ $grp->EOG_TITLE }}" required>
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Ordre</label>
+                        <input name="EOG_ORDER" type="number" class="form-control form-control-sm" min="1" max="99" value="{{ $grp->EOG_ORDER }}">
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+{{-- Add option --}}
+<div class="modal fade" id="addOptionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Nouvelle option d'inscription</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('event.option.store', $event->E_CODE) }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Nom <span class="text-danger">*</span></label>
+                        <input name="EO_TITLE" type="text" class="form-control form-control-sm" maxlength="80" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Type <span class="text-danger">*</span></label>
+                        <select name="EO_TYPE" class="form-select form-select-sm" required>
+                            <option value="checkbox">Case à cocher</option>
+                            <option value="text">Texte libre</option>
+                            <option value="textnum">Valeur numérique</option>
+                            <option value="dropdown">Liste déroulante</option>
+                            <option value="date">Date (JJ-MM-AAAA)</option>
+                            <option value="hour">Heure (HH:mm)</option>
+                        </select>
+                    </div>
+                    @if($optionGroups->isNotEmpty())
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Groupe</label>
+                        <select name="EOG_ID" class="form-select form-select-sm">
+                            <option value="">— aucun groupe —</option>
+                            @foreach($optionGroups as $grp)
+                                <option value="{{ $grp->EOG_ID }}">{{ $grp->EOG_TITLE }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Ordre dans le groupe</label>
+                        <input name="EO_ORDER" type="number" class="form-control form-control-sm" min="1" max="99" value="1">
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Description / aide</label>
+                        <textarea name="EO_COMMENT" class="form-control form-control-sm" rows="2" maxlength="255"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-plus me-1"></i> Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Edit option (one modal per option) --}}
+@foreach($eventOptions as $opt)
+<div class="modal fade" id="editOptionModal-{{ $opt->EO_ID }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">Modifier l'option</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('event.option.update', [$event->E_CODE, $opt->EO_ID]) }}">
+                @csrf @method('PATCH')
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Nom <span class="text-danger">*</span></label>
+                        <input name="EO_TITLE" type="text" class="form-control form-control-sm" maxlength="80" value="{{ $opt->EO_TITLE }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Type <span class="text-danger">*</span></label>
+                        <select name="EO_TYPE" class="form-select form-select-sm" required>
+                            @foreach(['checkbox'=>'Case à cocher','text'=>'Texte libre','textnum'=>'Valeur numérique','dropdown'=>'Liste déroulante','date'=>'Date (JJ-MM-AAAA)','hour'=>'Heure (HH:mm)'] as $v => $lbl)
+                                <option value="{{ $v }}" @selected($opt->EO_TYPE === $v)>{{ $lbl }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @if($optionGroups->isNotEmpty())
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Groupe</label>
+                        <select name="EOG_ID" class="form-select form-select-sm">
+                            <option value="">— aucun groupe —</option>
+                            @foreach($optionGroups as $grp)
+                                <option value="{{ $grp->EOG_ID }}" @selected($opt->EOG_ID == $grp->EOG_ID)>{{ $grp->EOG_TITLE }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                    <div class="mb-2">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Ordre</label>
+                        <input name="EO_ORDER" type="number" class="form-control form-control-sm" min="1" max="99" value="{{ $opt->EO_ORDER }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">Description / aide</label>
+                        <textarea name="EO_COMMENT" class="form-control form-control-sm" rows="2" maxlength="255">{{ $opt->EO_COMMENT }}</textarea>
+                    </div>
+                    {{-- Dropdown choices management --}}
+                    @if($opt->EO_TYPE === 'dropdown')
+                    <hr>
+                    <p class="mb-2" style="font-size:var(--font-size-sm)"><strong>Choix de la liste déroulante</strong></p>
+                    @foreach($opt->dropdown_choices->skip(1) as $dc)
+                    <div class="d-flex gap-1 align-items-center mb-1">
+                        <span class="flex-grow-1" style="font-size:var(--font-size-sm)">{{ $dc->EOD_TEXTE }}</span>
+                        <form method="POST"
+                              action="{{ route('event.option.choice.destroy', [$event->E_CODE, $opt->EO_ID, $dc->EOD_ID]) }}"
+                              onsubmit="return confirm('Supprimer ce choix ?')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-xs btn-light text-danger" title="Supprimer">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
+                    </div>
+                    @endforeach
+                    <form method="POST"
+                          action="{{ route('event.option.choice.store', [$event->E_CODE, $opt->EO_ID]) }}"
+                          class="d-flex gap-1 mt-2">
+                        @csrf
+                        <input name="EOD_TEXTE" type="text" class="form-control form-control-sm" maxlength="80" placeholder="Nouveau choix…" required>
+                        <input name="EOD_ORDER" type="number" class="form-control form-control-sm" min="1" max="99" value="1" style="width:60px" title="Ordre">
+                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
+                    </form>
+                    @endif
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@endif {{-- permission 15 --}}
+
+{{-- Participant choices modals (perm 15 or self — shown for enrolled participants with options) --}}
+@if($eventOptions->isNotEmpty())
+@foreach($participants as $p)
+@php $isSelf = auth()->id() === (int)$p->P_ID; @endphp
+@if(auth()->user()->hasPermission(15) || $isSelf)
+<div class="modal fade" id="choicesModal-{{ $p->P_ID }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:var(--font-size-base)">
+                    Options — {{ $p->P_PRENOM }} {{ $p->P_NOM }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ route('event.participant-choices.save', [$event->E_CODE, $p->P_ID]) }}">
+                @csrf
+                <div class="modal-body">
+                    @php
+                        $savedChoices = \Illuminate\Support\Facades\DB::table('evenement_option_choix')
+                            ->where('E_CODE', $event->E_CODE)->where('P_ID', $p->P_ID)
+                            ->pluck('EOC_VALUE', 'EO_ID');
+                    @endphp
+                    @foreach($eventOptions as $opt)
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:var(--font-size-sm)">
+                            <strong>{{ $opt->EO_TITLE }}</strong>
+                            @if($opt->EOG_TITLE) <span class="text-muted">({{ $opt->EOG_TITLE }})</span> @endif
+                        </label>
+                        @if($opt->EO_COMMENT)
+                            <div class="form-text mb-1">{{ $opt->EO_COMMENT }}</div>
+                        @endif
+                        @php $saved = $savedChoices[$opt->EO_ID] ?? null; @endphp
+                        @if($opt->EO_TYPE === 'checkbox')
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="O{{ $opt->EO_ID }}" value="1" id="opt-{{ $p->P_ID }}-{{ $opt->EO_ID }}" @checked($saved == '1')>
+                                <label class="form-check-label" for="opt-{{ $p->P_ID }}-{{ $opt->EO_ID }}">Oui</label>
+                            </div>
+                        @elseif($opt->EO_TYPE === 'text')
+                            <input type="text" name="O{{ $opt->EO_ID }}" class="form-control form-control-sm" maxlength="255" value="{{ $saved }}">
+                        @elseif($opt->EO_TYPE === 'textnum')
+                            <input type="number" name="O{{ $opt->EO_ID }}" class="form-control form-control-sm" style="width:100px" value="{{ $saved }}">
+                        @elseif($opt->EO_TYPE === 'date')
+                            <input type="text" name="O{{ $opt->EO_ID }}" class="form-control form-control-sm" style="width:140px" placeholder="JJ-MM-AAAA" value="{{ $saved }}">
+                        @elseif($opt->EO_TYPE === 'hour')
+                            <input type="text" name="O{{ $opt->EO_ID }}" class="form-control form-control-sm" style="width:90px" placeholder="HH:mm" value="{{ $saved }}">
+                        @elseif($opt->EO_TYPE === 'dropdown')
+                            <select name="O{{ $opt->EO_ID }}" class="form-select form-select-sm" style="max-width:250px">
+                                @foreach($opt->dropdown_choices as $dc)
+                                    <option value="{{ $dc->EOD_ID }}" @selected((string)$saved === (string)$dc->EOD_ID)>{{ $dc->EOD_TEXTE }}</option>
+                                @endforeach
+                            </select>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-success">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+@endforeach
 @endif
 
 @endsection

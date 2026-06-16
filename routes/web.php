@@ -126,6 +126,17 @@ Route::middleware('auth')->group(function () {
     // Reinforcement request (demande de renfort)
     Route::get('/events/{code}/renfort-request', [EventController::class, 'reinforcementRequest'])->name('event.renfort-request')->middleware('permission:0');
     Route::post('/events/{code}/renfort-request', [EventController::class, 'reinforcementRequestUpdate'])->name('event.renfort-request.update')->middleware('permission:15');
+    // Event options — option groups, options, dropdown choices (permission 15)
+    Route::post('/events/{code}/option-groups', [EventController::class, 'optionGroupStore'])->name('event.option-group.store')->middleware('permission:15');
+    Route::patch('/events/{code}/option-groups/{groupId}', [EventController::class, 'optionGroupUpdate'])->name('event.option-group.update')->middleware('permission:15');
+    Route::delete('/events/{code}/option-groups/{groupId}', [EventController::class, 'optionGroupDestroy'])->name('event.option-group.destroy')->middleware('permission:15');
+    Route::post('/events/{code}/options', [EventController::class, 'optionStore'])->name('event.option.store')->middleware('permission:15');
+    Route::patch('/events/{code}/options/{optionId}', [EventController::class, 'optionUpdate'])->name('event.option.update')->middleware('permission:15');
+    Route::delete('/events/{code}/options/{optionId}', [EventController::class, 'optionDestroy'])->name('event.option.destroy')->middleware('permission:15');
+    Route::post('/events/{code}/options/{optionId}/choices', [EventController::class, 'dropdownChoiceStore'])->name('event.option.choice.store')->middleware('permission:15');
+    Route::delete('/events/{code}/options/{optionId}/choices/{choiceId}', [EventController::class, 'dropdownChoiceDestroy'])->name('event.option.choice.destroy')->middleware('permission:15');
+    // Participant choices (perm 15, event chef, or self — checked in controller)
+    Route::post('/events/{code}/participant-choices/{pid}', [EventController::class, 'participantChoicesSave'])->name('event.participant-choices.save');
     Route::get('/duty', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
     Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
     Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');

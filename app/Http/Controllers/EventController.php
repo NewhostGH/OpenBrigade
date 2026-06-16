@@ -347,11 +347,49 @@ class EventController extends Controller
             ->orderBy('TYPE')
             ->get(['PS_ID', 'TYPE', 'DESCRIPTION']);
 
+        // Event options (groups + options with per-type response counts).
+        $optionGroups = DB::table('evenement_option_group')
+            ->where('E_CODE', $code)
+            ->orderBy('EOG_ORDER')
+            ->get(['EOG_ID', 'EOG_TITLE', 'EOG_ORDER']);
+
+        $eventOptions = DB::table('evenement_option as eo')
+            ->leftJoin('evenement_option_group as eog', 'eog.EOG_ID', '=', 'eo.EOG_ID')
+            ->where('eo.E_CODE', $code)
+            ->orderByRaw('COALESCE(eog.EOG_ORDER, 999)')
+            ->orderBy('eo.EO_ORDER')
+            ->orderBy('eo.EO_TITLE')
+            ->select('eo.EO_ID', 'eo.EO_TITLE', 'eo.EO_COMMENT', 'eo.EO_TYPE', 'eo.EO_ORDER', 'eo.EOG_ID', 'eog.EOG_TITLE')
+            ->get()
+            ->map(function ($opt) {
+                $opt->dropdown_choices = $opt->EO_TYPE === 'dropdown'
+                    ? DB::table('evenement_option_dropdown')
+                        ->where('EO_ID', $opt->EO_ID)
+                        ->orderBy('EOD_ORDER')
+                        ->get(['EOD_ID', 'EOD_ORDER', 'EOD_TEXTE'])
+                    : collect();
+
+                $q = DB::table('evenement_option_choix')->where('EO_ID', $opt->EO_ID);
+                if ($opt->EO_TYPE === 'checkbox') {
+                    $q->where('EOC_VALUE', '1');
+                } elseif ($opt->EO_TYPE === 'dropdown') {
+                    $q->where('EOC_VALUE', '>', 0);
+                } elseif ($opt->EO_TYPE === 'textnum') {
+                    $q->where('EOC_VALUE', '<>', '');
+                } elseif (in_array($opt->EO_TYPE, ['text', 'date', 'hour'])) {
+                    $q->where('EOC_VALUE', '<>', '');
+                }
+                $opt->response_count = $q->count();
+
+                return $opt;
+            });
+
         return view('event.show', compact(
             'event', 'typeLabel', 'participants', 'candidates', 'vehicules', 'allVehicles',
             'functions', 'equipes', 'renforts', 'materiels', 'allMateriels',
             'requiredPositions', 'availablePositions', 'activeCount',
-            'renfortRequest', 'renfortVehicleTypes', 'renfortMaterials'
+            'renfortRequest', 'renfortVehicleTypes', 'renfortMaterials',
+            'optionGroups', 'eventOptions'
         ));
     }
 
@@ -1339,5 +1377,214 @@ class EventController extends Controller
             ->delete();
 
         return back()->with('success', 'Poste requis supprimé.');
+    }
+
+    // ── Event options (groupes + options + dropdown choices) ─────────────────
+
+    public function optionGroupStore(Request $request, string $code): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+        $data = $request->validate([
+            'EOG_TITLE' => 'required|string|max:80',
+            'EOG_ORDER' => 'nullable|integer|min:1|max:99',
+        ]);
+
+        DB::table('evenement_option_group')->insert([
+            'E_CODE' => $event->E_CODE,
+            'EOG_TITLE' => $data['EOG_TITLE'],
+            'EOG_ORDER' => $data['EOG_ORDER'] ?? 1,
+        ]);
+
+        return back()->with('success', 'Groupe d\'options ajouté.');
+    }
+
+    public function optionGroupUpdate(Request $request, string $code, int $groupId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+        $data = $request->validate([
+            'EOG_TITLE' => 'required|string|max:80',
+            'EOG_ORDER' => 'nullable|integer|min:1|max:99',
+        ]);
+
+        DB::table('evenement_option_group')
+            ->where('EOG_ID', $groupId)->where('E_CODE', $event->E_CODE)
+            ->update([
+                'EOG_TITLE' => $data['EOG_TITLE'],
+                'EOG_ORDER' => $data['EOG_ORDER'] ?? 1,
+            ]);
+
+        return back()->with('success', 'Groupe mis à jour.');
+    }
+
+    public function optionGroupDestroy(string $code, int $groupId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+
+        // Detach options from the group (keep the options, just ungroup them).
+        DB::table('evenement_option')
+            ->where('E_CODE', $event->E_CODE)->where('EOG_ID', $groupId)
+            ->update(['EOG_ID' => null]);
+
+        DB::table('evenement_option_group')
+            ->where('EOG_ID', $groupId)->where('E_CODE', $event->E_CODE)
+            ->delete();
+
+        return back()->with('success', 'Groupe supprimé.');
+    }
+
+    public function optionStore(Request $request, string $code): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+        $data = $request->validate([
+            'EO_TITLE' => 'required|string|max:80',
+            'EO_TYPE' => 'required|in:checkbox,text,textnum,dropdown,date,hour',
+            'EO_COMMENT' => 'nullable|string|max:255',
+            'EO_ORDER' => 'nullable|integer|min:1|max:99',
+            'EOG_ID' => 'nullable|integer',
+        ]);
+
+        $optionId = DB::table('evenement_option')->insertGetId([
+            'E_CODE' => $event->E_CODE,
+            'EO_TITLE' => $data['EO_TITLE'],
+            'EO_TYPE' => $data['EO_TYPE'],
+            'EO_COMMENT' => $data['EO_COMMENT'] ?? '',
+            'EO_ORDER' => $data['EO_ORDER'] ?? 1,
+            'EOG_ID' => $data['EOG_ID'] ?: null,
+        ]);
+
+        // Seed a default "Choisir…" entry for dropdown options.
+        if ($data['EO_TYPE'] === 'dropdown') {
+            DB::table('evenement_option_dropdown')->insert([
+                'EO_ID' => $optionId, 'EOD_ORDER' => 0, 'EOD_TEXTE' => 'Choisir une option',
+            ]);
+        }
+
+        return back()->with('success', 'Option ajoutée.');
+    }
+
+    public function optionUpdate(Request $request, string $code, int $optionId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+        $data = $request->validate([
+            'EO_TITLE' => 'required|string|max:80',
+            'EO_TYPE' => 'required|in:checkbox,text,textnum,dropdown,date,hour',
+            'EO_COMMENT' => 'nullable|string|max:255',
+            'EO_ORDER' => 'nullable|integer|min:1|max:99',
+            'EOG_ID' => 'nullable|integer',
+        ]);
+
+        DB::table('evenement_option')
+            ->where('EO_ID', $optionId)->where('E_CODE', $event->E_CODE)
+            ->update([
+                'EO_TITLE' => $data['EO_TITLE'],
+                'EO_TYPE' => $data['EO_TYPE'],
+                'EO_COMMENT' => $data['EO_COMMENT'] ?? '',
+                'EO_ORDER' => $data['EO_ORDER'] ?? 1,
+                'EOG_ID' => $data['EOG_ID'] ?: null,
+            ]);
+
+        return back()->with('success', 'Option mise à jour.');
+    }
+
+    public function optionDestroy(string $code, int $optionId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+
+        DB::table('evenement_option_choix')
+            ->where('EO_ID', $optionId)->where('E_CODE', $event->E_CODE)
+            ->delete();
+        DB::table('evenement_option_dropdown')->where('EO_ID', $optionId)->delete();
+        DB::table('evenement_option')
+            ->where('EO_ID', $optionId)->where('E_CODE', $event->E_CODE)
+            ->delete();
+
+        return back()->with('success', 'Option supprimée.');
+    }
+
+    public function dropdownChoiceStore(Request $request, string $code, int $optionId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+        abort_unless(
+            DB::table('evenement_option')->where('EO_ID', $optionId)->where('E_CODE', $event->E_CODE)->exists(),
+            404
+        );
+        $data = $request->validate([
+            'EOD_TEXTE' => 'required|string|max:80',
+            'EOD_ORDER' => 'nullable|integer|min:1|max:99',
+        ]);
+
+        DB::table('evenement_option_dropdown')->insert([
+            'EO_ID' => $optionId,
+            'EOD_TEXTE' => $data['EOD_TEXTE'],
+            'EOD_ORDER' => $data['EOD_ORDER'] ?? 1,
+        ]);
+
+        return back()->with('success', 'Choix ajouté.');
+    }
+
+    public function dropdownChoiceDestroy(string $code, int $optionId, int $choiceId): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(15), 403);
+        $event = Event::findOrFail($code);
+
+        DB::table('evenement_option_choix')
+            ->where('EO_ID', $optionId)->where('EOC_VALUE', $choiceId)->delete();
+        DB::table('evenement_option_dropdown')
+            ->where('EOD_ID', $choiceId)->where('EO_ID', $optionId)->delete();
+
+        return back()->with('success', 'Choix supprimé.');
+    }
+
+    public function participantChoicesSave(Request $request, string $code, int $pid): RedirectResponse
+    {
+        $user = auth()->user();
+        $event = Event::findOrFail($code);
+
+        // Allow: perm 15, event chef, or the participant themselves.
+        $isSelf = (int) $user->P_ID === $pid;
+        abort_unless($user->hasPermission(15) || $isSelf, 403);
+
+        // Verify the person is enrolled.
+        abort_unless(
+            DB::table('evenement_participation')
+                ->where('E_CODE', $event->E_CODE)->where('P_ID', $pid)->exists(),
+            403
+        );
+
+        // Clear existing choices for this participant on this event, then re-insert.
+        DB::table('evenement_option_choix')
+            ->where('E_CODE', $event->E_CODE)->where('P_ID', $pid)->delete();
+
+        $options = DB::table('evenement_option')->where('E_CODE', $event->E_CODE)->get();
+
+        foreach ($options as $opt) {
+            $key = 'O'.$opt->EO_ID;
+            if (! $request->has($key)) {
+                continue;
+            }
+            $value = $request->input($key);
+            if ($value === null || $value === '') {
+                continue;
+            }
+            if ($opt->EO_TYPE === 'dropdown' && (int) $value <= 0) {
+                continue;
+            }
+
+            DB::table('evenement_option_choix')->insert([
+                'E_CODE' => $event->E_CODE,
+                'P_ID' => $pid,
+                'EO_ID' => $opt->EO_ID,
+                'EOC_VALUE' => (string) $value,
+            ]);
+        }
+
+        return back()->with('success', 'Choix enregistrés.');
     }
 }
