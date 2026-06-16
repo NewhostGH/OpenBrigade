@@ -488,7 +488,23 @@ class PersonnelController extends Controller
 
         $postes = Position::query()
             ->orderBy('TYPE')
-            ->get(['PS_ID', 'TYPE', 'DESCRIPTION', 'PS_EXPIRABLE']);
+            ->get(['PS_ID', 'TYPE', 'DESCRIPTION', 'PS_EXPIRABLE', 'PS_DIPLOMA', 'PS_RECYCLE']);
+
+        $formations = DB::table('personnel_formation as pf')
+            ->join('type_formation as tf', 'tf.TF_CODE', '=', 'pf.TF_CODE')
+            ->join('poste as ps', 'ps.PS_ID', '=', 'pf.PS_ID')
+            ->where('pf.P_ID', $personnel->P_ID)
+            ->select(
+                'pf.PF_ID', 'pf.PS_ID', 'pf.TF_CODE', 'pf.PF_DATE', 'pf.PF_LIEU',
+                'pf.PF_RESPONSABLE', 'pf.PF_DIPLOME', 'pf.PF_COMMENT', 'pf.E_CODE',
+                'tf.TF_LIBELLE', 'ps.TYPE as PS_TYPE', 'ps.DESCRIPTION as PS_DESC'
+            )
+            ->orderByDesc('pf.PF_DATE')
+            ->get();
+
+        $formationTypes = DB::table('type_formation')
+            ->orderBy('TF_CODE')
+            ->get(['TF_CODE', 'TF_LIBELLE']);
 
         $typesPaiement = PaymentType::query()
             ->orderBy('TP_DESCRIPTION')
@@ -551,6 +567,8 @@ class PersonnelController extends Controller
             ['id' => 'section-info',          'icon' => 'fas fa-user',          'label' => 'Information'],
             ['id' => 'section-competences',   'icon' => 'fas fa-certificate',   'label' => 'Compétences',
                 'badge' => $personnel->qualifications->count() ?: null],
+            ['id' => 'section-formations',    'icon' => 'fas fa-graduation-cap', 'label' => 'Formations',
+                'badge' => $formations->count() ?: null],
             ['id' => 'section-cotisations',   'icon' => 'fas fa-euro-sign',     'label' => 'Cotisations',
                 'badge' => $cotisations->count() ?: null],
             ['id' => 'section-participation', 'icon' => 'fas fa-calendar-check', 'label' => 'Participation',
@@ -601,6 +619,8 @@ class PersonnelController extends Controller
             'contactHandles' => $contactHandles,
             'homonyms' => $homonyms,
             'tenues' => $tenues,
+            'formations' => $formations,
+            'formationTypes' => $formationTypes,
         ]);
     }
 
@@ -953,6 +973,82 @@ class PersonnelController extends Controller
 
         return redirect()->route('personnel.show', $personnel)
             ->with('success', 'Cotisation supprimée.');
+    }
+
+    // ── Trainings (formations) CRUD ──────────────────────────────────────────────
+
+    public function storeTraining(Request $request, Personnel $personnel)
+    {
+        $user = auth()->user();
+        if ((int) $user->P_ID !== (int) $personnel->P_ID) {
+            abort_unless($user->hasPermission(40), 403);
+        }
+        abort_unless($user->hasPermission(4), 403);
+
+        $validated = $request->validate([
+            'PS_ID' => ['required', 'integer', 'exists:poste,PS_ID'],
+            'TF_CODE' => ['required', 'string', 'max:5', 'exists:type_formation,TF_CODE'],
+            'PF_DATE' => ['required', 'date'],
+            'PF_LIEU' => ['nullable', 'string', 'max:100'],
+            'PF_RESPONSABLE' => ['nullable', 'string', 'max:100'],
+            'PF_DIPLOME' => ['nullable', 'string', 'max:50'],
+            'PF_COMMENT' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        DB::table('personnel_formation')->insert(array_merge($validated, [
+            'P_ID' => $personnel->P_ID,
+            'PF_UPDATE_BY' => $user->P_ID,
+            'PF_UPDATE_DATE' => now()->toDateString(),
+        ]));
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Formation enregistrée.');
+    }
+
+    public function updateTraining(Request $request, Personnel $personnel, int $pfId)
+    {
+        $user = auth()->user();
+        if ((int) $user->P_ID !== (int) $personnel->P_ID) {
+            abort_unless($user->hasPermission(40), 403);
+        }
+        abort_unless($user->hasPermission(4), 403);
+
+        $validated = $request->validate([
+            'TF_CODE' => ['required', 'string', 'max:5', 'exists:type_formation,TF_CODE'],
+            'PF_DATE' => ['required', 'date'],
+            'PF_LIEU' => ['nullable', 'string', 'max:100'],
+            'PF_RESPONSABLE' => ['nullable', 'string', 'max:100'],
+            'PF_DIPLOME' => ['nullable', 'string', 'max:50'],
+            'PF_COMMENT' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        DB::table('personnel_formation')
+            ->where('PF_ID', $pfId)
+            ->where('P_ID', $personnel->P_ID)
+            ->update(array_merge($validated, [
+                'PF_UPDATE_BY' => $user->P_ID,
+                'PF_UPDATE_DATE' => now()->toDateString(),
+            ]));
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Formation mise à jour.');
+    }
+
+    public function destroyTraining(Personnel $personnel, int $pfId)
+    {
+        $user = auth()->user();
+        if ((int) $user->P_ID !== (int) $personnel->P_ID) {
+            abort_unless($user->hasPermission(40), 403);
+        }
+        abort_unless($user->hasPermission(4), 403);
+
+        DB::table('personnel_formation')
+            ->where('PF_ID', $pfId)
+            ->where('P_ID', $personnel->P_ID)
+            ->delete();
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Formation supprimée.');
     }
 
     // ── Exports ─────────────────────────────────────────────────────────────────

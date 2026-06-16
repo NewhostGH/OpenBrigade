@@ -428,6 +428,93 @@
                 </div>
             </div>{{-- /section-competences --}}
 
+            {{-- ▸ Formations ──────────────────────────────────────────────── --}}
+            <div id="section-formations" data-pers-section>
+                <div class="ob-widget-card mb-3">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title">
+                            <i class="fas fa-graduation-cap"></i> Formations
+                            @if($formations->isNotEmpty())
+                                <span class="ob-badge ob-badge-archive ms-1">{{ $formations->count() }}</span>
+                            @endif
+                        </div>
+                        @if(auth()->user()->hasPermission(4))
+                            <button type="button" class="btn btn-sm btn-success noprint"
+                                    data-bs-toggle="modal" data-bs-target="#addTrainingModal">
+                                <i class="fas fa-plus me-1"></i> Ajouter
+                            </button>
+                        @endif
+                    </div>
+                    <div class="ob-widget-card-body p-0">
+                        @if($formations->isNotEmpty())
+                            <table class="table table-sm table-hover align-middle mb-0" style="font-size:var(--font-size-sm);">
+                                <thead style="background:var(--table-header-bg);color:var(--table-header-text);">
+                                    <tr>
+                                        <th class="ps-3">Date</th>
+                                        <th>Compétence</th>
+                                        <th>Type</th>
+                                        <th>N° diplôme</th>
+                                        <th>Lieu</th>
+                                        <th>Délivré par</th>
+                                        <th>Commentaire</th>
+                                        @if(auth()->user()->hasPermission(4))<th class="noprint" style="width:72px;"></th>@endif
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($formations as $pf)
+                                        <tr>
+                                            <td class="ps-3" style="white-space:nowrap">
+                                                {{ $pf->PF_DATE ? \Carbon\Carbon::parse($pf->PF_DATE)->format('d/m/Y') : '—' }}
+                                            </td>
+                                            <td>
+                                                <strong>{{ $pf->PS_TYPE }}</strong>
+                                                @if($pf->PS_DESC)
+                                                    <small class="text-muted">— {{ $pf->PS_DESC }}</small>
+                                                @endif
+                                            </td>
+                                            <td>{{ $pf->TF_LIBELLE }}</td>
+                                            <td>{{ $pf->PF_DIPLOME ?: '—' }}</td>
+                                            <td>{{ $pf->PF_LIEU ?: '—' }}</td>
+                                            <td>{{ $pf->PF_RESPONSABLE ?: '—' }}</td>
+                                            <td>{{ $pf->PF_COMMENT ?: '—' }}</td>
+                                            @if(auth()->user()->hasPermission(4))
+                                                <td class="text-end pe-2 noprint">
+                                                    <button type="button"
+                                                            class="btn btn-xs btn-light py-0 px-1 me-1"
+                                                            onclick="openEditTrainingModal({{ json_encode([
+                                                                'pf_id'          => $pf->PF_ID,
+                                                                'ps_id'          => $pf->PS_ID,
+                                                                'tf_code'        => $pf->TF_CODE,
+                                                                'pf_date'        => $pf->PF_DATE,
+                                                                'pf_lieu'        => $pf->PF_LIEU ?? '',
+                                                                'pf_responsable' => $pf->PF_RESPONSABLE ?? '',
+                                                                'pf_diplome'     => $pf->PF_DIPLOME ?? '',
+                                                                'pf_comment'     => $pf->PF_COMMENT ?? '',
+                                                            ]) }})">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <form method="POST"
+                                                          action="{{ route('personnel.training.destroy', [$personnel, $pf->PF_ID]) }}"
+                                                          class="d-inline"
+                                                          onsubmit="return confirm('Supprimer cette formation ?')">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="btn btn-xs btn-light py-0 px-1 text-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <p class="ob-widget-empty p-3">Aucune formation enregistrée.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>{{-- /section-formations --}}
+
             {{-- ▸ Cotisations ────────────────────────────────────────────── --}}
             <div id="section-cotisations" data-pers-section>
                 <div class="ob-widget-card mb-3">
@@ -1159,6 +1246,131 @@
         </div>
     </div>
 </div>
+
+{{-- ── Add training modal ──────────────────────────────────────────────── --}}
+<div class="modal fade" id="addTrainingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('personnel.training.store', $personnel) }}">
+                @csrf
+                <div class="modal-header py-2">
+                    <h6 class="modal-title">Ajouter une formation</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Compétence <span class="text-danger">*</span></label>
+                            <select name="PS_ID" class="form-select form-select-sm" required>
+                                <option value="">— choisir —</option>
+                                @foreach($postes->filter(fn($p) => $p->PS_DIPLOMA || $p->PS_RECYCLE) as $p)
+                                    <option value="{{ $p->PS_ID }}">{{ $p->TYPE }}{{ $p->DESCRIPTION ? ' — ' . $p->DESCRIPTION : '' }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Type de formation <span class="text-danger">*</span></label>
+                            <select name="TF_CODE" class="form-select form-select-sm" required>
+                                @foreach($formationTypes as $ft)
+                                    <option value="{{ $ft->TF_CODE }}">{{ $ft->TF_LIBELLE }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Date <span class="text-danger">*</span></label>
+                            <input type="date" name="PF_DATE" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">N° diplôme</label>
+                            <input type="text" name="PF_DIPLOME" class="form-control form-control-sm" maxlength="50">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Lieu</label>
+                            <input type="text" name="PF_LIEU" class="form-control form-control-sm" maxlength="100">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Délivré / organisé par</label>
+                            <input type="text" name="PF_RESPONSABLE" class="form-control form-control-sm" maxlength="100">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Commentaire</label>
+                            <input type="text" name="PF_COMMENT" class="form-control form-control-sm" maxlength="255">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- ── Edit training modal ─────────────────────────────────────────────── --}}
+<div class="modal fade" id="editTrainingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="editTrainingForm">
+                @csrf @method('PATCH')
+                <div class="modal-header py-2">
+                    <h6 class="modal-title">Modifier la formation</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Type de formation <span class="text-danger">*</span></label>
+                            <select name="TF_CODE" id="editTfCode" class="form-select form-select-sm" required>
+                                @foreach($formationTypes as $ft)
+                                    <option value="{{ $ft->TF_CODE }}">{{ $ft->TF_LIBELLE }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Date <span class="text-danger">*</span></label>
+                            <input type="date" name="PF_DATE" id="editPfDate" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">N° diplôme</label>
+                            <input type="text" name="PF_DIPLOME" id="editPfDiplome" class="form-control form-control-sm" maxlength="50">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Lieu</label>
+                            <input type="text" name="PF_LIEU" id="editPfLieu" class="form-control form-control-sm" maxlength="100">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Délivré / organisé par</label>
+                            <input type="text" name="PF_RESPONSABLE" id="editPfResp" class="form-control form-control-sm" maxlength="100">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="font-size:var(--font-size-sm);">Commentaire</label>
+                            <input type="text" name="PF_COMMENT" id="editPfComment" class="form-control form-control-sm" maxlength="255">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openEditTrainingModal(data) {
+    const base = '{{ route('personnel.training.update', [$personnel, '__ID__']) }}';
+    document.getElementById('editTrainingForm').action = base.replace('__ID__', data.pf_id);
+    document.getElementById('editTfCode').value    = data.tf_code;
+    document.getElementById('editPfDate').value    = data.pf_date ? data.pf_date.substring(0, 10) : '';
+    document.getElementById('editPfDiplome').value = data.pf_diplome;
+    document.getElementById('editPfLieu').value    = data.pf_lieu;
+    document.getElementById('editPfResp').value    = data.pf_responsable;
+    document.getElementById('editPfComment').value = data.pf_comment;
+    new bootstrap.Modal(document.getElementById('editTrainingModal')).show();
+}
+</script>
 
 @endsection
 

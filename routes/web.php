@@ -403,6 +403,13 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.dues.update')->middleware('permission:0');
     Route::delete('personnel/{personnel}/dues/{pcId}', [PersonnelController::class, 'destroyDues'])
         ->name('personnel.dues.destroy')->middleware('permission:0');
+    // Trainings (formations) CRUD — nested under personnel
+    Route::post('personnel/{personnel}/trainings', [PersonnelController::class, 'storeTraining'])
+        ->name('personnel.training.store')->middleware('permission:0');
+    Route::patch('personnel/{personnel}/trainings/{pfId}', [PersonnelController::class, 'updateTraining'])
+        ->name('personnel.training.update')->middleware('permission:0');
+    Route::delete('personnel/{personnel}/trainings/{pfId}', [PersonnelController::class, 'destroyTraining'])
+        ->name('personnel.training.destroy')->middleware('permission:0');
     // Per-member exports
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');
