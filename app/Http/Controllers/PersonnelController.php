@@ -445,25 +445,14 @@ class PersonnelController extends Controller
             'Expires' => '0',
         ];
 
+        // Profile pictures live only in private storage (see the security
+        // rename to profile_pictures + MigrateStorage). Anything not found
+        // there falls back to the inline default avatar below.
         if ($filename !== '') {
-            $filename = basename($filename);
-            $paths = [
-                storage_path('app/private/profile_pictures/'.$filename),
-                base_path('archive/legacy_app/images/user-specific/trombi/'.$filename),
-                public_path('images/user-specific/trombi/'.$filename),
-            ];
-
-            foreach ($paths as $path) {
-                if (File::exists($path)) {
-                    return response()->file($path, $noCache);
-                }
+            $path = storage_path('app/private/profile_pictures/'.basename($filename));
+            if (File::exists($path)) {
+                return response()->file($path, $noCache);
             }
-        }
-
-        // TODO: Migrate code — DEFAULT.png lives in archive/legacy_app; move to storage/ after decommission
-        $defaultPath = base_path('archive/legacy_app/images/user-specific/DEFAULT.png');
-        if (File::exists($defaultPath)) {
-            return response()->file($defaultPath, $noCache);
         }
 
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#e2e8f0"/><circle cx="32" cy="24" r="12" fill="#94a3b8"/><rect x="14" y="40" width="36" height="18" rx="9" fill="#94a3b8"/></svg>';
