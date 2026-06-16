@@ -106,7 +106,7 @@ Contributions are welcome! Please read [CONTRIBUTING.md](.github/CONTRIBUTING.md
 
 ## License
 
-GNU General Public License v2.0 or later. See [license.txt](license.txt) for details.
+GNU General Public License v2.0 or later. See [LICENSE](LICENSE) for details ([version française](docs/legal/licence-fr.txt)).
 
 ---
 
