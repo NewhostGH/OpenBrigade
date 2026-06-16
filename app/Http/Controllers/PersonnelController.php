@@ -538,6 +538,16 @@ class PersonnelController extends Controller
         $today = now()->toDateString();
         $warn30 = now()->addDays(30)->toDateString();
 
+        // Homonym detection — same surname + first name, different record.
+        $homonyms = DB::table('pompier as p')
+            ->join('section as s', 'p.P_SECTION', '=', 's.S_ID')
+            ->where('p.P_NOM', $personnel->P_NOM)
+            ->whereRaw('LOWER(p.P_PRENOM) = LOWER(?)', [$personnel->P_PRENOM])
+            ->where('p.P_ID', '!=', $personnel->P_ID)
+            ->select('p.P_ID', 'p.P_NOM', 'p.P_PRENOM', 'p.P_BIRTHDATE', 'p.P_SEXE',
+                'p.P_STATUT', 'p.P_OLD_MEMBER', 's.S_CODE', 's.S_DESCRIPTION')
+            ->get();
+
         $sideNav = [
             ['id' => 'section-info',          'icon' => 'fas fa-user',          'label' => 'Information'],
             ['id' => 'section-competences',   'icon' => 'fas fa-certificate',   'label' => 'Compétences',
@@ -557,6 +567,11 @@ class PersonnelController extends Controller
             ['id' => 'section-historique',    'icon' => 'fas fa-history',       'label' => 'Historique'],
             ['id' => 'section-salarie',       'icon' => 'fas fa-briefcase',     'label' => 'Salarié'],
         ];
+
+        if ($homonyms->isNotEmpty()) {
+            $sideNav[] = ['id' => 'section-homonymes', 'icon' => 'fas fa-user-friends', 'label' => 'Homonymes',
+                'badge' => $homonyms->count(), 'badgeClass' => 'bg-warning text-dark'];
+        }
 
         // Contact handles (contact_type + personnel_contact).
         $contactHandles = DB::table('contact_type as ct')
@@ -584,6 +599,7 @@ class PersonnelController extends Controller
             'personnelGroups' => $personnelGroups,
             'personnelSections' => $personnelSections,
             'contactHandles' => $contactHandles,
+            'homonyms' => $homonyms,
         ]);
     }
 
@@ -1525,5 +1541,62 @@ class PersonnelController extends Controller
             ->with('success', 'Fiche personnel mise à jour.');
 
         return $warning !== null ? $redirect->with('error', $warning) : $redirect;
+    }
+
+    /**
+     * Show the homonym merge form comparing two personnel records side-by-side.
+     */
+    public function homonymMerge(Personnel $personnel, Personnel $doublon): View
+    {
+        abort_unless(auth()->user()->hasPermission(2), 403);
+        abort_if($personnel->P_ID === $doublon->P_ID, 422, 'Impossible de fusionner une fiche avec elle-même.');
+
+        $nb = [
+            'competences' => DB::table('qualification')->where('P_ID', $doublon->P_ID)->count(),
+            'formations' => DB::table('personnel_formation')->where('P_ID', $doublon->P_ID)->count(),
+            'participations' => DB::table('evenement_participation as ep')
+                ->join('evenement as e', 'ep.E_CODE', '=', 'e.E_CODE')
+                ->where('ep.P_ID', $doublon->P_ID)
+                ->where('e.E_CANCELED', 0)
+                ->count(),
+        ];
+
+        $mainSection = DB::table('section')->where('S_ID', $personnel->P_SECTION)->first(['S_CODE', 'S_DESCRIPTION']);
+        $doublonSection = DB::table('section')->where('S_ID', $doublon->P_SECTION)->first(['S_CODE', 'S_DESCRIPTION']);
+
+        return view('personnel.merge', compact('personnel', 'doublon', 'nb', 'mainSection', 'doublonSection'));
+    }
+
+    /**
+     * Execute the homonym merge: move selected records from doublon to main,
+     * optionally radiate or delete the doublon.
+     */
+    public function doMerge(Request $request, Personnel $personnel, Personnel $doublon): RedirectResponse
+    {
+        abort_unless(auth()->user()->hasPermission(2), 403);
+        abort_if($personnel->P_ID === $doublon->P_ID, 422, 'Impossible de fusionner une fiche avec elle-même.');
+
+        if ($request->boolean('competences')) {
+            DB::table('qualification')->where('P_ID', $doublon->P_ID)->update(['P_ID' => $personnel->P_ID]);
+        }
+
+        if ($request->boolean('formations')) {
+            DB::table('personnel_formation')->where('P_ID', $doublon->P_ID)->update(['P_ID' => $personnel->P_ID]);
+        }
+
+        if ($request->boolean('participations')) {
+            DB::table('evenement_participation')->where('P_ID', $doublon->P_ID)->update(['P_ID' => $personnel->P_ID]);
+        }
+
+        if ($request->boolean('radier')) {
+            DB::table('pompier')->where('P_ID', $doublon->P_ID)->update(['P_OLD_MEMBER' => 1]);
+        }
+
+        if ($request->boolean('supprimer') && auth()->user()->hasPermission(3)) {
+            DB::table('pompier')->where('P_ID', $doublon->P_ID)->delete();
+        }
+
+        return redirect()->route('personnel.show', $personnel)
+            ->with('success', 'Fusion effectuée avec succès.');
     }
 }

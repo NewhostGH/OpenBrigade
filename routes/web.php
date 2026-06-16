@@ -362,6 +362,11 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.logbook')->middleware('permission:0');
     Route::get('personnel/{personnel}/card-data', [PersonnelController::class, 'cardData'])
         ->name('personnel.card')->middleware('permission:0');
+    // Homonym merge
+    Route::get('personnel/{personnel}/merge/{doublon}', [PersonnelController::class, 'homonymMerge'])
+        ->name('personnel.merge.show')->middleware('permission:2');
+    Route::post('personnel/{personnel}/merge/{doublon}', [PersonnelController::class, 'doMerge'])
+        ->name('personnel.merge')->middleware('permission:2');
     // Géolocalisation
     Route::get('/geolocation', [GeolocationController::class, 'index'])
         ->name('geolocation.index')->middleware(['permission:0', 'feature:geolocalize_enabled']);

@@ -930,6 +930,82 @@
             </div>{{-- /section-salarie --}}
             @endif
 
+            @if ($homonyms->isNotEmpty())
+            <div id="section-homonymes" data-pers-section>
+                <div class="ob-widget-card mb-3 border-warning">
+                    <div class="ob-widget-card-header">
+                        <div class="ob-widget-card-title">
+                            <i class="fas fa-user-friends text-warning"></i> Homonymes détectés
+                        </div>
+                    </div>
+                    <div class="ob-widget-card-body">
+                        <p class="text-muted mb-3" style="font-size:var(--font-size-sm);">
+                            Les fiches suivantes ont le même nom et prénom. Vérifiez s'il s'agit de doublons ou de simples homonymes.
+                        </p>
+                        <table class="table table-sm table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Nom</th>
+                                    <th>Date de naissance</th>
+                                    <th>Statut</th>
+                                    <th>Section</th>
+                                    @if (auth()->user()->hasPermission(2))
+                                    <th></th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($homonyms as $h)
+                                @php
+                                    $sameBirthdate = $personnel->P_BIRTHDATE && $h->P_BIRTHDATE
+                                        && $personnel->P_BIRTHDATE === $h->P_BIRTHDATE;
+                                    $differentBirthdate = $personnel->P_BIRTHDATE && $h->P_BIRTHDATE
+                                        && $personnel->P_BIRTHDATE !== $h->P_BIRTHDATE;
+                                @endphp
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('personnel.show', $h->P_ID) }}">{{ $h->P_ID }}</a>
+                                    </td>
+                                    <td>{{ ucfirst(mb_strtolower($h->P_PRENOM)) }} {{ strtoupper($h->P_NOM) }}
+                                        @if ($h->P_OLD_MEMBER) <span class="badge bg-secondary ms-1">Ancien</span> @endif
+                                    </td>
+                                    <td>
+                                        @if ($h->P_BIRTHDATE)
+                                            {{ \Carbon\Carbon::parse($h->P_BIRTHDATE)->format('d/m/Y') }}
+                                            @if ($sameBirthdate)
+                                                <span class="badge bg-warning text-dark ms-1" title="Même date de naissance — probable doublon">doublon probable</span>
+                                            @elseif ($differentBirthdate)
+                                                <span class="badge bg-secondary ms-1" title="Dates de naissance différentes — simple homonyme">homonyme</span>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $h->P_STATUT }}</td>
+                                    <td>{{ $h->S_CODE }}</td>
+                                    @if (auth()->user()->hasPermission(2))
+                                    <td>
+                                        @if (!$differentBirthdate)
+                                        <a href="{{ route('personnel.merge.show', [$personnel, $h->P_ID]) }}"
+                                           class="btn btn-xs btn-outline-warning"
+                                           title="Gérer / fusionner ce doublon">
+                                            <i class="fas fa-code-merge me-1"></i> Fusionner
+                                        </a>
+                                        @else
+                                        <span class="text-muted small">homonyme — fusion non applicable</span>
+                                        @endif
+                                    </td>
+                                    @endif
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>{{-- /section-homonymes --}}
+            @endif
+
         </div>{{-- /content --}}
     </div>{{-- /sidebar layout --}}
 
