@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-npx --no -- commitlint --edit "$1"
+npx --no -- commitlint --config .husky/commitlint.config.js --edit "$1"

@@ -48,5 +48,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Apply project-specific PHP settings
-# COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
+# Apply project-specific PHP settings (context is the repo root)
+# COPY docker/php.ini /usr/local/etc/php/conf.d/openbrigade.ini

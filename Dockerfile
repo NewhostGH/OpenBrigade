@@ -85,7 +85,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP config
-COPY php.ini /usr/local/etc/php/conf.d/openbrigade.ini
+COPY docker/php.ini /usr/local/etc/php/conf.d/openbrigade.ini
 
 # Nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
