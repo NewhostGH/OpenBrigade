@@ -114,14 +114,27 @@ class ReferenceController extends Controller
     {
         $items = DB::table('type_participation as tp')
             ->join('type_evenement as te', 'tp.TE_CODE', '=', 'te.TE_CODE')
+            ->leftJoin('poste as p1', 'p1.PS_ID', '=', 'tp.PS_ID')
+            ->leftJoin('poste as p2', 'p2.PS_ID', '=', 'tp.PS_ID2')
             ->orderBy('te.TE_LIBELLE')
             ->orderBy('tp.TP_NUM')
-            ->select('tp.TP_ID', 'tp.TP_LIBELLE', 'tp.TP_NUM', 'tp.TE_CODE', 'te.TE_LIBELLE as te_label')
+            ->select('tp.TP_ID', 'tp.TP_LIBELLE', 'tp.TP_NUM', 'tp.TE_CODE',
+                'te.TE_LIBELLE as te_label',
+                'tp.PS_ID', 'tp.PS_ID2', 'tp.INSTRUCTOR',
+                'p1.TYPE as ps1_type', 'p1.DESCRIPTION as ps1_desc',
+                'p2.TYPE as ps2_type', 'p2.DESCRIPTION as ps2_desc')
             ->get();
 
         $eventTypes = DB::table('type_evenement')->orderBy('TE_LIBELLE')->get(['TE_CODE', 'TE_LIBELLE']);
 
-        return view('admin.references.participation-type', compact('items', 'eventTypes'));
+        $postes = DB::table('poste as p')
+            ->join('equipe as e', 'e.EQ_ID', '=', 'p.EQ_ID')
+            ->orderBy('e.EQ_ORDER')
+            ->orderBy('p.TYPE')
+            ->select('p.PS_ID', 'p.TYPE', 'p.DESCRIPTION', 'e.EQ_NOM')
+            ->get();
+
+        return view('admin.references.participation-type', compact('items', 'eventTypes', 'postes'));
     }
 
     public function participationTypeStore(Request $request): RedirectResponse
@@ -130,15 +143,17 @@ class ReferenceController extends Controller
             'TE_CODE' => ['required', 'string', 'max:5', 'exists:type_evenement,TE_CODE'],
             'TP_LIBELLE' => ['required', 'string', 'max:40'],
             'TP_NUM' => ['required', 'integer', 'min:1', 'max:99'],
+            'PS_ID' => ['nullable', 'integer', 'exists:poste,PS_ID'],
+            'PS_ID2' => ['nullable', 'integer', 'exists:poste,PS_ID'],
         ]);
 
         DB::table('type_participation')->insert([
             'TE_CODE' => $v['TE_CODE'],
             'TP_LIBELLE' => $v['TP_LIBELLE'],
             'TP_NUM' => $v['TP_NUM'],
-            'PS_ID' => 0,
-            'PS_ID2' => 0,
-            'INSTRUCTOR' => 0,
+            'PS_ID' => $v['PS_ID'] ?? 0,
+            'PS_ID2' => $v['PS_ID2'] ?? 0,
+            'INSTRUCTOR' => $request->boolean('INSTRUCTOR') ? 1 : 0,
             'EQ_ID' => 0,
         ]);
 
@@ -151,11 +166,16 @@ class ReferenceController extends Controller
         $v = $request->validate([
             'TP_LIBELLE' => ['required', 'string', 'max:40'],
             'TP_NUM' => ['required', 'integer', 'min:1', 'max:99'],
+            'PS_ID' => ['nullable', 'integer', 'exists:poste,PS_ID'],
+            'PS_ID2' => ['nullable', 'integer', 'exists:poste,PS_ID'],
         ]);
 
         DB::table('type_participation')->where('TP_ID', $id)->update([
             'TP_LIBELLE' => $v['TP_LIBELLE'],
             'TP_NUM' => $v['TP_NUM'],
+            'PS_ID' => $v['PS_ID'] ?? 0,
+            'PS_ID2' => $v['PS_ID2'] ?? 0,
+            'INSTRUCTOR' => $request->boolean('INSTRUCTOR') ? 1 : 0,
         ]);
 
         return redirect()->route('admin.references.participation-type')

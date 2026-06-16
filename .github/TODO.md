@@ -220,7 +220,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Plugins marketplace — `/admin/plugins` is a placeholder; install/download flow to design
 - [x] `paramfnv` vehicle function types (`type_fonction_vehicule`) — CRUD at `/admin/references/vehicle-function`; inline list with name/description/order; perm 5
 - [x] Grade category (`categorie_grade`) CRUD — at `/admin/references/grade-category`; inline description edit; delete blocked if grades assigned; badge count; link to grade icons page; perm 5
-- [ ] `paramfn` participation function enhanced fields (`PS_ID`/`PS_ID2` required competence, `INSTRUCTOR` flag per `type_participation` row) — these extra fields still default to 0; legacy `paramfn.php` bridge still used for the full edit
+- [x] `paramfn` participation function enhanced fields — `PS_ID`/`PS_ID2` (required competence + alternative) and `INSTRUCTOR` flag added to `type_participation` create/edit; grouped competence dropdowns with optgroups per team; edit modal on each row; perm 5. Legacy `paramfn.php` bridge retired for this functionality.
 - [ ] Maintenance utilities (`update_app.php`, `buildsql.php`, `decrypt.php`, `import_api.php`, `debug_data.php`)
 
 ### Opérations d'urgence (DPS / SITAC / Victimes)
