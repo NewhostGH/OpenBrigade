@@ -73,19 +73,24 @@
                         @forelse ($ctxSections as $s)
                             @php
                                 $depth = (int) ($s->depth ?? 0);
-                                $isRoot = (int) ($s->S_PARENT ?? 0) === 0;
+                                $isOrgRoot = (int) $s->S_ID === 0;          // the organizational root
+                                $isRoot = (int) ($s->S_PARENT ?? 0) === 0;  // a top-level site
                             @endphp
                             <li>
-                                <a class="dropdown-item dropdown-item-profil {{ $isRoot ? 'ob-nav-section-root' : '' }} {{ (int) $s->S_ID === (int) $ctxActiveSection ? 'active' : '' }}"
+                                <a class="dropdown-item dropdown-item-profil {{ $isOrgRoot || $isRoot ? 'ob-nav-section-root' : '' }} {{ (int) $s->S_ID === (int) $ctxActiveSection ? 'active' : '' }}"
                                     href="{{ route('context.section', ['s' => $s->S_ID]) }}"
                                     style="padding-left: {{ 1 + $depth * 1.1 }}rem;">
-                                    @if ($depth === 0)
+                                    @if ($isOrgRoot)
+                                        <i class="fas fa-sitemap fa-fw ob-nav-item-icon"></i>
+                                    @elseif ($depth === 0)
                                         <i class="fas fa-building fa-fw ob-nav-item-icon"></i>
                                     @else
                                         <span class="ob-nav-item-icon fa-fw ob-nav-muted" aria-hidden="true">└</span>
                                     @endif
                                     {{ $s->S_DESCRIPTION }}
-                                    @if ($isRoot)
+                                    @if ($isOrgRoot)
+                                        <span class="ob-nav-section-root-badge">organisation</span>
+                                    @elseif ($isRoot)
                                         <span class="ob-nav-section-root-badge">site</span>
                                     @elseif (!empty($s->S_CODE))
                                         <span class="ob-nav-muted ms-1"

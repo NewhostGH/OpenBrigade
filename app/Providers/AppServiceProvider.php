@@ -102,7 +102,10 @@ class AppServiceProvider extends ServiceProvider
             if ($user !== null) {
                 try {
                     $resolver = app(PermissionResolver::class);
-                    $ctx['ctxActiveSection'] = $resolver->activeSectionId($user);
+                    // The switcher reflects the EXPLICIT navbar choice (null = "Toutes
+                    // mes sections"), not activeSectionId() which falls back to the
+                    // home section for permission evaluation.
+                    $ctx['ctxActiveSection'] = $resolver->chosenSectionId();
                     $ctx['ctxSections'] = app(SectionScopeService::class)->switcherSections();
                     $ctx['ctxRoles'] = $resolver->userRoles($user, $ctx['ctxActiveSection']);
                     $ctx['ctxActiveRole'] = $resolver->activeRoleId($user);

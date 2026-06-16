@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +27,13 @@ use Illuminate\Support\Facades\DB;
  */
 class SectionScopeService implements ServiceInterface
 {
+    /**
+     * "All sections / no restriction" sentinel for request filters and scope
+     * resolution. -1 is safe: it is the virtual S_PARENT of the root and is
+     * never a real S_ID. Section 0 is the real organizational root section.
+     */
+    public const ALL = -1;
+
     /** @var Collection|null all section rows, memoized per request */
     private ?Collection $sections = null;
 
@@ -119,11 +127,12 @@ class SectionScopeService implements ServiceInterface
      *
      * @return int[]|null
      */
-    public function resolveScope(int $requestedSectionId = 0, bool $subsections = true): ?array
+    public function resolveScope(?int $requestedSectionId = null, bool $subsections = true): ?array
     {
         $visible = $this->visibleSectionIds();
 
-        if ($requestedSectionId <= 0) {
+        // null / -1 (ALL) = no narrowing. A real section id (incl. root 0) narrows.
+        if ($requestedSectionId === null || $requestedSectionId < 0) {
             return $visible;
         }
 
@@ -142,7 +151,7 @@ class SectionScopeService implements ServiceInterface
      * @param  TQuery  $query
      * @return TQuery
      */
-    public function apply($query, string $column, int $requestedSectionId = 0, bool $subsections = true)
+    public function apply($query, string $column, ?int $requestedSectionId = null, bool $subsections = true)
     {
         $scope = $this->resolveScope($requestedSectionId, $subsections);
         if ($scope !== null) {
@@ -171,7 +180,9 @@ class SectionScopeService implements ServiceInterface
      */
     public function coerce(?int $sectionId): ?int
     {
-        if ($sectionId !== null && $sectionId > 0 && $this->allows($sectionId)) {
+        // >= 0 so the root section (0) is a valid assignment target; negatives
+        // (the ALL sentinel) fall through to the default below.
+        if ($sectionId !== null && $sectionId >= 0 && $this->allows($sectionId)) {
             return $sectionId;
         }
 
@@ -245,9 +256,25 @@ class SectionScopeService implements ServiceInterface
                 $walk($sId, $show ? $depth + 1 : $depth);
             }
         };
-        $walk(0, 0);
+        // Start one level above the root: the org root is the real row S_ID = 0
+        // (its S_PARENT is -1), so walking from -1 renders the root at depth 0
+        // with the sites (S_PARENT = 0) nested beneath it.
+        $walk(-1, 0);
 
         return $out;
+    }
+
+    /**
+     * Parse a section filter from a request: null when absent or empty (= ALL /
+     * no narrowing), otherwise the integer id (including the root section 0).
+     * Centralises the "absent vs explicit 0" distinction that request->integer()
+     * cannot make.
+     */
+    public function sectionFilter(Request $request, string $key = 'section'): ?int
+    {
+        $raw = $request->input($key);
+
+        return ($raw === null || $raw === '') ? null : (int) $raw;
     }
 
     /**
@@ -300,7 +327,7 @@ class SectionScopeService implements ServiceInterface
 
         return $ids->map(fn ($v) => (int) $v)
             ->unique()
-            ->filter(fn ($v) => $v > 0)
+            ->filter(fn ($v) => $v >= 0) // include root (0); drop negatives (ALL sentinel)
             ->values()
             ->all();
     }

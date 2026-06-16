@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Per-person ACL override (the most specific habilitation tier). A row grants
  * (effect=allow) or refuses (effect=deny) a feature (F_ID) for one person,
- * optionally scoped to a section (section_id = 0 means global, inherited to
- * descendants like a role). Beats every group/role grant and the section
+ * optionally scoped to a section (section_id = -1 means global, inherited to
+ * descendants like a role; 0 is the real root section). Beats every group/role grant and the section
  * ceiling — see {@see App\Services\PermissionResolver}. Table: ob_user_permission.
  */
 class ObUserPermission extends Model
@@ -29,7 +29,7 @@ class ObUserPermission extends Model
     ];
 
     protected $attributes = [
-        'section_id' => 0,
+        'section_id' => -1, // global by default (SectionScopeService::ALL)
         'effect' => self::EFFECT_ALLOW,
     ];
 

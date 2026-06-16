@@ -61,13 +61,16 @@ class FeatureService
 
     /**
      * When multi_site is switched on, every user whose P_SECTION is NULL
-     * is assigned to the root section (S_PARENT = 0 or NULL).
+     * is assigned to the organizational root section (S_ID = 0; its own
+     * S_PARENT is the -1 virtual node). A legacy fallback covers installs
+     * where the root carries a NULL/negative parent instead.
      */
     private function backfillSectionlessUsers(): void
     {
-        $rootId = DB::table('section')
-            ->where(fn ($q) => $q->where('S_PARENT', 0)->orWhereNull('S_PARENT'))
-            ->value('S_ID');
+        $rootId = DB::table('section')->where('S_ID', 0)->value('S_ID')
+            ?? DB::table('section')
+                ->where(fn ($q) => $q->where('S_PARENT', '<', 0)->orWhereNull('S_PARENT'))
+                ->value('S_ID');
 
         if ($rootId === null) {
             return;

@@ -143,7 +143,7 @@ class DutyController extends Controller
      */
     private function buildOnCallQuery(Request $request): Builder
     {
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = $this->sectionScope->sectionFilter($request);
         [, , $first] = $this->onCallPeriod($request);
         $last = $first->copy()->endOfMonth();
 

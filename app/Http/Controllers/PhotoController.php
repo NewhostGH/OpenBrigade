@@ -376,8 +376,8 @@ class PhotoController extends Controller
 
     private function resolveSectionId(Request $request): int
     {
-        $requested = (int) $request->integer('section');
-        if ($requested > 0 && $this->sectionScope->canChoose($requested)) {
+        $requested = $this->sectionScope->sectionFilter($request);
+        if ($requested !== null && $requested >= 0 && $this->sectionScope->canChoose($requested)) {
             return $requested;
         }
 

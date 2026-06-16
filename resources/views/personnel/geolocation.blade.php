@@ -12,7 +12,7 @@
 <div class="ob-geo-toolbar noprint">
     @feature('multi_site')
     <select class="form-select" onchange="updateParam('section', this.value)">
-        <option value="0" {{ $sectionId === 0 ? 'selected' : '' }}>Toutes sections</option>
+        <option value="" {{ $sectionId === null ? 'selected' : '' }}>Toutes sections</option>
         @foreach ($sections as $sec)
             <option value="{{ $sec->S_ID }}" {{ $sectionId === (int)$sec->S_ID ? 'selected' : '' }}>
                 {{ $sec->S_CODE }}{{ $sec->S_DESCRIPTION ? ' — ' . $sec->S_DESCRIPTION : '' }}

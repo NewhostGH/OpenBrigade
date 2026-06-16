@@ -20,7 +20,7 @@ class EquipmentController extends Controller
     public function index(Request $request): View
     {
         $search = trim((string) $request->string('q'));
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = $this->sectionScope->sectionFilter($request);
 
         $items = $this->buildFilteredQuery($request)->paginate(50)->withQueryString();
         $sections = Section::query()->orderBy('S_CODE')->get(['S_ID', 'S_CODE', 'S_DESCRIPTION']);
@@ -35,7 +35,7 @@ class EquipmentController extends Controller
     private function buildFilteredQuery(Request $request): Builder
     {
         $search = trim((string) $request->string('q'));
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = $this->sectionScope->sectionFilter($request);
 
         $query = DB::table('materiel as m')
             ->leftJoin('type_materiel as tm', 'm.TM_ID', '=', 'tm.TM_ID')

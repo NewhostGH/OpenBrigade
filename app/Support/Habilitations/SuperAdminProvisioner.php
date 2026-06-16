@@ -99,13 +99,18 @@ class SuperAdminProvisioner
         ]);
     }
 
-    /** Root section (S_PARENT = 0 or NULL); null when none exists yet. */
+    /**
+     * Organizational root section (S_ID = 0; its own S_PARENT is the -1 virtual
+     * node). Falls back to a NULL/negative-parent root for legacy installs.
+     * Returns null when none exists yet.
+     */
     private function rootSectionId(): ?int
     {
-        $id = DB::table('section')
-            ->where(fn ($q) => $q->where('S_PARENT', 0)->orWhereNull('S_PARENT'))
-            ->orderBy('S_ID')
-            ->value('S_ID');
+        $id = DB::table('section')->where('S_ID', 0)->value('S_ID')
+            ?? DB::table('section')
+                ->where(fn ($q) => $q->where('S_PARENT', '<', 0)->orWhereNull('S_PARENT'))
+                ->orderBy('S_ID')
+                ->value('S_ID');
 
         return $id !== null ? (int) $id : null;
     }

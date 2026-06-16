@@ -111,7 +111,9 @@ class OrganizationController extends Controller
 
         $memberCounts = $this->memberCounts();
 
-        $tree = $this->buildTree($sections, 0, $memberCounts);
+        // Walk from the -1 virtual node so the org root (S_ID = 0) is the top of
+        // the tree, with the sites (S_PARENT = 0) nested beneath it.
+        $tree = $this->buildTree($sections, -1, $memberCounts);
 
         return view('organization.index', compact('tree', 'sectionId'));
     }
@@ -178,7 +180,7 @@ class OrganizationController extends Controller
         return view('organization.section-form', [
             'section' => null,
             'parents' => $this->parentOptions(null),
-            'canBeRoot' => ! $this->rootExists(null),
+            'canBeRoot' => true, // top-level sites (parent = org root 0) are always allowed
         ]);
     }
 
@@ -186,6 +188,8 @@ class OrganizationController extends Controller
     {
         $data = $this->validateSection($request);
 
+        // Empty parent → top-level site under the org root (0).
+        $data['S_PARENT'] = (int) ($data['S_PARENT'] ?? 0);
         $data['S_ID'] = (int) (DB::table('section')->max('S_ID') ?? 0) + 1;
         $data['S_INACTIVE'] = $request->boolean('S_INACTIVE');
 
@@ -200,13 +204,16 @@ class OrganizationController extends Controller
         return view('organization.section-form', [
             'section' => $section,
             'parents' => $this->parentOptions($section),
-            'canBeRoot' => ! $this->rootExists($section),
+            'canBeRoot' => true, // top-level sites (parent = org root 0) are always allowed
         ]);
     }
 
     public function updateSection(Request $request, Section $section): RedirectResponse
     {
         $data = $this->validateSection($request, $section);
+        // Empty parent → top-level site (0); the system root (S_ID = 0) keeps its
+        // -1 virtual parent and is never reparented from this form.
+        $data['S_PARENT'] = (int) $section->S_ID === 0 ? -1 : (int) ($data['S_PARENT'] ?? 0);
         $data['S_INACTIVE'] = $request->boolean('S_INACTIVE');
 
         $section->update($data);
@@ -506,20 +513,12 @@ class OrganizationController extends Controller
             : [];
 
         return DB::table('section')
+            ->where('S_ID', '!=', 0) // the org root (0) is offered via the "— racine —" option
             ->when($excluded !== [], fn ($q) => $q->whereNotIn('S_ID', $excluded))
             ->orderBy('S_ORDER')
             ->orderBy('S_CODE')
             ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION'])
             ->each(fn ($s) => $s->S_DESCRIPTION = $s->S_DESCRIPTION ?: 'Section '.$s->S_ID);
-    }
-
-    /** Does a root section (no parent) already exist, other than $editing? */
-    private function rootExists(?Section $editing): bool
-    {
-        return DB::table('section')
-            ->where(fn ($q) => $q->where('S_PARENT', 0)->orWhereNull('S_PARENT'))
-            ->when($editing, fn ($q) => $q->where('S_ID', '<>', $editing->S_ID))
-            ->exists();
     }
 
     /** @return array<string,mixed> */
@@ -531,12 +530,10 @@ class OrganizationController extends Controller
             'S_DESCRIPTION' => ['nullable', 'string', 'max:80'],
             'S_ORDER' => ['nullable', 'integer', 'min:0', 'max:255'],
             'S_PARENT' => ['nullable', 'integer', function (string $attribute, $value, \Closure $fail) use ($editing): void {
-                // No parent → root: the org chart allows exactly one root.
+                // No parent → top-level site, i.e. a child of the org root (0).
+                // Multiple sites are allowed; only the system root S_ID = 0 sits
+                // above them (its parent is the -1 virtual node, never editable here).
                 if (empty($value)) {
-                    if ($this->rootExists($editing)) {
-                        $fail('Une section racine existe déjà — l\'organisation ne peut avoir qu\'une seule racine.');
-                    }
-
                     return;
                 }
 
@@ -577,9 +574,10 @@ class OrganizationController extends Controller
     {
         return $sections
             ->filter(function ($s) use ($parentId) {
+                // NULL parent is treated as a child of the root (0).
                 $p = (int) ($s->S_PARENT ?? 0);
 
-                return $parentId === 0 ? ($p === 0) : $p === $parentId;
+                return $p === $parentId;
             })
             ->map(fn ($s) => [
                 'section' => $s,

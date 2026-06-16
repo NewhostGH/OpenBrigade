@@ -18,7 +18,7 @@ class VehicleController extends Controller
     public function index(Request $request): View
     {
         $search = trim((string) $request->string('q'));
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = app(SectionScopeService::class)->sectionFilter($request);
         $status = (string) $request->string('status', 'all');
 
         $items = $this->buildFilteredQuery($request)
@@ -37,7 +37,7 @@ class VehicleController extends Controller
     private function buildFilteredQuery(Request $request): Builder
     {
         $search = trim((string) $request->string('q'));
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = app(SectionScopeService::class)->sectionFilter($request);
         $status = (string) $request->string('status', 'all');
 
         $query = Vehicle::query()

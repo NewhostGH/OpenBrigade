@@ -57,7 +57,7 @@ class PersonnelController extends Controller
         $position = (string) $request->string('position', 'actif');
         $search = trim((string) $request->string('q'));
         $category = (string) $request->string('category', 'INT');
-        $sectionId = (int) $request->integer('section', 0);
+        $sectionId = $this->sectionScope->sectionFilter($request);
         $order = (string) $request->string('order', 'P_NOM');
         $subsections = (bool) $request->integer('subsections', 1);
         $perPage = (int) $request->integer('perPage', 100);
@@ -530,7 +530,7 @@ class PersonnelController extends Controller
             ->where('a.person_id', $personnel->P_ID)
             ->orderBy('s.S_DESCRIPTION')
             ->get(['a.id', 'a.section_id', 'g.name as role_name', 's.S_CODE as section_code', 's.S_DESCRIPTION as section_name'])
-            ->each(fn ($r) => $r->section_name = $r->section_id == 0
+            ->each(fn ($r) => $r->section_name = $r->section_id < 0
                 ? '— global —'
                 : ($r->section_code ? $r->section_code.($r->section_name ? ' — '.$r->section_name : '') : 'Section '.$r->section_id));
 
@@ -754,21 +754,36 @@ class PersonnelController extends Controller
             ->map(fn ($a) => [
                 'person_id' => $personnel->P_ID,
                 'group_id' => (int) $a['group_id'],
-                // 0 = global sentinel; non-zero only if it's a visible section.
-                'section_id' => ! empty($a['section_id']) && in_array((int) $a['section_id'], $editable, true)
-                    ? (int) $a['section_id']
-                    : 0,
+                // -1 (ALL) = global sentinel; a real id (incl. root 0) only if
+                // it is within the editor's visible scope.
+                'section_id' => $this->roleSectionScope($a['section_id'] ?? null, $editable),
             ])
             ->unique(fn ($a) => $a['group_id'].'-'.$a['section_id'])
             ->values();
 
         ObUserAssignment::where('person_id', $personnel->P_ID)
-            ->where(fn ($q) => $q->whereIn('section_id', $editable)->orWhere('section_id', 0)->orWhereNull('section_id'))
+            ->where(fn ($q) => $q->whereIn('section_id', $editable)
+                ->orWhere('section_id', SectionScopeService::ALL)
+                ->orWhereNull('section_id'))
             ->delete();
 
         foreach ($desired as $row) {
             ObUserAssignment::create($row);
         }
+    }
+
+    /**
+     * Normalise a submitted role section scope: empty/absent → global
+     * (SectionScopeService::ALL = -1); a real id (incl. root 0) only when it is
+     * inside the editor's visible scope, otherwise falls back to global.
+     *
+     * @param  int[]  $editable
+     */
+    private function roleSectionScope(mixed $raw, array $editable): int
+    {
+        $sid = ($raw === null || $raw === '') ? SectionScopeService::ALL : (int) $raw;
+
+        return in_array($sid, $editable, true) ? $sid : SectionScopeService::ALL;
     }
 
     /**
@@ -1208,7 +1223,7 @@ class PersonnelController extends Controller
         $position = (string) $request->string('position', 'actif');
         $search = trim((string) $request->string('q'));
         $category = (string) $request->string('category', 'INT');
-        $sectionId = (int) $request->integer('section', 0);
+        $sectionId = $this->sectionScope->sectionFilter($request);
         $order = (string) $request->string('order', 'P_NOM');
         $subsections = (bool) $request->integer('subsections', 1);
 
@@ -1415,10 +1430,10 @@ class PersonnelController extends Controller
             ->get(['group_id', 'section_id'])
             ->map(fn ($r) => [
                 'group_id' => (int) $r->group_id,
-                'section_id' => (int) $r->section_id, // 0 = global
+                'section_id' => (int) $r->section_id, // -1 = global
             ])
             ->filter(fn ($a) => $visible === null
-                || $a['section_id'] === 0
+                || $a['section_id'] < 0
                 || in_array($a['section_id'], $visible, true))
             ->values()
             ->all();

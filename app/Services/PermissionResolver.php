@@ -22,8 +22,9 @@ use Illuminate\Support\Facades\DB;
  *   5. group/role allow — a held group/role grants it                 → ALLOW
  *   6. (nothing grants it)                                            → DENY
  *
- * "In scope" for a user-override or role row means section_id ≤ 0 (global,
- * inherited everywhere) or a section in the active chain (section + ancestors).
+ * "In scope" for a user-override or role row means section_id < 0 (the -1
+ * "global" sentinel, inherited everywhere) or a section in the active chain
+ * (section + ancestors). Section 0 is the real root section, not "global".
  * Global groups (ob_personnel_group) always apply. Within a tier, deny wins.
  *
  * Registered as a singleton so the per-request lookups below are memoized.
@@ -273,7 +274,10 @@ class PermissionResolver
      */
     public function sectionChain(?int $sId): array
     {
-        if ($sId === null || $sId <= 0) {
+        // null / negative = no section context (the "all/global" sentinel is -1).
+        // The root section is the real row S_ID = 0 (its own S_PARENT is -1), so
+        // 0 is a valid starting point and must be included in the chain.
+        if ($sId === null || $sId < 0) {
             return [];
         }
         if (isset($this->chainCache[$sId])) {
@@ -283,7 +287,7 @@ class PermissionResolver
         $chain = [];
         $current = $sId;
         $guard = 0;
-        while ($current !== null && $current > 0 && $guard++ < 50 && ! in_array($current, $chain, true)) {
+        while ($current !== null && $current >= 0 && $guard++ < 50 && ! in_array($current, $chain, true)) {
             $chain[] = $current;
             $parent = DB::table('section')->where('S_ID', $current)->value('S_PARENT');
             $current = $parent !== null ? (int) $parent : null;
@@ -301,7 +305,9 @@ class PermissionResolver
      */
     private function appliesInChain(?int $sid, array $chain): bool
     {
-        if ($sid === null || $sid <= 0) {
+        // null / negative (the -1 "global" sentinel) means "applies everywhere".
+        // Section 0 is the real root section and is scoped via the chain.
+        if ($sid === null || $sid < 0) {
             return true;
         }
         if ($chain === []) {

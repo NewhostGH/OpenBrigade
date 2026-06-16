@@ -168,7 +168,7 @@ class DuesController extends Controller
     {
         $year = (int) $request->integer('year', now()->year);
         $periodeCode = (string) $request->string('periode', 'A');
-        $sectionId = (int) $request->integer('section', 0);
+        $sectionId = app(SectionScopeService::class)->sectionFilter($request);
         $subsections = (bool) $request->integer('subsections', 1);
 
         $periodes = DB::table('periode')->orderBy('P_ORDER')->get();
@@ -289,7 +289,7 @@ class DuesController extends Controller
      */
     public function transfers(Request $request)
     {
-        $sectionId = (int) $request->integer('section', 0);
+        $sectionId = app(SectionScopeService::class)->sectionFilter($request);
         $subsections = (bool) $request->integer('subsections', 1);
         $includeOld = (bool) $request->integer('include_old', 0);
         $dateFrom = trim((string) $request->string('date_from', ''));
@@ -359,7 +359,7 @@ class DuesController extends Controller
     {
         $year = (int) $request->integer('year', now()->year);
         $periodeCode = (string) $request->string('periode', 'A');
-        $sectionId = (int) $request->integer('section', 0);
+        $sectionId = app(SectionScopeService::class)->sectionFilter($request);
         $subsections = (bool) $request->integer('subsections', 1);
         $tpId = (string) $request->string('type_paiement', 'ALL');
         $paid = (string) $request->string('paid', '2');

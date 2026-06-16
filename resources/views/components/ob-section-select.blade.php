@@ -6,7 +6,8 @@
         @if($required) required @endif>
 
     @if($allLabel !== null)
-        <option value="0" @selected($selected === null || $selected === 0)>{{ $allLabel }}</option>
+        {{-- "All" sentinel is empty (parsed to SectionScopeService::ALL); 0 is the real root section --}}
+        <option value="" @selected($selected === null)>{{ $allLabel }}</option>
     @endif
 
     @foreach($options as $opt)

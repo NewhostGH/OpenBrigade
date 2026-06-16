@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Personnel;
 use App\Models\Section;
+use App\Services\SectionScopeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -22,7 +23,7 @@ class GeolocationController extends Controller
      */
     public function index(Request $request): View
     {
-        $sectionId = (int) $request->integer('section', 0);
+        $sectionId = app(SectionScopeService::class)->sectionFilter($request);
 
         $query = DB::table('gps as g')
             ->join('pompier as p', 'g.P_ID', '=', 'p.P_ID')
@@ -44,7 +45,7 @@ class GeolocationController extends Controller
                 'g.DATE_LOC'
             );
 
-        if ($sectionId > 0) {
+        if ($sectionId !== null) {
             $query->where('p.P_SECTION', $sectionId);
         }
 

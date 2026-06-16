@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ObGroup;
 use App\Services\FeatureService;
 use App\Services\PermissionResolver;
+use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -61,8 +62,10 @@ class PermissionController extends Controller
             ->mapWithKeys(fn ($r) => ["{$r->group_id}|{$r->feature_id}" => $r->effect]);
 
         // Dérogations tab: personnel picker + the selected person's overrides at
-        // the chosen scope (section_id, where 0 = "toutes les sections / global").
-        $scopeId = (int) $request->integer('section');
+        // the chosen scope. section_id = -1 (SectionScopeService::ALL) means
+        // "toutes les sections / global"; 0 is the real root section.
+        $rawScope = $request->input('section');
+        $scopeId = ($rawScope === null || $rawScope === '') ? SectionScopeService::ALL : (int) $rawScope;
         $personId = (int) $request->integer('person') ?: null;
         [$people, $person, $userGrants] = $this->overridesData($tab, $request, $personId, $scopeId);
 
@@ -177,7 +180,7 @@ class PermissionController extends Controller
 
     /**
      * Set a per-person override (ob_user_permission) at a section scope
-     * (section_id 0 = global). effect = allow|deny; empty removes it.
+     * (section_id -1 = global; 0 = root section). effect = allow|deny; empty removes it.
      */
     public function setUserGrant(Request $request): RedirectResponse
     {
@@ -205,11 +208,13 @@ class PermissionController extends Controller
             );
         }
 
-        return redirect()->route('admin.permissions', array_filter([
+        // Keep the scope explicitly (incl. 0 = root and -1 = global) so the
+        // reload lands on the same scope instead of falling back to global.
+        return redirect()->route('admin.permissions', [
             'tab' => 'overrides',
             'person' => (int) $v['person_id'],
-            'section' => (int) $v['section_id'] ?: null,
-        ]))->with('success', 'Dérogation mise à jour.');
+            'section' => (int) $v['section_id'],
+        ])->with('success', 'Dérogation mise à jour.');
     }
 
     /** Toggle a section ceiling entry. allow=1 removes the deny row; allow=0 adds it. */

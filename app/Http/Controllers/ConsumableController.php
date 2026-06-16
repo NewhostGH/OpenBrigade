@@ -20,7 +20,7 @@ class ConsumableController extends Controller
     public function index(Request $request): View
     {
         $search = trim((string) $request->string('q'));
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = $this->sectionScope->sectionFilter($request);
         $alert = (bool) $request->boolean('alert', false);
 
         $items = $this->buildFilteredQuery($request)->paginate(50)->withQueryString();
@@ -37,7 +37,7 @@ class ConsumableController extends Controller
     private function buildFilteredQuery(Request $request): Builder
     {
         $search = trim((string) $request->string('q'));
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = $this->sectionScope->sectionFilter($request);
         $alert = (bool) $request->boolean('alert', false);
         $today = now()->toDateString();
 

@@ -19,7 +19,7 @@
                class="form-control form-control-sm" style="width:240px;">
         @feature('multi_site')
         <select name="section" class="form-select form-select-sm ob-hab-auto" style="width:auto;" aria-label="Portée">
-            <option value="0" {{ (int) $scopeId === 0 ? 'selected' : '' }}>Toutes les sections (global)</option>
+            <option value="-1" {{ (int) $scopeId === -1 ? 'selected' : '' }}>Toutes les sections (global)</option>
             @foreach ($sections as $s)
                 <option value="{{ $s->S_ID }}" {{ (int) $s->S_ID === (int) $scopeId ? 'selected' : '' }}>{{ $s->S_DESCRIPTION }}</option>
             @endforeach
@@ -32,7 +32,7 @@
     @if ($people->isNotEmpty())
         <div class="ob-hab-people mb-3">
             @foreach ($people as $p)
-                <a href="{{ route('admin.permissions', ['tab' => 'overrides', 'person' => $p->P_ID, 'section' => $scopeId ?: null]) }}"
+                <a href="{{ route('admin.permissions', ['tab' => 'overrides', 'person' => $p->P_ID, 'section' => $scopeId]) }}"
                    class="ob-hab-person {{ $person && (int) $person->P_ID === (int) $p->P_ID ? 'active' : '' }}">
                     <i class="fas fa-user fa-fw me-1"></i>{{ $p->P_NOM }} {{ $p->P_PRENOM }}
                 </a>
@@ -48,7 +48,7 @@
         <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
             <i class="fas fa-circle-info me-1"></i>
             Dérogations de <strong>{{ $person->P_NOM }} {{ $person->P_PRENOM }}</strong>
-            — portée : <strong>{{ (int) $scopeId === 0 ? 'toutes les sections' : ($sections->firstWhere('S_ID', $scopeId)->S_DESCRIPTION ?? 'Section '.$scopeId) }}</strong>.
+            — portée : <strong>{{ (int) $scopeId === -1 ? 'toutes les sections' : ($sections->firstWhere('S_ID', $scopeId)->S_DESCRIPTION ?? 'Section '.$scopeId) }}</strong>.
         </p>
 
         <div class="ob-hab-matrix-scroll">

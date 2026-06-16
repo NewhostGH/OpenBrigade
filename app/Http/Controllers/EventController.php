@@ -30,7 +30,7 @@ class EventController extends Controller
         $period = (string) $request->string('period', 'upcoming');
         $search = trim((string) $request->string('q'));
         $type = (string) $request->string('type', 'ALL');
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = $this->sectionScope->sectionFilter($request);
 
         $items = $this->buildFilteredQuery($request)->paginate(50)->withQueryString();
 
@@ -56,7 +56,7 @@ class EventController extends Controller
         $period = (string) $request->string('period', 'upcoming');
         $search = trim((string) $request->string('q'));
         $type = (string) $request->string('type', 'ALL');
-        $filtSect = (int) $request->integer('section', 0);
+        $filtSect = $this->sectionScope->sectionFilter($request);
 
         $query = Event::query()
             ->with(['horaires', 'section'])

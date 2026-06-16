@@ -167,14 +167,14 @@ test('a role deny only applies inside its section scope', function () {
 
 test('a user deny overrides a group allow', function () {
     $r = fakeResolver();
-    $r->userPerms = [['section_id' => 0, 'feature_id' => 3, 'effect' => 'deny']];
+    $r->userPerms = [['section_id' => -1, 'feature_id' => 3, 'effect' => 'deny']];
     expect($r->allows(resolverFakeUser(), 3, 2))->toBeFalse();
 });
 
 test('a user allow overrides a section ceiling deny', function () {
     $r = fakeResolver();
     // 53 is denied at the root ceiling, but a global user-allow wins.
-    $r->userPerms = [['section_id' => 0, 'feature_id' => 53, 'effect' => 'allow']];
+    $r->userPerms = [['section_id' => -1, 'feature_id' => 53, 'effect' => 'allow']];
     expect($r->allows(resolverFakeUser(), 53, 2))->toBeTrue();
 });
 
@@ -190,15 +190,15 @@ test('a section-scoped user override only applies in that section subtree', func
 test('a user deny beats a user allow for the same feature', function () {
     $r = fakeResolver();
     $r->userPerms = [
-        ['section_id' => 0, 'feature_id' => 3, 'effect' => 'allow'],
-        ['section_id' => 0, 'feature_id' => 3, 'effect' => 'deny'],
+        ['section_id' => -1, 'feature_id' => 3, 'effect' => 'allow'],
+        ['section_id' => -1, 'feature_id' => 3, 'effect' => 'deny'],
     ];
     expect($r->allows(resolverFakeUser(), 3, 2))->toBeFalse();
 });
 
 test('effectiveFeatureIds includes a user-allowed feature no group grants', function () {
     $r = fakeResolver();
-    $r->userPerms = [['section_id' => 0, 'feature_id' => 77, 'effect' => 'allow']];
+    $r->userPerms = [['section_id' => -1, 'feature_id' => 77, 'effect' => 'allow']];
     expect($r->effectiveFeatureIds(resolverFakeUser(), 2))->toEqualCanonicalizing([3, 42, 77]);
 });
 

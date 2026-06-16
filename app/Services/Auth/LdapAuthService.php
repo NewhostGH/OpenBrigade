@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Models\LdapDomain;
 use App\Models\ObUserAssignment;
 use App\Models\User;
+use App\Services\SectionScopeService;
 use LdapRecord\Connection;
 use LdapRecord\Container;
 use LdapRecord\LdapRecordException;
@@ -275,7 +276,7 @@ class LdapAuthService
                 ObUserAssignment::firstOrCreate([
                     'person_id' => $user->P_ID,
                     'group_id' => $rule->role_id,
-                    'section_id' => $rule->section_id ?? 0,
+                    'section_id' => $rule->section_id ?? SectionScopeService::ALL,
                 ]);
             }
         }

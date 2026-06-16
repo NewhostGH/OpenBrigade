@@ -591,7 +591,7 @@
                                                 @feature('multi_site')
                                                 <select name="role_assignments[{{ $i }}][section_id]"
                                                         class="form-select form-select-sm" style="flex:1 1 180px; max-width:240px;">
-                                                    <option value="0">— global —</option>
+                                                    <option value="-1" @selected($ra['section_id'] < 0)>— global —</option>
                                                     @foreach ($sections as $s)
                                                         <option value="{{ $s->S_ID }}"
                                                                 @selected($ra['section_id'] === (int)$s->S_ID)>
@@ -601,7 +601,7 @@
                                                 </select>
                                                 @else
                                                     <input type="hidden" name="role_assignments[{{ $i }}][section_id]"
-                                                           value="{{ $ra['section_id'] }}">
+                                                           value="{{ $ra['section_id'] < 0 ? -1 : $ra['section_id'] }}">
                                                 @endfeature
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-danger ob-role-remove"
@@ -629,7 +629,7 @@
                                                 @feature('multi_site')
                                                 <select name="role_assignments[__OB_IDX__][section_id]"
                                                         class="form-select form-select-sm" style="flex:1 1 180px; max-width:240px;">
-                                                    <option value="0">— global —</option>
+                                                    <option value="-1">— global —</option>
                                                     @foreach ($sections as $s)
                                                         <option value="{{ $s->S_ID }}">
                                                             {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}
@@ -637,8 +637,8 @@
                                                     @endforeach
                                                 </select>
                                                 @else
-                                                    {{-- 0 = portée globale --}}
-                                                    <input type="hidden" name="role_assignments[__OB_IDX__][section_id]" value="0">
+                                                    {{-- -1 = portée globale --}}
+                                                    <input type="hidden" name="role_assignments[__OB_IDX__][section_id]" value="-1">
                                                 @endfeature
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-danger ob-role-remove"

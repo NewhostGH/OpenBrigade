@@ -58,9 +58,9 @@ if ($isEdit) {
                         <label class="form-label form-label-sm" for="S_PARENT">Section parente</label>
                         <select id="S_PARENT" name="S_PARENT" required
                                 class="form-select form-select-sm @error('S_PARENT') is-invalid @enderror">
-                            {{-- L'organigramme n'admet qu'une seule racine. --}}
+                            {{-- value 0 = directement sous l'organisation (site de premier niveau). --}}
                             @if ($canBeRoot)
-                                <option value="0">— racine —</option>
+                                <option value="0" @selected((string) $val('S_PARENT') === '0')>— racine (sous l'organisation) —</option>
                             @endif
                             @foreach ($parents as $p)
                                 <option value="{{ $p->S_ID }}" @selected((string) $val('S_PARENT') === (string) $p->S_ID)>

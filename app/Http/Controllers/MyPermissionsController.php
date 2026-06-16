@@ -27,8 +27,10 @@ class MyPermissionsController extends Controller
 
         // Same set and order as the navbar switcher (memberships + descendants).
         $sections = $this->sectionScope->switcherSections();
-        $sectionId = (int) $request->integer('section')
-            ?: ($this->resolver->activeSectionId($user) ?? (int) ($sections->first()->S_ID ?? 0));
+        // sectionFilter distinguishes "absent" (→ fallback) from an explicit 0
+        // (preview the root section).
+        $sectionId = $this->sectionScope->sectionFilter($request)
+            ?? ($this->resolver->activeSectionId($user) ?? (int) ($sections->first()->S_ID ?? 0));
 
         $roles = $this->resolver->userRoles($user, $sectionId);
         $roleId = $request->integer('role') ?: null;
@@ -69,7 +71,7 @@ class MyPermissionsController extends Controller
         $userDenies = [];
         foreach (DB::table('ob_user_permission')->where('person_id', (int) $user->P_ID)->get() as $row) {
             $sid = $row->section_id !== null ? (int) $row->section_id : null;
-            $inScope = ($sid === null || $sid <= 0) || $chain === [] || in_array($sid, $chain, true);
+            $inScope = ($sid === null || $sid < 0) || $chain === [] || in_array($sid, $chain, true);
             if (! $inScope) {
                 continue;
             }

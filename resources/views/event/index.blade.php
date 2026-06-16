@@ -39,7 +39,7 @@
         </select>
         @feature('multi_site')
         <select name="section" class="form-select form-select-sm">
-            <option value="0" @selected($filtSect === 0)>Ma section</option>
+            <option value="" @selected($filtSect === null)>Toutes mes sections</option>
             @foreach($sections as $s)
                 <option value="{{ $s->S_ID }}" @selected($filtSect === $s->S_ID)>
                     {{ $s->S_CODE }} — {{ $s->S_DESCRIPTION }}

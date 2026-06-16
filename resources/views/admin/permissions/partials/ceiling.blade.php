@@ -13,8 +13,8 @@
                 @foreach ($sections as $s)
                     <a href="{{ route('admin.permissions', ['tab' => 'ceiling', 'section' => $s->S_ID]) }}"
                        class="d-block px-2 py-1 rounded text-decoration-none {{ (int) $s->S_ID === (int) $sectionId ? 'bg-primary text-white' : 'text-body' }}"
-                       style="font-size:var(--font-size-sm);{{ (int) $s->S_PARENT !== 0 ? 'padding-left:1.4rem!important;' : '' }}">
-                        <i class="fas fa-{{ (int) $s->S_PARENT === 0 ? 'building' : 'angle-right' }} fa-fw me-1"></i>{{ $s->S_DESCRIPTION }}
+                       style="font-size:var(--font-size-sm);{{ (int) $s->S_PARENT > 0 ? 'padding-left:1.4rem!important;' : '' }}">
+                        <i class="fas fa-{{ (int) $s->S_PARENT < 0 ? 'sitemap' : ((int) $s->S_PARENT === 0 ? 'building' : 'angle-right') }} fa-fw me-1"></i>{{ $s->S_DESCRIPTION }}
                     </a>
                 @endforeach
             </div>
