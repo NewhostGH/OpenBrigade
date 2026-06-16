@@ -90,7 +90,7 @@ Legend: `[x]` done · `[ ]` open · WIP = implemented but parity not verified.
 - [ ] Required competences / diplomas per event (`evenement_competences.php`, `evenement_diplome.php`)
 - [ ] Participant notifications (`evenement_notify.php`)
 - [ ] Event report (`evenement_rapport.php`)
-- [ ] Per-event trombinoscope (`evenement_trombinoscope.php`)
+- [x] Per-event trombinoscope (`evenement_trombinoscope.php`) — photo grid of non-absent participants, grouped by function, with grade image and profile link; button in event show header
 - [ ] Event billing & tariffs (`evenement_facturation*.php`, `evenement_tarif*.php`)
 - [x] Event list export (`evenement_xls.php`) — XLS / CSV via `TableExportService`, period/type/section/search-aware
 - [x] Per-event vehicle export (`evenement_vehicule_xls.php`) — XLS via `TableExportService`, button in the event detail Véhicules card

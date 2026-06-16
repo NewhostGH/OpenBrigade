@@ -26,6 +26,10 @@
                 @endif
             </div>
             <div class="d-flex gap-2">
+                <a href="{{ route('event.trombinoscope', $event->E_CODE) }}"
+                   class="btn btn-sm btn-outline-secondary" title="Trombinoscope des participants">
+                    <i class="fas fa-id-badge me-1"></i> Trombi
+                </a>
                 <a href="{{ route('event.export.participants', $event->E_CODE) }}"
                    class="btn btn-sm btn-outline-secondary" title="Exporter la liste des participants">
                     <i class="fas fa-file-excel me-1"></i> XLS

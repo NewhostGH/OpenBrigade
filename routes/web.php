@@ -118,6 +118,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{code}/export/participants', [EventController::class, 'exportParticipants'])->name('event.export.participants')->middleware('permission:0');
     Route::get('/events/{code}/export/vehicles', [EventController::class, 'exportVehicles'])->name('event.export.vehicles')->middleware('permission:0');
     Route::get('/events/{code}/ical', [EventController::class, 'exportIcal'])->name('event.ical')->middleware('permission:0');
+    Route::get('/events/{code}/trombinoscope', [EventController::class, 'trombinoscope'])->name('event.trombinoscope')->middleware('permission:0');
     Route::get('/duty', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
     Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
     Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');

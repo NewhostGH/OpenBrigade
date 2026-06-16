@@ -1117,4 +1117,28 @@ class EventController extends Controller
             'E_AUTOCLOSE_BEFORE' => ['nullable', 'integer', 'min:0', 'max:999'],
         ]);
     }
+
+    /**
+     * Photo-directory (trombinoscope) for event participants.
+     */
+    public function trombinoscope(string $code): View
+    {
+        $event = Event::findOrFail($code);
+
+        $participants = DB::table('evenement_participation as ep')
+            ->join('pompier as p', 'ep.P_ID', '=', 'p.P_ID')
+            ->leftJoin('type_participation as tp', 'tp.TP_ID', '=', 'ep.TP_ID')
+            ->where('ep.E_CODE', $code)
+            ->where('ep.EP_ABSENT', 0)
+            ->orderBy('p.P_NOM')
+            ->orderBy('p.P_PRENOM')
+            ->select('p.P_ID', 'p.P_NOM', 'p.P_PRENOM', 'p.P_PHOTO', 'p.P_GRADE',
+                'p.P_CIVILITE', 'tp.TP_LIBELLE')
+            ->get()
+            ->each(function ($row): void {
+                $row->avatarSrc = Personnel::avatarUrl($row->P_ID, $row->P_PHOTO, $row->P_CIVILITE);
+            });
+
+        return view('event.trombinoscope', compact('event', 'participants'));
+    }
 }
