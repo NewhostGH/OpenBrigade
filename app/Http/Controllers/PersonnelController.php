@@ -563,33 +563,9 @@ class PersonnelController extends Controller
             ->select('m.MA_ID', 'm.MA_MODELE', 'm.MA_ANNEE', 'm.MA_NB', 'tm.TM_CODE', 'tm.TM_DESCRIPTION', 'tv.TV_NAME')
             ->get();
 
-        $sideNav = [
-            ['id' => 'section-info',          'icon' => 'fas fa-user',          'label' => 'Information'],
-            ['id' => 'section-competences',   'icon' => 'fas fa-certificate',   'label' => 'Compétences',
-                'badge' => $personnel->qualifications->count() ?: null],
-            ['id' => 'section-formations',    'icon' => 'fas fa-graduation-cap', 'label' => 'Formations',
-                'badge' => $formations->count() ?: null],
-            ['id' => 'section-cotisations',   'icon' => 'fas fa-euro-sign',     'label' => 'Cotisations',
-                'badge' => $cotisations->count() ?: null],
-            ['id' => 'section-participation', 'icon' => 'fas fa-calendar-check', 'label' => 'Participation',
-                'badge' => $participation->count() ?: null],
-            ['id' => 'section-dotation',      'icon' => 'fas fa-box',           'label' => 'Dotation',
-                'badge' => $tenues->count() ?: null],
-            ['id' => 'section-documents',     'icon' => 'fas fa-file-alt',      'label' => 'Documents'],
-            ['id' => 'section-notedfrais',    'icon' => 'fas fa-receipt',       'label' => 'Notes de frais'],
-            ['id' => 'section-disponibilite', 'icon' => 'fas fa-calendar-day',  'label' => 'Availabilitynibilité'],
-            ['id' => 'section-calendrier',    'icon' => 'fas fa-calendar',      'label' => 'Calendrier'],
-            ['id' => 'section-absences',      'icon' => 'fas fa-user-times',    'label' => 'Absences'],
-            ['id' => 'section-geo',           'icon' => 'fas fa-map-marker-alt', 'label' => 'Géolocalisation'],
-            ['id' => 'section-acces',         'icon' => 'fas fa-shield-alt',    'label' => 'Accès'],
-            ['id' => 'section-historique',    'icon' => 'fas fa-history',       'label' => 'Historique'],
-            ['id' => 'section-salarie',       'icon' => 'fas fa-briefcase',     'label' => 'Salarié'],
-        ];
-
-        if ($homonyms->isNotEmpty()) {
-            $sideNav[] = ['id' => 'section-homonymes', 'icon' => 'fas fa-user-friends', 'label' => 'Homonymes',
-                'badge' => $homonyms->count(), 'badgeClass' => 'bg-warning text-dark'];
-        }
+        // The profile side-nav is generated client-side from the rendered
+        // [data-pers-section] blocks (see ob-personnel-show.js), so there is no
+        // server-side menu list to keep in sync with the blade order/visibility.
 
         // Contact handles (contact_type + personnel_contact).
         $contactHandles = DB::table('contact_type as ct')
@@ -612,7 +588,6 @@ class PersonnelController extends Controller
             'cotisations' => $cotisations,
             'today' => $today,
             'warn30' => $warn30,
-            'sideNav' => $sideNav,
             'roleAssignments' => $roleAssignments,
             'personnelGroups' => $personnelGroups,
             'personnelSections' => $personnelSections,
