@@ -282,12 +282,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/vehicles/export/csv', [VehicleController::class, 'exportCsv'])->name('vehicle.export.csv')->middleware('permission:42');
         Route::get('/vehicles/create', [VehicleController::class, 'create'])->name('vehicle.create')->middleware('permission:17');
         Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicle.store')->middleware('permission:17');
-        Route::get('/vehicles/{vehicle}', [VehicleController::class, 'show'])->name('vehicle.show')->middleware('permission:42');
-        Route::get('/vehicles/{vehicle}/edit', [VehicleController::class, 'edit'])->name('vehicle.edit')->middleware('permission:17');
-        Route::put('/vehicles/{vehicle}', [VehicleController::class, 'update'])->name('vehicle.update')->middleware('permission:17');
-        Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicle.destroy')->middleware('permission:19');
-        Route::post('/vehicles/{vehicle}/equipment', [VehicleController::class, 'equipmentAttach'])->name('vehicle.equipment.attach')->middleware('permission:17');
-        Route::delete('/vehicles/{vehicle}/equipment/{maId}', [VehicleController::class, 'equipmentDetach'])->name('vehicle.equipment.detach')->middleware('permission:17');
+        Route::get('/vehicles/{vehicule}', [VehicleController::class, 'show'])->name('vehicle.show')->middleware('permission:42');
+        Route::get('/vehicles/{vehicule}/edit', [VehicleController::class, 'edit'])->name('vehicle.edit')->middleware('permission:17');
+        Route::put('/vehicles/{vehicule}', [VehicleController::class, 'update'])->name('vehicle.update')->middleware('permission:17');
+        Route::delete('/vehicles/{vehicule}', [VehicleController::class, 'destroy'])->name('vehicle.destroy')->middleware('permission:19');
+        Route::post('/vehicles/{vehicule}/equipment', [VehicleController::class, 'equipmentAttach'])->name('vehicle.equipment.attach')->middleware('permission:17');
+        Route::delete('/vehicles/{vehicule}/equipment/{maId}', [VehicleController::class, 'equipmentDetach'])->name('vehicle.equipment.detach')->middleware('permission:17');
     });
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index')->middleware(['permission:42', 'feature:materiel']);
     Route::get('/equipment/export/xls', [EquipmentController::class, 'exportXls'])->name('equipment.export.xls')->middleware(['permission:42', 'feature:materiel']);

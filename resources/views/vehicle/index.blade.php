@@ -34,8 +34,8 @@
 
     <x-ob-commandbar table-id="vehiculeTable" :total="$items->total()" total-label="véhicule">
         <x-ob-table :columns="$columns" :items="$items" storage-key="vehiculeColsV2" :current-order="request('order')"
-            row-url-pattern="/vehicules/{V_ID}" :row-actions="[
-                    ['url' => '/vehicules/{V_ID}', 'icon' => 'fas fa-eye', 'title' => 'Voir le détail'],
+            row-url-pattern="/vehicles/{V_ID}" :row-actions="[
+                    ['url' => '/vehicles/{V_ID}', 'icon' => 'fas fa-eye', 'title' => 'Voir le détail'],
                 ]" :show-select="false" table-id="vehiculeTable" />
         <x-slot:pagination>{{ $items->links() }}</x-slot:pagination>
     </x-ob-commandbar>
