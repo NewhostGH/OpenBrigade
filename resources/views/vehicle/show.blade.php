@@ -187,12 +187,12 @@
                             <dt class="text-muted fw-normal">Kilométrage</dt>
                             <dd class="mb-0">
                                 @if($vehicule->V_KM)
-                                    <span>{{ number_format($vehicule->V_KM, 0, ',', '\u{202f}') }} km</span>
+                                    <span>{{ number_format($vehicule->V_KM, 0, ',', "\u{202f}") }} km</span>
                                 @else —
                                 @endif
                                 @if($vehicule->V_KM_REVISION)
                                     <span class="text-muted ms-2" style="font-size:var(--font-size-xs);">
-                                        révision à {{ number_format($vehicule->V_KM_REVISION, 0, ',', '\u{202f}') }} km
+                                        révision à {{ number_format($vehicule->V_KM_REVISION, 0, ',', "\u{202f}") }} km
                                     </span>
                                 @endif
                             </dd>
@@ -333,7 +333,7 @@
                                     {{ $ev->EH_DATE_DEBUT ? \Carbon\Carbon::parse($ev->EH_DATE_DEBUT)->format('d/m/Y') : '—' }}
                                 </td>
                                 <td class="text-end" style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
-                                    {{ $ev->EV_KM ? number_format($ev->EV_KM, 0, ',', '\u{202f}') . ' km' : '—' }}
+                                    {{ $ev->EV_KM ? number_format($ev->EV_KM, 0, ',', "\u{202f}") . ' km' : '—' }}
                                 </td>
                             </tr>
                         @endforeach

@@ -410,7 +410,7 @@ class ReferenceController extends Controller
     public function consumableCategoryStore(Request $request): RedirectResponse
     {
         $v = $request->validate([
-            'CC_CODE' => ['required', 'string', 'max:12', 'unique:categorie_consommable,CC_CODE', 'regex:/^[A-Z0-9_]+$/'],
+            'CC_CODE' => ['required', 'string', 'max:12', 'unique:categorie_consommable,CC_CODE', 'regex:/^[A-Za-z0-9_]+$/'],
             'CC_NAME' => ['required', 'string', 'max:40'],
             'CC_DESCRIPTION' => ['nullable', 'string', 'max:60'],
             'CC_IMAGE' => ['nullable', 'string', 'max:60'],

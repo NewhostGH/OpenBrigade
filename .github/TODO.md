@@ -62,28 +62,17 @@ whole Communication menu, reminders and guard generation).
   no-op: make it actually run (DB + uploads), store off-site/retained, and add a
   periodic restore-drill check.
 
-### Data isolation by section (multi_site)
-
-- [x] `section_flat` still read by `DashboardService` (lines 402, 666) for `NIV`
-  depth ordering in `getDuty()` and the hours widget — refactor those two
-  queries to derive depth from the `section` tree before dropping the table and
-  `rebuild_section_flat.php`.
-
 ## Feature migration (menu by menu)
 
 ### Personnel (PERSO)
 
-- [x] Trainings CRUD (`personnel_formation.php`) — formations card on personnel show page
 - [ ] Diploma print layout config (`diplome_edit.php`) — complex PDF field positioning admin screen
 - [ ] Custom member fields (`specific_info.php`)
-- [x] `formations_xls.php` — per-member formations XLS export (button in Formations card)
 - [ ] `export_badges.php` — member badge/ID card PDF export
 
 ### Activité — Events & Interventions (ACT)
 
 - [ ] Participant notifications (`evenement_notify.php`) — needs the notification layer
-- [x] Main courante (incident log) — `evenement_log` card on event show: list + add/edit/delete modals (perm 15)
-- [x] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`)
 - [ ] Event report (`evenement_rapport.php`)
 - [ ] Editable PDF for conventions
 - [ ] Event billing & tariffs (`evenement_facturation*.php`, `evenement_tarif*.php`)
@@ -251,6 +240,7 @@ How the app is built, shipped and upgraded in production.
 - [x] Section-scope test for the root: `PermissionRootScopeTest` — 10 unit tests covering `sectionChain` with root (S_ID=0), root ceiling deny cascade, child deny non-cascade, and `effectiveDenied` union across the full ancestor chain; `AdminTest` stub updated with `categorie_consommable` count
 - [x] `GeolocationController::index` — replaced exact `P_SECTION =` match with `SectionScopeService::apply()` so the map honours section isolation, navbar scope and root subtree
 - [x] `PermissionController::exportGroup` — fixed `section_id > 0` guard to `!== null` so root section (`S_ID = 0`) is included; absent/empty = no filter convention
+- [x] Dropped `section_flat` — `DashboardService::getDuty()` and the hours-to-validate widget now derive `NIV` depth from the `section` tree (`getSectionFamilyUp()`) instead of the denormalized cache; migration `2026_06_16_000200` drops the table, `rebuild_section_flat.php` bridge retired (`bridgeable => false`)
 
 ### Login screen (Phase 2B)
 
@@ -277,7 +267,9 @@ How the app is built, shipped and upgraded in production.
 - [x] Homonym management (`homonymes_*.php`) — detect same-name records on personnel show; side-by-side merge page with selective data transfer (competences, formations, participations), radiate/delete options (perm 2/3)
 - [x] Contact / email lists (`listecontacts.php`, `listemails.php`) — emails.txt + contacts.csv bulk export from personnel list
 - [x] Qualifications export (`qualifications_xls.php`) — XLS / CSV via `TableExportService`, section-scoped, filter & `?cols=` aware
-- [x] Meeting participation export (`personnel_reunion_xls.php`) — per-member meeting participation XLS from the personnel show page (`formations_xls.php` / `export_badges.php` still wait on the training/formation CRUD)
+- [x] Meeting participation export (`personnel_reunion_xls.php`) — per-member meeting participation XLS from the personnel show page (`export_badges.php` still pending)
+- [x] Trainings CRUD (`personnel_formation.php`) — formations card on personnel show page (add/edit/delete, perm 4; perm 40 for others)
+- [x] Per-member formations XLS export (`formations_xls.php`) — button in Formations card
 
 ### Activité — Events & Interventions (ACT)
 
@@ -290,6 +282,8 @@ How the app is built, shipped and upgraded in production.
 - [x] Per-event trombinoscope (`evenement_trombinoscope.php`) — photo grid of non-absent participants, grouped by function, with grade image and profile link; button in event show header
 - [x] Event list export (`evenement_xls.php`) — XLS / CSV via `TableExportService`, period/type/section/search-aware
 - [x] Per-event vehicle export (`evenement_vehicule_xls.php`) — XLS via `TableExportService`, button in the event detail Véhicules card
+- [x] Main courante (incident log) — `evenement_log` card on event show: list + add/edit/delete modals (perm 15), important-row highlighting, in event section nav
+- [x] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`) — option groups + checkbox/text/dropdown/date options (perm 15), per-participant choices modal, cascade delete
 
 ### Garde — On-call roster (GAR)
 
