@@ -61,6 +61,12 @@
     z-index: 2;
 }
 
+/* The delete action is wrapped in a <form>; collapse the form box so its
+   button aligns evenly with the bare edit button in the flex row. */
+.ob-photo-album-actions form {
+    display: contents;
+}
+
 /* ── Album detail — photo grid ───────────────────────────────────────────── */
 
 .ob-photo-grid {
@@ -136,7 +142,24 @@
     display: none;
     gap: 3px;
     flex-direction: row;
+    align-items: center;
     z-index: 2;
+}
+
+/* Some actions (cover/delete) are wrapped in a <form>. `display: contents`
+   removes the form box from layout so its button becomes a direct flex child,
+   letting every action button render as the same uniform square. */
+.ob-photo-actions form {
+    display: contents;
+}
+
+.ob-photo-actions .btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ob-photo-item:hover .ob-photo-actions {
