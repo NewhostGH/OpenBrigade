@@ -528,20 +528,39 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    document.querySelectorAll('.ob-photo-item').forEach(function (card) {
+    var allSelectableCards = Array.from(document.querySelectorAll('.ob-photo-item'));
+    var lastSelectedIndex = null;
+
+    function setCardSelected(card, on) {
+        var id = parseInt(card.dataset.photoId, 10);
+        if (on) {
+            selectedPhotoIds.add(id);
+            card.classList.add('ob-photo-item--selected');
+        } else {
+            selectedPhotoIds.delete(id);
+            card.classList.remove('ob-photo-item--selected');
+        }
+    }
+
+    allSelectableCards.forEach(function (card, index) {
         card.addEventListener('click', function (e) {
             if (!inSelectMode) return;
             // Prevent lightbox or other link activation.
             e.preventDefault();
             e.stopPropagation();
-            var id = parseInt(card.dataset.photoId, 10);
-            if (selectedPhotoIds.has(id)) {
-                selectedPhotoIds.delete(id);
-                card.classList.remove('ob-photo-item--selected');
+
+            // Shift-click selects the whole range from the last clicked card.
+            if (e.shiftKey && lastSelectedIndex !== null) {
+                var start = Math.min(lastSelectedIndex, index);
+                var end = Math.max(lastSelectedIndex, index);
+                for (var i = start; i <= end; i++) {
+                    setCardSelected(allSelectableCards[i], true);
+                }
             } else {
-                selectedPhotoIds.add(id);
-                card.classList.add('ob-photo-item--selected');
+                var id = parseInt(card.dataset.photoId, 10);
+                setCardSelected(card, !selectedPhotoIds.has(id));
             }
+            lastSelectedIndex = index;
             updateBulkBar();
         }, true);
     });
