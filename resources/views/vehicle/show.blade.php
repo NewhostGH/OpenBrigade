@@ -294,12 +294,12 @@
             <div class="ob-widget-card-body border-bottom py-2 px-3 d-flex gap-4" style="font-size:var(--font-size-sm);">
                 <span>
                     <span class="text-muted">Total engagements :</span>
-                    <strong>{{ number_format((int)$vehicleStats->total_events, 0, ',', '\u{202f}') }}</strong>
+                    <strong>{{ number_format((int)$vehicleStats->total_events, 0, ',', "\u{202f}") }}</strong>
                 </span>
                 @if($vehicleStats->total_km)
                     <span>
                         <span class="text-muted">Km cumulés :</span>
-                        <strong>{{ number_format((int)$vehicleStats->total_km, 0, ',', '\u{202f}') }} km</strong>
+                        <strong>{{ number_format((int)$vehicleStats->total_km, 0, ',', "\u{202f}") }} km</strong>
                     </span>
                 @endif
             </div>

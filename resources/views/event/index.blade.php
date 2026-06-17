@@ -52,8 +52,8 @@
 
 <x-ob-commandbar table-id="evenementTable" :total="$items->total()" total-label="activité">
     <x-ob-table :columns="$columns" :items="$items" storage-key="evenementColsV2" :current-order="request('order')"
-        row-url-pattern="/evenements/{E_CODE}" :row-actions="[
-            ['url' => '/evenements/{E_CODE}', 'icon' => 'fas fa-eye', 'title' => 'Voir le détail'],
+        row-url-pattern="/events/{E_CODE}" :row-actions="[
+            ['url' => '/events/{E_CODE}', 'icon' => 'fas fa-eye', 'title' => 'Voir le détail'],
         ]" :show-select="false" table-id="evenementTable" />
     <x-slot:pagination>{{ $items->links() }}</x-slot:pagination>
 </x-ob-commandbar>
