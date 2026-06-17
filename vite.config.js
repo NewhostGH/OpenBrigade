@@ -16,6 +16,7 @@ export default defineConfig({
                 'resources/js/ob-event-show.js',
                 'resources/js/ob-dues-index.js',
                 'resources/js/ob-vehicle-form.js',
+                'resources/js/ob-vehicle-show.js',
                 'resources/js/ob-organization-org-chart.js',
                 'resources/js/ob-statistics-index.js',
                 'resources/js/ob-statistics-report.js',
