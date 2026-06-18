@@ -19,6 +19,7 @@
 
 @import './ob-dashboard.css';
 @import './ob-login.css';
+@import './ob-errors.css';
 
 /* ── Feature module CSS (one file per section) ────────────────────── */
 @import './ob-personnel.css';

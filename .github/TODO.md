@@ -22,7 +22,7 @@ keeps the record of completed work.
 
 ---
 
-# Backlog
+## Backlog
 
 ## Cross-cutting foundations
 
@@ -52,8 +52,6 @@ whole Communication menu, reminders and guard generation).
   album photos).
 - [ ] **Observability** — structured logging, error tracking (Sentry/Flare or
   similar), a health-check endpoint, and basic uptime/performance monitoring.
-- [ ] **Error / empty pages** — polished custom 404 / 403 / 500 / maintenance
-  and no-JS pages (replaces legacy `error.php` / `noscript.php`).
 - [ ] **i18n / l10n scaffolding (French only for now)** — move hard-coded UI
   strings into a `lang/fr` layer and route them through Laravel localization, so
   copy is centralized and a second locale is later a drop-in. No translations
@@ -202,7 +200,7 @@ How the app is built, shipped and upgraded in production.
 
 ---
 
-# Shipped
+## Shipped
 
 ## Foundations
 
@@ -227,6 +225,14 @@ How the app is built, shipped and upgraded in production.
 - [x] Universal `ob-*` component system (breadcrumb, toolbar, table, commandbar, badge, avatar, toggle)
 - [x] `TableExportService` — universal XLS/CSV export
 - [x] All list pages migrated to the `ob-*` component set
+- [x] **Error / empty pages** — data-driven custom pages for the full HTTP status
+  set (400/401/403/404/405/407/408/409/410/411/412/413/416/418/419/429/500/502/503/504/505),
+  metadata in `config/error_pages.php`, resolved by `App\Support\ErrorPage`. Each shows a
+  client → réseau → serveur connection diagram with the failing node highlighted
+  (`errors/partials/diagram`). 4xx keep the normal app shell for authenticated users;
+  5xx and re-login codes (401/419) render standalone (`errors/standalone`). 503 honours
+  the `php artisan down --message`. No-JS `<noscript>` notice on the app + login layouts
+  (replaces legacy `error.php` / `noscript.php`)
 - [x] Convention enforcement — CONVENTIONS.md + `ConventionsTest`
 - [x] Static-analysis remediation — model `@property` docblocks, PHPStan at 0 errors, Pint clean
 

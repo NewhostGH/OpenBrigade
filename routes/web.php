@@ -38,6 +38,7 @@ use App\Http\Controllers\TotpController;
 use App\Http\Controllers\UnavailabilityController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /*
 |--------------------------------------------------------------------------
@@ -512,3 +513,40 @@ Route::middleware('auth')->group(function () {
 if (file_exists(__DIR__.'/web_legacy_bridge.php')) {
     require __DIR__.'/web_legacy_bridge.php';
 }
+
+/*
+|--------------------------------------------------------------------------
+| Error-page preview (local only)
+|--------------------------------------------------------------------------
+|
+| Renders the custom error/status views directly so they can be inspected
+| during development without forcing a real failure. Guarded to the local
+| non-production environments so it never ships to production.
+|
+| Visit /_preview/error/404, /403, /401, /419, /429, /500, /503.
+|
+*/
+if (! app()->isProduction()) {
+    Route::get('/_preview/error/{code}', function (string $code) {
+        abort_unless(view()->exists("errors.$code"), 404);
+
+        return response()->view("errors.$code", [
+            // 503 reads $exception->getMessage(); supply a dummy for the others too.
+            'exception' => new HttpException((int) $code),
+        ], (int) $code);
+    })->whereNumber('code')->name('preview.error');
+}
+
+/*
+|--------------------------------------------------------------------------
+| Fallback (unmatched URLs)
+|--------------------------------------------------------------------------
+|
+| Routing a non-existent URL throws the 404 before the 'web' middleware
+| group runs, so the session/auth context is missing and the error page
+| can't tell a logged-in user from a guest. Catching it here pushes the
+| request through the web stack first, so the 404 view keeps the app shell
+| for authenticated users.
+|
+*/
+Route::fallback(fn () => abort(404));

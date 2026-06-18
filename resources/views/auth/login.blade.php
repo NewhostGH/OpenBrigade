@@ -15,6 +15,12 @@
     $loginSplashUrl = isset($appIdentity) ? $appIdentity->splashUrl() : null;
 @endphp
 <body class="ob-login-body">
+<noscript>
+    <div class="ob-noscript">
+        JavaScript est désactivé&nbsp;: OpenBrigade nécessite JavaScript pour
+        fonctionner correctement. Veuillez l'activer puis recharger la page.
+    </div>
+</noscript>
 <div class="container-fluid ob-login-shell">
     <div class="row min-vh-100">
 

@@ -16,6 +16,16 @@
 
 <body>
 
+    {{-- No-JS notice (replaces legacy noscript.php). OpenBrigade relies on
+         JavaScript for navigation, tables and forms; warn rather than break. --}}
+    <noscript>
+        <div class="ob-noscript">
+            JavaScript est désactivé dans votre navigateur. OpenBrigade nécessite
+            JavaScript pour fonctionner correctement&nbsp;: veuillez l'activer puis
+            recharger la page.
+        </div>
+    </noscript>
+
     @auth
         @include('layout.navbar')
         @include('layout.sidebar')

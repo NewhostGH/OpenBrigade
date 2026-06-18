@@ -1,0 +1,179 @@
+/*
+|--------------------------------------------------------------------------
+| Error / status pages (404, 403, 401, 419, 429, 500, 503) + no-JS notice
+|--------------------------------------------------------------------------
+|
+| Styling for the error views (resources/views/errors/*) — card, the
+| client → réseau → serveur connection diagram, and the <noscript> banners
+| on the app + login layouts. Tokens come from variables.css.
+|
+*/
+
+/* Standalone shell: the whole page is the error backdrop. */
+.ob-error-page {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-family);
+    color: var(--page-text);
+    background: var(--page-bg);
+}
+
+/* Centres the card — full-viewport when standalone, within the content
+   region when embedded in the app shell (.ob-space-left). */
+.ob-error-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+.ob-space-left .ob-error-wrap {
+    min-height: calc(100vh - var(--navbar-height) - 2rem);
+}
+
+.ob-error-card {
+    background: var(--component-bg);
+    border: 1px solid var(--component-border);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(43, 35, 80, 0.10);
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* ── Connection diagram (client → réseau → serveur) ──────────────────── */
+.ob-error-diagram {
+    background: var(--brand-bg);
+    padding: 1.75rem 1.5rem 1.25rem;
+    text-align: center;
+}
+.ob-error-diagram-svg {
+    width: 320px;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Node glyphs inherit colour from their group state. */
+.ob-glyph {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+.ob-node.is-ok   { color: rgba(255, 255, 255, 0.55); }
+.ob-node.is-fail { color: var(--accent); }
+.ob-node.is-fail { animation: ob-error-pulse 1.6s ease-in-out infinite; }
+
+@keyframes ob-error-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+}
+
+/* Connectors. */
+.ob-conn {
+    stroke: rgba(255, 255, 255, 0.45);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+.ob-conn.is-fail {
+    stroke: var(--accent);
+    stroke-dasharray: 5 4;
+}
+
+/* Status badges. */
+.ob-badge.is-ok   circle { fill: var(--color-success-icon); }
+.ob-badge.is-fail circle { fill: var(--accent); }
+.ob-badge-mark {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Node labels. */
+.ob-node-label {
+    fill: rgba(255, 255, 255, 0.65);
+    font-family: var(--font-family);
+    font-size: 11px;
+    text-anchor: middle;
+}
+.ob-node-label.is-fail {
+    fill: #fff;
+    font-weight: 600;
+}
+
+.ob-error-code {
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+    color: var(--brand-bg);
+}
+
+.ob-error-body {
+    padding: 1.5rem 1.75rem 2rem;
+    text-align: center;
+}
+
+.ob-error-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+}
+
+.ob-error-message {
+    color: var(--text-muted-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 1.5rem;
+}
+
+.ob-error-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.ob-error-btn {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.55rem 1.1rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.ob-error-btn-primary { background: var(--brand-bg); color: #fff; }
+.ob-error-btn-primary:hover { background: #1f1a3c; color: #fff; }
+
+.ob-error-btn-secondary {
+    background: #fff;
+    color: var(--page-text);
+    border-color: var(--component-border);
+}
+.ob-error-btn-secondary:hover { background: #f3f4f6; }
+
+.ob-error-foot {
+    border-top: 1px solid var(--component-border);
+    padding: 0.85rem 1.5rem;
+    text-align: center;
+    color: var(--text-muted-soft);
+    font-size: 0.75rem;
+}
+
+/* ── No-JS notice (replaces legacy noscript.php) ─────────────────────── */
+.ob-noscript {
+    background: var(--card-danger-bg);
+    border-bottom: 1px solid var(--card-danger-border);
+    color: var(--card-danger-title);
+    padding: 0.75rem 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
