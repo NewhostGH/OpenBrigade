@@ -1,0 +1,4 @@
+# Literal strings the Blade i18n lint should ignore (one per line).
+# These are brand names / technical tokens that are intentionally not localized.
+# Lines starting with # are comments.
+OpenBrigade

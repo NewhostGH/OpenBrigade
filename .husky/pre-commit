@@ -1,24 +1,65 @@
 #!/usr/bin/env sh
-# Abort the commit if any step fails.
+
 set -e
 
-# On Windows the WinGet PHP 8.x install has no php.ini by default.
-# Point to a minimal ini we keep in TEMP so extensions are available.
-OB_INI="$TEMP/ob-php.ini"
-if [ -f "$OB_INI" ]; then
-    export PHPRC="$OB_INI"
+echo "Running pre-commit checks..."
+
+# Load PHP configuration for Windows PHP installations without php.ini
+OB_INI="${TEMP:-/tmp}/ob-php.ini"
+
+if [ ! -f "$OB_INI" ]; then
+    PHP_DIR=$(dirname "$(where php | head -1)")
+    
+    cat > "$OB_INI" <<EOF
+extension_dir="$PHP_DIR/ext"
+
+extension=mbstring
+extension=openssl
+extension=fileinfo
+extension=curl
+extension=zip
+extension=pdo_mysql
+EOF
 fi
 
-# 1. Lint: the Vite bundle must compile cleanly.
+export PHPRC="$OB_INI"
+
+# 1. Build
+echo "Running Vite build..."
+
 npm run build --silent > /dev/null
 
-# 2. Format: rewrite staged PHP with Pint, then re-stage what it changed.
+echo "Vite build passed"
+
+# 2. Format staged PHP files
 STAGED_PHP=$(git diff --cached --name-only --diff-filter=ACM -- '*.php')
+
 if [ -n "$STAGED_PHP" ]; then
-    echo "$STAGED_PHP" | xargs vendor/bin/pint
+    PHP_COUNT=$(echo "$STAGED_PHP" | wc -l | tr -d ' ')
+
+    echo "Running Pint on $PHP_COUNT staged PHP file(s)..."
+
+    echo "$STAGED_PHP" | xargs vendor/bin/pint --quiet
+
     echo "$STAGED_PHP" | xargs git add
+
+    echo "Pint passed"
+else
+    echo "No staged PHP files to format"
 fi
 
-# 3. Static analysis: PHPStan must pass.
-# Use php directly so the hook works in Git-Bash on Windows (composer.bat not in POSIX PATH).
+# 3. i18n check
+echo "Running i18n check..."
+
+npm run lint-i18n
+
+echo "i18n check passed"
+
+# 4. PHPStan
+echo "Running PHPStan..."
+
 php vendor/bin/phpstan analyse --memory-limit=512M
+
+echo "PHPStan passed"
+
+echo "Pre-commit checks passed"

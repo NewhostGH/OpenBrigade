@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "lint-i18n": "node .husky/lint-blade-i18n.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
