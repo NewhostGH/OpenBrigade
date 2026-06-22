@@ -52,10 +52,6 @@ whole Communication menu, reminders and guard generation).
   album photos).
 - [ ] **Observability** — structured logging, error tracking (Sentry/Flare or
   similar), a health-check endpoint, and basic uptime/performance monitoring.
-- [ ] **i18n / l10n scaffolding (French only for now)** — move hard-coded UI
-  strings into a `lang/fr` layer and route them through Laravel localization, so
-  copy is centralized and a second locale is later a drop-in. No translations
-  yet — implementation + French strings only.
 - [ ] **Backup robustness** — an automated backup schedule exists but is a
   no-op: make it actually run (DB + uploads), store off-site/retained, and add a
   periodic restore-drill check.
@@ -203,6 +199,11 @@ How the app is built, shipped and upgraded in production.
 ## Shipped
 
 ## Foundations
+
+- [X] **i18n / l10n scaffolding (French only for now)** — move hard-coded UI
+  strings into a `lang/fr` layer and route them through Laravel localization, so
+  copy is centralized and a second locale is later a drop-in. No translations
+  yet — implementation + French strings only.
 
 ### Dashboard
 
