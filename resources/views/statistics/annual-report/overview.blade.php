@@ -5,9 +5,9 @@
 @section('content')
 
     <x-ob-breadcrumb :items="[
-            ['label' => 'Statistiques'],
-            ['label' => 'Bilan annuel', 'url' => route('statistics.annual-report')],
-            ['label' => 'Généralités'],
+            ['label' => __('statistics.title')],
+            ['label' => __('statistics.annual_report_title'), 'url' => route('statistics.annual-report')],
+            ['label' => __('statistics.breadcrumb_generalites')],
         ]" />
 
     @include('statistics.annual-report._tabs', ['activeTab' => 'generalites'])
@@ -15,24 +15,24 @@
     <div class="mx-3 mt-3 ob-bilan-content">
 
         <p class="text-muted mb-4">
-            Retrouvez le bilan annuel complet du personnel et des moyens — véhicules, matériel et consommables.
+            {{ __('statistics.overview_intro') }}
         </p>
 
         {{-- ── Personnel ─────────────────────────────────────────────────────── --}}
         <div class="ob-bilan-header-title">
-            <i class="fas fa-users me-2"></i>Personnel
+            <i class="fas fa-users me-2"></i>{{ __('statistics.personnel_heading') }}
         </div>
 
         <div class="ob-kpi-grid mb-4">
             <div class="ob-kpi-card ob-kpi-card--primary">
-                <span class="ob-kpi-card__label">Membres actifs</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_active_members') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalMembers }}</span>
-                <span class="ob-kpi-card__sub">au {{ now()->format('d/m/Y') }}</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_active_members_sub', ['date' => now()->format('d/m/Y')]) }}</span>
             </div>
             <div class="ob-kpi-card ob-kpi-card--info">
-                <span class="ob-kpi-card__label">Nouveaux {{ now()->year - 1 }}</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_new_members_label', ['year' => now()->year - 1]) }}</span>
                 <span class="ob-kpi-card__value">{{ $newMembersByYear[now()->year - 1] ?? 0 }}</span>
-                <span class="ob-kpi-card__sub">engagements</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_new_members_sub') }}</span>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                     <div class="ob-widget-card">
                         <div class="ob-widget-card-header">
                             <div class="ob-widget-card-title">
-                                <i class="fas fa-layer-group me-1"></i> Répartition par groupe
+                                <i class="fas fa-layer-group me-1"></i> {{ __('statistics.chart_members_group') }}
                             </div>
                         </div>
                         <div class="ob-widget-card-body">
@@ -58,7 +58,7 @@
                     <div class="ob-widget-card">
                         <div class="ob-widget-card-header">
                             <div class="ob-widget-card-title">
-                                <i class="fas fa-user-plus me-1"></i> Évolution des engagements (5 ans)
+                                <i class="fas fa-user-plus me-1"></i> {{ __('statistics.chart_new_members_5y') }}
                             </div>
                         </div>
                         <div class="ob-widget-card-body">
@@ -72,14 +72,14 @@
 
         {{-- ── Véhicules ──────────────────────────────────────────────────────── --}}
         <div class="ob-bilan-header-title">
-            <i class="fas fa-truck me-2"></i>Véhicules
+            <i class="fas fa-truck me-2"></i>{{ __('statistics.vehicles_heading') }}
         </div>
 
         <div class="ob-kpi-grid mb-4">
             <div class="ob-kpi-card ob-kpi-card--accent">
-                <span class="ob-kpi-card__label">Total véhicules</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_total_vehicles') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalVehicles }}</span>
-                <span class="ob-kpi-card__sub">en parc</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_total_vehicles_sub') }}</span>
             </div>
         </div>
 
@@ -89,7 +89,7 @@
                     <div class="ob-widget-card">
                         <div class="ob-widget-card-header">
                             <div class="ob-widget-card-title">
-                                <i class="fas fa-chart-bar me-1"></i> Véhicules par type
+                                <i class="fas fa-chart-bar me-1"></i> {{ __('statistics.chart_vehicles_type') }}
                             </div>
                         </div>
                         <div class="ob-widget-card-body">
@@ -101,14 +101,14 @@
                 <div class="col-lg-6">
                     <div class="ob-widget-card">
                         <div class="ob-widget-card-header">
-                            <div class="ob-widget-card-title">Détail</div>
+                            <div class="ob-widget-card-title">{{ __('statistics.vehicles_detail_title') }}</div>
                         </div>
                         <div class="ob-widget-card-body p-0">
                             <table class="table table-sm ob-table mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Type</th>
-                                        <th>Quantité</th>
+                                        <th>{{ __('statistics.th_type') }}</th>
+                                        <th>{{ __('statistics.th_qty') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -125,19 +125,19 @@
                 </div>
             </div>
         @else
-            <p class="text-muted mb-4">Aucun véhicule enregistré.</p>
+            <p class="text-muted mb-4">{{ __('statistics.no_vehicles') }}</p>
         @endif
 
         {{-- ── Matériel ───────────────────────────────────────────────────────── --}}
         <div class="ob-bilan-header-title">
-            <i class="fas fa-toolbox me-2"></i>Matériel
+            <i class="fas fa-toolbox me-2"></i>{{ __('statistics.materiel_heading') }}
         </div>
 
         <div class="ob-kpi-grid mb-4">
             <div class="ob-kpi-card ob-kpi-card--success">
-                <span class="ob-kpi-card__label">Total matériel</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_total_materiel') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalEquipments }}</span>
-                <span class="ob-kpi-card__sub">articles inventoriés</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_total_materiel_sub') }}</span>
             </div>
         </div>
 
@@ -146,14 +146,14 @@
                 <div class="col-12">
                     <div class="ob-widget-card">
                         <div class="ob-widget-card-header">
-                            <div class="ob-widget-card-title">Matériel par catégorie</div>
+                            <div class="ob-widget-card-title">{{ __('statistics.materiel_by_cat_title') }}</div>
                         </div>
                         <div class="ob-widget-card-body p-0">
                             <table class="table table-sm ob-table mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Catégorie</th>
-                                        <th>Quantité</th>
+                                        <th>{{ __('statistics.th_category') }}</th>
+                                        <th>{{ __('statistics.th_qty') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -170,19 +170,19 @@
                 </div>
             </div>
         @else
-            <p class="text-muted mb-4">Aucun matériel enregistré.</p>
+            <p class="text-muted mb-4">{{ __('statistics.no_materiel') }}</p>
         @endif
 
         {{-- ── Consommables ────────────────────────────────────────────────────── --}}
         <div class="ob-bilan-header-title">
-            <i class="fas fa-box-open me-2"></i>Consommables
+            <i class="fas fa-box-open me-2"></i>{{ __('statistics.consommables_heading') }}
         </div>
 
         <div class="ob-kpi-grid mb-4">
             <div class="ob-kpi-card ob-kpi-card--info">
-                <span class="ob-kpi-card__label">Total consommables</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_total_consommables') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalConsumables }}</span>
-                <span class="ob-kpi-card__sub">articles inventoriés</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_total_consommables_sub') }}</span>
             </div>
         </div>
 
@@ -191,14 +191,14 @@
                 <div class="col-12">
                     <div class="ob-widget-card">
                         <div class="ob-widget-card-header">
-                            <div class="ob-widget-card-title">Consommables par catégorie</div>
+                            <div class="ob-widget-card-title">{{ __('statistics.consommables_by_cat_title') }}</div>
                         </div>
                         <div class="ob-widget-card-body p-0">
                             <table class="table table-sm ob-table mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Catégorie</th>
-                                        <th>Quantité</th>
+                                        <th>{{ __('statistics.th_category') }}</th>
+                                        <th>{{ __('statistics.th_qty') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -215,7 +215,7 @@
                 </div>
             </div>
         @else
-            <p class="text-muted mb-4">Aucun consommable enregistré.</p>
+            <p class="text-muted mb-4">{{ __('statistics.no_consommables') }}</p>
         @endif
 
     </div>

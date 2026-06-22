@@ -1,39 +1,39 @@
 @extends('layout.app')
 
-@section('title', e($album->name) . ' — Album photos — ' . config('app.name'))
+@section('title', e($album->name) . ' — ' . __('photo.title_albums') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Album photos', 'url' => route('photo.index')],
+    ['label' => __('photo.breadcrumb_albums'), 'url' => route('photo.index')],
     ['label' => $album->name],
 ]"/>
 
-<x-ob-toolbar :title="$album->name" :total="count($photos)" total-label="photo">
+<x-ob-toolbar :title="$album->name" :total="count($photos)" total-label="{{ __('photo.total_label_photo') }}">
 
     <a href="{{ route('photo.index') }}" class="btn btn-sm btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i> Albums
+        <i class="fas fa-arrow-left me-1"></i> {{ __('photo.btn_back_albums') }}
     </a>
 
     @if (!$photos->isEmpty())
         <a href="{{ route('photo.album.download', $album) }}" class="btn btn-sm btn-outline-secondary">
-            <i class="fas fa-file-zipper me-1"></i> Télécharger l'album
+            <i class="fas fa-file-zipper me-1"></i> {{ __('photo.btn_download_album') }}
         </a>
     @endif
 
     @if ($canManage)
         @if (!$photos->isEmpty())
             <button type="button" class="btn btn-sm btn-outline-secondary" id="selectModeToggle">
-                <i class="fas fa-check-square me-1"></i> Sélectionner
+                <i class="fas fa-check-square me-1"></i> {{ __('photo.btn_select') }}
             </button>
         @endif
         <button type="button" class="btn btn-sm btn-primary"
                 data-bs-toggle="modal" data-bs-target="#photoAddModal">
-            <i class="fas fa-plus me-1"></i> Ajouter des photos
+            <i class="fas fa-plus me-1"></i> {{ __('photo.btn_add_photos') }}
         </button>
         <button type="button" class="btn btn-sm btn-outline-secondary"
                 data-bs-toggle="modal" data-bs-target="#albumEditModal">
-            <i class="fas fa-pen me-1"></i> Modifier
+            <i class="fas fa-pen me-1"></i> {{ __('photo.btn_edit_album') }}
         </button>
     @endif
 </x-ob-toolbar>
@@ -45,12 +45,12 @@
 @if ($photos->isEmpty())
     <div class="mx-3 mt-4 text-muted text-center py-5">
         <i class="fas fa-camera fa-3x mb-3 d-block text-secondary opacity-50"></i>
-        Cet album est vide.
+        {{ __('photo.empty_album') }}
         @if ($canManage)
             <div class="mt-2">
                 <button class="btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal" data-bs-target="#photoAddModal">
-                    Ajouter des photos
+                    {{ __('photo.btn_add_first_photo') }}
                 </button>
             </div>
         @endif
@@ -76,12 +76,12 @@
 
                 <div class="ob-photo-actions">
                     <a href="{{ route('photo.download', $photo) }}"
-                       class="btn btn-xs btn-light" title="Télécharger">
+                       class="btn btn-xs btn-light" title="{{ __('photo.photo_download_title') }}">
                         <i class="fas fa-download fa-xs"></i>
                     </a>
                     @if ($canManage)
                         <button type="button" class="btn btn-xs btn-light"
-                                title="Légende" data-caption-edit
+                                title="{{ __('photo.photo_caption_title') }}" data-caption-edit
                                 data-id="{{ $photo->id }}"
                                 data-caption="{{ $photo->caption }}">
                             <i class="fas fa-quote-right fa-xs"></i>
@@ -89,14 +89,14 @@
                         <form method="POST" action="{{ route('photo.cover', $album) }}" class="d-inline">
                             @csrf @method('PATCH')
                             <input type="hidden" name="photo_id" value="{{ $photo->id }}">
-                            <button type="submit" class="btn btn-xs btn-light" title="Couverture de l'album">
+                            <button type="submit" class="btn btn-xs btn-light" title="{{ __('photo.photo_cover_title') }}">
                                 <i class="fas fa-star fa-xs {{ (int) $album->cover_photo_id === (int) $photo->id ? 'text-warning' : '' }}"></i>
                             </button>
                         </form>
                         <form method="POST" action="{{ route('photo.destroy', $photo) }}"
-                              class="d-inline" data-confirm="Supprimer cette photo ?">
+                              class="d-inline" data-confirm="{{ __('photo.confirm_delete_photo') }}">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-xs btn-danger" title="Supprimer">
+                            <button type="submit" class="btn btn-xs btn-danger" title="{{ __('photo.photo_delete_title') }}">
                                 <i class="fas fa-trash fa-xs"></i>
                             </button>
                         </form>
@@ -104,7 +104,7 @@
                 </div>
 
                 @if ((int) $album->cover_photo_id === (int) $photo->id)
-                    <span class="ob-photo-cover-badge" title="Photo de couverture">
+                    <span class="ob-photo-cover-badge" title="{{ __('photo.cover_badge_title') }}">
                         <i class="fas fa-star fa-xs"></i>
                     </span>
                 @endif
@@ -119,16 +119,16 @@
     @if ($canManage)
         {{-- Floating bulk-action bar (shown in select mode) --}}
         <div id="bulkBar" class="ob-bulk-bar d-none">
-            <span id="bulkCount" class="ob-bulk-count">0 sélectionnée(s)</span>
+            <span id="bulkCount" class="ob-bulk-count">{{ __('photo.bulk_selected', ['count' => 0]) }}</span>
             <span class="d-flex gap-2 ms-auto">
-                <button type="button" class="btn btn-sm btn-secondary" id="bulkCancel">Annuler</button>
+                <button type="button" class="btn btn-sm btn-secondary" id="bulkCancel">{{ __('common.cancel') }}</button>
                 <button type="submit" form="bulkDeleteForm" class="btn btn-sm btn-danger" id="bulkDelete" disabled>
-                    <i class="fas fa-trash me-1"></i> Supprimer la sélection
+                    <i class="fas fa-trash me-1"></i> {{ __('photo.btn_bulk_delete') }}
                 </button>
             </span>
         </div>
         <form method="POST" action="{{ route('photo.bulk-destroy', $album) }}"
-              id="bulkDeleteForm" data-confirm="Supprimer les photos sélectionnées ?">
+              id="bulkDeleteForm" data-confirm="{{ __('photo.confirm_bulk_delete') }}">
             @csrf @method('DELETE')
             <div id="bulkHiddenInputs"></div>
         </form>
@@ -145,18 +145,18 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="tab-upload" data-bs-toggle="tab"
                                     data-bs-target="#pane-upload" type="button" role="tab">
-                                <i class="fas fa-upload me-1"></i> Téléverser
+                                <i class="fas fa-upload me-1"></i> {{ __('photo.tab_upload') }}
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="tab-library" data-bs-toggle="tab"
                                     data-bs-target="#pane-library" type="button" role="tab"
                                     data-load-url="{{ route('photo.pick-docs', $album) }}">
-                                <i class="fas fa-folder-open me-1"></i> Bibliothèque de documents
+                                <i class="fas fa-folder-open me-1"></i> {{ __('photo.tab_library') }}
                             </button>
                         </li>
                     </ul>
-                    <button type="button" class="btn-close ms-auto mb-auto" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <button type="button" class="btn-close ms-auto mb-auto" data-bs-dismiss="modal" aria-label="{{ __('photo.modal_close') }}"></button>
                 </div>
 
                 <div class="tab-content modal-body pt-3">
@@ -167,21 +167,21 @@
                             @csrf
                             <div class="ob-drop-zone" id="dropZone">
                                 <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-secondary opacity-50"></i>
-                                <p class="mb-1">Glissez vos photos ici ou</p>
+                                <p class="mb-1">{{ __('photo.drop_hint') }}</p>
                                 <label class="btn btn-sm btn-outline-primary mb-0" for="photoFiles">
-                                    Choisir des fichiers
+                                    {{ __('photo.btn_choose_files') }}
                                 </label>
                                 <input type="file" id="photoFiles" name="photos[]" class="d-none"
                                        multiple accept="{{ implode(',', array_map(fn($e) => '.'.$e, config('photos.supported_extensions'))) }}">
                                 <p class="mt-2 mb-0 text-muted" style="font-size:var(--font-size-xs);">
-                                    {{ implode(', ', config('photos.supported_extensions')) }} · max {{ config('photos.max_size_mb') }} Mo
+                                    {{ implode(', ', config('photos.supported_extensions')) }} · {{ __('photo.max_size_suffix', ['size' => config('photos.max_size_mb')]) }}
                                 </p>
                             </div>
                             <div id="uploadPreview" class="ob-upload-preview mt-3 d-none"></div>
                             <div class="d-flex justify-content-end mt-3 gap-2">
-                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
                                 <button type="submit" id="uploadSubmit" class="btn btn-sm btn-primary" disabled>
-                                    <i class="fas fa-upload me-1"></i> <span id="uploadLabel">Envoyer</span>
+                                    <i class="fas fa-upload me-1"></i> <span id="uploadLabel">{{ __('photo.btn_send') }}</span>
                                 </button>
                             </div>
                         </form>
@@ -191,11 +191,11 @@
                     <div class="tab-pane fade" id="pane-library" role="tabpanel">
                         <div id="docPickerState">
                             <div class="text-center py-4 text-muted" id="docPickerLoading">
-                                <div class="spinner-border spinner-border-sm me-2"></div> Chargement…
+                                <div class="spinner-border spinner-border-sm me-2"></div> {{ __('common.loading') }}
                             </div>
                             <div id="docPickerEmpty" class="text-center py-4 text-muted d-none">
                                 <i class="fas fa-folder-open fa-2x mb-2 d-block opacity-50"></i>
-                                Aucune image trouvée dans la bibliothèque de documents de cette section.
+                                {{ __('photo.doc_picker_empty') }}
                             </div>
                             <div id="docPickerGrid" class="ob-doc-picker-grid d-none"></div>
                         </div>
@@ -203,11 +203,11 @@
                             @csrf
                             <div id="docPickerHiddenInputs"></div>
                             <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
-                                <span class="text-muted" style="font-size:var(--font-size-xs);" id="docPickerCount">Aucune sélection</span>
+                                <span class="text-muted" style="font-size:var(--font-size-xs);" id="docPickerCount">{{ __('photo.no_selection') }}</span>
                                 <span class="d-flex gap-2">
-                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
                                     <button type="submit" id="docPickerSubmit" class="btn btn-sm btn-primary" disabled>
-                                        <i class="fas fa-file-import me-1"></i> Importer
+                                        <i class="fas fa-file-import me-1"></i> {{ __('photo.btn_import') }}
                                     </button>
                                 </span>
                             </div>
@@ -224,24 +224,24 @@
             <form method="POST" action="{{ route('photo.album.update', $album) }}" class="modal-content">
                 @csrf @method('PATCH')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Modifier l'album</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <h5 class="modal-title"><i class="fas fa-pen me-2"></i>{{ __('photo.modal_edit_title') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('photo.modal_close') }}"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label" for="albumName">Nom</label>
+                        <label class="form-label" for="albumName">{{ __('photo.label_name') }}</label>
                         <input type="text" id="albumName" name="name" class="form-control"
                                maxlength="100" value="{{ $album->name }}" required>
                     </div>
                     <div class="mb-0">
-                        <label class="form-label" for="albumDesc">Description</label>
+                        <label class="form-label" for="albumDesc">{{ __('photo.label_description') }}</label>
                         <input type="text" id="albumDesc" name="description" class="form-control"
                                maxlength="500" value="{{ $album->description }}">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{ __('photo.btn_save') }}</button>
                 </div>
             </form>
         </div>
@@ -253,16 +253,16 @@
             <form method="POST" id="captionForm" class="modal-content">
                 @csrf @method('PATCH')
                 <div class="modal-header py-2">
-                    <h5 class="modal-title" style="font-size:var(--font-size-sm);">Légende</h5>
-                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <h5 class="modal-title" style="font-size:var(--font-size-sm);">{{ __('photo.caption_modal_title') }}</h5>
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="{{ __('photo.modal_close') }}"></button>
                 </div>
                 <div class="modal-body py-2">
                     <input type="text" id="captionInput" name="caption" class="form-control form-control-sm"
-                           maxlength="255" placeholder="Légende de la photo…">
+                           maxlength="255" placeholder="{{ __('photo.caption_placeholder') }}">
                 </div>
                 <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{ __('photo.btn_save') }}</button>
                 </div>
             </form>
         </div>

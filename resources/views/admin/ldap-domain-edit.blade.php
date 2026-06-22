@@ -5,8 +5,8 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Sécurité', 'url' => route('admin.security', ['tab' => 'auth'])],
+    ['label' => __('admin.administration')], {{-- i18n-ignore --}}
+    ['label' => __('admin.security.title'), 'url' => route('admin.security', ['tab' => 'auth'])],
     ['label' => $domain->name],
 ]"/>
 
@@ -25,19 +25,19 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-server me-1"></i> Connexion
+                    <i class="fas fa-server me-1"></i> {{ __('admin.ldap.connection_section') }}
                 </div>
                 <div class="d-flex gap-2 align-items-center">
                     <button type="button" class="btn btn-sm btn-outline-secondary"
                             id="ldap-test-btn"
                             data-url="{{ route('admin.ldap.test', $domain->id) }}"
                             style="font-size:var(--font-size-xs);">
-                        <i class="fas fa-plug me-1"></i> Tester
+                        <i class="fas fa-plug me-1"></i> {{ __('admin.test') }}
                     </button>
                     @if ($domain->enabled)
-                        <span class="ob-badge ob-badge-int" style="font-size:10px;">Actif</span>
+                        <span class="ob-badge ob-badge-int" style="font-size:10px;">{{ __('admin.active') }}</span>
                     @else
-                        <span class="ob-badge" style="font-size:10px;background:var(--bs-secondary-bg);">Désactivé</span>
+                        <span class="ob-badge" style="font-size:10px;background:var(--bs-secondary-bg);">{{ __('admin.disabled') }}</span>
                     @endif
                 </div>
             </div>
@@ -49,62 +49,62 @@
                 @csrf @method('PATCH')
 
                 <div class="mb-2">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Nom affiché</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.display_name') }}</label>
                     <input type="text" name="name" class="form-control form-control-sm"
                            value="{{ old('name', $domain->name) }}" required>
                 </div>
 
                 <div class="row g-2 mb-2">
                     <div class="col-7">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Hôte</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.host') }}</label>
                         <input type="text" name="host" class="form-control form-control-sm"
                                value="{{ old('host', $domain->host) }}" required>
                     </div>
                     <div class="col-3">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Port</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.port') }}</label>
                         <input type="number" name="port" class="form-control form-control-sm"
                                value="{{ old('port', $domain->port) }}" min="1" max="65535">
                     </div>
                     <div class="col-2">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Timeout</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.timeout') }}</label>
                         <input type="number" name="timeout" class="form-control form-control-sm"
                                value="{{ old('timeout', $domain->timeout) }}" min="1" max="60">
                     </div>
                 </div>
 
                 <div class="mb-2">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Base DN</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.base_dn') }}</label>
                     <input type="text" name="base_dn" class="form-control form-control-sm font-monospace"
                            value="{{ old('base_dn', $domain->base_dn) }}"
                            placeholder="DC=example,DC=com" required>
                 </div>
 
                 <div class="mb-2">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Compte de service (DN)</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.service_account') }}</label>
                     <input type="text" name="username" class="form-control form-control-sm font-monospace"
                            value="{{ old('username', $domain->username) }}"
                            placeholder="CN=svc-ldap,OU=Comptes,DC=example,DC=com">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Mot de passe du compte de service</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.service_password') }}</label>
                     <input type="password" name="password" class="form-control form-control-sm"
-                           placeholder="Laisser vide pour conserver" autocomplete="new-password">
-                    <div class="text-muted" style="font-size:var(--font-size-xs);">Stocké chiffré.</div>
+                           placeholder="{{ __('admin.ldap.service_password_ph') }}" autocomplete="new-password">
+                    <div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.service_password_hint') }}</div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Chiffrement</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.encryption') }}</label>
                     <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="use_tls" value="1" id="use_tls"
                                    {{ old('use_tls', $domain->use_tls) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="use_tls" style="font-size:var(--font-size-sm);">LDAPS (TLS)</label>
+                            <label class="form-check-label" for="use_tls" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.use_tls') }}</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="use_starttls" value="1" id="use_starttls"
                                    {{ old('use_starttls', $domain->use_starttls) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="use_starttls" style="font-size:var(--font-size-sm);">STARTTLS</label>
+                            <label class="form-check-label" for="use_starttls" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.use_starttls') }}</label>
                         </div>
                     </div>
                 </div>
@@ -112,34 +112,34 @@
                 <hr style="border-color:var(--border-color);">
 
                 <div class="mb-2">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Méthode d'authentification</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.auth_method') }}</label>
                     <select name="auth_method" class="form-select form-select-sm" id="auth-method-select">
                         <option value="bind" {{ $domain->auth_method === 'bind' ? 'selected' : '' }}>
-                            Bind — recherche du DN via compte de service
+                            {{ __('admin.ldap.auth_bind') }}
                         </option>
                         <option value="upn" {{ $domain->auth_method === 'upn' ? 'selected' : '' }}>
-                            UPN direct — Active Directory
+                            {{ __('admin.ldap.auth_upn') }}
                         </option>
                     </select>
                 </div>
 
                 <div id="bind-fields">
                     <div class="mb-2">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Filtre utilisateur</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.user_filter') }}</label>
                         <input type="text" name="user_filter" class="form-control form-control-sm font-monospace"
                                value="{{ old('user_filter', $domain->user_filter) }}"
                                placeholder="(&(objectClass=person)(|(uid={login})(mail={login})))">
-                        <div class="text-muted" style="font-size:var(--font-size-xs);"><code>{login}</code> est remplacé par l'identifiant saisi.</div>
+                        <div class="text-muted" style="font-size:var(--font-size-xs);">{!! __('admin.ldap.user_filter_hint') !!}</div>
                     </div>
                 </div>
 
                 <div id="upn-fields" class="d-none">
                     <div class="mb-2">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Suffixe UPN</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.upn_suffix') }}</label>
                         <input type="text" name="upn_suffix" class="form-control form-control-sm"
                                value="{{ old('upn_suffix', $domain->upn_suffix) }}"
                                placeholder="@corp.example.com">
-                        <div class="text-muted" style="font-size:var(--font-size-xs);">Résultat : <code>identifiant@corp.example.com</code></div>
+                        <div class="text-muted" style="font-size:var(--font-size-xs);">{!! __('admin.ldap.upn_result') !!}</div>
                     </div>
                 </div>
 
@@ -147,10 +147,10 @@
 
                 <div class="row g-2 mb-3">
                     <div class="col-auto">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">Priorité</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.priority') }}</label>
                         <input type="number" name="priority" class="form-control form-control-sm"
                                value="{{ old('priority', $domain->priority) }}" min="0" max="999" style="max-width:90px;">
-                        <div class="text-muted" style="font-size:var(--font-size-xs);">Plus petit = essayé en premier.</div>
+                        <div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.priority_hint') }}</div>
                     </div>
                 </div>
 
@@ -158,20 +158,20 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="enabled" value="1" id="domain-enabled"
                                {{ old('enabled', $domain->enabled) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="domain-enabled" style="font-size:var(--font-size-sm);">Domaine actif</label>
+                        <label class="form-check-label" for="domain-enabled" style="font-size:var(--font-size-sm);">{{ __('admin.ldap.domain_enabled') }}</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="restrict_to_ou" value="1" id="restrict_to_ou"
                                {{ old('restrict_to_ou', $domain->restrict_to_ou) ? 'checked' : '' }}>
                         <label class="form-check-label" for="restrict_to_ou" style="font-size:var(--font-size-sm);">
-                            Mode liste blanche OU
-                            <span class="text-muted" style="font-size:var(--font-size-xs);">(seules les règles <em>Autoriser</em> passent)</span>
+                            {{ __('admin.ldap.whitelist_mode') }}
+                            <span class="text-muted" style="font-size:var(--font-size-xs);">{!! __('admin.ldap.whitelist_hint') !!}</span>
                         </label>
                     </div>
                 </div>
 
                 <button type="submit" class="btn btn-sm btn-primary">
-                    <i class="fas fa-save me-1"></i> Enregistrer
+                    <i class="fas fa-save me-1"></i> {{ __('common.save') }}
                 </button>
 
                 </form>
@@ -185,22 +185,21 @@
         <div class="ob-widget-card mb-3">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-arrows-alt-h me-1"></i> Correspondances d'attributs
+                    <i class="fas fa-arrows-alt-h me-1"></i> {{ __('admin.ldap.attr_section') }}
                 </div>
             </div>
             <div class="ob-widget-card-body">
                 <p class="text-muted mb-2" style="font-size:var(--font-size-xs);">
-                    Après connexion, les attributs LDAP listés ci-dessous sont copiés vers les champs locaux du compte pompier.
-                    <em>Écraser</em> remplace une valeur existante ; sinon seul un champ vide est renseigné.
+                    {!! __('admin.ldap.attr_hint') !!}
                 </p>
 
                 @if ($domain->attributeMaps->isNotEmpty())
                 <table class="table table-sm mb-3" style="font-size:var(--font-size-xs);">
                     <thead>
                         <tr style="text-transform:uppercase;color:var(--text-muted);">
-                            <th>Attribut LDAP</th>
-                            <th>Champ local</th>
-                            <th class="text-center">Écraser</th>
+                            <th>{{ __('admin.ldap.attr_ldap') }}</th>
+                            <th>{{ __('admin.ldap.attr_local') }}</th>
+                            <th class="text-center">{{ __('admin.ldap.col_overwrite') }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -226,14 +225,12 @@
 
                 {{-- Quick-fill templates --}}
                 <div class="mb-2">
-                    <span class="text-muted fw-semibold" style="font-size:var(--font-size-xs);">Suggestions rapides :</span>
+                    <span class="text-muted fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.quick_fill') }}</span>
                     <div class="d-flex flex-wrap gap-1 mt-1">
-                        @php
-                        $quickFills = [
+                        @php($quickFills = [
                             'AD standard'   => ['mail' => 'P_EMAIL', 'givenName' => 'P_PRENOM', 'sn' => 'P_NOM', 'sAMAccountName' => 'P_CODE'],
                             'OpenLDAP'      => ['mail' => 'P_EMAIL', 'givenName' => 'P_PRENOM', 'sn' => 'P_NOM', 'uid' => 'P_CODE'],
-                        ];
-                        @endphp
+                        ])
                         @foreach ($quickFills as $label => $pairs)
                         <button type="button" class="btn btn-xs btn-outline-secondary quick-fill-btn"
                                 data-pairs="{{ json_encode($pairs) }}"
@@ -247,56 +244,56 @@
                 <form method="POST" action="{{ route('admin.ldap.attr.store', $domain->id) }}" class="row g-2 align-items-end" id="attr-form">
                 @csrf
                 <div class="col-4">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">Attribut LDAP</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.attr_ldap') }}</label>
                     <input type="text" name="ldap_attr" id="attr-ldap" class="form-control form-control-sm font-monospace"
                            list="ldap-attr-list" required>
                     <datalist id="ldap-attr-list">
                         {{-- Active Directory --}}
-                        <option value="sAMAccountName">sAMAccountName — identifiant AD</option>
-                        <option value="userPrincipalName">userPrincipalName — UPN (user@domain)</option>
-                        <option value="mail">mail — adresse e-mail principale</option>
-                        <option value="proxyAddresses">proxyAddresses — adresses e-mail secondaires</option>
-                        <option value="givenName">givenName — prénom</option>
-                        <option value="sn">sn — nom de famille</option>
-                        <option value="displayName">displayName — nom d'affichage</option>
-                        <option value="cn">cn — nom complet</option>
-                        <option value="department">department — département / service</option>
-                        <option value="title">title — intitulé de poste</option>
-                        <option value="company">company — organisation</option>
-                        <option value="telephoneNumber">telephoneNumber — téléphone fixe</option>
-                        <option value="mobile">mobile — téléphone mobile</option>
-                        <option value="facsimileTelephoneNumber">facsimileTelephoneNumber — fax</option>
-                        <option value="streetAddress">streetAddress — adresse postale</option>
-                        <option value="l">l — ville</option>
-                        <option value="postalCode">postalCode — code postal</option>
-                        <option value="co">co — pays</option>
-                        <option value="employeeID">employeeID — matricule employé</option>
-                        <option value="employeeNumber">employeeNumber — numéro employé</option>
-                        <option value="extensionAttribute1">extensionAttribute1</option>
-                        <option value="extensionAttribute2">extensionAttribute2</option>
-                        <option value="extensionAttribute3">extensionAttribute3</option>
-                        <option value="memberOf">memberOf — groupes AD</option>
-                        <option value="manager">manager — responsable hiérarchique (DN)</option>
-                        <option value="physicalDeliveryOfficeName">physicalDeliveryOfficeName — bureau</option>
-                        <option value="description">description</option>
-                        <option value="info">info — notes</option>
-                        <option value="thumbnailPhoto">thumbnailPhoto — photo</option>
+                        <option value="sAMAccountName">sAMAccountName — identifiant AD</option> {{-- i18n-ignore --}}
+                        <option value="userPrincipalName">userPrincipalName — UPN (user@domain)</option> {{-- i18n-ignore --}}
+                        <option value="mail">mail — adresse e-mail principale</option> {{-- i18n-ignore --}}
+                        <option value="proxyAddresses">proxyAddresses — adresses e-mail secondaires</option> {{-- i18n-ignore --}}
+                        <option value="givenName">givenName — prénom</option> {{-- i18n-ignore --}}
+                        <option value="sn">sn — nom de famille</option> {{-- i18n-ignore --}}
+                        <option value="displayName">displayName — nom d'affichage</option> {{-- i18n-ignore --}}
+                        <option value="cn">cn — nom complet</option> {{-- i18n-ignore --}}
+                        <option value="department">department — département / service</option> {{-- i18n-ignore --}}
+                        <option value="title">title — intitulé de poste</option> {{-- i18n-ignore --}}
+                        <option value="company">company — organisation</option> {{-- i18n-ignore --}}
+                        <option value="telephoneNumber">telephoneNumber — téléphone fixe</option> {{-- i18n-ignore --}}
+                        <option value="mobile">mobile — téléphone mobile</option> {{-- i18n-ignore --}}
+                        <option value="facsimileTelephoneNumber">facsimileTelephoneNumber — fax</option> {{-- i18n-ignore --}}
+                        <option value="streetAddress">streetAddress — adresse postale</option> {{-- i18n-ignore --}}
+                        <option value="l">l — ville</option> {{-- i18n-ignore --}}
+                        <option value="postalCode">postalCode — code postal</option> {{-- i18n-ignore --}}
+                        <option value="co">co — pays</option> {{-- i18n-ignore --}}
+                        <option value="employeeID">employeeID — matricule employé</option> {{-- i18n-ignore --}}
+                        <option value="employeeNumber">employeeNumber — numéro employé</option> {{-- i18n-ignore --}}
+                        <option value="extensionAttribute1">extensionAttribute1</option> {{-- i18n-ignore --}}
+                        <option value="extensionAttribute2">extensionAttribute2</option> {{-- i18n-ignore --}}
+                        <option value="extensionAttribute3">extensionAttribute3</option> {{-- i18n-ignore --}}
+                        <option value="memberOf">memberOf — groupes AD</option> {{-- i18n-ignore --}}
+                        <option value="manager">manager — responsable hiérarchique (DN)</option> {{-- i18n-ignore --}}
+                        <option value="physicalDeliveryOfficeName">physicalDeliveryOfficeName — bureau</option> {{-- i18n-ignore --}}
+                        <option value="description">description</option> {{-- i18n-ignore --}}
+                        <option value="info">info — notes</option> {{-- i18n-ignore --}}
+                        <option value="thumbnailPhoto">thumbnailPhoto — photo</option> {{-- i18n-ignore --}}
                         {{-- OpenLDAP / LDAP standard --}}
-                        <option value="uid">uid — identifiant Unix</option>
-                        <option value="uidNumber">uidNumber — UID numérique</option>
-                        <option value="gidNumber">gidNumber — GID groupe</option>
-                        <option value="homeDirectory">homeDirectory — répertoire home</option>
-                        <option value="loginShell">loginShell — shell</option>
-                        <option value="gecos">gecos — informations GECOS</option>
-                        <option value="shadowExpire">shadowExpire — expiration mot de passe</option>
-                        <option value="shadowLastChange">shadowLastChange — dernière modification MDP</option>
-                        <option value="ou">ou — unité organisationnelle</option>
-                        <option value="o">o — organisation</option>
-                        <option value="labeledURI">labeledURI — URL</option>
+                        <option value="uid">uid — identifiant Unix</option> {{-- i18n-ignore --}}
+                        <option value="uidNumber">uidNumber — UID numérique</option> {{-- i18n-ignore --}}
+                        <option value="gidNumber">gidNumber — GID groupe</option> {{-- i18n-ignore --}}
+                        <option value="homeDirectory">homeDirectory — répertoire home</option> {{-- i18n-ignore --}}
+                        <option value="loginShell">loginShell — shell</option> {{-- i18n-ignore --}}
+                        <option value="gecos">gecos — informations GECOS</option> {{-- i18n-ignore --}}
+                        <option value="shadowExpire">shadowExpire — expiration mot de passe</option> {{-- i18n-ignore --}}
+                        <option value="shadowLastChange">shadowLastChange — dernière modification MDP</option> {{-- i18n-ignore --}}
+                        <option value="ou">ou — unité organisationnelle</option> {{-- i18n-ignore --}}
+                        <option value="o">o — organisation</option> {{-- i18n-ignore --}}
+                        <option value="labeledURI">labeledURI — URL</option> {{-- i18n-ignore --}}
                     </datalist>
                 </div>
                 <div class="col-4">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">Champ local</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.attr_local') }}</label>
                     <select name="local_field" id="attr-local" class="form-select form-select-sm" required>
                         @foreach ($localFields as $field => $label)
                         <option value="{{ $field }}">{{ $label }}</option>
@@ -306,7 +303,7 @@
                 <div class="col-2 d-flex align-items-end pb-1">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="overwrite" value="1" id="attr-overwrite">
-                        <label class="form-check-label" for="attr-overwrite" style="font-size:var(--font-size-xs);">Écraser</label>
+                        <label class="form-check-label" for="attr-overwrite" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.attr_overwrite') }}</label>
                     </div>
                 </div>
                 <div class="col-2">
@@ -322,27 +319,25 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-sitemap me-1"></i> Règles par OU / filtre
+                    <i class="fas fa-sitemap me-1"></i> {{ __('admin.ldap.ou_section') }}
                 </div>
             </div>
             <div class="ob-widget-card-body">
                 <p class="text-muted mb-3" style="font-size:var(--font-size-xs);">
-                    <strong>Refuser</strong> bloque la connexion. <strong>Autoriser</strong> est requis en mode liste blanche.
-                    <strong>Assigner</strong> applique le groupe, le rôle ou la section après connexion.
-                    Les règles de refus l'emportent toujours, quelle que soit la priorité.
+                    {!! __('admin.ldap.ou_hint') !!}
                 </p>
 
                 @if ($domain->ouRules->isNotEmpty())
                 <table class="table table-sm mb-3" style="font-size:var(--font-size-xs);">
                     <thead>
                         <tr style="text-transform:uppercase;color:var(--text-muted);">
-                            <th>OU DN</th>
-                            <th>Filtre</th>
-                            <th>Action</th>
-                            <th>Groupe</th>
-                            <th>Rôle</th>
-                            @if ($multiSite) <th>Section</th> @endif
-                            <th>Pri.</th>
+                            <th>{{ __('admin.ldap.col_ou_dn') }}</th>
+                            <th>{{ __('admin.ldap.col_filter') }}</th>
+                            <th>{{ __('admin.ldap.col_action') }}</th>
+                            <th>{{ __('admin.ldap.col_group') }}</th>
+                            <th>{{ __('admin.ldap.col_role') }}</th>
+                            @if ($multiSite) <th>{{ __('admin.ldap.col_section') }}</th> @endif
+                            <th>{{ __('admin.ldap.col_priority') }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -361,11 +356,11 @@
                         </td>
                         <td style="vertical-align:middle;">
                             @if ($rule->action === 'deny')
-                                <span class="badge bg-danger">Refuser</span>
+                                <span class="badge bg-danger">{{ __('admin.ldap.action_deny') }}</span>
                             @elseif ($rule->action === 'allow')
-                                <span class="badge bg-success">Autoriser</span>
+                                <span class="badge bg-success">{{ __('admin.ldap.action_allow') }}</span>
                             @else
-                                <span class="badge bg-info text-dark">Assigner</span>
+                                <span class="badge bg-info text-dark">{{ __('admin.ldap.action_assign') }}</span>
                             @endif
                         </td>
                         <td style="vertical-align:middle;">{{ $rule->group?->name ?? '—' }}</td>
@@ -390,36 +385,36 @@
                 <form method="POST" action="{{ route('admin.ldap.ou.store', $domain->id) }}">
                 @csrf
                 <div class="mb-2">
-                    <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">OU DN</label>
+                    <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.ou_dn_label') }}</label>
                     <input type="text" name="ou_dn" class="form-control form-control-sm font-monospace"
                            placeholder="OU=Pompiers,DC=example,DC=com" required>
                     <div class="text-muted" style="font-size:var(--font-size-xs);">
-                        Correspond à l'OU cible et toutes ses OU parentes dans le DN de l'utilisateur.
+                        {{ __('admin.ldap.ou_dn_hint') }}
                     </div>
                 </div>
                 <div class="mb-2">
                     <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">
-                        Filtre LDAP supplémentaire <span class="text-muted fw-normal">(optionnel)</span>
+                        {{ __('admin.ldap.extra_filter_label') }} <span class="text-muted fw-normal">{{ __('admin.ldap.extra_filter_optional') }}</span>
                     </label>
                     <input type="text" name="extra_filter" class="form-control form-control-sm font-monospace"
                            placeholder="(memberOf=CN=Actifs,OU=Groupes,DC=example,DC=com)">
                     <div class="text-muted" style="font-size:var(--font-size-xs);">
-                        Filtre LDAP appliqué au DN de l'utilisateur pour affiner la règle.
+                        {{ __('admin.ldap.extra_filter_hint') }}
                     </div>
                 </div>
                 <div class="row g-2 mb-2">
                     <div class="col-auto">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">Action</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.action_label') }}</label>
                         <select name="action" class="form-select form-select-sm" id="ou-action-select">
-                            <option value="allow">Autoriser</option>
-                            <option value="deny">Refuser</option>
-                            <option value="assign">Assigner</option>
+                            <option value="allow">{{ __('admin.ldap.action_allow') }}</option>
+                            <option value="deny">{{ __('admin.ldap.action_deny') }}</option>
+                            <option value="assign">{{ __('admin.ldap.action_assign') }}</option>
                         </select>
                     </div>
                     <div class="col" id="ou-assign-fields">
                         <div class="row g-2">
                             <div class="col-6">
-                                <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">Groupe</label>
+                                <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.col_group') }}</label>
                                 <select name="group_id" class="form-select form-select-sm">
                                     <option value="">—</option>
                                     @foreach ($groups as $g)
@@ -428,7 +423,7 @@
                                 </select>
                             </div>
                             <div class="col-6">
-                                <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">Rôle</label>
+                                <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.col_role') }}</label>
                                 <select name="role_id" class="form-select form-select-sm">
                                     <option value="">—</option>
                                     @foreach ($roles as $r)
@@ -438,7 +433,7 @@
                             </div>
                             @if ($multiSite)
                             <div class="col-6">
-                                <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">Section</label>
+                                <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.col_section') }}</label>
                                 <select name="section_id" class="form-select form-select-sm">
                                     <option value="">—</option>
                                     @foreach ($sections as $s)
@@ -450,12 +445,12 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">Priorité</label>
+                        <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.priority') }}</label>
                         <input type="number" name="priority" class="form-control form-control-sm" value="10" min="0" max="999" style="width:70px;">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-sm btn-outline-primary">
-                    <i class="fas fa-plus me-1"></i> Ajouter la règle
+                    <i class="fas fa-plus me-1"></i> {{ __('admin.ldap.add_rule') }}
                 </button>
                 </form>
             </div>
@@ -467,13 +462,13 @@
 {{-- Danger zone --}}
 <div class="mt-3 p-3 rounded border border-danger" style="background:rgba(220,53,69,.04);">
     <div class="fw-semibold text-danger mb-1" style="font-size:var(--font-size-sm);">
-        <i class="fas fa-exclamation-triangle me-1"></i> Zone dangereuse
+        <i class="fas fa-exclamation-triangle me-1"></i> {{ __('admin.danger_zone') }}
     </div>
     <form method="POST" action="{{ route('admin.ldap.destroy', $domain->id) }}" class="d-inline">
         @csrf @method('DELETE')
         <button type="submit" class="btn btn-sm btn-outline-danger"
-                onclick="return confirm('Supprimer définitivement ce domaine et toutes ses règles ?')">
-            <i class="fas fa-trash me-1"></i> Supprimer ce domaine
+                onclick="return confirm('{{ __('admin.ldap.delete_domain_confirm') }}')">
+            <i class="fas fa-trash me-1"></i> {{ __('admin.ldap.delete_domain_btn') }}
         </button>
     </form>
 </div>

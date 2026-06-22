@@ -1,13 +1,13 @@
 @extends('layout.app')
 
-@section('title', 'Types d\'activité — ' . config('app.name'))
+@section('title', __('admin.references.event_type.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Paramétrage', 'url' => route('admin.references')],
-    ['label' => 'Types d\'activité'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.references.title'), 'url' => route('admin.references')],
+    ['label' => __('admin.references.event_type.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -15,7 +15,7 @@
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>Nouveau type d'activité</div>
+            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>{{ __('admin.references.event_type.new_title') }}</div>
         </div>
         <div class="p-3">
             <form method="POST" action="{{ route('admin.references.event-type.store') }}">
@@ -29,20 +29,20 @@
                 @endif
                 <div class="row g-2 align-items-end">
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Code <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_code') }} <span class="text-danger">*</span></label>
                         <input type="text" name="TE_CODE" value="{{ old('TE_CODE') }}"
                                class="form-control form-control-sm text-uppercase" style="width:80px;"
-                               maxlength="5" required placeholder="EX">
+                               maxlength="5" required placeholder="{{ __('admin.references.event_type.ph_code') }}">
                     </div>
                     <div class="col">
-                        <label class="form-label form-label-sm">Libellé <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_label') }} <span class="text-danger">*</span></label>
                         <input type="text" name="TE_LIBELLE" value="{{ old('TE_LIBELLE') }}"
                                class="form-control form-control-sm" maxlength="40" required>
                     </div>
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Catégorie <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_category') }} <span class="text-danger">*</span></label>
                         <select name="CEV_CODE" class="form-select form-select-sm" required style="width:160px;">
-                            <option value="">— choisir —</option>
+                            <option value="">{{ __('admin.references.choose') }}</option>
                             @foreach($categories as $c)
                                 <option value="{{ $c->CEV_CODE }}" @selected(old('CEV_CODE') == $c->CEV_CODE)>
                                     {{ $c->CEV_DESCRIPTION }}
@@ -53,20 +53,20 @@
                     <div class="col-auto d-flex gap-3 pb-1">
                         <div class="form-check form-check-sm">
                             <input class="form-check-input" type="checkbox" name="FICHE_PRESENCE" id="fp_new" value="1" {{ old('FICHE_PRESENCE') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="fp_new" style="font-size:var(--font-size-xs);">Fiche présence</label>
+                            <label class="form-check-label" for="fp_new" style="font-size:var(--font-size-xs);">{{ __('admin.references.event_type.label_presence') }}</label>
                         </div>
                         <div class="form-check form-check-sm">
                             <input class="form-check-input" type="checkbox" name="ORDRE_MISSION" id="om_new" value="1" {{ old('ORDRE_MISSION') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="om_new" style="font-size:var(--font-size-xs);">Ordre de mission</label>
+                            <label class="form-check-label" for="om_new" style="font-size:var(--font-size-xs);">{{ __('admin.references.event_type.label_mission') }}</label>
                         </div>
                         <div class="form-check form-check-sm">
                             <input class="form-check-input" type="checkbox" name="CONVOCATIONS" id="conv_new" value="1" {{ old('CONVOCATIONS') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="conv_new" style="font-size:var(--font-size-xs);">Convocations</label>
+                            <label class="form-check-label" for="conv_new" style="font-size:var(--font-size-xs);">{{ __('admin.references.event_type.label_convocations') }}</label>
                         </div>
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus me-1"></i>Ajouter
+                            <i class="fas fa-plus me-1"></i>{{ __('common.add') }}
                         </button>
                     </div>
                 </div>
@@ -77,18 +77,18 @@
     {{-- List --}}
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-calendar-alt me-2"></i>Types d'activité ({{ $items->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-calendar-alt me-2"></i>{{ __('admin.references.event_type.list_title', ['count' => $items->count()]) }}</div>
         </div>
         <div class="table-responsive">
             <table class="table table-sm table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th style="width:70px;">Code</th>
-                        <th>Libellé</th>
-                        <th style="width:140px;">Catégorie</th>
-                        <th class="text-center" style="width:110px;">Fiche présence</th>
-                        <th class="text-center" style="width:120px;">Ordre mission</th>
-                        <th class="text-center" style="width:110px;">Convocations</th>
+                        <th style="width:70px;">{{ __('admin.references.col_code') }}</th>
+                        <th>{{ __('admin.references.col_label') }}</th>
+                        <th style="width:140px;">{{ __('admin.references.col_category') }}</th>
+                        <th class="text-center" style="width:110px;">{{ __('admin.references.event_type.col_presence') }}</th>
+                        <th class="text-center" style="width:120px;">{{ __('admin.references.event_type.col_mission') }}</th>
+                        <th class="text-center" style="width:110px;">{{ __('admin.references.event_type.col_convocations') }}</th>
                         <th style="width:60px;"></th>
                     </tr>
                 </thead>
@@ -134,7 +134,7 @@
                         </td>
                         <td class="align-middle text-end">
                             <form method="POST" action="{{ route('admin.references.event-type.destroy', $item->TE_CODE) }}"
-                                  onsubmit="return confirm('Supprimer {{ addslashes($item->TE_LIBELLE) }} ?')">
+                                  onsubmit="return confirm('{{ __('admin.references.event_type.delete_confirm', ['label' => addslashes($item->TE_LIBELLE)]) }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <i class="fas fa-trash"></i>
@@ -143,7 +143,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="7" class="text-center text-muted py-4">Aucun type d'activité.</td></tr>
+                    <tr><td colspan="7" class="text-center text-muted py-4">{{ __('admin.references.event_type.empty') }}</td></tr>
                 @endforelse
                 </tbody>
             </table>

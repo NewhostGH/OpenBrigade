@@ -1,13 +1,13 @@
 @extends('layout.app')
 
-@section('title', 'Fonctions véhicule — ' . config('app.name'))
+@section('title', __('admin.references.vehicle_function.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Paramétrage', 'url' => route('admin.references')],
-    ['label' => 'Fonctions véhicule'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.references.title'), 'url' => route('admin.references')],
+    ['label' => __('admin.references.vehicle_function.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -28,7 +28,7 @@
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>Nouvelle fonction véhicule</div>
+            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>{{ __('admin.references.vehicle_function.new_title') }}</div>
         </div>
         <div class="p-3">
             <form method="POST" action="{{ route('admin.references.vehicle-function.store') }}">
@@ -42,24 +42,24 @@
                 @endif
                 <div class="row g-2 align-items-end">
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Nom <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.vehicle_function.col_name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="TFV_NAME" value="{{ old('TFV_NAME') }}"
                                class="form-control form-control-sm" maxlength="50" required
-                               style="width:180px;" placeholder="Chef de bord">
+                               style="width:180px;" placeholder="{{ __('admin.references.vehicle_function.ph_name') }}">
                     </div>
                     <div class="col">
-                        <label class="form-label form-label-sm">Description</label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.vehicle_function.col_desc') }}</label>
                         <input type="text" name="TFV_DESCRIPTION" value="{{ old('TFV_DESCRIPTION') }}"
                                class="form-control form-control-sm" maxlength="100">
                     </div>
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Ordre</label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_order') }}</label>
                         <input type="number" name="TFV_ORDER" value="{{ old('TFV_ORDER', 10) }}"
                                class="form-control form-control-sm" min="0" max="9999" style="width:80px;" required>
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus me-1"></i>Ajouter
+                            <i class="fas fa-plus me-1"></i>{{ __('common.add') }}
                         </button>
                     </div>
                 </div>
@@ -70,15 +70,15 @@
     {{-- List --}}
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-truck me-2"></i>Fonctions véhicule ({{ $items->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-truck me-2"></i>{{ __('admin.references.vehicle_function.list_title', ['count' => $items->count()]) }}</div>
         </div>
         <div class="table-responsive">
             <table class="table table-sm table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Nom</th>
-                        <th>Description</th>
-                        <th style="width:80px;">Ordre</th>
+                        <th>{{ __('admin.references.vehicle_function.col_name') }}</th>
+                        <th>{{ __('admin.references.vehicle_function.col_desc') }}</th>
+                        <th style="width:80px;">{{ __('admin.references.col_order') }}</th>
                         <th style="width:60px;"></th>
                     </tr>
                 </thead>
@@ -93,7 +93,7 @@
                                        class="form-control form-control-sm" maxlength="50" required style="min-width:160px;">
                                 <input type="text" name="TFV_DESCRIPTION" value="{{ $item->TFV_DESCRIPTION }}"
                                        class="form-control form-control-sm" maxlength="100" style="min-width:200px;"
-                                       placeholder="(description)">
+                                       placeholder="{{ __('admin.references.vehicle_function.ph_desc') }}">
                                 <input type="number" name="TFV_ORDER" value="{{ $item->TFV_ORDER }}"
                                        class="form-control form-control-sm" min="0" max="9999" style="width:70px;" required>
                                 <button type="submit" class="btn btn-sm btn-outline-primary flex-shrink-0">
@@ -105,7 +105,7 @@
                         <td class="align-middle text-muted" style="font-size:var(--font-size-sm);">{{ $item->TFV_ORDER }}</td>
                         <td class="align-middle text-end">
                             <form method="POST" action="{{ route('admin.references.vehicle-function.destroy', $item->TFV_ID) }}"
-                                  onsubmit="return confirm('Supprimer {{ addslashes($item->TFV_NAME) }} ?')">
+                                  onsubmit="return confirm('{{ __('admin.references.vehicle_function.delete_confirm', ['name' => addslashes($item->TFV_NAME)]) }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <i class="fas fa-trash"></i>
@@ -114,7 +114,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="text-center text-muted py-4">Aucune fonction véhicule.</td></tr>
+                    <tr><td colspan="4" class="text-center text-muted py-4">{{ __('admin.references.vehicle_function.empty') }}</td></tr>
                 @endforelse
                 </tbody>
             </table>

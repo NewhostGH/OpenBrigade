@@ -7,7 +7,7 @@
             <span class="ob-org-card__name">{{ $node['section']->S_DESCRIPTION }}</span>
         @endif
         <span class="ob-org-card__count">
-            {{ $node['count'] }}&nbsp;membre{{ $node['count'] !== 1 ? 's' : '' }}
+            {{ trans_choice('organization.node_member', $node['count'], ['count' => $node['count']]) }}
         </span>
     </a>
 

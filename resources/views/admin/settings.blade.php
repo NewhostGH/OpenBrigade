@@ -24,14 +24,14 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Configuration'],
+    ['label' => __('admin.administration')], {{-- i18n-ignore --}}
+    ['label' => __('admin.settings.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-cog me-2"></i>Configuration de l'application</div>
+            <div class="ob-widget-card-title"><i class="fas fa-cog me-2"></i>{{ __('admin.settings.app_config') }}</div>
         </div>
 
         {{-- Tab nav --}}
@@ -60,18 +60,15 @@
                         <table class="table table-sm table-hover mb-0">
                             <tbody>
                                 @foreach($grouped->get($tabId) as $row)
-                                    @php
-                                        $label = $row->DISPLAY_NAME ?: $row->NAME;
-                                        $label = strip_tags($label);
-                                    @endphp
+                                    @php($label = strip_tags($row->DISPLAY_NAME ?: $row->NAME))
                                     <tr>
                                         <td style="width:40%;vertical-align:middle;font-size:var(--font-size-sm);">
                                             <span title="{{ $row->DESCRIPTION ?? '' }}">{{ $label }}</span>
                                             @if(isset($annotations[$row->ID]))
-                                                @php $ann = $annotations[$row->ID]; @endphp
+                                                @php($ann = $annotations[$row->ID])
                                                 <span class="ms-1 ob-badge {{ $ann['type'] === 'obsolete' ? 'ob-badge-archive' : 'ob-badge-ext' }}"
                                                       style="font-size:10px;" title="{{ $ann['note'] }}">
-                                                    {{ $ann['type'] === 'obsolete' ? 'Obsolète' : 'Non implémenté' }}
+                                                    {{ $ann['type'] === 'obsolete' ? __('admin.obsolete') : __('admin.not_implemented') }}
                                                 </span>
                                                 <div style="font-size:var(--font-size-xs);color:var(--text-muted-soft);margin-top:2px;">
                                                     <i class="fas fa-info-circle me-1"></i>{{ $ann['note'] }}
@@ -89,10 +86,8 @@
 
                                             @elseif($row->IS_FILE)
                                                 {{-- Image upload --}}
-                                                @php
-                                                    $hasImg = $row->VALUE && str_starts_with($row->VALUE, 'theme/') && Storage::disk('public')->exists($row->VALUE);
-                                                    $imgUrl = $hasImg ? Storage::url($row->VALUE) : null;
-                                                @endphp
+                                                @php($hasImg = $row->VALUE && str_starts_with($row->VALUE, 'theme/') && Storage::disk('public')->exists($row->VALUE))
+                                                @php($imgUrl = $hasImg ? Storage::url($row->VALUE) : null)
                                                 <div class="d-flex align-items-center gap-3 flex-wrap">
                                                     @if($imgUrl)
                                                         <img src="{{ $imgUrl }}" alt="{{ $label }}"
@@ -101,12 +96,12 @@
                                                             @csrf @method('DELETE')
                                                             <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                             <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                                    onclick="return confirm('Supprimer cette image ?')">
+                                                                    onclick="return confirm('{{ __('admin.settings.delete_image_confirm') }}')">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
                                                     @else
-                                                        <span class="text-muted fst-italic" style="font-size:var(--font-size-xs);">Aucune image</span>
+                                                        <span class="text-muted fst-italic" style="font-size:var(--font-size-xs);">{{ __('admin.settings.no_image') }}</span>
                                                     @endif
                                                     <form method="POST" action="{{ route('admin.settings.upload', $row->ID) }}"
                                                           enctype="multipart/form-data" class="d-flex align-items-center gap-2">
@@ -142,10 +137,10 @@
                                                     @csrf @method('PATCH')
                                                     <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                     <select name="VALUE" class="form-select form-select-sm" style="max-width:220px;">
-                                                        <option value="0" @selected($row->VALUE=='0')>Aucune</option>
-                                                        <option value="1" @selected($row->VALUE=='1')>Erreurs seulement</option>
-                                                        <option value="2" @selected($row->VALUE=='2')>Erreurs + Warnings</option>
-                                                        <option value="3" @selected($row->VALUE=='3')>Tout afficher</option>
+                                                        <option value="0" @selected($row->VALUE=='0')>{{ __('admin.settings.error_none') }}</option>
+                                                        <option value="1" @selected($row->VALUE=='1')>{{ __('admin.settings.error_errors_only') }}</option>
+                                                        <option value="2" @selected($row->VALUE=='2')>{{ __('admin.settings.error_errors_warn') }}</option>
+                                                        <option value="3" @selected($row->VALUE=='3')>{{ __('admin.settings.error_all') }}</option>
                                                     </select>
                                                     <button type="submit" class="btn btn-sm btn-primary">
                                                         <i class="fas fa-save"></i>
@@ -174,9 +169,9 @@
                                                     @csrf @method('PATCH')
                                                     <input type="hidden" name="_tab" value="{{ $tabId }}">
                                                     <select name="VALUE" class="form-select form-select-sm" style="max-width:200px;">
-                                                        <option value="0" @selected($row->VALUE=='0')>Aucune restriction</option>
-                                                        <option value="1" @selected($row->VALUE=='1')>Minimum (longueur)</option>
-                                                        <option value="2" @selected($row->VALUE=='2')>Fort (complexité)</option>
+                                                        <option value="0" @selected($row->VALUE=='0')>{{ __('admin.settings.pwd_no_restriction') }}</option>
+                                                        <option value="1" @selected($row->VALUE=='1')>{{ __('admin.settings.pwd_minimum') }}</option>
+                                                        <option value="2" @selected($row->VALUE=='2')>{{ __('admin.settings.pwd_strong') }}</option>
                                                     </select>
                                                     <button type="submit" class="btn btn-sm btn-primary">
                                                         <i class="fas fa-save"></i>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
-    <title>Connexion — {{ config('app.name') }}</title>
+    <title>{{ __('auth_views.login_page_title') }} — {{ config('app.name') }}</title>
     @vite('resources/css/app.css')
 </head>
 
@@ -17,8 +17,7 @@
 <body class="ob-login-body">
 <noscript>
     <div class="ob-noscript">
-        JavaScript est désactivé&nbsp;: OpenBrigade nécessite JavaScript pour
-        fonctionner correctement. Veuillez l'activer puis recharger la page.
+        {{ __('auth_views.login_noscript') }}
     </div>
 </noscript>
 <div class="container-fluid ob-login-shell">
@@ -32,7 +31,7 @@
                  style="max-height:80px; max-width:90%;"
                  onerror="this.style.display='none'">
             <p class="ob-login-left-title mt-4">
-                Organisez le personnel et les activités avec {{ $loginOrgName }}
+                {{ __('auth_views.login_tagline', ['org' => $loginOrgName]) }}
             </p>
         </aside>
 
@@ -43,8 +42,8 @@
                 {{-- Sign-in form --}}
                 <div class="ob-login-signin-panel">
                     <div class="mb-4">
-                        <div class="ob-login-brand-title">Bienvenue</div>
-                        <div class="ob-login-brand-sub">Connectez-vous à {{ $loginOrgName }}</div>
+                        <div class="ob-login-brand-title">{{ __('auth_views.login_welcome') }}</div>
+                        <div class="ob-login-brand-sub">{{ __('auth_views.login_subtitle', ['org' => $loginOrgName]) }}</div>
                     </div>
 
                     @if (session('success'))
@@ -62,7 +61,7 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label for="login" class="form-label">Identifiant ou adresse e-mail</label>
+                            <label for="login" class="form-label">{{ __('auth_views.login_label_login') }}</label>
                             <input id="login" type="text" name="login"
                                 class="form-control ob-login-input @error('login') is-invalid @enderror"
                                 value="{{ old('login') }}"
@@ -74,11 +73,11 @@
 
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-baseline">
-                                <label for="password" class="form-label mb-0">Mot de passe</label>
+                                <label for="password" class="form-label mb-0">{{ __('auth_views.login_label_password') }}</label>
                                 <a href="#" id="showForgot"
                                    class="text-decoration-none"
                                    style="font-size:var(--font-size-xs)">
-                                    Mot de passe oublié ?
+                                    {{ __('auth_views.login_forgot_link') }}
                                 </a>
                             </div>
                             <input id="password" type="password" name="password"
@@ -93,35 +92,34 @@
                             <input type="checkbox" class="form-check-input" id="remember" name="remember">
                             <label class="form-check-label" for="remember"
                                    style="font-size:var(--font-size-sm)">
-                                Se souvenir de moi
+                                {{ __('auth_views.login_remember') }}
                             </label>
                         </div>
 
                         {{-- Inline validation message (shown by JS without page reload) --}}
                         <div id="signinError" class="alert alert-danger ob-login-alert mb-3 d-none" role="alert">
                             <i class="fas fa-exclamation-circle me-1"></i>
-                            Veuillez remplir l'identifiant et le mot de passe.
+                            {{ __('auth_views.login_inline_error') }}
                         </div>
 
-                        <button type="submit" class="btn ob-login-btn">Se connecter</button>
+                        <button type="submit" class="btn ob-login-btn">{{ __('auth_views.login_btn') }}</button>
                     </form>
                 </div>
 
                 {{-- Forgot-password panel --}}
                 <div class="ob-login-forgot-panel">
                     <div class="mb-3">
-                        <div class="ob-login-brand-title">Mot de passe oublié ?</div>
+                        <div class="ob-login-brand-title">{{ __('auth_views.forgot_title') }}</div>
                         <p class="ob-login-brand-sub mt-1 mb-0">
-                            Utilisez le formulaire de récupération si votre adresse e-mail est enregistrée,
-                            ou contactez votre administrateur.
+                            {{ __('auth_views.forgot_subtitle') }}
                         </p>
                     </div>
 
                     <a href="{{ route('password.request') }}" class="btn btn-primary btn-sm mt-2 me-2">
-                        <i class="fas fa-envelope me-1"></i> Récupérer mon mot de passe
+                        <i class="fas fa-envelope me-1"></i> {{ __('auth_views.forgot_btn_recover') }}
                     </a>
                     <button type="button" id="showSignin" class="btn btn-secondary btn-sm mt-2">
-                        <i class="fas fa-arrow-left me-1"></i> Retour
+                        <i class="fas fa-arrow-left me-1"></i> {{ __('auth_views.btn_back') }}
                     </button>
                 </div>
 

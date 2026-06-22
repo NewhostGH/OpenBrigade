@@ -2,7 +2,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-umbrella-beach"></i> Congés à valider
+            <i class="fas fa-umbrella-beach"></i> {{ __('dashboard.cp.title') }}
         </div>
         {{-- TODO: Migrate code --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/indispo_choice.php?tab=2&page=1') }}">
@@ -19,10 +19,10 @@
                         {{ ucfirst(strtolower($item->P_PRENOM)) }} {{ strtoupper($item->P_NOM) }}
                     </div>
                     <div class="ob-dash-alert-item-sub">
-                        {{ $item->TI_LIBELLE }} &mdash; {{ $item->I_DEBUT }} au {{ $item->I_FIN }}
+                        {{ $item->TI_LIBELLE }} {{ __('dashboard.cp.date_range', ['debut' => $item->I_DEBUT, 'fin' => $item->I_FIN]) }}
                     </div>
                 </div>
-                <span class="ob-dash-day-label ob-dash-day-label-orange">À valider</span>
+                <span class="ob-dash-day-label ob-dash-day-label-orange">{{ __('dashboard.cp.to_valdiate') }}</span>
             </a>
         @endforeach
     </div>

@@ -5,26 +5,26 @@
 @section('content')
 
 @php
-    $sortUrl  = fn(string $f) => route('dues.transfers', array_merge(request()->query(), ['order' => $f]));
+    $sortUrl  = fn(string $f) => route('dues.transfers', array_merge(request()->query(), ['order' => $f])); // i18n-ignore
     $sortIcon = fn(string $f) => '<i class="fas fa-sort' . ($order === $f ? '-down active' : '') . ' sort-icon ms-1"></i>';
 @endphp
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Cotisations', 'url' => route('dues.index')],
-    ['label' => 'Virements'],
+    ['label' => __('dues.title_dues'), 'url' => route('dues.index')],
+    ['label' => __('dues.title_transfers')],
 ]"/>
 
 @include('dues._tabs')
 
 {{-- ── Toolbar ─────────────────────────────────────────────────────────────── --}}
 <x-ob-toolbar
-    title="Virements"
+    title="{{ __('dues.title_transfers') }}"
     :total="$items->total()"
     total-label="virement"
     filter-action="{{ route('dues.transfers') }}"
     filter-cols="2fr 1fr 1fr 1fr auto">
 
-    <button class="btn btn-sm btn-light" onclick="window.print()" title="Imprimer">
+    <button class="btn btn-sm btn-light" onclick="window.print()" title="{{ __('common.print') }}">
         <i class="fas fa-print"></i>
     </button>
 
@@ -38,21 +38,21 @@
         <div>
             <input type="date" name="date_from"
                    class="form-control form-control-sm"
-                   placeholder="Du…"
+                   placeholder="{{ __('dues.date_from_placeholder') }}"
                    value="{{ $dateFrom }}"
-                   title="Date de début">
+                   title="{{ __('dues.date_from_title') }}">
         </div>
 
         <div>
             <input type="date" name="date_to"
                    class="form-control form-control-sm"
-                   placeholder="Au…"
+                   placeholder="{{ __('dues.date_to_placeholder') }}"
                    value="{{ $dateTo }}"
-                   title="Date de fin">
+                   title="{{ __('dues.date_to_title') }}">
         </div>
 
         <button type="submit" class="btn btn-sm btn-secondary">
-            <i class="fas fa-filter me-1"></i> Filtrer
+            <i class="fas fa-filter me-1"></i> {{ __('dues.filter') }}
         </button>
     </x-slot:filters>
 

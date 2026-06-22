@@ -2,7 +2,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-clock"></i> Horaires à valider
+            <i class="fas fa-clock"></i> {{ __('dashboard.horaires.title') }}
         </div>
     </div>
     <div class="ob-widget-card-body">
@@ -14,9 +14,9 @@
                     <div class="ob-dash-alert-item-label">
                         {{ strtoupper($row->P_NOM) }} {{ ucfirst(strtolower($row->P_PRENOM)) }}
                     </div>
-                    <div class="ob-dash-alert-item-sub">Semaine {{ $row->SEMAINE }} – {{ $row->ANNEE }}</div>
+                    <div class="ob-dash-alert-item-sub">{{ __('dashboard.horaires.week_label', ['week' => $row->SEMAINE, 'year' => $row->ANNEE]) }}</div>
                 </div>
-                <span class="ob-dash-day-label ob-dash-day-label-orange">À valider</span>
+                <span class="ob-dash-day-label ob-dash-day-label-orange">{{ __('dashboard.horaires.to_validate') }}</span>
             </a>
         @endforeach
     </div>

@@ -2,7 +2,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-bullhorn"></i> Consignes opérationnelles
+            <i class="fas fa-bullhorn"></i> {{ __('dashboard.infos.consignes_title') }}
         </div>
         <a class="ob-widget-card-link" href="{{ route('duty.index') }}">
             <i class="fas fa-external-link-alt"></i>
@@ -29,7 +29,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-newspaper"></i> Actualités
+            <i class="fas fa-newspaper"></i> {{ __('dashboard.infos.actualites_title') }}
         </div>
         <a class="ob-widget-card-link" href="{{ route('message.index') }}">
             <i class="fas fa-external-link-alt"></i>
@@ -56,11 +56,11 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-newspaper"></i> Informations
+            <i class="fas fa-newspaper"></i> {{ __('dashboard.infos.fallback_title') }}
         </div>
     </div>
     <div class="ob-widget-card-body">
-        <p class="ob-widget-empty">Aucune information en cours.</p>
+        <p class="ob-widget-empty">{{ __('dashboard.infos.empty') }}</p>
     </div>
 </div>
 @endif

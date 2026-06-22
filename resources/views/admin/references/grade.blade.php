@@ -1,33 +1,33 @@
 @extends('layout.app')
 
-@section('title', 'Icônes de grades — ' . config('app.name'))
+@section('title', __('admin.references.grade.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Paramétrage', 'url' => route('admin.references')],
-    ['label' => 'Icônes de grades'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.references.title'), 'url' => route('admin.references')],
+    ['label' => __('admin.references.grade.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-medal me-2"></i>Icônes de grades ({{ $grades->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-medal me-2"></i>{{ __('admin.references.grade.list_title', ['count' => $grades->count()]) }}</div>
             <div class="ob-widget-card-actions" style="font-size:var(--font-size-xs);color:var(--text-muted);">
-                PNG/JPG recommandé — 48×48 px minimum
+                {{ __('admin.references.grade.img_hint') }}
             </div>
         </div>
         <div class="table-responsive">
             <table class="table table-sm table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th style="width:60px;">Icône</th>
-                        <th style="width:80px;">Code</th>
-                        <th>Description</th>
-                        <th style="width:120px;">Catégorie</th>
-                        <th style="width:60px;">Niv.</th>
-                        <th style="width:280px;">Changer l'icône</th>
+                        <th style="width:60px;">{{ __('admin.references.grade.col_icon') }}</th>
+                        <th style="width:80px;">{{ __('admin.references.grade.col_code') }}</th>
+                        <th>{{ __('admin.references.grade.col_desc') }}</th>
+                        <th style="width:120px;">{{ __('admin.references.grade.col_category') }}</th>
+                        <th style="width:60px;">{{ __('admin.references.grade.col_level') }}</th>
+                        <th style="width:280px;">{{ __('admin.references.grade.col_change') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,7 +81,7 @@
                                 </form>
                                 @if($hasIcon)
                                     <form method="POST" action="{{ route('admin.references.grade.icon.destroy', $g->G_GRADE) }}"
-                                          onsubmit="return confirm('Supprimer l\'icône de {{ addslashes($g->G_GRADE) }} ?')">
+                                          onsubmit="return confirm('{{ __('admin.references.grade.delete_confirm', ['grade' => addslashes($g->G_GRADE)]) }}')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger">
                                             <i class="fas fa-trash"></i>

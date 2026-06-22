@@ -6,8 +6,7 @@
 <div data-acl-panel>
     <p class="text-muted mb-2" style="font-size:var(--font-size-sm);">
         <i class="fas fa-{{ $type === 'folder' ? 'folder' : 'file' }} me-1 text-secondary"></i>
-        <strong>{{ $name }}</strong> — les dossiers transmettent leurs autorisations à leur contenu ;
-        un <strong>refus</strong> l'emporte toujours.
+        <strong>{{ $name }}</strong> — {{ __('document.acl_desc_partial') }}
     </p>
 
     @if (session('success'))
@@ -20,19 +19,19 @@
     {{-- Current ACEs --}}
     @if ($aces->isEmpty())
         <div class="text-muted mb-3" style="font-size:var(--font-size-sm);">
-            Aucune autorisation propre — la sécurité de section / type s'applique.
+            {{ __('document.acl_empty') }}
         </div>
     @else
         <table class="table table-sm align-middle mb-3" style="font-size:var(--font-size-sm);">
             <thead>
-                <tr><th>Bénéficiaire</th><th>Effet</th><th>Droits</th><th style="width:40px;"></th></tr>
+                <tr><th>{{ __('document.acl_th_beneficiary') }}</th><th>{{ __('document.acl_th_effect') }}</th><th>{{ __('document.acl_th_rights') }}</th><th style="width:40px;"></th></tr>
             </thead>
             <tbody>
                 @foreach ($aces as $ace)
                     @php
                         $label = match ($ace->principal_type) {
-                            'everyone' => 'Tout le monde',
-                            'user' => $peopleNames[$ace->principal_id] ?? ('Personne #'.$ace->principal_id),
+                            'everyone' => __('document.acl_opt_everyone'),
+                            'user' => $peopleNames[$ace->principal_id] ?? __('document.acl_label_person_id', ['id' => $ace->principal_id]),
                             default => $groupNames[$ace->principal_id] ?? ('#'.$ace->principal_id),
                         };
                         $icon = ['user' => 'user', 'group' => 'users', 'role' => 'user-tie', 'everyone' => 'globe'][$ace->principal_type] ?? 'user';
@@ -41,7 +40,7 @@
                         <td><i class="fas fa-{{ $icon }} fa-fw me-1 text-muted"></i>{{ $label }}</td>
                         <td>
                             <span class="ob-badge {{ $ace->effect === 'deny' ? 'ob-badge-bloqued' : 'ob-badge-actif' }}">
-                                {{ $ace->effect === 'deny' ? 'Refus' : 'Autorise' }}
+                                {{ $ace->effect === 'deny' ? __('document.acl_effect_deny') : __('document.acl_effect_allow') }}
                             </span>
                         </td>
                         <td>
@@ -52,10 +51,10 @@
                             @endforeach
                         </td>
                         <td>
-                            <form method="POST" action="{{ route('document.acl.destroy', $ace->id) }}" data-acl-form data-confirm="Retirer cette autorisation ?">
+                            <form method="POST" action="{{ route('document.acl.destroy', $ace->id) }}" data-acl-form data-confirm="{{ __('document.acl_confirm_remove') }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" title="Retirer"><i class="fas fa-trash fa-xs"></i></button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1" title="{{ __('document.acl_btn_remove') }}"><i class="fas fa-trash fa-xs"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -68,17 +67,17 @@
     <form method="POST" action="{{ route('document.acl.store', [$type, $id]) }}" class="row g-2" data-acl-form data-acl-add>
         @csrf
         <div class="col-md-4">
-            <label class="form-label" for="aclPrincipalType">Bénéficiaire</label>
+            <label class="form-label" for="aclPrincipalType">{{ __('document.acl_label_beneficiary') }}</label>
             <select id="aclPrincipalType" name="principal_type" class="form-select form-select-sm" data-acl-principal-type>
-                <option value="user">Utilisateur</option>
-                <option value="group">Groupe</option>
-                <option value="role">Rôle</option>
-                <option value="everyone">Tout le monde</option>
+                <option value="user">{{ __('document.acl_opt_user') }}</option>
+                <option value="group">{{ __('document.acl_opt_group') }}</option>
+                <option value="role">{{ __('document.acl_opt_role') }}</option>
+                <option value="everyone">{{ __('document.acl_opt_everyone') }}</option>
             </select>
         </div>
         <div class="col-md-5">
             <div data-acl-pp="user">
-                <label class="form-label" for="aclUser">Personne</label>
+                <label class="form-label" for="aclUser">{{ __('document.acl_label_person') }}</label>
                 <select id="aclUser" name="user_id" class="form-select form-select-sm">
                     @foreach ($people as $p)
                         <option value="{{ $p->P_ID }}">{{ $p->P_NOM }} {{ $p->P_PRENOM }}</option>
@@ -86,31 +85,31 @@
                 </select>
             </div>
             <div data-acl-pp="group" class="d-none">
-                <label class="form-label" for="aclGroup">Groupe</label>
+                <label class="form-label" for="aclGroup">{{ __('document.acl_label_group') }}</label>
                 <select id="aclGroup" name="group_id" class="form-select form-select-sm">
                     @foreach ($groups as $g)<option value="{{ $g->id }}">{{ $g->name }}</option>@endforeach
                 </select>
             </div>
             <div data-acl-pp="role" class="d-none">
-                <label class="form-label" for="aclRole">Rôle</label>
+                <label class="form-label" for="aclRole">{{ __('document.acl_label_role') }}</label>
                 <select id="aclRole" name="role_id" class="form-select form-select-sm">
                     @foreach ($roles as $r)<option value="{{ $r->id }}">{{ $r->name }}</option>@endforeach
                 </select>
             </div>
             <div data-acl-pp="everyone" class="d-none">
                 <label class="form-label">&nbsp;</label>
-                <p class="form-text mb-0">Toute personne ayant accès à la bibliothèque.</p>
+                <p class="form-text mb-0">{{ __('document.acl_everyone_note_partial') }}</p>
             </div>
         </div>
         <div class="col-md-3">
-            <label class="form-label" for="aclEffect">Effet</label>
+            <label class="form-label" for="aclEffect">{{ __('document.acl_label_effect') }}</label>
             <select id="aclEffect" name="effect" class="form-select form-select-sm">
-                <option value="allow">Autorise</option>
-                <option value="deny">Refuse</option>
+                <option value="allow">{{ __('document.acl_opt_allow') }}</option>
+                <option value="deny">{{ __('document.acl_opt_deny') }}</option>
             </select>
         </div>
         <div class="col-12">
-            <label class="form-label d-block mb-1">Droits</label>
+            <label class="form-label d-block mb-1">{{ __('document.acl_label_rights') }}</label>
             @foreach ($rightLabels as $bit => $rl)
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="rights[]" value="{{ $bit }}" id="aclRight{{ $bit }}">
@@ -119,7 +118,7 @@
             @endforeach
         </div>
         <div class="col-12 text-end">
-            <button type="submit" class="btn btn-sm btn-primary">Ajouter l'autorisation</button>
+            <button type="submit" class="btn btn-sm btn-primary">{{ __('document.acl_btn_add_auth') }}</button>
         </div>
     </form>
 </div>

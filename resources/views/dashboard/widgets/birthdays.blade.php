@@ -1,8 +1,8 @@
-@php $hasBirthdays = collect($birthdays['days'])->contains(fn($d) => !empty($d['rows'])); @endphp
+@php /* i18n-ignore */ $hasBirthdays = collect($birthdays['days'])->contains(fn($d) => !empty($d['rows'])); @endphp
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-birthday-cake"></i> Ma section
+            <i class="fas fa-birthday-cake"></i> {{ __('dashboard.birthdays.title') }}
         </div>
     </div>
     <div class="ob-widget-card-body">
@@ -10,7 +10,7 @@
         {{-- Anniversaires --}}
         @if ($hasBirthdays)
             <p style="font-size:var(--font-size-xs);font-weight:600;color:var(--text-muted-soft);margin-bottom:6px;">
-                <i class="fas fa-birthday-cake me-1"></i> Anniversaires à souhaiter
+                <i class="fas fa-birthday-cake me-1"></i> {{ __('dashboard.birthdays.section_title') }}
             </p>
             @foreach ($birthdays['days'] as $day)
                 @foreach ($day['rows'] as $p)
@@ -27,13 +27,13 @@
                 @endforeach
             @endforeach
         @else
-            <p class="ob-widget-empty">Aucun anniversaire dans les 3 prochains jours.</p>
+            <p class="ob-widget-empty">{{ __('dashboard.birthdays.none') }}</p>
         @endif
 
         {{-- WhatsApp groups --}}
         @if (!empty($sectionLinks['links']))
             <p style="font-size:var(--font-size-xs);font-weight:600;color:var(--text-muted-soft);margin:12px 0 6px;">
-                <i class="fab fa-whatsapp me-1" style="color:var(--color-whatsapp);"></i> Mes groupes WhatsApp
+                <i class="fab fa-whatsapp me-1" style="color:var(--color-whatsapp);"></i> {{ __('dashboard.birthdays.whatsapp_title') }}
             </p>
             @foreach ($sectionLinks['links'] as $link)
                 <div class="ob-dash-about-row" style="padding:5px 0;">
@@ -42,7 +42,7 @@
                     </div>
                     <span class="ob-dash-about-text">{{ $link['label'] }}</span>
                     <a href="{{ $sectionLinks['whatsappBase'] }}/{{ $link['whatsapp'] }}"
-                       target="_blank" rel="noopener" title="Rejoindre le groupe WhatsApp">
+                       target="_blank" rel="noopener" title="{{ __('dashboard.birthdays.whatsapp_join') }}">
                         <i class="fas fa-arrow-right ob-dash-about-arrow"></i>
                     </a>
                 </div>

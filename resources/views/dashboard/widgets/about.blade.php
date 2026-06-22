@@ -1,7 +1,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-info-circle"></i> À propos
+            <i class="fas fa-info-circle"></i> {{ __('dashboard.about.title') }}
         </div>
         <a class="ob-widget-card-link" href="{{ route('about') }}">
             <i class="fas fa-external-link-alt"></i>
@@ -12,7 +12,7 @@
             <div class="ob-dash-about-icon ob-dash-stat-icon-blue">
                 <i class="fas fa-book"></i>
             </div>
-            <span class="ob-dash-about-text">Documentation en ligne</span>
+            <span class="ob-dash-about-text">{{ __('dashboard.about.doc_online') }}</span>
             <i class="fas fa-arrow-right ob-dash-about-arrow"></i>
         </a>
 
@@ -20,7 +20,7 @@
             <div class="ob-dash-about-icon" style="background:var(--color-purple-bg);color:var(--color-purple);">
                 <i class="fas fa-hands-helping"></i>
             </div>
-            <span class="ob-dash-about-text">Communauté eBrigade</span>
+            <span class="ob-dash-about-text">{{ __('dashboard.about.community') }}</span>
             <i class="fas fa-arrow-right ob-dash-about-arrow"></i>
         </a>
 
@@ -29,7 +29,7 @@
             <div class="ob-dash-about-icon ob-dash-stat-icon-green">
                 <i class="fas fa-envelope"></i>
             </div>
-            <span class="ob-dash-about-text">Support – {{ $about['supportEmail'] }}</span>
+            <span class="ob-dash-about-text">{{ __('dashboard.about.support', ['email' => $about['supportEmail']]) }}</span>
             <i class="fas fa-arrow-right ob-dash-about-arrow"></i>
         </a>
         @endif
@@ -40,7 +40,7 @@
                 <i class="fas fa-info"></i>
             </div>
             <span class="ob-dash-about-text">
-                {{ config('app.name') }} &mdash; version <strong>{{ $about['version'] }}</strong>
+                {{ config('app.name') }} &mdash; {{ __('dashboard.about.version') }} <strong>{{ $about['version'] }}</strong>
             </span>
             <i class="fas fa-arrow-right ob-dash-about-arrow"></i>
         </a>

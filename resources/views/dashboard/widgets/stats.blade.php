@@ -7,17 +7,17 @@
                 <i class="fas fa-user"></i>
             </div>
             <div>
-                <div class="ob-dash-stat-tile-title">Mes participations</div>
+                <div class="ob-dash-stat-tile-title">{{ __('dashboard.stats.participations_title') }}</div>
                 <div class="ob-dash-stat-tile-subtitle">{{ $stats['year'] }}</div>
             </div>
         </div>
         <div class="ob-dash-stat-tile-numbers">
             <div class="ob-dash-stat-number-item">
-                <span class="ob-dash-stat-number-label">Total</span>
+                <span class="ob-dash-stat-number-label">{{ __('dashboard.stats.total') }}</span>
                 <span class="ob-dash-stat-number-value">{{ $stats['partiDone'] }}</span>
             </div>
             <div class="ob-dash-stat-number-item">
-                <span class="ob-dash-stat-number-label">À venir</span>
+                <span class="ob-dash-stat-number-label">{{ __('dashboard.stats.upcoming') }}</span>
                 <span class="ob-dash-stat-number-value">{{ $stats['partiIncoming'] }}</span>
             </div>
         </div>
@@ -30,17 +30,17 @@
                 <i class="fas fa-calendar-alt"></i>
             </div>
             <div>
-                <div class="ob-dash-stat-tile-title">Activités</div>
+                <div class="ob-dash-stat-tile-title">{{ __('dashboard.stats.activities_title') }}</div>
                 <div class="ob-dash-stat-tile-subtitle">{{ $stats['sectionName'] }}</div>
             </div>
         </div>
         <div class="ob-dash-stat-tile-numbers">
             <div class="ob-dash-stat-number-item">
-                <span class="ob-dash-stat-number-label">Ce mois</span>
+                <span class="ob-dash-stat-number-label">{{ __('dashboard.stats.this_month') }}</span>
                 <span class="ob-dash-stat-number-value">{{ $stats['actMonth'] }}</span>
             </div>
             <div class="ob-dash-stat-number-item">
-                <span class="ob-dash-stat-number-label">Trimestre</span>
+                <span class="ob-dash-stat-number-label">{{ __('dashboard.stats.quarter') }}</span>
                 <span class="ob-dash-stat-number-value">{{ $stats['actQuarter'] }}</span>
             </div>
         </div>
@@ -53,17 +53,17 @@
                 <i class="fas fa-user-plus"></i>
             </div>
             <div>
-                <div class="ob-dash-stat-tile-title">Nouveaux membres</div>
+                <div class="ob-dash-stat-tile-title">{{ __('dashboard.stats.new_members_title') }}</div>
                 <div class="ob-dash-stat-tile-subtitle">{{ $stats['sectionName'] }}</div>
             </div>
         </div>
         <div class="ob-dash-stat-tile-numbers">
             <div class="ob-dash-stat-number-item">
-                <span class="ob-dash-stat-number-label">Ce mois</span>
+                <span class="ob-dash-stat-number-label">{{ __('dashboard.stats.this_month') }}</span>
                 <span class="ob-dash-stat-number-value">{{ $stats['newMonth'] }}</span>
             </div>
             <div class="ob-dash-stat-number-item">
-                <span class="ob-dash-stat-number-label">Trimestre</span>
+                <span class="ob-dash-stat-number-label">{{ __('dashboard.stats.quarter') }}</span>
                 <span class="ob-dash-stat-number-value">{{ $stats['newQuarter'] }}</span>
             </div>
         </div>
@@ -76,13 +76,13 @@
                 <i class="fas fa-bell"></i>
             </div>
             <div>
-                <div class="ob-dash-stat-tile-title">Tâches</div>
-                <div class="ob-dash-stat-tile-subtitle">Mes alarmes</div>
+                <div class="ob-dash-stat-tile-title">{{ __('dashboard.stats.tasks_title') }}</div>
+                <div class="ob-dash-stat-tile-subtitle">{{ __('dashboard.stats.my_alarms') }}</div>
             </div>
         </div>
         <div class="ob-dash-stat-tile-numbers">
             <div class="ob-dash-stat-number-item">
-                <span class="ob-dash-stat-number-label">Total</span>
+                <span class="ob-dash-stat-number-label">{{ __('dashboard.stats.total') }}</span>
                 <span class="ob-dash-stat-number-value {{ $stats['alerts'] > 0 ? 'text-danger' : '' }}">
                     {{ $stats['alerts'] }}
                 </span>

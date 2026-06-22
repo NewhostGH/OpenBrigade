@@ -5,9 +5,9 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Personnel', 'url' => route('personnel.index')],
+    ['label' => __('personnel.title'), 'url' => route('personnel.index')],
     ['label' => strtoupper($personnel->P_NOM).' '.ucfirst(mb_strtolower($personnel->P_PRENOM)), 'url' => route('personnel.show', $personnel)],
-    ['label' => 'Dotation habillement'],
+    ['label' => __('personnel.tenues_title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -19,30 +19,30 @@
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
                     <i class="fas fa-box me-1"></i>
-                    Habillement en dotation — {{ strtoupper($personnel->P_NOM) }} {{ ucfirst(mb_strtolower($personnel->P_PRENOM)) }}
+                    {{ __('personnel.tenues_header', ['name' => strtoupper($personnel->P_NOM) . ' ' . ucfirst(mb_strtolower($personnel->P_PRENOM))]) }}
                 </div>
                 <div class="ob-widget-card-actions">
-                    <span class="badge bg-secondary me-2">{{ $assigned->count() }} article(s)</span>
+                    <span class="badge bg-secondary me-2">{{ __('personnel.tenues_articles_badge', ['count' => $assigned->count()]) }}</span>
                     <a href="{{ route('personnel.show', $personnel) }}" class="btn btn-sm btn-light">
-                        <i class="fas fa-arrow-left me-1"></i> Retour
+                        <i class="fas fa-arrow-left me-1"></i> {{ __('common.back') }}
                     </a>
                 </div>
             </div>
 
             @if($assigned->isEmpty())
                 <div class="ob-widget-card-body">
-                    <p class="ob-widget-empty mb-0">Aucune dotation habillement enregistrée.</p>
+                    <p class="ob-widget-empty mb-0">{{ __('personnel.empty_dotation') }}</p>
                 </div>
             @else
                 <div class="ob-widget-card-body p-0">
                     <table class="ob-table ob-table-sm w-100 mb-0">
                         <thead>
                             <tr>
-                                <th>Type</th>
-                                <th>Modèle</th>
-                                <th>Année</th>
-                                <th>Taille</th>
-                                <th class="text-end" style="width:70px">Nb</th>
+                                <th>{{ __('personnel.col_type_hab') }}</th>
+                                <th>{{ __('personnel.col_modele') }}</th>
+                                <th>{{ __('personnel.col_annee') }}</th>
+                                <th>{{ __('personnel.col_taille') }}</th>
+                                <th class="text-end" style="width:70px">{{ __('personnel.col_nb') }}</th>
                                 @if($canFullUpdate)<th style="width:40px"></th>@endif
                             </tr>
                         </thead>
@@ -78,7 +78,7 @@
                                     @elseif($canFullUpdate || $canSizeOnly)
                                         <select name="items[{{ $item->MA_ID }}][tv_id]"
                                                 class="form-select form-select-sm" style="min-width:100px">
-                                            <option value="0">— taille —</option>
+                                            <option value="0">{{ __('personnel.tenue_taille_placeholder') }}</option>
                                             @foreach($sizes as $sz)
                                                 <option value="{{ $sz->TV_ID }}" @selected($sz->TV_ID == $item->TV_ID)>
                                                     {{ $sz->TV_NAME }}
@@ -94,14 +94,14 @@
                                         <input type="number" name="items[{{ $item->MA_ID }}][nb]"
                                                value="{{ $item->MA_NB }}"
                                                class="form-control form-control-sm text-end" min="0" max="99"
-                                               style="width:60px" title="0 = supprimer">
+                                               style="width:60px" title="{{ __('personnel.tenue_nb_zero_title') }}">
                                     @else
                                         {{ $item->MA_NB }}
                                     @endif
                                 </td>
                                 @if($canFullUpdate)
                                 <td class="text-center text-muted" style="font-size:var(--font-size-xs)">
-                                    <span title="Mettre Nb à 0 pour supprimer"><i class="fas fa-info-circle"></i></span>
+                                    <span title="{{ __('personnel.tenue_nb_zero_hint') }}"><i class="fas fa-info-circle"></i></span>
                                 </td>
                                 @endif
                             </tr>
@@ -114,7 +114,7 @@
             @if($canFullUpdate || ($canSizeOnly && $assigned->isNotEmpty()))
                 <div class="ob-widget-card-footer text-end">
                     <button type="submit" class="btn btn-sm btn-success">
-                        <i class="fas fa-save me-1"></i> Enregistrer
+                        <i class="fas fa-save me-1"></i> {{ __('common.save') }}
                     </button>
                 </div>
             @endif
@@ -125,18 +125,18 @@
         <div class="ob-widget-card mb-3">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-plus me-1"></i> Ajouter habillement
+                    <i class="fas fa-plus me-1"></i> {{ __('personnel.tenues_ajouter_title') }}
                 </div>
             </div>
             <div class="ob-widget-card-body p-0">
                 <table class="ob-table ob-table-sm w-100 mb-0">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Modèle</th>
-                            <th>Année</th>
-                            <th>Taille</th>
-                            <th class="text-end" style="width:70px">Nb</th>
+                            <th>{{ __('personnel.col_type_hab') }}</th>
+                            <th>{{ __('personnel.col_modele') }}</th>
+                            <th>{{ __('personnel.col_annee') }}</th>
+                            <th>{{ __('personnel.col_taille') }}</th>
+                            <th class="text-end" style="width:70px">{{ __('personnel.col_nb') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -160,7 +160,7 @@
                                 @else
                                     <select name="new[{{ $type->TM_ID }}][tv_id]"
                                             class="form-select form-select-sm" style="min-width:100px">
-                                        <option value="0">— taille —</option>
+                                        <option value="0">{{ __('personnel.tenue_taille_placeholder') }}</option>
                                         @foreach($sizes as $sz)
                                             <option value="{{ $sz->TV_ID }}">{{ $sz->TV_NAME }}</option>
                                         @endforeach
@@ -178,9 +178,9 @@
                 </table>
             </div>
             <div class="ob-widget-card-footer text-end">
-                <small class="text-muted me-3">Nb = 0 : non ajouté</small>
+                <small class="text-muted me-3">{{ __('personnel.tenues_nb_zero_note') }}</small>
                 <button type="submit" class="btn btn-sm btn-success">
-                    <i class="fas fa-save me-1"></i> Enregistrer
+                    <i class="fas fa-save me-1"></i> {{ __('common.save') }}
                 </button>
             </div>
         </div>

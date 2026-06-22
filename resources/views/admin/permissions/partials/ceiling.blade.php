@@ -7,7 +7,7 @@
     <div class="col-12 col-md-4 col-lg-3">
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
-                <div class="ob-widget-card-title"><i class="fas fa-sitemap me-2"></i>Sections</div>
+                <div class="ob-widget-card-title"><i class="fas fa-sitemap me-2"></i>{{ __('admin.permissions.ceiling_sections') }}</div>
             </div>
             <div class="p-2">
                 @foreach ($sections as $s)
@@ -26,32 +26,30 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-layer-group me-2"></i>Plafond — {{ $selected->S_DESCRIPTION ?? '—' }}
+                    <i class="fas fa-layer-group me-2"></i>{{ __('admin.permissions.ceiling_title', ['section' => $selected->S_DESCRIPTION ?? '—']) }}
                 </div>
             </div>
             <div class="p-3">
                 <p class="text-muted mb-3" style="font-size:var(--font-size-xs);">
-                    Décochez une fonctionnalité pour la <strong>refuser</strong> à cette section et à toutes ses
-                    sections filles. Une fonctionnalité <i class="fas fa-lock"></i> est déjà refusée par une section
-                    parente : elle ne peut pas être réautorisée ici.
+                    {!! __('admin.permissions.ceiling_hint') !!}
                 </p>
 
                 @if (! $selected)
-                    <div class="text-muted">Sélectionnez une section.</div>
+                    <div class="text-muted">{{ __('admin.permissions.ceiling_select') }}</div>
                 @else
                     <div class="ob-hab-matrix-scroll">
                         <table class="ob-hab-table">
                             <thead>
                                 <tr>
-                                    <th class="ob-hab-feat-head">Fonctionnalité</th>
-                                    <th class="ob-hab-colhead" style="min-width:90px;writing-mode:horizontal-tb;transform:none;">Autorisé</th>
+                                    <th class="ob-hab-feat-head">{{ __('admin.permissions.feature_col') }}</th>
+                                    <th class="ob-hab-colhead" style="min-width:90px;writing-mode:horizontal-tb;transform:none;">{{ __('admin.permissions.ceiling_allowed_col') }}</th>
                                 </tr>
                             </thead>
                             @foreach ($featuresByCategory as $category => $features)
                                 <tbody data-hab-cat>
                                     <tr class="ob-hab-cat-row">
                                         <td colspan="2">
-                                            <i class="fas fa-chevron-down ob-hab-chevron me-1"></i>{{ $category ?: 'Général' }}
+                                            <i class="fas fa-chevron-down ob-hab-chevron me-1"></i>{{ $category ?: __('admin.general') }}
                                             <span class="text-muted ms-1" style="font-weight:400;text-transform:none;">({{ $features->count() }})</span>
                                         </td>
                                     </tr>
@@ -65,12 +63,12 @@
                                             <td class="ob-hab-feat-cell" title="{{ $f->F_DESCRIPTION }}">
                                                 {{ $f->F_LIBELLE }}
                                                 <span class="text-muted ms-1" style="font-size:10px;">#{{ $f->F_ID }}</span>
-                                                @if ($f->F_FLAG)<span class="ob-badge ob-badge-bloqued ms-1" style="font-size:9px;">sensible</span>@endif
-                                                @if ($isObsolete)<span class="ob-badge ob-badge-archive ms-1" style="font-size:9px;" title="Fonctionnalité qui ne sera pas portée">obsolète</span>@endif
+                                                @if ($f->F_FLAG)<span class="ob-badge ob-badge-bloqued ms-1" style="font-size:9px;">{{ __('admin.permissions.badge_sensitive') }}</span>@endif
+                                                @if ($isObsolete)<span class="ob-badge ob-badge-archive ms-1" style="font-size:9px;" title="{{ __('admin.permissions.obsolete_title') }}">{{ __('admin.permissions.badge_obsolete') }}</span>@endif
                                             </td>
                                             <td class="ob-hab-cell">
                                                 @if ($locked)
-                                                    <i class="fas fa-lock text-muted" title="Refusé par une section parente"></i>
+                                                    <i class="fas fa-lock text-muted" title="{{ __('admin.permissions.ceiling_locked_title') }}"></i>
                                                 @else
                                                     <form method="POST" action="{{ route('admin.permissions.ceiling.toggle') }}" style="margin:0;">
                                                         @csrf

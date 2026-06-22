@@ -5,9 +5,9 @@
 @section('content')
 
     <x-ob-breadcrumb :items="[
-            ['label' => 'Statistiques'],
-            ['label' => 'Bilan annuel', 'url' => route('statistics.annual-report')],
-            ['label' => 'Formations'],
+            ['label' => __('statistics.title')],
+            ['label' => __('statistics.annual_report_title'), 'url' => route('statistics.annual-report')],
+            ['label' => __('statistics.breadcrumb_formations')],
         ]" />
 
     @include('statistics.annual-report._tabs', ['activeTab' => 'formations'])
@@ -15,32 +15,32 @@
     <div class="mx-3 mt-3 ob-bilan-content">
 
         <p class="text-muted mb-4">
-            Liste de toutes les formations prodiguées durant l'année {{ $year }}.
+            {{ __('statistics.training_intro', ['year' => $year]) }}
         </p>
 
         {{-- ── KPI cards ──────────────────────────────────────────────────────── --}}
         <div class="ob-kpi-grid mb-4">
             <div class="ob-kpi-card ob-kpi-card--primary">
-                <span class="ob-kpi-card__label">Formations</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_formations_label') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalFormations }}</span>
-                <span class="ob-kpi-card__sub">sessions en {{ $year }}</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_formations_sub', ['year' => $year]) }}</span>
             </div>
             <div class="ob-kpi-card ob-kpi-card--success">
-                <span class="ob-kpi-card__label">Stagiaires</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_trainees_label') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalTrained }}</span>
-                <span class="ob-kpi-card__sub">participations cumulées</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_trainees_sub') }}</span>
             </div>
             <div class="ob-kpi-card ob-kpi-card--accent">
-                <span class="ob-kpi-card__label">Heures</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_hours_label') }}</span>
                 <span class="ob-kpi-card__value">{{ number_format($totalHours, 0, ',', ' ') }}</span>
-                <span class="ob-kpi-card__sub">de formation dispensées</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_hours_training_sub') }}</span>
             </div>
         </div>
 
         {{-- ── Charts ─────────────────────────────────────────────────────────── --}}
         @if($totalFormations > 0)
             <div class="ob-bilan-header-title">
-                <i class="fas fa-chart-bar me-2"></i>Répartition
+                <i class="fas fa-chart-bar me-2"></i>{{ __('statistics.section_repartition') }}
             </div>
 
             <div class="row g-3 mb-4">
@@ -48,7 +48,7 @@
                     <div class="ob-widget-card">
                         <div class="ob-widget-card-header">
                             <div class="ob-widget-card-title">
-                                <i class="fas fa-calendar-check me-1"></i> Formations par mois
+                                <i class="fas fa-calendar-check me-1"></i> {{ __('statistics.chart_form_month') }}
                             </div>
                         </div>
                         <div class="ob-widget-card-body">
@@ -62,7 +62,7 @@
                         <div class="ob-widget-card">
                             <div class="ob-widget-card-header">
                                 <div class="ob-widget-card-title">
-                                    <i class="fas fa-chart-pie me-1"></i> Répartition par type
+                                    <i class="fas fa-chart-pie me-1"></i> {{ __('statistics.chart_form_type') }}
                                 </div>
                             </div>
                             <div class="ob-widget-card-body">
@@ -76,7 +76,7 @@
 
         {{-- ── Formations list ─────────────────────────────────────────────────── --}}
         <div class="ob-bilan-header-title">
-            <i class="fas fa-list me-2"></i>Détail des sessions
+            <i class="fas fa-list me-2"></i>{{ __('statistics.section_detail') }}
         </div>
 
         <div class="row g-3 mb-4">
@@ -84,17 +84,17 @@
                 <div class="ob-widget-card">
                     <div class="ob-widget-card-body p-0">
                         @if($formationsList->isEmpty())
-                            <p class="ob-widget-empty p-3">Aucune formation enregistrée pour {{ $year }}.</p>
+                            <p class="ob-widget-empty p-3">{{ __('statistics.training_empty', ['year' => $year]) }}</p>
                         @else
                             <table class="table table-sm ob-table mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Intitulé</th>
-                                        <th>Type</th>
-                                        <th>Lieu</th>
-                                        <th class="text-end">Durée (h)</th>
-                                        <th class="text-end">Stagiaires</th>
+                                        <th>{{ __('statistics.th_date') }}</th>
+                                        <th>{{ __('statistics.th_intitule') }}</th>
+                                        <th>{{ __('statistics.th_type') }}</th>
+                                        <th>{{ __('statistics.th_lieu') }}</th>
+                                        <th class="text-end">{{ __('statistics.th_duree') }}</th>
+                                        <th class="text-end">{{ __('statistics.th_stagiaires') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -111,7 +111,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr class="table-light fw-semibold">
-                                        <td colspan="4">Total</td>
+                                        <td colspan="4">{{ __('statistics.tfoot_total') }}</td>
                                         <td class="text-end">{{ number_format($totalHours, 0, ',', ' ') }}</td>
                                         <td class="text-end">{{ $totalTrained }}</td>
                                     </tr>

@@ -9,7 +9,7 @@
 <div class="ob-doc-tree-node">
     <div class="ob-doc-folder {{ $isActive ? 'active' : '' }}" style="padding-left:{{ 0.4 + $depth * 0.85 }}rem;">
         @if ($hasChildren)
-            <button type="button" class="ob-doc-tree-toggle {{ $isOpen ? 'open' : '' }}" data-tree-toggle aria-label="Déplier / replier">
+            <button type="button" class="ob-doc-tree-toggle {{ $isOpen ? 'open' : '' }}" data-tree-toggle aria-label="{{ __('document.folder_toggle_aria') }}">
                 <i class="fas fa-chevron-right"></i>
             </button>
         @else
@@ -22,10 +22,10 @@
 
         @if ($canManage)
             <span class="ob-doc-folder-actions">
-                <a href="{{ route('document.acl', ['folder', $f->DF_ID]) }}?window=1" class="btn btn-link btn-sm p-0 text-secondary" title="Partager" data-acl-window>
+                <a href="{{ route('document.acl', ['folder', $f->DF_ID]) }}?window=1" class="btn btn-link btn-sm p-0 text-secondary" title="{{ __('document.folder_share_title') }}" data-acl-window>
                     <i class="fas fa-user-lock fa-xs"></i>
                 </a>
-                <button type="button" class="btn btn-link btn-sm p-0 text-secondary" title="Renommer"
+                <button type="button" class="btn btn-link btn-sm p-0 text-secondary" title="{{ __('document.folder_rename_title') }}"
                         data-folder-edit data-id="{{ $f->DF_ID }}" data-name="{{ $f->DF_NAME }}">
                     <i class="fas fa-pen fa-xs"></i>
                 </button>
@@ -33,7 +33,7 @@
                       class="d-inline" data-folder-delete>
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-link btn-sm p-0 text-danger" title="Supprimer">
+                    <button type="submit" class="btn btn-link btn-sm p-0 text-danger" title="{{ __('document.folder_delete_title') }}">
                         <i class="fas fa-trash fa-xs"></i>
                     </button>
                 </form>

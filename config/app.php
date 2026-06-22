@@ -52,6 +52,11 @@ return [
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'fr'),
     'faker_locale' => env('APP_FAKER_LOCALE', 'fr_FR'),
 
+    // Locales for which a lang/<code> directory exists. Add a code here (and the
+    // matching lang directory) to make a second locale a drop-in. The SetLocale
+    // middleware only honours a session locale listed here.
+    'supported_locales' => ['fr'],
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

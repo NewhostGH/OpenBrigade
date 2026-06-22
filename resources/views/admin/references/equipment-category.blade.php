@@ -1,13 +1,13 @@
 @extends('layout.app')
 
-@section('title', 'Catégories de matériel — ' . config('app.name'))
+@section('title', __('admin.references.equipment_category.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Paramétrage', 'url' => route('admin.references')],
-    ['label' => 'Catégories de matériel'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.references.title'), 'url' => route('admin.references')],
+    ['label' => __('admin.references.equipment_category.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -15,7 +15,7 @@
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>Nouvelle catégorie</div>
+            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>{{ __('admin.references.equipment_category.new_title') }}</div>
         </div>
         <div class="p-3">
             <form method="POST" action="{{ route('admin.references.equipment-category.store') }}">
@@ -29,32 +29,31 @@
                 @endif
                 <div class="row g-2 align-items-end">
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Code <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_code') }} <span class="text-danger">*</span></label>
                         <input type="text" name="TM_USAGE" value="{{ old('TM_USAGE') }}"
                                class="form-control form-control-sm text-uppercase" style="width:130px;"
-                               maxlength="15" placeholder="EX: DIVERS" required
-                               pattern="[A-Za-z0-9_]+" title="Lettres majuscules, chiffres et underscore uniquement">
+                               maxlength="15" placeholder="{{ __('admin.references.equipment_category.ph_code') }}" required
+                               pattern="[A-Za-z0-9_]+" title="{{ __('admin.references.code_pattern_title') }}">
                     </div>
                     <div class="col">
-                        <label class="form-label form-label-sm">Description <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_description') }} <span class="text-danger">*</span></label>
                         <input type="text" name="CM_DESCRIPTION" value="{{ old('CM_DESCRIPTION') }}"
                                class="form-control form-control-sm" maxlength="60" required>
                     </div>
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Icône FA</label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_icon_fa') }}</label>
                         <input type="text" name="PICTURE" value="{{ old('PICTURE', 'cog') }}"
                                class="form-control form-control-sm" style="width:130px;" maxlength="60"
                                placeholder="cog">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus me-1"></i>Ajouter
+                            <i class="fas fa-plus me-1"></i>{{ __('common.add') }}
                         </button>
                     </div>
                 </div>
                 <div class="mt-2" style="font-size:var(--font-size-xs);color:var(--text-muted);">
-                    Icône : nom FontAwesome (ex: <code>cog</code>, <code>fire</code>, <code>medkit</code>).
-                    <a href="https://fontawesome.com/icons?d=gallery&m=free" target="_blank" rel="noreferrer">Parcourir les icônes</a>
+                    {!! __('admin.references.equipment_category.icon_hint') !!}
                 </div>
             </form>
         </div>
@@ -63,15 +62,15 @@
     {{-- List --}}
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-layer-group me-2"></i>Catégories ({{ $items->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-layer-group me-2"></i>{{ __('admin.references.equipment_category.list_title', ['count' => $items->count()]) }}</div>
         </div>
         <div class="table-responsive">
             <table class="table table-sm table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th style="width:130px;">Code</th>
-                        <th>Description</th>
-                        <th style="width:100px;">Icône</th>
+                        <th style="width:130px;">{{ __('admin.references.col_code') }}</th>
+                        <th>{{ __('admin.references.col_description') }}</th>
+                        <th style="width:100px;">{{ __('admin.references.col_icon') }}</th>
                         <th style="width:60px;"></th>
                     </tr>
                 </thead>
@@ -104,7 +103,7 @@
                         </td>
                         <td class="align-middle text-end">
                             <form method="POST" action="{{ route('admin.references.equipment-category.destroy', $item->TM_USAGE) }}"
-                                  onsubmit="return confirm('Supprimer la catégorie {{ addslashes($item->CM_DESCRIPTION) }} ?')">
+                                  onsubmit="return confirm('{{ __('admin.references.equipment_category.delete_confirm', ['description' => addslashes($item->CM_DESCRIPTION)]) }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <i class="fas fa-trash"></i>
@@ -113,7 +112,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="text-center text-muted py-4">Aucune catégorie de matériel.</td></tr>
+                    <tr><td colspan="4" class="text-center text-muted py-4">{{ __('admin.references.equipment_category.empty') }}</td></tr>
                 @endforelse
                 </tbody>
             </table>

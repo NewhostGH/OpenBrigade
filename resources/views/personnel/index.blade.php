@@ -5,12 +5,12 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Personnel'],
+    ['label' => __('personnel.title')],
 ]"/>
 
 {{-- ── Toolbar ─────────────────────────────────────────────────────────────── --}}
 <x-ob-toolbar
-    title="Personnel"
+    title="{{ __('personnel.title') }}"
     :total="$items->total()"
     filter-cols="2fr 1.4fr 1fr 2fr auto"
     filter-action="{{ route('personnel.index') }}"
@@ -22,14 +22,14 @@
     :show-card-toggle="true">
 
     {{-- Header actions --}}
-    <button class="btn btn-sm btn-light" onclick="window.print()" title="Imprimer">
+    <button class="btn btn-sm btn-light" onclick="window.print()" title="{{ __('common.print') }}">
         <i class="fas fa-print"></i>
     </button>
     <a class="btn btn-sm btn-success"
        href="{{ route('personnel.create') }}"
-       title="Ajouter du personnel">
+       title="{{ __('personnel.add_title') }}">
         <i class="fa fa-user-plus"></i>
-        <span class="d-none d-sm-inline ms-1">Ajouter</span>
+        <span class="d-none d-sm-inline ms-1">{{ __('common.add') }}</span>
     </a>
 
     {{-- Filters (rendered inside the form by ob-toolbar) --}}
@@ -38,31 +38,31 @@
         <input type="hidden" name="perPage"     value="{{ $perPage }}">
         <input type="hidden" name="subsections" value="{{ $subsections ? 1 : 0 }}">
 
-        <x-ob-section-select :selected="$sectionId" all-label="Toutes sections" :auto-submit="true" />
+        <x-ob-section-select :selected="$sectionId" all-label="{{ __('personnel.all_sections_option') }}" :auto-submit="true" />
 
         <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
-            <option value="ALL"  {{ $category === 'ALL'  ? 'selected' : '' }}>Tous</option>
-            <option value="INT"  {{ $category === 'INT'  ? 'selected' : '' }}>Sauf externes</option>
-            <option value="BEN"  {{ $category === 'BEN'  ? 'selected' : '' }}>Bénévoles</option>
-            <option value="EXT"  {{ $category === 'EXT'  ? 'selected' : '' }}>Externes</option>
-            <option value="PRES" {{ $category === 'PRES' ? 'selected' : '' }}>Prestataires</option>
+            <option value="ALL"  {{ $category === 'ALL'  ? 'selected' : '' }}>{{ __('personnel.cat_all') }}</option>
+            <option value="INT"  {{ $category === 'INT'  ? 'selected' : '' }}>{{ __('personnel.cat_int') }}</option>
+            <option value="BEN"  {{ $category === 'BEN'  ? 'selected' : '' }}>{{ __('personnel.cat_ben') }}</option>
+            <option value="EXT"  {{ $category === 'EXT'  ? 'selected' : '' }}>{{ __('personnel.cat_ext') }}</option>
+            <option value="PRES" {{ $category === 'PRES' ? 'selected' : '' }}>{{ __('personnel.cat_pres') }}</option>
         </select>
 
         <select name="position" class="form-select form-select-sm" onchange="this.form.submit()">
-            <option value="all"     {{ $position === 'all'     ? 'selected' : '' }}>Tous</option>
-            <option value="actif"   {{ $position === 'actif'   ? 'selected' : '' }}>Actif</option>
-            <option value="archive" {{ $position === 'archive' ? 'selected' : '' }}>Archivé</option>
-            <option value="bloqued" {{ $position === 'bloqued' ? 'selected' : '' }}>Bloqué</option>
+            <option value="all"     {{ $position === 'all'     ? 'selected' : '' }}>{{ __('personnel.pos_all') }}</option>
+            <option value="actif"   {{ $position === 'actif'   ? 'selected' : '' }}>{{ __('personnel.pos_actif') }}</option>
+            <option value="archive" {{ $position === 'archive' ? 'selected' : '' }}>{{ __('personnel.pos_archive') }}</option>
+            <option value="bloqued" {{ $position === 'bloqued' ? 'selected' : '' }}>{{ __('personnel.pos_bloqued') }}</option>
         </select>
 
         <input type="search" name="q"
                class="form-control form-control-sm"
-               placeholder="Rechercher…"
+               placeholder="{{ __('common.search_placeholder') }}"
                value="{{ $search }}"
                data-ob-search>
 
         <button type="submit" class="btn btn-sm btn-secondary">
-            <i class="fas fa-filter me-1"></i> Filtrer
+            <i class="fas fa-filter me-1"></i> {{ __('personnel.filter_btn') }}
         </button>
     </x-slot:filters>
 
@@ -71,7 +71,7 @@
         @feature('multi_site')
         @if ($sectionId > 0)
             <div class="ob-toggle-switch">
-                <label for="subsToggle">Sous-sections</label>
+                <label for="subsToggle">{{ __('personnel.subsections_label') }}</label>
                 <label class="ob-switch">
                     <input type="checkbox" id="subsToggle" {{ $subsections ? 'checked' : '' }}
                            onchange="updateParam('subsections', this.checked ? 1 : 0)">
@@ -86,7 +86,7 @@
                 onchange="updateParam('perPage', this.value)">
             @foreach ([12, 24, 48, 100, 500] as $ps)
                 <option value="{{ $ps }}" {{ $perPage == $ps ? 'selected' : '' }}>
-                    {{ $ps }} / page
+                    {{ $ps }} {{ __('personnel.per_page_suffix') }}
                 </option>
             @endforeach
         </select>
@@ -111,7 +111,7 @@
         :current-order="$order"
         row-url-pattern="/personnel/{P_ID}"
         :row-actions="[
-            ['url' => '/personnel/{P_ID}/edit', 'icon' => 'fas fa-edit', 'title' => 'Modifier'],
+            ['url' => '/personnel/{P_ID}/edit', 'icon' => 'fas fa-edit', 'title' => __('personnel.row_edit_title')],
         ]"
         :show-select="true"
         select-id-field="P_ID"
@@ -122,24 +122,24 @@
     {{-- Bulk action buttons --}}
     <x-slot:actions>
         <button type="button" class="btn btn-sm btn-light"
-                onclick="personnelAction('mail')" title="Envoyer un message">
-            <i class="fas fa-envelope me-1"></i> Envoyer
+                onclick="personnelAction('mail')" title="{{ __('personnel.bulk_send_title') }}">
+            <i class="fas fa-envelope me-1"></i> {{ __('personnel.bulk_send_label') }}
         </button>
         <button type="button" class="btn btn-sm btn-light"
-                onclick="personnelAction('badge')" title="Badges PDF">
-            <i class="fas fa-id-badge me-1"></i> Badges
+                onclick="personnelAction('badge')" title="{{ __('personnel.bulk_badge_title') }}">
+            <i class="fas fa-id-badge me-1"></i> {{ __('personnel.bulk_badge_label') }}
         </button>
         <button type="button" class="btn btn-sm btn-light"
-                onclick="personnelMailto()" title="Mailto">
-            <i class="fas fa-at me-1"></i> Mail
+                onclick="personnelMailto()" title="{{ __('personnel.bulk_mailto_title') }}">
+            <i class="fas fa-at me-1"></i> {{ __('personnel.bulk_mailto_label') }}
         </button>
         <button type="button" class="btn btn-sm btn-light"
-                onclick="personnelAction('emails')" title="Télécharger liste emails (.txt)">
-            <i class="fas fa-envelope-open-text me-1"></i> Emails.txt
+                onclick="personnelAction('emails')" title="{{ __('personnel.bulk_emails_title') }}">
+            <i class="fas fa-envelope-open-text me-1"></i> {{ __('personnel.bulk_emails_label') }}
         </button>
         <button type="button" class="btn btn-sm btn-light"
-                onclick="personnelAction('contacts')" title="Télécharger carnet d'adresses (.csv)">
-            <i class="fas fa-address-book me-1"></i> Contacts.csv
+                onclick="personnelAction('contacts')" title="{{ __('personnel.bulk_contacts_title') }}">
+            <i class="fas fa-address-book me-1"></i> {{ __('personnel.bulk_contacts_label') }}
         </button>
     </x-slot:actions>
 

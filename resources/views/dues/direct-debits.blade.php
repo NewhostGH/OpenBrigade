@@ -5,28 +5,28 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Cotisations', 'url' => route('dues.index')],
-    ['label' => 'Prélèvements'],
+    ['label' => __('dues.title_dues'), 'url' => route('dues.index')],
+    ['label' => __('dues.title_direct_debits')],
 ]"/>
 
 @include('dues._tabs')
 
 {{-- ── Toolbar ─────────────────────────────────────────────────────────────── --}}
 <x-ob-toolbar
-    title="Prélèvements"
+    title="{{ __('dues.title_direct_debits') }}"
     :total="$pending->count() + $paid->count()"
-    total-label="membre"
+    total-label="{{ __('dues.total_label_member') }}"
     filter-action="{{ route('dues.direct-debits') }}"
     filter-cols="2fr 1.2fr 1.2fr auto">
 
-    <button class="btn btn-sm btn-light" onclick="window.print()" title="Imprimer">
+    <button class="btn btn-sm btn-light" onclick="window.print()" title="{{ __('common.print') }}">
         <i class="fas fa-print"></i>
     </button>
 
     <x-slot:filters>
         @feature('multi_site')
         <div>
-            <x-ob-section-select :selected="$sectionId" all-label="Toutes sections" :auto-submit="true" />
+            <x-ob-section-select :selected="$sectionId" all-label="{{ __('dues.all_sections') }}" :auto-submit="true" />
         </div>
         @endfeature
 
@@ -49,7 +49,7 @@
         </div>
 
         <button type="submit" class="btn btn-sm btn-secondary">
-            <i class="fas fa-filter me-1"></i> Filtrer
+            <i class="fas fa-filter me-1"></i> {{ __('dues.filter') }}
         </button>
     </x-slot:filters>
 
@@ -57,7 +57,7 @@
         @feature('multi_site')
         @if ($sectionId > 0)
             <div class="ob-toggle-switch">
-                <label for="subsToggle">Sous-sections</label>
+                <label for="subsToggle">{{ __('dues.subsections') }}</label>
                 <label class="ob-switch">
                     <input type="checkbox" id="subsToggle" {{ $subsections ? 'checked' : '' }}
                            onchange="updateParam('subsections', this.checked ? 1 : 0)">
@@ -69,8 +69,7 @@
         @endfeature
 
         <span class="text-muted small">
-            Mode de paiement&nbsp;: <strong>Prélèvement (TP_ID = 1)</strong>
-            &mdash; Actifs uniquement
+            {!! __('dues.payment_mode_note') !!}
         </span>
     </x-slot:secondary>
 </x-ob-toolbar>
@@ -89,7 +88,7 @@
 
         @if ($pending->isEmpty() && $paid->isEmpty())
             <p class="ob-table-empty mb-0">
-                Aucun membre avec prélèvement automatique pour la période sélectionnée.
+                {{ __('dues.empty_direct_debits') }}
             </p>
         @else
 
@@ -98,21 +97,21 @@
                 <div class="col-sm-4">
                     <div class="border rounded p-3 text-center bg-light">
                         <div class="fs-2 fw-bold text-warning">{{ $pending->count() }}</div>
-                        <div class="text-muted small">à enregistrer</div>
+                        <div class="text-muted small">{{ __('dues.stat_to_record') }}</div>
                     </div>
                 </div>
                 {{-- Stat: paid --}}
                 <div class="col-sm-4">
                     <div class="border rounded p-3 text-center bg-light">
                         <div class="fs-2 fw-bold text-success">{{ $paid->count() }}</div>
-                        <div class="text-muted small">déjà enregistrés</div>
+                        <div class="text-muted small">{{ __('dues.stat_already') }}</div>
                     </div>
                 </div>
                 {{-- Stat: total pending amount --}}
                 <div class="col-sm-4">
                     <div class="border rounded p-3 text-center bg-light">
                         <div class="fs-2 fw-bold">{{ number_format($totalPending, 2, ',', ' ') }} €</div>
-                        <div class="text-muted small">montant estimé (réguls)</div>
+                        <div class="text-muted small">{{ __('dues.stat_estimated') }}</div>
                     </div>
                 </div>
             </div>
@@ -120,7 +119,7 @@
             @if ($pending->count() > 0)
                 {{-- Batch save form --}}
                 <form method="POST" action="{{ route('dues.direct-debits.save') }}"
-                      onsubmit="return confirm('Enregistrer {{ $pending->count() }} prélèvement(s) ?');">
+                      onsubmit="return confirm('{{ addslashes(__('dues.confirm_save_debits', ['count' => $pending->count()])) }}');">
                     @csrf
                     <input type="hidden" name="year"    value="{{ $year }}">
                     <input type="hidden" name="periode" value="{{ $periodeCode }}">
@@ -138,7 +137,7 @@
 
                     <div class="d-flex align-items-center gap-3 flex-wrap">
                         <label class="fw-semibold mb-0" for="date_prelev">
-                            Date du prélèvement&nbsp;:
+                            {!! __('dues.debit_date_label') !!}
                         </label>
                         <input type="date" id="date_prelev" name="date_prelev"
                                class="form-control form-control-sm"
@@ -147,14 +146,14 @@
                                required>
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fas fa-save me-1"></i>
-                            Enregistrer les {{ $pending->count() }} prélèvements
+                            {{ __('dues.save_debits', ['count' => $pending->count()]) }}
                         </button>
                     </div>
                 </form>
             @else
                 <p class="text-success mb-0">
                     <i class="fas fa-check-circle me-1"></i>
-                    Tous les prélèvements ont déjà été enregistrés pour cette période.
+                    {{ __('dues.all_recorded') }}
                 </p>
             @endif
 
@@ -168,15 +167,15 @@
 <div class="ob-commandbar-wrap mx-3 mt-2">
     <div class="px-3 py-2 border-bottom" style="background:var(--card-subheader-bg);">
         <span class="fw-semibold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:.04em;">
-            À enregistrer ({{ $pending->count() }})
+            {{ __('dues.section_header_pending', ['count' => $pending->count()]) }}
         </span>
     </div>
     <table class="ob-table">
         <thead>
             <tr>
-                <th>Nom Prénom</th>
-                @feature('multi_site')<th>Section</th>@endfeature
-                <th>Montant régul</th>
+                <th>{{ __('dues.col_name') }}</th>
+                @feature('multi_site')<th>{{ __('dues.col_section') }}</th>@endfeature
+                <th>{{ __('dues.col_amount_regul') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -201,16 +200,16 @@
 <div class="ob-commandbar-wrap mx-3 mt-2 mb-3">
     <div class="px-3 py-2 border-bottom" style="background:var(--card-subheader-bg);">
         <span class="fw-semibold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:.04em;">
-            Déjà enregistrés ({{ $paid->count() }}) — Total : {{ number_format($totalPaid, 2, ',', ' ') }} €
+            {{ __('dues.section_header_paid', ['count' => $paid->count(), 'total' => number_format($totalPaid, 2, ',', ' ')]) }}
         </span>
     </div>
     <table class="ob-table">
         <thead>
             <tr>
-                <th>Nom Prénom</th>
-                @feature('multi_site')<th>Section</th>@endfeature
-                <th>Montant</th>
-                <th>Date prélevé</th>
+                <th>{{ __('dues.col_name') }}</th>
+                @feature('multi_site')<th>{{ __('dues.col_section') }}</th>@endfeature
+                <th>{{ __('dues.col_amount') }}</th>
+                <th>{{ __('dues.col_debit_date') }}</th>
             </tr>
         </thead>
         <tbody>

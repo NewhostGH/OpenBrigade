@@ -6,6 +6,7 @@ use App\Http\Middleware\RequireCharterAcceptance;
 use App\Http\Middleware\RequireFeature;
 use App\Http\Middleware\RequirePermission;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\TrackSession;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -42,6 +43,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Security headers on every web response
         $middleware->prependToGroup('web', SecurityHeaders::class);
+
+        // Resolve the active UI locale (session override -> app default)
+        $middleware->appendToGroup('web', SetLocale::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Custom exception handling configuration

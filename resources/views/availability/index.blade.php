@@ -1,16 +1,16 @@
 @extends('layout.app')
 
-@section('title', 'Disponibilités — ' . config('app.name'))
+@section('title', __('availability.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Mes disponibilités'],
+    ['label' => __('availability.breadcrumb')],
 ]"/>
 
 <div class="ob-toolbar mx-3 mt-3">
     <div class="ob-toolbar-title">
-        <h1>Mes disponibilités</h1>
+        <h1>{{ __('availability.page_title') }}</h1>
     </div>
 </div>
 
@@ -21,7 +21,7 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-calendar-check"></i> Planning 4 semaines
+                    <i class="fas fa-calendar-check"></i> {{ __('availability.grid_title') }}
                 </div>
                 <div style="font-size:var(--font-size-xs)">
                     @foreach($periods as $period)
@@ -36,7 +36,7 @@
                 <table class="table table-sm mb-0" style="table-layout:fixed">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
                         <tr>
-                            @foreach(['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'] as $l)
+                            @foreach([__('availability.day_mon'),__('availability.day_tue'),__('availability.day_wed'),__('availability.day_thu'),__('availability.day_fri'),__('availability.day_sat'),__('availability.day_sun')] as $l)
                                 <th class="text-center" style="font-size:var(--font-size-xs)">{{ $l }}</th>
                             @endforeach
                         </tr>
@@ -71,19 +71,19 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-user-times"></i> Mes absences à venir
+                    <i class="fas fa-user-times"></i> {{ __('availability.absences_title') }}
                 </div>
                 <a href="{{ route('unavailability.index', ['tab' => 'mine']) }}"
-                   class="ob-widget-card-link">Toutes</a>
+                   class="ob-widget-card-link">{{ __('availability.absences_all') }}</a>
             </div>
             <div class="ob-widget-card-body p-0">
                 @if($absences->isEmpty())
-                    <p class="ob-widget-empty p-3">Aucune absence.</p>
+                    <p class="ob-widget-empty p-3">{{ __('availability.absences_empty') }}</p>
                 @else
                     @foreach($absences as $abs)
                         <div class="ob-duty-row px-3">
                             <div class="ob-duty-info">
-                                <div class="ob-duty-name">{{ $abs->TI_LIBELLE ?? 'Absence' }}</div>
+                                <div class="ob-duty-name">{{ $abs->TI_LIBELLE ?? __('availability.absence_default') }}</div>
                                 <div class="ob-duty-role">
                                     {{ $abs->I_DEBUT ? \Carbon\Carbon::parse($abs->I_DEBUT)->format('d/m/Y') : '?' }}
                                     —
@@ -91,9 +91,9 @@
                                 </div>
                             </div>
                             @if($abs->I_ACCEPT == 1)
-                                <span class="badge bg-success">OK</span>
+                                <span class="badge bg-success">{{ __('availability.status_accepted') }}</span>
                             @else
-                                <span class="badge bg-warning text-dark">En attente</span>
+                                <span class="badge bg-warning text-dark">{{ __('availability.status_pending') }}</span>
                             @endif
                         </div>
                     @endforeach
@@ -104,7 +104,7 @@
         <div class="mt-2">
             {{-- TODO: Migrate code — indispo_choice.php has no native route yet --}}
             <a href="{{ url('/legacy/indispo_choice.php') }}" class="btn btn-sm btn-outline-secondary w-100">
-                <i class="fas fa-plus me-1"></i> Déclarer une absence
+                <i class="fas fa-plus me-1"></i> {{ __('availability.declare_absence') }}
             </a>
         </div>
     </div>

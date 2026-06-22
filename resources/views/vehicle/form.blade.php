@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($vehicule ? 'Modifier' : 'Nouveau véhicule') . ' — ' . config('app.name'))
+@section('title', $vehicule ? __('vehicle.form_edit_title', ['app' => config('app.name')]) : __('vehicle.form_new_title', ['app' => config('app.name')]))
 
 @section('content')
 
@@ -11,13 +11,13 @@
     $val = fn(string $field, $default = null) => old($field, $isEdit ? ($vehicule->$field ?? $default) : $default);
 
     // Breadcrumb built in PHP — @if cannot live inside a PHP expression
-    $breadcrumb = [['label' => 'Véhicules', 'url' => route('vehicle.index')]];
+    $breadcrumb = [['label' => __('vehicle.title'), 'url' => route('vehicle.index')]];
     if ($isEdit) {
         $breadcrumb[] = ['label' => $vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF,
                          'url'   => route('vehicle.show', $vehicule->V_ID)];
-        $breadcrumb[] = ['label' => 'Modifier'];
+        $breadcrumb[] = ['label' => __('vehicle.breadcrumb_edit')];
     } else {
-        $breadcrumb[] = ['label' => 'Nouveau véhicule'];
+        $breadcrumb[] = ['label' => __('vehicle.breadcrumb_new')];
     }
 
     // Date urgency left-border color (edit mode only)
@@ -34,8 +34,8 @@
         $date = $vehicule->$field ?? null;
         if (! $date) return '';
         $diff = (int) now()->diffInDays($date, false);
-        if ($diff < 0) return 'Expiré il y a ' . abs($diff) . ' j.';
-        return 'Dans ' . $diff . ' j.';
+        if ($diff < 0) return __('vehicle.hint_expired', ['days' => abs($diff)]);
+        return __('vehicle.hint_in', ['days' => $diff]);
     };
 @endphp
 
@@ -48,13 +48,13 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-{{ $isEdit ? 'edit' : 'plus-circle' }}"></i>
             {{ $isEdit
-                ? 'Modifier — ' . ($vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF)
-                : 'Nouveau véhicule' }}
+                ? __('vehicle.edit_title', ['name' => $vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF])
+                : __('vehicle.new_vehicle') }}
         </div>
         @if($isEdit)
             <a href="{{ route('vehicle.show', $vehicule->V_ID) }}"
                class="btn btn-sm btn-outline-secondary">
-                <i class="fas fa-eye me-1"></i> Voir la fiche
+                <i class="fas fa-eye me-1"></i> {{ __('vehicle.btn_view_sheet') }}
             </a>
         @endif
     </div>
@@ -84,13 +84,13 @@
 
                     {{-- Section label --}}
                     <p class="ob-form-label">
-                        <i class="fas fa-id-card me-1"></i> Identification
+                        <i class="fas fa-id-card me-1"></i> {{ __('vehicle.section_identification') }}
                     </p>
 
                     <div class="row g-3 mb-4">
                         <div class="col-sm-5">
                             <label class="form-label fw-semibold" for="V_IMMATRICULATION">
-                                Immatriculation <span class="text-danger">*</span>
+                                {{ __('vehicle.label_immatriculation') }} <span class="text-danger">*</span>
                             </label>
                             <input type="text" id="V_IMMATRICULATION" name="V_IMMATRICULATION"
                                    class="form-control form-control-sm @error('V_IMMATRICULATION') is-invalid @enderror"
@@ -103,14 +103,14 @@
                             @enderror
                         </div>
                         <div class="col-sm-4">
-                            <label class="form-label fw-semibold" for="V_INDICATIF">Indicatif</label>
+                            <label class="form-label fw-semibold" for="V_INDICATIF">{{ __('vehicle.label_indicatif') }}</label>
                             <input type="text" id="V_INDICATIF" name="V_INDICATIF"
                                    class="form-control form-control-sm"
                                    value="{{ $val('V_INDICATIF', '') }}"
                                    maxlength="50">
                         </div>
                         <div class="col-sm-3">
-                            <label class="form-label fw-semibold" for="V_INVENTAIRE">N° inventaire</label>
+                            <label class="form-label fw-semibold" for="V_INVENTAIRE">{{ __('vehicle.label_inventaire') }}</label>
                             <input type="text" id="V_INVENTAIRE" name="V_INVENTAIRE"
                                    class="form-control form-control-sm"
                                    value="{{ $val('V_INVENTAIRE', '') }}"
@@ -120,15 +120,15 @@
 
                     {{-- Section label --}}
                     <p class="ob-form-label">
-                        <i class="fas fa-truck me-1"></i> Caractéristiques
+                        <i class="fas fa-truck me-1"></i> {{ __('vehicle.section_characteristics') }}
                     </p>
 
                     <div class="row g-3 mb-3">
                         <div class="col-sm-5">
-                            <label class="form-label fw-semibold" for="TV_CODE">Type <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold" for="TV_CODE">{{ __('vehicle.label_type') }} <span class="text-danger">*</span></label>
                             <select id="TV_CODE" name="TV_CODE" required
                                     class="form-select form-select-sm @error('TV_CODE') is-invalid @enderror">
-                                <option value="">— Choisir —</option>
+                                <option value="">{{ __('vehicle.choose') }}</option>
                                 @php $currentUsage = null; @endphp
                                 @foreach ($types as $t)
                                     @if($t->TV_USAGE !== $currentUsage)
@@ -145,14 +145,14 @@
                             </select>
                         </div>
                         <div class="col-sm-4">
-                            <label class="form-label fw-semibold" for="V_MODELE">Modèle</label>
+                            <label class="form-label fw-semibold" for="V_MODELE">{{ __('vehicle.label_modele') }}</label>
                             <input type="text" id="V_MODELE" name="V_MODELE"
                                    class="form-control form-control-sm"
                                    value="{{ $val('V_MODELE', '') }}"
                                    maxlength="50">
                         </div>
                         <div class="col-sm-3">
-                            <label class="form-label fw-semibold" for="V_ANNEE">Année</label>
+                            <label class="form-label fw-semibold" for="V_ANNEE">{{ __('vehicle.label_annee') }}</label>
                             <input type="number" id="V_ANNEE" name="V_ANNEE"
                                    class="form-control form-control-sm @error('V_ANNEE') is-invalid @enderror"
                                    value="{{ $val('V_ANNEE', '') }}"
@@ -164,7 +164,7 @@
                         @feature('multi_site')
                         <div class="col-sm-6">
                             <label class="form-label fw-semibold" for="S_ID">
-                                Section <span class="text-danger">*</span>
+                                {{ __('vehicle.label_section') }} <span class="text-danger">*</span>
                             </label>
                             {{-- @error n'est pas compilé dans les attributs de composant — expression liée obligatoire. --}}
                             <x-ob-section-select id="S_ID" name="S_ID" required
@@ -177,12 +177,12 @@
                         @endfeature
                         <div class="col-sm-6">
                             <label class="form-label fw-semibold" for="VP_ID">
-                                Statut / Position <span class="text-danger">*</span>
+                                {{ __('vehicle.label_position') }} <span class="text-danger">*</span>
                             </label>
                             <select id="VP_ID" name="VP_ID"
                                     class="form-select form-select-sm @error('VP_ID') is-invalid @enderror"
                                     required>
-                                <option value="">— Choisir —</option>
+                                <option value="">{{ __('vehicle.choose') }}</option>
                                 @foreach ($positions as $p)
                                     @php
                                         $selected = $val('VP_ID') === $p->VP_ID || (!$isEdit && $p->VP_OPERATIONNEL && $loop->first);
@@ -201,23 +201,23 @@
 
                     <div class="row g-3 mb-4">
                         <div class="col-sm-6">
-                            <label class="form-label fw-semibold" for="V_KM">Kilométrage actuel</label>
+                            <label class="form-label fw-semibold" for="V_KM">{{ __('vehicle.label_km') }}</label>
                             <div class="input-group input-group-sm">
                                 <input type="number" id="V_KM" name="V_KM"
                                        class="form-control form-control-sm"
                                        value="{{ $val('V_KM', '') }}"
                                        min="0" placeholder="0">
-                                <span class="input-group-text text-muted">km</span>
+                                <span class="input-group-text text-muted">{{ __('vehicle.unit_km') }}</span>
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <label class="form-label fw-semibold" for="V_KM_REVISION">Km prochaine révision</label>
+                            <label class="form-label fw-semibold" for="V_KM_REVISION">{{ __('vehicle.label_km_revision') }}</label>
                             <div class="input-group input-group-sm">
                                 <input type="number" id="V_KM_REVISION" name="V_KM_REVISION"
                                        class="form-control form-control-sm"
                                        value="{{ $val('V_KM_REVISION', '') }}"
                                        min="0" placeholder="0">
-                                <span class="input-group-text text-muted">km</span>
+                                <span class="input-group-text text-muted">{{ __('vehicle.unit_km') }}</span>
                             </div>
                         </div>
                     </div>
@@ -231,15 +231,15 @@
 
                     {{-- Section label --}}
                     <p class="ob-form-label">
-                        <i class="fas fa-calendar-alt me-1"></i> Dates d'expiration
+                        <i class="fas fa-calendar-alt me-1"></i> {{ __('vehicle.section_expiry_dates') }}
                     </p>
 
                     @php
                         $dateFields = [
-                            ['field' => 'V_ASS_DATE',   'id' => 'V_ASS_DATE',   'label' => 'Assurance',      'icon' => 'fas fa-shield-alt'],
-                            ['field' => 'V_CT_DATE',    'id' => 'V_CT_DATE',    'label' => 'Contrôle tech.', 'icon' => 'fas fa-clipboard-check'],
-                            ['field' => 'V_REV_DATE',   'id' => 'V_REV_DATE',   'label' => 'Révision',       'icon' => 'fas fa-wrench'],
-                            ['field' => 'V_TITRE_DATE', 'id' => 'V_TITRE_DATE', 'label' => "Titre d'accès",  'icon' => 'fas fa-id-card'],
+                            ['field' => 'V_ASS_DATE',   'id' => 'V_ASS_DATE',   'label' => __('vehicle.exp_insurance'), 'icon' => 'fas fa-shield-alt'],
+                            ['field' => 'V_CT_DATE',    'id' => 'V_CT_DATE',    'label' => __('vehicle.exp_ct'),        'icon' => 'fas fa-clipboard-check'],
+                            ['field' => 'V_REV_DATE',   'id' => 'V_REV_DATE',   'label' => __('vehicle.exp_revision'),  'icon' => 'fas fa-wrench'],
+                            ['field' => 'V_TITRE_DATE', 'id' => 'V_TITRE_DATE', 'label' => __('vehicle.exp_titre'),     'icon' => 'fas fa-id-card'],
                         ];
                     @endphp
 
@@ -270,15 +270,15 @@
 
                     {{-- Section label --}}
                     <p class="ob-form-label">
-                        <i class="fas fa-cogs me-1"></i> Équipement
+                        <i class="fas fa-cogs me-1"></i> {{ __('vehicle.section_equipment') }}
                     </p>
 
                     @php
                         $flags = [
-                            ['key' => 'V_FLAG1', 'icon' => 'fas fa-snowflake', 'color' => '#0369a1', 'bg' => '#e0f2fe', 'label' => 'Neige'],
-                            ['key' => 'V_FLAG2', 'icon' => 'fas fa-wind',      'color' => '#1d4ed8', 'bg' => '#dbeafe', 'label' => 'Climatisation'],
-                            ['key' => 'V_FLAG3', 'icon' => 'fas fa-bullhorn',  'color' => '#92400e', 'bg' => '#fef3c7', 'label' => 'Public Address'],
-                            ['key' => 'V_FLAG4', 'icon' => 'fas fa-link',      'color' => '#374151', 'bg' => '#f3f4f6', 'label' => 'Attelage'],
+                            ['key' => 'V_FLAG1', 'icon' => 'fas fa-snowflake', 'color' => '#0369a1', 'bg' => '#e0f2fe', 'label' => __('vehicle.flag_snow')],
+                            ['key' => 'V_FLAG2', 'icon' => 'fas fa-wind',      'color' => '#1d4ed8', 'bg' => '#dbeafe', 'label' => __('vehicle.flag_clim')],
+                            ['key' => 'V_FLAG3', 'icon' => 'fas fa-bullhorn',  'color' => '#92400e', 'bg' => '#fef3c7', 'label' => __('vehicle.flag_pa')],
+                            ['key' => 'V_FLAG4', 'icon' => 'fas fa-link',      'color' => '#374151', 'bg' => '#f3f4f6', 'label' => __('vehicle.flag_attelage')],
                         ];
                     @endphp
 
@@ -312,19 +312,19 @@
                                    class="form-check-input flex-shrink-0 mb-0"
                                    {{ $val('V_EXTERNE') ? 'checked' : '' }}>
                             <i class="fas fa-external-link-alt text-muted" style="width:14px; text-align:center;"></i>
-                            <span>Véhicule externe</span>
+                            <span>{{ __('vehicle.flag_externe') }}</span>
                         </label>
                     </div>
 
                     {{-- Section label --}}
                     <p class="ob-form-label">
-                        <i class="fas fa-comment-alt me-1"></i> Commentaire
+                        <i class="fas fa-comment-alt me-1"></i> {{ __('vehicle.section_comment') }}
                     </p>
 
                     <textarea id="V_COMMENT" name="V_COMMENT" rows="4"
                               class="form-control form-control-sm"
                               maxlength="2000"
-                              placeholder="Notes libres…">{{ $val('V_COMMENT', '') }}</textarea>
+                              placeholder="{{ __('vehicle.comment_placeholder') }}">{{ $val('V_COMMENT', '') }}</textarea>
 
                 </div>{{-- /col-lg-5 --}}
 
@@ -334,11 +334,11 @@
             <div class="d-flex gap-2 mt-4 pt-3" style="border-top:1px solid var(--component-border);">
                 <button type="submit" class="btn btn-primary btn-sm px-4">
                     <i class="fas fa-save me-1"></i>
-                    {{ $isEdit ? 'Enregistrer les modifications' : 'Créer le véhicule' }}
+                    {{ $isEdit ? __('vehicle.btn_save_edit') : __('vehicle.btn_create') }}
                 </button>
                 <a href="{{ $isEdit ? route('vehicle.show', $vehicule->V_ID) : route('vehicle.index') }}"
                    class="btn btn-outline-secondary btn-sm">
-                    Annuler
+                    {{ __('common.cancel') }}
                 </a>
             </div>
 
@@ -351,19 +351,19 @@
     <div class="ob-widget-card mt-3" style="border-color:var(--card-danger-border) !important;">
         <div class="ob-widget-card-header" style="background:var(--card-danger-bg);">
             <div class="ob-widget-card-title" style="color:var(--card-danger-title);">
-                <i class="fas fa-trash"></i> Zone dangereuse
+                <i class="fas fa-trash"></i> {{ __('vehicle.danger_zone_title') }}
             </div>
         </div>
         <div class="ob-widget-card-body d-flex align-items-center gap-4">
             <p class="mb-0 text-muted" style="font-size:var(--font-size-sm); flex:1;">
-                Supprime définitivement ce véhicule et toutes ses affectations à des activités.
+                {{ __('vehicle.danger_zone_desc') }}
             </p>
             <form method="POST" action="{{ route('vehicle.destroy', $vehicule->V_ID) }}"
-                  onsubmit="return confirm('Supprimer définitivement ce véhicule ?');">
+                  onsubmit="return confirm('{{ __('vehicle.confirm_delete') }}');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-sm btn-outline-danger flex-shrink-0">
-                    <i class="fas fa-trash me-1"></i> Supprimer
+                    <i class="fas fa-trash me-1"></i> {{ __('common.delete') }}
                 </button>
             </form>
         </div>

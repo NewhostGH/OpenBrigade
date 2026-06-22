@@ -5,8 +5,8 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Garde', 'url' => route('duty.index')],
-    ['label' => 'Types de garde'],
+    ['label' => __('duty.breadcrumb_duty'), 'url' => route('duty.index')],
+    ['label' => __('duty.title_types')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -26,9 +26,9 @@
 
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-shield-alt me-2"></i>Types de garde ({{ $items->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-shield-alt me-2"></i>{{ __('duty.title_types') }} ({{ $items->count() }})</div>
             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
-                <i class="fas fa-plus me-1"></i> Nouveau type
+                <i class="fas fa-plus me-1"></i> {{ __('duty.new_type') }}
             </button>
         </div>
         <div class="table-responsive">
@@ -36,12 +36,12 @@
                 <thead class="table-light">
                     <tr>
                         <th style="width:32px;" class="text-center">#</th>
-                        <th>Nom</th>
-                        <th style="width:80px;" class="text-center">Jour</th>
-                        <th style="width:80px;" class="text-center">Nuit</th>
-                        <th style="width:120px;" class="text-center">Personnes J/N</th>
-                        <th style="width:100px;" class="text-center">Véhicules</th>
-                        <th style="width:70px;" class="text-center">Défaut</th>
+                        <th>{{ __('duty.col_name') }}</th>
+                        <th style="width:80px;" class="text-center">{{ __('duty.col_day') }}</th>
+                        <th style="width:80px;" class="text-center">{{ __('duty.col_night') }}</th>
+                        <th style="width:120px;" class="text-center">{{ __('duty.col_persons_jn') }}</th>
+                        <th style="width:100px;" class="text-center">{{ __('duty.col_vehicles') }}</th>
+                        <th style="width:70px;" class="text-center">{{ __('duty.col_default') }}</th>
                         <th style="width:100px;"></th>
                     </tr>
                 </thead>
@@ -59,7 +59,7 @@
                         </td>
                         <td class="text-center align-middle">
                             @if($item->EQ_JOUR)
-                                <i class="fas fa-sun text-warning" title="Actif le jour"></i>
+                                <i class="fas fa-sun text-warning" title="{{ __('duty.active_day') }}"></i>
                                 <div class="text-muted" style="font-size:var(--font-size-xs);">
                                     {{ substr($item->EQ_DEBUT1 ?? '', 0, 5) }}–{{ substr($item->EQ_FIN1 ?? '', 0, 5) }}
                                 </div>
@@ -69,7 +69,7 @@
                         </td>
                         <td class="text-center align-middle">
                             @if($item->EQ_NUIT)
-                                <i class="fas fa-moon text-primary" title="Actif la nuit"></i>
+                                <i class="fas fa-moon text-primary" title="{{ __('duty.active_night') }}"></i>
                                 <div class="text-muted" style="font-size:var(--font-size-xs);">
                                     {{ substr($item->EQ_DEBUT2 ?? '', 0, 5) }}–{{ substr($item->EQ_FIN2 ?? '', 0, 5) }}
                                 </div>
@@ -89,21 +89,21 @@
                         </td>
                         <td class="text-center align-middle">
                             @if($item->EQ_DEFAULT)
-                                <i class="fas fa-star text-warning" title="Type par défaut"></i>
+                                <i class="fas fa-star text-warning" title="{{ __('duty.default_type') }}"></i>
                             @endif
                         </td>
                         <td class="text-end align-middle">
                             <button type="button" class="btn btn-sm btn-outline-secondary me-1"
                                     data-bs-toggle="modal"
                                     data-bs-target="#editModal{{ $item->EQ_ID }}"
-                                    title="Modifier">
+                                    title="{{ __('common.edit') }}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <form method="POST" action="{{ route('duty.types.destroy', $item->EQ_ID) }}"
                                   class="d-inline"
-                                  onsubmit="return confirm('Supprimer le type « {{ addslashes($item->EQ_NOM) }} » ?')">
+                                  onsubmit="return confirm('{{ addslashes(__('duty.confirm_delete_type', ['name' => $item->EQ_NOM])) }}')">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ __('common.delete') }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -112,7 +112,7 @@
                 @empty
                     <tr>
                         <td colspan="8" class="text-center text-muted py-4">
-                            Aucun type de garde configuré pour votre section.
+                            {{ __('duty.empty_types') }}
                         </td>
                     </tr>
                 @endforelse
@@ -130,7 +130,7 @@
                 @csrf
                 <div class="modal-header py-2">
                     <h6 class="modal-title" id="createModalLabel">
-                        <i class="fas fa-plus me-1"></i> Nouveau type de garde
+                        <i class="fas fa-plus me-1"></i> {{ __('duty.modal_create_title') }}
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -138,9 +138,9 @@
                     @include('duty.partials.type-form', ['item' => null, 'nextOrder' => $nextOrder])
                 </div>
                 <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
                     <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="fas fa-plus me-1"></i> Créer
+                        <i class="fas fa-plus me-1"></i> {{ __('common.create') }}
                     </button>
                 </div>
             </form>
@@ -157,7 +157,7 @@
                 @csrf @method('PATCH')
                 <div class="modal-header py-2">
                     <h6 class="modal-title">
-                        <i class="fas fa-edit me-1"></i> Modifier — {{ $item->EQ_NOM }}
+                        <i class="fas fa-edit me-1"></i> {{ __('duty.modal_edit_title', ['name' => $item->EQ_NOM]) }}
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -165,9 +165,9 @@
                     @include('duty.partials.type-form', ['item' => $item, 'nextOrder' => $nextOrder])
                 </div>
                 <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
                     <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="fas fa-save me-1"></i> Enregistrer
+                        <i class="fas fa-save me-1"></i> {{ __('common.save') }}
                     </button>
                 </div>
             </form>

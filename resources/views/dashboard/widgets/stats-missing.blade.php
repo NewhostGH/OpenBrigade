@@ -2,7 +2,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-chart-bar"></i> Statistiques manquantes
+            <i class="fas fa-chart-bar"></i> {{ __('dashboard.stats_missing.title') }}
         </div>
     </div>
     <div class="ob-widget-card-body">

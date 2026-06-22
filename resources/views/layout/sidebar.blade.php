@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg ob-navbar-lateral" style="width:220px; overflow:hidden">
         <div class="ob-div-scroll">
             <ul class="nav flex-column ob-nav-lateral collapse navbar-collapse noprint" id="navLateral">
-                <a class="ob-nav-logo ob-logo-lateral" href="{{ route('dashboard') }}" title="Accueil">
+                <a class="ob-nav-logo ob-logo-lateral" href="{{ route('dashboard') }}" title="{{ __('nav.home') }}">
                     @if (isset($appIdentity) && $appIdentity->logoUrl())
                         <img height="32" width="32" src="{{ $appIdentity->logoUrl() }}" alt="">
                     @else
@@ -19,14 +19,14 @@
                         <input type="search"
                                id="sidebarSearch"
                                class="ob-sidebar-search-input"
-                               placeholder="Rechercher…"
+                               placeholder="{{ __('nav.search_placeholder') }}"
                                autocomplete="off"
                                spellcheck="false"
-                               aria-label="Rechercher dans le menu">
+                               aria-label="{{ __('nav.search_aria') }}">
                         <button type="button"
                                 id="sidebarSearchClear"
                                 class="ob-sidebar-search-clear d-none"
-                                aria-label="Effacer la recherche">
+                                aria-label="{{ __('nav.search_clear') }}">
                             <i class="fas fa-times" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -56,8 +56,8 @@
                                         </a>
                                         <button class="ob-sidebar-pin-btn {{ $item['pinned'] ? 'pinned' : '' }}"
                                             data-key="{{ $item['key'] }}"
-                                            title="{{ $item['pinned'] ? 'Retirer du raccourci' : 'Épingler dans la barre' }}"
-                                            aria-label="{{ $item['pinned'] ? 'Désépingler' : 'Épingler' }}">
+                                            title="{{ $item['pinned'] ? __('nav.unpin') : __('nav.pin') }}"
+                                            aria-label="{{ $item['pinned'] ? __('nav.unpin_aria') : __('nav.pin_aria') }}">
                                             <i class="fas fa-thumbtack"></i>
                                         </button>
                                     </div>
@@ -68,7 +68,7 @@
                 @endforeach
             </ul>
         </div>
-        <div class="ob-collapse-menu"><i class="fas fa-angle-double-left"></i> Réduire le menu</div>
+        <div class="ob-collapse-menu"><i class="fas fa-angle-double-left"></i> {{ __('nav.collapse_menu') }}</div>
         <div class="ob-decollapse-menu" style="display:none;"><i class="fas fa-angle-double-right ob-icon-collapse"></i></div>
     </nav>
 </div>

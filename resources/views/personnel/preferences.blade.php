@@ -5,9 +5,9 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Personnel', 'url' => route('personnel.index')],
+    ['label' => __('personnel.title'), 'url' => route('personnel.index')],
     ['label' => strtoupper($personnel->P_NOM) . ' ' . $personnel->P_PRENOM, 'url' => route('personnel.show', $personnel)],
-    ['label' => 'Préférences'],
+    ['label' => __('personnel.prefs_title')],
 ]"/>
 
 <div class="mx-3 mt-3" style="max-width:600px;">
@@ -27,20 +27,20 @@
                 <div class="ob-widget-card-title">
                     <i class="fas fa-sliders-h me-1"></i>
                     @if(auth()->id() === $personnel->P_ID)
-                        Mes préférences
+                        {{ __('personnel.prefs_title') }}
                     @else
-                        Préférences — {{ $personnel->P_PRENOM }} {{ strtoupper($personnel->P_NOM) }}
+                        {{ __('personnel.prefs_title_other', ['name' => $personnel->P_PRENOM . ' ' . strtoupper($personnel->P_NOM)]) }}
                     @endif
                 </div>
                 <a href="{{ route('personnel.show', $personnel) }}" class="btn btn-sm btn-light">
-                    <i class="fas fa-arrow-left me-1"></i> Retour
+                    <i class="fas fa-arrow-left me-1"></i> {{ __('common.back') }}
                 </a>
             </div>
 
             {{-- Affichage --}}
             <div class="ob-widget-card-body border-bottom">
                 <h6 class="fw-semibold mb-3" style="font-size:var(--font-size-sm);">
-                    <i class="fas fa-desktop me-1 text-muted"></i> Affichage
+                    <i class="fas fa-desktop me-1 text-muted"></i> {{ __('personnel.prefs_display_section') }}
                 </h6>
                 <div class="row g-3">
                     <div class="col-12">
@@ -49,19 +49,19 @@
                                    name="pp_1" id="pp_1" value="1"
                                    @checked($values[1] == '1')>
                             <label class="form-check-label" for="pp_1" style="font-size:var(--font-size-sm);">
-                                Afficher les info-bulles (tooltips)
+                                {{ __('personnel.prefs_tooltips') }}
                             </label>
                         </div>
                     </div>
                     <div class="col-12 col-sm-6">
-                        <label class="form-label" style="font-size:var(--font-size-sm);">Ordre de l'organigramme</label>
+                        <label class="form-label" style="font-size:var(--font-size-sm);">{{ __('personnel.prefs_orgchart_order') }}</label>
                         <select name="pp_4" class="form-select form-select-sm">
-                            <option value="hierarchique" @selected($values[4] === 'hierarchique')>Ordre hiérarchique</option>
-                            <option value="alphabetique" @selected($values[4] === 'alphabetique')>Ordre alphabétique</option>
+                            <option value="hierarchique" @selected($values[4] === 'hierarchique')>{{ __('personnel.prefs_order_hierarchique') }}</option>
+                            <option value="alphabetique" @selected($values[4] === 'alphabetique')>{{ __('personnel.prefs_order_alphabetique') }}</option>
                         </select>
                     </div>
                     <div class="col-12 col-sm-6">
-                        <label class="form-label" style="font-size:var(--font-size-sm);">Éléments par page</label>
+                        <label class="form-label" style="font-size:var(--font-size-sm);">{{ __('personnel.prefs_per_page') }}</label>
                         <select name="pp_15" class="form-select form-select-sm">
                             <option value="10" @selected($values[15] == '10')>10</option>
                             <option value="20" @selected($values[15] == '20')>20</option>
@@ -73,7 +73,7 @@
 
             <div class="ob-widget-card-footer text-end">
                 <button type="submit" class="btn btn-sm btn-success">
-                    <i class="fas fa-save me-1"></i> Enregistrer
+                    <i class="fas fa-save me-1"></i> {{ __('common.save') }}
                 </button>
             </div>
         </div>

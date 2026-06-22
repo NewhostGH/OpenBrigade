@@ -60,26 +60,26 @@ document.addEventListener('DOMContentLoaded', function () {
         <li class="nav-item">
             <a class="nav-link {{ $tab === 'ceiling' ? 'active' : '' }}"
                href="{{ route('admin.permissions', ['tab' => 'ceiling', 'section' => $sectionId]) }}">
-                <i class="fas fa-layer-group me-1"></i>Plafonds par section
+                <i class="fas fa-layer-group me-1"></i>{{ __('admin.permissions.tab_ceiling') }}
             </a>
         </li>
         @endfeature
         <li class="nav-item">
             <a class="nav-link {{ $tab === 'groups' ? 'active' : '' }}"
                href="{{ route('admin.permissions', ['tab' => 'groups', 'section' => $sectionId]) }}">
-                <i class="fas fa-key me-1"></i>Groupes d'accès
+                <i class="fas fa-key me-1"></i>{{ __('admin.permissions.tab_groups') }}
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ $tab === 'roles' ? 'active' : '' }}"
                href="{{ route('admin.permissions', ['tab' => 'roles', 'section' => $sectionId]) }}">
-                <i class="fas fa-user-tie me-1"></i>Rôles organisationnels
+                <i class="fas fa-user-tie me-1"></i>{{ __('admin.permissions.tab_roles') }}
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ $tab === 'overrides' ? 'active' : '' }}"
                href="{{ route('admin.permissions', ['tab' => 'overrides']) }}">
-                <i class="fas fa-user-shield me-1"></i>Dérogations
+                <i class="fas fa-user-shield me-1"></i>{{ __('admin.permissions.tab_overrides') }}
             </a>
         </li>
     </ul>

@@ -12,16 +12,16 @@
 <div class="mx-3 mt-3 d-flex gap-2">
     <a href="{{ route('replacement.index', ['tab' => 'mine']) }}"
        class="btn btn-sm {{ $tab === 'mine' ? 'btn-primary' : 'btn-outline-secondary' }}">
-        <i class="fas fa-user me-1"></i> Mes remplacements
+        <i class="fas fa-user me-1"></i> {{ __('replacement.tab_mine') }}
     </a>
     <a href="{{ route('replacement.index', ['tab' => 'section']) }}"
        class="btn btn-sm {{ $tab === 'section' ? 'btn-primary' : 'btn-outline-secondary' }}">
-        <i class="fas fa-users me-1"></i> Ma section
+        <i class="fas fa-users me-1"></i> {{ __('replacement.tab_section') }}
     </a>
 </div>
 
 <x-ob-toolbar
-    title="Remplacements de garde"
+    :title="__('replacement.title')"
     :total="$items->total()"
     :columns="$columns"
     table-id="remplacementTable"

@@ -1,13 +1,13 @@
 @extends('layout.app')
 
-@section('title', 'Types de véhicule — ' . config('app.name'))
+@section('title', __('admin.references.vehicle_type.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Paramétrage', 'url' => route('admin.references')],
-    ['label' => 'Types de véhicule'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.references.title'), 'url' => route('admin.references')],
+    ['label' => __('admin.references.vehicle_type.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -15,7 +15,7 @@
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>Nouveau type de véhicule</div>
+            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>{{ __('admin.references.vehicle_type.new_title') }}</div>
         </div>
         <div class="p-3">
             <form method="POST" action="{{ route('admin.references.vehicle-type.store') }}">
@@ -29,30 +29,30 @@
                 @endif
                 <div class="row g-2 align-items-end">
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Code <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_code') }} <span class="text-danger">*</span></label>
                         <input type="text" name="TV_CODE" value="{{ old('TV_CODE') }}"
                                class="form-control form-control-sm text-uppercase" style="width:90px;"
                                maxlength="10" required placeholder="VSAV">
                     </div>
                     <div class="col">
-                        <label class="form-label form-label-sm">Libellé <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_label') }} <span class="text-danger">*</span></label>
                         <input type="text" name="TV_LIBELLE" value="{{ old('TV_LIBELLE') }}"
                                class="form-control form-control-sm" maxlength="60" required>
                     </div>
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Usage <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.vehicle_type.label_usage') }} <span class="text-danger">*</span></label>
                         <input type="text" name="TV_USAGE" value="{{ old('TV_USAGE') }}"
                                class="form-control form-control-sm text-uppercase" style="width:110px;" maxlength="12" required
                                placeholder="SECOURS">
                     </div>
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Nb par défaut</label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.vehicle_type.label_nb') }}</label>
                         <input type="number" name="TV_NB" value="{{ old('TV_NB', 0) }}"
                                class="form-control form-control-sm" style="width:80px;" min="0">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus me-1"></i>Ajouter
+                            <i class="fas fa-plus me-1"></i>{{ __('common.add') }}
                         </button>
                     </div>
                 </div>
@@ -63,16 +63,16 @@
     {{-- List --}}
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-truck me-2"></i>Types de véhicule ({{ $items->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-truck me-2"></i>{{ __('admin.references.vehicle_type.list_title', ['count' => $items->count()]) }}</div>
         </div>
         <div class="table-responsive">
             <table class="table table-sm table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th style="width:90px;">Code</th>
-                        <th>Libellé</th>
-                        <th style="width:120px;">Usage</th>
-                        <th style="width:80px;" class="text-center">Nb défaut</th>
+                        <th style="width:90px;">{{ __('admin.references.col_code') }}</th>
+                        <th>{{ __('admin.references.col_label') }}</th>
+                        <th style="width:120px;">{{ __('admin.references.vehicle_type.col_usage') }}</th>
+                        <th style="width:80px;" class="text-center">{{ __('admin.references.vehicle_type.col_default') }}</th>
                         <th style="width:60px;"></th>
                     </tr>
                 </thead>
@@ -82,7 +82,7 @@
                     @if($item->TV_USAGE !== $prevUsage)
                         <tr class="table-secondary">
                             <td colspan="5" class="py-1 fw-semibold" style="font-size:var(--font-size-xs);letter-spacing:.05em;">
-                                {{ $item->TV_USAGE ?: 'Sans usage' }}
+                                {{ $item->TV_USAGE ?: __('admin.references.vehicle_type.no_usage') }}
                             </td>
                         </tr>
                         @php $prevUsage = $item->TV_USAGE; @endphp
@@ -108,7 +108,7 @@
                         <td class="text-center align-middle" style="font-size:var(--font-size-sm);">{{ $item->TV_NB ?? 0 }}</td>
                         <td class="align-middle text-end">
                             <form method="POST" action="{{ route('admin.references.vehicle-type.destroy', $item->TV_CODE) }}"
-                                  onsubmit="return confirm('Supprimer {{ addslashes($item->TV_CODE) }} ?')">
+                                  onsubmit="return confirm('{{ __('admin.references.vehicle_type.delete_confirm', ['code' => addslashes($item->TV_CODE)]) }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <i class="fas fa-trash"></i>
@@ -117,7 +117,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center text-muted py-4">Aucun type de véhicule.</td></tr>
+                    <tr><td colspan="5" class="text-center text-muted py-4">{{ __('admin.references.vehicle_type.empty') }}</td></tr>
                 @endforelse
                 </tbody>
             </table>

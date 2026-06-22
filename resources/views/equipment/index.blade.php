@@ -1,15 +1,15 @@
 @extends('layout.app')
 
-@section('title', 'Matériels — ' . config('app.name'))
+@section('title', __('equipment.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Matériels'],
+    ['label' => __('equipment.breadcrumb')],
 ]"/>
 
 <x-ob-toolbar
-    title="Matériels"
+    title="{{ __('equipment.title') }}"
     :total="$items->total()"
     filter-action="{{ route('equipment.index') }}"
     filter-id="filterForm"
@@ -22,18 +22,18 @@
     @if(auth()->user()->hasPermission(70))
         {{-- TODO: Migrate code --}}
         <a href="{{ url('/legacy/ins_equipment.php') }}" class="btn btn-sm btn-primary">
-            <i class="fas fa-plus me-1"></i> Nouveau matériel
+            <i class="fas fa-plus me-1"></i> {{ __('equipment.new_equipment') }}
         </a>
     @endif
 
     <x-slot:filters>
         <input type="text" name="q" value="{{ $search }}"
                class="form-control form-control-sm"
-               placeholder="Modèle, n° série…"
+               placeholder="{{ __('equipment.search_placeholder') }}"
                data-ob-search="filterForm">
         @feature('multi_site')
         <select name="section" class="form-select form-select-sm">
-            <option value="" @selected($filtSect === null)>Toutes mes sections</option>
+            <option value="" @selected($filtSect === null)>{{ __('equipment.all_sections') }}</option>
             @foreach($sections as $s)
                 <option value="{{ $s->S_ID }}" @selected($filtSect === $s->S_ID)>
                     {{ $s->S_CODE }} — {{ $s->S_DESCRIPTION }}
@@ -44,7 +44,7 @@
     </x-slot:filters>
 </x-ob-toolbar>
 
-<x-ob-commandbar table-id="materielTable" :total="$items->total()" total-label="matériel">
+<x-ob-commandbar table-id="materielTable" :total="$items->total()" :total-label="__('equipment.item_label')">
     <x-ob-table
         :columns="$columns"
         :items="$items"

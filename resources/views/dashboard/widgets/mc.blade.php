@@ -1,7 +1,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-ambulance"></i> Mains courantes
+            <i class="fas fa-ambulance"></i> {{ __('dashboard.mc.title') }}
         </div>
         {{-- TODO: Migrate code — ec_mode=MC filter has no native equivalent yet --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/evenement_choice.php?ec_mode=MC&page=1') }}">
@@ -24,7 +24,7 @@
                 <div class="ob-dash-event-date">{{ $e->FORMDATE }}</div>
             </div>
         @empty
-            <p class="ob-widget-empty">Aucune main courante en cours.</p>
+            <p class="ob-widget-empty">{{ __('dashboard.mc.empty') }}</p>
         @endforelse
     </div>
 </div>

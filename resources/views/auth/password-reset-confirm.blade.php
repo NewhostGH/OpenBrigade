@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Nouveau mot de passe — {{ config('app.name') }}</title>
+    <title>{{ __('auth_views.reset_confirm_title') }} — {{ config('app.name') }}</title>
     @vite('resources/css/app.css')
 </head>
 
@@ -17,7 +17,7 @@
                  style="max-height:80px; max-width:90%;"
                  onerror="this.style.display='none'">
             <p class="ob-login-left-title mt-4">
-                Organisez le personnel et les activités avec {{ config('app.name') }}
+                {{ __('auth_views.login_tagline', ['org' => config('app.name')]) }}
             </p>
         </aside>
 
@@ -26,39 +26,37 @@
 
                 @if ($valid)
                     <div class="mb-4">
-                        <div class="ob-login-brand-title">Nouveau mot de passe</div>
+                        <div class="ob-login-brand-title">{{ __('auth_views.reset_confirm_title') }}</div>
                         <p class="ob-login-brand-sub mt-2">
-                            Votre mot de passe temporaire vous a été envoyé par e-mail.
+                            {{ __('auth_views.reset_confirm_sent') }}
                         </p>
                         @if ($newPass)
                             <div class="alert alert-info mt-3" style="font-family:monospace; font-size:1.1em;">
                                 {{ $newPass }}
                             </div>
                             <p class="ob-login-brand-sub" style="font-size:var(--font-size-xs);">
-                                Ce mot de passe expire immédiatement — vous devrez en choisir un nouveau
-                                lors de votre prochaine connexion.
+                                {{ __('auth_views.reset_confirm_expiry') }}
                             </p>
                         @endif
                     </div>
                 @else
                     <div class="mb-4">
-                        <div class="ob-login-brand-title">Lien invalide</div>
+                        <div class="ob-login-brand-title">{{ __('auth_views.reset_invalid_title') }}</div>
                         <p class="ob-login-brand-sub mt-2">
-                            Ce lien de réinitialisation est invalide ou a expiré (validité : 24 h).
-                            Faites une nouvelle demande si nécessaire.
+                            {{ __('auth_views.reset_invalid_body') }}
                         </p>
                     </div>
                 @endif
 
                 <a href="{{ route('login') }}" class="btn ob-login-btn">
-                    <i class="fas fa-sign-in-alt me-1"></i> Se connecter
+                    <i class="fas fa-sign-in-alt me-1"></i> {{ __('auth_views.reset_confirm_btn') }}
                 </a>
 
                 <div class="ob-login-footer mt-3">
                     @if (! $valid)
                         <a href="{{ route('password.request') }}" class="text-decoration-none"
                            style="font-size:var(--font-size-xs);">
-                            Nouvelle demande
+                            {{ __('auth_views.reset_new_request') }}
                         </a>
                     @endif
                 </div>

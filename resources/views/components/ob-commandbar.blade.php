@@ -40,7 +40,7 @@
             <div class="ob-commandbar-left">
                 @if ($showSelCount)
                 <span class="ob-commandbar-count">
-                    <span id="{{ $tableId }}_selCount">0</span> sélectionné(s)
+                    <span id="{{ $tableId }}_selCount">0</span> {{ __('components.selected_count') }}
                 </span>
                 @endif
                 @if (isset($actions) && !$actions->isEmpty())

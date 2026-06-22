@@ -5,9 +5,9 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Activités', 'url' => route('event.index')],
+    ['label' => __('event.title'), 'url' => route('event.index')],
     ['label' => $event->E_LIBELLE ?? $event->E_CODE, 'url' => route('event.show', $event->E_CODE)],
-    ['label' => 'Trombinoscope'],
+    ['label' => __('event.trombi_heading')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -15,12 +15,12 @@
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
                 <i class="fas fa-id-badge me-1"></i>
-                Trombinoscope — {{ $event->E_LIBELLE ?? $event->E_CODE }}
+                {{ __('event.trombi_heading') }} — {{ $event->E_LIBELLE ?? $event->E_CODE }}
             </div>
             <div class="ob-widget-card-actions">
-                <span class="badge bg-secondary me-2">{{ $participants->count() }} participant(s)</span>
+                <span class="badge bg-secondary me-2">{{ __('event.trombi_participants', ['count' => $participants->count()]) }}</span>
                 <a href="{{ route('event.show', $event->E_CODE) }}" class="btn btn-sm btn-light">
-                    <i class="fas fa-arrow-left me-1"></i> Retour
+                    <i class="fas fa-arrow-left me-1"></i> {{ __('event.btn_back') }}
                 </a>
             </div>
         </div>
@@ -29,7 +29,7 @@
     @if($participants->isEmpty())
         <div class="text-center text-muted py-5">
             <i class="fas fa-users fa-3x mb-3 d-block opacity-25"></i>
-            Aucun participant inscrit à cette activité.
+            {{ __('event.trombi_empty') }}
         </div>
     @else
         @php $byFunction = $participants->groupBy('TP_LIBELLE'); @endphp
@@ -61,7 +61,7 @@
                                     <img src="{{ route('personnel.grade-image', ['grade' => $p->P_GRADE]) }}"
                                          alt="{{ $p->P_GRADE }}"
                                          class="ob-grade-img"
-                                         onerror="this.outerHTML='<small class=\'text-muted\'>' + this.alt + '</small>'">
+                                         onerror="this.outerHTML='<small class=\'text-muted\'>' + this.alt + '</small>'"> {{-- i18n-ignore: JS builds markup from this.alt, no static copy --}}
                                 </div>
                             @endif
                         </a>

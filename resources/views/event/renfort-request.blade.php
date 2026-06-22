@@ -5,9 +5,9 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Activités', 'url' => route('event.index')],
+    ['label' => __('event.title'), 'url' => route('event.index')],
     ['label' => $event->E_LIBELLE ?? $event->E_CODE, 'url' => route('event.show', $event->E_CODE)],
-    ['label' => 'Demande de renfort'],
+    ['label' => __('event.renfort_req_heading')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -18,28 +18,28 @@
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
                     <i class="fas fa-ambulance me-1"></i>
-                    Demande de renfort — {{ $event->E_LIBELLE ?? $event->E_CODE }}
+                    {{ __('event.renfort_req_heading') }} — {{ $event->E_LIBELLE ?? $event->E_CODE }}
                 </div>
                 <a href="{{ route('event.show', $event->E_CODE) }}" class="btn btn-sm btn-light">
-                    <i class="fas fa-arrow-left me-1"></i> Retour
+                    <i class="fas fa-arrow-left me-1"></i> {{ __('event.btn_back') }}
                 </a>
             </div>
 
             {{-- Véhicules ──────────────────────────────────────────── --}}
             <div class="ob-widget-card-body border-bottom">
                 <h6 class="fw-semibold mb-3" style="font-size:var(--font-size-sm)">
-                    <i class="fas fa-truck me-1 text-muted"></i> Véhicules requis
+                    <i class="fas fa-truck me-1 text-muted"></i> {{ __('event.renfort_req_vehicles_heading') }}
                 </h6>
 
                 <div class="row g-3 mb-3">
                     <div class="col-sm-3">
-                        <label class="form-label" style="font-size:var(--font-size-sm)">Nombre total de véhicules</label>
+                        <label class="form-label" style="font-size:var(--font-size-sm)">{{ __('event.renfort_req_nb_vehicles_label') }}</label>
                         <input type="number" name="nb_vehicules" class="form-control form-control-sm"
                                min="0" max="9999"
                                value="{{ old('nb_vehicules', $global?->NB_VEHICULES ?? 0) }}">
                     </div>
                     <div class="col-sm-9">
-                        <label class="form-label" style="font-size:var(--font-size-sm)">Point de regroupement</label>
+                        <label class="form-label" style="font-size:var(--font-size-sm)">{{ __('event.renfort_req_point_label') }}</label>
                         <input type="text" name="point_regroupement" class="form-control form-control-sm"
                                maxlength="250"
                                value="{{ old('point_regroupement', $global?->POINT_REGROUPEMENT ?? '') }}">
@@ -48,7 +48,7 @@
 
                 @if($vehicleTypes->isNotEmpty())
                 <div class="mb-3">
-                    <label class="form-label" style="font-size:var(--font-size-sm)">Détail par type de véhicule</label>
+                    <label class="form-label" style="font-size:var(--font-size-sm)">{{ __('event.renfort_req_detail_label') }}</label>
                     <div class="row g-2">
                         @php $prevUsage = ''; @endphp
                         @foreach($vehicleTypes as $vt)
@@ -76,7 +76,7 @@
             @if($materialCategories->isNotEmpty())
             <div class="ob-widget-card-body border-bottom">
                 <h6 class="fw-semibold mb-3" style="font-size:var(--font-size-sm)">
-                    <i class="fas fa-box me-1 text-muted"></i> Catégories de matériel requis
+                    <i class="fas fa-box me-1 text-muted"></i> {{ __('event.renfort_req_material_heading') }}
                 </h6>
                 <div class="row g-2">
                     @foreach($materialCategories as $cat)
@@ -103,7 +103,7 @@
 
             {{-- Demande spécifique ────────────────────────────────── --}}
             <div class="ob-widget-card-body">
-                <label class="form-label" style="font-size:var(--font-size-sm)">Demande spécifique</label>
+                <label class="form-label" style="font-size:var(--font-size-sm)">{{ __('event.renfort_req_specific_label') }}</label>
                 <textarea name="demande_specifique" class="form-control form-control-sm"
                           rows="3" maxlength="600"
                           >{{ old('demande_specifique', $global?->DEMANDE_SPECIFIQUE ?? '') }}</textarea>
@@ -112,7 +112,7 @@
             @if(auth()->user()->hasPermission(15))
             <div class="ob-widget-card-footer text-end">
                 <button type="submit" class="btn btn-sm btn-success">
-                    <i class="fas fa-save me-1"></i> Enregistrer
+                    <i class="fas fa-save me-1"></i> {{ __('event.renfort_req_btn_save') }}
                 </button>
             </div>
             @endif

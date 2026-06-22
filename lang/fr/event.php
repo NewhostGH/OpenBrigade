@@ -1,0 +1,333 @@
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Activités (événements)
+    |--------------------------------------------------------------------------
+    */
+
+    // ── index ──────────────────────────────────────────────────────────────
+    'title' => 'Activités',
+    'btn_new' => 'Nouvelle activité',
+    'filter_upcoming' => 'À venir',
+    'filter_past' => 'Passées',
+    'filter_all' => 'Toutes',
+    'filter_all_types' => 'Tous les types',
+    'filter_my_sections' => 'Toutes mes sections',
+    'row_action_view' => 'Voir le détail',
+
+    // ── show — statuses ────────────────────────────────────────────────────
+    'status_canceled' => 'Annulé',
+    'status_closed' => 'Clôturé',
+    'status_open' => 'Ouvert',
+
+    // ── show — header actions ──────────────────────────────────────────────
+    'btn_trombinoscope' => 'Trombinoscope',
+    'btn_trombinoscope_title' => 'Trombinoscope des participants',
+    'btn_export_xls' => 'XLS',
+    'btn_export_xls_title' => 'Exporter la liste des participants',
+    'btn_ical_title' => 'Télécharger en iCal',
+    'btn_duplicate' => 'Dupliquer',
+    'btn_duplicate_title' => 'Dupliquer cette activité',
+    'btn_edit' => 'Modifier',
+    'btn_back' => 'Retour',
+    'btn_detach_title' => 'Détacher',
+
+    // ── show — identity fields ─────────────────────────────────────────────
+    'field_type' => 'Type',
+    'field_lieu' => 'Lieu',
+    'field_section' => 'Section',
+    'field_responsable' => 'Responsable',
+    'field_effectif' => 'Effectif prévu',
+    'field_adresse' => 'Adresse',
+    'field_rdv' => 'Rendez-vous',
+    'at_time' => 'à :time',
+    'field_renforts' => 'Renforts',
+    'renforts_actives' => 'Activés',
+    'field_contact' => 'Contact sur place',
+    'field_conference' => 'Conférence',
+    'conf_join' => 'Rejoindre',
+    'conf_code' => 'Code:',
+    'consignes_label' => 'Consignes :',
+
+    // ── show — créneaux ────────────────────────────────────────────────────
+    'creneaux_heading' => 'Créneaux',
+    'no_creneau' => 'Aucun créneau',
+
+    // ── show — participants section ────────────────────────────────────────
+    'section_participants' => 'Participants',
+    'btn_enroll' => 'Inscrire',
+    'participants_empty' => 'Aucun participant inscrit.',
+    'th_name' => 'Nom',
+    'th_grade' => 'Grade',
+    'th_function' => 'Fonction',
+    'th_team' => 'Équipe',
+    'option_no_team' => '— aucune —',
+
+    // ── show — équipes section ─────────────────────────────────────────────
+    'section_equipes' => 'Équipes',
+    'equipes_empty' => 'Aucune équipe définie pour cette activité.',
+    'team_personnel_label' => 'Personnel',
+    'team_materiel_label' => 'Matériel',
+    'team_add_placeholder' => '+ Ajouter…',
+    'team_remove_title' => 'Retirer de l\'équipe',
+    'unassigned_count' => ':count participant(s) sans équipe',
+
+    // ── show — véhicules section ───────────────────────────────────────────
+    'section_vehicules' => 'Véhicules',
+    'btn_assign_vehicle' => 'Assigner',
+    'btn_export_vehicles_title' => 'Exporter la liste des véhicules',
+    'vehicules_empty' => 'Aucun véhicule assigné à cette activité.',
+    'th_immat' => 'Immatriculation',
+    'th_indicatif' => 'Indicatif',
+    'th_km' => 'Km',
+
+    // ── show — matériel section ────────────────────────────────────────────
+    'section_materiels' => 'Matériel',
+    'btn_assign_materiel' => 'Assigner',
+    'materiels_empty' => 'Aucun matériel assigné à cette activité.',
+    'th_designation' => 'Désignation',
+    'th_reference' => 'Référence',
+    'th_qty' => 'Qté',
+
+    // ── show — renforts section ────────────────────────────────────────────
+    'section_renforts' => 'Renforts',
+    'btn_attach' => 'Rattacher',
+    'renforts_empty' => 'Aucun renfort rattaché à cette activité.',
+    'th_numero' => 'N°',
+    'th_activite' => 'Activité',
+    'th_inscrits' => 'Inscrits',
+    'renfort_canceled' => 'Annulé',
+
+    // ── show — demande de renfort section ──────────────────────────────────
+    'section_renfort_request' => 'Demande de renfort',
+    'btn_manage_renfort' => 'Gérer',
+    'renfort_request_empty' => 'Aucune demande de renfort enregistrée.',
+    'renfort_vehicles_label' => 'Véhicules :',
+    'renfort_vehicles_total' => 'au total',
+    'renfort_material_label' => 'Matériel :',
+    'renfort_point_label' => 'Point de regroupement :',
+    'renfort_specific_label' => 'Demande spécifique :',
+
+    // ── show — postes requis section ───────────────────────────────────────
+    'section_postes' => 'Postes requis',
+    'postes_empty' => 'Aucun poste requis défini.',
+    'th_poste' => 'Poste / Qualification',
+    'th_inscrits_short' => 'Inscrits',
+    'th_requis' => 'Requis',
+    'th_statut' => 'Statut',
+    'title_no_limit' => 'Pas de limite',
+    'title_exceeds' => 'Plus que nécessaire',
+    'title_ok' => 'Suffisant',
+    'title_insufficient' => 'Insuffisant',
+    'hint_zero_remove' => '0 = supprimer',
+
+    // ── show — options d'inscription section ───────────────────────────────
+    'section_options' => 'Options d\'inscription',
+    'btn_add_group' => 'Groupe',
+    'btn_add_option' => 'Option',
+    'options_empty' => 'Aucune option d\'inscription définie.',
+    'th_nom' => 'Nom',
+    'th_groupe' => 'Groupe',
+    'th_type' => 'Type',
+    'th_reponses' => 'Réponses',
+    'opt_type_checkbox' => 'Case à cocher',
+    'opt_type_text' => 'Texte',
+    'opt_type_textnum' => 'Numérique',
+    'opt_type_dropdown' => 'Liste',
+    'opt_type_date' => 'Date',
+    'opt_type_hour' => 'Heure',
+
+    // ── show — groupes d'options section ──────────────────────────────────
+    'section_option_groups' => 'Groupes d\'options',
+    'th_group_name' => 'Nom du groupe',
+    'th_order' => 'Ordre',
+
+    // ── show — main courante section ───────────────────────────────────────
+    'section_log' => 'Main courante',
+    'log_empty' => 'Aucune entrée.',
+    'th_debut' => 'Début',
+    'th_type' => 'Type',
+    'th_titre' => 'Titre / Commentaire',
+    'th_auteur' => 'Auteur',
+    'log_important_title' => 'Important',
+
+    // ── show — modals ──────────────────────────────────────────────────────
+    // log modals
+    'modal_add_log_title' => 'Ajouter une entrée',
+    'modal_edit_log_title' => 'Modifier une entrée',
+    'log_type_label' => 'Type',
+    'log_debut_label' => 'Début',
+    'log_fin_label' => 'Fin',
+    'log_sll_label' => 'SLL',
+    'log_title_label' => 'Titre',
+    'log_comment_label' => 'Commentaire',
+    'log_important_label' => 'Important',
+    'btn_add_log' => 'Ajouter',
+
+    // matériel modal
+    'modal_assign_materiel_title' => 'Assigner du matériel',
+    'materiel_label' => 'Matériel',
+    'qty_label' => 'Quantité',
+    'team_label' => 'Équipe',
+    'option_all_teams' => '— toutes —',
+    'btn_assign' => 'Assigner',
+
+    // véhicule modal
+    'modal_assign_vehicle_title' => 'Assigner un véhicule',
+    'vehicle_label' => 'Véhicule',
+
+    // participant modals
+    'modal_add_participant_title' => 'Inscrire un participant',
+    'modal_edit_participant_title' => 'Modifier la participation',
+    'member_label' => 'Membre',
+    'creneau_label' => 'Créneau',
+    'function_label' => 'Fonction',
+    'comment_label' => 'Commentaire',
+    'btn_enroll_submit' => 'Inscrire',
+    'partie_label' => 'Partie',
+
+    // équipe modals
+    'modal_add_equipe_title' => 'Nouvelle équipe',
+    'modal_edit_equipe_title' => 'Modifier l\'équipe',
+    'equipe_nom_label' => 'Nom',
+    'equipe_order_label' => 'Ordre d\'affichage',
+    'equipe_radio_label' => 'ID Radio',
+    'equipe_desc_label' => 'Description / Mission',
+
+    // renfort modal
+    'modal_add_renfort_title' => 'Rattacher un renfort',
+    'renfort_number_label' => 'N° de l\'activité renfort',
+    'renfort_number_help' => 'Numéro de l\'événement à rattacher en tant que renfort.',
+    'renfort_number_placeholder' => 'ex. 12345',
+    'btn_attach_renfort' => 'Rattacher',
+
+    // duplicate modal
+    'modal_duplicate_title' => 'Dupliquer l\'activité',
+    'duplicate_intro' => 'Une copie de :name sera créée à la date indiquée. Le statut sera remis à « Ouvert ».',
+    'duplicate_date_label' => 'Date de début',
+    'duplicate_date_help' => 'Les autres horaires seront décalés du même nombre de jours.',
+    'duplicate_copy_people' => 'Copier les participants et les équipes',
+    'duplicate_copy_vehicles' => 'Copier les véhicules et le matériel',
+    'btn_duplicate_submit' => 'Dupliquer',
+
+    // postes modal
+    'modal_add_poste_title' => 'Ajouter un poste requis',
+    'poste_label' => 'Poste / Qualification',
+    'poste_global_option' => 'Total participants (global)',
+    'nb_requis_label' => 'Nombre requis',
+    'btn_add_poste' => 'Ajouter',
+
+    // option group modals
+    'modal_add_group_title' => 'Nouveau groupe d\'options',
+    'modal_edit_group_title' => 'Modifier le groupe',
+    'group_nom_label' => 'Nom',
+    'group_order_label' => 'Ordre',
+
+    // option modals
+    'modal_add_option_title' => 'Nouvelle option d\'inscription',
+    'modal_edit_option_title' => 'Modifier l\'option',
+    'option_nom_label' => 'Nom',
+    'option_type_label' => 'Type',
+    'opt_type_checkbox_long' => 'Case à cocher',
+    'opt_type_text_long' => 'Texte libre',
+    'opt_type_textnum_long' => 'Valeur numérique',
+    'opt_type_dropdown_long' => 'Liste déroulante',
+    'opt_type_date_long' => 'Date (JJ-MM-AAAA)',
+    'opt_type_hour_long' => 'Heure (HH:mm)',
+    'option_group_label' => 'Groupe',
+    'option_no_group' => '— aucun groupe —',
+    'option_order_label' => 'Ordre dans le groupe',
+    'option_order_label_short' => 'Ordre',
+    'option_desc_label' => 'Description / aide',
+    'dropdown_choices_heading' => 'Choix de la liste déroulante',
+    'choice_placeholder' => 'Nouveau choix…',
+    'choices_modal_heading' => 'Options',
+
+    // JS confirms
+    'confirm_unsubscribe' => 'Désinscrire :name ?',
+    'confirm_delete_team' => 'Supprimer l\'équipe « :name » ?',
+    'confirm_remove_vehicle' => 'Désassigner ce véhicule ?',
+    'confirm_remove_materiel' => 'Retirer :name ?',
+    'confirm_detach_renfort' => 'Détacher ce renfort ?',
+    'confirm_delete_poste' => 'Supprimer ce poste requis ?',
+    'confirm_delete_option' => 'Supprimer cette option et tous les choix saisis ?',
+    'confirm_delete_group' => 'Supprimer ce groupe ? Les options seront dégroupées.',
+    'confirm_delete_log' => 'Supprimer cette entrée ?',
+    'confirm_delete_choice' => 'Supprimer ce choix ?',
+    'confirm_delete_event' => 'Supprimer définitivement cette activité ?',
+
+    // ── form ───────────────────────────────────────────────────────────────
+    'form_title_new' => 'Nouvelle activité',
+    'form_title_edit' => 'Modifier',
+    'form_btn_view' => 'Voir la fiche',
+    'form_section_identity' => 'Identification',
+    'form_type_label' => 'Type',
+    'form_intitule_label' => 'Intitulé',
+    'form_section_location' => 'Localisation',
+    'form_lieu_label' => 'Lieu',
+    'form_section_label' => 'Section',
+    'form_address_label' => 'Adresse exacte (avec code postal)',
+    'form_lieu_rdv_label' => 'Lieu de rendez-vous',
+    'form_heure_rdv_label' => 'Heure de rendez-vous',
+    'form_section_org' => 'Organisation',
+    'form_chef_label' => 'Responsable',
+    'form_chef_none' => '— Aucun —',
+    'form_tel_label' => 'Tél. responsable',
+    'form_effectif_label' => 'Effectif',
+    'form_section_contact' => 'Contact sur place',
+    'form_contact_name_label' => 'Nom du contact',
+    'form_contact_tel_label' => 'Téléphone',
+    'form_whatsapp_label' => 'WhatsApp',
+    'form_section_conf' => 'Conférence web',
+    'form_conf_url_label' => 'Lien de conférence',
+    'form_conf_pin_label' => 'Code / PIN',
+    'form_conf_start_label' => 'Heure de début',
+    'form_section_creneaux' => 'Créneaux',
+    'form_add_partie' => 'Ajouter une partie',
+    'form_partie_label' => 'Partie',
+    'form_date_debut_label' => 'Date début',
+    'form_date_fin_label' => 'Date fin',
+    'form_heure_debut_label' => 'Heure début',
+    'form_heure_fin_label' => 'Heure fin',
+    'form_section_status' => 'Statut',
+    'form_open_to_ext' => 'Ouvert aux externes',
+    'form_visible_outside' => 'Visible de l\'extérieur',
+    'form_exterieur' => 'Activité extérieure au département',
+    'form_hidden' => 'Activité cachée',
+    'form_allow_reinf' => 'Renforts possibles',
+    'form_closed' => 'Clôturée',
+    'form_canceled' => 'Annulée',
+    'form_autoclose_label' => 'Clôturer auto. après',
+    'form_autoclose_unit' => 'jours',
+    'form_consignes_label' => 'Consignes',
+    'form_consignes_hint' => '(visible sur ordre de mission)',
+    'form_comment_label' => 'Commentaire',
+    'form_comment_hint' => '(visible)',
+    'form_btn_save' => 'Enregistrer',
+    'form_btn_create' => 'Créer l\'activité',
+    'form_choose' => '— Choisir —',
+
+    // danger zone
+    'danger_zone_title' => 'Zone dangereuse',
+    'danger_zone_desc' => 'La suppression est définitive et retire également les participations, véhicules et matériels associés.',
+    'btn_delete_event' => 'Supprimer l\'activité',
+
+    // ── trombinoscope ─────────────────────────────────────────────────────
+    'trombi_heading' => 'Trombinoscope',
+    'trombi_participants' => ':count participant(s)',
+    'trombi_empty' => 'Aucun participant inscrit à cette activité.',
+
+    // ── renfort-request ───────────────────────────────────────────────────
+    'renfort_req_heading' => 'Demande de renfort',
+    'renfort_req_vehicles_heading' => 'Véhicules requis',
+    'renfort_req_nb_vehicles_label' => 'Nombre total de véhicules',
+    'renfort_req_point_label' => 'Point de regroupement',
+    'renfort_req_detail_label' => 'Détail par type de véhicule',
+    'renfort_req_material_heading' => 'Catégories de matériel requis',
+    'renfort_req_specific_label' => 'Demande spécifique',
+    'renfort_req_btn_save' => 'Enregistrer',
+
+];

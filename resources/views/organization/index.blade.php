@@ -5,23 +5,23 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Organisation'],
-    ['label' => 'Organigramme'],
+    ['label' => __('organization.bc_organisation')],
+    ['label' => __('organization.bc_org_chart')],
 ]"/>
 
 <div class="mx-3 mt-3">
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
-                <i class="fas fa-project-diagram me-2"></i>Organigramme
+                <i class="fas fa-project-diagram me-2"></i>{{ __('organization.bc_org_chart') }}
             </div>
             <div class="ob-widget-card-actions">
                 <a href="{{ route('organization.sections') }}" class="btn btn-sm btn-outline-secondary me-1">
-                    <i class="fas fa-layer-group me-1"></i>Gérer les sections
+                    <i class="fas fa-layer-group me-1"></i>{{ __('organization.manage_sections') }}
                 </a>
                 @if(auth()->user()->hasPermission(55))
                     <a href="{{ route('organization.sections.create') }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-plus me-1"></i>Nouvelle section
+                        <i class="fas fa-plus me-1"></i>{{ __('organization.new_section') }}
                     </a>
                 @endif
             </div>

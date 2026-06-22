@@ -1,12 +1,12 @@
 @extends('layout.app')
 
-@section('title', 'Authentification à deux facteurs — ' . config('app.name'))
+@section('title', __('account.title_totp') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Mon compte'],
-    ['label' => 'Authentification à deux facteurs'],
+    ['label' => __('account.breadcrumb_account')],
+    ['label' => __('account.breadcrumb_totp')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -20,14 +20,13 @@
         <div class="ob-widget-card mb-3">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-shield-alt me-1 text-success"></i> 2FA activée
+                    <i class="fas fa-shield-alt me-1 text-success"></i> {{ __('account.2fa_active_title') }}
                 </div>
-                <span class="badge bg-success">Actif</span>
+                <span class="badge bg-success">{{ __('account.badge_active') }}</span>
             </div>
             <div class="ob-widget-card-body" style="font-size:var(--font-size-sm);">
                 <p class="mb-0 text-muted">
-                    Votre compte est protégé par l'authentification à deux facteurs.
-                    Un code TOTP sera demandé à chaque connexion.
+                    {{ __('account.2fa_active_desc') }}
                 </p>
             </div>
         </div>
@@ -36,13 +35,12 @@
         <div class="ob-widget-card mb-3">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-key me-1"></i> Codes de récupération
+                    <i class="fas fa-key me-1"></i> {{ __('account.recovery_title') }}
                 </div>
             </div>
             <div class="ob-widget-card-body">
                 <p class="text-muted mb-3" style="font-size:var(--font-size-sm);">
-                    Conservez ces codes dans un endroit sûr. Chaque code est à usage unique et
-                    permet de se connecter si vous perdez l'accès à votre application TOTP.
+                    {{ __('account.recovery_desc') }}
                 </p>
 
                 @if (! empty($recoveryCodes))
@@ -54,16 +52,15 @@
                 </div>
                 @else
                 <p class="text-muted" style="font-size:var(--font-size-sm);">
-                    Les codes de récupération ne sont affichés qu'une seule fois après leur génération.
-                    Régénérez-les ci-dessous si vous les avez perdus.
+                    {{ __('account.recovery_hidden') }}
                 </p>
                 @endif
 
                 <form method="POST" action="{{ route('totp.codes.regenerate') }}">
                     @csrf
                     <button type="submit" class="btn btn-sm btn-outline-secondary"
-                            onclick="return confirm('Régénérer les codes ? Les anciens codes seront invalides.')">
-                        <i class="fas fa-sync-alt me-1"></i> Régénérer les codes
+                            onclick="return confirm('{{ __('account.confirm_regenerate') }}')">
+                        <i class="fas fa-sync-alt me-1"></i> {{ __('account.btn_regenerate') }}
                     </button>
                 </form>
             </div>
@@ -73,12 +70,12 @@
         <div class="ob-widget-card border-danger-subtle">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title text-danger">
-                    <i class="fas fa-times-circle me-1"></i> Désactiver la 2FA
+                    <i class="fas fa-times-circle me-1"></i> {{ __('account.disable_title') }}
                 </div>
             </div>
             <div class="ob-widget-card-body">
                 <p class="text-muted mb-3" style="font-size:var(--font-size-sm);">
-                    Saisissez votre code TOTP actuel pour confirmer la désactivation.
+                    {{ __('account.disable_desc') }}
                 </p>
                 <form method="POST" action="{{ route('totp.disable') }}">
                     @csrf @method('DELETE')
@@ -93,8 +90,8 @@
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('Désactiver la protection 2FA ?')">
-                            Désactiver
+                                onclick="return confirm('{{ __('account.confirm_disable') }}')">
+                            {{ __('account.btn_disable') }}
                         </button>
                     </div>
                 </form>
@@ -106,15 +103,14 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-mobile-alt me-1"></i> Configuration de la 2FA
+                    <i class="fas fa-mobile-alt me-1"></i> {{ __('account.setup_pending_title') }}
                 </div>
-                <span class="badge bg-warning text-dark">En attente de confirmation</span>
+                <span class="badge bg-warning text-dark">{{ __('account.badge_pending') }}</span>
             </div>
             <div class="ob-widget-card-body">
 
                 <p class="mb-3" style="font-size:var(--font-size-sm);">
-                    Scannez ce QR code avec votre application d'authentification
-                    (Google Authenticator, Authy, 2FAS…), puis saisissez le code généré pour confirmer.
+                    {{ __('account.setup_qr_desc') }}
                 </p>
 
                 <div class="text-center mb-3">
@@ -122,13 +118,13 @@
                 </div>
 
                 <p class="text-muted text-center mb-4" style="font-size:var(--font-size-xs);">
-                    Clé manuelle&nbsp;:
+                    {{ __('account.manual_key_label_nbsp') }}
                     <code class="user-select-all">{{ $secret }}</code>
                 </p>
 
                 <form method="POST" action="{{ route('totp.confirm') }}">
                     @csrf
-                    <label for="code" class="form-label fw-semibold">Code de confirmation</label>
+                    <label for="code" class="form-label fw-semibold">{{ __('account.label_confirm_code') }}</label>
                     <div class="d-flex gap-2">
                         <input type="text" id="code" name="code"
                                class="form-control font-monospace @error('code') is-invalid @enderror"
@@ -136,7 +132,7 @@
                                autocomplete="one-time-code" autofocus
                                style="max-width:160px;">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-check me-1"></i> Confirmer
+                            <i class="fas fa-check me-1"></i> {{ __('account.btn_confirm') }}
                         </button>
                     </div>
                     @error('code')
@@ -152,13 +148,13 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-mobile-alt me-1"></i> Configurer la 2FA
+                    <i class="fas fa-mobile-alt me-1"></i> {{ __('account.setup_title') }}
                 </div>
-                <span class="badge bg-secondary">Inactif</span>
+                <span class="badge bg-secondary">{{ __('account.badge_inactive') }}</span>
             </div>
             <div class="ob-widget-card-body">
                 <p class="text-muted mb-0" style="font-size:var(--font-size-sm);">
-                    La double authentification n'est pas encore configurée. Rechargez cette page pour démarrer la configuration.
+                    {{ __('account.setup_not_configured') }}
                 </p>
             </div>
         </div>
@@ -171,22 +167,18 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-info-circle me-1"></i> À propos de la 2FA
+                    <i class="fas fa-info-circle me-1"></i> {{ __('account.about_title') }}
                 </div>
             </div>
             <div class="ob-widget-card-body" style="font-size:var(--font-size-sm);">
                 <p class="text-muted mb-2">
-                    L'authentification à deux facteurs (2FA / TOTP) ajoute une couche de protection :
-                    même si votre mot de passe est compromis, l'attaquant ne peut pas se connecter
-                    sans votre téléphone.
+                    {{ __('account.about_desc_totp') }}
                 </p>
                 <p class="text-muted mb-2">
-                    <strong>Applications compatibles :</strong> Google Authenticator, Microsoft Authenticator,
-                    Authy, 2FAS Auth, Bitwarden, ou tout client TOTP (RFC 6238).
+                    <strong>{{ __('account.about_apps') }}</strong> {{ __('account.about_apps_list') }}
                 </p>
                 <p class="text-muted mb-0">
-                    <strong>Codes de récupération :</strong> conservez-les hors ligne. Ils permettent
-                    l'accès si vous perdez votre appareil.
+                    <strong>{{ __('account.about_recovery') }}</strong> {{ __('account.about_recovery_desc') }}
                 </p>
             </div>
         </div>

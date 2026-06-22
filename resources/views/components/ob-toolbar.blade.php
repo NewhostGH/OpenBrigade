@@ -99,9 +99,9 @@
             <div class="dropdown">
                 <button class="btn btn-sm btn-light dropdown-toggle" type="button"
                         data-bs-toggle="dropdown" aria-expanded="false"
-                        title="Colonnes visibles">
+                        title="{{ __('components.columns_title') }}">
                     <i class="fa fa-columns fa-sm"></i>
-                    <span class="d-none d-sm-inline ms-1">Colonnes</span>
+                    <span class="d-none d-sm-inline ms-1">{{ __('components.columns_label') }}</span>
                 </button>
                 <ul class="dropdown-menu p-2" style="min-width:190px;"
                     onclick="event.stopPropagation()">
@@ -110,7 +110,7 @@
                             <input type="checkbox"
                                    data-col-toggle-all
                                    data-for-table="{{ $tableId }}">
-                            <span class="fw-semibold">Tout basculer</span>
+                            <span class="fw-semibold">{{ __('components.toggle_all_cols') }}</span>
                         </label>
                     </li>
                     <li><hr class="dropdown-divider my-1"></li>
@@ -135,11 +135,11 @@
                     data-card-toggle
                     data-for-table="{{ $tableId }}"
                     class="btn btn-sm btn-light"
-                    title="Vue carte / tableau">
+                    title="{{ __('components.card_view_title') }}">
                 <i data-card-toggle-icon
                    data-for-table="{{ $tableId }}"
                    class="fa fa-toggle-off"></i>
-                <span class="d-none d-sm-inline ms-1">Vue carte</span>
+                <span class="d-none d-sm-inline ms-1">{{ __('components.card_view_label') }}</span>
             </button>
             @endif
 
@@ -150,7 +150,7 @@
                data-base-href="{{ $exportXlsUrl }}"
                href="{{ $exportXlsUrl }}"
                class="btn btn-sm btn-light"
-               title="Exporter Excel (.xlsx) — colonnes visibles">
+               title="{{ __('components.export_xls_title') }}">
                 <i class="far fa-file-excel" style="color:var(--color-excel);"></i>
             </a>
             @endif
@@ -162,7 +162,7 @@
                data-base-href="{{ $exportCsvUrl }}"
                href="{{ $exportCsvUrl }}"
                class="btn btn-sm btn-light"
-               title="Exporter CSV — colonnes visibles">
+               title="{{ __('components.export_csv_title') }}">
                 <i class="fas fa-file-csv" style="color:var(--text-muted-soft);"></i>
             </a>
             @endif

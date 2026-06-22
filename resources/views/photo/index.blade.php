@@ -1,23 +1,23 @@
 @extends('layout.app')
 
-@section('title', 'Album photos — ' . config('app.name'))
+@section('title', __('photo.title_albums') . ' — ' . config('app.name'))
 
 @section('content')
 
-<x-ob-breadcrumb :items="[['label' => 'Album photos']]"/>
+<x-ob-breadcrumb :items="[['label' => __('photo.breadcrumb_albums')]]"/>
 
-<x-ob-toolbar title="Album photos" :total="count($albums)" total-label="album"
+<x-ob-toolbar title="{{ __('photo.title_albums') }}" :total="count($albums)" total-label="{{ __('photo.total_label_album') }}"
     filter-action="{{ route('photo.index') }}" filter-id="photoFilter">
 
     @if ($canManage)
         <button type="button" class="btn btn-sm btn-primary"
                 data-bs-toggle="modal" data-bs-target="#albumCreateModal">
-            <i class="fas fa-plus me-1"></i> Nouvel album
+            <i class="fas fa-plus me-1"></i> {{ __('photo.btn_new_album') }}
         </button>
         @if ($imageFolders->isNotEmpty())
             <button type="button" class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="modal" data-bs-target="#autoAlbumModal">
-                <i class="fas fa-magic me-1"></i> Auto-albums
+                <i class="fas fa-magic me-1"></i> {{ __('photo.btn_auto_albums') }}
             </button>
         @endif
     @endif
@@ -30,17 +30,17 @@
 @if ($albums->isEmpty())
     <div class="mx-3 mt-4 text-muted text-center py-5">
         <i class="fas fa-images fa-3x mb-3 d-block text-secondary opacity-50"></i>
-        Aucun album photo.
+        {{ __('photo.empty_albums') }}
         @if ($canManage)
             <div class="mt-2 d-flex gap-2 justify-content-center flex-wrap">
                 <button class="btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal" data-bs-target="#albumCreateModal">
-                    Créer le premier album
+                    {{ __('photo.btn_create_first') }}
                 </button>
                 @if ($imageFolders->isNotEmpty())
                     <button class="btn btn-sm btn-outline-secondary"
                             data-bs-toggle="modal" data-bs-target="#autoAlbumModal">
-                        <i class="fas fa-magic me-1"></i> Importer depuis la bibliothèque
+                        <i class="fas fa-magic me-1"></i> {{ __('photo.btn_import_library') }}
                     </button>
                 @endif
             </div>
@@ -81,7 +81,7 @@
                             <span class="ob-photo-album-actions">
                                 <button type="button"
                                         class="btn btn-sm btn-outline-secondary py-0 px-2"
-                                        title="Modifier l'album"
+                                        title="{{ __('photo.album_edit_title') }}"
                                         data-album-edit
                                         data-id="{{ $album->id }}"
                                         data-name="{{ $album->name }}"
@@ -89,11 +89,11 @@
                                     <i class="fas fa-pen fa-xs"></i>
                                 </button>
                                 <form method="POST" action="{{ route('photo.album.destroy', $album) }}"
-                                      data-confirm="Supprimer l'album « {{ $album->name }} » et toutes ses photos ?">
+                                      data-confirm="{{ __('photo.confirm_delete_album', ['name' => $album->name]) }}">
                                     @csrf @method('DELETE')
                                     <button type="submit"
                                             class="btn btn-sm btn-outline-danger py-0 px-2"
-                                            title="Supprimer l'album">
+                                            title="{{ __('photo.album_delete_title') }}">
                                         <i class="fas fa-trash fa-xs"></i>
                                     </button>
                                 </form>
@@ -114,23 +114,23 @@
                 @csrf
                 <input type="hidden" name="section" value="{{ $sectionId }}">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Nouvel album</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>{{ __('photo.modal_create_title') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('photo.modal_close') }}"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label" for="albumCreateName">Nom</label>
+                        <label class="form-label" for="albumCreateName">{{ __('photo.label_name') }}</label>
                         <input type="text" id="albumCreateName" name="name" class="form-control"
                                maxlength="100" required autofocus>
                     </div>
                     <div class="mb-0">
-                        <label class="form-label" for="albumCreateDesc">Description <span class="text-muted">(optionnel)</span></label>
+                        <label class="form-label" for="albumCreateDesc">{!! __('photo.label_description_opt') !!}</label>
                         <input type="text" id="albumCreateDesc" name="description" class="form-control" maxlength="500">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Créer</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{ __('photo.btn_create') }}</button>
                 </div>
             </form>
         </div>
@@ -142,22 +142,22 @@
             <form method="POST" id="albumEditForm" class="modal-content">
                 @csrf @method('PATCH')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Modifier l'album</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <h5 class="modal-title"><i class="fas fa-pen me-2"></i>{{ __('photo.modal_edit_title') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('photo.modal_close') }}"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label" for="albumEditName">Nom</label>
+                        <label class="form-label" for="albumEditName">{{ __('photo.label_name') }}</label>
                         <input type="text" id="albumEditName" name="name" class="form-control" maxlength="100" required>
                     </div>
                     <div class="mb-0">
-                        <label class="form-label" for="albumEditDesc">Description</label>
+                        <label class="form-label" for="albumEditDesc">{{ __('photo.label_description') }}</label>
                         <input type="text" id="albumEditDesc" name="description" class="form-control" maxlength="500">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{ __('photo.btn_save') }}</button>
                 </div>
             </form>
         </div>
@@ -171,12 +171,12 @@
                     @csrf
                     <input type="hidden" name="section" value="{{ $sectionId }}">
                     <div class="modal-header">
-                        <h5 class="modal-title"><i class="fas fa-magic me-2"></i>Auto-albums depuis la bibliothèque</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        <h5 class="modal-title"><i class="fas fa-magic me-2"></i>{{ __('photo.auto_modal_title') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('photo.modal_close') }}"></button>
                     </div>
                     <div class="modal-body">
                         <p class="text-muted mb-3" style="font-size:var(--font-size-sm);">
-                            Chaque dossier sélectionné sera converti en album photo avec toutes ses images.
+                            {{ __('photo.auto_modal_desc') }}
                         </p>
                         <div class="list-group">
                             @foreach ($imageFolders as $folder)
@@ -187,7 +187,7 @@
                                         <i class="fas fa-folder text-warning me-2"></i>
                                         <strong>{{ $folder['name'] }}</strong>
                                         <span class="ms-2 text-muted" style="font-size:var(--font-size-xs);">
-                                            {{ $folder['image_count'] }} image{{ $folder['image_count'] > 1 ? 's' : '' }}
+                                            {{ trans_choice('photo.image_count', $folder['image_count'], ['count' => $folder['image_count']]) }}
                                         </span>
                                     </span>
                                 </label>
@@ -195,9 +195,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
                         <button type="submit" class="btn btn-sm btn-primary">
-                            <i class="fas fa-magic me-1"></i> Créer les albums
+                            <i class="fas fa-magic me-1"></i> {{ __('photo.btn_create_albums') }}
                         </button>
                     </div>
                 </form>

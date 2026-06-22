@@ -5,14 +5,14 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Géolocalisation'],
+    ['label' => __('personnel.geo_title')], {{-- i18n-ignore --}}
 ]"/>
 
 {{-- Toolbar --}}
 <div class="ob-geo-toolbar noprint">
     @feature('multi_site')
     <select class="form-select" onchange="updateParam('section', this.value)">
-        <option value="" {{ $sectionId === null ? 'selected' : '' }}>Toutes sections</option>
+        <option value="" {{ $sectionId === null ? 'selected' : '' }}>{{ __('personnel.geo_all_sections') }}</option>
         @foreach ($sections as $sec)
             <option value="{{ $sec->S_ID }}" {{ $sectionId === (int)$sec->S_ID ? 'selected' : '' }}>
                 {{ $sec->S_CODE }}{{ $sec->S_DESCRIPTION ? ' — ' . $sec->S_DESCRIPTION : '' }}
@@ -22,7 +22,7 @@
     @endfeature
     <span class="ob-geo-stat">
         <i class="fas fa-map-marker-alt me-1"></i>
-        {{ $count }} membre{{ $count > 1 ? 's' : '' }} géolocalisé{{ $count > 1 ? 's' : '' }}
+        {{ trans_choice('personnel.geo_member_count', $count, ['count' => $count]) }}
     </span>
 </div>
 

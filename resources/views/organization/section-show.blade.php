@@ -5,8 +5,8 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Organisation'],
-    ['label' => 'Sections', 'url' => route('organization.sections')],
+    ['label' => __('organization.bc_organisation')],
+    ['label' => __('organization.bc_sections'), 'url' => route('organization.sections')],
     ['label' => $section->S_CODE],
 ]"/>
 
@@ -24,14 +24,14 @@
                     <span class="text-muted fw-normal ms-2">— {{ $section->S_DESCRIPTION }}</span>
                 @endif
                 @if ($section->S_INACTIVE)
-                    <span class="ob-badge ob-badge-archive ms-2">Inactive</span>
+                    <span class="ob-badge ob-badge-archive ms-2">{{ __('organization.status_inactive') }}</span>
                 @else
-                    <span class="ob-badge ob-badge-actif ms-2">Active</span>
+                    <span class="ob-badge ob-badge-actif ms-2">{{ __('organization.status_active') }}</span>
                 @endif
             </div>
             <div class="d-flex gap-2">
                 <a href="{{ route('organization.sections.edit', $section->S_ID) }}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-edit me-1"></i>Modifier
+                    <i class="fas fa-edit me-1"></i>{{ __('common.edit') }}
                 </a>
                 <a href="{{ route('organization.sections') }}" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-arrow-left"></i>
@@ -40,7 +40,7 @@
         </div>
         <div class="ob-widget-card-body pt-2 pb-2">
             <div class="d-flex gap-4" style="font-size:var(--font-size-sm); color:var(--text-muted);">
-                <span><i class="fas fa-users me-1"></i>{{ $memberCount }} membre{{ $memberCount !== 1 ? 's' : '' }}</span>
+                <span><i class="fas fa-users me-1"></i>{{ trans_choice('organization.member_count', $memberCount, ['count' => $memberCount]) }}</span>
                 @if ($section->parent)
                     <span><i class="fas fa-sitemap me-1"></i>{{ $section->parent->S_CODE }}</span>
                 @endif
@@ -55,11 +55,11 @@
     <ul class="nav nav-tabs mb-3">
         @php
             $tabs = [
-                'informations'    => ['icon' => 'fas fa-info-circle',    'label' => 'Informations'],
-                'organigramme'    => ['icon' => 'fas fa-project-diagram', 'label' => 'Organigramme'],
-                'personalisation' => ['icon' => 'fas fa-palette',         'label' => 'Personnalisation'],
-                'agrements'       => ['icon' => 'fas fa-certificate',     'label' => 'Agréments & Médailles'],
-                'cotisation'      => ['icon' => 'fas fa-university',      'label' => 'Cotisation'],
+                'informations'    => ['icon' => 'fas fa-info-circle',    'label' => __('organization.tab_informations')],
+                'organigramme'    => ['icon' => 'fas fa-project-diagram', 'label' => __('organization.tab_org_chart')],
+                'personalisation' => ['icon' => 'fas fa-palette',         'label' => __('organization.tab_personalisation')],
+                'agrements'       => ['icon' => 'fas fa-certificate',     'label' => __('organization.tab_agrements')],
+                'cotisation'      => ['icon' => 'fas fa-university',      'label' => __('organization.tab_cotisation')],
             ];
         @endphp
         @foreach ($tabs as $key => $tab)
@@ -81,15 +81,15 @@
             <div class="col-md-6">
                 <div class="ob-widget-card h-100">
                     <div class="ob-widget-card-header">
-                        <div class="ob-widget-card-title"><i class="fas fa-layer-group me-2"></i>Informations obligatoires</div>
+                        <div class="ob-widget-card-title"><i class="fas fa-layer-group me-2"></i>{{ __('organization.card_mandatory_info') }}</div>
                     </div>
                     <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
-                            <div class="ob-info-item"><dt>Code</dt><dd>{{ $section->S_CODE ?: '—' }}</dd></div>
-                            <div class="ob-info-item"><dt>Nom</dt><dd>{{ $section->S_DESCRIPTION ?: '—' }}</dd></div>
-                            <div class="ob-info-item"><dt>Ordre garde</dt><dd>{{ $section->S_ORDER ?? '—' }}</dd></div>
+                            <div class="ob-info-item"><dt>{{ __('organization.field_code') }}</dt><dd>{{ $section->S_CODE ?: '—' }}</dd></div>
+                            <div class="ob-info-item"><dt>{{ __('organization.field_name') }}</dt><dd>{{ $section->S_DESCRIPTION ?: '—' }}</dd></div>
+                            <div class="ob-info-item"><dt>{{ __('organization.field_order') }}</dt><dd>{{ $section->S_ORDER ?? '—' }}</dd></div>
                             <div class="ob-info-item">
-                                <dt>Section parente</dt>
+                                <dt>{{ __('organization.field_parent_section') }}</dt>
                                 <dd>
                                     @if ($section->parent)
                                         <a href="{{ route('organization.sections.show', $section->parent->S_ID) }}">
@@ -108,20 +108,20 @@
             <div class="col-md-6">
                 <div class="ob-widget-card h-100">
                     <div class="ob-widget-card-header">
-                        <div class="ob-widget-card-title"><i class="fas fa-address-book me-2"></i>Contact</div>
+                        <div class="ob-widget-card-title"><i class="fas fa-address-book me-2"></i>{{ __('organization.card_contact') }}</div>
                     </div>
                     <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
                             @foreach ([
-                                'Téléphone'          => $section->S_PHONE,
-                                'Tél opérationnel'   => $section->S_PHONE2,
-                                'Tél formations'     => $section->S_PHONE3,
-                                'Fax'                => $section->S_FAX,
-                                'Email opérationnel' => $section->S_EMAIL,
-                                'Email secrétariat'  => $section->S_EMAIL2,
-                                'Email formation'    => $section->S_EMAIL3,
-                                'Groupe WhatsApp'    => $section->S_WHATSAPP,
-                                'ID Radio'           => $section->S_ID_RADIO,
+                                __('organization.field_phone')          => $section->S_PHONE,
+                                __('organization.field_phone_ops')      => $section->S_PHONE2,
+                                __('organization.field_phone_training') => $section->S_PHONE3,
+                                __('organization.field_fax')            => $section->S_FAX,
+                                __('organization.field_email_ops')      => $section->S_EMAIL,
+                                __('organization.field_email_secretary') => $section->S_EMAIL2,
+                                __('organization.field_email_training') => $section->S_EMAIL3,
+                                __('organization.field_whatsapp')       => $section->S_WHATSAPP,
+                                __('organization.field_radio_id')       => $section->S_ID_RADIO,
                             ] as $label => $value)
                                 @if ($value)
                                     <div class="ob-info-item"><dt>{{ $label }}</dt><dd>{{ $value }}</dd></div>
@@ -135,22 +135,22 @@
             <div class="col-md-6">
                 <div class="ob-widget-card h-100">
                     <div class="ob-widget-card-header">
-                        <div class="ob-widget-card-title"><i class="fas fa-info-circle me-2"></i>Informations facultatives</div>
+                        <div class="ob-widget-card-title"><i class="fas fa-info-circle me-2"></i>{{ __('organization.card_optional_info') }}</div>
                     </div>
                     <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
                             @php
                                 $adresse = implode(', ', array_filter([$section->S_ADDRESS, $section->S_ADDRESS_COMPLEMENT]));
                             @endphp
-                            @if ($adresse)<div class="ob-info-item"><dt>Adresse</dt><dd>{{ $adresse }}</dd></div>@endif
+                            @if ($adresse)<div class="ob-info-item"><dt>{{ __('organization.field_address') }}</dt><dd>{{ $adresse }}</dd></div>@endif
                             @if ($section->S_ZIP_CODE || $section->S_CITY)
-                                <div class="ob-info-item"><dt>Ville</dt><dd>{{ trim($section->S_ZIP_CODE . ' ' . $section->S_CITY) }}</dd></div>
+                                <div class="ob-info-item"><dt>{{ __('organization.field_city') }}</dt><dd>{{ trim($section->S_ZIP_CODE . ' ' . $section->S_CITY) }}</dd></div>
                             @endif
-                            @if ($section->S_SIRET)<div class="ob-info-item"><dt>SIRET</dt><dd>{{ $section->S_SIRET }}</dd></div>@endif
-                            @if ($section->S_AFFILIATION)<div class="ob-info-item"><dt>N° Affiliation</dt><dd>{{ $section->S_AFFILIATION }}</dd></div>@endif
+                            @if ($section->S_SIRET)<div class="ob-info-item"><dt>{{ __('organization.field_siret') }}</dt><dd>{{ $section->S_SIRET }}</dd></div>@endif
+                            @if ($section->S_AFFILIATION)<div class="ob-info-item"><dt>{{ __('organization.field_affiliation') }}</dt><dd>{{ $section->S_AFFILIATION }}</dd></div>@endif
                             @if ($section->S_URL)
                                 <div class="ob-info-item">
-                                    <dt>Site web</dt>
+                                    <dt>{{ __('organization.field_website') }}</dt>
                                     <dd><a href="{{ Str::startsWith($section->S_URL, 'http') ? $section->S_URL : 'https://' . $section->S_URL }}"
                                            target="_blank" rel="noopener">{{ $section->S_URL }}</a></dd>
                                 </div>
@@ -168,11 +168,11 @@
 
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
-                <div class="ob-widget-card-title"><i class="fas fa-project-diagram me-2"></i>Rôles dans la section</div>
+                <div class="ob-widget-card-title"><i class="fas fa-project-diagram me-2"></i>{{ __('organization.card_roles') }}</div>
             </div>
             <div class="ob-widget-card-body">
                 @if ($orgByRole->isEmpty())
-                    <p class="text-muted mb-0" style="font-size:var(--font-size-sm);">Aucun rôle attribué dans cette section.</p>
+                    <p class="text-muted mb-0" style="font-size:var(--font-size-sm);">{{ __('organization.no_roles') }}</p>
                 @else
                     <div class="row g-3">
                         @foreach ($orgByRole as $roleName => $members)
@@ -222,48 +222,48 @@
             {{-- Papier à entête --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-file-alt me-2"></i>Papier à entête</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-file-alt me-2"></i>{{ __('organization.card_letterhead') }}</div>
                 </div>
                 <div class="ob-widget-card-body">
                     <div class="row g-2">
                         <div class="col-md-6">
-                            <label class="form-label form-label-sm">Modèle (.PDF)</label>
+                            <label class="form-label form-label-sm">{{ __('organization.label_pdf_model') }}</label>
                             <input type="file" name="S_PDF_PAGE" accept=".pdf" class="form-control form-control-sm">
                             @if ($section->S_PDF_PAGE)
                                 <div class="mt-1 d-flex align-items-center gap-2" style="font-size:var(--font-size-xs); color:var(--text-muted);">
                                     <span><i class="fas fa-file-pdf text-danger me-1"></i>{{ $section->S_PDF_PAGE }}</span>
                                     <button type="submit" form="letterhead-reset-form"
                                             class="btn btn-sm btn-outline-secondary py-0"
-                                            onclick="return confirm('Réinitialiser le papier à entête ? Le modèle par défaut sera utilisé.')">
-                                        <i class="fas fa-undo me-1"></i>Modèle par défaut
+                                            onclick="return confirm('{{ __('organization.confirm_reset_lh') }}')">
+                                        <i class="fas fa-undo me-1"></i>{{ __('organization.label_reset_letterhead') }}
                                     </button>
                                 </div>
                             @else
                                 <div class="mt-1" style="font-size:var(--font-size-xs); color:var(--text-muted);">
-                                    Modèle par défaut utilisé (pdf_page.pdf)
+                                    {{ __('organization.label_default_model') }}
                                 </div>
                             @endif
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label form-label-sm" for="S_PDF_MARGE_TOP">Marge haut (mm)</label>
+                            <label class="form-label form-label-sm" for="S_PDF_MARGE_TOP">{{ __('organization.label_margin_top') }}</label>
                             <input type="number" id="S_PDF_MARGE_TOP" name="S_PDF_MARGE_TOP"
                                    min="0" max="999" class="form-control form-control-sm"
                                    value="{{ old('S_PDF_MARGE_TOP', $section->S_PDF_MARGE_TOP ?? 15) }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label form-label-sm" for="S_PDF_MARGE_LEFT">Marge gauche/droite (mm)</label>
+                            <label class="form-label form-label-sm" for="S_PDF_MARGE_LEFT">{{ __('organization.label_margin_lr') }}</label>
                             <input type="number" id="S_PDF_MARGE_LEFT" name="S_PDF_MARGE_LEFT"
                                    min="0" max="999" class="form-control form-control-sm"
                                    value="{{ old('S_PDF_MARGE_LEFT', $section->S_PDF_MARGE_LEFT ?? 15) }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label form-label-sm" for="S_PDF_TEXTE_TOP">Début zone de texte (mm)</label>
+                            <label class="form-label form-label-sm" for="S_PDF_TEXTE_TOP">{{ __('organization.label_text_top') }}</label>
                             <input type="number" id="S_PDF_TEXTE_TOP" name="S_PDF_TEXTE_TOP"
                                    min="0" max="9999" class="form-control form-control-sm"
                                    value="{{ old('S_PDF_TEXTE_TOP', $section->S_PDF_TEXTE_TOP ?? 40) }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label form-label-sm" for="S_PDF_TEXTE_BOTTOM">Fin zone de texte (mm)</label>
+                            <label class="form-label form-label-sm" for="S_PDF_TEXTE_BOTTOM">{{ __('organization.label_text_bottom') }}</label>
                             <input type="number" id="S_PDF_TEXTE_BOTTOM" name="S_PDF_TEXTE_BOTTOM"
                                    min="0" max="9999" class="form-control form-control-sm"
                                    value="{{ old('S_PDF_TEXTE_BOTTOM', $section->S_PDF_TEXTE_BOTTOM ?? 25) }}">
@@ -275,25 +275,25 @@
             {{-- Badge --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-id-badge me-2"></i>Badge</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-id-badge me-2"></i>{{ __('organization.card_badge') }}</div>
                 </div>
                 <div class="ob-widget-card-body">
                     <div class="row g-2 align-items-start">
                         <div class="col-md-4">
-                            <label class="form-label form-label-sm">Image de fond du badge</label>
+                            <label class="form-label form-label-sm">{{ __('organization.label_badge_bg') }}</label>
                             <input type="file" name="S_PDF_BADGE" accept="image/*" class="form-control form-control-sm">
                             @if ($section->S_PDF_BADGE)
                                 <div class="mt-1 d-flex align-items-center gap-2" style="font-size:var(--font-size-xs); color:var(--text-muted);">
                                     <span><i class="fas fa-image me-1"></i>{{ $section->S_PDF_BADGE }}</span>
                                     <button type="submit" form="badge-reset-form"
                                             class="btn btn-sm btn-outline-secondary py-0"
-                                            onclick="return confirm('Réinitialiser l\'image de fond du badge ?')">
-                                        <i class="fas fa-undo me-1"></i>Image par défaut
+                                            onclick="return confirm('{{ __('organization.confirm_reset_badge') }}')">
+                                        <i class="fas fa-undo me-1"></i>{{ __('organization.label_reset_badge') }}
                                     </button>
                                 </div>
                             @else
                                 <div class="mt-1" style="font-size:var(--font-size-xs); color:var(--text-muted);">
-                                    Aucune image de fond (dessin par défaut)
+                                    {{ __('organization.label_no_badge_bg') }}
                                 </div>
                             @endif
                         </div>
@@ -304,17 +304,17 @@
             {{-- Interdire les modifications --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-lock me-2"></i>Interdire les modifications sur les activités terminées</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-lock me-2"></i>{{ __('organization.card_lock') }}</div>
                 </div>
                 <div class="ob-widget-card-body">
                     @php $lockDays = (int) ($section->NB_DAYS_BEFORE_BLOCK ?? 0); @endphp
                     <div class="row g-2 align-items-end">
                         <div class="col-auto">
-                            <label class="form-label form-label-sm d-block">Modifications interdites</label>
+                            <label class="form-label form-label-sm d-block">{{ __('organization.label_lock_mode') }}</label>
                             <select id="lock_mode" class="form-select form-select-sm" style="width:auto;"
                                     onchange="document.getElementById('lock_days_wrap').style.display = this.value === 'days' ? 'inline-flex' : 'none'">
-                                <option value="never" {{ $lockDays === 0 ? 'selected' : '' }}>Jamais</option>
-                                <option value="days"  {{ $lockDays > 0  ? 'selected' : '' }}>Après x jours</option>
+                                <option value="never" {{ $lockDays === 0 ? 'selected' : '' }}>{{ __('organization.lock_never') }}</option>
+                                <option value="days"  {{ $lockDays > 0  ? 'selected' : '' }}>{{ __('organization.lock_after_days') }}</option>
                             </select>
                         </div>
                         <div class="col-auto" id="lock_days_wrap"
@@ -322,7 +322,7 @@
                             <input type="number" id="NB_DAYS_BEFORE_BLOCK" name="NB_DAYS_BEFORE_BLOCK"
                                    min="1" max="9999" class="form-control form-control-sm" style="width:100px;"
                                    value="{{ old('NB_DAYS_BEFORE_BLOCK', $lockDays ?: '') }}">
-                            <span style="font-size:var(--font-size-sm);">jours après la fin</span>
+                            <span style="font-size:var(--font-size-sm);">{{ __('organization.lock_days_after') }}</span>
                         </div>
                     </div>
                 </div>
@@ -331,16 +331,16 @@
             {{-- Textes par défaut --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-file-invoice me-2"></i>Textes par défaut pour devis et factures</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-file-invoice me-2"></i>{{ __('organization.card_default_texts') }}</div>
                 </div>
                 <div class="ob-widget-card-body">
                     <div class="row g-3">
                         @foreach ([
-                            'S_PDF_SIGNATURE'  => 'Signature des documents',
-                            'S_DEVIS_DEBUT'    => 'Début du devis',
-                            'S_DEVIS_FIN'      => 'Fin du devis',
-                            'S_FACTURE_DEBUT'  => 'Début de facture',
-                            'S_FACTURE_FIN'    => 'Fin de facture',
+                            'S_PDF_SIGNATURE'  => __('organization.label_pdf_signature'),
+                            'S_DEVIS_DEBUT'    => __('organization.label_devis_debut'),
+                            'S_DEVIS_FIN'      => __('organization.label_devis_fin'),
+                            'S_FACTURE_DEBUT'  => __('organization.label_facture_debut'),
+                            'S_FACTURE_FIN'    => __('organization.label_facture_fin'),
                         ] as $field => $label)
                             <div class="col-md-6">
                                 <label class="form-label form-label-sm" for="{{ $field }}">{{ $label }}</label>
@@ -355,12 +355,12 @@
             {{-- Signature président --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-signature me-2"></i>Image de la signature du président</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-signature me-2"></i>{{ __('organization.card_president_sig') }}</div>
                 </div>
                 <div class="ob-widget-card-body">
                     <div class="row g-2 align-items-start">
                         <div class="col-md-4">
-                            <label class="form-label form-label-sm">Signature scannée</label>
+                            <label class="form-label form-label-sm">{{ __('organization.label_scanned_sig') }}</label>
                             @if ($section->S_IMAGE_SIGNATURE)
                                 <div class="mb-1" style="font-size:var(--font-size-xs); color:var(--text-muted);">
                                     <i class="fas fa-image me-1"></i>{{ $section->S_IMAGE_SIGNATURE }}
@@ -373,7 +373,7 @@
             </div>
 
             <div class="mb-4">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Enregistrer</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>{{ __('common.save') }}</button>
             </div>
         </form>
 
@@ -407,14 +407,14 @@
                     <table class="table table-sm mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th style="width:90px;">Code</th>
-                                <th>Libellé</th>
+                                <th style="width:90px;">{{ __('organization.col_agr_code') }}</th>
+                                <th>{{ __('organization.col_agr_label') }}</th>
                                 @if ($cat['type'] === 'medal')
-                                    <th style="width:160px;">Délivrée le</th>
-                                    <th style="width:200px;">Agrafe</th>
+                                    <th style="width:160px;">{{ __('organization.col_agr_delivered') }}</th>
+                                    <th style="width:200px;">{{ __('organization.col_agr_clasp') }}</th>
                                 @else
-                                    <th style="width:160px;">Début</th>
-                                    <th style="width:160px;">Fin</th>
+                                    <th style="width:160px;">{{ __('organization.col_agr_start') }}</th>
+                                    <th style="width:160px;">{{ __('organization.col_agr_end') }}</th>
                                 @endif
                                 <th style="width:80px;"></th>
                             </tr>
@@ -434,7 +434,7 @@
                                         </td>
                                         <td class="align-middle">
                                             <input type="text" class="form-control form-control-sm agr-agrafe"
-                                                   placeholder="Agrafe…" value="{{ $row?->A_COMMENT }}">
+                                                   placeholder="{{ __('organization.agr_clasp_placeholder') }}" value="{{ $row?->A_COMMENT }}">
                                         </td>
                                     @else
                                         <td class="align-middle">
@@ -447,11 +447,11 @@
                                         </td>
                                     @endif
                                     <td class="align-middle text-end">
-                                        <button type="button" class="btn btn-sm btn-outline-success agr-save" title="Enregistrer">
+                                        <button type="button" class="btn btn-sm btn-outline-success agr-save" title="{{ __('organization.agr_save_title') }}">
                                             <i class="fas fa-save"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger agr-clear"
-                                                title="Effacer" style="visibility:{{ $row ? 'visible' : 'hidden' }};">
+                                                title="{{ __('organization.agr_clear_title') }}" style="visibility:{{ $row ? 'visible' : 'hidden' }};">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </td>
@@ -538,19 +538,19 @@
             {{-- IBAN / BIC --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-university me-2"></i>Coordonnées bancaires</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-university me-2"></i>{{ __('organization.card_bank') }}</div>
                 </div>
                 <div class="ob-widget-card-body">
                     <div class="row g-3">
                         <div class="col-md-7">
-                            <label class="form-label form-label-sm" for="IBAN">IBAN</label>
+                            <label class="form-label form-label-sm" for="IBAN">{{ __('organization.label_iban') }}</label>
                             <input type="text" id="IBAN" name="IBAN" maxlength="34"
                                    class="form-control form-control-sm font-monospace"
-                                   placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX"
+                                   placeholder="{{ __('organization.iban_placeholder') }}"
                                    value="{{ old('IBAN', $rib?->IBAN) }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label form-label-sm" for="BIC">BIC / SWIFT</label>
+                            <label class="form-label form-label-sm" for="BIC">{{ __('organization.label_bic') }}</label>
                             <input type="text" id="BIC" name="BIC" maxlength="11"
                                    class="form-control form-control-sm font-monospace"
                                    value="{{ old('BIC', $rib?->BIC) }}">
@@ -562,43 +562,43 @@
             {{-- Legacy RIB fields --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-hashtag me-2"></i>RIB (coordonnées françaises)</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-hashtag me-2"></i>{{ __('organization.card_rib') }}</div>
                     <div class="ob-widget-card-actions" style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">
-                        Utilisé pour les prélèvements
+                        {{ __('organization.rib_used_for') }}
                     </div>
                 </div>
                 <div class="ob-widget-card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label form-label-sm" for="CODE_BANQUE">Code banque</label>
+                            <label class="form-label form-label-sm" for="CODE_BANQUE">{{ __('organization.label_code_banque') }}</label>
                             <input type="text" id="CODE_BANQUE" name="CODE_BANQUE" maxlength="30"
                                    class="form-control form-control-sm font-monospace"
                                    placeholder="12345"
                                    value="{{ old('CODE_BANQUE', $rib?->CODE_BANQUE) }}">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label form-label-sm" for="ETABLISSEMENT">Établissement</label>
+                            <label class="form-label form-label-sm" for="ETABLISSEMENT">{{ __('organization.label_etablissement') }}</label>
                             <input type="text" id="ETABLISSEMENT" name="ETABLISSEMENT" maxlength="5"
                                    class="form-control form-control-sm font-monospace"
                                    placeholder="12345"
                                    value="{{ old('ETABLISSEMENT', $rib?->ETABLISSEMENT) }}">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label form-label-sm" for="GUICHET">Guichet</label>
+                            <label class="form-label form-label-sm" for="GUICHET">{{ __('organization.label_guichet') }}</label>
                             <input type="text" id="GUICHET" name="GUICHET" maxlength="5"
                                    class="form-control form-control-sm font-monospace"
                                    placeholder="12345"
                                    value="{{ old('GUICHET', $rib?->GUICHET) }}">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label form-label-sm" for="COMPTE">Compte</label>
+                            <label class="form-label form-label-sm" for="COMPTE">{{ __('organization.label_compte') }}</label>
                             <input type="text" id="COMPTE" name="COMPTE" maxlength="11"
                                    class="form-control form-control-sm font-monospace"
                                    placeholder="00123456789"
                                    value="{{ old('COMPTE', $rib?->COMPTE) }}">
                         </div>
                         <div class="col-md-1">
-                            <label class="form-label form-label-sm" for="CLE_RIB">Clé</label>
+                            <label class="form-label form-label-sm" for="CLE_RIB">{{ __('organization.label_cle_rib') }}</label>
                             <input type="text" id="CLE_RIB" name="CLE_RIB" maxlength="2"
                                    class="form-control form-control-sm font-monospace"
                                    placeholder="42"
@@ -611,7 +611,7 @@
             {{-- RIB file upload --}}
             <div class="ob-widget-card mb-3">
                 <div class="ob-widget-card-header">
-                    <div class="ob-widget-card-title"><i class="fas fa-file-pdf me-2"></i>Document RIB</div>
+                    <div class="ob-widget-card-title"><i class="fas fa-file-pdf me-2"></i>{{ __('organization.card_rib_doc') }}</div>
                 </div>
                 <div class="ob-widget-card-body">
                     @if ($rib?->CB_FILE)
@@ -619,7 +619,7 @@
                             <i class="fas fa-paperclip text-muted"></i>
                             <a href="{{ route('organization.sections.rib.download', $section->S_ID) }}"
                                class="text-decoration-none" style="font-size:var(--font-size-sm);">
-                                Télécharger le document enregistré
+                                {{ __('organization.label_rib_download') }}
                             </a>
                             <span class="text-muted" style="font-size:var(--font-size-xs);">
                                 ({{ strtoupper(pathinfo($rib->CB_FILE, PATHINFO_EXTENSION)) }})
@@ -628,24 +628,24 @@
                     @endif
                     <div>
                         <label class="form-label form-label-sm" for="rib_file">
-                            {{ $rib?->CB_FILE ? 'Remplacer le document' : 'Téléverser un document' }}
+                            {{ $rib?->CB_FILE ? __('organization.label_rib_replace') : __('organization.label_rib_upload') }}
                         </label>
                         <input type="file" id="rib_file" name="rib_file"
                                class="form-control form-control-sm"
                                accept=".pdf,.jpg,.jpeg,.png">
-                        <div class="form-text">PDF, JPG ou PNG · max 5 Mo</div>
+                        <div class="form-text">{{ __('organization.rib_file_hint') }}</div>
                     </div>
                 </div>
             </div>
 
             @if ($rib?->UPDATE_DATE)
                 <p class="text-muted mb-3" style="font-size:var(--font-size-xs);">
-                    Dernière mise à jour : {{ \Carbon\Carbon::parse($rib->UPDATE_DATE)->format('d/m/Y H:i') }}
+                    {{ __('organization.rib_updated_at', ['date' => \Carbon\Carbon::parse($rib->UPDATE_DATE)->format('d/m/Y H:i')]) }}
                 </p>
             @endif
 
             <div class="mb-4">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Enregistrer</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>{{ __('common.save') }}</button>
             </div>
         </form>
 

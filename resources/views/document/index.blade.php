@@ -5,7 +5,7 @@
 @section('content')
 
 @php
-    $crumbs = [['label' => 'Documents', 'url' => route('document.index')]];
+    $crumbs = [['label' => __('document.title'), 'url' => route('document.index')]];
     foreach ($breadcrumb as $i => $c) {
         $crumbs[] = $i === array_key_last($breadcrumb)
             ? ['label' => $c['name']]
@@ -23,7 +23,7 @@
         'type' => $typeCode === 'ALL' ? null : $typeCode,
     ], fn ($v) => $v !== null);
 @endphp
-<x-ob-toolbar title="Bibliothèque de documents" :total="$documents->total()"
+<x-ob-toolbar title="{{ __('document.title') }}" :total="$documents->total()"
     filter-action="{{ route('document.index') }}" filter-id="docFilter"
     :columns="$columns" table-id="docTable" :show-card-toggle="true"
     :export-xls-url="route('document.export', ['format' => 'xlsx'] + $exportParams)"
@@ -31,14 +31,14 @@
 
     @if ($canManage)
         <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#folderCreateModal">
-            <i class="fas fa-folder-plus me-1"></i> Nouveau dossier
+            <i class="fas fa-folder-plus me-1"></i> {{ __('document.new_folder') }}
         </button>
         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#docUploadModal">
-            <i class="fas fa-upload me-1"></i> Ajouter
+            <i class="fas fa-upload me-1"></i> {{ __('document.add_doc') }}
         </button>
     @endif
     @if ($canConfig)
-        <a href="{{ route('document.types') }}" class="btn btn-sm btn-outline-secondary" title="Types de documents">
+        <a href="{{ route('document.types') }}" class="btn btn-sm btn-outline-secondary" title="{{ __('document.doc_types_title') }}">
             <i class="fas fa-tags"></i>
         </a>
     @endif
@@ -47,7 +47,7 @@
         <input type="hidden" name="folder" value="{{ $folderId }}">
         <x-ob-section-select name="section" :selected="$sectionId" auto-submit/>
         <select name="type" class="form-select form-select-sm" onchange="this.form.submit()">
-            <option value="ALL" @selected($typeCode === 'ALL')>Tous les types</option>
+            <option value="ALL" @selected($typeCode === 'ALL')>{{ __('document.filter_all_types') }}</option>
             @foreach ($types as $t)
                 <option value="{{ $t->TD_CODE }}" @selected($typeCode === $t->TD_CODE)>{{ $t->TD_LIBELLE }}</option>
             @endforeach
@@ -61,12 +61,12 @@
     <div class="col-lg-3">
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
-                <div class="ob-widget-card-title"><i class="fas fa-folder-open me-2"></i>Dossiers</div>
+                <div class="ob-widget-card-title"><i class="fas fa-folder-open me-2"></i>{{ __('document.folder_tree_heading') }}</div>
             </div>
             <div class="ob-widget-card-body p-0 ob-doc-tree">
                 <div class="ob-doc-folder {{ $folderId === 0 ? 'active' : '' }}" style="padding-left: 0.4rem;">
                     <a href="{{ route('document.index', ['section' => $sectionId]) }}" class="ob-doc-folder-link">
-                        <i class="fas fa-home fa-fw me-1"></i>Racine
+                        <i class="fas fa-home fa-fw me-1"></i>{{ __('document.root') }}
                     </a>
                 </div>
                 @foreach ($tree as $node)
@@ -81,7 +81,7 @@
 
         <x-ob-commandbar table-id="docTable" :total="$documents->total()" total-label="document">
             <x-ob-table :columns="$columns" :items="$rows" table-id="docTable"
-                empty-text="Ce dossier est vide."/>
+                empty-text="{{ __('document.empty_folder') }}"/>
         </x-ob-commandbar>
 
         <div class="mt-2">{{ $documents->links() }}</div>
@@ -98,21 +98,21 @@
                 <input type="hidden" name="section_id" value="{{ $sectionId }}">
                 <input type="hidden" name="parent_id" value="{{ $folderId }}">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-folder-plus me-2"></i>Nouveau dossier</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <h5 class="modal-title"><i class="fas fa-folder-plus me-2"></i>{{ __('document.modal_create_folder_title') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="folderCreateName">Nom du dossier</label>
+                    <label class="form-label" for="folderCreateName">{{ __('document.folder_name_label') }}</label>
                     <input type="text" id="folderCreateName" name="name" class="form-control" maxlength="50" required autofocus>
                     @if ($folderId > 0)
                         <p class="text-muted mt-2 mb-0" style="font-size:var(--font-size-xs);">
-                            Créé dans le dossier courant ; il héritera de son type de document.
+                            {{ __('document.folder_inherit_note') }}
                         </p>
                     @endif
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Créer</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{ __('common.create') }}</button>
                 </div>
             </form>
         </div>
@@ -126,30 +126,30 @@
                 <input type="hidden" name="section_id" value="{{ $sectionId }}">
                 <input type="hidden" name="folder_id" value="{{ $folderId }}">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-upload me-2"></i>Ajouter un document</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <h5 class="modal-title"><i class="fas fa-upload me-2"></i>{{ __('document.modal_upload_title') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label" for="docUploadFiles">Fichier(s)</label>
+                        <label class="form-label" for="docUploadFiles">{{ __('document.upload_files_label') }}</label>
                         <input type="file" id="docUploadFiles" name="userfile[]" class="form-control" multiple required>
                         <div class="form-text">
-                            {{ implode(', ', config('documents.supported_extensions')) }} — max {{ config('documents.max_size_mb') }} Mo.
+                            {{ __('document.upload_hint', ['exts' => implode(', ', config('documents.supported_extensions')), 'max' => config('documents.max_size_mb')]) }}
                         </div>
                     </div>
                     <div class="mb-0">
-                        <label class="form-label" for="docUploadType">Type</label>
+                        <label class="form-label" for="docUploadType">{{ __('document.upload_type_label') }}</label>
                         <select id="docUploadType" name="type" class="form-select" required>
                             @foreach ($types as $t)
                                 <option value="{{ $t->TD_CODE }}">{{ $t->TD_LIBELLE }}</option>
                             @endforeach
                         </select>
-                        <div class="form-text">La visibilité se gère ensuite via « Partager ».</div>
+                        <div class="form-text">{{ __('document.upload_visibility_note') }}</div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Envoyer</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{ __('document.btn_send') }}</button>
                 </div>
             </form>
         </div>
@@ -163,16 +163,16 @@
                     @csrf
                     @method('PATCH')
                     <div class="modal-header">
-                        <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Modifier le document</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        <h5 class="modal-title"><i class="fas fa-pen me-2"></i>{{ __('document.modal_edit_doc_title') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label" for="docEditName">Nom du fichier</label>
+                            <label class="form-label" for="docEditName">{{ __('document.doc_name_label') }}</label>
                             <input type="text" id="docEditName" name="name" class="form-control" maxlength="120" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="docEditType">Type</label>
+                            <label class="form-label" for="docEditType">{{ __('document.doc_type_label') }}</label>
                             <select id="docEditType" name="type" class="form-select" required>
                                 @foreach ($types as $t)
                                     <option value="{{ $t->TD_CODE }}">{{ $t->TD_LIBELLE }}</option>
@@ -180,9 +180,9 @@
                             </select>
                         </div>
                         <div class="mb-0">
-                            <label class="form-label" for="docEditFolder">Dossier</label>
+                            <label class="form-label" for="docEditFolder">{{ __('document.doc_folder_label') }}</label>
                             <select id="docEditFolder" name="folder_id" class="form-select">
-                                <option value="0">Racine</option>
+                                <option value="0">{{ __('document.root') }}</option>
                                 @foreach ($folders as $f)
                                     <option value="{{ $f->DF_ID }}">{{ $f->DF_NAME }}</option>
                                 @endforeach
@@ -191,11 +191,11 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-sm btn-outline-danger" data-doc-delete>
-                            <i class="fas fa-trash me-1"></i>Supprimer
+                            <i class="fas fa-trash me-1"></i>{{ __('document.btn_delete_doc') }}
                         </button>
                         <span>
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                            <button type="submit" class="btn btn-sm btn-primary">{{ __('common.save') }}</button>
                         </span>
                     </div>
                 </form>
@@ -214,16 +214,16 @@
                 @csrf
                 @method('PATCH')
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Renommer le dossier</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    <h5 class="modal-title"><i class="fas fa-pen me-2"></i>{{ __('document.modal_rename_folder_title') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label" for="folderEditName">Nom du dossier</label>
+                    <label class="form-label" for="folderEditName">{{ __('document.folder_name_label') }}</label>
                     <input type="text" id="folderEditName" name="name" class="form-control" maxlength="50" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-primary">{{ __('common.save') }}</button>
                 </div>
             </form>
         </div>
@@ -235,11 +235,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <h5 class="modal-title"><i class="fas fa-user-lock me-2"></i>Partager</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <h5 class="modal-title"><i class="fas fa-user-lock me-2"></i>{{ __('document.modal_acl_title') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
             </div>
             <div class="modal-body p-0">
-                <iframe id="aclFrame" src="" style="width:100%;height:580px;border:none;" title="Partager"></iframe>
+                <iframe id="aclFrame" src="" style="width:100%;height:580px;border:none;" title="{{ __('document.modal_acl_title') }}"></iframe>
             </div>
         </div>
     </div>
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('[data-folder-delete]').forEach(function (form) {
         form.addEventListener('submit', function (e) {
-            if (!window.confirm('Supprimer ce dossier ? Il doit être vide.')) {
+            if (!window.confirm('{{ __('document.confirm_delete_folder') }}')) {
                 e.preventDefault();
             }
         });
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var docDeleteBtn = document.querySelector('[data-doc-delete]');
     if (docDeleteBtn) {
         docDeleteBtn.addEventListener('click', function () {
-            if (window.confirm('Supprimer définitivement ce document ?')) {
+            if (window.confirm('{{ __('document.confirm_delete_doc') }}')) {
                 docDeleteForm.submit();
             }
         });

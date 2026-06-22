@@ -10,7 +10,7 @@
     $conn2Fail = in_array($node, ['network', 'server'], true);  // réseau ↔ serveur
 @endphp
 <svg class="ob-error-diagram-svg" viewBox="0 0 380 124" xmlns="http://www.w3.org/2000/svg"
-     role="img" aria-label="Schéma de connexion client, réseau, serveur — point de défaillance mis en évidence">
+     role="img" aria-label="{{ __('errors.diagram_aria') }}">
 
     {{-- ── Connectors ─────────────────────────────────────────────── --}}
     <line class="ob-conn {{ $conn1Fail ? 'is-fail' : '' }}" x1="82" y1="50" x2="156" y2="50"/>
@@ -50,7 +50,7 @@
     @endforeach
 
     {{-- ── Labels ─────────────────────────────────────────────────── --}}
-    <text class="ob-node-label {{ $node === 'client' ? 'is-fail' : '' }}"  x="55"  y="92">Client</text>
-    <text class="ob-node-label {{ $node === 'network' ? 'is-fail' : '' }}" x="190" y="92">Réseau</text>
-    <text class="ob-node-label {{ $node === 'server' ? 'is-fail' : '' }}"  x="325" y="92">Serveur</text>
+    <text class="ob-node-label {{ $node === 'client' ? 'is-fail' : '' }}"  x="55"  y="92">{{ __('errors.diagram_client') }}</text>
+    <text class="ob-node-label {{ $node === 'network' ? 'is-fail' : '' }}" x="190" y="92">{{ __('errors.diagram_network') }}</text>
+    <text class="ob-node-label {{ $node === 'server' ? 'is-fail' : '' }}"  x="325" y="92">{{ __('errors.diagram_server') }}</text>
 </svg>

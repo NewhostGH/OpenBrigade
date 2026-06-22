@@ -5,8 +5,8 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Maintenance'],
+    ['label' => __('admin.administration')], {{-- i18n-ignore --}}
+    ['label' => __('admin.maintenance.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -14,40 +14,40 @@
     {{-- System info --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-server me-2"></i>Informations système</div>
+            <div class="ob-widget-card-title"><i class="fas fa-server me-2"></i>{{ __('admin.maintenance.system_section') }}</div>
         </div>
         <div class="table-responsive">
             <table class="table table-sm mb-0">
                 <tbody>
                     <tr>
-                        <td style="width:35%;font-size:var(--font-size-sm);" class="fw-semibold">Version OpenBrigade (DB)</td>
+                        <td style="width:35%;font-size:var(--font-size-sm);" class="fw-semibold">{{ __('admin.maintenance.row_app_version') }}</td>
                         <td><span class="ob-badge ob-badge-int">{{ $appVersion }}</span></td>
                     </tr>
                     <tr>
-                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">Laravel</td>
+                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">{{ __('admin.maintenance.row_laravel') }}</td>
                         <td style="font-size:var(--font-size-sm);">{{ $laravelVersion }}</td>
                     </tr>
                     <tr>
-                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">PHP</td>
+                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">{{ __('admin.maintenance.row_php') }}</td>
                         <td style="font-size:var(--font-size-sm);">{{ $phpVersion }}</td>
                     </tr>
                     <tr>
-                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">Base de données</td>
+                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">{{ __('admin.maintenance.row_db') }}</td>
                         <td style="font-size:var(--font-size-sm);">{{ $dbVersion }}</td>
                     </tr>
                     <tr>
-                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">Environnement</td>
+                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">{{ __('admin.maintenance.row_env') }}</td>
                         <td><span class="ob-badge {{ $env === 'production' ? 'ob-badge-bloqued' : 'ob-badge-ext' }}">{{ $env }}</span></td>
                     </tr>
                     <tr>
-                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">Mode debug</td>
+                        <td style="font-size:var(--font-size-sm);" class="fw-semibold">{{ __('admin.maintenance.row_debug') }}</td>
                         <td>
                             <span class="ob-badge {{ $debugMode === 'Activé' ? 'ob-badge-bloqued' : 'ob-badge-int' }}">
                                 {{ $debugMode }}
                             </span>
                             @if($debugMode === 'Activé')
                                 <span class="ms-2 text-danger" style="font-size:var(--font-size-xs);">
-                                    <i class="fas fa-exclamation-triangle me-1"></i>Désactivez APP_DEBUG en production
+                                    <i class="fas fa-exclamation-triangle me-1"></i>{{ __('admin.maintenance.debug_warn') }}
                                 </span>
                             @endif
                         </td>
@@ -60,22 +60,22 @@
     {{-- Migration status --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-database me-2"></i>État des migrations Laravel</div>
+            <div class="ob-widget-card-title"><i class="fas fa-database me-2"></i>{{ __('admin.maintenance.migration_section') }}</div>
             <div class="ob-widget-card-actions" style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">
-                Remplace upgrade.php — les migrations se lancent via <code>php artisan migrate</code>
+                {!! __('admin.maintenance.migration_hint') !!}
             </div>
         </div>
         @if(empty($status))
             <div class="p-3 text-muted" style="font-size:var(--font-size-sm);">
-                Impossible de récupérer le statut des migrations.
+                {{ __('admin.maintenance.migration_unavail') }}
             </div>
         @else
             <div class="table-responsive">
                 <table class="table table-sm mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:80px;">État</th>
-                            <th>Migration</th>
+                            <th style="width:80px;">{{ __('admin.maintenance.col_status') }}</th>
+                            <th>{{ __('admin.maintenance.col_migration') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,9 +83,9 @@
                         <tr>
                             <td class="align-middle">
                                 @if($m['ran'])
-                                    <span class="ob-badge ob-badge-int"><i class="fas fa-check me-1"></i>Exécutée</span>
+                                    <span class="ob-badge ob-badge-int"><i class="fas fa-check me-1"></i>{{ __('admin.maintenance.status_ran') }}</span>
                                 @else
-                                    <span class="ob-badge ob-badge-bloqued"><i class="fas fa-clock me-1"></i>En attente</span>
+                                    <span class="ob-badge ob-badge-bloqued"><i class="fas fa-clock me-1"></i>{{ __('admin.maintenance.status_pending') }}</span>
                                 @endif
                             </td>
                             <td class="align-middle font-monospace" style="font-size:var(--font-size-xs);">
@@ -102,34 +102,34 @@
     {{-- Cache / storage --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-broom me-2"></i>Commandes utiles</div>
+            <div class="ob-widget-card-title"><i class="fas fa-broom me-2"></i>{{ __('admin.maintenance.commands_section') }}</div>
         </div>
         <div class="p-3">
             <table class="table table-sm mb-0" style="font-size:var(--font-size-sm);">
                 <tbody>
                     <tr>
-                        <td class="font-monospace" style="width:50%;">php artisan migrate</td>
-                        <td>Appliquer les migrations en attente</td>
+                        <td class="font-monospace" style="width:50%;">php artisan migrate</td> {{-- i18n-ignore --}}
+                        <td>{{ __('admin.maintenance.cmd_migrate') }}</td>
                     </tr>
                     <tr>
-                        <td class="font-monospace">php artisan cache:clear</td>
-                        <td>Vider le cache applicatif</td>
+                        <td class="font-monospace">php artisan cache:clear</td> {{-- i18n-ignore --}}
+                        <td>{{ __('admin.maintenance.cmd_cache_clear') }}</td>
                     </tr>
                     <tr>
-                        <td class="font-monospace">php artisan view:clear</td>
-                        <td>Vider le cache des vues Blade</td>
+                        <td class="font-monospace">php artisan view:clear</td> {{-- i18n-ignore --}}
+                        <td>{{ __('admin.maintenance.cmd_view_clear') }}</td>
                     </tr>
                     <tr>
-                        <td class="font-monospace">php artisan config:clear</td>
-                        <td>Vider le cache de configuration</td>
+                        <td class="font-monospace">php artisan config:clear</td> {{-- i18n-ignore --}}
+                        <td>{{ __('admin.maintenance.cmd_config_clear') }}</td>
                     </tr>
                     <tr>
-                        <td class="font-monospace">php artisan route:clear</td>
-                        <td>Vider le cache des routes</td>
+                        <td class="font-monospace">php artisan route:clear</td> {{-- i18n-ignore --}}
+                        <td>{{ __('admin.maintenance.cmd_route_clear') }}</td>
                     </tr>
                     <tr>
-                        <td class="font-monospace">npm run build</td>
-                        <td>Recompiler les assets Vite (CSS/JS)</td>
+                        <td class="font-monospace">npm run build</td> {{-- i18n-ignore --}}
+                        <td>{{ __('admin.maintenance.cmd_npm_build') }}</td>
                     </tr>
                 </tbody>
             </table>

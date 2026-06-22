@@ -5,12 +5,12 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Monitoring'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.monitoring.title')],
 ]"/>
 
 <x-ob-toolbar
-    title="Journal d'activité"
+    title="{{ __('admin.monitoring.title') }}"
     :total="$items->total()"
     filter-action="{{ route('admin.monitoring') }}"
     filter-id="filterForm"
@@ -21,10 +21,10 @@
     <x-slot:filters>
         <input type="text" name="q" value="{{ $search }}"
                class="form-control form-control-sm"
-               placeholder="Rechercher…"
+               placeholder="{{ __('common.search_placeholder') }}"
                data-ob-search="filterForm">
         <select name="type" class="form-select form-select-sm">
-            <option value="ALL" @selected($ltCode === 'ALL')>Tous les types</option>
+            <option value="ALL" @selected($ltCode === 'ALL')>{{ __('admin.monitoring.all_types') }}</option>
             @foreach($logTypes as $t)
                 <option value="{{ $t->LT_CODE }}" @selected($ltCode === $t->LT_CODE)>
                     {{ $t->LT_DESCRIPTION }}

@@ -5,7 +5,7 @@
 @section('content')
 
 @php
-    $today       = now()->format('Y-m-d');
+    $today       = now()->format('Y-m-d'); // i18n-ignore
     $paidCount   = $items->whereNotNull('PC_DATE')->count();
     $unpaidCount = $items->whereNull('PC_DATE')->count();
     $totalPaid   = $items->whereNotNull('PC_DATE')->sum('MONTANT');
@@ -15,26 +15,26 @@
 @endphp
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Cotisations'],
+    ['label' => __('dues.title_dues')],
 ]"/>
 
 @include('dues._tabs')
 
 {{-- ── Toolbar ─────────────────────────────────────────────────────────────── --}}
 <x-ob-toolbar
-    title="Cotisations"
+    title="{{ __('dues.title_dues') }}"
     :total="$items->count()"
     total-label="membre"
     filter-action="{{ route('dues.index') }}"
     filter-cols="2fr 1.2fr 1.2fr 1fr 1fr auto">
 
     {{-- Actions: print + export --}}
-    <button class="btn btn-sm btn-light" onclick="window.print()" title="Imprimer">
+    <button class="btn btn-sm btn-light" onclick="window.print()" title="{{ __('common.print') }}">
         <i class="fas fa-print"></i>
     </button>
     <a class="btn btn-sm btn-light"
        href="{{ route('dues.export', request()->query()) }}"
-       title="Exporter Excel">
+       title="{{ __('dues.export_excel') }}"
         <i class="far fa-file-excel" style="color:var(--color-excel);"></i>
     </a>
 
@@ -66,7 +66,7 @@
 
         <div>
             <select name="type_paiement" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value="ALL" {{ $tpId === 'ALL' ? 'selected' : '' }}>Tous modes</option>
+                <option value="ALL" {{ $tpId === 'ALL' ? 'selected' : '' }}>{{ __('dues.all_modes') }}</option>
                 @foreach ($typesPaiement as $tp)
                     <option value="{{ $tp->TP_ID }}" {{ (string)$tpId === (string)$tp->TP_ID ? 'selected' : '' }}>
                         {{ $tp->TP_DESCRIPTION }}
@@ -77,15 +77,15 @@
 
         <div>
             <select name="paid" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value="2" {{ $paid === '2' ? 'selected' : '' }}>Tout afficher</option>
-                <option value="0" {{ $paid === '0' ? 'selected' : '' }}>Pas encore payé</option>
-                <option value="1" {{ $paid === '1' ? 'selected' : '' }}>Paiement enregistré</option>
+                <option value="2" {{ $paid === '2' ? 'selected' : '' }}>{{ __('dues.show_all') }}</option>
+                <option value="0" {{ $paid === '0' ? 'selected' : '' }}>{{ __('dues.not_paid') }}</option>
+                <option value="1" {{ $paid === '1' ? 'selected' : '' }}>{{ __('dues.paid_recorded') }}</option>
             </select>
         </div>
 
         <div>
             <button type="submit" class="btn btn-sm btn-secondary w-100">
-                <i class="fas fa-filter me-1"></i> Filtrer
+                <i class="fas fa-filter me-1"></i> {{ __('dues.filter') }}
             </button>
         </div>
 
@@ -285,7 +285,7 @@
                                    class="form-control form-control-sm"
                                    name="commentaire[{{ $row->P_ID }}]"
                                    value="{{ $row->COMMENTAIRE ?? '' }}"
-                                   placeholder="Commentaire…">
+                                   placeholder="{{ __('dues.comment_placeholder') }}">
                         </td>
 
                     </tr>

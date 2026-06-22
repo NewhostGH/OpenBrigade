@@ -1,7 +1,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-shield-alt"></i> Service / Astreinte
+            <i class="fas fa-shield-alt"></i> {{ __('dashboard.duty.title') }}
         </div>
     </div>
     <div class="ob-widget-card-body">
@@ -27,7 +27,7 @@
                 @endif
             </div>
         @empty
-            <p class="ob-widget-empty">Aucun personnel de service.</p>
+            <p class="ob-widget-empty">{{ __('dashboard.duty.empty') }}</p>
         @endforelse
     </div>
 </div>

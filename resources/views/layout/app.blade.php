@@ -20,9 +20,7 @@
          JavaScript for navigation, tables and forms; warn rather than break. --}}
     <noscript>
         <div class="ob-noscript">
-            JavaScript est désactivé dans votre navigateur. OpenBrigade nécessite
-            JavaScript pour fonctionner correctement&nbsp;: veuillez l'activer puis
-            recharger la page.
+            {{ __('layout.noscript') }}
         </div>
     </noscript>
 
@@ -34,13 +32,13 @@
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show mx-3 mt-2" role="alert">
                     {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('layout.dismiss') }}"></button>
                 </div>
             @endif
             @if (session('error'))
                 <div class="alert alert-danger alert-dismissible fade show mx-3 mt-2" role="alert">
                     {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('layout.dismiss') }}"></button>
                 </div>
             @endif
 

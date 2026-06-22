@@ -5,9 +5,9 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Sécurité', 'url' => route('admin.security', ['tab' => 'charter'])],
-    ['label' => 'Charte'],
+    ['label' => __('admin.administration')], {{-- i18n-ignore --}}
+    ['label' => __('admin.security.title'), 'url' => route('admin.security', ['tab' => 'charter'])],
+    ['label' => __('admin.security.tab_charter')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -17,10 +17,10 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-file-contract me-1"></i> Texte de la charte
+                    <i class="fas fa-file-contract me-1"></i> {{ __('admin.charter.title') }}
                 </div>
                 <a href="{{ route('account.charter') }}" class="btn btn-outline-secondary btn-sm" target="_blank">
-                    <i class="fas fa-eye me-1"></i> Aperçu
+                    <i class="fas fa-eye me-1"></i> {{ __('admin.preview') }}
                 </a>
             </div>
             <div class="ob-widget-card-body">
@@ -29,16 +29,14 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="charte_text" class="form-label">Contenu HTML</label>
+                        <label for="charte_text" class="form-label">{{ __('admin.charter.content_label') }}</label>
                         <textarea id="charte_text" name="charte_text" rows="24"
                                   class="form-control font-monospace"
                                   style="font-size:var(--font-size-xs); resize:vertical;"
-                                  placeholder="Laissez vide pour utiliser le texte par défaut."
+                                  placeholder="{{ __('admin.charter.content_ph') }}"
                         >{{ old('charte_text', $charteText) }}</textarea>
                         <div class="form-text">
-                            Tags autorisés : <code>h5</code> <code>p</code> <code>ul</code> <code>li</code>
-                            <code>strong</code> <code>em</code> <code>small</code>.
-                            Vider le champ restaure le texte généré automatiquement.
+                            {!! __('admin.charter.allowed_tags') !!}
                         </div>
                     </div>
 
@@ -50,21 +48,20 @@
                                    value="1" class="form-check-input"
                                    {{ old('force_reaccept') ? 'checked' : '' }}>
                             <label for="force_reaccept" class="form-check-label fw-semibold">
-                                Publier une nouvelle version (demander la réacceptation)
+                                {{ __('admin.charter.force_reaccept') }}
                             </label>
                         </div>
                         <div class="form-text ms-4">
-                            Met à jour l'horodatage de version. Les utilisateurs ayant accepté avant cette
-                            date devront réaccepter à leur prochaine connexion.
+                            {{ __('admin.charter.force_reaccept_hint') }}
                         </div>
                     </div>
 
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i> Enregistrer
+                            <i class="fas fa-save me-1"></i> {{ __('common.save') }}
                         </button>
                         <a href="{{ route('admin.security', ['tab' => 'charter']) }}" class="btn btn-outline-secondary">
-                            Annuler
+                            {{ __('common.cancel') }}
                         </a>
                     </div>
 
@@ -78,7 +75,7 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-info-circle me-1"></i> À propos
+                    <i class="fas fa-info-circle me-1"></i> {{ __('admin.charter.about_title') }}
                 </div>
             </div>
             <div class="ob-widget-card-body" style="font-size:var(--font-size-sm);">
@@ -86,7 +83,7 @@
                 @if ($updatedAt)
                     <p>
                         <i class="fas fa-history me-1 text-muted"></i>
-                        Dernière publication&nbsp;:
+                        {!! __('admin.charter.last_published') !!}
                         <strong>{{ \Carbon\Carbon::parse($updatedAt)->format('d/m/Y à H:i') }}</strong>
                     </p>
                     <hr>
@@ -94,14 +91,11 @@
 
                 <p class="text-muted mb-2">
                     <i class="fas fa-lightbulb me-1"></i>
-                    Sans texte personnalisé, la charte est générée automatiquement depuis les paramètres
-                    de l'organization.
+                    {{ __('admin.charter.hint_auto') }}
                 </p>
                 <p class="text-muted mb-0">
                     <i class="fas fa-shield-alt me-1"></i>
-                    Cocher «&nbsp;Publier une nouvelle version&nbsp;» enregistre l'horodatage de publication.
-                    Seuls les utilisateurs ayant accepté <em>avant</em> cette date seront invités à réaccepter.
-                    Leurs acceptances précédentes ne sont pas effacées.
+                    {!! __('admin.charter.hint_reaccept') !!}
                 </p>
 
             </div>

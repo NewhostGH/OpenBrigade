@@ -59,7 +59,7 @@
     'selectIdField'    => 'P_ID',
     'selectEmailField' => null,
     'tableId'          => 'obTable',
-    'emptyText'        => 'Aucun résultat',
+    'emptyText'        => null,
 ])
 
 @php
@@ -90,7 +90,7 @@
             <tr>
                 @if ($showSelect)
                 <th style="width:28px;">
-                    <input type="checkbox" data-check-all title="Tout sélectionner">
+                    <input type="checkbox" data-check-all title="{{ __('components.select_all_title') }}">
                 </th>
                 @endif
 
@@ -242,7 +242,7 @@
             @empty
             <tr>
                 <td colspan="{{ $colCount }}">
-                    <div class="ob-table-empty">{{ $emptyText }}</div>
+                    <div class="ob-table-empty">{{ $emptyText ?? __('components.empty_text') }}</div>
                 </td>
             </tr>
             @endforelse

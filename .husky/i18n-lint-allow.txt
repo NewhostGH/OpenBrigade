@@ -2,3 +2,43 @@
 # These are brand names / technical tokens that are intentionally not localized.
 # Lines starting with # are comments.
 OpenBrigade
+xxxx-xxxx-xxxx-xxxx
+TOTP / 2FA
+LDAPS STARTTLS
+Corp AD
+ldap.example.com
+DC=example,DC=com
+Have I Been Pwned
+api.pwnedpasswords.com:443
+HTTPS
+LDAP —
+LDAP
+SMTP
+MAIL_HOST:MAIL_PORT
+iCal
+MD5
+PBKDF2
+CN=svc-ldap,OU=Comptes,DC=example,DC=com
+(&(objectClass=person)(|(uid={login})(mail={login})))
+@corp.example.com
+OU=Pompiers,DC=example,DC=com
+(memberOf=CN=Actifs,OU=Groupes,DC=example,DC=com)
+WIP
+PSE1
+Premiers Secours en Équipe Niveau 1
+UN
+LT
+KG
+BT
+BO
+ML
+boxes
+pills
+gas-pump
+cog
+VSAV
+SECOURS
+OFF
+DIVERS
+XLS
+CSV

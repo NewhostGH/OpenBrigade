@@ -2,7 +2,7 @@
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
-                <i class="fas fa-truck"></i> Véhicules
+                <i class="fas fa-truck"></i> {{ __('dashboard.vehicles.title') }}
             </div>
             <a class="ob-widget-card-link" href="{{ route('vehicle.index') }}">
                 <i class="fas fa-external-link-alt"></i>

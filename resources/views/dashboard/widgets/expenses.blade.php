@@ -1,9 +1,9 @@
 @php
-    $fsLabels = [
-        'ATTV' => ['label' => 'En attente', 'class' => 'ob-dash-badge-warning'],
-        'VAL'  => ['label' => 'Validé',     'class' => 'ob-dash-badge-info'],
-        'VAL1' => ['label' => 'Validé N1',  'class' => 'ob-dash-badge-info'],
-        'VAL2' => ['label' => 'Validé N2',  'class' => 'ob-dash-badge-info'],
+    $fsLabels = [ // i18n-ignore
+        'ATTV' => ['label' => __('dashboard.expenses.status_waiting'),   'class' => 'ob-dash-badge-warning'], // i18n-ignore
+        'VAL'  => ['label' => __('dashboard.expenses.status_approved'),  'class' => 'ob-dash-badge-info'], // i18n-ignore
+        'VAL1' => ['label' => __('dashboard.expenses.status_approved1'), 'class' => 'ob-dash-badge-info'], // i18n-ignore
+        'VAL2' => ['label' => __('dashboard.expenses.status_approved2'), 'class' => 'ob-dash-badge-info'], // i18n-ignore
     ];
 @endphp
 
@@ -11,17 +11,17 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-receipt"></i> Notes de frais
+            <i class="fas fa-receipt"></i> {{ __('dashboard.expenses.title') }}
         </div>
         {{-- TODO: Migrate code --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/note_frais_edit.php') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
     </div>
-    <div class="ob-widget-card-body">
+    <div class="ob-widget-card-body"> {{-- i18n-ignore --}}
         @foreach ($expenses['rows'] as $row)
             @php
-                $fs = $fsLabels[$row->FS_CODE] ?? ['label' => $row->FS_CODE, 'class' => 'ob-dash-badge-warning'];
+                $fs = $fsLabels[$row->FS_CODE] ?? ['label' => $row->FS_CODE, 'class' => 'ob-dash-badge-warning']; // i18n-ignore
             @endphp
             <div class="ob-dash-alert-item-row">
                 <div class="ob-dash-alert-item-info">
@@ -33,7 +33,7 @@
                     <div class="ob-dash-alert-item-sub">
                         {{-- TODO: Migrate code --}}
                         <a href="{{ url('/legacy/note_frais_edit.php?action=update&nfid=' . $row->NF_ID) }}"
-                           style="color:inherit">Note #{{ $row->NF_ID }}</a>
+                           style="color:inherit">{{ __('dashboard.expenses.note_ref', ['id' => $row->NF_ID]) }}</a>
                         &mdash;
                         @if(!empty($row->NF_CREATE_DATE))
                             {{ \Carbon\Carbon::parse($row->NF_CREATE_DATE)->format('d-m-Y') }}
@@ -52,7 +52,7 @@
 <div class="ob-widget-card">
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
-            <i class="fas fa-receipt"></i> Notes de frais
+            <i class="fas fa-receipt"></i> {{ __('dashboard.expenses.title') }}
         </div>
         {{-- TODO: Migrate code --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/note_frais_edit.php') }}">
@@ -60,7 +60,7 @@
         </a>
     </div>
     <div class="ob-widget-card-body">
-        <p class="ob-widget-empty">Aucune note de frais à traiter.</p>
+        <p class="ob-widget-empty">{{ __('dashboard.expenses.empty') }}</p>
     </div>
 </div>
 @endif

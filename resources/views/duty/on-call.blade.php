@@ -13,7 +13,7 @@
     @if(auth()->user()->hasPermission(26))
         {{-- TODO: Migrate code --}}
         <a href="{{ url('/legacy/astreinte_edit.php') }}" class="btn btn-sm btn-primary">
-            <i class="fas fa-plus me-1"></i> Nouvelle astreinte
+            <i class="fas fa-plus me-1"></i> {{ __('duty.new_on_call') }}
         </a>
     @endif
     <a href="{{ route('duty.on-call', ['month' => $prevMonth, 'year' => $prevYear]) }}"
@@ -28,11 +28,11 @@
         <i class="fas fa-chevron-right"></i>
     </a>
     <a href="{{ route('duty.on-call.export.xls', ['month' => $month, 'year' => $year]) }}"
-       class="btn btn-sm btn-outline-secondary ms-auto" title="Exporter le mois en XLS">
+       class="btn btn-sm btn-outline-secondary ms-auto" title="{{ __('duty.export_xls_title') }}"
         <i class="fas fa-file-excel me-1"></i> XLS
     </a>
     <a href="{{ route('duty.on-call.export.csv', ['month' => $month, 'year' => $year]) }}"
-       class="btn btn-sm btn-outline-secondary" title="Exporter le mois en CSV">
+       class="btn btn-sm btn-outline-secondary" title="{{ __('duty.export_csv_title') }}"
         <i class="fas fa-file-csv me-1"></i> CSV
     </a>
 </div>

@@ -1,11 +1,11 @@
 @extends('layout.app')
 
-@section('title', ($vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF) . ' — ' . config('app.name'))
+@section('title', __('vehicle.show_title', ['vehicle' => $vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF, 'app' => config('app.name')]))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-        ['label' => 'Véhicules', 'url' => route('vehicle.index')],
+        ['label' => __('vehicle.title'), 'url' => route('vehicle.index')],
         ['label' => $vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF],
     ]" />
 
@@ -55,8 +55,8 @@
         $ds = $date->toDateString();
         $diff = now()->diffInDays($date, false);
         $sub = $diff < 0
-            ? 'Expiré il y a ' . abs((int) $diff) . ' j.'
-            : 'Dans ' . (int) $diff . ' j.';
+            ? __('vehicle.hint_expired', ['days' => abs((int) $diff)])
+            : __('vehicle.hint_in', ['days' => (int) $diff]);
         if ($ds < $today) {
             return [
                 'label' => $label,
@@ -88,18 +88,18 @@
     };
 
     $expCards = [
-        $expCard($vehicule->V_ASS_DATE, 'Assurance', 'fas fa-shield-alt'),
-        $expCard($vehicule->V_CT_DATE, 'Contrôle tech.', 'fas fa-clipboard-check'),
-        $expCard($vehicule->V_REV_DATE, 'Révision', 'fas fa-wrench'),
-        $expCard($vehicule->V_TITRE_DATE, "Titre d'accès", 'fas fa-id-card'),
+        $expCard($vehicule->V_ASS_DATE, __('vehicle.exp_insurance'), 'fas fa-shield-alt'),
+        $expCard($vehicule->V_CT_DATE, __('vehicle.exp_ct'), 'fas fa-clipboard-check'),
+        $expCard($vehicule->V_REV_DATE, __('vehicle.exp_revision'), 'fas fa-wrench'),
+        $expCard($vehicule->V_TITRE_DATE, __('vehicle.exp_titre'), 'fas fa-id-card'),
     ];
 
     // Status
     if ($position) {
         [$statusLabel, $statusClass] = match (true) {
-            $position->VP_OPERATIONNEL >= 3 => ['Opérationnel', 'ob-badge-actif'],
-            $position->VP_OPERATIONNEL >= 1 => ['Limité', 'ob-badge-ben'],
-            default => ['Indisponible', 'ob-badge-bloqued'],
+            $position->VP_OPERATIONNEL >= 3 => [__('vehicle.status_operational'), 'ob-badge-actif'],
+            $position->VP_OPERATIONNEL >= 1 => [__('vehicle.status_limited'), 'ob-badge-ben'],
+            default => [__('vehicle.status_unavailable'), 'ob-badge-bloqued'],
         };
     }
 @endphp
@@ -123,7 +123,7 @@
         <div style="flex:1; min-width:0;">
 
     {{-- ── Main info card ─────────────────────────────────────────────────────── --}}
-    <div id="section-info" data-veh-section data-nav-icon="fas fa-info-circle" data-nav-label="Informations" class="ob-widget-card mb-3">
+    <div id="section-info" data-veh-section data-nav-icon="fas fa-info-circle" data-nav-label="{{ __('vehicle.nav_label_info') }}" class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
                 <i class="{{ $tvIcon }}" title="{{ $vehicleType->TV_LIBELLE ?? $vehicule->TV_CODE }}"></i>
@@ -135,11 +135,11 @@
             <div class="d-flex gap-2">
                 @if(auth()->user()->hasPermission(17))
                     <a href="{{ route('vehicle.edit', $vehicule->V_ID) }}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-edit me-1"></i> Modifier
+                        <i class="fas fa-edit me-1"></i> {{ __('common.edit') }}
                     </a>
                 @endif
                 <a href="{{ route('vehicle.index') }}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Retour
+                    <i class="fas fa-arrow-left me-1"></i> {{ __('common.back') }}
                 </a>
             </div>
         </div>
@@ -152,7 +152,7 @@
                     <dl class="mb-0"
                         style="display:grid; grid-template-columns:auto 1fr; gap:6px 16px; font-size:var(--font-size-sm); align-items:baseline;">
 
-                        <dt class="text-muted fw-normal" style="white-space:nowrap;">Type</dt>
+                        <dt class="text-muted fw-normal" style="white-space:nowrap;">{{ __('vehicle.dt_type') }}</dt>
                         <dd class="mb-0">
                             <i class="{{ $tvIcon }} me-1"
                                 style="color:var(--text-muted-soft); width:14px; text-align:center;"></i>
@@ -160,21 +160,21 @@
                         </dd>
 
                         @if($vehicule->V_MODELE || $vehicule->V_ANNEE)
-                            <dt class="text-muted fw-normal">Modèle</dt>
+                            <dt class="text-muted fw-normal">{{ __('vehicle.dt_model') }}</dt>
                             <dd class="mb-0">
                                 {{ trim(($vehicule->V_MODELE ?? '') . ($vehicule->V_ANNEE ? ' (' . $vehicule->V_ANNEE . ')' : '')) ?: '—' }}
                             </dd>
                         @endif
 
-                        <dt class="text-muted fw-normal">Indicatif</dt>
+                        <dt class="text-muted fw-normal">{{ __('vehicle.dt_indicatif') }}</dt>
                         <dd class="mb-0 fw-semibold">{{ $vehicule->V_INDICATIF ?: '—' }}</dd>
 
                         @feature('multi_site')
-                        <dt class="text-muted fw-normal">Section</dt>
+                        <dt class="text-muted fw-normal">{{ __('vehicle.dt_section') }}</dt>
                         <dd class="mb-0">{{ $vehicule->section?->S_DESCRIPTION ?? '—' }}</dd>
                         @endfeature
 
-                        <dt class="text-muted fw-normal">Statut</dt>
+                        <dt class="text-muted fw-normal">{{ __('vehicle.dt_status') }}</dt>
                         <dd class="mb-0">
                             @if($position)
                                 <span class="ob-badge {{ $statusClass }}">{{ $position->VP_LIBELLE }}</span>
@@ -184,22 +184,22 @@
                         </dd>
 
                         @if($vehicule->V_KM || $vehicule->V_KM_REVISION)
-                            <dt class="text-muted fw-normal">Kilométrage</dt>
+                            <dt class="text-muted fw-normal">{{ __('vehicle.dt_km') }}</dt>
                             <dd class="mb-0">
                                 @if($vehicule->V_KM)
-                                    <span>{{ number_format($vehicule->V_KM, 0, ',', "\u{202f}") }} km</span>
+                                    <span>{{ number_format($vehicule->V_KM, 0, ',', "\u{202f}") }} {{ __('vehicle.unit_km') }}</span>
                                 @else —
                                 @endif
                                 @if($vehicule->V_KM_REVISION)
                                     <span class="text-muted ms-2" style="font-size:var(--font-size-xs);">
-                                        révision à {{ number_format($vehicule->V_KM_REVISION, 0, ',', "\u{202f}") }} km
+                                        {{ __('vehicle.dt_km_revision', ['km' => number_format($vehicule->V_KM_REVISION, 0, ',', "\u{202f}")]) }}
                                     </span>
                                 @endif
                             </dd>
                         @endif
 
                         @if($vehicule->V_INVENTAIRE)
-                            <dt class="text-muted fw-normal">N° inventaire</dt>
+                            <dt class="text-muted fw-normal">{{ __('vehicle.dt_inventaire') }}</dt>
                             <dd class="mb-0">{{ $vehicule->V_INVENTAIRE }}</dd>
                         @endif
 
@@ -210,20 +210,20 @@
                     @if($hasFlags)
                         <div class="d-flex flex-wrap gap-1 mt-3">
                             @if($vehicule->V_FLAG1)
-                                <span class="ob-badge ob-badge-int"><i class="fas fa-snowflake me-1"></i>Neige</span>
+                                <span class="ob-badge ob-badge-int"><i class="fas fa-snowflake me-1"></i>{{ __('vehicle.flag_snow') }}</span>
                             @endif
                             @if($vehicule->V_FLAG2)
                                 <span class="ob-badge" style="background:var(--badge-info-bg);color:var(--badge-info-color);"><i
-                                        class="fas fa-wind me-1"></i>Climatisation</span>
+                                        class="fas fa-wind me-1"></i>{{ __('vehicle.flag_clim') }}</span>
                             @endif
                             @if($vehicule->V_FLAG3)
-                                <span class="ob-badge ob-badge-ben"><i class="fas fa-bullhorn me-1"></i>Public Address</span>
+                                <span class="ob-badge ob-badge-ben"><i class="fas fa-bullhorn me-1"></i>{{ __('vehicle.flag_pa') }}</span>
                             @endif
                             @if($vehicule->V_FLAG4)
-                                <span class="ob-badge ob-badge-archive"><i class="fas fa-link me-1"></i>Attelage</span>
+                                <span class="ob-badge ob-badge-archive"><i class="fas fa-link me-1"></i>{{ __('vehicle.flag_attelage') }}</span>
                             @endif
                             @if($vehicule->V_EXTERNE)
-                                <span class="ob-badge ob-badge-ext"><i class="fas fa-external-link-alt me-1"></i>Externe</span>
+                                <span class="ob-badge ob-badge-ext"><i class="fas fa-external-link-alt me-1"></i>{{ __('vehicle.flag_externe_short') }}</span>
                             @endif
                         </div>
                     @endif
@@ -268,10 +268,10 @@
     </div>
 
     {{-- ── Event history ───────────────────────────────────────────────────── --}}
-    <div id="section-activites" data-veh-section data-nav-icon="fas fa-history" data-nav-label="Activités" data-nav-badge="{{ ($vehicleStats->total_events ?? 0) ?: '' }}" class="ob-widget-card mb-3">
+    <div id="section-activites" data-veh-section data-nav-icon="fas fa-history" data-nav-label="{{ __('vehicle.nav_activities') }}" data-nav-badge="{{ ($vehicleStats->total_events ?? 0) ?: '' }}" class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
-                <i class="fas fa-history"></i> Activités
+                <i class="fas fa-history"></i> {{ __('vehicle.section_activities') }}
                 @if($vehicleStats && $vehicleStats->total_events)
                     <span class="ob-badge ob-badge-archive ms-1">{{ $vehicleStats->total_events }}</span>
                 @endif
@@ -293,13 +293,13 @@
         @if($vehicleStats && ($vehicleStats->total_events || $vehicleStats->total_km))
             <div class="ob-widget-card-body border-bottom py-2 px-3 d-flex gap-4" style="font-size:var(--font-size-sm);">
                 <span>
-                    <span class="text-muted">Total engagements :</span>
+                    <span class="text-muted">{{ __('vehicle.stat_total_engagements') }}</span>
                     <strong>{{ number_format((int)$vehicleStats->total_events, 0, ',', "\u{202f}") }}</strong>
                 </span>
                 @if($vehicleStats->total_km)
                     <span>
-                        <span class="text-muted">Km cumulés :</span>
-                        <strong>{{ number_format((int)$vehicleStats->total_km, 0, ',', "\u{202f}") }} km</strong>
+                        <span class="text-muted">{{ __('vehicle.stat_km_total') }}</span>
+                        <strong>{{ number_format((int)$vehicleStats->total_km, 0, ',', "\u{202f}") }} {{ __('vehicle.unit_km') }}</strong>
                     </span>
                 @endif
             </div>
@@ -307,15 +307,15 @@
 
         <div class="ob-widget-card-body p-0">
             @if($eventHistory->isEmpty())
-                <p class="ob-widget-empty p-3">Aucune activité en {{ $year }}.</p>
+                <p class="ob-widget-empty p-3">{{ __('vehicle.empty_activities', ['year' => $year]) }}</p>
             @else
                 <table class="table table-sm table-hover mb-0">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
                         <tr>
-                            <th>Activité</th>
-                            <th>Fonction</th>
-                            <th>Date</th>
-                            <th class="text-end">Km</th>
+                            <th>{{ __('vehicle.col_activity') }}</th>
+                            <th>{{ __('vehicle.col_function') }}</th>
+                            <th>{{ __('vehicle.col_date') }}</th>
+                            <th class="text-end">{{ __('vehicle.col_km') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -347,10 +347,10 @@
     </div>
 
     {{-- ── Matériel embarqué ────────────────────────────────────────────────── --}}
-    <div id="section-materiel" data-veh-section data-nav-icon="fas fa-boxes" data-nav-label="Matériel" data-nav-badge="{{ $materiels->count() ?: '' }}" class="ob-widget-card mb-3">
+    <div id="section-materiel" data-veh-section data-nav-icon="fas fa-boxes" data-nav-label="{{ __('vehicle.nav_equipment') }}" data-nav-badge="{{ $materiels->count() ?: '' }}" class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
-                <i class="fas fa-boxes"></i> Matériel embarqué
+                <i class="fas fa-boxes"></i> {{ __('vehicle.section_equipment_title') }}
                 @if($materiels->isNotEmpty())
                     <span class="ob-badge ob-badge-archive ms-1">{{ $materiels->count() }}</span>
                 @endif
@@ -360,12 +360,12 @@
                       class="d-flex align-items-center gap-1">
                     @csrf
                     <select name="MA_ID" class="form-select form-select-sm" style="max-width:280px;" required>
-                        <option value="">— Embarquer du matériel —</option>
+                        <option value="">{{ __('vehicle.load_equipment_placeholder') }}</option>
                         @php $prevType = null; @endphp
                         @foreach($availableEquipment as $eq)
                             @if($eq->TM_DESCRIPTION !== $prevType)
                                 @if($prevType !== null)</optgroup>@endif
-                                <optgroup label="{{ $eq->TM_DESCRIPTION ?? $eq->TM_CODE ?? 'Autre' }}">
+                                <optgroup label="{{ $eq->TM_DESCRIPTION ?? $eq->TM_CODE ?? __('vehicle.option_other') }}">
                                 @php $prevType = $eq->TM_DESCRIPTION; @endphp
                             @endif
                             <option value="{{ $eq->MA_ID }}">
@@ -375,7 +375,7 @@
                         @endforeach
                         @if($prevType !== null)</optgroup>@endif
                     </select>
-                    <button type="submit" class="btn btn-sm btn-outline-primary flex-shrink-0">
+                    <button type="submit" class="btn btn-sm btn-outline-primary flex-shrink-0" title="{{ __('vehicle.attach_btn_title') }}">
                         <i class="fas fa-plus"></i>
                     </button>
                 </form>
@@ -383,16 +383,16 @@
         </div>
         <div class="ob-widget-card-body p-0">
             @if($materiels->isEmpty())
-                <p class="ob-widget-empty p-3">Aucun matériel assigné à ce véhicule.</p>
+                <p class="ob-widget-empty p-3">{{ __('vehicle.empty_equipment') }}</p>
             @else
                 <table class="table table-sm table-hover mb-0">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
                         <tr>
-                            <th>Type</th>
-                            <th>Modèle</th>
-                            <th>N° série</th>
-                            <th>Inventaire</th>
-                            <th class="text-end">Qté</th>
+                            <th>{{ __('vehicle.col_eq_type') }}</th>
+                            <th>{{ __('vehicle.col_eq_model') }}</th>
+                            <th>{{ __('vehicle.col_eq_serial') }}</th>
+                            <th>{{ __('vehicle.col_eq_inventory') }}</th>
+                            <th class="text-end">{{ __('vehicle.col_eq_qty') }}</th>
                             @if(auth()->user()->hasPermission(17))<th></th>@endif
                         </tr>
                     </thead>
@@ -410,11 +410,11 @@
                                     <td class="text-end">
                                         <form method="POST"
                                               action="{{ route('vehicle.equipment.detach', [$vehicule->V_ID, $mat->MA_ID]) }}"
-                                              onsubmit="return confirm('Débarquer ce matériel ?')">
+                                              onsubmit="return confirm('{{ __('vehicle.confirm_unload') }}')">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn btn-xs btn-outline-danger"
                                                     style="font-size:var(--font-size-xs);padding:1px 6px;"
-                                                    title="Débarquer">
+                                                    title="{{ __('vehicle.btn_unload_title') }}">
                                                 <i class="fas fa-times"></i>
                                             </button>
                                         </form>
@@ -429,10 +429,10 @@
     </div>
 
     {{-- ── Documents ────────────────────────────────────────────────────────── --}}
-    <div id="section-documents" data-veh-section data-nav-icon="fas fa-file-alt" data-nav-label="Documents" data-nav-badge="{{ $documents->count() ?: '' }}" class="ob-widget-card mb-3">
+    <div id="section-documents" data-veh-section data-nav-icon="fas fa-file-alt" data-nav-label="{{ __('vehicle.nav_documents') }}" data-nav-badge="{{ $documents->count() ?: '' }}" class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
-                <i class="fas fa-file-alt"></i> Documents
+                <i class="fas fa-file-alt"></i> {{ __('vehicle.section_documents_title') }}
                 @if($documents->isNotEmpty())
                     <span class="ob-badge ob-badge-archive ms-1">{{ $documents->count() }}</span>
                 @endif
@@ -440,14 +440,14 @@
         </div>
         <div class="ob-widget-card-body p-0">
             @if($documents->isEmpty())
-                <p class="ob-widget-empty p-3">Aucun document associé à ce véhicule.</p>
+                <p class="ob-widget-empty p-3">{{ __('vehicle.empty_documents') }}</p>
             @else
                 <table class="table table-sm table-hover mb-0">
                     <thead style="background:var(--table-header-bg);color:var(--table-header-text)">
                         <tr>
-                            <th>Nom</th>
-                            <th>Catégorie</th>
-                            <th>Date</th>
+                            <th>{{ __('vehicle.col_doc_name') }}</th>
+                            <th>{{ __('vehicle.col_doc_category') }}</th>
+                            <th>{{ __('vehicle.col_doc_date') }}</th>
                         </tr>
                     </thead>
                     <tbody>

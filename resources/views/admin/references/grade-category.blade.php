@@ -1,13 +1,13 @@
 @extends('layout.app')
 
-@section('title', 'Catégories de grade — ' . config('app.name'))
+@section('title', __('admin.references.grade_category.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Paramétrage', 'url' => route('admin.references')],
-    ['label' => 'Catégories de grade'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.references.title'), 'url' => route('admin.references')],
+    ['label' => __('admin.references.grade_category.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -28,7 +28,7 @@
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>Nouvelle catégorie de grade</div>
+            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>{{ __('admin.references.grade_category.new_title') }}</div>
         </div>
         <div class="p-3">
             <form method="POST" action="{{ route('admin.references.grade-category.store') }}">
@@ -42,20 +42,20 @@
                 @endif
                 <div class="row g-2 align-items-end">
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Code <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_code') }} <span class="text-danger">*</span></label>
                         <input type="text" name="CG_CODE" value="{{ old('CG_CODE') }}"
                                class="form-control form-control-sm text-uppercase" maxlength="10" required
                                style="width:100px;" placeholder="OFF">
                     </div>
                     <div class="col">
-                        <label class="form-label form-label-sm">Description <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_description') }} <span class="text-danger">*</span></label>
                         <input type="text" name="CG_DESCRIPTION" value="{{ old('CG_DESCRIPTION') }}"
                                class="form-control form-control-sm" maxlength="50" required
-                               placeholder="Officiers">
+                               placeholder="{{ __('admin.references.grade_category.ph_desc') }}">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus me-1"></i>Ajouter
+                            <i class="fas fa-plus me-1"></i>{{ __('common.add') }}
                         </button>
                     </div>
                 </div>
@@ -66,18 +66,18 @@
     {{-- List --}}
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-layer-group me-2"></i>Catégories de grade ({{ $categories->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-layer-group me-2"></i>{{ __('admin.references.grade_category.list_title', ['count' => $categories->count()]) }}</div>
             <a href="{{ route('admin.references.grade') }}" class="btn btn-sm btn-light">
-                <i class="fas fa-medal me-1"></i> Icônes de grades
+                <i class="fas fa-medal me-1"></i> {{ __('admin.references.grade_category.see_grades') }}
             </a>
         </div>
         <div class="table-responsive">
             <table class="table table-sm table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th style="width:100px;">Code</th>
-                        <th>Description</th>
-                        <th class="text-center" style="width:90px;">Grades</th>
+                        <th style="width:100px;">{{ __('admin.references.col_code') }}</th>
+                        <th>{{ __('admin.references.col_description') }}</th>
+                        <th class="text-center" style="width:90px;">{{ __('admin.references.grade_category.col_grades') }}</th>
                         <th style="width:60px;"></th>
                     </tr>
                 </thead>
@@ -101,7 +101,7 @@
                         </td>
                         <td class="align-middle text-end">
                             <form method="POST" action="{{ route('admin.references.grade-category.destroy', $cat->CG_CODE) }}"
-                                  onsubmit="return confirm('Supprimer {{ addslashes($cat->CG_CODE) }} ?')">
+                                  onsubmit="return confirm('{{ __('admin.references.grade_category.delete_confirm', ['code' => addslashes($cat->CG_CODE)]) }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger"
                                         {{ ($gradeCounts[$cat->CG_CODE] ?? 0) > 0 ? 'disabled' : '' }}>
@@ -111,7 +111,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="text-center text-muted py-4">Aucune catégorie de grade.</td></tr>
+                    <tr><td colspan="4" class="text-center text-muted py-4">{{ __('admin.references.grade_category.empty') }}</td></tr>
                 @endforelse
                 </tbody>
             </table>

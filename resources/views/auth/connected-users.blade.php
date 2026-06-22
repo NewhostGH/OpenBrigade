@@ -1,23 +1,23 @@
 @extends('layout.app')
 
-@section('title', 'Utilisateurs connectés — ' . config('app.name'))
+@section('title', __('auth_views.connected_title') . ' — ' . config('app.name'))
 
 @section('content')
 
     <x-ob-breadcrumb :items="[
-            ['label' => 'Administration'],
-            ['label' => 'Connexions'],
+            ['label' => __('auth_views.connected_breadcrumb_admin')],
+            ['label' => __('auth_views.connected_breadcrumb_connexions')],
         ]" />
 
     <div class="mx-3 mt-3">
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-users me-1"></i> Utilisateurs connectés
+                    <i class="fas fa-users me-1"></i> {{ __('auth_views.connected_title') }}
                 </div>
                 <div class="ob-widget-card-actions">
                     <span class="text-muted" style="font-size:var(--font-size-sm);">
-                        {{ $connected->count() }} utilisateur(s) actif(s) ces 10&nbsp;dernières minutes
+                        {{ __('auth_views.connected_subtitle', ['count' => $connected->count()]) }}
                     </span>
                     <a href="{{ route('account.connected-users') }}" class="btn btn-sm btn-outline-secondary ms-2">
                         <i class="fas fa-sync-alt"></i>
@@ -27,7 +27,7 @@
 
             @if ($connected->isEmpty())
                 <div class="ob-widget-card-body">
-                    <div class="ob-widget-empty">Aucun utilisateur connecté en ce moment.</div>
+                    <div class="ob-widget-empty">{{ __('auth_views.connected_empty') }}</div>
                 </div>
             @else
                 <div class="ob-widget-card-body p-0">
@@ -36,13 +36,13 @@
                             <thead class="table-light">
                                 <tr>
                                     <th style="width:40px;"></th>
-                                    <th>Nom</th>
-                                    <th>Section</th>
-                                    <th>Système</th>
-                                    <th>Navigateur</th>
-                                    <th>Connexion</th>
-                                    <th>Dernière activité</th>
-                                    <th>IP</th>
+                                    <th>{{ __('auth_views.connected_col_nom') }}</th>
+                                    <th>{{ __('auth_views.connected_col_section') }}</th>
+                                    <th>{{ __('auth_views.connected_col_systeme') }}</th>
+                                    <th>{{ __('auth_views.connected_col_navigateur') }}</th>
+                                    <th>{{ __('auth_views.connected_col_connexion') }}</th>
+                                    <th>{{ __('auth_views.connected_col_activite') }}</th>
+                                    <th>{{ __('auth_views.connected_col_ip') }}</th>
                                 </tr>
                             </thead>
                             <tbody>

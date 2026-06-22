@@ -10,7 +10,7 @@
 
 <div class="ob-toolbar mx-3 mt-3">
     <div class="ob-toolbar-title">
-        <h1>Mon planning</h1>
+        <h1>{{ __('planning.title') }}</h1>
     </div>
 
     {{-- Month navigation --}}
@@ -31,7 +31,7 @@
 
         @if($year !== now()->year || $month !== now()->month)
             <a href="{{ route('planning.index') }}" class="btn btn-sm btn-outline-primary">
-                Ce mois-ci
+                {{ __('planning.this_month') }}
             </a>
         @endif
     </div>
@@ -73,7 +73,7 @@
                                      title="{{ $abs->TI_LIBELLE ?? 'Absence' }}{{ $abs->I_COMMENT ? ' — '.$abs->I_COMMENT : '' }}">
                                     <i class="fas fa-user-times fa-xs me-1"></i>
                                     {{ $abs->TI_LIBELLE ?? 'Absence' }}
-                                    @if($pending) <i class="fas fa-clock fa-xs ms-1" title="En attente"></i> @endif
+                                    @if($pending) <i class="fas fa-clock fa-xs ms-1" title="{{ __('planning.pending') }}"></i> @endif
                                 </div>
                             @endforeach
                         </td>
@@ -85,9 +85,9 @@
 
     {{-- Legend --}}
     <div class="d-flex gap-3 mt-2" style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
-        <span class="ob-cal-event ob-cal-event-ev px-2">Activité</span>
-        <span class="ob-cal-event ob-cal-event-abs px-2">Absence acceptée</span>
-        <span class="ob-cal-event ob-cal-event-abs-pend px-2">Absence en attente</span>
+        <span class="ob-cal-event ob-cal-event-ev px-2">{{ __('planning.legend_event') }}</span>
+        <span class="ob-cal-event ob-cal-event-abs px-2">{{ __('planning.legend_abs_ok') }}</span>
+        <span class="ob-cal-event ob-cal-event-abs-pend px-2">{{ __('planning.legend_abs_pending') }}</span>
     </div>
 </div>
 

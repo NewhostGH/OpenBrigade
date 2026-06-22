@@ -5,7 +5,7 @@
             <i class="fas fa-file-invoice-dollar"></i>
             {{-- TODO: Migrate code --}}
             <a href="{{ url('/legacy/export.php?filter=0&subsections=1&exp=1tnonpaye&type_event=ALL&affichage=ecran&show=1') }}"
-               style="color:inherit;text-decoration:none;">Activité non réglée</a>
+               style="color:inherit;text-decoration:none;">{{ __('dashboard.unpaid.title') }}</a>
         </div>
         <a class="ob-widget-card-link"
            {{-- TODO: Migrate code --}}
@@ -16,13 +16,13 @@
     <div class="ob-widget-card-body">
         @foreach ($unpaidActivities['rows'] as $row)
             @php
-                $montant = $row->facture_montant ?: ($row->devis_montant ?: 0);
-                if ($row->relance_date) {
-                    $badge = '<span class="ob-dash-alert-badge ob-dash-badge-info">Relancé</span>';
-                } elseif ($row->facture_date) {
-                    $badge = '<span class="ob-dash-alert-badge ob-dash-badge-warning">Facturé</span>';
-                } else {
-                    $badge = '<span class="ob-dash-alert-badge ob-dash-badge-danger">À facturer</span>';
+                $montant = $row->facture_montant ?: ($row->devis_montant ?: 0); // i18n-ignore
+                if ($row->relance_date) { // i18n-ignore
+                    $badge = '<span class="ob-dash-alert-badge ob-dash-badge-info">' . e(__('dashboard.unpaid.badge_relance')) . '</span>'; // i18n-ignore
+                } elseif ($row->facture_date) { // i18n-ignore
+                    $badge = '<span class="ob-dash-alert-badge ob-dash-badge-warning">' . e(__('dashboard.unpaid.badge_facture')) . '</span>'; // i18n-ignore
+                } else { // i18n-ignore
+                    $badge = '<span class="ob-dash-alert-badge ob-dash-badge-danger">' . e(__('dashboard.unpaid.badge_to_bill')) . '</span>'; // i18n-ignore
                 }
             @endphp
             <div class="ob-dash-alert-item-row">

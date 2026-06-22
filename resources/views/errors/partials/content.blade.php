@@ -22,13 +22,13 @@
             <p class="ob-error-message">{{ $message }}</p>
             <div class="ob-error-actions">
                 @if ($relogin)
-                    <a href="{{ url('/login') }}" class="ob-error-btn ob-error-btn-primary">Se connecter</a>
-                    <a href="{{ url('/') }}" class="ob-error-btn ob-error-btn-secondary">Accueil</a>
+                    <a href="{{ url('/login') }}" class="ob-error-btn ob-error-btn-primary">{{ __('errors.btn_login') }}</a>
+                    <a href="{{ url('/') }}" class="ob-error-btn ob-error-btn-secondary">{{ __('errors.btn_home') }}</a>
                 @elseif ($code === 503)
-                    <a href="javascript:location.reload()" class="ob-error-btn ob-error-btn-primary">Réessayer</a>
+                    <a href="javascript:location.reload()" class="ob-error-btn ob-error-btn-primary">{{ __('errors.btn_retry') }}</a>
                 @else
-                    <a href="{{ url('/') }}" class="ob-error-btn ob-error-btn-primary">Retour à l'accueil</a>
-                    <a href="javascript:history.back()" class="ob-error-btn ob-error-btn-secondary">Page précédente</a>
+                    <a href="{{ url('/') }}" class="ob-error-btn ob-error-btn-primary">{{ __('errors.btn_back_home') }}</a>
+                    <a href="javascript:history.back()" class="ob-error-btn ob-error-btn-secondary">{{ __('errors.btn_prev_page') }}</a>
                 @endif
             </div>
         </div>

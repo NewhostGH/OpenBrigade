@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Vérification en deux étapes — ' . config('app.name'))
+@section('title', __('auth_views.totp_section_title') . ' — ' . config('app.name'))
 
 @section('content')
 
@@ -10,21 +10,20 @@
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
-                <i class="fas fa-mobile-alt me-1"></i> Vérification en deux étapes
+                <i class="fas fa-mobile-alt me-1"></i> {{ __('auth_views.totp_section_title') }}
             </div>
         </div>
         <div class="ob-widget-card-body">
 
             <p class="text-muted mb-4" style="font-size:var(--font-size-sm);">
-                Saisissez le code à 6 chiffres affiché par votre application d'authentification
-                (Google Authenticator, Authy…).
+                {{ __('auth_views.totp_intro') }}
             </p>
 
             <form method="POST" action="{{ route('totp.challenge.verify') }}">
                 @csrf
 
                 <div class="mb-3">
-                    <label for="code" class="form-label fw-semibold">Code TOTP</label>
+                    <label for="code" class="form-label fw-semibold">{{ __('auth_views.totp_label') }}</label>
                     <input type="text" id="code" name="code"
                            class="form-control form-control-lg text-center font-monospace @error('code') is-invalid @enderror"
                            inputmode="numeric" pattern="[0-9]*" maxlength="6"
@@ -37,7 +36,7 @@
 
                 <div class="d-grid mb-3">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check me-1"></i> Vérifier
+                        <i class="fas fa-check me-1"></i> {{ __('auth_views.totp_btn') }}
                     </button>
                 </div>
 
@@ -47,7 +46,7 @@
 
             <details style="font-size:var(--font-size-sm);">
                 <summary class="text-muted" style="cursor:pointer;">
-                    Utiliser un code de récupération
+                    {{ __('auth_views.totp_recovery_summary') }}
                 </summary>
                 <form method="POST" action="{{ route('totp.challenge.verify') }}" class="mt-3">
                     @csrf
@@ -61,14 +60,14 @@
                         @enderror
                     </div>
                     <button type="submit" class="btn btn-sm btn-outline-secondary w-100">
-                        Utiliser ce code
+                        {{ __('auth_views.totp_recovery_btn') }}
                     </button>
                 </form>
             </details>
 
             <div class="mt-3 text-center" style="font-size:var(--font-size-xs);">
                 <a href="{{ route('login') }}" class="text-muted">
-                    <i class="fas fa-arrow-left me-1"></i> Retour à la connexion
+                    <i class="fas fa-arrow-left me-1"></i> {{ __('auth_views.totp_back_login') }}
                 </a>
             </div>
 

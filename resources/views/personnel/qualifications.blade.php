@@ -12,19 +12,19 @@
 {{-- Filter tabs --}}
 <div class="mx-3 mt-3 d-flex gap-2">
     <a href="{{ route('personnel.qualifications', ['filter' => 'all']) }}"
-       class="btn btn-sm {{ $filter === 'all' ? 'btn-primary' : 'btn-outline-secondary' }}">Toutes</a>
+       class="btn btn-sm {{ $filter === 'all' ? 'btn-primary' : 'btn-outline-secondary' }}">{{ __('personnel.qual_filter_all') }}</a>
     <a href="{{ route('personnel.qualifications', ['filter' => 'expiring']) }}"
        class="btn btn-sm {{ $filter === 'expiring' ? 'btn-warning' : 'btn-outline-secondary' }}">
-        <i class="fas fa-clock me-1"></i> Expirant bientôt
+        <i class="fas fa-clock me-1"></i> {{ __('personnel.qual_filter_expiring') }}
     </a>
     <a href="{{ route('personnel.qualifications', ['filter' => 'expired']) }}"
        class="btn btn-sm {{ $filter === 'expired' ? 'btn-danger' : 'btn-outline-secondary' }}">
-        <i class="fas fa-exclamation-circle me-1"></i> Expirées
+        <i class="fas fa-exclamation-circle me-1"></i> {{ __('personnel.qual_filter_expired') }}
     </a>
 </div>
 
 <x-ob-toolbar
-    title="Qualifications de la section"
+    title="{{ __('personnel.qual_title') }}"
     :total="$items->total()"
     :columns="$columns"
     table-id="qualificationsTable"

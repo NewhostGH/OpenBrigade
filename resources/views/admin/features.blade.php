@@ -19,8 +19,8 @@
 @section('content')
 
     <x-ob-breadcrumb :items="[
-            ['label' => 'Administration'],
-            ['label' => 'Fonctionnalités'],
+            ['label' => __('admin.administration')], {{-- i18n-ignore --}}
+            ['label' => __('admin.features.title')],
         ]" />
 
     <div class="px-3 px-md-4 mt-3">
@@ -46,7 +46,7 @@
                                         </span>
                                         @if($feature->status === 'wip')
                                             <span class="ob-badge ob-badge-ext ms-1"
-                                                title="Pas encore disponible dans l'application native (en cours de migration).">WIP</span>
+                                                title="{{ __('admin.features.wip_title') }}">WIP</span>
                                         @endif
                                         @if($feature->description)
                                             <div class="text-muted" style="font-size:var(--font-size-xs);">

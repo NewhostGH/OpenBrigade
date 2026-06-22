@@ -5,15 +5,15 @@
 @section('content')
 
     <x-ob-breadcrumb :items="[
-            ['label' => 'Statistiques'],
-            ['label' => 'Tableau de bord', 'url' => route('statistics.dashboard')],
+            ['label' => __('statistics.title')],
+            ['label' => __('statistics.btn_dashboard'), 'url' => route('statistics.dashboard')],
         ]" />
 
     <div class="ob-toolbar mx-3 mt-3">
         <div class="ob-toolbar-title">
-            <h1>Statistiques {{ $year }}</h1>
+            <h1>{{ __('statistics.title') }} {{ $year }}</h1>
             <form method="GET" action="{{ route('statistics.dashboard') }}" class="ob-stats-year-form">
-                <label class="text-muted" style="font-size:var(--font-size-sm)">Année :</label>
+                <label class="text-muted" style="font-size:var(--font-size-sm)">{{ __('statistics.year_label') }}</label>
                 <select name="year" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
                     @foreach($years as $y)
                         <option value="{{ $y }}" @selected($y === $year)>{{ $y }}</option>
@@ -23,7 +23,7 @@
         </div>
         <div class="ob-toolbar-actions">
             <a href="{{ route('statistics.annual-report') }}?year={{ $year }}" class="btn btn-sm btn-outline-secondary">
-                <i class="fas fa-file-pdf me-1"></i>Bilan annuel
+                <i class="fas fa-file-pdf me-1"></i>{{ __('statistics.btn_annual_report') }}
             </a>
         </div>
     </div>
@@ -33,25 +33,24 @@
         {{-- ── KPI cards ──────────────────────────────────────────────────────── --}}
         <div class="ob-kpi-grid">
             <div class="ob-kpi-card ob-kpi-card--primary">
-                <span class="ob-kpi-card__label">Activités</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_events_label') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalEvents }}</span>
-                <span class="ob-kpi-card__sub">en {{ $year }}</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_events_sub', ['year' => $year]) }}</span>
             </div>
             <div class="ob-kpi-card ob-kpi-card--success">
-                <span class="ob-kpi-card__label">Participations</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_participants_label') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalParticipants }}</span>
-                <span class="ob-kpi-card__sub">cumulées sur l'année</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_participants_sub') }}</span>
             </div>
             <div class="ob-kpi-card ob-kpi-card--accent">
-                <span class="ob-kpi-card__label">Heures</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_hours_label') }}</span>
                 <span class="ob-kpi-card__value">{{ number_format($totalHours, 0, ',', ' ') }}</span>
-                <span class="ob-kpi-card__sub">total bénévoles</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_hours_sub') }}</span>
             </div>
             <div class="ob-kpi-card ob-kpi-card--info">
-                <span class="ob-kpi-card__label">Membres actifs</span>
+                <span class="ob-kpi-card__label">{{ __('statistics.kpi_members_label') }}</span>
                 <span class="ob-kpi-card__value">{{ $totalMembers }}</span>
-                <span class="ob-kpi-card__sub">{{ $newMembersThisYear }} nouveau{{ $newMembersThisYear !== 1 ? 'x' : '' }}
-                    en {{ $year }}</span>
+                <span class="ob-kpi-card__sub">{{ __('statistics.kpi_members_sub', ['new' => $newMembersThisYear, 'year' => $year]) }}</span>
             </div>
         </div>
 
@@ -62,7 +61,7 @@
                 <div class="ob-widget-card">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title">
-                            <i class="fas fa-chart-bar me-1"></i> Activités par mois
+                            <i class="fas fa-chart-bar me-1"></i> {{ __('statistics.chart_events_month') }}
                         </div>
                     </div>
                     <div class="ob-widget-card-body">
@@ -75,7 +74,7 @@
                 <div class="ob-widget-card">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title">
-                            <i class="fas fa-users me-1"></i> Participants par mois
+                            <i class="fas fa-users me-1"></i> {{ __('statistics.chart_participants_month') }}
                         </div>
                     </div>
                     <div class="ob-widget-card-body">
@@ -90,7 +89,7 @@
                 <div class="ob-widget-card">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title">
-                            <i class="fas fa-chart-pie me-1"></i> Répartition par type
+                            <i class="fas fa-chart-pie me-1"></i> {{ __('statistics.chart_events_type') }}
                         </div>
                     </div>
                     <div class="ob-widget-card-body">
@@ -104,12 +103,12 @@
                 <div class="ob-widget-card">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title">
-                            <i class="fas fa-user-plus me-1"></i> Nouveaux membres (5 ans)
+                            <i class="fas fa-user-plus me-1"></i> {{ __('statistics.chart_new_members') }}
                         </div>
                     </div>
                     <div class="ob-widget-card-body">
                         @if(empty($newMembersByYear))
-                            <span class="ob-widget-empty">Aucune donnée.</span>
+                            <span class="ob-widget-empty">{{ __('statistics.no_data') }}</span>
                         @else
                             <div id="chart-new-members" data-values="{{ json_encode($newMembersByYear) }}"></div>
                         @endif
@@ -122,19 +121,19 @@
                 <div class="ob-widget-card">
                     <div class="ob-widget-card-header">
                         <div class="ob-widget-card-title">
-                            <i class="fas fa-trophy me-1"></i> Top 10 participants — {{ $year }}
+                            <i class="fas fa-trophy me-1"></i> {{ __('statistics.top_participants_title', ['year' => $year]) }}
                         </div>
                     </div>
                     <div class="ob-widget-card-body p-0">
                         @if($topParticipants->isEmpty())
-                            <p class="ob-widget-empty p-3">Aucune donnée.</p>
+                            <p class="ob-widget-empty p-3">{{ __('statistics.no_data') }}</p>
                         @else
                             <table class="table table-sm ob-table mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width:32px">#</th>
-                                        <th>Membre</th>
-                                        <th>Activités</th>
+                                        <th style="width:32px">{{ __('statistics.th_rank') }}</th>
+                                        <th>{{ __('statistics.th_member') }}</th>
+                                        <th>{{ __('statistics.th_events') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>

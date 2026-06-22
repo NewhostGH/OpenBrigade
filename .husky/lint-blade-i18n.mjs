@@ -13,10 +13,10 @@
  * Escape hatches:
  *   - Put `i18n-ignore` anywhere on a line (e.g. in a `{{-- i18n-ignore --}}`
  *     comment) to skip that line.
- *   - Add a literal string (one per line) to scripts/i18n-lint-allow.txt to
+ *   - Add a literal string (one per line) to .husky/i18n-lint-allow.txt to
  *     whitelist it everywhere. Lines starting with `#` are comments.
  *
- * Usage:  node scripts/lint-blade-i18n.mjs
+ * Usage:  npm run lint-i18n   (node .husky/lint-blade-i18n.mjs)
  * Exit:   0 = clean, 1 = hardcoded strings found.
 **/
 
@@ -44,6 +44,46 @@ const WORD_RE = /\p{L}{2,}/u;
 
 function blank(src, re) {
     return src.replace(re, (m) => m.replace(/[^\n]/g, ' '));
+}
+
+// Blank Blade directives `@name(...)`, consuming a balanced parenthesis group
+// (quote-aware) so PHP expressions with nested parens or `=>` arrows don't leak
+// into the text-node scan. Directives with no parens (e.g. @csrf) are blanked too.
+function blankDirectives(src) {
+    const out = src.split('');
+    const re = /@\w+/g;
+    let m;
+    while ((m = re.exec(src)) !== null) {
+        let i = m.index + m[0].length;
+        // Optional whitespace then an opening paren → consume balanced group.
+        let j = i;
+        while (j < src.length && (src[j] === ' ' || src[j] === '\t')) j++;
+        let end = i;
+        if (src[j] === '(') {
+            let depth = 0, quote = null;
+            let k = j;
+            for (; k < src.length; k++) {
+                const c = src[k];
+                if (quote) {
+                    if (c === '\\') { k++; continue; }
+                    if (c === quote) quote = null;
+                } else if (c === '"' || c === "'") {
+                    quote = c;
+                } else if (c === '(') {
+                    depth++;
+                } else if (c === ')') {
+                    depth--;
+                    if (depth === 0) { k++; break; }
+                }
+            }
+            end = k;
+        }
+        for (let p = m.index; p < end; p++) {
+            if (out[p] !== '\n') out[p] = ' ';
+        }
+        re.lastIndex = end;
+    }
+    return out.join('');
 }
 
 function loadAllowlist() {
@@ -119,6 +159,9 @@ function lintFile(absPath) {
     let s = blank(src, /\{\{--[\s\S]*?--\}\}/g);
     s = blank(s, /<script\b[\s\S]*?<\/script>/gi);
     s = blank(s, /<style\b[\s\S]*?<\/style>/gi);
+    // Raw PHP blocks are code, not UI copy.
+    s = blank(s, /@php\b[\s\S]*?@endphp/gi);
+    s = blank(s, /@verbatim\b[\s\S]*?@endverbatim/gi);
 
     // -------------------------
     // Attribute pass
@@ -171,15 +214,13 @@ function lintFile(absPath) {
     t = blank(t, /\{\{[\s\S]*?\}\}/g);
     t = blank(t, /\{!![\s\S]*?!!\}/g);
 
-    // Remove Blade directives
-    t = blank(
-        t,
-        /@\w+(\s*\([^()]*(\([^()]*\)[^()]*)*\))?/g
-    );
+    // Remove Blade directives (balanced, quote-aware paren handling)
+    t = blankDirectives(t);
 
-    // Remove Blade components entirely
-    t = blank(t, /<x-[^>]*\/>/gi);
-    t = blank(t, /<x-[^>]*>[\s\S]*?<\/x-[^>]*>/gi);
+    // Remove Blade components entirely. Non-greedy so `=>` arrows inside
+    // array-valued attributes (which contain `>`) don't cut the match short.
+    t = blank(t, /<x-[\w.:-]+[\s\S]*?\/>/gi);
+    t = blank(t, /<x-[\w.:-]+[\s\S]*?>[\s\S]*?<\/x-[\w.:-]+>/gi);
 
     // Only inspect clean text nodes
     const TEXT_RE = />([^<{]+)</g;
@@ -253,10 +294,10 @@ if (total === 0) {
     console.log(
         `${GREEN}${BOLD}✓${RESET} blade-i18n: ${files.length} templates checked`
     );
-} else {
-    console.error(
-        `${RED}${BOLD}✗${RESET} blade-i18n: ${total} hardcoded string(s) found in ${report.length} file(s)`
-    );
+    process.exit(0);
 }
 
+console.error(
+    `${RED}${BOLD}✗${RESET} blade-i18n: ${total} hardcoded string(s) found in ${report.length} file(s)`
+);
 process.exit(1);

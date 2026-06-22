@@ -18,11 +18,11 @@
     'items' => [],
 ])
 
-<nav class="ob-breadcrumb noprint" aria-label="Fil d'Ariane">
+<nav class="ob-breadcrumb noprint" aria-label="{{ __('components.breadcrumb_nav_label') }}">
 
     {{-- Home / Dashboard --}}
     <span class="ob-breadcrumb-item">
-        <a href="{{ route('dashboard') }}" title="Tableau de bord">
+        <a href="{{ route('dashboard') }}" title="{{ __('components.breadcrumb_home_title') }}">
             <i class="fas fa-home"></i>
         </a>
     </span>

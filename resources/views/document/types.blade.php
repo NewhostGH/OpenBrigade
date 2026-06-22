@@ -5,21 +5,21 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Documents', 'url' => route('document.index')],
-    ['label' => 'Types de documents'],
+    ['label' => __('document.title'), 'url' => route('document.index')],
+    ['label' => __('document.types_page_title')],
 ]"/>
 
-<x-ob-toolbar title="Types de documents" :total="$types->count()"
+<x-ob-toolbar title="{{ __('document.types_page_title') }}" :total="$types->count()"
     :columns="$columns" table-id="docTypeTable">
     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#typeCreateModal">
-        <i class="fas fa-plus me-1"></i> Nouveau type
+        <i class="fas fa-plus me-1"></i> {{ __('document.types_btn_new') }}
     </button>
 </x-ob-toolbar>
 
 <div class="mx-1">
     <x-ob-commandbar table-id="docTypeTable" :total="$types->count()" total-label="type">
         <x-ob-table :columns="$columns" :items="$types" table-id="docTypeTable"
-            empty-text="Aucun type de document."/>
+            empty-text="{{ __('document.types_empty') }}"/>
     </x-ob-commandbar>
 </div>
 
@@ -29,22 +29,22 @@
         <form method="POST" action="{{ route('document.types.store') }}" class="modal-content">
             @csrf
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Nouveau type de document</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <h5 class="modal-title"><i class="fas fa-plus me-2"></i>{{ __('document.modal_create_type_title') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label" for="typeCreateCode">Code (5 car. max)</label>
+                    <label class="form-label" for="typeCreateCode">{{ __('document.type_code_label') }}</label>
                     <input type="text" id="typeCreateCode" name="code" class="form-control" maxlength="5" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="typeCreateLibelle">Libellé</label>
+                    <label class="form-label" for="typeCreateLibelle">{{ __('document.type_libelle_label') }}</label>
                     <input type="text" id="typeCreateLibelle" name="libelle" class="form-control" maxlength="50" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="typeCreateSecurity">Visible si la personne a le droit</label>
+                    <label class="form-label" for="typeCreateSecurity">{{ __('document.type_security_label') }}</label>
                     <select id="typeCreateSecurity" name="security" class="form-select">
-                        <option value="0">Public (tout le monde)</option>
+                        <option value="0">{{ __('document.type_security_public') }}</option>
                         @foreach ($features as $f)
                             <option value="{{ $f->F_ID }}">{{ $f->F_LIBELLE }} (#{{ $f->F_ID }})</option>
                         @endforeach
@@ -52,12 +52,12 @@
                 </div>
                 <div class="form-check">
                     <input type="checkbox" id="typeCreateSyndicate" name="syndicate" value="1" class="form-check-input">
-                    <label class="form-check-label" for="typeCreateSyndicate">Réservé au syndicat</label>
+                    <label class="form-check-label" for="typeCreateSyndicate">{{ __('document.type_syndicate_label') }}</label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="submit" class="btn btn-sm btn-primary">Créer</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                <button type="submit" class="btn btn-sm btn-primary">{{ __('common.create') }}</button>
             </div>
         </form>
     </div>
@@ -70,18 +70,18 @@
             @csrf
             @method('PATCH')
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-pen me-2"></i>Modifier le type <span id="typeEditCode" class="text-muted"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <h5 class="modal-title"><i class="fas fa-pen me-2"></i>{{ __('document.modal_edit_type_title') }} <span id="typeEditCode" class="text-muted"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label" for="typeEditLibelle">Libellé</label>
+                    <label class="form-label" for="typeEditLibelle">{{ __('document.type_libelle_label') }}</label>
                     <input type="text" id="typeEditLibelle" name="libelle" class="form-control" maxlength="50" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="typeEditSecurity">Visible si la personne a le droit</label>
+                    <label class="form-label" for="typeEditSecurity">{{ __('document.type_security_label') }}</label>
                     <select id="typeEditSecurity" name="security" class="form-select">
-                        <option value="0">Public (tout le monde)</option>
+                        <option value="0">{{ __('document.type_security_public') }}</option>
                         @foreach ($features as $f)
                             <option value="{{ $f->F_ID }}">{{ $f->F_LIBELLE }} (#{{ $f->F_ID }})</option>
                         @endforeach
@@ -89,12 +89,12 @@
                 </div>
                 <div class="form-check">
                     <input type="checkbox" id="typeEditSyndicate" name="syndicate" value="1" class="form-check-input">
-                    <label class="form-check-label" for="typeEditSyndicate">Réservé au syndicat</label>
+                    <label class="form-check-label" for="typeEditSyndicate">{{ __('document.type_syndicate_label') }}</label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                <button type="submit" class="btn btn-sm btn-primary">{{ __('common.save') }}</button>
             </div>
         </form>
     </div>
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('[data-type-delete]').forEach(function (f) {
         f.addEventListener('submit', function (e) {
-            if (!window.confirm('Supprimer ce type de document ?')) {
+            if (!window.confirm('{{ __('document.confirm_delete_type') }}')) {
                 e.preventDefault();
             }
         });
