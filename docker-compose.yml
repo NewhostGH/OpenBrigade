@@ -22,6 +22,9 @@ services:
       AUTO_RUN_MIGRATIONS: 1
       NODE_TLS_REJECT_UNAUTHORIZED: ${NODE_TLS_REJECT_UNAUTHORIZED:-1}
       COMPOSER_DISABLE_TLS: ${COMPOSER_DISABLE_TLS:-0}
+      # Upload malware scanning defaults ON in Docker (a clamav service ships below).
+      # The admin can still flip it off in Sécurité ▸ Renforcement.
+      SECURITY_UPLOAD_SCAN: ${SECURITY_UPLOAD_SCAN:-1}
 
     volumes:
       # Use local source files directly (dev-friendly, no code copy inside running container)
@@ -34,6 +37,31 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      # Soft dependency only: the scanner fails open, so the app must not wait on
+      # clamav's slow first-run signature download to come up.
+      clamav:
+        condition: service_started
+
+  clamav:
+    image: clamav/clamav:1.4
+    container_name: openbrigade_clamav
+    restart: unless-stopped
+
+    # The clamd INSTREAM endpoint used by App\Support\ClamavScanner.
+    # Reachable from the app container as host "clamav" on port 3310.
+    expose:
+      - "3310"
+
+    volumes:
+      - clamav_db:/var/lib/clamav
+
+    healthcheck:
+      test: ["CMD", "clamdcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 6
+      # Generous start period: the first freshclam signature download is slow.
+      start_period: 180s
 
   db:
     image: mariadb:11.4
@@ -88,3 +116,4 @@ volumes:
   db_data:
   storage_uploads:
   storage_logs:
+  clamav_db:

@@ -32,6 +32,7 @@ use App\Services\PermissionResolver;
 use App\Services\PersonnelExportService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
+use App\Services\UploadSecurityService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -1471,6 +1472,12 @@ class PersonnelController extends Controller
 
         if ($request->hasFile('photo_upload') && $request->file('photo_upload')->isValid()) {
             $file = $request->file('photo_upload');
+            app(UploadSecurityService::class)->assertSafe(
+                $file,
+                ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                (int) config('photos.max_size_mb') * 1024,
+                'photo_upload',
+            );
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = $personnel->P_ID.'_'.time().'.'.$extension;
             $destDir = storage_path('app/private/profile_pictures');
@@ -1639,6 +1646,12 @@ class PersonnelController extends Controller
         // Handle photo upload
         if ($request->hasFile('photo_upload') && $request->file('photo_upload')->isValid()) {
             $file = $request->file('photo_upload');
+            app(UploadSecurityService::class)->assertSafe(
+                $file,
+                ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                (int) config('photos.max_size_mb') * 1024,
+                'photo_upload',
+            );
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
             $filename = $personnel->P_ID.'_'.time().'.'.$extension;
             $destDir = storage_path('app/private/profile_pictures');

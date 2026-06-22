@@ -10,8 +10,12 @@ use App\Services\FeatureService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
 use App\Services\SectionScopeService;
+use App\Services\SecuritySettingService;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -77,6 +81,22 @@ class AppServiceProvider extends ServiceProvider
         // Gate for legacy permission IDs: Gate::allows('feature', 52)
         Gate::define('feature', function (User $user, int $fid): bool {
             return $user->hasPermission($fid);
+        });
+
+        // Named 'auth' rate limiter for the login / password-reset routes. The
+        // limit (and whether it applies) is administrable from Sécurité ▸
+        // Renforcement, so it is resolved per request. Keyed by client IP.
+        RateLimiter::for('auth', function (Request $request) {
+            $settings = app(SecuritySettingService::class);
+
+            if (! $settings->bool('sec_ratelimit_auth_enabled')) {
+                return Limit::none();
+            }
+
+            return Limit::perMinutes(
+                max(1, $settings->int('sec_ratelimit_auth_window')),
+                max(1, $settings->int('sec_ratelimit_auth_max')),
+            )->by($request->ip());
         });
 
         // @feature('multi_site') … @endfeature — hide UI tied to a disabled

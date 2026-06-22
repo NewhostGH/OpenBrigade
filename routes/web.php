@@ -59,11 +59,11 @@ Route::get('/', function () {
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt')->middleware('throttle:auth');
 
     // Compatibility for middleware redirects generated from /index.php/* requests.
     Route::get('/index.php/login', [AuthController::class, 'showLogin'])->name('login.compat');
-    Route::post('/index.php/login', [AuthController::class, 'login'])->name('login.attempt.compat');
+    Route::post('/index.php/login', [AuthController::class, 'login'])->name('login.attempt.compat')->middleware('throttle:auth');
 
     // Legacy scripts sometimes point to login.php explicitly.
     Route::get('/index.php/login.php', fn () => redirect('/login'));
@@ -76,7 +76,7 @@ Route::middleware('guest')->group(function () {
 
     // Self-service password reset (no auth required)
     Route::get('/password/reset', [PasswordResetController::class, 'showRequestForm'])->name('password.request');
-    Route::post('/password/reset', [PasswordResetController::class, 'sendResetToken'])->name('password.email');
+    Route::post('/password/reset', [PasswordResetController::class, 'sendResetToken'])->name('password.email')->middleware('throttle:auth');
     Route::get('/password/reset/{token}', [PasswordResetController::class, 'confirmToken'])->name('password.reset');
 });
 
@@ -181,6 +181,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/security/ldap/{id}/ou', [AdminController::class, 'ldapOuStore'])->name('admin.ldap.ou.store')->middleware('permission:14');
     Route::delete('/admin/security/ldap/{id}/ou/{ruleId}', [AdminController::class, 'ldapOuDestroy'])->name('admin.ldap.ou.destroy')->middleware('permission:14');
     Route::post('/admin/security/network/test-hibp', [AdminController::class, 'testHibp'])->name('admin.network.test-hibp')->middleware('permission:14');
+    // Security hardening (Renforcement) — CSP/HSTS, auth throttling, upload safety.
+    // Toggle/value rows save via the generic admin.settings.save endpoint (per-row,
+    // keyed by configuration ID), exactly like the other security tabs.
+    Route::post('/admin/security/hardening/test-clamav', [AdminController::class, 'testClamav'])->name('admin.security.test-clamav')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');

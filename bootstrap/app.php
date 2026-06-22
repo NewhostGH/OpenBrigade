@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\UploadRejectedException;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\RequireAuthSetup;
 use App\Http\Middleware\RequireCharterAcceptance;
@@ -48,5 +49,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('web', SetLocale::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Custom exception handling configuration
+        // A rejected upload (forbidden type, MIME mismatch, malware hit) surfaces
+        // as a normal validation error on the upload field, wherever it is thrown.
+        $exceptions->render(function (UploadRejectedException $e) {
+            throw $e->toValidationException();
+        });
     })->create();

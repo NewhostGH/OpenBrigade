@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Services\Auth\AuthService;
 use App\Services\NavigationService;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Auth;
 use Mockery\MockInterface;
 
@@ -42,9 +43,11 @@ function authStubNav(): void
 }
 
 // Disable CSRF verification for the whole file — these tests exercise the form
-// logic, not token handling (covered by the middleware unit tests).
+// logic, not token handling (covered by the middleware unit tests). The
+// throttle is disabled too: these tests fire many login attempts from the same
+// IP and are not about rate limiting (covered by its own test below).
 beforeEach(function () {
-    $this->withoutMiddleware(ValidateCsrfToken::class);
+    $this->withoutMiddleware([ValidateCsrfToken::class, ThrottleRequests::class]);
 });
 
 // ── GET /login ───────────────────────────────────────────────────────────────
@@ -125,6 +128,28 @@ test('login input is repopulated after failed attempt', function () {
         ->assertRedirect();
 
     $this->get('/login')->assertSee('someone');
+});
+
+// ── POST /login — rate limiting (throttle:auth) ──────────────────────────────
+
+test('login is throttled after too many attempts from the same IP', function () {
+    // Keep the throttle middleware enabled for this test only, and start from a
+    // clean limiter (the array cache store is shared across tests in a run).
+    $this->withMiddleware(ThrottleRequests::class);
+    cache()->flush();
+
+    $authService = Mockery::mock(AuthService::class);
+    $authService->shouldReceive('attemptLogin')->andReturn(false);
+    app()->instance(AuthService::class, $authService);
+
+    // Default limit is 5 per minute; the 6th attempt must be blocked with 429.
+    for ($i = 0; $i < 5; $i++) {
+        $this->post('/login', ['login' => 'someone', 'password' => 'wrong'])
+            ->assertStatus(302);
+    }
+
+    $this->post('/login', ['login' => 'someone', 'password' => 'wrong'])
+        ->assertStatus(429);
 });
 
 // ── POST /logout ─────────────────────────────────────────────────────────────

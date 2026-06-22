@@ -10,6 +10,9 @@ use App\Models\ObPasswordPolicy;
 use App\Models\Section;
 use App\Services\Auth\LdapAuthService;
 use App\Services\FeatureService;
+use App\Services\SecuritySettingService;
+use App\Services\UploadSecurityService;
+use App\Support\ClamavScanner;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -64,13 +67,19 @@ class AdminController extends Controller
     /** IDs that live on the dedicated security page, not on the generic settings page. */
     private const SECURITY_IDS = [48, 34, 36, 49, 25, 33, 69];
 
-    private const SECURITY_TABS = ['passwords', 'charter', 'sessions', 'auth', 'network'];
+    private const SECURITY_TABS = ['passwords', 'charter', 'sessions', 'auth', 'network', 'hardening'];
 
-    public function security(Request $request): View
+    public function security(Request $request, SecuritySettingService $hardeningSvc): View
     {
         $tab = $request->input('tab', 'passwords');
         if (! in_array($tab, self::SECURITY_TABS, true)) {
             $tab = 'passwords';
+        }
+
+        if ($tab === 'hardening') {
+            // Self-heal: make sure every hardening setting has a row (and thus an ID
+            // the per-row save forms can target) even before the seeding migration runs.
+            $hardeningSvc->ensureSeeded();
         }
 
         $settings = DB::table('configuration')
@@ -90,7 +99,44 @@ class AdminController extends Controller
             ? LdapDomain::orderBy('priority')->get()
             : collect();
 
-        return view('admin.security', compact('settings', 'charterUpdatedAt', 'tab', 'policies', 'ldapDomains'));
+        // Hardening rows (CSP/HSTS, auth throttling, upload safety) keyed by NAME so
+        // the blade reuses the same per-row save plumbing as the other tabs (each
+        // row posts its ID to admin.settings.save), without hard-coding IDs.
+        $hardening = $tab === 'hardening'
+            ? DB::table('configuration')->whereIn('NAME', SecuritySettingService::keys())->get()->keyBy('NAME')
+            : collect();
+
+        // ClamAV is an outbound dependency, so the Réseau tab lists it as a flow.
+        $clamav = $tab === 'network'
+            ? [
+                'enabled' => $hardeningSvc->bool('sec_upload_scan_enabled'),
+                'host' => $hardeningSvc->string('sec_clamav_host'),
+                'port' => $hardeningSvc->int('sec_clamav_port'),
+            ]
+            : null;
+
+        return view('admin.security', compact(
+            'settings', 'charterUpdatedAt', 'tab', 'policies', 'ldapDomains', 'hardening', 'clamav',
+        ));
+    }
+
+    // ── Security hardening (Renforcement tab) ─────────────────────────────────
+
+    public function testClamav(Request $request, SecuritySettingService $hardening): JsonResponse
+    {
+        $scanner = new ClamavScanner(
+            (string) $request->input('host', $hardening->string('sec_clamav_host')),
+            (int) $request->input('port', $hardening->int('sec_clamav_port')),
+            5,
+        );
+
+        try {
+            return $scanner->ping()
+                ? response()->json(['ok' => true, 'message' => __('admin.security.clamav_reachable')])
+                : response()->json(['ok' => false, 'message' => __('admin.security.clamav_unreachable')]);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     // ── LDAP domain management ────────────────────────────────────────────────
@@ -392,6 +438,13 @@ class AdminController extends Controller
         $request->validate([
             'file' => ['required', 'file', 'mimes:jpeg,png,gif,ico,webp', 'max:4096'],
         ]);
+
+        app(UploadSecurityService::class)->assertSafe(
+            $request->file('file'),
+            ['jpeg', 'jpg', 'png', 'gif', 'ico', 'webp'],
+            4096,
+            'file',
+        );
 
         // Remove old file from storage
         $old = $row->VALUE ?? '';

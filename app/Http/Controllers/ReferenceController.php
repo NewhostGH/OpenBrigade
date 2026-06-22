@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UploadSecurityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -666,6 +667,13 @@ class ReferenceController extends Controller
         $request->validate([
             'icon' => ['required', 'file', 'mimes:png,jpg,jpeg,gif,webp', 'max:512'],
         ]);
+
+        app(UploadSecurityService::class)->assertSafe(
+            $request->file('icon'),
+            ['png', 'jpg', 'jpeg', 'gif', 'webp'],
+            512,
+            'icon',
+        );
 
         // Remove old icon from storage if it's in our managed path
         $old = $row->G_ICON ?? '';

@@ -52,6 +52,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <i class="fas fa-network-wired me-1"></i> {{ __('admin.security.tab_network') }}
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ $tab === 'hardening' ? 'active' : '' }}"
+               href="{{ route('admin.security', ['tab' => 'hardening']) }}">
+                <i class="fas fa-shield-halved me-1"></i> {{ __('admin.security.tab_hardening') }}
+            </a>
+        </li>
     </ul>
 
     <div class="border border-top-0 rounded-bottom bg-white">
@@ -601,6 +607,32 @@ document.addEventListener('DOMContentLoaded', function () {
                     </tr>
                     @endif
 
+                    {{-- ClamAV (analyse antivirus des téléversements) --}}
+                    <tr>
+                        <td class="ps-2" style="vertical-align:middle;font-size:var(--font-size-sm);">
+                            ClamAV
+                            @if ($clamav['enabled'])
+                                <span class="ob-badge ob-badge-int ms-1" style="font-size:10px;">{{ __('admin.active') }}</span>
+                            @else
+                                <span class="ob-badge ms-1" style="font-size:10px;background:var(--bs-secondary-bg);">{{ __('admin.disabled') }}</span>
+                            @endif
+                        </td>
+                        <td style="vertical-align:middle;font-size:var(--font-size-xs);">
+                            <code>{{ $clamav['host'] }}:{{ $clamav['port'] }}</code> TCP
+                        </td>
+                        <td style="vertical-align:middle;font-size:var(--font-size-xs);">{{ __('admin.security.clamav_condition') }}</td>
+                        <td style="vertical-align:middle;font-size:var(--font-size-xs);">{{ __('admin.security.clamav_sent') }}</td>
+                        <td style="vertical-align:middle;">
+                            <button type="button" class="btn btn-xs btn-outline-secondary net-test-btn"
+                                    data-url="{{ route('admin.security.test-clamav') }}"
+                                    data-result="clamav-net-result"
+                                    style="font-size:var(--font-size-xs);">
+                                <i class="fas fa-plug me-1"></i> {{ __('admin.test') }}
+                            </button>
+                            <div id="clamav-net-result" class="d-none mt-1" style="font-size:var(--font-size-xs);"></div>
+                        </td>
+                    </tr>
+
                     {{-- SMTP --}}
                     <tr class="text-muted">
                         <td class="ps-2" style="vertical-align:middle;font-size:var(--font-size-sm);">
@@ -651,6 +683,129 @@ document.addEventListener('DOMContentLoaded', function () {
                     btn.innerHTML = orig;
                 }
             });
+        });
+        </script>
+        @endpush
+        @endif
+
+        {{-- ── Renforcement ──────────────────────────────────────────────────── --}}
+        @if ($tab === 'hardening')
+
+        {{-- Reusable row partials: each setting saves on its own via the generic
+             admin.settings.save endpoint (keyed by configuration ID), exactly like
+             the Sessions & audit tab. Toggles auto-submit through .ob-sec-toggle. --}}
+
+        {{-- En-têtes HTTP de sécurité --}}
+        <div class="ob-hab-toolbar px-3 pt-2 pb-0">
+            <span class="fw-semibold"><i class="fas fa-code me-1 text-secondary"></i> {{ __('admin.security.hardening_headers') }}</span>
+            <span class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.security.hardening_hint') }}</span>
+        </div>
+        <table class="table table-sm table-hover mb-0">
+            <tbody>
+                @include('admin.partials.hardening-toggle', ['s' => $hardening->get('sec_csp_enabled'), 'label' => 'hardening_csp', 'hint' => 'hardening_csp_hint', 'default' => '1'])
+                @include('admin.partials.hardening-toggle', ['s' => $hardening->get('sec_csp_report_only'), 'label' => 'hardening_csp_report_only', 'hint' => 'hardening_csp_report_only_hint', 'default' => '0'])
+                @include('admin.partials.hardening-toggle', ['s' => $hardening->get('sec_hsts_enabled'), 'label' => 'hardening_hsts', 'hint' => 'hardening_hsts_hint', 'default' => '0'])
+                @include('admin.partials.hardening-number', ['s' => $hardening->get('sec_hsts_max_age'), 'label' => 'hardening_hsts_max_age', 'unit' => 'hardening_seconds', 'default' => '15552000', 'min' => 0, 'max' => 63072000])
+            </tbody>
+        </table>
+
+        {{-- Limitation des tentatives --}}
+        <div class="ob-hab-toolbar px-3 pt-2 pb-0">
+            <span class="fw-semibold"><i class="fas fa-gauge-high me-1 text-secondary"></i> {{ __('admin.security.hardening_ratelimit') }}</span>
+        </div>
+        <table class="table table-sm table-hover mb-0">
+            <tbody>
+                @include('admin.partials.hardening-toggle', ['s' => $hardening->get('sec_ratelimit_auth_enabled'), 'label' => 'hardening_ratelimit_auth', 'hint' => 'hardening_ratelimit_auth_hint', 'default' => '1'])
+                @include('admin.partials.hardening-number', ['s' => $hardening->get('sec_ratelimit_auth_max'), 'label' => 'hardening_ratelimit_max', 'unit' => null, 'default' => '5', 'min' => 1, 'max' => 1000])
+                @include('admin.partials.hardening-number', ['s' => $hardening->get('sec_ratelimit_auth_window'), 'label' => 'hardening_ratelimit_window_row', 'unit' => 'hardening_minutes', 'default' => '1', 'min' => 1, 'max' => 1440])
+            </tbody>
+        </table>
+
+        {{-- Sécurité des fichiers téléversés --}}
+        <div class="ob-hab-toolbar px-3 pt-2 pb-0">
+            <span class="fw-semibold"><i class="fas fa-file-shield me-1 text-secondary"></i> {{ __('admin.security.hardening_uploads') }}</span>
+        </div>
+        <table class="table table-sm table-hover mb-0">
+            <tbody>
+                @include('admin.partials.hardening-toggle', ['s' => $hardening->get('sec_upload_mime_hardening'), 'label' => 'hardening_mime', 'hint' => 'hardening_mime_hint', 'default' => '1'])
+                @include('admin.partials.hardening-toggle', ['s' => $hardening->get('sec_upload_scan_enabled'), 'label' => 'hardening_scan', 'hint' => 'hardening_scan_hint', 'default' => '0'])
+
+                {{-- ClamAV host --}}
+                @php($s = $hardening->get('sec_clamav_host'))
+                <tr>
+                    <td class="ps-3" style="width:60%;vertical-align:middle;font-size:var(--font-size-sm);">
+                        {{ __('admin.security.hardening_clamav_host') }}
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <form method="POST" action="{{ route('admin.settings.save', $s->ID) }}" class="d-flex align-items-center gap-2">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="_back" value="security">
+                            <input type="hidden" name="_tab" value="hardening">
+                            <input type="text" name="VALUE" id="sec_clamav_host" value="{{ $s?->VALUE ?? 'clamav' }}"
+                                   class="form-control form-control-sm" style="max-width:180px;">
+                            <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-save"></i></button>
+                        </form>
+                    </td>
+                </tr>
+
+                {{-- ClamAV port + test --}}
+                @php($s = $hardening->get('sec_clamav_port'))
+                <tr>
+                    <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
+                        {{ __('admin.security.hardening_clamav_port') }}
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <form method="POST" action="{{ route('admin.settings.save', $s->ID) }}" class="d-flex align-items-center gap-2 flex-wrap">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="_back" value="security">
+                            <input type="hidden" name="_tab" value="hardening">
+                            <input type="number" name="VALUE" id="sec_clamav_port" min="1" max="65535" value="{{ $s?->VALUE ?? '3310' }}"
+                                   class="form-control form-control-sm" style="max-width:100px;">
+                            <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-save"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="clamav-test-btn"
+                                    data-url="{{ route('admin.security.test-clamav') }}">
+                                <i class="fas fa-plug me-1"></i> {{ __('admin.test') }}
+                            </button>
+                            <span id="clamav-test-result" class="d-none" style="font-size:var(--font-size-xs);"></span>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @push('scripts')
+        <script>
+        document.getElementById('clamav-test-btn')?.addEventListener('click', async function () {
+            const btn = this;
+            const resultEl = document.getElementById('clamav-test-result');
+            btn.disabled = true;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            resultEl.className = 'd-none';
+            try {
+                const params = new URLSearchParams({
+                    host: document.getElementById('sec_clamav_host').value,
+                    port: document.getElementById('sec_clamav_port').value,
+                });
+                const r = await fetch(btn.dataset.url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: params.toString(),
+                });
+                const data = await r.json();
+                resultEl.className = 'ms-1 ' + (data.ok ? 'text-success' : 'text-danger');
+                resultEl.innerHTML = (data.ok ? '✓ ' : '✗ ') + data.message;
+            } catch (e) {
+                resultEl.className = 'ms-1 text-danger';
+                resultEl.innerHTML = '✗ ' + @json(__('admin.security.clamav_unreachable'));
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+            }
         });
         </script>
         @endpush

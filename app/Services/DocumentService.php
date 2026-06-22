@@ -23,7 +23,10 @@ use Illuminate\Support\Facades\File;
  */
 class DocumentService implements ServiceInterface
 {
-    public function __construct(private readonly DocumentAclService $acl) {}
+    public function __construct(
+        private readonly DocumentAclService $acl,
+        private readonly UploadSecurityService $uploadSecurity,
+    ) {}
 
     /** All folders for a section, ordered for tree + breadcrumb building. */
     public function folders(int $sectionId): Collection
@@ -380,6 +383,13 @@ class DocumentService implements ServiceInterface
      */
     public function storeUpload(int $sectionId, int $folderId, UploadedFile $file, string $typeCode, int $userId): void
     {
+        $this->uploadSecurity->assertSafe(
+            $file,
+            array_map('strtolower', (array) config('documents.supported_extensions')),
+            (int) config('documents.max_size_mb') * 1024,
+            'file',
+        );
+
         $name = $this->sanitizeFileName($file->getClientOriginalName());
         $dir = $this->fileDir($sectionId, $folderId);
         File::ensureDirectoryExists($dir);

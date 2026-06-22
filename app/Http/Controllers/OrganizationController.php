@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Section;
 use App\Services\SectionScopeService;
+use App\Services\UploadSecurityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -366,6 +367,12 @@ class OrganizationController extends Controller
         $filePath = $existing?->CB_FILE;
 
         if ($request->hasFile('rib_file')) {
+            app(UploadSecurityService::class)->assertSafe(
+                $request->file('rib_file'),
+                ['pdf', 'jpg', 'jpeg', 'png'],
+                5120,
+                'rib_file',
+            );
             if ($filePath) {
                 Storage::disk('local')->delete($filePath);
             }

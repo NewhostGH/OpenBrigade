@@ -11,6 +11,8 @@ DC=example,DC=com
 Have I Been Pwned
 api.pwnedpasswords.com:443
 HTTPS
+ClamAV
+TCP
 LDAP —
 LDAP
 SMTP

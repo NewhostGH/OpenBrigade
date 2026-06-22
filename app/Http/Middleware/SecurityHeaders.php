@@ -17,20 +17,27 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\SecuritySettingService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Adds security response headers to every web response:
- *  - X-Frame-Options          → blocks clickjacking
- *  - X-Content-Type-Options   → blocks MIME sniffing
- *  - Referrer-Policy          → limits referrer leakage
- *  - Content-Security-Policy  → restricts resource origins
- *  - Permissions-Policy       → disables unused browser features
+ *  - X-Frame-Options              → blocks clickjacking
+ *  - X-Content-Type-Options       → blocks MIME sniffing
+ *  - Referrer-Policy              → limits referrer leakage
+ *  - Permissions-Policy           → disables unused browser features
+ *  - Content-Security-Policy      → restricts resource origins (toggleable)
+ *  - Strict-Transport-Security    → forces HTTPS (toggleable, HTTPS-only)
+ *
+ * The CSP and HSTS behaviours are administrable from Administration ▸ Sécurité ▸
+ * Renforcement; see {@see SecuritySettingService}.
  */
 class SecurityHeaders
 {
+    public function __construct(private readonly SecuritySettingService $settings) {}
+
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
@@ -43,10 +50,25 @@ class SecurityHeaders
         // CSP: allow self, Bootstrap/FA CDN fallback, no inline scripts except those using nonce
         // Kept permissive for legacy-migrated pages that may use inline JS; tighten per-domain during migration.
         // img-src / connect-src include OpenStreetMap tile servers used by the Leaflet map (géolocalisation page).
-        $response->headers->set(
-            'Content-Security-Policy',
-            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.tile.openstreetmap.org; font-src 'self' data:; connect-src 'self' https://*.tile.openstreetmap.org; object-src 'none'; frame-ancestors 'self';"
-        );
+        if ($this->settings->bool('sec_csp_enabled')) {
+            $header = $this->settings->bool('sec_csp_report_only')
+                ? 'Content-Security-Policy-Report-Only'
+                : 'Content-Security-Policy';
+
+            $response->headers->set(
+                $header,
+                "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.tile.openstreetmap.org; font-src 'self' data:; connect-src 'self' https://*.tile.openstreetmap.org; object-src 'none'; frame-ancestors 'self';"
+            );
+        }
+
+        // HSTS only over a genuine HTTPS request, so an HTTP-only deployment can never
+        // be locked out by flipping the toggle.
+        if ($this->settings->bool('sec_hsts_enabled') && $request->secure()) {
+            $response->headers->set(
+                'Strict-Transport-Security',
+                'max-age='.$this->settings->int('sec_hsts_max_age').'; includeSubDomains'
+            );
+        }
 
         return $response;
     }

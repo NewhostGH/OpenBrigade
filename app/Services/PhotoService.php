@@ -28,6 +28,8 @@ class PhotoService implements ServiceInterface
     /** Maximum upload size in MB. */
     public const MAX_SIZE_MB = 20;
 
+    public function __construct(private readonly UploadSecurityService $uploadSecurity) {}
+
     /** All albums for a section, newest first, with cover-photo eager-loaded. */
     public function albums(int $sectionId): Collection
     {
@@ -74,6 +76,13 @@ class PhotoService implements ServiceInterface
     /** Store one uploaded image and create the photo row. */
     public function storeUpload(int $sectionId, ObPhotoAlbum $album, UploadedFile $file, int $userId): ObPhoto
     {
+        $this->uploadSecurity->assertSafe(
+            $file,
+            self::SUPPORTED_EXTENSIONS,
+            self::MAX_SIZE_MB * 1024,
+            'photos',
+        );
+
         $name = $this->sanitizeFilename($file->getClientOriginalName());
         $path = "photos/{$sectionId}/{$album->id}";
         Storage::disk('local')->putFileAs($path, $file, $name);
