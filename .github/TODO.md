@@ -46,10 +46,6 @@ whole Communication menu, reminders and guard generation).
   export (portability), right-to-erasure workflow, retention policy + automated
   purge, consent tracking, a processing register, and access logging on
   sensitive records. Encrypt sensitive columns at rest.
-- [ ] **Security headers & upload safety** — CSP/HSTS/security headers
-  middleware, rate limiting on auth and sensitive endpoints, and validation +
-  type/size + malware scanning on all uploads (profile photos, RIB, documents,
-  album photos).
 - [ ] **Observability** — structured logging, error tracking (Sentry/Flare or
   similar), a health-check endpoint, and basic uptime/performance monitoring.
 - [ ] **Backup robustness** — an automated backup schedule exists but is a
@@ -204,6 +200,10 @@ How the app is built, shipped and upgraded in production.
   strings into a `lang/fr` layer and route them through Laravel localization, so
   copy is centralized and a second locale is later a drop-in. No translations
   yet — implementation + French strings only.
+- [X] **Security headers & upload safety** — CSP/HSTS/security headers
+middleware, rate limiting on auth and sensitive endpoints, and validation +
+type/size + malware scanning on all uploads (profile photos, RIB, documents,
+album photos).
 
 ### Dashboard
 
