@@ -182,6 +182,88 @@ return [
     'monitoring' => [
         'title' => "Journal d'activité",
         'all_types' => 'Tous les types',
+        'all_levels' => 'Tous les niveaux',
+        'all_channels' => 'Tous les canaux',
+
+        // Onglets
+        'tab_logs' => 'Journaux',
+        'tab_health' => 'Santé',
+        'tab_settings' => 'Paramètres',
+
+        // Colonnes du tableau des journaux
+        'col_date' => 'Date',
+        'col_level' => 'Niveau',
+        'col_channel' => 'Canal',
+        'col_message' => 'Message',
+        'col_user' => 'Utilisateur',
+        'col_context' => 'Contexte',
+        'col_route' => 'Route',
+        'empty_logs' => 'Aucune entrée de journal.',
+        'empty_perf' => 'Aucune requête lente enregistrée.',
+
+        // Santé & performance
+        'health_title' => 'État des services',
+        'health_json' => 'Voir le rapport JSON',
+
+        // Diagnostic (simulateur d'incident)
+        'diag' => [
+            'title' => 'Diagnostic',
+            'hint' => "Déclenche volontairement un incident pour vérifier la chaîne d'observabilité (suivi des erreurs, canaux error / performance) de bout en bout.",
+            'exception' => 'Déclencher une exception',
+            'exception_confirm' => 'Cela génère une erreur 500 réelle (transmise à Sentry / GlitchTip si activé). Continuer ?',
+            'log' => 'Journaliser une erreur de test',
+            'slow' => 'Simuler une requête lente',
+            'done' => 'Incident simulé — consultez les Journaux.',
+            'unknown' => 'Type de simulation inconnu.',
+        ],
+        'perf_title' => 'Performance',
+        'perf_slow_24h' => 'Requêtes lentes (24 h)',
+        'perf_avg' => 'Durée moyenne',
+        'perf_max' => 'Durée max.',
+
+        // Paramètres
+        'settings' => [
+            'title' => 'Paramètres de journalisation',
+
+            // Niveaux par canal
+            'canals_title' => 'Niveaux par canal',
+            'canal_activity' => 'Activité (métier)',
+            'canal_audit' => 'Audit des requêtes',
+            'canal_auth' => 'Authentification',
+            'canal_security' => 'Sécurité',
+            'canal_app' => 'Application',
+            'canal_error' => 'Erreurs',
+            'canal_performance' => 'Performance',
+
+            // Sorties & rétention
+            'outputs_title' => 'Sorties et rétention',
+            'to_db' => 'Journaliser en base de données',
+            'to_db_hint' => 'Enregistre les journaux structurés et les traces d’erreur dans la table ob_log_entry.',
+            'to_file' => 'Journaliser dans un fichier',
+            'to_file_hint' => 'Écrit les journaux dans storage/logs.',
+            'file_channel' => 'Canal de fichier',
+            'channel_daily' => 'Quotidien (rotation)',
+            'channel_single' => 'Fichier unique',
+            'file_retention' => 'Rétention des fichiers',
+            'db_retention' => 'Purge des journaux en base',
+            'db_retention_hint' => 'Supprime les entrées plus anciennes (0 = conservation illimitée).',
+
+            // Suivi des erreurs
+            'error_title' => 'Suivi des erreurs',
+            'sentry_dsn' => 'DSN Sentry / GlitchTip',
+            'sentry_dsn_hint' => 'Adresse du projet GlitchTip (ou Sentry) recevant les erreurs.',
+            'error_tracking' => 'Suivi des erreurs (Sentry / GlitchTip)',
+            'error_tracking_hint' => 'Transmet les exceptions non capturées au serveur configuré.',
+            'no_dsn' => 'Aucun DSN configuré — renseignez-le ci-dessus.',
+
+            // Performance
+            'perf_title' => 'Performance',
+            'perf_enabled' => 'Suivi des performances',
+            'perf_enabled_hint' => 'Mesure la durée et la mémoire de chaque requête.',
+            'perf_slow' => 'Seuil de requête lente',
+            'days' => 'jours',
+            'ms' => 'ms',
+        ],
     ],
 
     // ── Liste des politiques (onglet Sécurité) ────────────────────────────────

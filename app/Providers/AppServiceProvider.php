@@ -7,13 +7,16 @@ use App\Services\AppIdentityService;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
 use App\Services\FeatureService;
+use App\Services\LoggingSettingService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
 use App\Services\SectionScopeService;
 use App\Services\SecuritySettingService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
@@ -43,6 +46,10 @@ class AppServiceProvider extends ServiceProvider
             return new FeatureService;
         });
 
+        // Per-request memoized observability settings — resolved on every logged
+        // record for per-canal level checks, so it must be a singleton.
+        $this->app->singleton(LoggingSettingService::class);
+
         $this->app->singleton(NavigationService::class, function ($app) {
             return new NavigationService($app->make(FeatureService::class));
         });
@@ -59,6 +66,15 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(PermissionResolver::class),
             );
         });
+
+        // Resolve the Sentry/GlitchTip DSN from the admin setting in the REGISTER
+        // phase. The Sentry service provider boots *before* this provider (package
+        // providers boot before app providers) and there it eagerly builds its
+        // hub and gates event capture on config('sentry.dsn') being set. All
+        // register() calls run before any boot(), so setting it here lands before
+        // Sentry boots — doing it in boot() would be too late and silently drop
+        // every event.
+        $this->configureErrorTracking();
     }
 
     /**
@@ -68,6 +84,15 @@ class AppServiceProvider extends ServiceProvider
     {
         // Set up locale and timezone from config
         date_default_timezone_set(config('app.timezone'));
+
+        // This is a Bootstrap 5 app — render paginators with the Bootstrap view
+        // so `$paginator->links()` matches the UI instead of the unstyled
+        // Tailwind default (which renders oversized SVG arrows without Tailwind).
+        Paginator::useBootstrapFive();
+
+        // Reconcile the logging pipeline with the administrable observability
+        // settings (Journal d'activité ▸ Paramètres) before anything logs.
+        $this->configureObservability();
 
         // Force URL root so redirects include the correct host:port when running
         // behind Docker port mappings where internal port differs from external.
@@ -146,5 +171,63 @@ class AppServiceProvider extends ServiceProvider
         View::composer('auth.login', function ($view): void {
             $view->with('appIdentity', app(AppIdentityService::class));
         });
+    }
+
+    /**
+     * Apply the runtime observability settings to the log channels and the
+     * Sentry/GlitchTip client.
+     *
+     * Wholly guarded: if the settings can't be read (no DB, fresh install,
+     * tests) the shipped config/env defaults stand and logging keeps working.
+     */
+    private function configureObservability(): void
+    {
+        try {
+            $obs = app(LoggingSettingService::class);
+
+            // The database store keeps records per-canal (filtered in
+            // DatabaseLogHandler), so the channel itself accepts everything; the
+            // file mirrors at least the lowest canal threshold.
+            $fileLevel = $obs->lowestCanalLevel();
+            Config::set('logging.channels.daily.level', $fileLevel);
+            Config::set('logging.channels.single.level', $fileLevel);
+            Config::set('logging.channels.daily.days', max(1, $obs->int('obs_file_retention_days')));
+
+            // Compose the active stack from the output toggles. Falling back to
+            // the file leg guarantees we never end up with a no-op logger.
+            $stack = [];
+            if ($obs->bool('obs_log_to_file')) {
+                $stack[] = $obs->string('obs_file_channel') === 'single' ? 'single' : 'daily';
+            }
+            if ($obs->bool('obs_log_to_db')) {
+                $stack[] = 'database';
+            }
+            Config::set('logging.channels.stack.channels', $stack !== [] ? $stack : ['daily']);
+        } catch (\Throwable) {
+            // Keep shipped defaults — logging must never break boot.
+        }
+    }
+
+    /**
+     * Resolve the effective Sentry/GlitchTip DSN from the admin settings.
+     *
+     * Error tracking is opt-in: report only when the `obs_error_tracking` toggle
+     * is on AND a DSN is set. The DSN is an admin setting (`obs_sentry_dsn`), with
+     * the `SENTRY_LARAVEL_DSN` env (config/sentry.php) as a fallback for existing
+     * deployments. When disabled, the DSN is cleared so Sentry stays silent.
+     *
+     * Must run in register() — see the call site for why.
+     */
+    private function configureErrorTracking(): void
+    {
+        try {
+            $obs = $this->app->make(LoggingSettingService::class);
+
+            $dsn = $obs->string('obs_sentry_dsn') ?: (string) config('sentry.dsn');
+
+            Config::set('sentry.dsn', $obs->bool('obs_error_tracking') && $dsn !== '' ? $dsn : null);
+        } catch (\Throwable) {
+            // Keep the shipped config/env DSN — never break boot over a setting.
+        }
     }
 }

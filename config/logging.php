@@ -1,5 +1,6 @@
 <?php
 
+use App\Logging\DatabaseLogger;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -30,9 +31,13 @@ return [
 
     'channels' => [
 
+        // The default stack fans every record out to the rotating file channel
+        // and the database channel. Which legs actually persist (and at what
+        // minimum level) is reconciled at runtime from the observability
+        // settings in App\Providers\AppServiceProvider::boot().
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily', 'database'],
             'ignore_exceptions' => false,
         ],
 
@@ -41,6 +46,16 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
+        ],
+
+        // Unified observability log → ob_log_entry (App\Logging\DatabaseLogger).
+        // The channel accepts every record (debug); the effective minimum is
+        // enforced PER CANAL inside App\Logging\DatabaseLogHandler from the
+        // obs_level_<canal> settings.
+        'database' => [
+            'driver' => 'custom',
+            'via' => DatabaseLogger::class,
+            'level' => 'debug',
         ],
 
         'daily' => [

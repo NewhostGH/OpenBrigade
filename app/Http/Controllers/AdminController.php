@@ -6,60 +6,163 @@ use App\Models\LdapAttributeMap;
 use App\Models\LdapDomain;
 use App\Models\LdapOuRule;
 use App\Models\ObGroup;
+use App\Models\ObLogEntry;
 use App\Models\ObPasswordPolicy;
 use App\Models\Section;
 use App\Services\Auth\LdapAuthService;
 use App\Services\FeatureService;
+use App\Services\HealthCheckService;
+use App\Services\LoggingSettingService;
 use App\Services\SecuritySettingService;
 use App\Services\UploadSecurityService;
+use App\Support\Audit;
 use App\Support\ClamavScanner;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    public function monitoring(Request $request): View
+    private const MONITORING_TABS = ['logs', 'health', 'settings'];
+
+    public function monitoring(Request $request, LoggingSettingService $obs, HealthCheckService $health): View
+    {
+        $tab = (string) $request->string('tab', 'logs');
+        if (! in_array($tab, self::MONITORING_TABS, true)) {
+            $tab = 'logs';
+        }
+
+        $data = ['tab' => $tab] + match ($tab) {
+            'health' => $this->monitoringHealthTab($health),
+            'settings' => $this->monitoringSettingsTab($obs),
+            default => $this->monitoringLogsTab($request),
+        };
+
+        return view('admin.monitoring', $data);
+    }
+
+    /**
+     * Deliberately trigger an issue so an admin can verify the observability
+     * pipeline (error tracking + the error/performance canaux) works end to end.
+     */
+    public function simulateIssue(Request $request, LoggingSettingService $obs): RedirectResponse
+    {
+        switch ((string) $request->string('type')) {
+            case 'exception':
+                // Uncaught on purpose: reported to Sentry/GlitchTip (when enabled)
+                // and logged to the `error` canal. Returns a 500 to the caller.
+                throw new \RuntimeException(
+                    'Incident simulé depuis le diagnostic d’observabilité — '.now()->toIso8601String()
+                );
+
+            case 'log':
+                Audit::write('error', 'simulated.error', [
+                    'source' => 'diagnostics',
+                    'note' => 'Entrée de test générée manuellement.',
+                ], 'error');
+                break;
+
+            case 'slow':
+                // Block past the slow-request threshold so TrackPerformance
+                // records a `performance` entry for this request.
+                usleep((max(1000, $obs->int('obs_perf_slow_ms')) + 250) * 1000);
+                break;
+
+            default:
+                return back()->with('error', __('admin.monitoring.diag.unknown'));
+        }
+
+        return redirect()
+            ->route('admin.monitoring', ['tab' => 'logs'])
+            ->with('success', __('admin.monitoring.diag.done'));
+    }
+
+    /** Unified structured log / activity viewer (ob_log_entry). */
+    private function monitoringLogsTab(Request $request): array
     {
         $search = trim((string) $request->string('q'));
-        $ltCode = (string) $request->string('type', 'ALL');
-        $pid = (int) $request->integer('user', 0);
+        $level = (string) $request->string('level', 'ALL');
+        $channel = (string) $request->string('channel', 'ALL');
 
-        $query = DB::table('log_history as lh')
-            ->leftJoin('pompier as p', 'lh.P_ID', '=', 'p.P_ID')
-            ->leftJoin('log_type as lt', 'lh.LT_CODE', '=', 'lt.LT_CODE')
-            ->select(
-                'lh.LH_ID', 'lh.LH_STAMP', 'lh.LH_COMPLEMENT', 'lh.LT_CODE',
-                'lt.LT_DESCRIPTION',
-                DB::raw("CONCAT(p.P_PRENOM, ' ', p.P_NOM) as actor")
-            )
-            ->orderByDesc('lh.LH_STAMP');
+        $query = ObLogEntry::query()
+            ->with('actor:P_ID,P_NOM,P_PRENOM')
+            ->orderByDesc('created_at');
 
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {
-                $q->where('lh.LH_COMPLEMENT', 'like', "%{$search}%")
-                    ->orWhere('p.P_NOM', 'like', "%{$search}%");
+                $q->where('message', 'like', "%{$search}%")
+                    ->orWhere('exception_message', 'like', "%{$search}%")
+                    ->orWhere('url', 'like', "%{$search}%");
             });
         }
 
-        if ($ltCode !== 'ALL') {
-            $query->where('lh.LT_CODE', $ltCode);
+        if (in_array($level, ObLogEntry::LEVELS, true)) {
+            $query->where('level', $level);
         }
 
-        if ($pid > 0) {
-            $query->where('lh.P_ID', $pid);
+        if ($channel !== 'ALL') {
+            $query->where('channel', $channel);
         }
 
         $items = $query->paginate(50)->withQueryString();
-        $logTypes = DB::table('log_type')->orderBy('LT_DESCRIPTION')->get(['LT_CODE', 'LT_DESCRIPTION']);
 
-        return view('admin.monitoring', compact('items', 'search', 'ltCode', 'logTypes')
-            + ['columns' => $this->monitoringColumns()]);
+        return [
+            'items' => $items,
+            'search' => $search,
+            'level' => $level,
+            'channel' => $channel,
+            'levels' => ObLogEntry::LEVELS,
+            'channels' => array_keys(LoggingSettingService::CANALS),
+            'columns' => $this->logColumns(),
+        ];
+    }
+
+    /** Health probes + basic performance metrics. */
+    private function monitoringHealthTab(HealthCheckService $health): array
+    {
+        $report = $health->report();
+
+        // Recent performance snapshot from the structured log.
+        $perf = ['count' => 0, 'avg_ms' => null, 'max_ms' => null, 'slow' => collect()];
+        try {
+            $since = now()->subDay();
+            $base = ObLogEntry::query()
+                ->where('channel', 'performance')
+                ->where('created_at', '>=', $since);
+
+            $perf['count'] = (clone $base)->count();
+            $perf['avg_ms'] = (int) round((float) (clone $base)->avg('duration_ms'));
+            $perf['max_ms'] = (int) (clone $base)->max('duration_ms');
+            $perf['slow'] = (clone $base)->orderByDesc('duration_ms')->limit(10)->get();
+        } catch (\Throwable) {
+            // ob_log_entry not migrated yet — leave the empty snapshot.
+        }
+
+        return ['report' => $report, 'perf' => $perf];
+    }
+
+    /** Observability settings rows for the Paramètres tab. */
+    private function monitoringSettingsTab(LoggingSettingService $obs): array
+    {
+        // Self-heal: ensure every setting has a row (and thus an ID to PATCH).
+        $obs->ensureSeeded();
+
+        $settings = DB::table('configuration')
+            ->whereIn('NAME', LoggingSettingService::keys())
+            ->get()
+            ->keyBy('NAME');
+
+        return [
+            'obsSettings' => $settings,
+            'levels' => ObLogEntry::LEVELS,
+            'canals' => array_keys(LoggingSettingService::CANALS),
+            'canalLevelKey' => fn (string $canal) => LoggingSettingService::canalLevelKey($canal),
+        ];
     }
 
     // ── Security settings ─────────────────────────────────────────────────────
@@ -423,6 +526,10 @@ class AdminController extends Controller
             return redirect()->route('admin.security', ['tab' => $secTab])->with('success', 'Paramètre mis à jour.');
         }
 
+        if ($request->input('_back') === 'monitoring') {
+            return redirect()->route('admin.monitoring', ['tab' => 'settings'])->with('success', 'Paramètre mis à jour.');
+        }
+
         return redirect()->route('admin.settings')
             ->with('success', 'Paramètre mis à jour.')
             ->with('_settings_tab', $tab);
@@ -605,13 +712,64 @@ class AdminController extends Controller
         }
     }
 
-    private function monitoringColumns(): array
+    /** Column definitions for the unified log table (ob_log_entry). */
+    private function logColumns(): array
     {
+        $levelBadge = [
+            'debug' => 'ob-badge-archive', 'info' => 'ob-badge-int', 'notice' => 'ob-badge-int',
+            'warning' => 'ob-badge-ben', 'error' => 'ob-badge-bloqued', 'critical' => 'ob-badge-bloqued',
+            'alert' => 'ob-badge-bloqued', 'emergency' => 'ob-badge-bloqued',
+        ];
+        $levelMap = [];
+        foreach ($levelBadge as $lvl => $css) {
+            $levelMap[$lvl] = [ucfirst($lvl), $css];
+        }
+        $canalMap = [];
+        foreach (array_keys(LoggingSettingService::CANALS) as $canal) {
+            $canalMap[$canal] = [$canal, 'ob-badge-ext'];
+        }
+
         return [
-            ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'value' => fn ($log) => $log->LH_STAMP ? '<span style="white-space:nowrap">'.e(Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i')).'</span>' : '—', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($log) => $log->LH_STAMP ? Carbon::parse($log->LH_STAMP)->format('d/m/Y H:i') : ''],
-            ['key' => 'utilisateur', 'label' => 'Utilisateur', 'type' => 'text', 'value' => fn ($log) => $log->actor ?? '—', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($log) => $log->actor ?? ''],
-            ['key' => 'action', 'label' => 'Action', 'type' => 'badge', 'value' => fn ($log) => $log->LT_CODE ?? 'OTHER', 'badgeMap' => ['LOGIN' => ['Connexion', 'ob-badge-int'], 'LOGOUT' => ['Déconnexion', 'ob-badge-archive'], 'UPDATE' => ['Modification', 'ob-badge-ben'], 'DELETE' => ['Suppression', 'ob-badge-bloqued'], 'OTHER' => ['Action', 'ob-badge-ext']], 'exportable' => true, 'exportValue' => fn ($log) => $log->LT_DESCRIPTION ?? $log->LT_CODE ?? '', 'mobile' => true],
-            ['key' => 'detail', 'label' => 'Détail', 'type' => 'text', 'value' => fn ($log) => $log->LH_COMPLEMENT ?? '', 'mobile' => false, 'default' => false, 'exportable' => true, 'exportValue' => fn ($log) => $log->LH_COMPLEMENT ?? ''],
+            ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true,
+                'value' => fn ($log) => $log->created_at ? '<span style="white-space:nowrap">'.e($log->created_at->format('d/m/Y H:i:s')).'</span>' : '—',
+                'exportValue' => fn ($log) => $log->created_at?->format('d/m/Y H:i:s') ?? ''],
+            ['key' => 'canal', 'label' => 'Canal', 'type' => 'badge', 'mobile' => true, 'exportable' => true,
+                'value' => fn ($log) => $log->channel, 'badgeMap' => $canalMap,
+                'exportValue' => fn ($log) => $log->channel],
+            ['key' => 'level', 'label' => 'Niveau', 'type' => 'badge', 'mobile' => true, 'exportable' => true,
+                'value' => fn ($log) => $log->level, 'badgeMap' => $levelMap,
+                'exportValue' => fn ($log) => $log->level],
+            ['key' => 'message', 'label' => 'Message', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true,
+                'value' => function ($log) {
+                    $html = e(Str::limit($log->message, 160));
+                    if ($log->exception_class) {
+                        $html .= '<div class="text-muted" style="font-size:var(--font-size-xs);">'.e($log->exception_class).'</div>';
+                    }
+                    if ($log->url) {
+                        $html .= '<div class="text-muted" style="font-size:var(--font-size-xs);">'.e($log->method.' '.Str::limit($log->url, 80)).'</div>';
+                    }
+
+                    return $html;
+                },
+                'exportValue' => fn ($log) => $log->message],
+            ['key' => 'user', 'label' => 'Utilisateur', 'type' => 'text', 'mobile' => false, 'exportable' => true,
+                'value' => fn ($log) => $log->actor ? $log->actor->P_PRENOM.' '.$log->actor->P_NOM : '—',
+                'exportValue' => fn ($log) => $log->actor ? $log->actor->P_PRENOM.' '.$log->actor->P_NOM : ''],
+            ['key' => 'details', 'label' => 'Détails', 'type' => 'html', 'mobile' => false, 'default' => false, 'exportable' => false,
+                'value' => function ($log) {
+                    $parts = '';
+                    if (! empty($log->context)) {
+                        $parts .= '<pre class="mb-1" style="font-size:var(--font-size-xs);white-space:pre-wrap;">'.e(json_encode($log->context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)).'</pre>';
+                    }
+                    if ($log->exception_trace) {
+                        $parts .= '<pre class="mb-0" style="font-size:var(--font-size-xs);white-space:pre-wrap;max-height:280px;overflow:auto;">'.e($log->exception_message."\n\n".$log->exception_trace).'</pre>';
+                    }
+                    if ($parts === '') {
+                        return '—';
+                    }
+
+                    return '<details><summary style="cursor:pointer;"><i class="fas fa-code"></i></summary>'.$parts.'</details>';
+                }],
         ];
     }
 }

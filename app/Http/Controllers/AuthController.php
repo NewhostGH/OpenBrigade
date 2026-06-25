@@ -20,6 +20,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Services\Auth\AuthService;
+use App\Support\Audit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
@@ -53,10 +54,14 @@ class AuthController extends Controller
         }
 
         if (! $ok) {
+            Audit::auth('login.failed', ['login' => $validated['login']], 'warning');
+
             return back()
                 ->withErrors(['login' => __('Identifiant ou mot de passe incorrect.')])
                 ->withInput($request->safe()->except('password'));
         }
+
+        Audit::auth('login.success', ['login' => $validated['login']]);
 
         // Redirect to change-password when the password is expired or was never set.
         /** @var User|null $user */
@@ -105,6 +110,9 @@ class AuthController extends Controller
 
     public function logout(): RedirectResponse
     {
+        // Log before the session is cleared so the actor is still resolvable.
+        Audit::auth('logout');
+
         $this->authService->logout();
 
         return redirect()->route('login')->with('success', __('Vous êtes déconnecté.'));

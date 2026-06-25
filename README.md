@@ -27,8 +27,11 @@ The easiest way to run OpenBrigade locally is with Docker Compose:
 git clone https://github.com/NewHostGH/OpenBrigade.git
 cd OpenBrigade
 cp .env.example .env   # edit credentials as needed
-docker compose up -d
+docker compose --profile minimal up -d   # app + db; use --profile full for clamav + error tracking
 ```
+
+The stack uses nested Compose profiles — `app` ⊂ `minimal` ⊂ `full` ⊂ `dev`.
+Pass `--profile` or set `COMPOSE_PROFILES` in `.env`; with no profile nothing starts.
 
 Then open `http://localhost:8080` in your browser and follow the setup wizard.
 

@@ -119,10 +119,6 @@ class UploadSecurityService
         }
 
         if ($threat !== null) {
-            Log::warning("Upload rejected by malware scan: {$threat}", [
-                'filename' => $file->getClientOriginalName(),
-            ]);
-
             throw new UploadRejectedException(
                 __('uploads.malware_detected', ['threat' => $threat]),
                 $field,

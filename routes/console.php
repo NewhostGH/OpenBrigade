@@ -11,6 +11,9 @@ use Symfony\Component\Console\Command\Command;
 // run time, start date, day of week/month — see ob_backup_settings) is due.
 Schedule::command('backup:run-scheduled')->everyMinute();
 
+// Trim the observability log to its configured retention window (daily, 03:10).
+Schedule::command('ob:logs:prune')->dailyAt('03:10');
+
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');

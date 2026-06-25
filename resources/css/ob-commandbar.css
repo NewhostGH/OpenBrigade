@@ -49,6 +49,20 @@
     font-size: var(--font-size-sm);
 }
 
+/* ── Pagination (Bootstrap-5 view inside the footer) ────────────────────── */
+/* Drop the paginator's default bottom margin so the page links sit centred
+   against the total-count label instead of dropping below the baseline. */
+.ob-commandbar-right .pagination {
+    margin-bottom: 0;
+}
+
+/* The footer already shows the total ("N entrées"), so hide the paginator's
+   redundant — and untranslated — "Showing X to Y of Z results" line (the only
+   <p> the Bootstrap-5 pagination view renders). */
+.ob-commandbar-right nav p {
+    display: none;
+}
+
 /* ── Print ──────────────────────────────────────────────────────────────── */
 
 @media print {

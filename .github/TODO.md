@@ -46,8 +46,10 @@ whole Communication menu, reminders and guard generation).
   export (portability), right-to-erasure workflow, retention policy + automated
   purge, consent tracking, a processing register, and access logging on
   sensitive records. Encrypt sensitive columns at rest.
-- [ ] **Observability** — structured logging, error tracking (Sentry/Flare or
-  similar), a health-check endpoint, and basic uptime/performance monitoring.
+- [x] **Observability** — structured logging (Monolog → `ob_log_entry` + files),
+  error tracking (self-hosted Sentry/GlitchTip), a `/health` endpoint, and basic
+  uptime/performance monitoring. Admin UI under Journal d'activité ▸ Paramètres.
+  See `docs/admin/observability.md`.
 - [ ] **Backup robustness** — an automated backup schedule exists but is a
   no-op: make it actually run (DB + uploads), store off-site/retained, and add a
   periodic restore-drill check.

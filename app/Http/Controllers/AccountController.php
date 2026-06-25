@@ -13,6 +13,7 @@ use App\Models\Personnel;
 use App\Models\User;
 use App\Services\Auth\AuthService;
 use App\Services\PasswordPolicyService;
+use App\Support\Audit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -288,16 +289,23 @@ class AccountController extends Controller
         return file_exists($path) ? (string) file_get_contents($path) : null;
     }
 
-    private function logHistory(string $ltCode, int $actorId, int $whatId, string $complement = ''): void
+    /**
+     * Record a business-activity event. Consolidated onto the structured
+     * `activity` canal (ob_log_entry) — the legacy log_history table is retired.
+     * The acting pompier is captured automatically; $targetId identifies the
+     * affected record when it differs from the actor.
+     */
+    private function logHistory(string $ltCode, int $actorId, int $targetId, string $complement = ''): void
     {
-        DB::table('log_history')->insert([
-            'P_ID' => $actorId,
-            'LH_STAMP' => now(),
-            'LT_CODE' => $ltCode,
-            'LH_WHAT' => $whatId,
-            'LH_COMPLEMENT' => $complement,
-            'COMPLEMENT_CODE' => 0,
-        ]);
+        $context = [];
+        if ($targetId !== $actorId) {
+            $context['target_p_id'] = $targetId;
+        }
+        if ($complement !== '') {
+            $context['detail'] = $complement;
+        }
+
+        Audit::activity($ltCode, $context);
     }
 
     /** @return array<string,mixed> */

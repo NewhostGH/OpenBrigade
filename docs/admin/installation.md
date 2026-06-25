@@ -22,14 +22,16 @@ frontend assets built by **Vite**.
 
 ## Option A — Docker Compose
 
-The shipped `docker-compose.yml` runs the app, a MariaDB 11.4 database, and CloudBeaver
-(web DB browser).
+The shipped `docker-compose.yml` is split into nested Compose **profiles** —
+`app` ⊂ `minimal` (app + db) ⊂ `full` (+ clamav + GlitchTip error tracking) ⊂
+`dev` (+ DBGate). Pass `--profile` or set `COMPOSE_PROFILES` in `.env`; with no
+profile, nothing starts.
 
 ```bash
 git clone https://github.com/NewHostGH/OpenBrigade.git
 cd OpenBrigade
 cp .env.example .env          # set APP_KEY, DB creds, APP_URL, mail, etc.
-docker compose up -d
+docker compose --profile full up -d
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
 docker compose exec app sh -lc "npm ci && npm run build"

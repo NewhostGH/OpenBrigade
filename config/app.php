@@ -12,6 +12,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Version
+    |--------------------------------------------------------------------------
+    |
+    | Surfaced by the /health endpoint and reported to Sentry/GlitchTip as the
+    | release. Set APP_VERSION at deploy time (e.g. a tag or short commit SHA).
+    |
+    */
+
+    'version' => env('APP_VERSION'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     */

@@ -25,14 +25,26 @@ Requires [Docker](https://docs.docker.com/get-docker/) and Docker Compose.
 
 ```bash
 cp .env.example .env        # adjust credentials if needed
-docker compose up -d
+docker compose --profile dev up -d
 ```
 
-| Service                         | URL / port              | Notes                                                                     |
-| ------------------------------- | ----------------------- | ------------------------------------------------------------------------- |
-| Application (`openbrigade_app`) | <http://localhost:8080> | `APP_PORT`, Apache → port 80                                              |
-| Database (`openbrigade_db`)     | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL`                                          |
-| DBGate (`openbrigade_dbgate`)   | <http://localhost:8888> | Web DB browser, `DBGATE_PORT` — dev only (`COMPOSE_PROFILES=development`) |
+The stack is split into nested Compose **profiles** — pass `--profile` (or set
+`COMPOSE_PROFILES` in `.env`, which `.env.example.dev` defaults to `dev`). With
+no profile, `docker compose up` starts nothing.
+
+| Profile   | Services                                       |
+| --------- | ---------------------------------------------- |
+| `app`     | app only                                       |
+| `minimal` | app + db                                       |
+| `full`    | app + db + clamav + GlitchTip (error tracking) |
+| `dev`     | full + DBGate                                  |
+
+| Service                         | URL / port              | Notes                                         |
+| ------------------------------- | ----------------------- | --------------------------------------------- |
+| Application (`openbrigade_app`) | <http://localhost:8080> | `APP_PORT`, Apache → port 80                  |
+| Database (`openbrigade_db`)     | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL` — `minimal`+ |
+| GlitchTip (`..._glitchtip_web`) | <http://localhost:8000> | Error tracking, `GLITCHTIP_PORT` — `full`+    |
+| DBGate (`openbrigade_dbgate`)   | <http://localhost:8888> | Web DB browser, `DBGATE_PORT` — `dev` only    |
 
 After the containers are up, run migrations and seed development data:
 

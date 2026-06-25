@@ -6,7 +6,9 @@ use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ReferenceController;
 use App\Models\BackupSetting;
+use App\Models\ObLogEntry;
 use App\Models\User;
+use App\Services\LoggingSettingService;
 use App\Services\NavigationService;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -124,10 +126,13 @@ test('plugins page renders for an admin and is forbidden otherwise', function ()
 
 test('monitoring page renders the admin.monitoring view', function () {
     adminStubView(AdminController::class, 'monitoring', 'admin.monitoring', [
+        'tab' => 'logs',
         'items' => new LengthAwarePaginator([], 0, 50),
         'search' => '',
-        'ltCode' => 'ALL',
-        'logTypes' => collect([]),
+        'level' => 'ALL',
+        'channel' => 'ALL',
+        'levels' => ObLogEntry::LEVELS,
+        'channels' => array_keys(LoggingSettingService::CANALS),
         'columns' => [],
     ]);
 

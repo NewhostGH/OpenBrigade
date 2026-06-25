@@ -100,14 +100,18 @@ single source of truth for running the project. The short version:
 
 ```bash
 cp .env.example .env        # adjust credentials if needed
-docker compose up -d
+docker compose --profile dev up -d
 docker compose exec app php artisan migrate --seed
 docker compose exec app sh -lc "npm ci && npm run build"
 ```
 
+The stack is split into nested Compose profiles (`app` ⊂ `minimal` ⊂ `full` ⊂
+`dev`) — pass `--profile` or set `COMPOSE_PROFILES` in `.env` (`.env.example.dev`
+defaults to `dev`). With no profile, `docker compose up` starts nothing.
+
 The application is served at `http://localhost:8080`; DBGate (web DB browser) at
-`http://localhost:8888` — only started when `COMPOSE_PROFILES=development` (set automatically
-by `.env.example.dev`). Stop everything with `docker compose down`.
+`http://localhost:8888` — only started under the `dev` profile. Stop everything
+with `docker compose --profile dev down`.
 
 OpenBrigade is a **Laravel 12 / PHP 8.4** application — there is no PHP setup wizard;
 the schema is built by `php artisan migrate`.

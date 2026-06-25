@@ -1,4 +1,12 @@
 services:
+  # ── Compose profiles ───────────────────────────────────────────────────────
+  # Pick a stack with --profile (or COMPOSE_PROFILES in .env). Profiles nest:
+  #   app      → app only
+  #   minimal  → app + db
+  #   full     → app + db + clamav + GlitchTip (postgres/redis/web/worker/migrate)
+  #   dev      → full + dbgate
+  # Every service is profiled, so a bare `docker compose up` with no profile
+  # starts nothing — always pass a profile or set COMPOSE_PROFILES.
   app:
     build:
       context: .
@@ -9,6 +17,7 @@ services:
 
     container_name: openbrigade_app
     restart: unless-stopped
+    profiles: [app, minimal, full, dev]
 
     ports:
       - "${APP_PORT:-8080}:80"
@@ -35,17 +44,22 @@ services:
       - storage_logs:/var/www/html/storage/logs
 
     depends_on:
+      # required:false → in the "app"/"minimal" profiles where these services are
+      # not enabled, the app still starts (instead of erroring on a missing dep).
       db:
         condition: service_healthy
+        required: false
       # Soft dependency only: the scanner fails open, so the app must not wait on
       # clamav's slow first-run signature download to come up.
       clamav:
         condition: service_started
+        required: false
 
   clamav:
     image: clamav/clamav:1.4
     container_name: openbrigade_clamav
     restart: unless-stopped
+    profiles: [full, dev]
 
     # The clamd INSTREAM endpoint used by App\Support\ClamavScanner.
     # Reachable from the app container as host "clamav" on port 3310.
@@ -67,6 +81,7 @@ services:
     image: mariadb:11.4
     container_name: openbrigade_db
     restart: unless-stopped
+    profiles: [minimal, full, dev]
 
     ports:
       - "${DB_PORT_EXTERNAL:-3306}:3306"
@@ -89,12 +104,103 @@ services:
       timeout: 5s
       retries: 5
 
+  # ── Self-hosted error tracking (Sentry-API compatible) ───────────────────
+  # GlitchTip is a lightweight, Sentry-compatible server: the app's
+  # sentry/sentry-laravel SDK reports to it unchanged. Part of the "full" and
+  # "dev" profiles: `docker compose --profile full up -d`.
+  # After first start, open http://localhost:${GLITCHTIP_PORT:-8000}, create an
+  # account + project, copy its DSN into SENTRY_LARAVEL_DSN, then enable error
+  # tracking under Administration ▸ Journal d'activité ▸ Paramètres.
+  glitchtip-postgres:
+    image: postgres:16-alpine
+    container_name: openbrigade_glitchtip_db
+    restart: unless-stopped
+    profiles: [full, dev]
+    environment:
+      POSTGRES_DB: glitchtip
+      POSTGRES_USER: glitchtip
+      POSTGRES_PASSWORD: "${GLITCHTIP_DB_PASSWORD:-CHANGE_ME_GT}"
+    volumes:
+      - glitchtip_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "glitchtip"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  glitchtip-redis:
+    image: redis:7-alpine
+    container_name: openbrigade_glitchtip_redis
+    restart: unless-stopped
+    profiles: [full, dev]
+    volumes:
+      - glitchtip_redis:/data
+
+  glitchtip-web:
+    image: glitchtip/glitchtip:v4.1.4
+    container_name: openbrigade_glitchtip_web
+    restart: unless-stopped
+    profiles: [full, dev]
+    depends_on:
+      glitchtip-postgres:
+        condition: service_healthy
+      glitchtip-redis:
+        condition: service_started
+    ports:
+      - "${GLITCHTIP_PORT:-8000}:8080"
+    environment:
+      DATABASE_URL: "postgres://glitchtip:${GLITCHTIP_DB_PASSWORD:-CHANGE_ME_GT}@glitchtip-postgres:5432/glitchtip"
+      REDIS_URL: "redis://glitchtip-redis:6379/0"
+      SECRET_KEY: "${GLITCHTIP_SECRET_KEY:-CHANGE_ME_GLITCHTIP_SECRET_KEY}"
+      PORT: "8080"
+      GLITCHTIP_DOMAIN: "${GLITCHTIP_DOMAIN:-http://localhost:8000}"
+      DEFAULT_FROM_EMAIL: "${GLITCHTIP_FROM_EMAIL:-glitchtip@openbrigade.local}"
+      EMAIL_URL: "${GLITCHTIP_EMAIL_URL:-consolemail://}"
+      # Self-hosted single-org instance: disable open registration after setup.
+      ENABLE_OPEN_USER_REGISTRATION: "${GLITCHTIP_OPEN_REGISTRATION:-true}"
+    volumes:
+      - glitchtip_uploads:/code/uploads
+
+  glitchtip-worker:
+    image: glitchtip/glitchtip:v4.1.4
+    container_name: openbrigade_glitchtip_worker
+    restart: unless-stopped
+    profiles: [full, dev]
+    command: ./bin/run-celery-with-beat.sh
+    depends_on:
+      glitchtip-postgres:
+        condition: service_healthy
+      glitchtip-redis:
+        condition: service_started
+    environment:
+      DATABASE_URL: "postgres://glitchtip:${GLITCHTIP_DB_PASSWORD:-CHANGE_ME_GT}@glitchtip-postgres:5432/glitchtip"
+      REDIS_URL: "redis://glitchtip-redis:6379/0"
+      SECRET_KEY: "${GLITCHTIP_SECRET_KEY:-CHANGE_ME_GLITCHTIP_SECRET_KEY}"
+      GLITCHTIP_DOMAIN: "${GLITCHTIP_DOMAIN:-http://localhost:8000}"
+      DEFAULT_FROM_EMAIL: "${GLITCHTIP_FROM_EMAIL:-glitchtip@openbrigade.local}"
+      EMAIL_URL: "${GLITCHTIP_EMAIL_URL:-consolemail://}"
+    volumes:
+      - glitchtip_uploads:/code/uploads
+
+  glitchtip-migrate:
+    image: glitchtip/glitchtip:v4.1.4
+    container_name: openbrigade_glitchtip_migrate
+    profiles: [full, dev]
+    command: ./manage.py migrate
+    restart: "no"
+    depends_on:
+      glitchtip-postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgres://glitchtip:${GLITCHTIP_DB_PASSWORD:-CHANGE_ME_GT}@glitchtip-postgres:5432/glitchtip"
+      REDIS_URL: "redis://glitchtip-redis:6379/0"
+      SECRET_KEY: "${GLITCHTIP_SECRET_KEY:-CHANGE_ME_GLITCHTIP_SECRET_KEY}"
+
   dbgate:
     image: dbgate/dbgate:7.2.0
     container_name: openbrigade_dbgate
     restart: unless-stopped
-    profiles:
-      - development
+    profiles: [dev]
 
     ports:
       - "${DBGATE_PORT:-8888}:3000"
@@ -117,3 +223,6 @@ volumes:
   storage_uploads:
   storage_logs:
   clamav_db:
+  glitchtip_pg:
+  glitchtip_redis:
+  glitchtip_uploads:

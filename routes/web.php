@@ -19,6 +19,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\GeolocationController;
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\MessageController;
@@ -56,6 +57,10 @@ Route::get('/', function () {
         ? redirect()->route('dashboard')
         : redirect()->route('login');
 })->name('home');
+
+// Public health-check for uptime probes / load balancers. JSON, no auth — it
+// reports service availability only, never data. (Laravel's bare /up stays.)
+Route::get('/health', HealthController::class)->name('health');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -156,6 +161,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/replacements/export/csv', [ReplacementController::class, 'exportCsv'])->name('replacement.export.csv')->middleware(['permission:0', 'feature:remplacements']);
     Route::get('/availability', [AvailabilityController::class, 'index'])->name('availability.index')->middleware('permission:38');
     Route::get('/admin/monitoring', [AdminController::class, 'monitoring'])->name('admin.monitoring')->middleware('permission:49');
+    // Diagnostics — deliberately trigger an issue to verify the observability
+    // pipeline (error tracking, error/performance canaux) end to end.
+    Route::post('/admin/monitoring/simulate', [AdminController::class, 'simulateIssue'])->name('admin.monitoring.simulate')->middleware('permission:49');
     // Backup & restore
     Route::get('/admin/backup', [BackupController::class, 'index'])->name('admin.backup')->middleware('permission:14');
     Route::post('/admin/backup', [BackupController::class, 'store'])->name('admin.backup.store')->middleware('permission:14');
