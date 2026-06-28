@@ -4,13 +4,14 @@ set -e
 
 echo "Running pre-commit checks..."
 
-# Load PHP configuration for Windows PHP installations without php.ini
-OB_INI="${TEMP:-/tmp}/ob-php.ini"
-
-if [ ! -f "$OB_INI" ]; then
-    PHP_DIR=$(dirname "$(where php | head -1)")
-    
-    cat > "$OB_INI" <<EOF
+# On Windows, PHP ships without a php.ini so we generate a minimal one.
+# On Linux/macOS the system php.ini is used directly — skip this block.
+case "$(uname -s)" in
+    MINGW*|CYGWIN*|MSYS*)
+        OB_INI="${TEMP:-/tmp}/ob-php.ini"
+        if [ ! -f "$OB_INI" ]; then
+            PHP_DIR=$(dirname "$(where php | head -1)")
+            cat > "$OB_INI" <<EOF
 extension_dir="$PHP_DIR/ext"
 
 extension=mbstring
@@ -20,9 +21,10 @@ extension=curl
 extension=zip
 extension=pdo_mysql
 EOF
-fi
-
-export PHPRC="$OB_INI"
+        fi
+        export PHPRC="$OB_INI"
+        ;;
+esac
 
 # 1. Build
 echo "Running Vite build..."
