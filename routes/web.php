@@ -33,6 +33,7 @@ use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\PluginController;
 use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\ReplacementController;
+use App\Http\Controllers\SetupController;
 use App\Http\Controllers\ShortcutController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TotpController;
@@ -197,6 +198,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');
     Route::delete('/admin/settings/{id}/file', [AdminController::class, 'deleteSetting'])->name('admin.settings.delete-file')->middleware('permission:14');
+
+    // ── First-run setup wizard + organisation-type management (perm 14) ────────
+    Route::get('/setup', [SetupController::class, 'show'])->name('setup.show')->middleware('permission:14');
+    Route::post('/setup', [SetupController::class, 'store'])->name('setup.store')->middleware('permission:14');
+    Route::get('/admin/organisation-type', [SetupController::class, 'editOrgType'])->name('setup.org-type')->middleware('permission:14');
+    Route::patch('/admin/organisation-type', [SetupController::class, 'updateOrgType'])->name('setup.org-type.update')->middleware('permission:14');
+    Route::post('/admin/organisation-type/reset-roles', [SetupController::class, 'resetRoles'])->name('setup.org-type.reset-roles')->middleware('permission:14');
+    Route::post('/admin/organisation-type/delete-custom-roles', [SetupController::class, 'deleteCustomRoles'])->name('setup.org-type.delete-custom-roles')->middleware('permission:14');
 
     // ── Fonctionnalités & Modules — unified feature registry (ob_feature) ──────
     Route::get('/admin/features', [FeatureController::class, 'index'])->name('admin.features')->middleware('permission:14');

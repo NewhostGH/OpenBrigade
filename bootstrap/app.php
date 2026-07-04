@@ -7,6 +7,7 @@ use App\Http\Middleware\RequireAuthSetup;
 use App\Http\Middleware\RequireCharterAcceptance;
 use App\Http\Middleware\RequireFeature;
 use App\Http\Middleware\RequirePermission;
+use App\Http\Middleware\RequireSetup;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\TrackPerformance;
@@ -44,6 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('web', EnsureUserIsActive::class);
         $middleware->appendToGroup('web', RequireCharterAcceptance::class);
         $middleware->appendToGroup('web', RequireAuthSetup::class);
+        $middleware->appendToGroup('web', RequireSetup::class);
         $middleware->appendToGroup('web', TrackSession::class);
 
         // Security headers on every web response

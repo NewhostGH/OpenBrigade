@@ -227,32 +227,51 @@ class BaseHabilitations
         $orgTypes = array_keys((array) config('brigade.organisation_types', [0 => null]));
         foreach ($orgTypes as $orgType) {
             $orgType = (int) $orgType;
-            $defs = config("habilitations.roles_by_org_type.{$orgType}")
-                ?? config('habilitations.roles_by_org_type.0', []);
-            $resolved = $this->rolesForType($orgType);
-
-            foreach ($defs as $index => $def) {
-                $rid = $this->roleId($orgType, $index);
-                $archetypeToId[$orgType][$def['archetype']] = $rid;
-
-                DB::table('ob_group')->updateOrInsert(
-                    ['id' => $rid],
-                    [
-                        'name' => $def['name'],
-                        'kind' => 'role',
-                        'usage' => 'internes',
-                        'org_type' => $orgType,
-                        'ordering' => 50,
-                        'is_system' => true,
-                        'updated_at' => $now,
-                        'created_at' => $now,
-                    ],
-                );
-                $this->replaceGrants($rid, $resolved[$index]['feature_ids'], $now);
-            }
+            $archetypeToId[$orgType] = $this->seedRolesForType($orgType, $now);
         }
 
         return $archetypeToId;
+    }
+
+    /**
+     * (Re)seed a single organisation type's section roles and reset their grants
+     * back to the preset defaults. Idempotent per type — used by both the global
+     * seed above and the admin "reset roles" action when switching org type.
+     *
+     * Only the preset roles for this type are touched; custom (non-system) roles
+     * and other types are left untouched, so this is safe on a configured DB.
+     *
+     * @return array<string,int> archetype => role id
+     */
+    public function seedRolesForType(int $orgType, ?\DateTimeInterface $now = null): array
+    {
+        $now ??= now();
+        $defs = config("habilitations.roles_by_org_type.{$orgType}")
+            ?? config('habilitations.roles_by_org_type.0', []);
+        $resolved = $this->rolesForType($orgType);
+
+        $map = [];
+        foreach ($defs as $index => $def) {
+            $rid = $this->roleId($orgType, $index);
+            $map[$def['archetype']] = $rid;
+
+            DB::table('ob_group')->updateOrInsert(
+                ['id' => $rid],
+                [
+                    'name' => $def['name'],
+                    'kind' => 'role',
+                    'usage' => 'internes',
+                    'org_type' => $orgType,
+                    'ordering' => 50,
+                    'is_system' => true,
+                    'updated_at' => $now,
+                    'created_at' => $now,
+                ],
+            );
+            $this->replaceGrants($rid, $resolved[$index]['feature_ids'], $now);
+        }
+
+        return $map;
     }
 
     /**

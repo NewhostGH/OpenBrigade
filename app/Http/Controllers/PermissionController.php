@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ObGroup;
 use App\Services\FeatureService;
+use App\Services\OrganisationSetupService;
 use App\Services\PermissionResolver;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
@@ -54,7 +55,13 @@ class PermissionController extends Controller
 
         $groups = ObGroup::query()->where('kind', ObGroup::KIND_GROUP)
             ->orderBy('ordering')->orderBy('id')->get();
+        // Only the active organisation type's seeded roles are surfaced, plus
+        // custom roles (org_type = null) created by the admin. Roles for the
+        // other types stay seeded but hidden until that type is activated.
+        $activeOrgTypes = app(OrganisationSetupService::class)->activeRoleOrgTypes();
         $roles = ObGroup::query()->where('kind', ObGroup::KIND_ROLE)
+            ->where(fn ($q) => $q->whereIn('org_type', array_filter($activeOrgTypes, fn ($t) => $t !== null))
+                ->orWhereNull('org_type'))
             ->orderBy('ordering')->orderBy('id')->get();
 
         // "group_id|feature_id" => effect ('allow'|'deny')
