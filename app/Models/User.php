@@ -20,6 +20,7 @@ namespace App\Models;
 use App\Models\Concerns\HasAvatar;
 use App\Services\PermissionResolver;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -43,10 +44,15 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|string|null $two_factor_confirmed_at
+ * @property string|null $P_EMAIL
+ * @property string|null $P_PHONE
+ * @property string|null $P_PHONE2
+ * @property string|null $P_PRENOM
+ * @property string|null $P_NOM
  */
 class User extends Authenticatable
 {
-    use HasAvatar, TwoFactorAuthenticatable;
+    use HasAvatar, Notifiable, TwoFactorAuthenticatable;
 
     protected $table = 'pompier';
 
@@ -123,5 +129,23 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->isSuperAdmin() || $this->hasPermission(9);
+    }
+
+    /** Route mail notifications to the member's e-mail address. */
+    public function routeNotificationForMail(): ?string
+    {
+        return $this->P_EMAIL ?: null;
+    }
+
+    /** Route SMS notifications to the mobile (P_PHONE2), falling back to P_PHONE. */
+    public function routeNotificationForSms(): ?string
+    {
+        return $this->P_PHONE2 ?: ($this->P_PHONE ?: null);
+    }
+
+    /** Display name used in notification greetings. */
+    public function getFullNameAttribute(): string
+    {
+        return trim(ucfirst((string) $this->P_PRENOM).' '.strtoupper((string) $this->P_NOM));
     }
 }
