@@ -5,11 +5,12 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => __('admin.administration'), 'url' => route('admin.settings')],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.settings.title'), 'url' => route('admin.settings')],
     ['label' => __('setup.admin_breadcrumb')],
 ]"/>
 
-<div class="mx-3 mt-3" style="max-width:760px;">
+<div class="mx-3 mt-3">
 
     @if (session('success'))
         <div class="alert alert-success"><i class="fas fa-check-circle me-1"></i>{{ session('success') }}</div>
