@@ -14,6 +14,15 @@ Schedule::command('backup:run-scheduled')->everyMinute();
 // Trim the observability log to its configured retention window (daily, 03:10).
 Schedule::command('ob:logs:prune')->dailyAt('03:10');
 
+// Notify members of qualifications / medical aptitudes expiring soon (daily, 07:00).
+Schedule::command('reminders:expiry')->dailyAt('07:00')->withoutOverlapping();
+
+// Weekly restore drill: prove the latest backup is actually recoverable
+// (Mondays 04:00). Gated by the backup.restore_drill config flag.
+if (config('backup.restore_drill')) {
+    Schedule::command('backup:restore-drill')->weeklyOn(1, '04:00')->withoutOverlapping();
+}
+
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
