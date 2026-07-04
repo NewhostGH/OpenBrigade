@@ -30,11 +30,15 @@ class RequireSetup
     {
         $user = $request->user();
 
+        // On a genuinely fresh install roles/permissions may not be wired yet, so
+        // a super-admin must always reach the wizard even without permission 14.
+        $mayConfigure = $user !== null && ($user->isSuperAdmin() || $user->hasPermission(14));
+
         if ($user === null
             || $this->setup->isCompleted()
             || $request->routeIs('setup.*')
             || $request->routeIs('logout')
-            || ! $user->hasPermission(14)) {
+            || ! $mayConfigure) {
             return $next($request);
         }
 
