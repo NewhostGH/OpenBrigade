@@ -94,10 +94,6 @@ Needs the notification / messaging infrastructure above.
 
 ### Organisation (ORGA)
 
-- [ ] First-run setup wizard (`wizard.php`)
-- [ ] **Organisation-type setup wizard** — let an admin pick the organisation type
-  (`config('brigade.organisation_types')`) and activate that type's seeded role set
-  (`ob_group.org_type`); roles for every type are already seeded by `BaseHabilitations`
 - [ ] Rank & grade management / rework grade system — full grade model (grade
   categories and grade icons CRUD already exist; this is the broader rework)
 - [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
@@ -381,6 +377,16 @@ album photos).
 - [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
 - [x] Protect the organizational root section (`S_ID = 0`): `destroySection` returns 302 with error; `updateSection` forces `S_INACTIVE = false`; reparent already pinned to `-1`
 - [x] Habilitations export (`habilitations_xls.php`)
+- [x] **First-run setup wizard** (`wizard.php`) + **organisation-type activation** — guarded
+  first-run screen (`OrganisationSetupService`, `SetupController`, `RequireSetup` middleware)
+  collecting org type + short/long name, URL, admin email, app title, and optional
+  description & logo; persists the canonical `configuration` keys and flips
+  `already_configured`. Fresh installs ship unconfigured with the legacy `admin`
+  account disabled (`reference.sql`); super-admins always reach `/setup`. Activation
+  filters the habilitations roles tab to the active `ob_group.org_type` (+ custom roles).
+  Admin screen at `/admin/organisation-type` changes the type (non-destructive) with a
+  consequences panel, an opt-in reset of the type's preset roles, and an opt-in delete of
+  custom roles that remaps their members to a chosen preset role. `docs`/lang under `setup`
 
 ### Configuration — Admin (ADMIN)
 
