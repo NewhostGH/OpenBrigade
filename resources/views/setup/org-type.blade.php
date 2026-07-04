@@ -12,13 +12,6 @@
 
 <div class="mx-3 mt-3">
 
-    @if (session('success'))
-        <div class="alert alert-success"><i class="fas fa-check-circle me-1"></i>{{ session('success') }}</div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger"><i class="fas fa-exclamation-circle me-1"></i>{{ session('error') }}</div>
-    @endif
-
     {{-- Current type + change form --}}
     <div class="ob-widget-card p-4 mb-3">
         <div class="d-flex align-items-center gap-3 mb-3">
