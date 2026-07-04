@@ -15,27 +15,28 @@ sources of truth** — each topic is owned by exactly one file.
 
 ## Admin docs (`admin/`)
 
-| Doc                                                  | Owns                                                                         |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [installation.md](admin/installation.md)             | Deploying OpenBrigade (Docker / manual), upgrading                           |
-| [database-migration.md](admin/database-migration.md) | Schema ownership, migrations, legacy parity validation                       |
-| [backup-and-restore.md](admin/backup-and-restore.md) | Database backups, the scheduler, restore                                     |
+| Doc                                                  | Owns                                                                           |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [installation.md](admin/installation.md)             | Deploying OpenBrigade (Docker / manual), upgrading                             |
+| [database-migration.md](admin/database-migration.md) | Schema ownership, migrations, legacy parity validation                         |
+| [backup-and-restore.md](admin/backup-and-restore.md) | DB + uploads backups, off-site mirror, scheduler, restore & restore drill      |
+| [sms.md](admin/sms.md)                               | Provider-agnostic SMS layer, SMSGateway.me setup, adding a provider            |
 | [observability.md](admin/observability.md)           | Structured logging, error tracking, `/health` endpoint, performance monitoring |
-| [passwords.md](admin/passwords.md)                   | Admin password-reset procedures (shell-side, until self-service is wired)    |
+| [passwords.md](admin/passwords.md)                   | Admin password-reset procedures (shell-side, until self-service is wired)      |
 
 ## Security docs (`security/`)
 
-| Doc | Owns |
-| --- | --- |
-| [password-policies.md](security/password-policies.md) | Named password policies, per-group assignment, NCSC/ANSSI guidance |
-| [totp.md](security/totp.md) | TOTP two-factor authentication — enrolment, login flow, recovery codes |
-| [ldap.md](security/ldap.md) | LDAP/AD authentication delegation, configuration, dev emulation with Docker |
-| [hardening.md](security/hardening.md) | Defence-in-depth controls — security headers, rate limiting, upload safety, CSP |
+| Doc                                                   | Owns                                                                            |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| [password-policies.md](security/password-policies.md) | Named password policies, per-group assignment, NCSC/ANSSI guidance              |
+| [totp.md](security/totp.md)                           | TOTP two-factor authentication — enrolment, login flow, recovery codes          |
+| [ldap.md](security/ldap.md)                           | LDAP/AD authentication delegation, configuration, dev emulation with Docker     |
+| [hardening.md](security/hardening.md)                 | Defence-in-depth controls — security headers, rate limiting, upload safety, CSP |
 
 ## Legal (`legal/`)
 
-| Doc | Owns |
-| --- | --- |
+| Doc                                    | Owns                             |
+| -------------------------------------- | -------------------------------- |
 | [licence-fr.txt](legal/licence-fr.txt) | GNU GPL v2 licence (French text) |
 
 ## Migration tracking

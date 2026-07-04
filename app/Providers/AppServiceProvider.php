@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Notifications\Channels\SmsChannel;
 use App\Services\AppIdentityService;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
@@ -12,12 +13,14 @@ use App\Services\NavigationService;
 use App\Services\PermissionResolver;
 use App\Services\SectionScopeService;
 use App\Services\SecuritySettingService;
+use App\Services\Sms\SmsManager;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -35,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(AppIdentityService::class);
+
+        // Provider-agnostic SMS layer (config/sms.php resolves the driver).
+        $this->app->singleton(SmsManager::class);
 
         // Register singleton services (instantiated once per container)
         $this->app->singleton(BrigadeService::class, function ($app) {
@@ -84,6 +90,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // Set up locale and timezone from config
         date_default_timezone_set(config('app.timezone'));
+
+        // Register the "sms" notification channel (provider-agnostic — the
+        // active gateway is picked by config('sms.driver')).
+        Notification::extend('sms', function ($app) {
+            return $app->make(SmsChannel::class);
+        });
 
         // This is a Bootstrap 5 app — render paginators with the Bootstrap view
         // so `$paginator->links()` matches the UI instead of the unstyled

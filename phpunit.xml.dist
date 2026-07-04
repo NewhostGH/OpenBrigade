@@ -27,6 +27,10 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
+        <!-- Pin the upload-scan default OFF for tests. Uses <server> (not <env>)
+             because Laravel's env() reads $_SERVER first, and the Docker stack
+             exports SECURITY_UPLOAD_SCAN=1 there. -->
+        <server name="SECURITY_UPLOAD_SCAN" value="0" force="true"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>

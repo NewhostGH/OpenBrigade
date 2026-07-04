@@ -37,7 +37,7 @@ services:
 
     volumes:
       # Use local source files directly (dev-friendly, no code copy inside running container)
-      - ./:/var/www/html:Z
+      - ./:/var/www/html:z
 
       # Laravel storage
       - storage_uploads:/var/www/html/storage/app/public/uploads
@@ -54,6 +54,113 @@ services:
       clamav:
         condition: service_started
         required: false
+      # Soft dependency: with QUEUE_CONNECTION=sync (app-only profile) the app
+      # must still start without a Redis service present.
+      redis:
+        condition: service_started
+        required: false
+
+  # ── Queue backend (Redis) ────────────────────────────────────────────────
+  # Backs the async queue (QUEUE_CONNECTION=redis) consumed by queue-worker,
+  # and can also serve cache/session. Reachable from the app as host "redis".
+  redis:
+    image: redis:7-alpine
+    container_name: openbrigade_redis
+    restart: unless-stopped
+    profiles: [minimal, full, dev]
+    command: ["redis-server", "--appendonly", "yes"]
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Queue worker ─────────────────────────────────────────────────────────
+  # Same image as the app, but runs `queue:work` instead of the web server so
+  # mail/SMS/exports and other queued jobs are processed out of the request
+  # cycle. Scale with `docker compose up -d --scale queue-worker=N`.
+  queue-worker:
+    build:
+      context: .
+      args:
+        BUILD_ENV: ${APP_ENV:-development}
+        NODE_TLS_REJECT_UNAUTHORIZED: ${NODE_TLS_REJECT_UNAUTHORIZED:-1}
+        COMPOSER_DISABLE_TLS: ${COMPOSER_DISABLE_TLS:-0}
+    container_name: openbrigade_queue_worker
+    restart: unless-stopped
+    profiles: [minimal, full, dev]
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      # The worker must not re-run migrations; the app container owns that.
+      AUTO_RUN_MIGRATIONS: 0
+    command: >
+      php artisan queue:work redis
+      --queue=default
+      --sleep=3 --tries=3 --max-time=3600 --backoff=10
+    volumes:
+      - ./:/var/www/html:z
+      - storage_uploads:/var/www/html/storage/app/public/uploads
+      - storage_logs:/var/www/html/storage/logs
+    depends_on:
+      redis:
+        condition: service_started
+        required: false
+      db:
+        condition: service_healthy
+        required: false
+
+  # ── Scheduler ────────────────────────────────────────────────────────────
+  # Runs Laravel's scheduler (routes/console.php): due backups, log pruning,
+  # expiry reminders and the weekly restore drill. Without this the schedule is
+  # defined but never fires. `schedule:work` is a long-running foreground loop.
+  scheduler:
+    build:
+      context: .
+      args:
+        BUILD_ENV: ${APP_ENV:-development}
+        NODE_TLS_REJECT_UNAUTHORIZED: ${NODE_TLS_REJECT_UNAUTHORIZED:-1}
+        COMPOSER_DISABLE_TLS: ${COMPOSER_DISABLE_TLS:-0}
+    container_name: openbrigade_scheduler
+    restart: unless-stopped
+    profiles: [minimal, full, dev]
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      AUTO_RUN_MIGRATIONS: 0
+    command: php artisan schedule:work
+    volumes:
+      - ./:/var/www/html:z
+      - storage_uploads:/var/www/html/storage/app/public/uploads
+      - storage_logs:/var/www/html/storage/logs
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+      redis:
+        condition: service_started
+        required: false
+
+  # ── Mail catcher (dev) ───────────────────────────────────────────────────
+  # Mailpit captures all outbound mail so nothing leaves the machine in dev.
+  # SMTP on 1025 (app → host "mailpit"), web UI on http://localhost:${MAILPIT_PORT:-8025}.
+  mailpit:
+    image: axllent/mailpit:v1.20
+    container_name: openbrigade_mailpit
+    restart: unless-stopped
+    profiles: [dev]
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+    expose:
+      - "1025"
 
   clamav:
     image: clamav/clamav:1.4
@@ -220,6 +327,7 @@ services:
 
 volumes:
   db_data:
+  redis_data:
   storage_uploads:
   storage_logs:
   clamav_db:
