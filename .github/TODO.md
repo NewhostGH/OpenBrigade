@@ -31,28 +31,11 @@ whole Communication menu, reminders and guard generation).
 
 ### Production readiness
 
-- [ ] **Notification / messaging infrastructure** — one unified layer (Laravel
-  Notifications + `app/Mail` mailables + channels) instead of per-screen
-  email/SMS/alert/push code. Configure a mail transport, queue the sends, and
-  build reusable templates; this unblocks password-reset mail and the whole
-  COMM menu. Add an SMS channel abstraction (provider-agnostic) consumed by the
-  later SMS-gateway work.
-- [ ] **Queues + scheduler** — wire a queue connection + worker (`app/Jobs`) so
-  mail/SMS/exports run async, and a Laravel scheduler (`routes/console.php` /
-  `Console\Kernel`) for recurring jobs: qualification/medical-aptitude expiry
-  reminders, automatic guard/piquet generation, backups, retention purges.
 - [ ] **RGPD / data-privacy compliance** — the app holds medical aptitude, home
   addresses, emergency contacts and member geolocation. Implement: data-subject
   export (portability), right-to-erasure workflow, retention policy + automated
   purge, consent tracking, a processing register, and access logging on
   sensitive records. Encrypt sensitive columns at rest.
-- [x] **Observability** — structured logging (Monolog → `ob_log_entry` + files),
-  error tracking (self-hosted Sentry/GlitchTip), a `/health` endpoint, and basic
-  uptime/performance monitoring. Admin UI under Journal d'activité ▸ Paramètres.
-  See `docs/admin/observability.md`.
-- [ ] **Backup robustness** — an automated backup schedule exists but is a
-  no-op: make it actually run (DB + uploads), store off-site/retained, and add a
-  periodic restore-drill check.
 
 ## Feature migration (menu by menu)
 
@@ -195,6 +178,33 @@ How the app is built, shipped and upgraded in production.
 ---
 
 ## Shipped
+
+## Production readiness
+
+- [x] **Notification / messaging infrastructure** — unified layer: `config/mail.php`
+  transport (Mailpit in dev), queued `App\Mail\PlainMessage` mailable on a branded
+  markdown layout, `NotificationService` (email + SMS entry point), and Laravel
+  Notifications wired with a provider-agnostic **SMS channel** (`App\Contracts\SmsSender`,
+  `SmsManager`, log/null/**SMSGateway.me** drivers, `SmsChannel`). `User` is `Notifiable`
+  (mail → `P_EMAIL`, sms → `P_PHONE2`/`P_PHONE`). Password-reset mail now flows through it.
+  See `docs/admin/sms.md`. (In-app/database channel + COMM compose screens remain under COMM.)
+- [x] **Queues + scheduler** — Redis queue connection + `queue-worker` service
+  (predis, `queue:work`); mail/SMS sends run async. Dedicated `scheduler` service
+  (`schedule:work`) actually runs `routes/console.php`: due backups, log pruning,
+  qualification/aptitude **expiry reminders** (`reminders:expiry`, per-poste
+  `DAYS_WARNING`), and the weekly restore drill. (Automatic guard/piquet generation
+  stays under Garde; retention purge under RGPD.)
+- [x] **Observability** — structured logging (Monolog → `ob_log_entry` + files),
+  error tracking (self-hosted Sentry/GlitchTip), a `/health` endpoint, and basic
+  uptime/performance monitoring. Admin UI under Journal d'activité ▸ Paramètres.
+  See `docs/admin/observability.md`.
+- [x] **Backup robustness** — the schedule now actually runs (dedicated
+  `scheduler` service). Backups bundle **DB + all stored files** (profile & album
+  photos, documents, RIB, section assets, charter, theme — the whole `storage/app`
+  tree) into a `.zip` (`BackupService`), mirror to an optional **off-site** S3-compatible disk
+  (`BACKUP_OFFSITE_DISK`), keep count-based retention, and a weekly
+  **restore-drill** (`backup:restore-drill`) restores the latest backup into a
+  scratch DB to prove recoverability. See `docs/admin/backup-and-restore.md`.
 
 ## Foundations
 
