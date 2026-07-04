@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Services\UploadSecurityService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ReferenceController extends Controller
@@ -646,17 +648,120 @@ class ReferenceController extends Controller
 
     // ── Grade icons ───────────────────────────────────────────────────────────
 
-    public function gradeIndex(): View
+    public function gradeIndex(Request $request): View
     {
-        $grades = DB::table('grade as g')
-            ->leftJoin('categorie_grade as cg', 'cg.CG_CODE', '=', 'g.G_CATEGORY')
-            ->orderBy('g.G_CATEGORY')
-            ->orderBy('g.G_LEVEL')
-            ->select('g.G_GRADE', 'g.G_DESCRIPTION', 'g.G_LEVEL', 'g.G_ICON',
-                'g.G_CATEGORY', 'cg.CG_DESCRIPTION as cat_label')
-            ->get();
+        $catFilter = $request->string('category')->toString();
+        $activeFilter = (string) $request->input('active', 'all');
 
-        return view('admin.references.grade', compact('grades'));
+        $query = DB::table('grade as g')
+            ->leftJoin('categorie_grade as cg', 'cg.CG_CODE', '=', 'g.G_CATEGORY')
+            ->select('g.G_GRADE', 'g.G_DESCRIPTION', 'g.G_LEVEL', 'g.G_ICON',
+                'g.G_CATEGORY', 'g.G_FLAG', 'cg.CG_DESCRIPTION as cat_label');
+
+        if ($catFilter !== '' && $catFilter !== 'ALL') {
+            $query->where('g.G_CATEGORY', $catFilter);
+        }
+        if ($activeFilter === '1' || $activeFilter === '0') {
+            $query->where('g.G_FLAG', (int) $activeFilter);
+        }
+
+        $grades = $query->orderBy('g.G_CATEGORY')->orderByDesc('g.G_LEVEL')->get();
+
+        // Members holding each grade (excludes externals) — shown per row and
+        // guards deletion.
+        $counts = DB::table('pompier')
+            ->where('P_STATUT', '<>', 'EXT')
+            ->whereNotNull('P_GRADE')->where('P_GRADE', '<>', '')
+            ->selectRaw('P_GRADE, COUNT(*) as c')
+            ->groupBy('P_GRADE')
+            ->pluck('c', 'P_GRADE');
+
+        $categories = DB::table('categorie_grade')->orderBy('CG_CODE')->get();
+
+        return view('admin.references.grade', compact('grades', 'categories', 'counts', 'catFilter', 'activeFilter'));
+    }
+
+    public function gradeStore(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'G_GRADE' => ['required', 'string', 'max:6', 'unique:grade,G_GRADE'],
+            'G_DESCRIPTION' => ['required', 'string', 'max:100'],
+            'G_CATEGORY' => ['required', Rule::exists('categorie_grade', 'CG_CODE')],
+            'G_LEVEL' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        DB::table('grade')->insert([
+            'G_GRADE' => strtoupper($data['G_GRADE']),
+            'G_DESCRIPTION' => $data['G_DESCRIPTION'],
+            'G_CATEGORY' => $data['G_CATEGORY'],
+            'G_LEVEL' => $data['G_LEVEL'] ?? 0,
+            'G_TYPE' => 'tous',
+            'G_FLAG' => $request->boolean('G_FLAG') ? 1 : 0,
+            'G_ICON' => '',
+        ]);
+
+        return redirect()->route('admin.references.grade')->with('success', __('admin.references.grade.created'));
+    }
+
+    public function gradeUpdate(Request $request, string $grade): RedirectResponse
+    {
+        abort_if(DB::table('grade')->where('G_GRADE', $grade)->doesntExist(), 404);
+
+        $data = $request->validate([
+            'G_DESCRIPTION' => ['required', 'string', 'max:100'],
+            'G_CATEGORY' => ['required', Rule::exists('categorie_grade', 'CG_CODE')],
+            'G_LEVEL' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        // G_GRADE (the code) is immutable — members reference it via P_GRADE.
+        DB::table('grade')->where('G_GRADE', $grade)->update([
+            'G_DESCRIPTION' => $data['G_DESCRIPTION'],
+            'G_CATEGORY' => $data['G_CATEGORY'],
+            'G_LEVEL' => $data['G_LEVEL'] ?? 0,
+            'G_FLAG' => $request->boolean('G_FLAG') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.references.grade')->with('success', __('admin.references.grade.updated'));
+    }
+
+    public function gradeDestroy(string $grade): RedirectResponse
+    {
+        $row = DB::table('grade')->where('G_GRADE', $grade)->first();
+        abort_if($row === null, 404);
+
+        $held = DB::table('pompier')->where('P_GRADE', $grade)->where('P_STATUT', '<>', 'EXT')->count();
+        if ($held > 0) {
+            return redirect()->route('admin.references.grade')
+                ->with('error', __('admin.references.grade.delete_in_use', ['count' => $held]));
+        }
+
+        if ($row->G_ICON && str_starts_with($row->G_ICON, 'grades/') && Storage::disk('public')->exists($row->G_ICON)) {
+            Storage::disk('public')->delete($row->G_ICON);
+        }
+
+        DB::table('grade')->where('G_GRADE', $grade)->delete();
+
+        return redirect()->route('admin.references.grade')->with('success', __('admin.references.grade.deleted'));
+    }
+
+    /** Persist a drag-reordered grade list within one category (G_LEVEL, senior first). */
+    public function gradeReorder(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'category' => ['required', 'string'],
+            'order' => ['required', 'array'],
+            'order.*' => ['string'],
+        ]);
+
+        $total = count($data['order']);
+        foreach ($data['order'] as $i => $code) {
+            DB::table('grade')
+                ->where('G_GRADE', $code)
+                ->where('G_CATEGORY', $data['category'])
+                ->update(['G_LEVEL' => $total - $i]);
+        }
+
+        return response()->json(['ok' => true]);
     }
 
     public function gradeIconUpload(Request $request, string $grade): RedirectResponse

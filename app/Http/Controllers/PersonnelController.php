@@ -1396,7 +1396,29 @@ class PersonnelController extends Controller
             'currentSectionIds' => [],
             'currentRoleAssignments' => [],
             'currentGroupIds' => [],
+            'gradeOptions' => $this->gradeOptions(),
         ]);
+    }
+
+    /**
+     * Active grades grouped by category label for the P_GRADE dropdown, or null
+     * when the grades feature is disabled (the form then falls back to a plain
+     * text field).
+     *
+     * @return Collection<string,Collection<int,\stdClass>>|null
+     */
+    private function gradeOptions(): ?Collection
+    {
+        if (! app(FeatureService::class)->isEnabled('grades')) {
+            return null;
+        }
+
+        return DB::table('grade as g')
+            ->leftJoin('categorie_grade as cg', 'cg.CG_CODE', '=', 'g.G_CATEGORY')
+            ->where('g.G_FLAG', 1)
+            ->orderBy('g.G_CATEGORY')->orderByDesc('g.G_LEVEL')
+            ->get(['g.G_GRADE', 'g.G_DESCRIPTION', 'cg.CG_DESCRIPTION as cat_label'])
+            ->groupBy(fn ($g) => $g->cat_label ?: '—');
     }
 
     public function store(Request $request)
@@ -1565,6 +1587,7 @@ class PersonnelController extends Controller
             'currentSectionIds' => $currentSectionIds,
             'currentRoleAssignments' => $currentRoleAssignments,
             'currentGroupIds' => $currentGroupIds,
+            'gradeOptions' => $this->gradeOptions(),
         ]);
     }
 

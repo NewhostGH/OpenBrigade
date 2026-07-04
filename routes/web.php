@@ -271,14 +271,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/references/vehicle-function/{id}', [ReferenceController::class, 'vehicleFunctionUpdate'])->name('admin.references.vehicle-function.update')->middleware('permission:5');
     Route::delete('/admin/references/vehicle-function/{id}', [ReferenceController::class, 'vehicleFunctionDestroy'])->name('admin.references.vehicle-function.destroy')->middleware('permission:5');
     // Grade categories
-    Route::get('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryIndex'])->name('admin.references.grade-category')->middleware('permission:5');
-    Route::post('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryStore'])->name('admin.references.grade-category.store')->middleware('permission:5');
-    Route::patch('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryUpdate'])->name('admin.references.grade-category.update')->middleware('permission:5');
-    Route::delete('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryDestroy'])->name('admin.references.grade-category.destroy')->middleware('permission:5');
+    Route::get('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryIndex'])->name('admin.references.grade-category')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryStore'])->name('admin.references.grade-category.store')->middleware('permission:5', 'feature:grades');
+    Route::patch('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryUpdate'])->name('admin.references.grade-category.update')->middleware('permission:5', 'feature:grades');
+    Route::delete('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryDestroy'])->name('admin.references.grade-category.destroy')->middleware('permission:5', 'feature:grades');
     // Grade icons
-    Route::get('/admin/references/grade', [ReferenceController::class, 'gradeIndex'])->name('admin.references.grade')->middleware('permission:5');
-    Route::post('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconUpload'])->name('admin.references.grade.icon.upload')->middleware('permission:5');
-    Route::delete('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconDestroy'])->name('admin.references.grade.icon.destroy')->middleware('permission:5');
+    Route::get('/admin/references/grade', [ReferenceController::class, 'gradeIndex'])->name('admin.references.grade')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade', [ReferenceController::class, 'gradeStore'])->name('admin.references.grade.store')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade/reorder', [ReferenceController::class, 'gradeReorder'])->name('admin.references.grade.reorder')->middleware('permission:5', 'feature:grades');
+    Route::patch('/admin/references/grade/{grade}', [ReferenceController::class, 'gradeUpdate'])->name('admin.references.grade.update')->middleware('permission:5', 'feature:grades');
+    Route::delete('/admin/references/grade/{grade}', [ReferenceController::class, 'gradeDestroy'])->name('admin.references.grade.destroy')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconUpload'])->name('admin.references.grade.icon.upload')->middleware('permission:5', 'feature:grades');
+    Route::delete('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconDestroy'])->name('admin.references.grade.icon.destroy')->middleware('permission:5', 'feature:grades');
     // Equipe (competence group) and Poste (position/competence definition)
     Route::get('/admin/references/team', [ReferenceController::class, 'teamIndex'])->name('admin.references.team')->middleware('permission:18');
     Route::post('/admin/references/team', [ReferenceController::class, 'teamStore'])->name('admin.references.team.store')->middleware('permission:18');
