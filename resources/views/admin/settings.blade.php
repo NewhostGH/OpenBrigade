@@ -57,6 +57,39 @@
                     <div class="tab-pane fade @if($loop->first) show active @endif"
                          id="tab-{{ $tabId }}" role="tabpanel">
 
+                        @if($tabId === 4)
+                            {{-- Organisation-type management + "configured elsewhere" guide --}}
+                            <div class="ob-widget-card mb-3 p-3 d-flex flex-wrap align-items-center gap-3"
+                                 style="background:var(--surface-2, transparent);">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                     style="width:44px;height:44px;background:var(--sidebar-bg);color:var(--sidebar-text);">
+                                    <i class="fas fa-sitemap"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold">{{ __('admin.settings.org_card_title') }}</div>
+                                    <div class="text-muted" style="font-size:var(--font-size-xs);">
+                                        {{ __('admin.settings.org_card_current') }} <strong>{{ $orgTypeLabel }}</strong>
+                                        — {{ __('admin.settings.org_card_manage_hint') }}
+                                    </div>
+                                </div>
+                                <a href="{{ route('setup.org-type') }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-arrow-right me-1"></i>{{ __('admin.settings.org_card_manage') }}
+                                </a>
+                            </div>
+
+                            <div class="alert alert-light border" style="font-size:var(--font-size-sm);">
+                                <div class="fw-semibold mb-1">
+                                    <i class="fas fa-info-circle me-1"></i>{{ __('admin.settings.elsewhere_title') }}
+                                </div>
+                                <ul class="mb-0 ps-3">
+                                    <li>{{ __('admin.settings.elsewhere_app_name') }} — <em>{{ __('admin.settings.elsewhere_app_name_where') }}</em></li>
+                                    <li>{{ __('admin.settings.elsewhere_app_url') }} — <em>{{ __('admin.settings.elsewhere_app_url_where') }}</em></li>
+                                    <li>{{ __('admin.settings.elsewhere_favicon') }} — <em>{{ __('admin.settings.elsewhere_favicon_where') }}</em></li>
+                                    <li>{{ __('admin.settings.elsewhere_org_type') }} — <em>{{ __('admin.settings.elsewhere_org_type_where') }}</em></li>
+                                </ul>
+                            </div>
+                        @endif
+
                         <table class="table table-sm table-hover mb-0">
                             <tbody>
                                 @foreach($grouped->get($tabId) as $row)

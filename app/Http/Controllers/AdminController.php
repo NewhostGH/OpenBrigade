@@ -13,6 +13,7 @@ use App\Services\Auth\LdapAuthService;
 use App\Services\FeatureService;
 use App\Services\HealthCheckService;
 use App\Services\LoggingSettingService;
+use App\Services\OrganisationSetupService;
 use App\Services\SecuritySettingService;
 use App\Services\UploadSecurityService;
 use App\Support\Audit;
@@ -502,7 +503,17 @@ class AdminController extends Controller
             67 => ['type' => 'obsolete', 'note' => 'Le verrou de crontab de mailing est géré par Laravel Queue. Ce réglage n\'a plus d\'effet.'],
         ];
 
-        return view('admin.settings', compact('grouped', 'tabs', 'activeTab', 'annotations'));
+        // Drop obsolete settings from the page entirely — they no longer have any
+        // effect. What replaced them is surfaced as informational notes in the
+        // views (e.g. the Organisation tab points to .env / the setup wizard).
+        $obsoleteIds = collect($annotations)
+            ->filter(fn ($a) => $a['type'] === 'obsolete')
+            ->keys();
+        $grouped = $rows->reject(fn ($r) => $obsoleteIds->contains($r->ID))->groupBy('TAB');
+
+        $orgTypeLabel = app(OrganisationSetupService::class)->typeLabel();
+
+        return view('admin.settings', compact('grouped', 'tabs', 'activeTab', 'annotations', 'orgTypeLabel'));
     }
 
     public function saveSetting(Request $request, int $id): RedirectResponse

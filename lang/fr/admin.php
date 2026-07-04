@@ -454,6 +454,21 @@ return [
         'pwd_no_restriction' => 'Aucune restriction',
         'pwd_minimum' => 'Minimum (longueur)',
         'pwd_strong' => 'Fort (complexité)',
+
+        // Carte « Organisation » (onglet Organisation)
+        'org_card_title' => "Type d'organisation",
+        'org_card_current' => 'Type actuel :',
+        'org_card_manage' => "Gérer le type d'organisation",
+        'org_card_manage_hint' => 'Choix du type et activation du jeu de rôles préconfigurés (assistant dédié).',
+        'elsewhere_title' => 'Réglages configurés ailleurs',
+        'elsewhere_app_name' => "Nom de l'application",
+        'elsewhere_app_name_where' => 'variable APP_NAME dans le fichier .env',
+        'elsewhere_app_url' => 'Adresse du site web',
+        'elsewhere_app_url_where' => 'variable APP_URL dans le fichier .env',
+        'elsewhere_favicon' => 'Favicon et icône iOS',
+        'elsewhere_favicon_where' => 'dérivés automatiquement du logo principal',
+        'elsewhere_org_type' => "Type d'organisation",
+        'elsewhere_org_type_where' => 'assistant Organisation ci-dessus',
     ],
 
     // ── Permissions ───────────────────────────────────────────────────────────

@@ -127,7 +127,6 @@ return [
             'icon' => 'sitemap',
             'permission' => 52,
             'items' => [
-                ['key' => 'org.org-type',  'label' => 'Type d\'organisation', 'url' => '/admin/organisation-type', 'icon' => 'sitemap',      'permission' => 14],
                 ['key' => 'org.sections',  'label' => 'Sections',      'url' => '/organization/sections',    'icon' => 'layer-group',  'permission' => 52, 'feature' => 'multi_site'],
                 ['key' => 'org.org-chart', 'label' => 'Organigramme',  'url' => '/organization/org-chart',   'icon' => 'project-diagram', 'permission' => 52, 'feature' => 'multi_site'],
                 ['key' => 'org.map',       'label' => 'Cartographie',  'url' => '/organization/map',         'icon' => 'map',          'permission' => 27, 'feature' => 'multi_site'],
