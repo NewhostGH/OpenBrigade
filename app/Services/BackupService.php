@@ -132,33 +132,51 @@ class BackupService implements ServiceInterface
 
         $zip->addFile($sqlPath, 'database.sql');
 
-        if (is_dir($filesRoot)) {
-            $base = rtrim($filesRoot, '/');
-            // Archive paths mirror storage/app/… (relative to storage_path()).
-            $prefixFrom = rtrim(storage_path(), '/');
-            $exclude = rtrim($excludeDir, '/');
-
-            /** @var \SplFileInfo $file */
-            foreach (new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($base, \FilesystemIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::LEAVES_ONLY,
-            ) as $file) {
-                if ($file->isDir()) {
-                    continue;
-                }
-                $path = $file->getPathname();
-
-                // Skip the backups directory (and anything under it).
-                if ($path === $exclude || str_starts_with($path, $exclude.'/')) {
-                    continue;
-                }
-
-                $local = 'storage/'.ltrim(substr($path, strlen($prefixFrom)), '/');
-                $zip->addFile($path, $local);
-            }
+        foreach ($this->filesToArchive($filesRoot, $excludeDir) as $absolute => $local) {
+            $zip->addFile($absolute, $local);
         }
 
         $zip->close();
+    }
+
+    /**
+     * Map every file under $filesRoot to its archive entry name, skipping the
+     * $excludeDir subtree (the backup output directory). Entry names mirror the
+     * real `storage/app/…` layout (relative to storage_path()) so extracting the
+     * archive at the project root restores files in place.
+     *
+     * @return array<string, string> absolute path => archive entry name
+     */
+    public function filesToArchive(string $filesRoot, string $excludeDir): array
+    {
+        if (! is_dir($filesRoot)) {
+            return [];
+        }
+
+        $base = rtrim($filesRoot, '/');
+        $prefixFrom = rtrim(storage_path(), '/');
+        $exclude = rtrim($excludeDir, '/');
+        $entries = [];
+
+        /** @var \SplFileInfo $file */
+        foreach (new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($base, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::LEAVES_ONLY,
+        ) as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+            $path = $file->getPathname();
+
+            // Skip the backups directory (and anything under it).
+            if ($path === $exclude || str_starts_with($path, $exclude.'/')) {
+                continue;
+            }
+
+            $entries[$path] = 'storage/'.ltrim(substr($path, strlen($prefixFrom)), '/');
+        }
+
+        return $entries;
     }
 
     /** Copy a freshly written backup to the off-site disk. Returns error|null. */
