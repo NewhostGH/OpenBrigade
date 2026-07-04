@@ -734,7 +734,7 @@ PRIMARY KEY (ID)
 # data for table 'configuration'
 # ------------------------------------
 INSERT INTO configuration (ID,NAME,VALUE,DESCRIPTION,ORDERING,HIDDEN,TAB,YESNO,IS_FILE,CARD_NAME,DISPLAY_NAME) VALUES
-('-1','already_configured','1','Application déjà configurée','100','1','1','0','0','',NULL),
+('-1','already_configured','0','Application déjà configurée','100','1','1','0','0','',NULL),
 ('1','version','5.3','version installée','101','0','1','0','0','',NULL),
 ('2','nbsections','0','Limiter le nombre de sections possible, si non est choisi, il n\'y a pas de limites','1','0','2','1','0','','Sections limitées'),
 ('3','gardes','0','Automatisez la gestion des gardes sur plusieurs jours en 1 clic','601','0','6','1','0','Tableau de garde',NULL),
@@ -3564,7 +3564,7 @@ KEY P_PHONE2 (P_PHONE2)
 # data for table 'pompier'
 # ------------------------------------
 INSERT INTO pompier (P_ID,P_CODE,P_PRENOM,P_PRENOM2,P_NOM,P_NOM_NAISSANCE,P_SEXE,P_CIVILITE,P_OLD_MEMBER,P_GRADE,P_PROFESSION,P_STATUT,P_REGIME,P_MDP,P_PASSWORD_FAILURE,P_MDP_EXPIRY,P_DATE_ENGAGEMENT,P_FIN,P_SECTION,C_ID,GP_ID,GP_ID2,P_BIRTHDATE,P_BIRTHPLACE,P_BIRTH_DEP,P_EMAIL,P_HORAIRE,P_PHONE,P_PHONE2,P_ABBREGE,P_ADDRESS,P_ZIP_CODE,P_CITY,P_RELATION_PRENOM,P_RELATION_NOM,P_RELATION_PHONE,P_RELATION_MAIL,P_HIDE,P_PHOTO,P_LAST_CONNECT,P_NB_CONNECT,GP_FLAG1,GP_FLAG2,TS_CODE,TS_HEURES,TS_JOURS_CP_PAR_AN,TS_HEURES_PAR_AN,TS_HEURES_A_RECUPERER,TS_RELIQUAT_CP,TS_RELIQUAT_RTT,P_NOSPAM,P_CREATE_DATE,SERVICE,TP_ID,MOTIF_RADIATION,NPAI,DATE_NPAI,OBSERVATION,SUSPENDU,DATE_SUSPENDU,DATE_FIN_SUSPENDU,MONTANT_REGUL,P_CALENDAR,P_ACCEPT_DATE,P_ACCEPT_DATE2,TS_HEURES_PAR_JOUR,P_MAITRE,P_PAYS,P_LICENCE,P_LICENCE_DATE,P_LICENCE_EXPIRY,ID_API,P_FAVORITE_SECTION) VALUES
-('1','admin','admin',NULL,'admin',NULL,'M','1','0','-','SPP','PRES','24h','7cf3589be4e9b55acc7c829076bd80a6',NULL,NULL,'2020-01-01',NULL,'0','0','4','0',NULL,NULL,NULL,'admin@mybrigade.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL,'2021-04-12 21:32:34','1','0','0',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','2020-01-01',NULL,'4',NULL,'0',NULL,NULL,'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0');
+('1','admin','admin',NULL,'admin',NULL,'M','1','0','-','SPP','PRES','24h','DISABLED-NO-LOGIN',NULL,NULL,'2020-01-01',NULL,'0','0','-1','-1',NULL,NULL,NULL,'admin@mybrigade.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0',NULL,'2021-04-12 21:32:34','1','0','0',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','2020-01-01',NULL,'4',NULL,'0',NULL,NULL,'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0');
 # ------------------------------------
 # structure for table 'poste'
 # ------------------------------------
