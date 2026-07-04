@@ -60,6 +60,7 @@
                 'personalisation' => ['icon' => 'fas fa-palette',         'label' => __('organization.tab_personalisation')],
                 'agrements'       => ['icon' => 'fas fa-certificate',     'label' => __('organization.tab_agrements')],
                 'cotisation'      => ['icon' => 'fas fa-university',      'label' => __('organization.tab_cotisation')],
+                'interdictions'   => ['icon' => 'fas fa-ban',            'label' => __('organization.tab_interdictions')],
             ];
         @endphp
         @foreach ($tabs as $key => $tab)
@@ -160,6 +161,75 @@
                 </div>
             </div>
         </div>
+
+        {{-- ── Danger zone: deactivate / reactivate ─────────────────────────── --}}
+        @if ((int) $section->S_ID !== 0)
+            <div class="ob-widget-card mt-3 border-danger-subtle">
+                <div class="ob-widget-card-header">
+                    <div class="ob-widget-card-title text-danger">
+                        <i class="fas fa-triangle-exclamation me-2"></i>{{ __('organization.danger_zone') }}
+                    </div>
+                </div>
+                <div class="ob-widget-card-body d-flex flex-wrap align-items-center gap-3">
+                    @if ($section->S_INACTIVE)
+                        <div class="flex-grow-1 text-muted" style="font-size:var(--font-size-sm);">
+                            {{ __('organization.reactivate_hint') }}
+                        </div>
+                        <form method="POST" action="{{ route('organization.sections.reactivate', $section->S_ID) }}">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fas fa-rotate-left me-1"></i>{{ __('organization.reactivate') }}
+                            </button>
+                        </form>
+                    @else
+                        <div class="flex-grow-1 text-muted" style="font-size:var(--font-size-sm);">
+                            {{ __('organization.deactivate_hint') }}
+                        </div>
+                        <button type="button" class="btn btn-outline-danger"
+                                data-bs-toggle="modal" data-bs-target="#deactivateModal">
+                            <i class="fas fa-ban me-1"></i>{{ __('organization.deactivate') }}
+                        </button>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Deactivate modal: choose deactivate-only vs deactivate+radiate --}}
+            @unless ($section->S_INACTIVE)
+                <div class="modal fade" id="deactivateModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="POST" action="{{ route('organization.sections.deactivate', $section->S_ID) }}" class="modal-content">
+                            @csrf @method('PATCH')
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ __('organization.deactivate_modal_title') }} — {{ $section->S_CODE }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="radiate" value="0" id="radiateNo" checked>
+                                    <label class="form-check-label" for="radiateNo">
+                                        <strong>{{ __('organization.deactivate_choice_only') }}</strong>
+                                        <div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('organization.deactivate_choice_only_hint') }}</div>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="radiate" value="1" id="radiateYes">
+                                    <label class="form-check-label" for="radiateYes">
+                                        <strong class="text-danger">{{ __('organization.deactivate_choice_radiate') }}</strong>
+                                        <div class="text-muted" style="font-size:var(--font-size-xs);">
+                                            {{ __('organization.deactivate_choice_radiate_hint', ['count' => $activeMemberCount]) }}
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                                <button type="submit" class="btn btn-danger">{{ __('organization.deactivate_confirm') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endunless
+        @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
          Tab 2 — Organigramme
@@ -648,6 +718,155 @@
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>{{ __('common.save') }}</button>
             </div>
         </form>
+
+    {{-- ════════════════════════════════════════════════════════════════════════
+         Tab 6 — Interdictions (section_stop_evenement)
+    ═══════════════════════════════════════════════════════════════════════════ --}}
+    @elseif ($activeTab === 'interdictions')
+
+        <div class="ob-widget-card">
+            <div class="ob-widget-card-header d-flex justify-content-between align-items-center">
+                <div class="ob-widget-card-title"><i class="fas fa-ban me-2"></i>{{ __('organization.interdictions_title') }}</div>
+                <button type="button" class="btn btn-sm btn-success"
+                        data-bs-toggle="modal" data-bs-target="#interdictionModal"
+                        onclick="obInterdictionModal(null)">
+                    <i class="fas fa-plus me-1"></i>{{ __('organization.interdiction_add') }}
+                </button>
+            </div>
+            <div class="ob-widget-card-body">
+                <p class="text-muted" style="font-size:var(--font-size-sm);">{{ __('organization.interdictions_hint') }}</p>
+
+                @if ($interdictions->isEmpty())
+                    <p class="text-muted mb-0">{{ __('organization.interdiction_none') }}</p>
+                @else
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('organization.interdiction_col_type') }}</th>
+                                    <th>{{ __('organization.interdiction_col_period') }}</th>
+                                    <th>{{ __('organization.interdiction_col_comment') }}</th>
+                                    <th class="text-center">{{ __('organization.interdiction_col_status') }}</th>
+                                    <th class="text-center">{{ __('common.actions') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($interdictions as $it)
+                                    <tr>
+                                        <td>{{ $it->TE_CODE === 'ALL' ? __('organization.interdiction_all_types') : ($it->TE_LIBELLE ?: $it->TE_CODE) }}</td>
+                                        <td class="text-nowrap">
+                                            {{ \Carbon\Carbon::parse($it->START_DATE)->format('d/m/Y') }}
+                                            → {{ \Carbon\Carbon::parse($it->END_DATE)->format('d/m/Y') }}
+                                        </td>
+                                        <td>{{ $it->SSE_COMMENT }}</td>
+                                        <td class="text-center">
+                                            @if ($it->SSE_ACTIVE)
+                                                <span class="ob-badge ob-badge-actif">{{ __('common.yes') }}</span>
+                                            @else
+                                                <span class="ob-badge ob-badge-archive">{{ __('common.no') }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center text-nowrap">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-toggle="modal" data-bs-target="#interdictionModal"
+                                                    onclick='obInterdictionModal(@json($it))'>
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <form method="POST" class="d-inline"
+                                                  action="{{ route('organization.sections.interdictions.destroy', [$section->S_ID, $it->SSE_ID]) }}"
+                                                  onsubmit="return confirm(@js(__('organization.interdiction_delete_confirm')))">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        {{-- Add/edit interdiction modal --}}
+        <div class="modal fade" id="interdictionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" id="interdictionForm" class="modal-content"
+                      action="{{ route('organization.sections.interdictions.store', $section->S_ID) }}">
+                    @csrf
+                    <input type="hidden" name="_method" id="interdictionMethod" value="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="interdictionModalTitle">{{ __('organization.interdiction_add') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="TE_CODE" class="form-label">{{ __('organization.interdiction_field_type') }}</label>
+                            <select name="TE_CODE" id="TE_CODE" class="form-select">
+                                <option value="ALL">{{ __('organization.interdiction_all_types') }}</option>
+                                @foreach ($eventTypes as $category => $types)
+                                    <optgroup label="{{ $category }}">
+                                        @foreach ($types as $t)
+                                            <option value="{{ $t->TE_CODE }}">{{ $t->TE_LIBELLE }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6 mb-3">
+                                <label for="START_DATE" class="form-label">{{ __('organization.interdiction_field_start') }}</label>
+                                <input type="date" name="START_DATE" id="START_DATE" class="form-control" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="END_DATE" class="form-label">{{ __('organization.interdiction_field_end') }}</label>
+                                <input type="date" name="END_DATE" id="END_DATE" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="SSE_COMMENT" class="form-label">{{ __('organization.interdiction_field_comment') }}</label>
+                            <textarea name="SSE_COMMENT" id="SSE_COMMENT" rows="2" maxlength="255" class="form-control"></textarea>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="SSE_ACTIVE" id="SSE_ACTIVE" value="1" checked>
+                            <label class="form-check-label" for="SSE_ACTIVE">{{ __('organization.interdiction_field_active') }}</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('common.cancel') }}</button>
+                        <button type="submit" class="btn btn-success">{{ __('common.save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @push('scripts')
+        <script>
+            function obInterdictionModal(it) {
+                var form = document.getElementById('interdictionForm');
+                var title = document.getElementById('interdictionModalTitle');
+                var method = document.getElementById('interdictionMethod');
+                var storeUrl = @json(route('organization.sections.interdictions.store', $section->S_ID));
+                var updateBase = @json(url('/organization/sections/'.$section->S_ID.'/interdictions'));
+                if (it) {
+                    title.textContent = @json(__('organization.interdiction_edit'));
+                    method.value = 'PATCH';
+                    form.action = updateBase + '/' + it.SSE_ID;
+                    document.getElementById('TE_CODE').value = it.TE_CODE;
+                    document.getElementById('START_DATE').value = (it.START_DATE || '').substring(0, 10);
+                    document.getElementById('END_DATE').value = (it.END_DATE || '').substring(0, 10);
+                    document.getElementById('SSE_COMMENT').value = it.SSE_COMMENT || '';
+                    document.getElementById('SSE_ACTIVE').checked = String(it.SSE_ACTIVE) === '1';
+                } else {
+                    title.textContent = @json(__('organization.interdiction_add'));
+                    method.value = 'POST';
+                    form.action = storeUrl;
+                    form.reset();
+                    document.getElementById('SSE_ACTIVE').checked = true;
+                }
+            }
+        </script>
+        @endpush
 
     @endif
 

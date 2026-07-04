@@ -70,13 +70,6 @@ if ($isEdit) {
                         </select>
                         @error('S_PARENT')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
-                    <div class="col-md-6 d-flex align-items-end">
-                        <div class="form-check">
-                            <input type="checkbox" id="S_INACTIVE" name="S_INACTIVE" value="1"
-                                   class="form-check-input" @checked($val('S_INACTIVE'))>
-                            <label class="form-check-label" for="S_INACTIVE" style="font-size:var(--font-size-sm);">{{ __('organization.label_section_inactive') }}</label>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

@@ -369,6 +369,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/organization/sections/{section}/edit', [OrganizationController::class, 'editSection'])->name('organization.sections.edit')->middleware('permission:52');
     Route::patch('/organization/sections/{section}', [OrganizationController::class, 'updateSection'])->name('organization.sections.update')->middleware('permission:52');
     Route::delete('/organization/sections/{section}', [OrganizationController::class, 'destroySection'])->name('organization.sections.destroy')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/deactivate', [OrganizationController::class, 'deactivateSection'])->name('organization.sections.deactivate')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/reactivate', [OrganizationController::class, 'reactivateSection'])->name('organization.sections.reactivate')->middleware('permission:52');
+    Route::post('/organization/sections/{section}/interdictions', [OrganizationController::class, 'storeInterdiction'])->name('organization.sections.interdictions.store')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/interdictions/{interdiction}', [OrganizationController::class, 'updateInterdiction'])->name('organization.sections.interdictions.update')->middleware('permission:52');
+    Route::delete('/organization/sections/{section}/interdictions/{interdiction}', [OrganizationController::class, 'destroyInterdiction'])->name('organization.sections.interdictions.destroy')->middleware('permission:52');
     Route::patch('/organization/sections/{section}/personalisation', [OrganizationController::class, 'updatePersonalisation'])->name('organization.sections.personalisation')->middleware('permission:52');
     // PDF assets — permission:0 because any member generating a livret/carte needs them
     Route::get('/organization/sections/{section}/letterhead', [OrganizationController::class, 'sectionLetterhead'])->name('organization.sections.letterhead')->middleware('permission:0');
