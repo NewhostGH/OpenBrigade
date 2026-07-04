@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BackupSetting;
+use App\Services\BackupService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,10 +11,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Process\Process;
 
 class BackupController extends Controller
 {
+    public function __construct(private readonly BackupService $backups) {}
+
     private function disk(): string
     {
         return config('backup.disk', 'local');
@@ -72,7 +74,7 @@ class BackupController extends Controller
 
     public function store(): RedirectResponse
     {
-        [$filename, $error] = $this->createBackup();
+        [$filename, $error] = $this->backups->createBackup();
 
         if ($error !== null) {
             return redirect()->route('admin.backup')
@@ -81,71 +83,6 @@ class BackupController extends Controller
 
         return redirect()->route('admin.backup')
             ->with('success', "Sauvegarde créée : {$filename}");
-    }
-
-    /**
-     * Run mysqldump, write the result to disk and prune old backups.
-     *
-     * @return array{0: string, 1: string|null} The created filename, and an error message on failure (null on success).
-     */
-    public function createBackup(): array
-    {
-        $db = config('database.connections.'.config('database.default'));
-        $host = $db['host'];
-        $port = $db['port'];
-        $name = $db['database'];
-        $user = $db['username'];
-        $pass = $db['password'];
-
-        $filename = $this->buildFilename($name);
-        $destPath = Storage::disk($this->disk())->path($this->prefix().'/'.$filename);
-
-        if (! is_dir(dirname($destPath))) {
-            mkdir(dirname($destPath), 0755, true);
-        }
-
-        $cmd = [
-            config('database.mysqldump_path', 'mysqldump'),
-            '--host='.$host,
-            '--port='.$port,
-            '--user='.$user,
-            '--single-transaction',
-            '--routines',
-            '--triggers',
-            '--result-file='.$destPath,
-            $name,
-        ];
-
-        $env = ['MYSQL_PWD' => $pass];
-
-        $process = new Process($cmd, null, $env);
-        $process->setTimeout(300);
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            return [$filename, $process->getErrorOutput()];
-        }
-
-        $this->pruneOldBackups();
-
-        return [$filename, null];
-    }
-
-    /**
-     * Expand the configured naming pattern's {date}/{time}/{database} tokens into a filename.
-     */
-    private function buildFilename(string $database): string
-    {
-        $pattern = BackupSetting::current()->naming_pattern;
-        $now = Carbon::now();
-
-        $name = strtr($pattern, [
-            '{date}' => $now->format('Y-m-d'),
-            '{time}' => $now->format('H-i-s'),
-            '{database}' => $database,
-        ]);
-
-        return $name.'.sql';
     }
 
     public function download(string $filename): StreamedResponse
@@ -174,56 +111,21 @@ class BackupController extends Controller
             'confirm' => ['required', 'in:CONFIRMER'],
         ]);
 
-        $path = $this->prefix().'/'.$this->sanitize($request->input('filename'));
-        abort_unless(Storage::disk($this->disk())->exists($path), 404);
+        $filename = (string) $request->input('filename');
+        $error = $this->backups->restore($filename);
 
-        $db = config('database.connections.'.config('database.default'));
-        $host = $db['host'];
-        $port = $db['port'];
-        $name = $db['database'];
-        $user = $db['username'];
-        $pass = $db['password'];
-        $fullPath = Storage::disk($this->disk())->path($path);
-
-        $cmd = [
-            config('database.mysql_path', 'mysql'),
-            '--host='.$host,
-            '--port='.$port,
-            '--user='.$user,
-            $name,
-        ];
-
-        $env = ['MYSQL_PWD' => $pass];
-
-        $process = new Process($cmd, null, $env, file_get_contents($fullPath));
-        $process->setTimeout(300);
-        $process->run();
-
-        if (! $process->isSuccessful()) {
+        if ($error !== null) {
             return redirect()->route('admin.backup')
-                ->with('error', 'Échec de la restauration : '.$process->getErrorOutput());
+                ->with('error', 'Échec de la restauration : '.$error);
         }
 
         return redirect()->route('admin.backup')
-            ->with('success', "Base restaurée depuis : {$request->input('filename')}");
+            ->with('success', "Base restaurée depuis : {$filename}");
     }
 
     private function sanitize(string $filename): string
     {
         // Strip path traversal; only allow the basename
         return basename(str_replace(['..', '/'], '', $filename));
-    }
-
-    private function pruneOldBackups(): void
-    {
-        $keep = BackupSetting::current()->retention_count ?? config('backup.keep', 30);
-
-        $files = collect(Storage::disk($this->disk())->files($this->prefix()))
-            ->sortBy(fn ($p) => Storage::disk($this->disk())->lastModified($p))
-            ->values();
-
-        while ($files->count() > $keep) {
-            Storage::disk($this->disk())->delete($files->shift());
-        }
     }
 }

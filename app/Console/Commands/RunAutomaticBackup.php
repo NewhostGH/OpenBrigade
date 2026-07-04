@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\BackupController;
 use App\Models\BackupSetting;
+use App\Services\BackupService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -13,7 +13,7 @@ class RunAutomaticBackup extends Command
 
     protected $description = 'Run a database backup if the configured automatic-backup schedule is due';
 
-    public function handle(BackupController $backups): int
+    public function handle(BackupService $backups): int
     {
         $settings = BackupSetting::current();
 
