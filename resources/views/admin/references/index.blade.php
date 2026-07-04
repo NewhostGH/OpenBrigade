@@ -25,7 +25,6 @@
             ['route' => 'admin.references.vehicle-function',  'icon' => 'car',            'label' => 'Fonctions véhicule',   'count' => 0,                            'desc' => 'Chef de bord, Équipier véhicule…'],
             ['route' => 'admin.references.grade-category',    'icon' => 'layer-group',    'label' => 'Catégories de grade',  'count' => 0,                            'desc' => 'Officiers, Sous-officiers…'],
             ['route' => 'admin.references.grade',             'icon' => 'medal',          'label' => 'Icônes de grades',     'count' => $counts['grade'],             'desc' => 'Images associées à chaque grade'],
-            ['route' => 'setup.org-type',                     'icon' => 'sitemap',        'label' => __('setup.admin_title'), 'count' => 0,                           'desc' => 'Jeu de rôles préconfigurés'],
         ];
         @endphp
         @foreach($sections as $s)

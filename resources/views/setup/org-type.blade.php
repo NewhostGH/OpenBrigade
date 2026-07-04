@@ -5,7 +5,7 @@
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
+    ['label' => 'Organisation'],
     ['label' => __('setup.admin_breadcrumb')],
 ]"/>
 

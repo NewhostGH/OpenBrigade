@@ -55,9 +55,7 @@ class SetupController extends Controller
         $this->setup->saveIdentity([
             'cisname' => $data['cisname'],
             'organisation_name' => $data['organisation_name'],
-            'cisurl' => $data['cisurl'],
             'admin_email' => $data['admin_email'],
-            'application_title' => $data['application_title'],
             'association_dept_name' => $data['description'] ?? '',
         ]);
 
@@ -170,9 +168,7 @@ class SetupController extends Controller
             'type_organisation' => ['required', Rule::in(array_keys($this->setup->types()))],
             'cisname' => ['required', 'string', 'max:25'],
             'organisation_name' => ['required', 'string', 'max:60'],
-            'cisurl' => ['required', 'string', 'max:60', 'url'],
             'admin_email' => ['required', 'string', 'max:60', 'email'],
-            'application_title' => ['required', 'string', 'max:25'],
             'description' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'file', 'mimes:jpeg,png,gif,ico,webp', 'max:4096'],
         ]);

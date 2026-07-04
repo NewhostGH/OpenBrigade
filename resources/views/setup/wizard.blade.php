@@ -63,24 +63,10 @@
             </div>
 
             <div class="mb-3">
-                <label for="cisurl" class="form-label">{{ __('setup.cisurl') }} <span class="text-danger">*</span></label>
-                <input id="cisurl" name="cisurl" type="url" maxlength="60" required
-                       class="form-control" value="{{ old('cisurl', $identity['cisurl'] ?: 'https://'.request()->getHost()) }}">
-                <div class="form-text">{{ __('setup.cisurl_help') }}</div>
-            </div>
-
-            <div class="mb-3">
                 <label for="admin_email" class="form-label">{{ __('setup.admin_email') }} <span class="text-danger">*</span></label>
                 <input id="admin_email" name="admin_email" type="email" maxlength="60" required
                        class="form-control" value="{{ old('admin_email', $identity['admin_email']) }}">
                 <div class="form-text">{{ __('setup.admin_email_help') }}</div>
-            </div>
-
-            <div class="mb-3">
-                <label for="application_title" class="form-label">{{ __('setup.application_title') }} <span class="text-danger">*</span></label>
-                <input id="application_title" name="application_title" type="text" maxlength="25" required
-                       class="form-control" value="{{ old('application_title', $identity['application_title'] ?: config('app.name')) }}">
-                <div class="form-text">{{ __('setup.application_title_help') }}</div>
             </div>
 
             <div class="mb-3">

@@ -41,12 +41,15 @@ class OrganisationSetupService
 
     private const ORG_TYPE_NAME = 'type_organisation';
 
-    /** Identity fields collected by the wizard: config NAME => ID. */
+    /**
+     * Identity fields collected by the wizard: config NAME => ID.
+     *
+     * The site URL (7) and application title (38) are intentionally excluded —
+     * they are obsolete, governed by APP_URL / APP_NAME in .env.
+     */
     private const IDENTITY = [
         'cisname' => 6,
-        'cisurl' => 7,
         'admin_email' => 8,
-        'application_title' => 38,
         'organisation_name' => 39,
         'association_dept_name' => 40,
     ];

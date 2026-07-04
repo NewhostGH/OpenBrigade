@@ -454,7 +454,7 @@ class AdminController extends Controller
             106 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             107 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             25 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
-            79 => ['type' => 'obsolete', 'note' => 'Le type d\'organisation n\'est plus utilisé. Ce réglage n\'a plus d\'effet.'],
+            79 => ['type' => 'obsolete', 'note' => 'Le type d\'organisation se règle via Organisation > Type d\'organisation (assistant de configuration). Ne pas modifier ici.'],
             7 => ['type' => 'obsolete', 'note' => 'L\'URL du site est gérée par APP_URL dans .env. Ce réglage n\'a plus d\'effet.'],
             8 => ['type' => 'todo',     'note' => 'Le mail de contact n\'est pas encore utilisé dans Laravel.'],
             39 => ['type' => 'todo',     'note' => 'Le nom de l\'organsiation n\'est pas encore utilisé dans Laravel.'],
