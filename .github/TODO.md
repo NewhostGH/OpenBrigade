@@ -97,7 +97,6 @@ Needs the notification / messaging infrastructure above.
 - [ ] Rank & grade management / rework grade system — full grade model (grade
   categories and grade icons CRUD already exist; this is the broader rework)
 - [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
-- [ ] Section deactivation / radiation (`section_stop.php`, `radier_section.php`)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)
 
@@ -376,6 +375,13 @@ album photos).
 - [x] Position (poste) management — `Compétences` page at `/admin/references/position`; CRUD with boolean flags (formation, secourisme, expirable, diplôme, etc.); edit modal per row; delete blocked if used in qualifications or event requirements; perm 18
 - [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
 - [x] Protect the organizational root section (`S_ID = 0`): `destroySection` returns 302 with error; `updateSection` forces `S_INACTIVE = false`; reparent already pinned to `-1`
+- [x] **Section deactivation / radiation** (`radier_section.php`) — "Zone sensible" card on the
+  section Informations tab; confirm modal offers *deactivate only* vs *deactivate + radiate all
+  active members* (`P_OLD_MEMBER=4`, `GP_ID/GP_ID2=-1`, `P_FIN=now`, one transaction, live count);
+  reactivation (radiated members not auto-restored); root section protected; silent `S_INACTIVE`
+  form checkbox removed. **Event interdictions** (`section_stop.php`) — new *Interdictions* tab,
+  CRUD over `section_stop_evenement` (block event type/all over a date range, active toggle,
+  comment); `SectionStopEvenement` model; audited; i18n
 - [x] Habilitations export (`habilitations_xls.php`)
 - [x] **First-run setup wizard** (`wizard.php`) + **organisation-type activation** — guarded
   first-run screen (`OrganisationSetupService`, `SetupController`, `RequireSetup` middleware)
