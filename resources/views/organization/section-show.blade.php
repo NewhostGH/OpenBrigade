@@ -201,7 +201,7 @@
                             @csrf @method('PATCH')
                             <div class="modal-header">
                                 <h5 class="modal-title">{{ __('organization.deactivate_modal_title') }} — {{ $section->S_CODE }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-check mb-3">
@@ -797,7 +797,7 @@
                     <input type="hidden" name="_method" id="interdictionMethod" value="POST">
                     <div class="modal-header">
                         <h5 class="modal-title" id="interdictionModalTitle">{{ __('organization.interdiction_add') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">

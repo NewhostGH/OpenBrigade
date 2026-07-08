@@ -26,6 +26,7 @@ class ReferenceController extends Controller
             'categorie_consommable' => DB::table('categorie_consommable')->where('CC_CODE', '<>', 'ALL')->count(),
             'categorie_evenement' => DB::table('categorie_evenement')->count(),
             'grade' => DB::table('grade')->count(),
+            'categorie_grade' => DB::table('categorie_grade')->where('CG_CODE', '<>', 'ALL')->count(),
             'equipe' => DB::table('equipe')->count(),
             'poste' => DB::table('poste')->count(),
         ];
@@ -612,6 +613,7 @@ class ReferenceController extends Controller
         DB::table('categorie_grade')->insert([
             'CG_CODE' => strtoupper($v['CG_CODE']),
             'CG_DESCRIPTION' => $v['CG_DESCRIPTION'],
+            'CG_ACTIVE' => $request->boolean('CG_ACTIVE', true) ? 1 : 0,
         ]);
 
         return redirect()->route('admin.references.grade-category')
@@ -626,6 +628,7 @@ class ReferenceController extends Controller
 
         DB::table('categorie_grade')->where('CG_CODE', $code)->update([
             'CG_DESCRIPTION' => $v['CG_DESCRIPTION'],
+            'CG_ACTIVE' => $request->boolean('CG_ACTIVE') ? 1 : 0,
         ]);
 
         return redirect()->route('admin.references.grade-category')

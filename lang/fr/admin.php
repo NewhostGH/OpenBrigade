@@ -716,6 +716,8 @@ return [
             'new_title' => 'Nouvelle catégorie de grade',
             'list_title' => 'Catégories de grade (:count)',
             'col_grades' => 'Grades',
+            'col_active' => 'Active',
+            'active_hint' => 'Décochez pour masquer cette catégorie (et ses grades) du formulaire de fiche personnel — utile par exemple pour ne pas proposer de grades militaires dans une structure hospitalière. Les grades existants restent intacts et gérables ici.',
             'see_grades' => 'Icônes de grades',
             'ph_desc' => 'Officiers',
             'delete_confirm' => 'Supprimer :code ?',

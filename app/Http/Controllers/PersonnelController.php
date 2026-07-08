@@ -40,6 +40,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -112,7 +113,7 @@ class PersonnelController extends Controller
                 'default' => true,
                 'exportable' => false,
             ],
-            [
+            ...($this->features->isEnabled('grades') ? [[
                 'key' => 'grade',
                 'label' => 'Grade',
                 'type' => 'image',
@@ -125,7 +126,7 @@ class PersonnelController extends Controller
                 'default' => true,
                 'exportable' => true,
                 'exportValue' => fn ($p) => $p->P_GRADE ?? '',
-            ],
+            ]] : []),
             [
                 'key' => 'name',
                 'label' => 'Nom Prénom',
@@ -297,19 +298,34 @@ class PersonnelController extends Controller
     }
 
     /**
-     * Serve grade badge images from the legacy assets directory.
+     * Serve a grade's badge icon: an admin-uploaded G_ICON takes priority,
+     * then the static default shipped under public/images/grades/, then a
+     * transparent pixel.
      */
     public function gradeImage(string $grade)
     {
-        $grade = preg_replace('/[^A-Z0-9]/', '', strtoupper($grade));
+        $grade = strtoupper($grade);
+        $row = DB::table('grade')->where('G_GRADE', $grade)->first(['G_ICON', 'G_CATEGORY']);
+        $icon = $row->G_ICON ?? null;
 
-        // TODO: Migrate code — grade images live in archive/legacy_app; move to storage/ after decommission
-        $path = base_path("archive/legacy_app/images/grades_sp/{$grade}.png");
-        if (! File::exists($path)) {
-            $path = base_path('archive/legacy_app/images/grades_sp/NR.png');
+        if ($icon && str_starts_with($icon, 'grades/') && Storage::disk('public')->exists($icon)) {
+            $mime = str_ends_with($icon, '.svg') ? 'image/svg+xml' : Storage::disk('public')->mimeType($icon);
+
+            return response(Storage::disk('public')->get($icon), 200, [
+                'Content-Type' => $mime ?: 'application/octet-stream',
+                'Cache-Control' => 'public, max-age=86400',
+            ]);
         }
-        if (File::exists($path)) {
-            return response()->file($path, ['Cache-Control' => 'public, max-age=86400']);
+
+        $category = $row->G_CATEGORY ?? 'ALL';
+        foreach (['svg', 'png'] as $ext) {
+            $staticPath = public_path("images/grades/{$category}_{$grade}.{$ext}");
+            if (File::exists($staticPath)) {
+                return response()->file($staticPath, [
+                    'Content-Type' => $ext === 'svg' ? 'image/svg+xml' : 'image/png',
+                    'Cache-Control' => 'public, max-age=86400',
+                ]);
+            }
         }
 
         // 1×1 transparent PNG fallback
@@ -1402,8 +1418,8 @@ class PersonnelController extends Controller
 
     /**
      * Active grades grouped by category label for the P_GRADE dropdown, or null
-     * when the grades feature is disabled (the form then falls back to a plain
-     * text field).
+     * when the grades feature is disabled (the form then hides the field
+     * entirely — @feature('grades') skips rendering it).
      *
      * @return Collection<string,Collection<int,\stdClass>>|null
      */
@@ -1416,6 +1432,7 @@ class PersonnelController extends Controller
         return DB::table('grade as g')
             ->leftJoin('categorie_grade as cg', 'cg.CG_CODE', '=', 'g.G_CATEGORY')
             ->where('g.G_FLAG', 1)
+            ->where(fn ($q) => $q->whereNull('cg.CG_ACTIVE')->orWhere('cg.CG_ACTIVE', 1))
             ->orderBy('g.G_CATEGORY')->orderByDesc('g.G_LEVEL')
             ->get(['g.G_GRADE', 'g.G_DESCRIPTION', 'cg.CG_DESCRIPTION as cat_label'])
             ->groupBy(fn ($g) => $g->cat_label ?: '—');

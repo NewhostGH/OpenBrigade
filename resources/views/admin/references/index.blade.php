@@ -23,7 +23,7 @@
             ['route' => 'admin.references.consumable-type',  'icon' => 'boxes',          'label' => 'Types de consommable', 'count' => $counts['type_consommable'],  'desc' => 'Carburant, médicaments…'],
             ['route' => 'admin.references.vehicle-type',      'icon' => 'truck',          'label' => 'Types de véhicule',    'count' => 0,                            'desc' => 'VSAV, FPT, VL…'],
             ['route' => 'admin.references.vehicle-function',  'icon' => 'car',            'label' => 'Fonctions véhicule',   'count' => 0,                            'desc' => 'Chef de bord, Équipier véhicule…'],
-            ['route' => 'admin.references.grade-category',    'icon' => 'layer-group',    'label' => 'Catégories de grade',  'count' => 0,                            'desc' => 'Officiers, Sous-officiers…', 'feature' => 'grades'],
+            ['route' => 'admin.references.grade-category',    'icon' => 'layer-group',    'label' => 'Catégories de grade',  'count' => $counts['categorie_grade'],  'desc' => 'Sapeurs-pompiers, Armée, Personnel soignant…', 'feature' => 'grades'],
             ['route' => 'admin.references.grade',             'icon' => 'medal',          'label' => 'Grades',               'count' => $counts['grade'],             'desc' => 'Grades, niveaux et icônes',    'feature' => 'grades'],
         ];
         @endphp

@@ -91,6 +91,7 @@
                         </dd>
                         @endfeature
 
+                        @feature('grades')
                         <dt class="text-muted fw-normal">{{ __('personnel.field_grade') }}</dt>
                         <dd class="mb-0">
                             @if ($personnel->P_GRADE)
@@ -102,6 +103,7 @@
                                 <span class="text-muted">—</span>
                             @endif
                         </dd>
+                        @endfeature
 
                         <dt class="text-muted fw-normal">{{ __('personnel.field_statut') }}</dt>
                         <dd class="mb-0">

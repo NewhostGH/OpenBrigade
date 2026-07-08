@@ -187,43 +187,37 @@
                                 @error('P_ABBREGE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            @feature('grades')
                             <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_GRADE">{{ __('personnel.label_grade') }}</label>
                                 @php $curGrade = $val('P_GRADE'); @endphp
-                                @if (($gradeOptions ?? null) !== null)
-                                    {{-- Grades feature on: choose from the defined, active grades. --}}
-                                    <div class="d-flex align-items-center gap-2">
-                                        <select id="P_GRADE" name="P_GRADE"
-                                                class="form-select form-select-sm flex-grow-1 @error('P_GRADE') is-invalid @enderror"
-                                                onchange="updateGradePreview(this.value)">
-                                            <option value="">{{ __('personnel.grade_none') }}</option>
-                                            @php $found = false; @endphp
-                                            @foreach ($gradeOptions as $catLabel => $catGrades)
-                                                <optgroup label="{{ $catLabel }}">
-                                                    @foreach ($catGrades as $g)
-                                                        @php if ($curGrade === $g->G_GRADE) $found = true; @endphp
-                                                        <option value="{{ $g->G_GRADE }}" @selected($curGrade === $g->G_GRADE)>{{ $g->G_GRADE }} — {{ $g->G_DESCRIPTION }}</option>
-                                                    @endforeach
-                                                </optgroup>
-                                            @endforeach
-                                            @if ($curGrade && ! $found)
-                                                {{-- Keep an unknown/legacy value assigned to this member. --}}
-                                                <option value="{{ $curGrade }}" selected>{{ $curGrade }}</option>
-                                            @endif
-                                        </select>
-                                        <img id="gradePreview"
-                                             src="{{ $curGrade ? route('personnel.grade-image', ['grade' => $curGrade]) : '' }}"
-                                             alt="" style="height:28px; {{ $curGrade ? '' : 'display:none;' }}"
-                                             onerror="this.style.display='none'">
-                                    </div>
-                                @else
-                                    {{-- Grades feature off: plain free-text field. --}}
-                                    <input type="text" id="P_GRADE" name="P_GRADE" maxlength="6"
-                                           value="{{ $curGrade }}"
-                                           class="form-control form-control-sm @error('P_GRADE') is-invalid @enderror">
-                                @endif
+                                <div class="d-flex align-items-center gap-2">
+                                    <select id="P_GRADE" name="P_GRADE"
+                                            class="form-select form-select-sm flex-grow-1 @error('P_GRADE') is-invalid @enderror"
+                                            onchange="updateGradePreview(this.value)">
+                                        <option value="">{{ __('personnel.grade_none') }}</option>
+                                        @php $found = false; @endphp
+                                        @foreach ($gradeOptions as $catLabel => $catGrades)
+                                            <optgroup label="{{ $catLabel }}">
+                                                @foreach ($catGrades as $g)
+                                                    @php if ($curGrade === $g->G_GRADE) $found = true; @endphp
+                                                    <option value="{{ $g->G_GRADE }}" @selected($curGrade === $g->G_GRADE)>{{ $g->G_GRADE }} — {{ $g->G_DESCRIPTION }}</option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                        @if ($curGrade && ! $found)
+                                            {{-- Keep an unknown/legacy value assigned to this member. --}}
+                                            <option value="{{ $curGrade }}" selected>{{ $curGrade }}</option>
+                                        @endif
+                                    </select>
+                                    <img id="gradePreview"
+                                         src="{{ $curGrade ? route('personnel.grade-image', ['grade' => $curGrade]) : '' }}"
+                                         alt="" style="height:28px; {{ $curGrade ? '' : 'display:none;' }}"
+                                         onerror="this.style.display='none'">
+                                </div>
                                 @error('P_GRADE')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+                            @endfeature
 
                             <div class="col-md-2">
                                 <label class="form-label form-label-sm" for="P_STATUT">{{ __('personnel.label_statut') }} <span class="text-danger">*</span></label>

@@ -22,7 +22,7 @@
                         <option value="">{{ __('admin.references.grade.filter_all_categories') }}</option>
                         @foreach($categories as $c)
                             @if($c->CG_CODE !== 'ALL')
-                                <option value="{{ $c->CG_CODE }}" @selected($catFilter === $c->CG_CODE)>{{ $c->CG_DESCRIPTION }}</option>
+                                <option value="{{ $c->CG_CODE }}" @selected($catFilter === $c->CG_CODE)>{{ $c->CG_DESCRIPTION }}@if(! $c->CG_ACTIVE) ({{ __('admin.references.grade_category.col_active') }}: {{ __('common.no') }})@endif</option>
                             @endif
                         @endforeach
                     </select>
@@ -73,6 +73,15 @@
                             @foreach($rows as $g)
                                 @php
                                     $hasIcon = $g->G_ICON && str_starts_with($g->G_ICON, 'grades/') && Storage::disk('public')->exists($g->G_ICON);
+                                    $staticExt = null;
+                                    if (! $hasIcon) {
+                                        foreach (['svg', 'png'] as $ext) {
+                                            if (file_exists(public_path("images/grades/{$cat}_{$g->G_GRADE}.{$ext}"))) {
+                                                $staticExt = $ext;
+                                                break;
+                                            }
+                                        }
+                                    }
                                     $members = (int) ($counts[$g->G_GRADE] ?? 0);
                                 @endphp
                                 <tr draggable="true" class="ob-grade-row" data-grade="{{ $g->G_GRADE }}">
@@ -80,6 +89,8 @@
                                     <td class="text-center">
                                         @if($hasIcon)
                                             <img src="{{ Storage::url($g->G_ICON) }}" alt="{{ $g->G_GRADE }}" style="width:32px;height:32px;object-fit:contain;">
+                                        @elseif($staticExt)
+                                            <img src="{{ asset("images/grades/{$cat}_{$g->G_GRADE}.{$staticExt}") }}" alt="{{ $g->G_GRADE }}" style="width:32px;height:32px;object-fit:contain;">
                                         @else
                                             <i class="fas fa-medal text-muted"></i>
                                         @endif
@@ -136,7 +147,7 @@
             <input type="hidden" name="_method" id="gradeMethod" value="POST">
             <div class="modal-header">
                 <h5 class="modal-title" id="gradeModalTitle">{{ __('admin.references.grade.add') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3" id="gradeCodeWrap">
@@ -153,7 +164,7 @@
                         <label for="G_CATEGORY" class="form-label">{{ __('admin.references.grade.field_category') }}</label>
                         <select name="G_CATEGORY" id="G_CATEGORY" class="form-select" required>
                             @foreach($categories as $c)
-                                <option value="{{ $c->CG_CODE }}">{{ $c->CG_DESCRIPTION }}</option>
+                                <option value="{{ $c->CG_CODE }}">{{ $c->CG_DESCRIPTION }}@if(! $c->CG_ACTIVE) ({{ __('admin.references.grade_category.col_active') }}: {{ __('common.no') }})@endif</option>
                             @endforeach
                         </select>
                     </div>

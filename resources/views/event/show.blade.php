@@ -226,7 +226,7 @@
                         <tr>
                             <th style="width:36px"></th>
                             <th>{{ __('event.th_name') }}</th>
-                            <th>{{ __('event.th_grade') }}</th>
+                            @feature('grades')<th>{{ __('event.th_grade') }}</th>@endfeature
                             <th>{{ __('event.th_function') }}</th>
                             <th>{{ __('event.th_team') }}</th>
                             @if($eventOptions->isNotEmpty())
@@ -252,9 +252,11 @@
                                         {{ $p->P_PRENOM }} {{ strtoupper($p->P_NOM) }}
                                     </a>
                                 </td>
+                                @feature('grades')
                                 <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                                     {{ $p->P_GRADE ?? '—' }}
                                 </td>
+                                @endfeature
                                 <td style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
                                     {{ $p->TP_LIBELLE ?? '—' }}
                                 </td>
@@ -1337,7 +1339,7 @@
                             @foreach($candidates as $c)
                                 <option value="{{ $c->P_ID }}">
                                     {{ strtoupper($c->P_NOM) }} {{ $c->P_PRENOM }}
-                                    @if($c->P_GRADE) — {{ $c->P_GRADE }} @endif
+                                    @feature('grades')@if($c->P_GRADE) — {{ $c->P_GRADE }} @endif@endfeature
                                 </option>
                             @endforeach
                         </select>

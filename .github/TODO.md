@@ -94,8 +94,6 @@ Needs the notification / messaging infrastructure above.
 
 ### Organisation (ORGA)
 
-- [ ] Rank & grade management / rework grade system — full grade model (grade
-  categories and grade icons CRUD already exist; this is the broader rework)
 - [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)
@@ -393,6 +391,16 @@ album photos).
   Admin screen at `/admin/organisation-type` changes the type (non-destructive) with a
   consequences panel, an opt-in reset of the type's preset roles, and an opt-in delete of
   custom roles that remaps their members to a chosen preset role. `docs`/lang under `setup`
+- [x] **Rank & grade management rework** — full grade model, feature-gated (`grades`):
+  category enable/disable (`CG_ACTIVE`, hides from pickers, keeps existing assignments)
+  with an "Active" toggle in the grade-category admin UI; grade CRUD with drag-to-reorder
+  and a member-count-aware delete guard; real official ladders seeded for Sapeurs-Pompiers,
+  Armée de terre and Police nationale (sourced from Wikipedia/Wikimedia, `Actuel (épaules)`
+  insignia), plus a generic 120-level `Universel` category seeded fully inactive for any
+  other org type; static per-grade icons under `public/images/grades/{CATEGORY}_{CODE}.svg`
+  (real insignia for SP/ARMY/POL, generated shape+color+tier badges for the rest), admin-
+  uploaded icon takes priority; all grade UI (personnel show/edit, event show/trombinoscope,
+  personnel list column + export) fully hidden — not just disabled — when the feature is off
 
 ### Configuration — Admin (ADMIN)
 
