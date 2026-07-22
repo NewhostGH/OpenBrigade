@@ -204,6 +204,16 @@ return [
         // Santé & performance
         'health_title' => 'État des services',
         'health_json' => 'Voir le rapport JSON',
+        'checks' => [
+            'database' => 'Base de données',
+            'cache' => 'Cache',
+            'storage' => 'Stockage',
+            'disk' => 'Espace disque',
+            'clamav' => 'Antivirus (ClamAV)',
+            'redis' => 'Redis',
+            'queue' => "File d'attente",
+            'mail' => 'Messagerie (email)',
+        ],
 
         // Diagnostic (simulateur d'incident)
         'diag' => [
