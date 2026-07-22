@@ -17,8 +17,8 @@ return [
     'header_subtitle' => 'Aperçu en lecture seule de vos permissions effectives',
 
     // Sélecteurs de contexte
-    'label_section' => 'Section\u{a0}:',
-    'label_role' => 'Rôle\u{a0}:',
+    'label_section' => 'Section:',
+    'label_role' => 'Rôle:',
     'all_roles' => 'Tous mes rôles',
     'role_inherited' => '(hérité)',
     'groups_always_applied' => 'Vos groupes sont toujours appliqués',
