@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\QueueHeartbeatJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,13 @@ Schedule::command('ob:logs:prune')->dailyAt('03:10');
 
 // Notify members of qualifications / medical aptitudes expiring soon (daily, 07:00).
 Schedule::command('reminders:expiry')->dailyAt('07:00')->withoutOverlapping();
+
+// Prove the scheduler → queue → worker chain end to end: a worker stamps a
+// cache key the queue health probe checks for staleness. Pointless (and
+// misleading) on the sync driver, where no worker exists.
+if (config('queue.default') !== 'sync') {
+    Schedule::job(new QueueHeartbeatJob)->everyFiveMinutes();
+}
 
 // Weekly restore drill: prove the latest backup is actually recoverable
 // (Mondays 04:00). Gated by the backup.restore_drill config flag.
