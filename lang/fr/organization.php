@@ -27,6 +27,9 @@ return [
     // ── index.blade.php ───────────────────────────────────────────────────
     'manage_sections' => 'Gérer les sections',
     'new_section' => 'Nouvelle section',
+    'expand_all' => 'Tout déplier',
+    'collapse_all' => 'Tout replier',
+    'export_image' => 'Exporter en image',
 
     // ── map.blade.php ─────────────────────────────────────────────────────
     'no_geolocated' => 'Aucune section géolocalisée. Les sections sont placées au barycentre des positions GPS de leurs membres (renseignées depuis la fiche de chaque membre).',
@@ -53,6 +56,45 @@ return [
     'tab_personalisation' => 'Personnalisation',
     'tab_agrements' => 'Agréments & Médailles',
     'tab_cotisation' => 'Cotisation',
+    'tab_interdictions' => 'Interdictions',
+
+    // ── Deactivation / radiation ──────────────────────────────────────────
+    'danger_zone' => 'Zone sensible',
+    'deactivate' => 'Désactiver la section',
+    'deactivate_hint' => 'Rend la section inactive. Vous pouvez aussi radier tous ses membres actifs.',
+    'reactivate' => 'Réactiver la section',
+    'reactivate_hint' => 'La section redevient active. Les membres déjà radiés ne sont pas restaurés automatiquement.',
+    'deactivate_modal_title' => 'Désactiver la section',
+    'deactivate_choice_only' => 'Désactiver seulement',
+    'deactivate_choice_only_hint' => 'La section devient inactive ; les membres ne sont pas modifiés.',
+    'deactivate_choice_radiate' => 'Désactiver et radier tous les membres',
+    'deactivate_choice_radiate_hint' => 'Radie les :count membre(s) actif(s) : marqués anciens membres, groupe retiré, date de fin fixée à aujourd\'hui.',
+    'deactivate_confirm' => 'Confirmer la désactivation',
+    'deactivated' => 'Section désactivée.',
+    'deactivated_radiated' => 'Section désactivée. :count membre(s) radié(s).',
+    'reactivated' => 'Section réactivée.',
+    'deactivate_root_error' => 'La section racine de l\'organisation ne peut pas être désactivée.',
+
+    // ── Event interdictions (section_stop_evenement) ──────────────────────
+    'interdictions_title' => 'Interdictions d\'événements',
+    'interdictions_hint' => 'Bloque un type d\'événement (ou tous) pour cette section sur une période.',
+    'interdiction_add' => 'Ajouter une interdiction',
+    'interdiction_edit' => 'Modifier l\'interdiction',
+    'interdiction_all_types' => 'Tous les types d\'événements',
+    'interdiction_col_type' => 'Type',
+    'interdiction_col_period' => 'Période',
+    'interdiction_col_comment' => 'Commentaire',
+    'interdiction_col_status' => 'Active',
+    'interdiction_col_by' => 'Par',
+    'interdiction_field_type' => 'Type d\'événement',
+    'interdiction_field_start' => 'Début',
+    'interdiction_field_end' => 'Fin',
+    'interdiction_field_comment' => 'Commentaire',
+    'interdiction_field_active' => 'Interdiction active',
+    'interdiction_none' => 'Aucune interdiction.',
+    'interdiction_saved' => 'Interdiction enregistrée.',
+    'interdiction_deleted' => 'Interdiction supprimée.',
+    'interdiction_delete_confirm' => 'Supprimer cette interdiction ?',
     // Info tab — card titles
     'card_mandatory_info' => 'Informations obligatoires',
     'card_contact' => 'Contact',
@@ -81,6 +123,7 @@ return [
     // Org tab
     'card_roles' => 'Rôles dans la section',
     'no_roles' => 'Aucun rôle attribué dans cette section.',
+    'view_in_org_chart' => 'Voir dans l\'organigramme',
     // Personnalisation tab — card titles
     'card_letterhead' => 'Papier à entête',
     'card_badge' => 'Badge',

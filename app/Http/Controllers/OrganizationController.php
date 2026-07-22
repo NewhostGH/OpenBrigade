@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Models\SectionStopEvenement;
 use App\Services\SectionScopeService;
 use App\Services\UploadSecurityService;
+use App\Support\Audit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -99,10 +102,11 @@ class OrganizationController extends Controller
 
     // ── Organization overview ─────────────────────────────────────────────────
 
-    public function index(): View
+    public function index(Request $request): View
     {
         $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
+        $focusId = (int) $request->query('focus', $sectionId);
 
         $sections = DB::table('section')
             ->where('S_INACTIVE', 0)
@@ -112,11 +116,41 @@ class OrganizationController extends Controller
 
         $memberCounts = $this->memberCounts();
 
+        // Roles held anywhere, grouped by the section they are scoped to.
+        // section_id = SectionScopeService::ALL (-1) is the global sentinel
+        // (org-wide roles, no section restriction); 0 is the real CIS root
+        // section. Feeds the merged organigramme: section hierarchy + roles /
+        // members per section + an organisation-wide "Rôles globaux" branch.
+        $rolesBySection = DB::table('ob_user_assignment as ua')
+            ->join('pompier as p', 'ua.person_id', '=', 'p.P_ID')
+            ->join('ob_group as g', 'ua.group_id', '=', 'g.id')
+            ->where('g.kind', 'role')
+            ->orderBy('g.ordering')
+            ->orderBy('p.P_NOM')
+            ->get(['ua.section_id', 'p.P_ID', 'p.P_NOM', 'p.P_PRENOM', 'p.P_CODE', 'g.name as role_name'])
+            ->groupBy('section_id');
+
+        // Active members grouped by their home section (P_SECTION) so each
+        // section node can expand to its individual members — same filter as
+        // memberCounts() so the branch size matches the displayed count.
+        $membersBySection = DB::table('pompier')
+            ->where('P_OLD_MEMBER', 0)
+            ->where('GP_ID', '<>', -1)
+            ->whereNull('P_FIN')
+            ->orderBy('P_NOM')
+            ->orderBy('P_PRENOM')
+            ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_CODE', 'P_SECTION'])
+            ->groupBy('P_SECTION');
+
         // Walk from the -1 virtual node so the org root (S_ID = 0) is the top of
         // the tree, with the sites (S_PARENT = 0) nested beneath it.
-        $tree = $this->buildTree($sections, -1, $memberCounts);
+        $tree = $this->buildTree($sections, -1, $memberCounts, $rolesBySection, $membersBySection);
 
-        return view('organization.index', compact('tree', 'sectionId'));
+        // Org-wide roles (section_id = -1) are surfaced under a dedicated
+        // "Rôles globaux" branch at the top of the tree.
+        $globalRoles = $this->buildRolesBranch($rolesBySection->get(SectionScopeService::ALL, collect()));
+
+        return view('organization.index', compact('tree', 'globalRoles', 'focusId'));
     }
 
     // ── Sections list + CRUD ──────────────────────────────────────────────────
@@ -171,8 +205,38 @@ class OrganizationController extends Controller
 
         $memberCount = (int) ($this->memberCounts()[$section->S_ID] ?? 0);
 
+        // Active member headcount (radiation target) — excludes already-radiated
+        // and external members, mirroring the legacy radier_section selection.
+        $activeMemberCount = (int) DB::table('pompier')
+            ->where('P_SECTION', $section->S_ID)
+            ->where('P_OLD_MEMBER', 0)
+            ->where('P_STATUT', '<>', 'EXT')
+            ->count();
+
+        // Section event interdictions (section_stop_evenement) + author name.
+        $interdictions = DB::table('section_stop_evenement as sse')
+            ->leftJoin('pompier as p', 'p.P_ID', '=', 'sse.SSE_BY')
+            ->leftJoin('type_evenement as te', 'te.TE_CODE', '=', 'sse.TE_CODE')
+            ->where('sse.S_ID', $section->S_ID)
+            ->orderByDesc('sse.START_DATE')
+            ->get([
+                'sse.SSE_ID', 'sse.TE_CODE', 'sse.START_DATE', 'sse.END_DATE',
+                'sse.SSE_COMMENT', 'sse.SSE_ACTIVE', 'sse.SSE_WHEN',
+                'te.TE_LIBELLE', 'p.P_NOM', 'p.P_PRENOM',
+            ]);
+
+        // Event types grouped by category for the interdiction dropdown.
+        $eventTypes = DB::table('type_evenement as te')
+            ->join('categorie_evenement as ce', 'ce.CEV_CODE', '=', 'te.CEV_CODE')
+            ->where('te.TE_CODE', '<>', 'INS')
+            ->orderByDesc('te.CEV_CODE')
+            ->orderBy('te.TE_LIBELLE')
+            ->get(['te.TE_CODE', 'te.TE_LIBELLE', 'ce.CEV_DESCRIPTION'])
+            ->groupBy('CEV_DESCRIPTION');
+
         return view('organization.section-show', compact(
-            'section', 'orgByRole', 'agrementsMap', 'agrementCategories', 'rib', 'memberCount'
+            'section', 'orgByRole', 'agrementsMap', 'agrementCategories', 'rib',
+            'memberCount', 'activeMemberCount', 'interdictions', 'eventTypes'
         ));
     }
 
@@ -212,9 +276,11 @@ class OrganizationController extends Controller
     public function updateSection(Request $request, Section $section): RedirectResponse
     {
         $data = $this->validateSection($request, $section);
-        // Root section (S_ID = 0) keeps its -1 virtual parent and can never be inactivated.
+        // Root section (S_ID = 0) keeps its -1 virtual parent.
         $data['S_PARENT'] = (int) $section->S_ID === 0 ? -1 : (int) ($data['S_PARENT'] ?? 0);
-        $data['S_INACTIVE'] = (int) $section->S_ID === 0 ? false : $request->boolean('S_INACTIVE');
+        // Activation state is managed by the dedicated deactivate/reactivate
+        // actions (with member radiation), never silently through this form.
+        unset($data['S_INACTIVE']);
 
         $section->update($data);
 
@@ -245,6 +311,132 @@ class OrganizationController extends Controller
 
         return redirect()->route('organization.sections')
             ->with('success', 'Section supprimée.');
+    }
+
+    // ── Deactivation / radiation ──────────────────────────────────────────────
+
+    /**
+     * Deactivate a section (legacy `radier_section.php`). When `radiate` is set,
+     * every active, non-external member is radiated in the same transaction:
+     * marked as old member, stripped of their base groups and given an end date.
+     */
+    public function deactivateSection(Request $request, Section $section): RedirectResponse
+    {
+        if ((int) $section->S_ID === 0) {
+            return redirect()->route('organization.sections.show', $section->S_ID)
+                ->with('error', __('organization.deactivate_root_error'));
+        }
+
+        $radiate = $request->boolean('radiate');
+        $radiatedCount = 0;
+
+        DB::transaction(function () use ($section, $radiate, &$radiatedCount) {
+            $section->update(['S_INACTIVE' => true]);
+
+            if ($radiate) {
+                $radiatedCount = DB::table('pompier')
+                    ->where('P_SECTION', $section->S_ID)
+                    ->where('P_OLD_MEMBER', 0)
+                    ->where('P_STATUT', '<>', 'EXT')
+                    ->update([
+                        'P_OLD_MEMBER' => 4,
+                        'GP_ID' => -1,
+                        'GP_ID2' => -1,
+                        'P_FIN' => now(),
+                    ]);
+            }
+        });
+
+        Audit::action('section.deactivated', [
+            'section_id' => $section->S_ID,
+            'radiate' => $radiate,
+            'radiated_count' => $radiatedCount,
+        ], 'warning');
+
+        return redirect()->route('organization.sections.show', $section->S_ID)
+            ->with('success', $radiate
+                ? __('organization.deactivated_radiated', ['count' => $radiatedCount])
+                : __('organization.deactivated'));
+    }
+
+    /** Reactivate a section. Previously radiated members are NOT restored. */
+    public function reactivateSection(Section $section): RedirectResponse
+    {
+        $section->update(['S_INACTIVE' => false]);
+
+        Audit::action('section.reactivated', ['section_id' => $section->S_ID]);
+
+        return redirect()->route('organization.sections.show', $section->S_ID)
+            ->with('success', __('organization.reactivated'));
+    }
+
+    // ── Event interdictions (section_stop_evenement) ──────────────────────────
+
+    public function storeInterdiction(Request $request, Section $section): RedirectResponse
+    {
+        $data = $this->validateInterdiction($request);
+
+        SectionStopEvenement::create([
+            'S_ID' => $section->S_ID,
+            'TE_CODE' => $data['TE_CODE'],
+            'START_DATE' => $data['START_DATE'],
+            'END_DATE' => $data['END_DATE'],
+            'SSE_COMMENT' => $data['SSE_COMMENT'] ?? '',
+            'SSE_ACTIVE' => $request->boolean('SSE_ACTIVE') ? 1 : 0,
+            'SSE_BY' => $request->user()->P_ID,
+            'SSE_WHEN' => now(),
+        ]);
+
+        return $this->backToInterdictions($section, __('organization.interdiction_saved'));
+    }
+
+    public function updateInterdiction(Request $request, Section $section, SectionStopEvenement $interdiction): RedirectResponse
+    {
+        abort_unless((int) $interdiction->S_ID === (int) $section->S_ID, 404);
+
+        $data = $this->validateInterdiction($request);
+
+        $interdiction->update([
+            'TE_CODE' => $data['TE_CODE'],
+            'START_DATE' => $data['START_DATE'],
+            'END_DATE' => $data['END_DATE'],
+            'SSE_COMMENT' => $data['SSE_COMMENT'] ?? '',
+            'SSE_ACTIVE' => $request->boolean('SSE_ACTIVE') ? 1 : 0,
+            'SSE_BY' => $request->user()->P_ID,
+            'SSE_WHEN' => now(),
+        ]);
+
+        return $this->backToInterdictions($section, __('organization.interdiction_saved'));
+    }
+
+    public function destroyInterdiction(Section $section, SectionStopEvenement $interdiction): RedirectResponse
+    {
+        abort_unless((int) $interdiction->S_ID === (int) $section->S_ID, 404);
+
+        $interdiction->delete();
+
+        return $this->backToInterdictions($section, __('organization.interdiction_deleted'));
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function validateInterdiction(Request $request): array
+    {
+        $validTypes = DB::table('type_evenement')->pluck('TE_CODE')->push('ALL')->all();
+
+        return $request->validate([
+            'TE_CODE' => ['required', 'string', Rule::in($validTypes)],
+            'START_DATE' => ['required', 'date'],
+            'END_DATE' => ['required', 'date', 'after_or_equal:START_DATE'],
+            'SSE_COMMENT' => ['nullable', 'string', 'max:255'],
+        ]);
+    }
+
+    private function backToInterdictions(Section $section, string $message): RedirectResponse
+    {
+        return redirect()->route('organization.sections.show', [$section->S_ID, 'tab' => 'interdictions'])
+            ->with('success', $message);
     }
 
     // ── Personnalisation tab ──────────────────────────────────────────────────
@@ -581,7 +773,7 @@ class OrganizationController extends Controller
         ]);
     }
 
-    private function buildTree($sections, int $parentId, $memberCounts): array
+    private function buildTree($sections, int $parentId, $memberCounts, $rolesBySection, $membersBySection): array
     {
         return $sections
             ->filter(function ($s) use ($parentId) {
@@ -590,12 +782,53 @@ class OrganizationController extends Controller
 
                 return $p === $parentId;
             })
-            ->map(fn ($s) => [
-                'section' => $s,
-                'count' => (int) ($memberCounts[$s->S_ID] ?? 0),
-                'children' => $this->buildTree($sections, (int) $s->S_ID, $memberCounts),
-            ])
+            ->map(function ($s) use ($sections, $memberCounts, $rolesBySection, $membersBySection) {
+                $sid = (int) $s->S_ID;
+
+                return [
+                    'section' => $s,
+                    'count' => (int) ($memberCounts[$s->S_ID] ?? 0),
+                    'roles' => $this->buildRolesBranch($rolesBySection->get($sid, collect())),
+                    'members' => $this->buildMembersBranch($membersBySection->get($sid, collect())),
+                    'children' => $this->buildTree($sections, $sid, $memberCounts, $rolesBySection, $membersBySection),
+                ];
+            })
             ->values()
             ->all();
+    }
+
+    /**
+     * Shape a flat list of role-assignment rows (section_id, P_ID, P_NOM,
+     * P_PRENOM, P_CODE, role_name) into role -> members branches for the
+     * ECharts organigramme.
+     *
+     * @return array<int,array{name:string,count:int,children:array}>
+     */
+    private function buildRolesBranch($roleRows): array
+    {
+        return $roleRows->groupBy('role_name')->map(fn ($members, $roleName) => [
+            'name' => $roleName,
+            'count' => $members->count(),
+            'children' => $members->map(fn ($m) => [
+                'name' => trim(strtoupper($m->P_NOM).' '.$m->P_PRENOM),
+                'code' => $m->P_CODE,
+                'id' => $m->P_ID,
+            ])->values(),
+        ])->values()->all();
+    }
+
+    /**
+     * Shape a section's member rows (P_ID, P_NOM, P_PRENOM, P_CODE) into the
+     * flat member list for the organigramme "Membres" branch.
+     *
+     * @return array<int,array{name:string,code:?string,id:int}>
+     */
+    private function buildMembersBranch($memberRows): array
+    {
+        return $memberRows->map(fn ($m) => [
+            'name' => trim(strtoupper($m->P_NOM).' '.$m->P_PRENOM),
+            'code' => $m->P_CODE,
+            'id' => $m->P_ID,
+        ])->values()->all();
     }
 }

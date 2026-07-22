@@ -56,14 +56,16 @@
                             <div class="text-muted" style="font-size:var(--font-size-xs);">
                                 {{ ucfirst(mb_strtolower($p->P_PRENOM)) }}
                             </div>
-                            @if($p->P_GRADE)
-                                <div class="mt-1">
-                                    <img src="{{ route('personnel.grade-image', ['grade' => $p->P_GRADE]) }}"
-                                         alt="{{ $p->P_GRADE }}"
-                                         class="ob-grade-img"
-                                         onerror="this.outerHTML='<small class=\'text-muted\'>' + this.alt + '</small>'"> {{-- i18n-ignore: JS builds markup from this.alt, no static copy --}}
-                                </div>
-                            @endif
+                            @feature('grades')
+                                @if($p->P_GRADE)
+                                    <div class="mt-1">
+                                        <img src="{{ route('personnel.grade-image', ['grade' => $p->P_GRADE]) }}"
+                                             alt="{{ $p->P_GRADE }}"
+                                             class="ob-grade-img"
+                                             onerror="this.outerHTML='<small class=\'text-muted\'>' + this.alt + '</small>'"> {{-- i18n-ignore: JS builds markup from this.alt, no static copy --}}
+                                    </div>
+                                @endif
+                            @endfeature
                         </a>
                     </div>
                 </div>

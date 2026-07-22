@@ -23,11 +23,12 @@
             ['route' => 'admin.references.consumable-type',  'icon' => 'boxes',          'label' => 'Types de consommable', 'count' => $counts['type_consommable'],  'desc' => 'Carburant, médicaments…'],
             ['route' => 'admin.references.vehicle-type',      'icon' => 'truck',          'label' => 'Types de véhicule',    'count' => 0,                            'desc' => 'VSAV, FPT, VL…'],
             ['route' => 'admin.references.vehicle-function',  'icon' => 'car',            'label' => 'Fonctions véhicule',   'count' => 0,                            'desc' => 'Chef de bord, Équipier véhicule…'],
-            ['route' => 'admin.references.grade-category',    'icon' => 'layer-group',    'label' => 'Catégories de grade',  'count' => 0,                            'desc' => 'Officiers, Sous-officiers…'],
-            ['route' => 'admin.references.grade',             'icon' => 'medal',          'label' => 'Icônes de grades',     'count' => $counts['grade'],             'desc' => 'Images associées à chaque grade'],
+            ['route' => 'admin.references.grade-category',    'icon' => 'layer-group',    'label' => 'Catégories de grade',  'count' => $counts['categorie_grade'],  'desc' => 'Sapeurs-pompiers, Armée, Personnel soignant…', 'feature' => 'grades'],
+            ['route' => 'admin.references.grade',             'icon' => 'medal',          'label' => 'Grades',               'count' => $counts['grade'],             'desc' => 'Grades, niveaux et icônes',    'feature' => 'grades'],
         ];
         @endphp
         @foreach($sections as $s)
+        @continue(isset($s['feature']) && ! app(\App\Services\FeatureService::class)->isEnabled($s['feature']))
         <div class="col-12 col-sm-6 col-lg-4">
             <a href="{{ route($s['route']) }}" class="text-decoration-none">
                 <div class="ob-widget-card p-3 h-100 d-flex align-items-center gap-3" style="transition:box-shadow .15s;cursor:pointer;">

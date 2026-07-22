@@ -94,14 +94,6 @@ Needs the notification / messaging infrastructure above.
 
 ### Organisation (ORGA)
 
-- [ ] First-run setup wizard (`wizard.php`)
-- [ ] **Organisation-type setup wizard** — let an admin pick the organisation type
-  (`config('brigade.organisation_types')`) and activate that type's seeded role set
-  (`ob_group.org_type`); roles for every type are already seeded by `BaseHabilitations`
-- [ ] Rank & grade management / rework grade system — full grade model (grade
-  categories and grade icons CRUD already exist; this is the broader rework)
-- [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
-- [ ] Section deactivation / radiation (`section_stop.php`, `radier_section.php`)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)
 
@@ -380,7 +372,41 @@ album photos).
 - [x] Position (poste) management — `Compétences` page at `/admin/references/position`; CRUD with boolean flags (formation, secourisme, expirable, diplôme, etc.); edit modal per row; delete blocked if used in qualifications or event requirements; perm 18
 - [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
 - [x] Protect the organizational root section (`S_ID = 0`): `destroySection` returns 302 with error; `updateSection` forces `S_INACTIVE = false`; reparent already pinned to `-1`
+- [x] **Section deactivation / radiation** (`radier_section.php`) — "Zone sensible" card on the
+  section Informations tab; confirm modal offers *deactivate only* vs *deactivate + radiate all
+  active members* (`P_OLD_MEMBER=4`, `GP_ID/GP_ID2=-1`, `P_FIN=now`, one transaction, live count);
+  reactivation (radiated members not auto-restored); root section protected; silent `S_INACTIVE`
+  form checkbox removed. **Event interdictions** (`section_stop.php`) — new *Interdictions* tab,
+  CRUD over `section_stop_evenement` (block event type/all over a date range, active toggle,
+  comment); `SectionStopEvenement` model; audited; i18n
 - [x] Habilitations export (`habilitations_xls.php`)
+- [x] **First-run setup wizard** (`wizard.php`) + **organisation-type activation** — guarded
+  first-run screen (`OrganisationSetupService`, `SetupController`, `RequireSetup` middleware)
+  collecting org type + short/long name, URL, admin email, app title, and optional
+  description & logo; persists the canonical `configuration` keys and flips
+  `already_configured`. Fresh installs ship unconfigured with the legacy `admin`
+  account disabled (`reference.sql`); super-admins always reach `/setup`. Activation
+  filters the habilitations roles tab to the active `ob_group.org_type` (+ custom roles).
+  Admin screen at `/admin/organisation-type` changes the type (non-destructive) with a
+  consequences panel, an opt-in reset of the type's preset roles, and an opt-in delete of
+  custom roles that remaps their members to a chosen preset role. `docs`/lang under `setup`
+- [x] **Rank & grade management rework** — full grade model, feature-gated (`grades`):
+  category enable/disable (`CG_ACTIVE`, hides from pickers, keeps existing assignments)
+  with an "Active" toggle in the grade-category admin UI; grade CRUD with drag-to-reorder
+  and a member-count-aware delete guard; real official ladders seeded for Sapeurs-Pompiers,
+  Armée de terre and Police nationale (sourced from Wikipedia/Wikimedia, `Actuel (épaules)`
+  insignia), plus a generic 120-level `Universel` category seeded fully inactive for any
+  other org type; static per-grade icons under `public/images/grades/{CATEGORY}_{CODE}.svg`
+  (real insignia for SP/ARMY/POL, generated shape+color+tier badges for the rest), admin-
+  uploaded icon takes priority; all grade UI (personnel show/edit, event show/trombinoscope,
+  personnel list column + export) fully hidden — not just disabled — when the feature is off
+- [x] **Organigramme tab as an interactive org-chart** — single ECharts tree (canvas,
+  orthogonal TB) merging the section hierarchy, per-section role holders and a *Membres*
+  branch under every section, plus a *Rôles globaux* branch (`section_id = -1` sentinel);
+  per-branch colour palette, per-type shapes, member avatar photos (`/personnel/{id}/photo`),
+  expand/collapse by click or toolbar, automatic canvas sizing with scroll centring,
+  PNG export, click-through to member/section pages and a "Voir dans l'organigramme"
+  focus link from the section show page
 
 ### Configuration — Admin (ADMIN)
 

@@ -33,6 +33,7 @@ use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\PluginController;
 use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\ReplacementController;
+use App\Http\Controllers\SetupController;
 use App\Http\Controllers\ShortcutController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TotpController;
@@ -198,6 +199,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');
     Route::delete('/admin/settings/{id}/file', [AdminController::class, 'deleteSetting'])->name('admin.settings.delete-file')->middleware('permission:14');
 
+    // ── First-run setup wizard + organisation-type management (perm 14) ────────
+    Route::get('/setup', [SetupController::class, 'show'])->name('setup.show')->middleware('permission:14');
+    Route::post('/setup', [SetupController::class, 'store'])->name('setup.store')->middleware('permission:14');
+    Route::get('/admin/organisation-type', [SetupController::class, 'editOrgType'])->name('setup.org-type')->middleware('permission:14');
+    Route::patch('/admin/organisation-type', [SetupController::class, 'updateOrgType'])->name('setup.org-type.update')->middleware('permission:14');
+    Route::post('/admin/organisation-type/reset-roles', [SetupController::class, 'resetRoles'])->name('setup.org-type.reset-roles')->middleware('permission:14');
+    Route::post('/admin/organisation-type/delete-custom-roles', [SetupController::class, 'deleteCustomRoles'])->name('setup.org-type.delete-custom-roles')->middleware('permission:14');
+
     // ── Fonctionnalités & Modules — unified feature registry (ob_feature) ──────
     Route::get('/admin/features', [FeatureController::class, 'index'])->name('admin.features')->middleware('permission:14');
     Route::patch('/admin/features/{feature}', [FeatureController::class, 'toggle'])->name('admin.features.toggle')->middleware('permission:14');
@@ -262,14 +271,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/references/vehicle-function/{id}', [ReferenceController::class, 'vehicleFunctionUpdate'])->name('admin.references.vehicle-function.update')->middleware('permission:5');
     Route::delete('/admin/references/vehicle-function/{id}', [ReferenceController::class, 'vehicleFunctionDestroy'])->name('admin.references.vehicle-function.destroy')->middleware('permission:5');
     // Grade categories
-    Route::get('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryIndex'])->name('admin.references.grade-category')->middleware('permission:5');
-    Route::post('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryStore'])->name('admin.references.grade-category.store')->middleware('permission:5');
-    Route::patch('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryUpdate'])->name('admin.references.grade-category.update')->middleware('permission:5');
-    Route::delete('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryDestroy'])->name('admin.references.grade-category.destroy')->middleware('permission:5');
+    Route::get('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryIndex'])->name('admin.references.grade-category')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade-category', [ReferenceController::class, 'gradeCategoryStore'])->name('admin.references.grade-category.store')->middleware('permission:5', 'feature:grades');
+    Route::patch('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryUpdate'])->name('admin.references.grade-category.update')->middleware('permission:5', 'feature:grades');
+    Route::delete('/admin/references/grade-category/{code}', [ReferenceController::class, 'gradeCategoryDestroy'])->name('admin.references.grade-category.destroy')->middleware('permission:5', 'feature:grades');
     // Grade icons
-    Route::get('/admin/references/grade', [ReferenceController::class, 'gradeIndex'])->name('admin.references.grade')->middleware('permission:5');
-    Route::post('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconUpload'])->name('admin.references.grade.icon.upload')->middleware('permission:5');
-    Route::delete('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconDestroy'])->name('admin.references.grade.icon.destroy')->middleware('permission:5');
+    Route::get('/admin/references/grade', [ReferenceController::class, 'gradeIndex'])->name('admin.references.grade')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade', [ReferenceController::class, 'gradeStore'])->name('admin.references.grade.store')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade/reorder', [ReferenceController::class, 'gradeReorder'])->name('admin.references.grade.reorder')->middleware('permission:5', 'feature:grades');
+    Route::patch('/admin/references/grade/{grade}', [ReferenceController::class, 'gradeUpdate'])->name('admin.references.grade.update')->middleware('permission:5', 'feature:grades');
+    Route::delete('/admin/references/grade/{grade}', [ReferenceController::class, 'gradeDestroy'])->name('admin.references.grade.destroy')->middleware('permission:5', 'feature:grades');
+    Route::post('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconUpload'])->name('admin.references.grade.icon.upload')->middleware('permission:5', 'feature:grades');
+    Route::delete('/admin/references/grade/{grade}/icon', [ReferenceController::class, 'gradeIconDestroy'])->name('admin.references.grade.icon.destroy')->middleware('permission:5', 'feature:grades');
     // Equipe (competence group) and Poste (position/competence definition)
     Route::get('/admin/references/team', [ReferenceController::class, 'teamIndex'])->name('admin.references.team')->middleware('permission:18');
     Route::post('/admin/references/team', [ReferenceController::class, 'teamStore'])->name('admin.references.team.store')->middleware('permission:18');
@@ -360,6 +373,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/organization/sections/{section}/edit', [OrganizationController::class, 'editSection'])->name('organization.sections.edit')->middleware('permission:52');
     Route::patch('/organization/sections/{section}', [OrganizationController::class, 'updateSection'])->name('organization.sections.update')->middleware('permission:52');
     Route::delete('/organization/sections/{section}', [OrganizationController::class, 'destroySection'])->name('organization.sections.destroy')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/deactivate', [OrganizationController::class, 'deactivateSection'])->name('organization.sections.deactivate')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/reactivate', [OrganizationController::class, 'reactivateSection'])->name('organization.sections.reactivate')->middleware('permission:52');
+    Route::post('/organization/sections/{section}/interdictions', [OrganizationController::class, 'storeInterdiction'])->name('organization.sections.interdictions.store')->middleware('permission:52');
+    Route::patch('/organization/sections/{section}/interdictions/{interdiction}', [OrganizationController::class, 'updateInterdiction'])->name('organization.sections.interdictions.update')->middleware('permission:52');
+    Route::delete('/organization/sections/{section}/interdictions/{interdiction}', [OrganizationController::class, 'destroyInterdiction'])->name('organization.sections.interdictions.destroy')->middleware('permission:52');
     Route::patch('/organization/sections/{section}/personalisation', [OrganizationController::class, 'updatePersonalisation'])->name('organization.sections.personalisation')->middleware('permission:52');
     // PDF assets — permission:0 because any member generating a livret/carte needs them
     Route::get('/organization/sections/{section}/letterhead', [OrganizationController::class, 'sectionLetterhead'])->name('organization.sections.letterhead')->middleware('permission:0');

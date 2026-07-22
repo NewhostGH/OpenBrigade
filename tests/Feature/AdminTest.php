@@ -153,6 +153,7 @@ test('parametrage index renders the admin.references.index view', function () {
             'type_consommable' => 0,
             'categorie_consommable' => 0,
             'categorie_evenement' => 0,
+            'categorie_grade' => 0,
             'grade' => 0,
             'equipe' => 0,
             'poste' => 0,

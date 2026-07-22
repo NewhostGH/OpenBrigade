@@ -11,20 +11,6 @@
 ]"/>
 
 <div class="mx-3 mt-3">
-
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible py-2 mb-3">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible py-2 mb-3">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
@@ -54,12 +40,19 @@
                                placeholder="{{ __('admin.references.grade_category.ph_desc') }}">
                     </div>
                     <div class="col-auto">
+                        <div class="form-check form-switch mb-1">
+                            <input class="form-check-input" type="checkbox" name="CG_ACTIVE" id="CG_ACTIVE_new" value="1" checked>
+                            <label class="form-check-label" for="CG_ACTIVE_new">{{ __('admin.references.grade_category.col_active') }}</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
                             <i class="fas fa-plus me-1"></i>{{ __('common.add') }}
                         </button>
                     </div>
                 </div>
             </form>
+            <div class="form-text mt-2">{{ __('admin.references.grade_category.active_hint') }}</div>
         </div>
     </div>
 
@@ -78,6 +71,7 @@
                         <th style="width:100px;">{{ __('admin.references.col_code') }}</th>
                         <th>{{ __('admin.references.col_description') }}</th>
                         <th class="text-center" style="width:90px;">{{ __('admin.references.grade_category.col_grades') }}</th>
+                        <th class="text-center" style="width:80px;">{{ __('admin.references.grade_category.col_active') }}</th>
                         <th style="width:60px;"></th>
                     </tr>
                 </thead>
@@ -87,7 +81,7 @@
                         <td class="align-middle font-monospace fw-semibold" style="font-size:var(--font-size-sm);">{{ $cat->CG_CODE }}</td>
                         <td class="align-middle" style="font-size:var(--font-size-sm);">
                             <form method="POST" action="{{ route('admin.references.grade-category.update', $cat->CG_CODE) }}"
-                                  class="d-flex gap-2 align-items-center">
+                                  id="catForm{{ $cat->CG_CODE }}" class="d-flex gap-2 align-items-center">
                                 @csrf @method('PATCH')
                                 <input type="text" name="CG_DESCRIPTION" value="{{ $cat->CG_DESCRIPTION }}"
                                        class="form-control form-control-sm" maxlength="50" required style="min-width:200px;">
@@ -98,6 +92,12 @@
                         </td>
                         <td class="text-center align-middle">
                             <span class="ob-badge ob-badge-int">{{ $gradeCounts[$cat->CG_CODE] ?? 0 }}</span>
+                        </td>
+                        <td class="text-center align-middle">
+                            <div class="form-check form-switch d-flex justify-content-center" title="{{ __('admin.references.grade_category.active_hint') }}">
+                                <input class="form-check-input" type="checkbox" name="CG_ACTIVE" value="1"
+                                       form="catForm{{ $cat->CG_CODE }}" @checked($cat->CG_ACTIVE) onchange="this.form.requestSubmit()">
+                            </div>
                         </td>
                         <td class="align-middle text-end">
                             <form method="POST" action="{{ route('admin.references.grade-category.destroy', $cat->CG_CODE) }}"
@@ -111,7 +111,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="text-center text-muted py-4">{{ __('admin.references.grade_category.empty') }}</td></tr>
+                    <tr><td colspan="5" class="text-center text-muted py-4">{{ __('admin.references.grade_category.empty') }}</td></tr>
                 @endforelse
                 </tbody>
             </table>
