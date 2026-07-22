@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Services\FeatureService;
+use App\Services\GeneralSettingService;
 use App\Services\OrganisationSetupService;
 use App\Services\PermissionResolver;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -42,5 +43,21 @@ abstract class TestCase extends BaseTestCase
         $setup = Mockery::mock(OrganisationSetupService::class)->makePartial();
         $setup->shouldReceive('isCompleted')->andReturn(true)->byDefault();
         $this->app->instance(OrganisationSetupService::class, $setup);
+
+        // General settings (maintenance mode, mandatory photo, timezone…) are
+        // consulted at boot and on every request. Default to a plain install
+        // with everything off; individual tests can rebind.
+        $general = Mockery::mock(GeneralSettingService::class)->makePartial();
+        $general->shouldReceive('get')->andReturnUsing(
+            fn (string $name) => match ($name) {
+                'timezone' => 'Europe/Paris',
+                'default_money' => 'Euro',
+                'default_money_symbol' => '€',
+                'phone_prefix' => '+33',
+                'min_numbers_in_phone' => '10',
+                default => '0',
+            }
+        )->byDefault();
+        $this->app->instance(GeneralSettingService::class, $general);
     }
 }
