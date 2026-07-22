@@ -34,10 +34,16 @@ class RequireSetup
         // a super-admin must always reach the wizard even without permission 14.
         $mayConfigure = $user !== null && ($user->isSuperAdmin() || $user->hasPermission(14));
 
+        // The auth-setup gate (expired password, forced 2FA, charter) outranks
+        // the wizard: its pages must stay reachable on a fresh install or the
+        // two middlewares redirect to each other forever.
+        $routeName = $request->route()?->getName();
+
         if ($user === null
             || $this->setup->isCompleted()
             || $request->routeIs('setup.*')
             || $request->routeIs('logout')
+            || in_array($routeName, RequireAuthSetup::ALLOWED_ROUTES, true)
             || ! $mayConfigure) {
             return $next($request);
         }

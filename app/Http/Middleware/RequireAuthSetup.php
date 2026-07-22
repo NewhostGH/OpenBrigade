@@ -26,7 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RequireAuthSetup
 {
-    private const ALLOWED_ROUTES = [
+    /** Also honoured by RequireSetup, so the two gates can never ping-pong. */
+    public const ALLOWED_ROUTES = [
         'account.auth',
         'account.password.update',
         'totp.confirm',
