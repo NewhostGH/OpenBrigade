@@ -20,6 +20,8 @@ class GeneralSettingService
 {
     /** @var array<string,int|string> */
     private const DEFAULTS = [
+        'application_title' => '',
+        'cisurl' => '',
         'timezone' => 'Europe/Paris',
         'default_money' => 'Euro',
         'default_money_symbol' => '€',
@@ -34,6 +36,18 @@ class GeneralSettingService
 
     /** @var array<string,string>|null */
     private ?array $cache = null;
+
+    /** Stored application name ('' → keep the APP_NAME default). */
+    public function appName(): string
+    {
+        return $this->string('application_title');
+    }
+
+    /** Stored public site URL ('' → keep the APP_URL default). */
+    public function siteUrl(): string
+    {
+        return $this->string('cisurl');
+    }
 
     public function timezone(): string
     {

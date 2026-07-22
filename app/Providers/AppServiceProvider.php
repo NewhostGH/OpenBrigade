@@ -98,6 +98,12 @@ class AppServiceProvider extends ServiceProvider
         // falling back to the config/env default.
         $this->configureTimezone();
 
+        // Application name (38) and public site URL (7) — instantiated from
+        // APP_NAME / APP_URL, overridden by the stored rows (Organisation tab).
+        // Must run before the URL::forceRootUrl block below, which reads
+        // config('app.url').
+        $this->configureAppIdentity();
+
         // Overlay the administrable mail transport settings (Administration ▸
         // Notifications) onto config('mail.*'). The .env stays the default for
         // anything left empty; a stored row is the source of truth. Guarded —
@@ -200,6 +206,29 @@ class AppServiceProvider extends ServiceProvider
         View::composer('auth.login', function ($view): void {
             $view->with('appIdentity', app(AppIdentityService::class));
         });
+    }
+
+    /**
+     * Overlay the stored application name / site URL onto config('app.*').
+     * Empty rows keep the .env defaults; a malformed URL is ignored so a typo
+     * can never take every absolute link down. Guarded — no DB, no override.
+     */
+    private function configureAppIdentity(): void
+    {
+        try {
+            $general = app(GeneralSettingService::class);
+
+            if (($name = $general->appName()) !== '') {
+                Config::set('app.name', $name);
+            }
+
+            $url = $general->siteUrl();
+            if ($url !== '' && (str_starts_with($url, 'http://') || str_starts_with($url, 'https://'))) {
+                Config::set('app.url', rtrim($url, '/'));
+            }
+        } catch (\Throwable) {
+            // Keep the .env values.
+        }
     }
 
     /**
