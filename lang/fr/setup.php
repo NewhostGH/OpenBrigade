@@ -7,7 +7,7 @@ return [
     'wizard_intro' => 'Quelques informations pour configurer votre installation. Vous pourrez modifier ces réglages plus tard.',
 
     'org_type' => "Type d'organisation",
-    'org_type_help' => "Détermine le jeu de rôles préconfigurés proposé. Modifiable ultérieurement.",
+    'org_type_help' => 'Détermine le jeu de rôles préconfigurés proposé. Modifiable ultérieurement.',
     'org_type_choose' => 'Choisissez…',
 
     'cisname' => 'Nom court de votre organisation',
