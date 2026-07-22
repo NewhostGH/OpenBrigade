@@ -72,6 +72,7 @@ test('unauthenticated users are redirected from admin pages to login', function 
     $this->get($path)->assertRedirect('/login');
 })->with([
     '/admin/settings',
+    '/admin/notifications',
     '/admin/monitoring',
     '/admin/references',
     '/admin/permissions',
@@ -86,6 +87,7 @@ test('users without the required permission get 403', function (string $path) {
     $this->actingAs(adminFakeUser(can: false))->get($path)->assertForbidden();
 })->with([
     '/admin/settings',
+    '/admin/notifications',
     '/admin/monitoring',
     '/admin/references',
     '/admin/permissions',
@@ -108,6 +110,20 @@ test('settings page renders the admin.settings view', function () {
         ->assertOk()
         ->assertViewIs('admin.settings')
         ->assertViewHasAll(['grouped', 'tabs', 'activeTab', 'annotations']);
+});
+
+// ── Notifications ────────────────────────────────────────────────────────────
+
+test('notifications page renders the admin.notifications view', function () {
+    adminStubView(AdminController::class, 'notifications', 'admin.notifications', [
+        'rows' => collect(),
+        'envDriver' => 'log',
+    ]);
+
+    $this->actingAs(adminFakeUser())->get('/admin/notifications')
+        ->assertOk()
+        ->assertViewIs('admin.notifications')
+        ->assertViewHasAll(['rows', 'envDriver']);
 });
 
 // ── Plugins (WIP) ────────────────────────────────────────────────────────────

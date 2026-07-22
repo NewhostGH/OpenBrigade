@@ -13,8 +13,10 @@ use App\Services\Auth\LdapAuthService;
 use App\Services\FeatureService;
 use App\Services\HealthCheckService;
 use App\Services\LoggingSettingService;
+use App\Services\MailSettingService;
 use App\Services\OrganisationSetupService;
 use App\Services\SecuritySettingService;
+use App\Services\SmsSettingService;
 use App\Services\UploadSecurityService;
 use App\Support\Audit;
 use App\Support\ClamavScanner;
@@ -507,6 +509,32 @@ class AdminController extends Controller
         return view('admin.settings', compact('grouped', 'tabs', 'activeTab', 'annotations', 'orgTypeLabel'));
     }
 
+    /**
+     * Administration ▸ Notifications — email + SMS gateway settings, rendered
+     * from the hidden configuration rows (mail_allowed, mail_*, sms_*).
+     */
+    public function notifications(): View
+    {
+        // The .env instantiates the visible values: mail rows are created from
+        // the effective config on first render, empty SMS rows are filled from
+        // it. From then on the stored rows are the source of truth.
+        app(MailSettingService::class)->ensureSeeded();
+        app(SmsSettingService::class)->seedFromEnv();
+
+        $rows = DB::table('configuration')
+            ->whereIn('NAME', array_merge(
+                ['mail_allowed', 'sms_provider', 'sms_user', 'sms_password', 'sms_api_id'],
+                MailSettingService::keys(),
+            ))
+            ->get()
+            ->keyBy('NAME');
+
+        return view('admin.notifications', [
+            'rows' => $rows,
+            'envDriver' => (string) config('sms.driver', 'log'),
+        ]);
+    }
+
     public function saveSetting(Request $request, int $id): RedirectResponse
     {
         $row = DB::table('configuration')->where('ID', $id)->first();
@@ -530,6 +558,10 @@ class AdminController extends Controller
 
         if ($request->input('_back') === 'monitoring') {
             return redirect()->route('admin.monitoring', ['tab' => 'settings'])->with('success', 'Paramètre mis à jour.');
+        }
+
+        if ($request->input('_back') === 'notifications') {
+            return redirect()->route('admin.notifications')->with('success', 'Paramètre mis à jour.');
         }
 
         if ($request->input('_back') === 'maintenance') {

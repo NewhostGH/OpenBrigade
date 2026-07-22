@@ -9,19 +9,20 @@ use App\Services\ServiceInterface;
 use App\Services\Sms\Drivers\LogSmsSender;
 use App\Services\Sms\Drivers\NullSmsSender;
 use App\Services\Sms\Drivers\SmsGatewayMeSender;
+use App\Services\SmsSettingService;
 use InvalidArgumentException;
 
 /**
- * Provider-agnostic SMS entry point. Resolves the configured driver
- * (config('sms.driver')) and forwards sends to it, so callers and the
+ * Provider-agnostic SMS entry point. The driver and its credentials are
+ * resolved at send time from the administrable settings (Administration ▸
+ * Notifications, via {@see SmsSettingService}) with config/sms.php (env) as
+ * fallback — so a settings change applies without a restart. Callers and the
  * notification SMS channel never depend on a concrete provider.
  *
  * // TODO: COMM — persist an SMS history row per send (COMM ▸ SMS history view).
  */
 class SmsManager implements ServiceInterface
 {
-    private ?SmsSender $driver = null;
-
     /** Send a one-off SMS. Returns the driver's result. */
     public function send(string $to, string $body, ?string $from = null): SmsResult
     {
@@ -42,15 +43,17 @@ class SmsManager implements ServiceInterface
 
     public function driver(): SmsSender
     {
-        return $this->driver ??= $this->resolve((string) config('sms.driver', 'log'));
+        $settings = app(SmsSettingService::class);
+
+        return $this->resolve($settings->driver(), $settings);
     }
 
-    private function resolve(string $name): SmsSender
+    private function resolve(string $name, SmsSettingService $settings): SmsSender
     {
         return match ($name) {
             'log' => new LogSmsSender,
             'null' => new NullSmsSender,
-            'smsgatewayme' => new SmsGatewayMeSender((array) config('sms.drivers.smsgatewayme')),
+            'smsgatewayme' => new SmsGatewayMeSender($settings->smsGatewayMeOptions()),
             default => throw new InvalidArgumentException("Unsupported SMS driver [{$name}]."),
         };
     }

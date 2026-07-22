@@ -195,6 +195,7 @@ Route::middleware('auth')->group(function () {
     // keyed by configuration ID), exactly like the other security tabs.
     Route::post('/admin/security/hardening/test-clamav', [AdminController::class, 'testClamav'])->name('admin.security.test-clamav')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
+    Route::get('/admin/notifications', [AdminController::class, 'notifications'])->name('admin.notifications')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');
     Route::delete('/admin/settings/{id}/file', [AdminController::class, 'deleteSetting'])->name('admin.settings.delete-file')->middleware('permission:14');

@@ -10,11 +10,13 @@ use App\Services\BrigadeService;
 use App\Services\FeatureService;
 use App\Services\GeneralSettingService;
 use App\Services\LoggingSettingService;
+use App\Services\MailSettingService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
 use App\Services\SectionScopeService;
 use App\Services\SecuritySettingService;
 use App\Services\Sms\SmsManager;
+use App\Services\SmsSettingService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -40,8 +42,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(AppIdentityService::class);
 
-        // Provider-agnostic SMS layer (config/sms.php resolves the driver).
+        // Provider-agnostic SMS layer — driver resolved at send time from the
+        // administrable settings (memoised per request) with env fallback.
         $this->app->singleton(SmsManager::class);
+        $this->app->singleton(SmsSettingService::class);
+        $this->app->singleton(MailSettingService::class);
 
         // Register singleton services (instantiated once per container)
         $this->app->singleton(BrigadeService::class, function ($app) {
@@ -92,6 +97,16 @@ class AppServiceProvider extends ServiceProvider
         // Apply the administrable timezone (configuration row `timezone`),
         // falling back to the config/env default.
         $this->configureTimezone();
+
+        // Overlay the administrable mail transport settings (Administration ▸
+        // Notifications) onto config('mail.*'). The .env stays the default for
+        // anything left empty; a stored row is the source of truth. Guarded —
+        // a missing table must never break boot (or mail entirely).
+        try {
+            app(MailSettingService::class)->apply();
+        } catch (\Throwable) {
+            // Keep the shipped .env config.
+        }
 
         // Register the "sms" notification channel (provider-agnostic — the
         // active gateway is picked by config('sms.driver')).
