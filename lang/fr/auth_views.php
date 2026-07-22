@@ -18,6 +18,7 @@ return [
     'login_noscript' => 'JavaScript est désactivé&nbsp;: OpenBrigade nécessite JavaScript pour fonctionner correctement. Veuillez l\'activer puis recharger la page.',
     'login_tagline' => 'Organisez le personnel et les activités avec :org',
     'login_welcome' => 'Bienvenue',
+    'maintenance_title' => 'Maintenance en cours',
     'login_subtitle' => 'Connectez-vous à :org',
     'login_label_login' => 'Identifiant ou adresse e-mail',
     'login_label_password' => 'Mot de passe',
