@@ -8,6 +8,7 @@ use App\Services\AppIdentityService;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
 use App\Services\FeatureService;
+use App\Services\GeneralSettingService;
 use App\Services\LoggingSettingService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
@@ -88,8 +89,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Set up locale and timezone from config
-        date_default_timezone_set(config('app.timezone'));
+        // Apply the administrable timezone (configuration row `timezone`),
+        // falling back to the config/env default.
+        $this->configureTimezone();
 
         // Register the "sms" notification channel (provider-agnostic — the
         // active gateway is picked by config('sms.driver')).
@@ -183,6 +185,29 @@ class AppServiceProvider extends ServiceProvider
         View::composer('auth.login', function ($view): void {
             $view->with('appIdentity', app(AppIdentityService::class));
         });
+    }
+
+    /**
+     * Apply the administrable timezone (Administration ▸ Configuration,
+     * row `timezone`) to the runtime. Invalid or unreadable values leave the
+     * shipped config('app.timezone') default in place — a bad setting must
+     * never break boot.
+     */
+    private function configureTimezone(): void
+    {
+        $timezone = (string) config('app.timezone');
+
+        try {
+            $stored = app(GeneralSettingService::class)->timezone();
+            if (in_array($stored, timezone_identifiers_list(), true)) {
+                $timezone = $stored;
+            }
+        } catch (\Throwable) {
+            // Keep the config default.
+        }
+
+        Config::set('app.timezone', $timezone);
+        date_default_timezone_set($timezone);
     }
 
     /**

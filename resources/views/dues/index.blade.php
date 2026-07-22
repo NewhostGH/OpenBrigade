@@ -124,7 +124,7 @@
                 <span class="badge bg-success">{{ $paidCount }} payé(s)</span>
                 <span class="badge bg-secondary ms-1">{{ $unpaidCount }} en attente</span>
                 @if ($totalPaid > 0)
-                    <span class="ms-2">Total encaissé : <strong>{{ number_format($totalPaid, 2, ',', ' ') }} €</strong></span>
+                    <span class="ms-2">Total encaissé : <strong>{{ \App\Support\Money::format($totalPaid) }}</strong></span>
                 @endif
             </span>
         @endif

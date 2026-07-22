@@ -432,6 +432,7 @@ class AdminController extends Controller
             3 => ['label' => 'Technique',         'icon' => 'shield-alt'],
             4 => ['label' => 'Organisation',      'icon' => 'building'],
             5 => ['label' => 'Avancé',            'icon' => 'wrench'],
+            6 => ['label' => 'Localisation',      'icon' => 'globe'],
         ];
 
         $grouped = $rows->groupBy('TAB');
@@ -441,13 +442,10 @@ class AdminController extends Controller
         // ID => ['type' => 'obsolete'|'todo', 'note' => '...']
         $annotations = [
             88 => ['type' => 'obsolete', 'note' => 'Le logo dans la navbar ne sera plus utilisé. L\'icône de maison sera utilisée à la place. Ce réglage n\'a plus d\'effet.'],
-            76 => ['type' => 'todo',     'note' => 'Le fuseau horaire n\'est pas encore utilisé dans Laravel.'],
+            57 => ['type' => 'obsolete', 'note' => 'Les cartes utilisent Leaflet + OpenStreetMap, sans clé d\'API. Ce réglage n\'a plus d\'effet.'],
+            60 => ['type' => 'obsolete', 'note' => 'Les cartes utilisent Leaflet + OpenStreetMap. Ce réglage n\'a plus d\'effet.'],
             96 => ['type' => 'obsolete', 'note' => 'Le pays des victimes par défaut sera géré par la localisation de Laravel. Ce réglage n\'a plus d\'effet.'],
             97 => ['type' => 'obsolete', 'note' => 'Le pays par défaut pour la géolocalisation sera géré par la localisation de Laravel. Ce réglage n\'a plus d\'effet.'],
-            98 => ['type' => 'todo',     'note' => 'La devise par défaut n\'est pas encore utilisée dans Laravel.'],
-            99 => ['type' => 'todo',     'note' => 'La devise par défaut n\'est pas encore utilisée dans Laravel.'],
-            100 => ['type' => 'todo',     'note' => 'Le préfixe des numéros n\'est pas encore utilisé dans Laravel.'],
-            101 => ['type' => 'todo',     'note' => 'La longueur des numéros n\'est pas encore utilisée dans Laravel.'],
             102 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             103 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             104 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
@@ -468,15 +466,14 @@ class AdminController extends Controller
             13 => ['type' => 'obsolete', 'note' => 'Les sauvegardes automatiques sont gérées dans l\'onglet Sauvegardes. Ce réglage n\'a plus d\'effet.'],
             14 => ['type' => 'todo',     'note' => 'L\'optimisation de la base de données n\'est pas encore implémentée dans Laravel.'],
             26 => ['type' => 'obsolete', 'note' => 'Les Cron Jobs sont gérés par Laravel Scheduler. Ce réglage n\'a plus d\'effet.'],
-            28 => ['type' => 'todo',     'note' => 'Les notifications par email ne sont pas encore implémentées dans Laravel.'],
             55 => ['type' => 'obsolete', 'note' => 'Les flocons de neige ne seront pas réimplémentés. Ce réglage n\'a plus d\'effet.'],
             63 => ['type' => 'obsolete', 'note' => 'Les changements du personnel peuvent être bloqués par des permissions. Ce réglage n\'a plus d\'effet.'],
             68 => ['type' => 'todo',     'note' => 'Les photos de profil obligatoires ne sont pas encore implémentées dans Laravel.'],
-            64 => ['type' => 'todo',     'note' => 'L\'API n\'est pas encore implémentée dans Laravel.'],
-            65 => ['type' => 'todo',     'note' => 'L\'URL de l\'API n\'est pas encore implémentée dans Laravel.'],
+            64 => ['type' => 'todo',     'note' => 'Réglage actif ; les points d\'entrée de l\'API d\'import arriveront avec l\'épopée API.'],
+            65 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisée par la future API d\'import.'],
             37 => ['type' => 'todo',     'note' => 'Le mode de maintenance n\'est pas encore implémenté dans Laravel.'],
             41 => ['type' => 'todo',     'note' => 'Le texte de maintenance n\'est pas encore implémenté dans Laravel.'],
-            66 => ['type' => 'todo',     'note' => 'Le token d\'API n\'est pas encore implémenté dans Laravel.'],
+            66 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisé par la future API d\'import.'],
             9 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             10 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             11 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],

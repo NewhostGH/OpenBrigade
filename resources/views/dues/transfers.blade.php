@@ -141,7 +141,7 @@
                             @feature('multi_site')<td>{{ $row->S_CODE ?? '—' }}</td>@endfeature
                             <td>{{ $row->P_DATE_ENGAGEMENT ? \Carbon\Carbon::parse($row->P_DATE_ENGAGEMENT)->format('d/m/Y') : '—' }}</td>
                             <td>{{ $row->P_FIN ? \Carbon\Carbon::parse($row->P_FIN)->format('d/m/Y') : '—' }}</td>
-                            <td>{{ $row->MONTANT !== null ? number_format((float)$row->MONTANT, 2, ',', ' ') . ' €' : '—' }}</td>
+                            <td>{{ $row->MONTANT !== null ? \App\Support\Money::format($row->MONTANT) : '—' }}</td>
                             <td>{{ $row->PC_DATE ? \Carbon\Carbon::parse($row->PC_DATE)->format('d/m/Y') : '—' }}</td>
                             <td class="text-muted">{{ $row->COMMENTAIRE ?: '—' }}</td>
                         </tr>

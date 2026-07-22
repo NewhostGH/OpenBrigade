@@ -110,7 +110,7 @@
                 {{-- Stat: total pending amount --}}
                 <div class="col-sm-4">
                     <div class="border rounded p-3 text-center bg-light">
-                        <div class="fs-2 fw-bold">{{ number_format($totalPending, 2, ',', ' ') }} €</div>
+                        <div class="fs-2 fw-bold">{{ \App\Support\Money::format($totalPending) }}</div>
                         <div class="text-muted small">{{ __('dues.stat_estimated') }}</div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                         </a>
                     </td>
                     @feature('multi_site')<td>{{ $row->S_CODE }}</td>@endfeature
-                    <td>{{ $row->MONTANT_REGUL ? number_format((float)$row->MONTANT_REGUL, 2, ',', ' ') . ' €' : '—' }}</td>
+                    <td>{{ $row->MONTANT_REGUL ? \App\Support\Money::format($row->MONTANT_REGUL) : '—' }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -200,7 +200,7 @@
 <div class="ob-commandbar-wrap mx-3 mt-2 mb-3">
     <div class="px-3 py-2 border-bottom" style="background:var(--card-subheader-bg);">
         <span class="fw-semibold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:.04em;">
-            {{ __('dues.section_header_paid', ['count' => $paid->count(), 'total' => number_format($totalPaid, 2, ',', ' ')]) }}
+            {{ __('dues.section_header_paid', ['count' => $paid->count(), 'total' => \App\Support\Money::format($totalPaid)]) }}
         </span>
     </div>
     <table class="ob-table">
@@ -221,7 +221,7 @@
                         </a>
                     </td>
                     @feature('multi_site')<td>{{ $row->S_CODE }}</td>@endfeature
-                    <td>{{ $row->MONTANT ? number_format((float)$row->MONTANT, 2, ',', ' ') . ' €' : '—' }}</td>
+                    <td>{{ $row->MONTANT ? \App\Support\Money::format($row->MONTANT) : '—' }}</td>
                     <td>{{ $row->PC_DATE ? \Carbon\Carbon::parse($row->PC_DATE)->format('d/m/Y') : '—' }}</td>
                 </tr>
             @endforeach

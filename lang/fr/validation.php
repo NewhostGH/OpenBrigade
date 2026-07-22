@@ -171,6 +171,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'phone' => [
+            'min_digits' => 'Le numéro de téléphone doit contenir au moins :min chiffres.',
+        ],
     ],
 
     /*

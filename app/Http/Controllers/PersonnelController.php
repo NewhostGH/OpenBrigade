@@ -27,6 +27,7 @@ use App\Models\Personnel;
 use App\Models\Position;
 use App\Models\Qualification;
 use App\Models\Section;
+use App\Rules\Phone;
 use App\Services\FeatureService;
 use App\Services\PermissionResolver;
 use App\Services\PersonnelExportService;
@@ -1456,8 +1457,8 @@ class PersonnelController extends Controller
             'P_FIN' => 'nullable|date',
             'P_ABBREGE' => 'nullable|string|max:20',
             'P_EMAIL' => 'nullable|email|max:60',
-            'P_PHONE' => 'nullable|string|max:20',
-            'P_PHONE2' => 'nullable|string|max:20',
+            'P_PHONE' => ['nullable', 'string', 'max:20', new Phone],
+            'P_PHONE2' => ['nullable', 'string', 'max:20', new Phone],
             'P_ADDRESS' => 'nullable|string|max:150',
             'P_ZIP_CODE' => 'nullable|string|max:6',
             'P_CITY' => 'nullable|string|max:30',
@@ -1631,8 +1632,8 @@ class PersonnelController extends Controller
             'P_ABBREGE' => 'nullable|string|max:20',
             // Contact
             'P_EMAIL' => 'nullable|email|max:60',
-            'P_PHONE' => 'nullable|string|max:20',
-            'P_PHONE2' => 'nullable|string|max:20',
+            'P_PHONE' => ['nullable', 'string', 'max:20', new Phone],
+            'P_PHONE2' => ['nullable', 'string', 'max:20', new Phone],
             'P_ADDRESS' => 'nullable|string|max:150',
             'P_ZIP_CODE' => 'nullable|string|max:6',
             'P_CITY' => 'nullable|string|max:30',

@@ -70,7 +70,7 @@ return [
     'all_recorded' => 'Tous les prélèvements ont déjà été enregistrés pour cette période.',
     'empty_direct_debits' => 'Aucun membre avec prélèvement automatique pour la période sélectionnée.',
     'section_header_pending' => 'À enregistrer (:count)',
-    'section_header_paid' => 'Déjà enregistrés (:count) — Total : :total €',
+    'section_header_paid' => 'Déjà enregistrés (:count) — Total : :total',
     'col_amount_regul' => 'Montant régul',
     'col_debit_date' => 'Date prélevé',
 

@@ -21,6 +21,7 @@ use App\Models\PaymentType;
 use App\Services\FeatureService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
+use App\Support\Money;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -123,7 +124,7 @@ class DuesController extends Controller
         $filters = $request->only(['year', 'periode', 'section', 'subsections', 'type_paiement', 'paid', 'include_old']);
 
         return redirect()->route('dues.index', $filters)
-            ->with('success', "Cotisations enregistrées pour {$num} personne(s). Total : ".number_format($total, 2, ',', ' ').' €');
+            ->with('success', "Cotisations enregistrées pour {$num} personne(s). Total : ".Money::format($total));
     }
 
     public function export(Request $request)
@@ -278,7 +279,7 @@ class DuesController extends Controller
         $filters = $request->only(['year', 'periode', 'section', 'subsections']);
 
         return redirect()->route('dues.direct-debits', $filters)
-            ->with('success', "Prélèvements enregistrés pour {$num} personne(s). Total : ".number_format($total, 2, ',', ' ').' €');
+            ->with('success', "Prélèvements enregistrés pour {$num} personne(s). Total : ".Money::format($total));
     }
 
     // ── Virements (Tab 3) ─────────────────────────────────────────────────────

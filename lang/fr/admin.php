@@ -457,6 +457,7 @@ return [
         'delete_image_confirm' => 'Supprimer cette image ?',
 
         // Sélecteurs spéciaux
+        'tz_other' => 'Autres',
         'error_none' => 'Aucune',
         'error_errors_only' => 'Erreurs seulement',
         'error_errors_warn' => 'Erreurs + Warnings',

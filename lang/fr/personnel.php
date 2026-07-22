@@ -235,7 +235,7 @@ return [
     'modal_annee_label' => 'Année *',
     'modal_periode_label' => 'Période',
     'modal_date_label' => 'Date *',
-    'modal_montant_label' => 'Montant (€) *',
+    'modal_montant_label' => 'Montant (:symbol) *',
     'modal_mode_paiement' => 'Mode de paiement',
     'modal_remboursement' => 'Remboursement',
     'modal_commentaire_label' => 'Commentaire',
