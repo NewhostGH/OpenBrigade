@@ -4,10 +4,38 @@
 
 .ob-org-chart-wrap {
     padding: 16px;
-    overflow: hidden;
+    /* The canvas grows with the visible tree (see sizeChart() in
+       ob-organization-org-chart.js); scroll when it exceeds the card. */
+    overflow: auto;
+    height: 100%;
 }
 
 #ob-org-tree {
+    /* Exact pixel size set by sizeChart(). */
     width: 100%;
-    /* height set dynamically by JS */
+    height: 100%;
+}
+
+/* Full-page-height organigramme (organization/index.blade.php) */
+.ob-org-page {
+    display: flex;
+    flex-direction: column;
+    /* Fills the viewport below the breadcrumb; JS also recomputes an exact
+       pixel height for the ECharts canvas itself since % heights alone are
+       unreliable for canvas-based renderers. */
+    height: calc(100vh - 130px);
+    min-height: 420px;
+}
+
+.ob-org-page-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    margin-bottom: 0;
+}
+
+.ob-org-page-body {
+    flex: 1;
+    min-height: 0;
 }

@@ -102,10 +102,11 @@ class OrganizationController extends Controller
 
     // ── Organization overview ─────────────────────────────────────────────────
 
-    public function index(): View
+    public function index(Request $request): View
     {
         $user = auth()->user();
         $sectionId = (int) $user->P_SECTION;
+        $focusId = (int) $request->query('focus', $sectionId);
 
         $sections = DB::table('section')
             ->where('S_INACTIVE', 0)
@@ -115,11 +116,41 @@ class OrganizationController extends Controller
 
         $memberCounts = $this->memberCounts();
 
+        // Roles held anywhere, grouped by the section they are scoped to.
+        // section_id = SectionScopeService::ALL (-1) is the global sentinel
+        // (org-wide roles, no section restriction); 0 is the real CIS root
+        // section. Feeds the merged organigramme: section hierarchy + roles /
+        // members per section + an organisation-wide "Rôles globaux" branch.
+        $rolesBySection = DB::table('ob_user_assignment as ua')
+            ->join('pompier as p', 'ua.person_id', '=', 'p.P_ID')
+            ->join('ob_group as g', 'ua.group_id', '=', 'g.id')
+            ->where('g.kind', 'role')
+            ->orderBy('g.ordering')
+            ->orderBy('p.P_NOM')
+            ->get(['ua.section_id', 'p.P_ID', 'p.P_NOM', 'p.P_PRENOM', 'p.P_CODE', 'g.name as role_name'])
+            ->groupBy('section_id');
+
+        // Active members grouped by their home section (P_SECTION) so each
+        // section node can expand to its individual members — same filter as
+        // memberCounts() so the branch size matches the displayed count.
+        $membersBySection = DB::table('pompier')
+            ->where('P_OLD_MEMBER', 0)
+            ->where('GP_ID', '<>', -1)
+            ->whereNull('P_FIN')
+            ->orderBy('P_NOM')
+            ->orderBy('P_PRENOM')
+            ->get(['P_ID', 'P_NOM', 'P_PRENOM', 'P_CODE', 'P_SECTION'])
+            ->groupBy('P_SECTION');
+
         // Walk from the -1 virtual node so the org root (S_ID = 0) is the top of
         // the tree, with the sites (S_PARENT = 0) nested beneath it.
-        $tree = $this->buildTree($sections, -1, $memberCounts);
+        $tree = $this->buildTree($sections, -1, $memberCounts, $rolesBySection, $membersBySection);
 
-        return view('organization.index', compact('tree', 'sectionId'));
+        // Org-wide roles (section_id = -1) are surfaced under a dedicated
+        // "Rôles globaux" branch at the top of the tree.
+        $globalRoles = $this->buildRolesBranch($rolesBySection->get(SectionScopeService::ALL, collect()));
+
+        return view('organization.index', compact('tree', 'globalRoles', 'focusId'));
     }
 
     // ── Sections list + CRUD ──────────────────────────────────────────────────
@@ -742,7 +773,7 @@ class OrganizationController extends Controller
         ]);
     }
 
-    private function buildTree($sections, int $parentId, $memberCounts): array
+    private function buildTree($sections, int $parentId, $memberCounts, $rolesBySection, $membersBySection): array
     {
         return $sections
             ->filter(function ($s) use ($parentId) {
@@ -751,12 +782,53 @@ class OrganizationController extends Controller
 
                 return $p === $parentId;
             })
-            ->map(fn ($s) => [
-                'section' => $s,
-                'count' => (int) ($memberCounts[$s->S_ID] ?? 0),
-                'children' => $this->buildTree($sections, (int) $s->S_ID, $memberCounts),
-            ])
+            ->map(function ($s) use ($sections, $memberCounts, $rolesBySection, $membersBySection) {
+                $sid = (int) $s->S_ID;
+
+                return [
+                    'section' => $s,
+                    'count' => (int) ($memberCounts[$s->S_ID] ?? 0),
+                    'roles' => $this->buildRolesBranch($rolesBySection->get($sid, collect())),
+                    'members' => $this->buildMembersBranch($membersBySection->get($sid, collect())),
+                    'children' => $this->buildTree($sections, $sid, $memberCounts, $rolesBySection, $membersBySection),
+                ];
+            })
             ->values()
             ->all();
+    }
+
+    /**
+     * Shape a flat list of role-assignment rows (section_id, P_ID, P_NOM,
+     * P_PRENOM, P_CODE, role_name) into role -> members branches for the
+     * ECharts organigramme.
+     *
+     * @return array<int,array{name:string,count:int,children:array}>
+     */
+    private function buildRolesBranch($roleRows): array
+    {
+        return $roleRows->groupBy('role_name')->map(fn ($members, $roleName) => [
+            'name' => $roleName,
+            'count' => $members->count(),
+            'children' => $members->map(fn ($m) => [
+                'name' => trim(strtoupper($m->P_NOM).' '.$m->P_PRENOM),
+                'code' => $m->P_CODE,
+                'id' => $m->P_ID,
+            ])->values(),
+        ])->values()->all();
+    }
+
+    /**
+     * Shape a section's member rows (P_ID, P_NOM, P_PRENOM, P_CODE) into the
+     * flat member list for the organigramme "Membres" branch.
+     *
+     * @return array<int,array{name:string,code:?string,id:int}>
+     */
+    private function buildMembersBranch($memberRows): array
+    {
+        return $memberRows->map(fn ($m) => [
+            'name' => trim(strtoupper($m->P_NOM).' '.$m->P_PRENOM),
+            'code' => $m->P_CODE,
+            'id' => $m->P_ID,
+        ])->values()->all();
     }
 }

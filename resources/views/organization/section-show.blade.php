@@ -239,6 +239,9 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title"><i class="fas fa-project-diagram me-2"></i>{{ __('organization.card_roles') }}</div>
+                <a href="{{ route('organization.org-chart', ['focus' => $section->S_ID]) }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-sitemap me-1"></i>{{ __('organization.view_in_org_chart') }}
+                </a>
             </div>
             <div class="ob-widget-card-body">
                 @if ($orgByRole->isEmpty())
@@ -536,7 +539,7 @@
         <script>
         (function () {
             const csrf    = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const baseUrl = '{{ rtrim(url('/organisation/sections/' . $section->S_ID . '/agrement'), '/') }}';
+            const baseUrl = '{{ rtrim(url('/organization/sections/' . $section->S_ID . '/agrement'), '/') }}';
             const fb      = document.getElementById('agr-feedback');
 
             function flash(msg, ok) {

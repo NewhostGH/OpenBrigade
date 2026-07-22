@@ -27,6 +27,9 @@ return [
     // ── index.blade.php ───────────────────────────────────────────────────
     'manage_sections' => 'Gérer les sections',
     'new_section' => 'Nouvelle section',
+    'expand_all' => 'Tout déplier',
+    'collapse_all' => 'Tout replier',
+    'export_image' => 'Exporter en image',
 
     // ── map.blade.php ─────────────────────────────────────────────────────
     'no_geolocated' => 'Aucune section géolocalisée. Les sections sont placées au barycentre des positions GPS de leurs membres (renseignées depuis la fiche de chaque membre).',
@@ -120,6 +123,7 @@ return [
     // Org tab
     'card_roles' => 'Rôles dans la section',
     'no_roles' => 'Aucun rôle attribué dans cette section.',
+    'view_in_org_chart' => 'Voir dans l\'organigramme',
     // Personnalisation tab — card titles
     'card_letterhead' => 'Papier à entête',
     'card_badge' => 'Badge',
