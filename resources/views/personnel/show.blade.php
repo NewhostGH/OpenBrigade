@@ -1379,6 +1379,6 @@ function openEditTrainingModal(data) {
 @endsection
 
 @push('scripts')
-<script>window.PERS_SHOW_CONFIG = { cotisUrl: '{{ url('personnel/' . $personnel->P_ID . '/cotisations') }}', qualUrl: '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}' };</script>
+<script>window.PERS_SHOW_CONFIG = { cotisUrl: '{{ url('personnel/' . $personnel->P_ID . '/dues') }}', qualUrl: '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}' };</script>
 @vite(['resources/js/ob-personnel-show.js', 'resources/js/ob-pdf-personnel.js'])
 @endpush

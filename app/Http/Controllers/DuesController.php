@@ -375,7 +375,7 @@ class DuesController extends Controller
 
     private function buildQuery(
         int $year, string $periodeCode, ?object $periode,
-        int $sectionId, bool $subsections, mixed $tpId,
+        ?int $sectionId, bool $subsections, mixed $tpId,
         string $paid, bool $includeOld, string $order
     ) {
         $query = DB::table('pompier as p')

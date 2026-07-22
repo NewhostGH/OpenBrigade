@@ -34,7 +34,7 @@
     </button>
     <a class="btn btn-sm btn-light"
        href="{{ route('dues.export', request()->query()) }}"
-       title="{{ __('dues.export_excel') }}"
+       title="{{ __('dues.export_excel') }}">
         <i class="far fa-file-excel" style="color:var(--color-excel);"></i>
     </a>
 
