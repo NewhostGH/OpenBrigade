@@ -94,7 +94,6 @@ Needs the notification / messaging infrastructure above.
 
 ### Organisation (ORGA)
 
-- [ ] Organigramme tab as an interactive org-chart (currently role-grouped lists)
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 - [ ] Competence hierarchy (`hierarchie_competence.php`)
 
@@ -401,6 +400,13 @@ album photos).
   (real insignia for SP/ARMY/POL, generated shape+color+tier badges for the rest), admin-
   uploaded icon takes priority; all grade UI (personnel show/edit, event show/trombinoscope,
   personnel list column + export) fully hidden — not just disabled — when the feature is off
+- [x] **Organigramme tab as an interactive org-chart** — single ECharts tree (canvas,
+  orthogonal TB) merging the section hierarchy, per-section role holders and a *Membres*
+  branch under every section, plus a *Rôles globaux* branch (`section_id = -1` sentinel);
+  per-branch colour palette, per-type shapes, member avatar photos (`/personnel/{id}/photo`),
+  expand/collapse by click or toolbar, automatic canvas sizing with scroll centring,
+  PNG export, click-through to member/section pages and a "Voir dans l'organigramme"
+  focus link from the section show page
 
 ### Configuration — Admin (ADMIN)
 
