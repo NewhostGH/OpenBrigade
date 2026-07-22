@@ -154,7 +154,7 @@ return [
             'icon' => 'cog',
             'permission' => 5,
             'items' => [
-                ['key' => 'admin.configuration', 'label' => 'Général',         'url' => '/admin/settings',     'icon' => 'sliders-h',    'permission' => 14],
+                ['key' => 'admin.configuration', 'label' => 'Options',         'url' => '/admin/settings',     'icon' => 'sliders-h',    'permission' => 14],
                 ['key' => 'admin.features',      'label' => 'Fonctionnalités', 'url' => '/admin/features',     'icon' => 'toggle-on',    'permission' => 14],
                 ['key' => 'admin.references',    'label' => 'Paramétrage',     'url' => '/admin/references',   'icon' => 'wrench',       'permission' => 5],
                 null,

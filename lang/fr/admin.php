@@ -154,6 +154,13 @@ return [
     // ── Maintenance ──────────────────────────────────────────────────────────
     'maintenance' => [
         'title' => 'Maintenance',
+        'settings_section' => 'Réglages de maintenance',
+        'setting_mode' => 'Mode maintenance',
+        'setting_mode_hint' => 'Seuls les administrateurs (permission 14) peuvent se connecter.',
+        'setting_text' => 'Texte de maintenance',
+        'setting_text_hint' => 'Message affiché aux utilisateurs pendant la maintenance.',
+        'setting_optimize' => 'Optimisation automatique de la base de données',
+        'setting_optimize_hint' => 'Optimisation hebdomadaire des tables (OPTIMIZE TABLE) via le planificateur.',
         'system_section' => 'Informations système',
         'row_app_version' => 'Version OpenBrigade (DB)',
         'row_laravel' => 'Laravel',

@@ -19,8 +19,15 @@ class MaintenanceController extends Controller
 
         $status = $this->migrationStatus();
 
+        // Maintenance-related configuration rows (hidden from the settings
+        // grid — this page is their home): mode, banner text, auto-optimize.
+        $maintSettings = DB::table('configuration')
+            ->whereIn('NAME', ['maintenance_mode', 'maintenance_text', 'auto_optimize'])
+            ->get()
+            ->keyBy('NAME');
+
         return view('admin.maintenance.index', compact(
-            'phpVersion', 'laravelVersion', 'dbVersion', 'appVersion', 'env', 'debugMode', 'status'
+            'phpVersion', 'laravelVersion', 'dbVersion', 'appVersion', 'env', 'debugMode', 'status', 'maintSettings'
         ));
     }
 

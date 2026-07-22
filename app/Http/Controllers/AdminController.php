@@ -427,8 +427,9 @@ class AdminController extends Controller
             ->get();
 
         $tabs = [
-            1 => ['label' => 'Général',          'icon' => 'sliders-h'],
-            2 => ['label' => 'Options',          'icon' => 'sliders-h'],
+            // TAB 2 (the legacy « Options ») is gone: every remaining row in it
+            // is obsolete-filtered, moved or hidden — tab 1 takes the name over.
+            1 => ['label' => 'Options',          'icon' => 'sliders-h'],
             3 => ['label' => 'Technique',         'icon' => 'shield-alt'],
             4 => ['label' => 'Organisation',      'icon' => 'building'],
             5 => ['label' => 'Avancé',            'icon' => 'wrench'],
@@ -464,20 +465,13 @@ class AdminController extends Controller
             75 => ['type' => 'todo',     'note' => 'L\'image de connexion n\'est pas encore utilisée dans Laravel.'],
             2 => ['type' => 'obsolete', 'note' => 'Les sections ne sont plus limitées. Ce réglage n\'a plus d\'effet.'],
             13 => ['type' => 'obsolete', 'note' => 'Les sauvegardes automatiques sont gérées dans l\'onglet Sauvegardes. Ce réglage n\'a plus d\'effet.'],
-            14 => ['type' => 'todo',     'note' => 'L\'optimisation de la base de données n\'est pas encore implémentée dans Laravel.'],
             26 => ['type' => 'obsolete', 'note' => 'Les Cron Jobs sont gérés par Laravel Scheduler. Ce réglage n\'a plus d\'effet.'],
             55 => ['type' => 'obsolete', 'note' => 'Les flocons de neige ne seront pas réimplémentés. Ce réglage n\'a plus d\'effet.'],
             63 => ['type' => 'obsolete', 'note' => 'Les changements du personnel peuvent être bloqués par des permissions. Ce réglage n\'a plus d\'effet.'],
             68 => ['type' => 'todo',     'note' => 'Les photos de profil obligatoires ne sont pas encore implémentées dans Laravel.'],
             64 => ['type' => 'todo',     'note' => 'Réglage actif ; les points d\'entrée de l\'API d\'import arriveront avec l\'épopée API.'],
             65 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisée par la future API d\'import.'],
-            37 => ['type' => 'todo',     'note' => 'Le mode de maintenance n\'est pas encore implémenté dans Laravel.'],
-            41 => ['type' => 'todo',     'note' => 'Le texte de maintenance n\'est pas encore implémenté dans Laravel.'],
             66 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisé par la future API d\'import.'],
-            9 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            10 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            11 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            12 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
             33 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             42 => ['type' => 'obsolete', 'note' => 'Remplacé par le système de contrôle d\'accès des documents.'],
             48 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
@@ -536,6 +530,10 @@ class AdminController extends Controller
 
         if ($request->input('_back') === 'monitoring') {
             return redirect()->route('admin.monitoring', ['tab' => 'settings'])->with('success', 'Paramètre mis à jour.');
+        }
+
+        if ($request->input('_back') === 'maintenance') {
+            return redirect()->route('admin.maintenance')->with('success', 'Paramètre mis à jour.');
         }
 
         return redirect()->route('admin.settings')

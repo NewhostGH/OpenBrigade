@@ -218,6 +218,7 @@ test('maintenance index renders the admin.maintenance.index view', function () {
         'env' => 'testing',
         'debugMode' => 'Désactivé',
         'status' => [],
+        'maintSettings' => collect(),
     ]);
 
     $this->actingAs(adminFakeUser())->get('/admin/maintenance')
