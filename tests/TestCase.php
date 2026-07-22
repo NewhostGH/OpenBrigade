@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Services\FeatureService;
+use App\Services\OrganisationSetupService;
 use App\Services\PermissionResolver;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Mockery;
@@ -33,5 +34,13 @@ abstract class TestCase extends BaseTestCase
         $features = Mockery::mock(FeatureService::class)->makePartial();
         $features->shouldReceive('isEnabled')->andReturn(false)->byDefault();
         $this->app->instance(FeatureService::class, $features);
+
+        // The RequireSetup middleware consults the first-run flag on every
+        // request; without a database that reads as "unconfigured" and every
+        // route redirects to /setup. Default to a completed install; setup
+        // tests can rebind.
+        $setup = Mockery::mock(OrganisationSetupService::class)->makePartial();
+        $setup->shouldReceive('isCompleted')->andReturn(true)->byDefault();
+        $this->app->instance(OrganisationSetupService::class, $setup);
     }
 }

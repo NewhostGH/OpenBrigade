@@ -46,7 +46,7 @@ function orgStubIndex(): void
     app()->bind(OrganizationController::class, function () {
         $ctrl = Mockery::mock(OrganizationController::class)->makePartial();
         $ctrl->shouldReceive('index')->andReturn(
-            view('organization.index', ['tree' => [], 'sectionId' => 1])
+            view('organization.index', ['tree' => [], 'globalRoles' => null, 'focusId' => 1])
         );
 
         return $ctrl;
@@ -145,5 +145,5 @@ test('organigramme renders the organization.index view', function () {
 test('organigramme passes all required view variables', function () {
     orgStubIndex();
     $this->actingAs(orgFakeUser())->get('/organization/org-chart')
-        ->assertViewHasAll(['tree', 'sectionId']);
+        ->assertViewHasAll(['tree', 'globalRoles', 'focusId']);
 });
