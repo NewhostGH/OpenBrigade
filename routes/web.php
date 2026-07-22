@@ -296,9 +296,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/dues', [DuesController::class, 'index'])->name('dues.index')->middleware('permission:53');
         Route::post('/dues', [DuesController::class, 'batchSave'])->name('dues.save')->middleware('permission:53');
         Route::get('/dues/export', [DuesController::class, 'export'])->name('dues.export')->middleware('permission:53');
-        Route::get('/dues/direct-debits', [DuesController::class, 'directDebits'])->name('dues.direct-debits')->middleware('permission:53');
-        Route::post('/dues/direct-debits', [DuesController::class, 'saveDirectDebits'])->name('dues.direct-debits.save')->middleware('permission:53');
-        Route::get('/dues/transfers', [DuesController::class, 'transfers'])->name('dues.transfers')->middleware('permission:53');
     });
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index')->middleware('permission:0');
     Route::middleware('feature:vehicules')->group(function () {
