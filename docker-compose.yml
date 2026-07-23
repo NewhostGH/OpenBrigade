@@ -93,6 +93,10 @@ services:
     container_name: openbrigade_queue_worker
     restart: unless-stopped
     profiles: [minimal, full, dev]
+    # Same runtime user as php-fpm: anything this service writes into the
+    # shared storage volume (logs, compiled views) must stay appendable by
+    # the web container — a root-owned daily log file locks logging up.
+    user: www-data
     env_file:
       - .env
     environment:
@@ -130,6 +134,8 @@ services:
     container_name: openbrigade_scheduler
     restart: unless-stopped
     profiles: [minimal, full, dev]
+    # Same runtime user as php-fpm — see queue-worker.
+    user: www-data
     env_file:
       - .env
     environment:
