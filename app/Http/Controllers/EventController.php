@@ -641,9 +641,9 @@ class EventController extends Controller
                 ->with('error', 'Ce membre est déjà inscrit sur ce créneau.');
         }
 
-        // Photo obligatoire (setting 68): no member without a profile photo
-        // can be registered on an activity — whoever performs the action.
-        if ($this->registrationBlockedByPhoto((int) $validated['P_ID'])) {
+        // Photo obligatoire (setting 68): a member without a profile photo
+        // cannot register THEMSELF; registering someone else is never blocked.
+        if ($this->selfRegistrationBlockedByPhoto((int) $validated['P_ID'])) {
             return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
                 ->with('error', __('event.photo_required'));
         }
@@ -672,24 +672,22 @@ class EventController extends Controller
     }
 
     /**
-     * True when the mandatory-photo setting is on and the target member has
-     * no profile photo — legacy rule: no photo, no activity registration,
-     * whoever performs it. Guarded: an unreadable setting or table must
-     * never block registrations.
+     * True when the mandatory-photo setting is on, the target member is the
+     * authenticated user themself and their profile photo is missing.
+     * Registration BY someone else (manager, admin) is never blocked — see
+     * the setting's description. Guarded: an unreadable setting must never
+     * block registrations.
      */
-    private function registrationBlockedByPhoto(int $targetPid): bool
+    private function selfRegistrationBlockedByPhoto(int $targetPid): bool
     {
+        $user = auth()->user();
+        if ($user === null || (int) $user->P_ID !== $targetPid) {
+            return false;
+        }
+
         try {
-            if (! app(GeneralSettingService::class)->photoRequired()) {
-                return false;
-            }
-
-            $user = auth()->user();
-            $photo = ($user !== null && (int) $user->P_ID === $targetPid)
-                ? $user->P_PHOTO
-                : DB::table('pompier')->where('P_ID', $targetPid)->value('P_PHOTO');
-
-            return trim((string) ($photo ?? '')) === '';
+            return app(GeneralSettingService::class)->photoRequired()
+                && trim((string) ($user->P_PHOTO ?? '')) === '';
         } catch (\Throwable) {
             return false;
         }
