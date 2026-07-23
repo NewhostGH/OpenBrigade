@@ -8,12 +8,17 @@ use App\Services\AppIdentityService;
 use App\Services\Auth\AuthService;
 use App\Services\BrigadeService;
 use App\Services\FeatureService;
+use App\Services\GeneralSettingService;
 use App\Services\LoggingSettingService;
+use App\Services\MailSettingService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
+use App\Services\Plugins\PluginLoader;
+use App\Services\Plugins\PluginStateService;
 use App\Services\SectionScopeService;
 use App\Services\SecuritySettingService;
 use App\Services\Sms\SmsManager;
+use App\Services\SmsSettingService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -39,8 +44,23 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(AppIdentityService::class);
 
-        // Provider-agnostic SMS layer (config/sms.php resolves the driver).
+        // Provider-agnostic SMS layer — driver resolved at send time from the
+        // administrable settings (memoised per request) with env fallback.
         $this->app->singleton(SmsManager::class);
+        $this->app->singleton(SmsSettingService::class);
+        $this->app->singleton(MailSettingService::class);
+
+        // Plugin runtime: register every enabled plugin's autoloader and
+        // service provider. Fully guarded — a broken plugin (or a missing
+        // ob_plugin table) logs and is surfaced on the admin page, but can
+        // never take the application down.
+        $this->app->singleton(PluginStateService::class);
+        $this->app->singleton(PluginLoader::class);
+        try {
+            $this->app->make(PluginLoader::class)->boot($this->app);
+        } catch (\Throwable) {
+            // No plugins load; the marketplace page reports the failure.
+        }
 
         // Register singleton services (instantiated once per container)
         $this->app->singleton(BrigadeService::class, function ($app) {
@@ -88,8 +108,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Set up locale and timezone from config
-        date_default_timezone_set(config('app.timezone'));
+        // Apply the administrable timezone (configuration row `timezone`),
+        // falling back to the config/env default.
+        $this->configureTimezone();
+
+        // Application name (38) and public site URL (7) — instantiated from
+        // APP_NAME / APP_URL, overridden by the stored rows (Organisation tab).
+        // Must run before the URL::forceRootUrl block below, which reads
+        // config('app.url').
+        $this->configureAppIdentity();
+
+        // Overlay the administrable mail transport settings (Administration ▸
+        // Notifications) onto config('mail.*'). The .env stays the default for
+        // anything left empty; a stored row is the source of truth. Guarded —
+        // a missing table must never break boot (or mail entirely).
+        try {
+            app(MailSettingService::class)->apply();
+        } catch (\Throwable) {
+            // Keep the shipped .env config.
+        }
 
         // Register the "sms" notification channel (provider-agnostic — the
         // active gateway is picked by config('sms.driver')).
@@ -186,6 +223,59 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Overlay the stored application name / site URL onto config('app.*').
+     * Empty rows keep the .env defaults; a malformed URL is ignored so a typo
+     * can never take every absolute link down. Guarded — no DB, no override.
+     */
+    private function configureAppIdentity(): void
+    {
+        try {
+            $general = app(GeneralSettingService::class);
+
+            // Installed version (row 1) is the SSOT, stamped by the release
+            // migrations; APP_VERSION is only the DB-less fallback.
+            if (($version = $general->appVersion()) !== '') {
+                Config::set('brigade.version', $version);
+                Config::set('app.version', $version);
+            }
+
+            if (($name = $general->appName()) !== '') {
+                Config::set('app.name', $name);
+            }
+
+            $url = $general->siteUrl();
+            if ($url !== '' && (str_starts_with($url, 'http://') || str_starts_with($url, 'https://'))) {
+                Config::set('app.url', rtrim($url, '/'));
+            }
+        } catch (\Throwable) {
+            // Keep the .env values.
+        }
+    }
+
+    /**
+     * Apply the administrable timezone (Administration ▸ Configuration,
+     * row `timezone`) to the runtime. Invalid or unreadable values leave the
+     * shipped config('app.timezone') default in place — a bad setting must
+     * never break boot.
+     */
+    private function configureTimezone(): void
+    {
+        $timezone = (string) config('app.timezone');
+
+        try {
+            $stored = app(GeneralSettingService::class)->timezone();
+            if (in_array($stored, timezone_identifiers_list(), true)) {
+                $timezone = $stored;
+            }
+        } catch (\Throwable) {
+            // Keep the config default.
+        }
+
+        Config::set('app.timezone', $timezone);
+        date_default_timezone_set($timezone);
+    }
+
+    /**
      * Apply the runtime observability settings to the log channels and the
      * Sentry/GlitchTip client.
      *
@@ -238,6 +328,14 @@ class AppServiceProvider extends ServiceProvider
             $dsn = $obs->string('obs_sentry_dsn') ?: (string) config('sentry.dsn');
 
             Config::set('sentry.dsn', $obs->bool('obs_error_tracking') && $dsn !== '' ? $dsn : null);
+
+            // Release = the installed version (configuration row 1, the SSOT).
+            // Must also happen here: the Sentry provider boots before ours, so
+            // a boot()-time override would be too late (like the DSN above).
+            $version = $this->app->make(GeneralSettingService::class)->appVersion();
+            if ($version !== '') {
+                Config::set('sentry.release', $version);
+            }
         } catch (\Throwable) {
             // Keep the shipped config/env DSN — never break boot over a setting.
         }

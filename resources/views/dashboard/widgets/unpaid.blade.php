@@ -32,7 +32,7 @@
                         <a href="{{ url('/legacy/evenement_facturation.php?evenement=' . $row->E_CODE) }}"
                            style="color:inherit">{{ $row->E_LIBELLE }}</a>
                     </div>
-                    <div class="ob-dash-alert-item-sub">{{ $row->FORMDATE }} &mdash; {{ number_format($montant, 2) }} €</div>
+                    <div class="ob-dash-alert-item-sub">{{ $row->FORMDATE }} &mdash; {{ \App\Support\Money::format($montant) }}</div>
                 </div>
                 {!! $badge !!}
             </div>

@@ -107,12 +107,16 @@ RUN mkdir -p /opt/bootstrap/public-build \
     && cp -a ./public/build/. /opt/bootstrap/public-build/
 
 # Permissions (image-level defaults; runtime volumes are reinforced in start.sh)
+# /var/www/.config + .cache: www-data's home must be writable for CLI tools
+# run as that user (psysh/tinker keeps its config under ~/.config/psysh).
 RUN mkdir -p \
         storage/logs \
         storage/framework \
         storage/app/public/uploads \
         bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
+        /var/www/.config \
+        /var/www/.cache \
+    && chown -R www-data:www-data storage bootstrap/cache /var/www/.config /var/www/.cache \
     && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80

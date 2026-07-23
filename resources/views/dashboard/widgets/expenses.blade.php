@@ -39,7 +39,7 @@
                             {{ \Carbon\Carbon::parse($row->NF_CREATE_DATE)->format('d-m-Y') }}
                         @endif
                         @if(!empty($row->TOTAL_AMOUNT))
-                            &mdash; {{ number_format($row->TOTAL_AMOUNT, 2) }} €
+                            &mdash; {{ \App\Support\Money::format($row->TOTAL_AMOUNT) }}
                         @endif
                     </div>
                 </div>

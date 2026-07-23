@@ -142,7 +142,7 @@
                                 ['icon' => 'fas fa-certificate', 'label' => __('personnel.stat_competences'),
                                  'value' => $personnel->qualifications->count(), 'color' => '#7c3aed', 'bg' => '#f5f3ff'],
                                 ['icon' => 'fas fa-euro-sign', 'label' => __('personnel.stat_cotisations'),
-                                 'value' => number_format($personnel->cotis_net, 2, ',', ' ') . ' €',
+                                 'value' => \App\Support\Money::format($personnel->cotis_net),
                                  'color' => $personnel->cotis_net < 0 ? '#dc2626' : '#16a34a',
                                  'bg'    => $personnel->cotis_net < 0 ? '#fff1f2' : '#f0fdf4'],
                                 ['icon' => 'fas fa-clock', 'label' => __('personnel.stat_last_connect'),
@@ -559,7 +559,7 @@
                                                 @if ($cotis->REMBOURSEMENT)
                                                     <span class="badge bg-warning text-dark me-1">{{ __('personnel.label_remb') }}</span>
                                                 @endif
-                                                {{ number_format((float)$cotis->MONTANT, 2, ',', ' ') }} €
+                                                {{ \App\Support\Money::format($cotis->MONTANT) }}
                                             </td>
                                             <td>{{ $cotis->typePaiement?->TP_DESCRIPTION ?? '—' }}</td>
                                             <td class="text-muted">{{ $cotis->COMMENTAIRE ?: '' }}</td>
@@ -595,7 +595,7 @@
                                         <td colspan="3" class="text-end ps-3"
                                             style="font-size:var(--font-size-xs);color:var(--text-muted-soft);">{{ __('personnel.total_net') }}</td>
                                         <td class="text-end {{ $personnel->cotis_net < 0 ? 'text-danger' : '' }}">
-                                            {{ number_format($personnel->cotis_net, 2, ',', ' ') }} €
+                                            {{ \App\Support\Money::format($personnel->cotis_net) }}
                                         </td>
                                         <td colspan="3"></td>
                                     </tr>
@@ -1217,7 +1217,7 @@
                             <input name="PC_DATE" id="cotisDate" type="date" class="form-control form-control-sm" required>
                         </div>
                         <div class="col-3">
-                            <label class="form-label" style="font-size:var(--font-size-sm);">{{ __('personnel.modal_montant_label') }}</label>
+                            <label class="form-label" style="font-size:var(--font-size-sm);">{{ __('personnel.modal_montant_label', ['symbol' => \App\Support\Money::symbol()]) }}</label>
                             <input name="MONTANT" id="cotisMontant" type="number" class="form-control form-control-sm"
                                    min="0" step="0.01" placeholder="0.00" required>
                         </div>
@@ -1379,6 +1379,6 @@ function openEditTrainingModal(data) {
 @endsection
 
 @push('scripts')
-<script>window.PERS_SHOW_CONFIG = { cotisUrl: '{{ url('personnel/' . $personnel->P_ID . '/cotisations') }}', qualUrl: '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}' };</script>
+<script>window.PERS_SHOW_CONFIG = { cotisUrl: '{{ url('personnel/' . $personnel->P_ID . '/dues') }}', qualUrl: '{{ url('personnel/' . $personnel->P_ID . '/qualifications') }}' };</script>
 @vite(['resources/js/ob-personnel-show.js', 'resources/js/ob-pdf-personnel.js'])
 @endpush

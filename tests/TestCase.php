@@ -3,8 +3,10 @@
 namespace Tests;
 
 use App\Services\FeatureService;
+use App\Services\GeneralSettingService;
 use App\Services\OrganisationSetupService;
 use App\Services\PermissionResolver;
+use App\Services\Plugins\PluginStateService;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Mockery;
 
@@ -42,5 +44,28 @@ abstract class TestCase extends BaseTestCase
         $setup = Mockery::mock(OrganisationSetupService::class)->makePartial();
         $setup->shouldReceive('isCompleted')->andReturn(true)->byDefault();
         $this->app->instance(OrganisationSetupService::class, $setup);
+
+        // General settings (maintenance mode, mandatory photo, timezone…) are
+        // consulted at boot and on every request. Default to a plain install
+        // with everything off; individual tests can rebind.
+        $general = Mockery::mock(GeneralSettingService::class)->makePartial();
+        $general->shouldReceive('get')->andReturnUsing(
+            fn (string $name) => match ($name) {
+                'version', 'application_title', 'cisurl' => '',
+                'timezone' => 'Europe/Paris',
+                'default_money' => 'Euro',
+                'default_money_symbol' => '€',
+                'phone_prefix' => '+33',
+                'min_numbers_in_phone' => '10',
+                default => '0',
+            }
+        )->byDefault();
+        $this->app->instance(GeneralSettingService::class, $general);
+
+        // The plugin loader consults the installed-plugin state at boot.
+        // Default to "no plugins"; plugin tests can rebind.
+        $plugins = Mockery::mock(PluginStateService::class)->makePartial();
+        $plugins->shouldReceive('enabledPlugins')->andReturn([])->byDefault();
+        $this->app->instance(PluginStateService::class, $plugins);
     }
 }

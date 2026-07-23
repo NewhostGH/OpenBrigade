@@ -22,6 +22,17 @@
         </div>
     @endif
 
+    @if ($photoNag ?? false)
+        <div class="ob-dash-alert ob-dash-alert-warning">
+            <i class="fas fa-camera"></i>
+            {{ __('dashboard.index.photo_required') }}
+            &mdash;
+            <a href="{{ route('personnel.edit', auth()->user()->P_ID) }}">
+                {{ __('dashboard.index.photo_add_now') }}
+            </a>
+        </div>
+    @endif
+
     @if (!empty($competenceAlerts))
         <div class="ob-dash-alert ob-dash-alert-warning">
             <i class="fas fa-certificate"></i>

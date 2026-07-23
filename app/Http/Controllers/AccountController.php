@@ -102,7 +102,10 @@ class AccountController extends Controller
                 ->with('success', __('Mot de passe modifié avec succès.'));
         }
 
-        return redirect()->route('account.auth', ['tab' => 'password'])
+        // Home, not back to the form: after a forced change (expired password,
+        // first login) the user's journey continues from the root — which the
+        // middlewares re-route to the setup wizard when appropriate.
+        return redirect('/')
             ->with('success', __('Mot de passe modifié avec succès.'));
     }
 

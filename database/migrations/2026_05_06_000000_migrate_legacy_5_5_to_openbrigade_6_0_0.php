@@ -24,6 +24,12 @@ return new class extends Migration
         foreach ($this->splitSqlStatements($this->loadReferenceSql()) as $statement) {
             DB::unprepared($statement);
         }
+
+        // This migration IS the 5.5 → 6.0.0 shift: stamp the installed version
+        // (configuration row 1, NAME 'version' — the reference schema still
+        // carries the legacy value). That row is the version SSOT: it overlays
+        // config('brigade.version') / config('app.version') at boot.
+        DB::table('configuration')->where('ID', 1)->update(['VALUE' => '6.0.0']);
     }
 
     public function down(): void

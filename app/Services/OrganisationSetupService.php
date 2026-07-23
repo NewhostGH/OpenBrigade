@@ -45,7 +45,8 @@ class OrganisationSetupService
      * Identity fields collected by the wizard: config NAME => ID.
      *
      * The site URL (7) and application title (38) are intentionally excluded —
-     * they are obsolete, governed by APP_URL / APP_NAME in .env.
+     * they are instantiated from APP_URL / APP_NAME and managed from the
+     * Organisation tab of Administration ▸ Options, not by the wizard.
      */
     private const IDENTITY = [
         'cisname' => 6,

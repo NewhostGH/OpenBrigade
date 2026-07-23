@@ -9,7 +9,93 @@
     ['label' => __('admin.maintenance.title')],
 ]"/>
 
+<script>
+    document.addEventListener('change', function (e) {
+        if (e.target.classList.contains('ob-setting-row-toggle')) {
+            e.target.closest('form').submit();
+        }
+    });
+</script>
+
 <div class="mx-3 mt-3">
+
+    {{-- Maintenance settings (hidden configuration rows rendered here) --}}
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title"><i class="fas fa-toggle-on me-2"></i>{{ __('admin.maintenance.settings_section') }}</div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm mb-0 align-middle">
+                <tbody>
+                    @include('admin.partials.setting-toggle', [
+                        's' => $maintSettings->get('maintenance_mode'),
+                        'label' => 'admin.maintenance.setting_mode',
+                        'hint' => 'admin.maintenance.setting_mode_hint',
+                        'default' => '0',
+                        'back' => 'maintenance',
+                    ])
+                    @php($text = $maintSettings->get('maintenance_text'))
+                    <tr>
+                        <td class="ps-3" style="width:40%;vertical-align:top;font-size:var(--font-size-sm);">
+                            {{ __('admin.maintenance.setting_text') }}
+                            <div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.maintenance.setting_text_hint') }}</div>
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @if ($text)
+                                <form method="POST" action="{{ route('admin.settings.save', $text->ID) }}" class="d-flex align-items-start gap-2">
+                                    @csrf @method('PATCH')
+                                    <input type="hidden" name="_back" value="maintenance">
+                                    <textarea name="VALUE" rows="3" class="form-control form-control-sm" style="min-width:280px;">{{ $text->VALUE }}</textarea>
+                                    <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-save"></i></button>
+                                </form>
+                            @else
+                                <span class="text-muted">—</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @include('admin.partials.setting-toggle', [
+                        's' => $maintSettings->get('auto_optimize'),
+                        'label' => 'admin.maintenance.setting_optimize',
+                        'hint' => 'admin.maintenance.setting_optimize_hint',
+                        'default' => '0',
+                        'back' => 'maintenance',
+                    ])
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Actions --}}
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title"><i class="fas fa-bolt me-2"></i>{{ __('admin.maintenance.actions_section') }}</div>
+        </div>
+        <div class="p-3 d-flex flex-wrap gap-2">
+            <form method="POST" action="{{ route('admin.maintenance.clear-caches') }}">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-broom me-1"></i> {{ __('admin.maintenance.btn_clear_caches') }}
+                </button>
+            </form>
+            <form method="POST" action="{{ route('admin.maintenance.optimize-db') }}"
+                  onsubmit="return confirm('{{ __('admin.maintenance.confirm_optimize') }}')">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-database me-1"></i> {{ __('admin.maintenance.btn_optimize') }}
+                </button>
+            </form>
+            <form method="POST" action="{{ route('admin.maintenance.prune-logs') }}"
+                  onsubmit="return confirm('{{ __('admin.maintenance.confirm_prune') }}')">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-scissors me-1"></i> {{ __('admin.maintenance.btn_prune_logs') }}
+                </button>
+            </form>
+        </div>
+        <div class="text-muted px-3 pb-3" style="font-size:var(--font-size-xs);">
+            {{ __('admin.maintenance.actions_hint') }}
+        </div>
+    </div>
 
     {{-- System info --}}
     <div class="ob-widget-card mb-3">

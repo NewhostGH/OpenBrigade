@@ -174,6 +174,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/backup/settings', [BackupController::class, 'updateSettings'])->name('admin.backup.settings')->middleware('permission:14');
     // Maintenance (upgrade.php superseded by artisan migrate)
     Route::get('/admin/maintenance', [MaintenanceController::class, 'index'])->name('admin.maintenance')->middleware('permission:14');
+    Route::post('/admin/maintenance/clear-caches', [MaintenanceController::class, 'clearCaches'])->name('admin.maintenance.clear-caches')->middleware('permission:14');
+    Route::post('/admin/maintenance/optimize-db', [MaintenanceController::class, 'optimizeDatabase'])->name('admin.maintenance.optimize-db')->middleware('permission:14');
+    Route::post('/admin/maintenance/prune-logs', [MaintenanceController::class, 'pruneLogs'])->name('admin.maintenance.prune-logs')->middleware('permission:14');
     Route::get('/admin/security', [AdminController::class, 'security'])->name('admin.security')->middleware('permission:14');
     Route::get('/admin/security/politique/create', [AdminController::class, 'policyCreate'])->name('admin.policy.create')->middleware('permission:14');
     Route::post('/admin/security/politique', [AdminController::class, 'policyStore'])->name('admin.policy.store')->middleware('permission:14');
@@ -195,6 +198,7 @@ Route::middleware('auth')->group(function () {
     // keyed by configuration ID), exactly like the other security tabs.
     Route::post('/admin/security/hardening/test-clamav', [AdminController::class, 'testClamav'])->name('admin.security.test-clamav')->middleware('permission:14');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware('permission:14');
+    Route::get('/admin/notifications', [AdminController::class, 'notifications'])->name('admin.notifications')->middleware('permission:14');
     Route::patch('/admin/settings/{id}', [AdminController::class, 'saveSetting'])->name('admin.settings.save')->middleware('permission:14');
     Route::post('/admin/settings/{id}/upload', [AdminController::class, 'uploadSetting'])->name('admin.settings.upload')->middleware('permission:14');
     Route::delete('/admin/settings/{id}/file', [AdminController::class, 'deleteSetting'])->name('admin.settings.delete-file')->middleware('permission:14');
@@ -212,7 +216,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/features/{feature}', [FeatureController::class, 'toggle'])->name('admin.features.toggle')->middleware('permission:14');
 
     // ── Plugins — community plugin marketplace (WIP placeholder) ──────────────
-    Route::get('/admin/plugins', [PluginController::class, 'index'])->name('admin.plugins')->middleware('permission:14');
+    Route::middleware('permission:14')->group(function () {
+        Route::get('/admin/plugins', [PluginController::class, 'index'])->name('admin.plugins');
+        Route::post('/admin/plugins/{slug}/install', [PluginController::class, 'install'])->name('admin.plugins.install')->where('slug', '[a-z0-9-]+');
+        Route::post('/admin/plugins/{slug}/enable', [PluginController::class, 'enable'])->name('admin.plugins.enable')->where('slug', '[a-z0-9-]+');
+        Route::post('/admin/plugins/{slug}/disable', [PluginController::class, 'disable'])->name('admin.plugins.disable')->where('slug', '[a-z0-9-]+');
+        Route::delete('/admin/plugins/{slug}', [PluginController::class, 'uninstall'])->name('admin.plugins.uninstall')->where('slug', '[a-z0-9-]+');
+        Route::post('/admin/plugins/registries', [PluginController::class, 'storeRegistry'])->name('admin.plugins.registries.store');
+        Route::post('/admin/plugins/registries/{registry}/toggle', [PluginController::class, 'toggleRegistry'])->name('admin.plugins.registries.toggle');
+        Route::delete('/admin/plugins/registries/{registry}', [PluginController::class, 'destroyRegistry'])->name('admin.plugins.registries.destroy');
+    });
 
     // ── Paramétrage — reference table CRUD ────────────────────────────────────
     Route::get('/admin/references', [ReferenceController::class, 'index'])->name('admin.references')->middleware('permission:5');
@@ -296,9 +309,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/dues', [DuesController::class, 'index'])->name('dues.index')->middleware('permission:53');
         Route::post('/dues', [DuesController::class, 'batchSave'])->name('dues.save')->middleware('permission:53');
         Route::get('/dues/export', [DuesController::class, 'export'])->name('dues.export')->middleware('permission:53');
-        Route::get('/dues/direct-debits', [DuesController::class, 'directDebits'])->name('dues.direct-debits')->middleware('permission:53');
-        Route::post('/dues/direct-debits', [DuesController::class, 'saveDirectDebits'])->name('dues.direct-debits.save')->middleware('permission:53');
-        Route::get('/dues/transfers', [DuesController::class, 'transfers'])->name('dues.transfers')->middleware('permission:53');
     });
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index')->middleware('permission:0');
     Route::middleware('feature:vehicules')->group(function () {

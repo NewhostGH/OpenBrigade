@@ -72,6 +72,7 @@ test('unauthenticated users are redirected from admin pages to login', function 
     $this->get($path)->assertRedirect('/login');
 })->with([
     '/admin/settings',
+    '/admin/notifications',
     '/admin/monitoring',
     '/admin/references',
     '/admin/permissions',
@@ -86,6 +87,7 @@ test('users without the required permission get 403', function (string $path) {
     $this->actingAs(adminFakeUser(can: false))->get($path)->assertForbidden();
 })->with([
     '/admin/settings',
+    '/admin/notifications',
     '/admin/monitoring',
     '/admin/references',
     '/admin/permissions',
@@ -110,6 +112,20 @@ test('settings page renders the admin.settings view', function () {
         ->assertViewHasAll(['grouped', 'tabs', 'activeTab', 'annotations']);
 });
 
+// ── Notifications ────────────────────────────────────────────────────────────
+
+test('notifications page renders the admin.notifications view', function () {
+    adminStubView(AdminController::class, 'notifications', 'admin.notifications', [
+        'rows' => collect(),
+        'envDriver' => 'log',
+    ]);
+
+    $this->actingAs(adminFakeUser())->get('/admin/notifications')
+        ->assertOk()
+        ->assertViewIs('admin.notifications')
+        ->assertViewHasAll(['rows', 'envDriver']);
+});
+
 // ── Plugins (WIP) ────────────────────────────────────────────────────────────
 
 test('plugins page renders for an admin and is forbidden otherwise', function () {
@@ -121,6 +137,18 @@ test('plugins page renders for an admin and is forbidden otherwise', function ()
     $this->actingAs(adminFakeUser(can: false))->get('/admin/plugins')
         ->assertForbidden();
 });
+
+test('plugin lifecycle and registry actions are forbidden without permission 14', function (string $method, string $uri) {
+    $this->actingAs(adminFakeUser(can: false))
+        ->call($method, $uri)
+        ->assertForbidden();
+})->with([
+    ['POST', '/admin/plugins/demo/install'],
+    ['POST', '/admin/plugins/demo/enable'],
+    ['POST', '/admin/plugins/demo/disable'],
+    ['DELETE', '/admin/plugins/demo'],
+    ['POST', '/admin/plugins/registries'],
+]);
 
 // ── Monitoring (audit log) ───────────────────────────────────────────────────
 
@@ -218,6 +246,7 @@ test('maintenance index renders the admin.maintenance.index view', function () {
         'env' => 'testing',
         'debugMode' => 'Désactivé',
         'status' => [],
+        'maintSettings' => collect(),
     ]);
 
     $this->actingAs(adminFakeUser())->get('/admin/maintenance')

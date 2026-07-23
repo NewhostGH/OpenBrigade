@@ -99,22 +99,9 @@ Needs the notification / messaging infrastructure above.
 
 ### Configuration — Admin (ADMIN)
 
-- [ ] Plugins marketplace — `/admin/plugins` is a placeholder; install/download flow to design
-- [ ] Maintenance utilities (`update_app.php`, `buildsql.php`, `decrypt.php`, `import_api.php`, `debug_data.php`)
-
-Settings not yet wired (authoritative list: the `todo` annotations in
-`AdminController::settings()`; settings marked `obsolete` there are intentionally
-retired — no work needed):
-
-- [ ] Timezone (ID 76), default currency (IDs 98, 99)
-- [ ] Numbering prefix / length (IDs 100, 101)
-- [ ] Email notifications (ID 28) — needs the notification layer
-- [ ] Mandatory profile photos (ID 68)
-- [ ] Maintenance mode and text (IDs 37, 41)
-- [ ] Telemetry opt-in (ID 80)
-- [ ] Database optimization (ID 14)
-- [ ] API enable / URL / token (IDs 64, 65, 66) — see API & integrations
-- [ ] SMS provider settings (IDs 9, 10, 11, 12) — see COMM / SMS gateway
+*(cleared — see Shipped ▸ Configuration — Admin. Deferrals: in-app update
+flow → Release strategy; import-API endpoints → API & integrations (the
+settings themselves are live); masked SMS-password input → COMM.)*
 
 ### Opérations d'urgence (DPS / SITAC / Victimes)
 
@@ -190,6 +177,11 @@ How the app is built, shipped and upgraded in production.
   error tracking (self-hosted Sentry/GlitchTip), a `/health` endpoint, and basic
   uptime/performance monitoring. Admin UI under Journal d'activité ▸ Paramètres.
   See `docs/admin/observability.md`.
+- [x] **Redis, queue & mail health probes** (#6) — `checkRedis` (timed PING),
+  `checkQueue` (pending depth, failed_jobs 24 h, worker liveness via the scheduled
+  `QueueHeartbeatJob` cache stamp) and `checkMail` (SMTP EHLO handshake +
+  NotificationService failure count) in `/health` and the Santé tab; the missing
+  `jobs`/`job_batches`/`failed_jobs` tables now exist.
 - [x] **Backup robustness** — the schedule now actually runs (dedicated
   `scheduler` service). Backups bundle **DB + all stored files** (profile & album
   photos, documents, RIB, section assets, charter, theme — the whole `storage/app`
@@ -423,6 +415,33 @@ album photos).
 - [x] Surface user-level overrides in "Mes droits" — personal allow/deny rows from `ob_user_permission` shown in the preview table with dedicated icons and strikethrough styling
 - [x] `paramfnv` vehicle function types (`type_fonction_vehicule`) — CRUD at `/admin/references/vehicle-function`; inline list with name/description/order; perm 5
 - [x] Grade category (`categorie_grade`) CRUD — at `/admin/references/grade-category`; inline description edit; delete blocked if grades assigned; badge count; link to grade icons page; perm 5
+- [x] **Legacy settings wired & reorganised** — timezone (76, region-grouped dropdown),
+  currency (98/99 → `App\Support\Money`), phone prefix/length (100/101 → `App\Rules\Phone`),
+  app name & site URL (38/7, env-instantiated, Organisation tab), mandatory profile
+  photo (68, self-registration guard + dashboard nag), telemetry opt-in (80 →
+  `ob:telemetry:ping`, anonymous payload to telemetry.openbrigade.fr), maintenance
+  mode/text (37/41 → `MaintenanceMode` middleware, 503 + login notice, admin bypass),
+  DB optimization (14 → `ob:db:optimize`, weekly + manual). Tabs reworked: new
+  **Localisation** tab, Général renamed **Options**, empty legacy Options tab retired,
+  dead Google-Maps rows (57/60) obsoleted. Import-API settings (64/65/66) live on
+  Avancé — endpoints stay with the API epic. **Installed version (row 1) is the SSOT**
+  stamped by the release migrations, overlaying brigade/app version + Sentry release.
+- [x] **Notifications page** (`/admin/notifications`) — mail transport (8 rows) and
+  SMS provider (9-12, DB-backed `SmsSettingService`, send-time resolution) with the
+  `.env` as instantiator and the interface as source of truth; `MailSettingService::apply()`
+  overlays `config('mail.*')` at boot; emptied fields revert to `.env`.
+- [x] **Maintenance utilities** — audited action buttons (clear caches, optimize DB,
+  prune logs) + maintenance-settings card on the Maintenance page. `update_app.php`
+  deferred to the Release epic; `decrypt.php`/`debug_data.php` dropped; `buildsql.php`
+  obsolete (no stored SQL functions).
+- [x] **Plugins marketplace** — KASM-style multi-registry store: `ob_plugin` +
+  `ob_plugin_registry` (per-registry SSL/SHA-256 verification toggles, official
+  registry seeded), composer-less runtime (`plugin.json` manifest, PSR-4 loader,
+  per-plugin failure isolation), paranoid install pipeline (mandatory sha256,
+  traversal/bomb guards, compatibility window `min/max_app_version` with parallel
+  tracks per app line), store UI (search, categories, pagination, detail sheets,
+  per-registry colour chips, Dépôts tab). Docs: `docs/admin/plugins.md` +
+  `docs/dev/plugins.md` (ob/plugin/name conventions).
 - [x] `paramfn` participation function enhanced fields — `PS_ID`/`PS_ID2` (required competence + alternative) and `INSTRUCTOR` flag added to `type_participation` create/edit; grouped competence dropdowns with optgroups per team; edit modal on each row; perm 5. Legacy `paramfn.php` bridge retired for this functionality.
 
 ### Settings wired

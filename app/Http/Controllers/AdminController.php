@@ -13,8 +13,10 @@ use App\Services\Auth\LdapAuthService;
 use App\Services\FeatureService;
 use App\Services\HealthCheckService;
 use App\Services\LoggingSettingService;
+use App\Services\MailSettingService;
 use App\Services\OrganisationSetupService;
 use App\Services\SecuritySettingService;
+use App\Services\SmsSettingService;
 use App\Services\UploadSecurityService;
 use App\Support\Audit;
 use App\Support\ClamavScanner;
@@ -427,11 +429,13 @@ class AdminController extends Controller
             ->get();
 
         $tabs = [
-            1 => ['label' => 'Général',          'icon' => 'sliders-h'],
-            2 => ['label' => 'Options',          'icon' => 'sliders-h'],
+            // TAB 2 (the legacy « Options ») is gone: every remaining row in it
+            // is obsolete-filtered, moved or hidden — tab 1 takes the name over.
+            1 => ['label' => 'Options',          'icon' => 'sliders-h'],
             3 => ['label' => 'Technique',         'icon' => 'shield-alt'],
             4 => ['label' => 'Organisation',      'icon' => 'building'],
             5 => ['label' => 'Avancé',            'icon' => 'wrench'],
+            6 => ['label' => 'Localisation',      'icon' => 'globe'],
         ];
 
         $grouped = $rows->groupBy('TAB');
@@ -441,13 +445,10 @@ class AdminController extends Controller
         // ID => ['type' => 'obsolete'|'todo', 'note' => '...']
         $annotations = [
             88 => ['type' => 'obsolete', 'note' => 'Le logo dans la navbar ne sera plus utilisé. L\'icône de maison sera utilisée à la place. Ce réglage n\'a plus d\'effet.'],
-            76 => ['type' => 'todo',     'note' => 'Le fuseau horaire n\'est pas encore utilisé dans Laravel.'],
+            57 => ['type' => 'obsolete', 'note' => 'Les cartes utilisent Leaflet + OpenStreetMap, sans clé d\'API. Ce réglage n\'a plus d\'effet.'],
+            60 => ['type' => 'obsolete', 'note' => 'Les cartes utilisent Leaflet + OpenStreetMap. Ce réglage n\'a plus d\'effet.'],
             96 => ['type' => 'obsolete', 'note' => 'Le pays des victimes par défaut sera géré par la localisation de Laravel. Ce réglage n\'a plus d\'effet.'],
             97 => ['type' => 'obsolete', 'note' => 'Le pays par défaut pour la géolocalisation sera géré par la localisation de Laravel. Ce réglage n\'a plus d\'effet.'],
-            98 => ['type' => 'todo',     'note' => 'La devise par défaut n\'est pas encore utilisée dans Laravel.'],
-            99 => ['type' => 'todo',     'note' => 'La devise par défaut n\'est pas encore utilisée dans Laravel.'],
-            100 => ['type' => 'todo',     'note' => 'Le préfixe des numéros n\'est pas encore utilisé dans Laravel.'],
-            101 => ['type' => 'todo',     'note' => 'La longueur des numéros n\'est pas encore utilisée dans Laravel.'],
             102 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             103 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             104 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
@@ -456,31 +457,20 @@ class AdminController extends Controller
             107 => ['type' => 'obsolete', 'note' => 'Les nom de niveaux de hierarchie ne sont plus utilisés. Ce réglage n\'a plus d\'effet.'],
             25 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             79 => ['type' => 'obsolete', 'note' => 'Le type d\'organisation se règle via Organisation > Type d\'organisation (assistant de configuration). Ne pas modifier ici.'],
-            7 => ['type' => 'obsolete', 'note' => 'L\'URL du site est gérée par APP_URL dans .env. Ce réglage n\'a plus d\'effet.'],
             8 => ['type' => 'todo',     'note' => 'Le mail de contact n\'est pas encore utilisé dans Laravel.'],
             39 => ['type' => 'todo',     'note' => 'Le nom de l\'organsiation n\'est pas encore utilisé dans Laravel.'],
-            38 => ['type' => 'obsolete', 'note' => 'Le nom de l\'application est géré par APP_NAME dans .env. Ce réglage n\'a plus d\'effet.'],
             40 => ['type' => 'todo',     'note' => 'La description de l\'organisation n\'est pas encore utilisée dans Laravel.'],
             74 => ['type' => 'obsolete', 'note' => 'Le logo IOS de l\'application sera géré automatiquement à partir du logo principal. Ce réglage n\'a plus d\'effet.'],
             73 => ['type' => 'obsolete', 'note' => 'Le favicon de l\'application est géré par le logo principal. Ce réglage n\'a plus d\'effet.'],
             75 => ['type' => 'todo',     'note' => 'L\'image de connexion n\'est pas encore utilisée dans Laravel.'],
             2 => ['type' => 'obsolete', 'note' => 'Les sections ne sont plus limitées. Ce réglage n\'a plus d\'effet.'],
             13 => ['type' => 'obsolete', 'note' => 'Les sauvegardes automatiques sont gérées dans l\'onglet Sauvegardes. Ce réglage n\'a plus d\'effet.'],
-            14 => ['type' => 'todo',     'note' => 'L\'optimisation de la base de données n\'est pas encore implémentée dans Laravel.'],
             26 => ['type' => 'obsolete', 'note' => 'Les Cron Jobs sont gérés par Laravel Scheduler. Ce réglage n\'a plus d\'effet.'],
-            28 => ['type' => 'todo',     'note' => 'Les notifications par email ne sont pas encore implémentées dans Laravel.'],
             55 => ['type' => 'obsolete', 'note' => 'Les flocons de neige ne seront pas réimplémentés. Ce réglage n\'a plus d\'effet.'],
             63 => ['type' => 'obsolete', 'note' => 'Les changements du personnel peuvent être bloqués par des permissions. Ce réglage n\'a plus d\'effet.'],
-            68 => ['type' => 'todo',     'note' => 'Les photos de profil obligatoires ne sont pas encore implémentées dans Laravel.'],
-            64 => ['type' => 'todo',     'note' => 'L\'API n\'est pas encore implémentée dans Laravel.'],
-            65 => ['type' => 'todo',     'note' => 'L\'URL de l\'API n\'est pas encore implémentée dans Laravel.'],
-            37 => ['type' => 'todo',     'note' => 'Le mode de maintenance n\'est pas encore implémenté dans Laravel.'],
-            41 => ['type' => 'todo',     'note' => 'Le texte de maintenance n\'est pas encore implémenté dans Laravel.'],
-            66 => ['type' => 'todo',     'note' => 'Le token d\'API n\'est pas encore implémenté dans Laravel.'],
-            9 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            10 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            11 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
-            12 => ['type' => 'todo',     'note' => 'Les SMS ne sont pas encore implémentés dans Laravel.'],
+            64 => ['type' => 'todo',     'note' => 'Réglage actif ; les points d\'entrée de l\'API d\'import arriveront avec l\'épopée API.'],
+            65 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisée par la future API d\'import.'],
+            66 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisé par la future API d\'import.'],
             33 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             42 => ['type' => 'obsolete', 'note' => 'Remplacé par le système de contrôle d\'accès des documents.'],
             48 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
@@ -492,7 +482,6 @@ class AdminController extends Controller
             36 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             49 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             50 => ['type' => 'obsolete', 'note' => 'La clé du webservice n\'est plus utilisée. Ce réglage n\'a plus d\'effet.'],
-            80 => ['type' => 'todo',     'note' => 'La télémétrie n\'est pas encore implémentée dans Laravel.'],
             20 => ['type' => 'obsolete', 'note' => 'L\'URL de la page d\'identification est désormais fixe. Ce réglage n\'a plus d\'effet.'],
             51 => ['type' => 'obsolete', 'note' => 'L\'URL de redirection après connexion est désormais fixe. Ce réglage n\'a plus d\'effet.'],
             43 => ['type' => 'obsolete', 'note' => 'L\'ordre des sections n\'est plus utilisé. Ce réglage n\'a plus d\'effet.'],
@@ -514,6 +503,32 @@ class AdminController extends Controller
         $orgTypeLabel = app(OrganisationSetupService::class)->typeLabel();
 
         return view('admin.settings', compact('grouped', 'tabs', 'activeTab', 'annotations', 'orgTypeLabel'));
+    }
+
+    /**
+     * Administration ▸ Notifications — email + SMS gateway settings, rendered
+     * from the hidden configuration rows (mail_allowed, mail_*, sms_*).
+     */
+    public function notifications(): View
+    {
+        // The .env instantiates the visible values: mail rows are created from
+        // the effective config on first render, empty SMS rows are filled from
+        // it. From then on the stored rows are the source of truth.
+        app(MailSettingService::class)->ensureSeeded();
+        app(SmsSettingService::class)->seedFromEnv();
+
+        $rows = DB::table('configuration')
+            ->whereIn('NAME', array_merge(
+                ['mail_allowed', 'sms_provider', 'sms_user', 'sms_password', 'sms_api_id'],
+                MailSettingService::keys(),
+            ))
+            ->get()
+            ->keyBy('NAME');
+
+        return view('admin.notifications', [
+            'rows' => $rows,
+            'envDriver' => (string) config('sms.driver', 'log'),
+        ]);
     }
 
     public function saveSetting(Request $request, int $id): RedirectResponse
@@ -539,6 +554,14 @@ class AdminController extends Controller
 
         if ($request->input('_back') === 'monitoring') {
             return redirect()->route('admin.monitoring', ['tab' => 'settings'])->with('success', 'Paramètre mis à jour.');
+        }
+
+        if ($request->input('_back') === 'notifications') {
+            return redirect()->route('admin.notifications')->with('success', 'Paramètre mis à jour.');
+        }
+
+        if ($request->input('_back') === 'maintenance') {
+            return redirect()->route('admin.maintenance')->with('success', 'Paramètre mis à jour.');
         }
 
         return redirect()->route('admin.settings')

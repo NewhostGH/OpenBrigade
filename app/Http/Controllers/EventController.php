@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Personnel;
 use App\Models\Section;
+use App\Services\GeneralSettingService;
 use App\Services\ICalExportService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
@@ -640,6 +641,13 @@ class EventController extends Controller
                 ->with('error', 'Ce membre est déjà inscrit sur ce créneau.');
         }
 
+        // Photo obligatoire (setting 68): a member without a profile photo
+        // cannot register THEMSELF; registering someone else is never blocked.
+        if ($this->selfRegistrationBlockedByPhoto((int) $validated['P_ID'])) {
+            return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
+                ->with('error', __('event.photo_required'));
+        }
+
         $duree = DB::table('evenement_horaire')
             ->where('E_CODE', $code)
             ->where('EH_ID', $validated['EH_ID'])
@@ -661,6 +669,28 @@ class EventController extends Controller
 
         return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
             ->with('success', 'Participant ajouté.');
+    }
+
+    /**
+     * True when the mandatory-photo setting is on, the target member is the
+     * authenticated user themself and their profile photo is missing.
+     * Registration BY someone else (manager, admin) is never blocked — see
+     * the setting's description. Guarded: an unreadable setting must never
+     * block registrations.
+     */
+    private function selfRegistrationBlockedByPhoto(int $targetPid): bool
+    {
+        $user = auth()->user();
+        if ($user === null || (int) $user->P_ID !== $targetPid) {
+            return false;
+        }
+
+        try {
+            return app(GeneralSettingService::class)->photoRequired()
+                && trim((string) ($user->P_PHOTO ?? '')) === '';
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     public function participantUpdate(Request $request, string $code, int $pid): RedirectResponse

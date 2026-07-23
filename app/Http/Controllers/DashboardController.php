@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\DashboardService;
+use App\Services\GeneralSettingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +44,29 @@ class DashboardController extends Controller
             'numberEvents' => $limit,
             'widgetsByColumn' => $layout['columns'],
             'hiddenWidgets' => $layout['hidden'],
+            'photoNag' => $this->photoNag(),
         ]);
+    }
+
+    /**
+     * True when the mandatory-photo setting (68) is on and the connected
+     * member has no profile photo — surfaces the dashboard nag banner.
+     * Guarded: an unreadable setting must never break the dashboard.
+     */
+    private function photoNag(): bool
+    {
+        /** @var User|null $user */
+        $user = auth()->user();
+        if ($user === null) {
+            return false;
+        }
+
+        try {
+            return app(GeneralSettingService::class)->photoRequired()
+                && trim((string) ($user->P_PHOTO ?? '')) === '';
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     public function saveLayout(Request $request): JsonResponse

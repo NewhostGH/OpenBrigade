@@ -46,6 +46,14 @@
                         <div class="ob-login-brand-sub">{{ __('auth_views.login_subtitle', ['org' => $loginOrgName]) }}</div>
                     </div>
 
+                    @if (! empty($maintenanceNotice ?? null))
+                        <div class="alert alert-warning ob-login-alert mb-3" role="alert">
+                            <i class="fas fa-tools me-1"></i>
+                            <strong>{{ __('auth_views.maintenance_title') }}</strong><br>
+                            {{ $maintenanceNotice }}
+                        </div>
+                    @endif
+
                     @if (session('success'))
                         <div class="alert alert-success ob-login-alert mb-3">{{ session('success') }}</div>
                     @endif

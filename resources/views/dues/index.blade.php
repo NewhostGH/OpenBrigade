@@ -18,7 +18,6 @@
     ['label' => __('dues.title_dues')],
 ]"/>
 
-@include('dues._tabs')
 
 {{-- ── Toolbar ─────────────────────────────────────────────────────────────── --}}
 <x-ob-toolbar
@@ -34,7 +33,7 @@
     </button>
     <a class="btn btn-sm btn-light"
        href="{{ route('dues.export', request()->query()) }}"
-       title="{{ __('dues.export_excel') }}"
+       title="{{ __('dues.export_excel') }}">
         <i class="far fa-file-excel" style="color:var(--color-excel);"></i>
     </a>
 
@@ -124,7 +123,7 @@
                 <span class="badge bg-success">{{ $paidCount }} payé(s)</span>
                 <span class="badge bg-secondary ms-1">{{ $unpaidCount }} en attente</span>
                 @if ($totalPaid > 0)
-                    <span class="ms-2">Total encaissé : <strong>{{ number_format($totalPaid, 2, ',', ' ') }} €</strong></span>
+                    <span class="ms-2">Total encaissé : <strong>{{ \App\Support\Money::format($totalPaid) }}</strong></span>
                 @endif
             </span>
         @endif

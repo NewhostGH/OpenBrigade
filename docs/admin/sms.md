@@ -28,13 +28,33 @@ Recipient numbers come from the notifiable's `routeNotificationForSms()`
 
 ## Drivers
 
-| `SMS_DRIVER`   | Behaviour                                                                 |
+| `SMS_DRIVER`   | Behaviour                                                                |
 | -------------- | ------------------------------------------------------------------------ |
 | `log`          | **Default.** Writes the message to the log and sends nothing. Send-safe. |
 | `null`         | Silently discards every message.                                         |
 | `smsgatewayme` | Sends via a device registered on [SMSGateway.me](https://smsgateway.me). |
 
 Set `SMS_DRIVER=log` in any environment where real SMS must never be sent.
+
+## Configuring from the admin UI (Administration ▸ Notifications)
+
+The gateway can also be configured without touching `.env`, from
+**Administration ▸ Notifications**. The page drives the legacy `configuration`
+rows, which take precedence over the environment; **any field left empty falls
+back to the corresponding `SMS_*` env value**, so an install configured through
+`.env` keeps working untouched. Changes apply immediately — the driver and its
+credentials are resolved at send time (`App\Services\SmsSettingService`).
+
+| Setting row    | Meaning                                 | Env fallback             |
+| -------------- | --------------------------------------- | ------------------------ |
+| `sms_provider` | Driver: `log`, `null` or `smsgatewayme` | `SMS_DRIVER`             |
+| `sms_user`     | Reserved for future providers           | —                        |
+| `sms_password` | API token (SMSGateway.me)               | `SMSGATEWAYME_TOKEN`     |
+| `sms_api_id`   | Device ID (SMSGateway.me)               | `SMSGATEWAYME_DEVICE_ID` |
+
+Legacy spellings of the provider (`smsgateway.me`, `smsgateway`) are
+normalised; an unknown provider resolves to the `null` driver (SMS disabled)
+with a warning in the log rather than an error.
 
 ## Configuring SMSGateway.me
 

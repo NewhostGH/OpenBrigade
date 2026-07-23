@@ -154,9 +154,10 @@ return [
             'icon' => 'cog',
             'permission' => 5,
             'items' => [
-                ['key' => 'admin.configuration', 'label' => 'Général',         'url' => '/admin/settings',     'icon' => 'sliders-h',    'permission' => 14],
+                ['key' => 'admin.configuration', 'label' => 'Options',         'url' => '/admin/settings',     'icon' => 'sliders-h',    'permission' => 14],
                 ['key' => 'admin.features',      'label' => 'Fonctionnalités', 'url' => '/admin/features',     'icon' => 'toggle-on',    'permission' => 14],
                 ['key' => 'admin.references',    'label' => 'Paramétrage',     'url' => '/admin/references',   'icon' => 'wrench',       'permission' => 5],
+                ['key' => 'admin.notifications', 'label' => 'Notifications',   'url' => '/admin/notifications', 'icon' => 'bell',        'permission' => 14],
                 null,
                 ['key' => 'admin.security',    'label' => 'Sécurité',    'url' => '/admin/security',    'icon' => 'shield-alt', 'permission' => 14],
                 ['key' => 'admin.permissions', 'label' => 'Permissions', 'url' => '/admin/permissions', 'icon' => 'id-badge',   'permission' => 9],

@@ -36,6 +36,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property int|null $P_PASSWORD_FAILURE
  * @property Carbon|string|null $P_ACCEPT_DATE
  * @property string|null $P_STATUT
+ * @property string|null $P_PHOTO
  * @property int|null $P_SECTION
  * @property int|null $GP_ID
  * @property int|null $GP_ID2

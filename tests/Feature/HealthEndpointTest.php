@@ -14,6 +14,9 @@ it('exposes a public health endpoint returning JSON', function () {
                 'storage' => ['status'],
                 'disk' => ['status'],
                 'clamav' => ['status'],
+                'redis' => ['status'],
+                'queue' => ['status'],
+                'mail' => ['status'],
             ],
         ]);
 

@@ -23,6 +23,8 @@ return [
         'password_days' => ':count jours',
         'password_on' => '(le :date)',
         'password_change_now' => 'Changer maintenant',
+        'photo_required' => 'Une photo de profil est obligatoire pour s\'inscrire aux activités.',
+        'photo_add_now' => 'Ajouter ma photo',
         'competence_expiry' => 'Expiration prochaine de vos compétences :',
         'competence_days' => 'expire dans :count jours',
         'competence_see' => 'Voir le détail',

@@ -200,8 +200,8 @@ Uncaught exceptions are tagged into the `error` canal via
 
 `GET /health` returns a JSON report for uptime probes and load balancers — no
 authentication (it exposes availability only, never data). It probes the
-database, cache, storage writability, free disk, and ClamAV (when upload scanning
-is enabled), via
+database, cache, storage writability, free disk, ClamAV (when upload scanning
+is enabled), Redis, the queue and the mail transport, via
 [`App\Services\HealthCheckService`](../../app/Services/HealthCheckService.php).
 
 - **200** — overall `ok` or `degraded`.
@@ -217,13 +217,36 @@ is enabled), via
     "cache":    { "status": "ok" },
     "storage":  { "status": "ok", "writable": true },
     "disk":     { "status": "ok", "free_pct": 64 },
-    "clamav":   { "status": "skipped", "reason": "scan disabled" }
+    "clamav":   { "status": "skipped", "reason": "scan disabled" },
+    "redis":    { "status": "ok", "latency_ms": 1 },
+    "queue":    { "status": "ok", "pending": 0, "failed_24h": 0, "heartbeat_age_s": 42 },
+    "mail":     { "status": "ok", "transport": "smtp", "failures_24h": 0 }
   }
 }
 ```
 
-Laravel's bare `/up` probe is still available. Set `APP_VERSION` (a tag or short
-commit SHA) to surface a meaningful version here and as the Sentry release.
+### Redis, queue & mail probes
+
+- **redis** — skipped unless Redis backs the queue, cache or sessions.
+  Otherwise a timed `PING`: > 100 ms → `degraded`, unreachable → `down`.
+- **queue** — skipped on the `sync` driver. Reports the pending depth
+  (`Queue::size()` on redis, `jobs` row count on the database driver) and the
+  `failed_jobs` count over 24 h (> 0 → `degraded`). **Worker liveness** rides on
+  a heartbeat: the scheduler dispatches `App\Jobs\QueueHeartbeatJob` every
+  5 minutes and a worker stamps a cache key on pickup. A stamp older than
+  15 minutes — or missing entirely — reports `down`, because it proves the
+  scheduler → queue → worker chain is broken end to end. On a fresh install the
+  probe reads `down` until the first heartbeat lands (≤ 5 minutes after the
+  scheduler and worker start).
+- **mail** — the send-safe `log`/`array` mailers are skipped. `smtp` gets a
+  real TCP handshake (banner + `EHLO`, 3 s timeout). Delivery failures logged
+  by `NotificationService` over the last 24 h are surfaced as `failures_24h`
+  (> 0 → `degraded`).
+
+Laravel's bare `/up` probe is still available. The version surfaced here (and
+as the Sentry release) is the **installed version stored in the database**
+(configuration row 1, stamped by the release migrations); `APP_VERSION` in
+`.env` is only the fallback when the database is unreachable.
 
 ### Uptime monitoring (GlitchTip)
 

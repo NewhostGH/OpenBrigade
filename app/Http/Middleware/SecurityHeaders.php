@@ -55,9 +55,15 @@ class SecurityHeaders
                 ? 'Content-Security-Policy-Report-Only'
                 : 'Content-Security-Policy';
 
+            // The plugin marketplace renders icons/screenshots hosted by the
+            // configured registries — any https image, on that page only.
+            $imgSrc = $request->routeIs('admin.plugins')
+                ? "'self' data: https:"
+                : "'self' data: https://*.tile.openstreetmap.org";
+
             $response->headers->set(
                 $header,
-                "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.tile.openstreetmap.org; font-src 'self' data:; connect-src 'self' https://*.tile.openstreetmap.org; object-src 'none'; frame-ancestors 'self';"
+                "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src {$imgSrc}; font-src 'self' data:; connect-src 'self' https://*.tile.openstreetmap.org; object-src 'none'; frame-ancestors 'self';"
             );
         }
 

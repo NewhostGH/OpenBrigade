@@ -163,6 +163,28 @@
                                                     </div>
                                                 </form>
 
+                                            @elseif($row->ID == 76)
+                                                {{-- Timezone: dropdown grouped by region. Inline form only — a block
+                                                     php directive would pair with the earlier inline ones. --}}
+                                                @php($tzByRegion = collect(timezone_identifiers_list())->groupBy(fn ($tz) => str_contains($tz, '/') ? strtok($tz, '/') : __('admin.settings.tz_other')))
+                                                <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"
+                                                      class="d-flex gap-2 align-items-center">
+                                                    @csrf @method('PATCH')
+                                                    <input type="hidden" name="_tab" value="{{ $tabId }}">
+                                                    <select name="VALUE" class="form-select form-select-sm" style="max-width:280px;">
+                                                        @foreach ($tzByRegion as $region => $zones)
+                                                            <optgroup label="{{ $region }}">
+                                                                @foreach ($zones as $tz)
+                                                                    <option value="{{ $tz }}" @selected($row->VALUE === $tz)>{{ $tz }}</option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        @endforeach
+                                                    </select>
+                                                    <button type="submit" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-save"></i>
+                                                    </button>
+                                                </form>
+
                                             @elseif($row->ID == 54)
                                                 {{-- Error reporting: special select --}}
                                                 <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"

@@ -735,13 +735,13 @@ PRIMARY KEY (ID)
 # ------------------------------------
 INSERT INTO configuration (ID,NAME,VALUE,DESCRIPTION,ORDERING,HIDDEN,TAB,YESNO,IS_FILE,CARD_NAME,DISPLAY_NAME) VALUES
 ('-1','already_configured','0','Application déjà configurée','100','1','1','0','0','',NULL),
-('1','version','5.3','version installée','101','0','1','0','0','',NULL),
+('1','version','5.3','Version installée','101','0','1','0','0','','Version'),
 ('2','nbsections','0','Limiter le nombre de sections possible, si non est choisi, il n\'y a pas de limites','1','0','2','1','0','','Sections limitées'),
 ('3','gardes','0','Automatisez la gestion des gardes sur plusieurs jours en 1 clic','601','0','6','1','0','Tableau de garde',NULL),
 ('4','vehicules','1','activer la gestion des véhicules','111','0','1','1','0','','Véhicule '),
 ('5','grades','0','Personnalisez les grades et les compétences associées','602','0','6','1','0','Grade',NULL),
-('6','cisname','CIS','nom court de l\'organisation','103','0','4','0','0','','Nom court de l\'organisation'),
-('7','cisurl','http://localhost','adresse du site web','104','0','4','0','0','','Adresse du site web'),
+('6','cisname','OpenBrigade','nom court de l\'organisation','103','0','4','0','0','','Nom court de l\'organisation'),
+('7','cisurl','','adresse du site web','104','0','4','0','0','','Adresse du site web'),
 ('8','admin_email','admin@ebrigade.org','adresse mail de l\'administrateur','217','0','4','0','0','','Adresse mail'),
 ('9','sms_provider','','fournisseur SMS','218','0','2','0','0','','Fournisseur '),
 ('10','sms_user','','utilisateur du compte SMS, email pour smsgateway.me, inutile dans le cas de SMS Gateway Android','219','0','2','0','0','','Utilisateur '),
@@ -772,7 +772,7 @@ INSERT INTO configuration (ID,NAME,VALUE,DESCRIPTION,ORDERING,HIDDEN,TAB,YESNO,I
 ('36','days_log','100','Nombre de jours pendant lesquels on conserve les historiques utilisateurs','315','0','3','0','0','','Nombre de jours de conservation de l\'historique'),
 ('37','maintenance_mode','0','Mode maintenance, Seul admin peut se connecter','216','0','2','1','0','','Maintenance '),
 ('38','application_title','eBrigade','nom personnalisé de l\'application','223','0','4','0','0','','Nom de l\'application'),
-('39','organisation_name','CIS','nom long de l\'organisation','222','0','4','0','0','','Nom long de l\'organisation'),
+('39','organisation_name','OpenBrigade','nom long de l\'organisation','222','0','4','0','0','','Nom long de l\'organisation'),
 ('40','association_dept_name','l\'Association de Secourisme','Nom complet du niveau départemental, imprimé sur les conventions','224','0','4','0','0','','Descriptif de l\'organisation'),
 ('41','maintenance_text','Le serveur est actuellement inaccessible.<br>Une opération de maintenance est en cours.','Texte affiché aux utilisateurs si le mode maintenance est activé','216','0','2','0','0','','Texte de la maintenance'),
 ('42','document_security','1','Possibilité de restreindre l\'accès à chaque document avec un niveau de sécurité','312','0','3','1','0','','Sécurité des documents'),
@@ -4077,11 +4077,7 @@ KEY S_PARENT (S_PARENT)
 # data for table 'section'
 # ------------------------------------
 INSERT INTO section (S_ID,S_PARENT,S_CODE,S_DESCRIPTION,S_URL,S_PHONE,S_PHONE2,S_PHONE3,S_FAX,S_ADDRESS,S_ADDRESS_COMPLEMENT,S_ZIP_CODE,S_CITY,S_EMAIL,S_EMAIL2,S_EMAIL3,S_PDF_PAGE,S_PDF_MARGE_TOP,S_PDF_MARGE_LEFT,S_PDF_TEXTE_TOP,S_PDF_TEXTE_BOTTOM,S_PDF_BADGE,S_PDF_SIGNATURE,S_IMAGE_SIGNATURE,s_devis_debut,s_devis_fin,s_facture_debut,s_facture_fin,DPS_MAX_TYPE,NB_DAYS_BEFORE_BLOCK,SMS_LOCAL_PROVIDER,SMS_LOCAL_USER,SMS_LOCAL_PASSWORD,SMS_LOCAL_API_ID,S_HIDE,S_INACTIVE,WEBSERVICE_KEY,S_ORDER,S_ID_RADIO,SHOW_PHONE3,SHOW_EMAIL3,SHOW_URL,S_TIMEZONE,S_SIRET,S_AFFILIATION,S_WHATSAPP) VALUES
-('0','-1','CIS','CIS',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'15','15','40','25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','0',NULL,NULL,NULL,'0','0',NULL,'0',NULL,'0','0','0','Europe/Paris',NULL,NULL,NULL),
-('1','0','section 1','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'15','15','40','25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','0',NULL,NULL,NULL,'0','0',NULL,'1',NULL,'0','0','0','Europe/Paris',NULL,NULL,NULL),
-('2','0','section 2','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'15','15','40','25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','0',NULL,NULL,NULL,'0','0',NULL,'2',NULL,'0','0','0','Europe/Paris',NULL,NULL,NULL),
-('3','0','section 3','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'15','15','40','25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','0',NULL,NULL,NULL,'0','0',NULL,'3',NULL,'0','0','0','Europe/Paris',NULL,NULL,NULL),
-('4','0','section 4','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'15','15','40','25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','0',NULL,NULL,NULL,'0','0',NULL,'4',NULL,'0','0','0','Europe/Paris',NULL,NULL,NULL);
+('0','-1','Root Section','Root Section',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'15','15','40','25',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','0',NULL,NULL,NULL,'0','0',NULL,'0',NULL,'0','0','0','Europe/Paris',NULL,NULL,NULL);
 # ------------------------------------
 # structure for table 'section_cotisation'
 # ------------------------------------
@@ -4120,11 +4116,7 @@ KEY S_DESCRIPTION (S_DESCRIPTION)
 # data for table 'section_flat'
 # ------------------------------------
 INSERT INTO section_flat (LIG,NIV,S_ID,S_PARENT,S_CODE,S_DESCRIPTION) VALUES
-('1','0','0','-1','CIS','CIS'),
-('2','1','1','0','section 1',''),
-('3','1','2','0','section 2',''),
-('4','1','3','0','section 3',''),
-('5','1','4','0','section 4','');
+('1','0','0','-1','Root Section','Root Section');
 # ------------------------------------
 # structure for table 'section_role'
 # ------------------------------------

@@ -57,6 +57,14 @@ npm run lint-i18n
 
 echo "i18n check passed"
 
+# 3b. Compiled-Blade syntax check — view:cache alone never parses its output,
+# so e.g. adjacent directives (@endif@endfeature) ship a render-time fatal.
+echo "Running Blade lint..."
+
+php artisan ob:views:lint
+
+echo "Blade lint passed"
+
 # 4. PHPStan
 echo "Running PHPStan..."
 

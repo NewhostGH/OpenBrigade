@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <tbody>
                             @foreach ($report['checks'] as $name => $check)
                                 <tr>
-                                    <td style="text-transform:capitalize;">{{ $name }}</td>
+                                    <td>{{ \Illuminate\Support\Facades\Lang::has('admin.monitoring.checks.'.$name) ? __('admin.monitoring.checks.'.$name) : ucfirst($name) }}</td>
                                     <td><span class="ob-badge {{ $statusBadge[$check['status']] ?? 'ob-badge-ext' }}">{{ $check['status'] }}</span></td>
                                     <td class="text-muted" style="font-size:var(--font-size-xs);">
                                         @foreach ($check as $k => $v)
