@@ -20,6 +20,7 @@ class GeneralSettingService
 {
     /** @var array<string,int|string> */
     private const DEFAULTS = [
+        'version' => '',
         'application_title' => '',
         'cisurl' => '',
         'timezone' => 'Europe/Paris',
@@ -36,6 +37,15 @@ class GeneralSettingService
 
     /** @var array<string,string>|null */
     private ?array $cache = null;
+
+    /**
+     * Installed application version (configuration row 1 — the SSOT, stamped
+     * by the release migrations; '' → keep the APP_VERSION default).
+     */
+    public function appVersion(): string
+    {
+        return $this->string('version');
+    }
 
     /** Stored application name ('' → keep the APP_NAME default). */
     public function appName(): string

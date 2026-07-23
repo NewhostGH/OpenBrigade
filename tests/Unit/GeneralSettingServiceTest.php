@@ -11,7 +11,8 @@ test('falls back to defaults when the configuration table is unreachable', funct
     // read throws and the service must serve its defaults.
     $s = new GeneralSettingService;
 
-    expect($s->timezone())->toBe('Europe/Paris')
+    expect($s->appVersion())->toBe('')
+        ->and($s->timezone())->toBe('Europe/Paris')
         ->and($s->currencyName())->toBe('Euro')
         ->and($s->currencySymbol())->toBe('€')
         ->and($s->phonePrefix())->toBe('+33')

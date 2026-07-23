@@ -232,6 +232,13 @@ class AppServiceProvider extends ServiceProvider
         try {
             $general = app(GeneralSettingService::class);
 
+            // Installed version (row 1) is the SSOT, stamped by the release
+            // migrations; APP_VERSION is only the DB-less fallback.
+            if (($version = $general->appVersion()) !== '') {
+                Config::set('brigade.version', $version);
+                Config::set('app.version', $version);
+            }
+
             if (($name = $general->appName()) !== '') {
                 Config::set('app.name', $name);
             }
@@ -321,6 +328,14 @@ class AppServiceProvider extends ServiceProvider
             $dsn = $obs->string('obs_sentry_dsn') ?: (string) config('sentry.dsn');
 
             Config::set('sentry.dsn', $obs->bool('obs_error_tracking') && $dsn !== '' ? $dsn : null);
+
+            // Release = the installed version (configuration row 1, the SSOT).
+            // Must also happen here: the Sentry provider boots before ours, so
+            // a boot()-time override would be too late (like the DSN above).
+            $version = $this->app->make(GeneralSettingService::class)->appVersion();
+            if ($version !== '') {
+                Config::set('sentry.release', $version);
+            }
         } catch (\Throwable) {
             // Keep the shipped config/env DSN — never break boot over a setting.
         }

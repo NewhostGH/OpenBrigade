@@ -735,7 +735,7 @@ PRIMARY KEY (ID)
 # ------------------------------------
 INSERT INTO configuration (ID,NAME,VALUE,DESCRIPTION,ORDERING,HIDDEN,TAB,YESNO,IS_FILE,CARD_NAME,DISPLAY_NAME) VALUES
 ('-1','already_configured','0','Application déjà configurée','100','1','1','0','0','',NULL),
-('1','version','5.3','version installée','101','0','1','0','0','',NULL),
+('1','version','5.3','Version installée','101','0','1','0','0','','Version'),
 ('2','nbsections','0','Limiter le nombre de sections possible, si non est choisi, il n\'y a pas de limites','1','0','2','1','0','','Sections limitées'),
 ('3','gardes','0','Automatisez la gestion des gardes sur plusieurs jours en 1 clic','601','0','6','1','0','Tableau de garde',NULL),
 ('4','vehicules','1','activer la gestion des véhicules','111','0','1','1','0','','Véhicule '),

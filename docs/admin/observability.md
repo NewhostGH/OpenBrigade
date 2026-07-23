@@ -243,8 +243,10 @@ is enabled), Redis, the queue and the mail transport, via
   by `NotificationService` over the last 24 h are surfaced as `failures_24h`
   (> 0 → `degraded`).
 
-Laravel's bare `/up` probe is still available. Set `APP_VERSION` (a tag or short
-commit SHA) to surface a meaningful version here and as the Sentry release.
+Laravel's bare `/up` probe is still available. The version surfaced here (and
+as the Sentry release) is the **installed version stored in the database**
+(configuration row 1, stamped by the release migrations); `APP_VERSION` in
+`.env` is only the fallback when the database is unreachable.
 
 ### Uptime monitoring (GlitchTip)
 

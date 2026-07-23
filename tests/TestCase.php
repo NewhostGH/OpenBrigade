@@ -51,7 +51,7 @@ abstract class TestCase extends BaseTestCase
         $general = Mockery::mock(GeneralSettingService::class)->makePartial();
         $general->shouldReceive('get')->andReturnUsing(
             fn (string $name) => match ($name) {
-                'application_title', 'cisurl' => '',
+                'version', 'application_title', 'cisurl' => '',
                 'timezone' => 'Europe/Paris',
                 'default_money' => 'Euro',
                 'default_money_symbol' => '€',
