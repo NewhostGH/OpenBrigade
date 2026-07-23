@@ -28,6 +28,18 @@ The **Optimisation automatique de la base de données** toggle (row 14)
 gates a scheduled weekly `OPTIMIZE TABLE` pass. *(Command lands with the
 maintenance-utilities work; the toggle is stored and ready.)*
 
+## Telemetry
+
+The **Aider a ameliorer OpenBrigade** opt-in (row 80, Options tab) enables
+a weekly anonymous ping (`ob:telemetry:ping`, Mondays 03:30) to
+`https://telemetry.openbrigade.fr` (overridable via `OB_TELEMETRY_URL`).
+The payload is strictly limited to: a non-reversible instance hash
+(sha256 of the app key, truncated), the app / PHP / Laravel versions, the
+organisation type id and the active-member count rounded to the nearest
+ten. No names, emails, hostnames or IPs - unlike the legacy
+`push_monitoring_info()` it replaces. An unreachable endpoint is silently
+ignored.
+
 ## Legacy utilities
 
 - `update_app.php` (in-app self-update) — deferred to the RELEASE epic

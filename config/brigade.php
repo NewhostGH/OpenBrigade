@@ -39,6 +39,13 @@ return [
     ],
 
     /*
+     * Endpoint receiving the anonymous weekly telemetry ping when the
+     * "Aider à améliorer" setting (configuration row 80) is enabled.
+     * The payload is strictly anonymous — see ob:telemetry:ping.
+     */
+    'telemetry_url' => env('OB_TELEMETRY_URL', 'https://telemetry.openbrigade.fr'),
+
+    /*
      * Available organisation type pre-configurations.
      * Index 0 is "no pre-configuration" and must remain first.
      */

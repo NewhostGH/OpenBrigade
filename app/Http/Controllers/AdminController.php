@@ -482,7 +482,6 @@ class AdminController extends Controller
             36 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             49 => ['type' => 'obsolete', 'note' => 'Géré via Administration > Sécurité.'],
             50 => ['type' => 'obsolete', 'note' => 'La clé du webservice n\'est plus utilisée. Ce réglage n\'a plus d\'effet.'],
-            80 => ['type' => 'todo',     'note' => 'La télémétrie n\'est pas encore implémentée dans Laravel.'],
             20 => ['type' => 'obsolete', 'note' => 'L\'URL de la page d\'identification est désormais fixe. Ce réglage n\'a plus d\'effet.'],
             51 => ['type' => 'obsolete', 'note' => 'L\'URL de redirection après connexion est désormais fixe. Ce réglage n\'a plus d\'effet.'],
             43 => ['type' => 'obsolete', 'note' => 'L\'ordre des sections n\'est plus utilisé. Ce réglage n\'a plus d\'effet.'],
