@@ -1339,7 +1339,7 @@
                             @foreach($candidates as $c)
                                 <option value="{{ $c->P_ID }}">
                                     {{ strtoupper($c->P_NOM) }} {{ $c->P_PRENOM }}
-                                    @feature('grades')@if($c->P_GRADE) — {{ $c->P_GRADE }} @endif@endfeature
+                                    @feature('grades')@if($c->P_GRADE) — {{ $c->P_GRADE }} @endif @endfeature
                                 </option>
                             @endforeach
                         </select>
