@@ -468,7 +468,6 @@ class AdminController extends Controller
             26 => ['type' => 'obsolete', 'note' => 'Les Cron Jobs sont gérés par Laravel Scheduler. Ce réglage n\'a plus d\'effet.'],
             55 => ['type' => 'obsolete', 'note' => 'Les flocons de neige ne seront pas réimplémentés. Ce réglage n\'a plus d\'effet.'],
             63 => ['type' => 'obsolete', 'note' => 'Les changements du personnel peuvent être bloqués par des permissions. Ce réglage n\'a plus d\'effet.'],
-            68 => ['type' => 'todo',     'note' => 'Les photos de profil obligatoires ne sont pas encore implémentées dans Laravel.'],
             64 => ['type' => 'todo',     'note' => 'Réglage actif ; les points d\'entrée de l\'API d\'import arriveront avec l\'épopée API.'],
             65 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisée par la future API d\'import.'],
             66 => ['type' => 'todo',     'note' => 'Réglage actif ; utilisé par la future API d\'import.'],

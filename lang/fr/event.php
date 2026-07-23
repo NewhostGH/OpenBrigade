@@ -8,6 +8,8 @@ return [
     |--------------------------------------------------------------------------
     */
 
+    'photo_required' => 'Photo de profil obligatoire : ce membre doit ajouter une photo sur sa fiche avant de pouvoir être inscrit aux activités.',
+
     // ── index ──────────────────────────────────────────────────────────────
     'title' => 'Activités',
     'btn_new' => 'Nouvelle activité',

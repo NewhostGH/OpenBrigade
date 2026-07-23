@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Personnel;
 use App\Models\Section;
+use App\Services\GeneralSettingService;
 use App\Services\ICalExportService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
@@ -640,6 +641,13 @@ class EventController extends Controller
                 ->with('error', 'Ce membre est déjà inscrit sur ce créneau.');
         }
 
+        // Photo obligatoire (setting 68): no member without a profile photo
+        // can be registered on an activity — whoever performs the action.
+        if ($this->registrationBlockedByPhoto((int) $validated['P_ID'])) {
+            return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
+                ->with('error', __('event.photo_required'));
+        }
+
         $duree = DB::table('evenement_horaire')
             ->where('E_CODE', $code)
             ->where('EH_ID', $validated['EH_ID'])
@@ -661,6 +669,30 @@ class EventController extends Controller
 
         return redirect()->route('event.show', [$code, 'tab' => 'personnel'])
             ->with('success', 'Participant ajouté.');
+    }
+
+    /**
+     * True when the mandatory-photo setting is on and the target member has
+     * no profile photo — legacy rule: no photo, no activity registration,
+     * whoever performs it. Guarded: an unreadable setting or table must
+     * never block registrations.
+     */
+    private function registrationBlockedByPhoto(int $targetPid): bool
+    {
+        try {
+            if (! app(GeneralSettingService::class)->photoRequired()) {
+                return false;
+            }
+
+            $user = auth()->user();
+            $photo = ($user !== null && (int) $user->P_ID === $targetPid)
+                ? $user->P_PHOTO
+                : DB::table('pompier')->where('P_ID', $targetPid)->value('P_PHOTO');
+
+            return trim((string) ($photo ?? '')) === '';
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     public function participantUpdate(Request $request, string $code, int $pid): RedirectResponse
