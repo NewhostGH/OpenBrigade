@@ -13,6 +13,8 @@ use App\Services\LoggingSettingService;
 use App\Services\MailSettingService;
 use App\Services\NavigationService;
 use App\Services\PermissionResolver;
+use App\Services\Plugins\PluginLoader;
+use App\Services\Plugins\PluginStateService;
 use App\Services\SectionScopeService;
 use App\Services\SecuritySettingService;
 use App\Services\Sms\SmsManager;
@@ -47,6 +49,18 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(SmsManager::class);
         $this->app->singleton(SmsSettingService::class);
         $this->app->singleton(MailSettingService::class);
+
+        // Plugin runtime: register every enabled plugin's autoloader and
+        // service provider. Fully guarded — a broken plugin (or a missing
+        // ob_plugin table) logs and is surfaced on the admin page, but can
+        // never take the application down.
+        $this->app->singleton(PluginStateService::class);
+        $this->app->singleton(PluginLoader::class);
+        try {
+            $this->app->make(PluginLoader::class)->boot($this->app);
+        } catch (\Throwable) {
+            // No plugins load; the marketplace page reports the failure.
+        }
 
         // Register singleton services (instantiated once per container)
         $this->app->singleton(BrigadeService::class, function ($app) {

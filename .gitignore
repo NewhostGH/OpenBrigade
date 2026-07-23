@@ -76,3 +76,5 @@ storage/app/private
 storage/app/public/theme
 storage/app/photos
 storage/app/public/grades
+# Installed marketplace plugins (managed from Administration > Plugins)
+/plugins/

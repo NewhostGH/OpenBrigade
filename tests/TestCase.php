@@ -6,6 +6,7 @@ use App\Services\FeatureService;
 use App\Services\GeneralSettingService;
 use App\Services\OrganisationSetupService;
 use App\Services\PermissionResolver;
+use App\Services\Plugins\PluginStateService;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Mockery;
 
@@ -60,5 +61,11 @@ abstract class TestCase extends BaseTestCase
             }
         )->byDefault();
         $this->app->instance(GeneralSettingService::class, $general);
+
+        // The plugin loader consults the installed-plugin state at boot.
+        // Default to "no plugins"; plugin tests can rebind.
+        $plugins = Mockery::mock(PluginStateService::class)->makePartial();
+        $plugins->shouldReceive('enabledPlugins')->andReturn([])->byDefault();
+        $this->app->instance(PluginStateService::class, $plugins);
     }
 }
