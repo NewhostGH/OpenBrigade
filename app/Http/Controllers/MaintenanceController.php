@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Audit;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
@@ -29,6 +32,41 @@ class MaintenanceController extends Controller
         return view('admin.maintenance.index', compact(
             'phpVersion', 'laravelVersion', 'dbVersion', 'appVersion', 'env', 'debugMode', 'status', 'maintSettings'
         ));
+    }
+
+    /** Clear the application/config/route/view caches. */
+    public function clearCaches(): RedirectResponse
+    {
+        foreach (['cache:clear', 'config:clear', 'route:clear', 'view:clear'] as $command) {
+            Artisan::call($command);
+        }
+
+        Audit::action('maintenance.caches_cleared');
+
+        return redirect()->route('admin.maintenance')
+            ->with('success', __('admin.maintenance.caches_cleared'));
+    }
+
+    /** Run OPTIMIZE TABLE now (bypasses the auto_optimize gate). */
+    public function optimizeDatabase(): RedirectResponse
+    {
+        $code = Artisan::call('ob:db:optimize', ['--force' => true]);
+        $summary = trim(Artisan::output());
+
+        return redirect()->route('admin.maintenance')->with(
+            $code === 0 ? 'success' : 'error',
+            $summary !== '' ? $summary : __('admin.maintenance.optimize_done'),
+        );
+    }
+
+    /** Trim the observability log to its retention window now. */
+    public function pruneLogs(): RedirectResponse
+    {
+        Artisan::call('ob:logs:prune');
+        Audit::action('maintenance.logs_pruned');
+
+        return redirect()->route('admin.maintenance')
+            ->with('success', __('admin.maintenance.logs_pruned'));
     }
 
     private function migrationStatus(): array

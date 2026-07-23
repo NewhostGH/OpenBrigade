@@ -25,18 +25,31 @@ keep reporting during maintenance.
 ## Database optimization
 
 The **Optimisation automatique de la base de données** toggle (row 14)
-gates a scheduled weekly `OPTIMIZE TABLE` pass. *(Command lands with the
-maintenance-utilities work; the toggle is stored and ready.)*
+gates `ob:db:optimize`, a weekly `OPTIMIZE TABLE` pass over every table
+(Sundays 04:30, per-table failure isolation, summary in the audit trail).
+The **Optimiser la base de données** button runs it immediately
+(`--force`, bypassing the toggle). Tables are briefly locked — prefer
+off-peak hours.
+
+## Actions
+
+The **Actions** card offers one-click, audited operations:
+
+| Button                       | Effect                                                        |
+| ---------------------------- | ------------------------------------------------------------- |
+| Vider les caches             | `cache:clear` + `config:clear` + `route:clear` + `view:clear` |
+| Optimiser la base de données | `ob:db:optimize --force` (summary shown in the flash)         |
+| Purger les journaux          | `ob:logs:prune` (honours the configured retention)            |
 
 ## Telemetry
 
-The **Aider a ameliorer OpenBrigade** opt-in (row 80, Options tab) enables
+The **Aider à améliorer OpenBrigade** opt-in (row 80, Options tab) enables
 a weekly anonymous ping (`ob:telemetry:ping`, Mondays 03:30) to
 `https://telemetry.openbrigade.fr` (overridable via `OB_TELEMETRY_URL`).
 The payload is strictly limited to: a non-reversible instance hash
 (sha256 of the app key, truncated), the app / PHP / Laravel versions, the
 organisation type id and the active-member count rounded to the nearest
-ten. No names, emails, hostnames or IPs - unlike the legacy
+ten. No names, emails, hostnames or IPs — unlike the legacy
 `push_monitoring_info()` it replaces. An unreachable endpoint is silently
 ignored.
 

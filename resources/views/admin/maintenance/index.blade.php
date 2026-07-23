@@ -65,6 +65,38 @@
         </div>
     </div>
 
+    {{-- Actions --}}
+    <div class="ob-widget-card mb-3">
+        <div class="ob-widget-card-header">
+            <div class="ob-widget-card-title"><i class="fas fa-bolt me-2"></i>{{ __('admin.maintenance.actions_section') }}</div>
+        </div>
+        <div class="p-3 d-flex flex-wrap gap-2">
+            <form method="POST" action="{{ route('admin.maintenance.clear-caches') }}">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-broom me-1"></i> {{ __('admin.maintenance.btn_clear_caches') }}
+                </button>
+            </form>
+            <form method="POST" action="{{ route('admin.maintenance.optimize-db') }}"
+                  onsubmit="return confirm('{{ __('admin.maintenance.confirm_optimize') }}')">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-database me-1"></i> {{ __('admin.maintenance.btn_optimize') }}
+                </button>
+            </form>
+            <form method="POST" action="{{ route('admin.maintenance.prune-logs') }}"
+                  onsubmit="return confirm('{{ __('admin.maintenance.confirm_prune') }}')">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-scissors me-1"></i> {{ __('admin.maintenance.btn_prune_logs') }}
+                </button>
+            </form>
+        </div>
+        <div class="text-muted px-3 pb-3" style="font-size:var(--font-size-xs);">
+            {{ __('admin.maintenance.actions_hint') }}
+        </div>
+    </div>
+
     {{-- System info --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">

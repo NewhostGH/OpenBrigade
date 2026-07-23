@@ -25,9 +25,13 @@ if (config('queue.default') !== 'sync') {
     Schedule::job(new QueueHeartbeatJob)->everyFiveMinutes();
 }
 
-// Anonymous opt-in telemetry ping (Mondays 03:30 - the command itself checks
-// the "Aider a ameliorer" setting and sends nothing when it is off).
+// Anonymous opt-in telemetry ping (Mondays 03:30 — the command itself checks
+// the "Aider à améliorer" setting and sends nothing when it is off).
 Schedule::command('ob:telemetry:ping')->weeklyOn(1, '03:30');
+
+// Weekly OPTIMIZE TABLE pass (Sundays 04:30, off-peak — gated inside the
+// command on the auto_optimize setting).
+Schedule::command('ob:db:optimize')->weeklyOn(0, '04:30')->withoutOverlapping();
 
 // Weekly restore drill: prove the latest backup is actually recoverable
 // (Mondays 04:00). Gated by the backup.restore_drill config flag.

@@ -174,6 +174,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/backup/settings', [BackupController::class, 'updateSettings'])->name('admin.backup.settings')->middleware('permission:14');
     // Maintenance (upgrade.php superseded by artisan migrate)
     Route::get('/admin/maintenance', [MaintenanceController::class, 'index'])->name('admin.maintenance')->middleware('permission:14');
+    Route::post('/admin/maintenance/clear-caches', [MaintenanceController::class, 'clearCaches'])->name('admin.maintenance.clear-caches')->middleware('permission:14');
+    Route::post('/admin/maintenance/optimize-db', [MaintenanceController::class, 'optimizeDatabase'])->name('admin.maintenance.optimize-db')->middleware('permission:14');
+    Route::post('/admin/maintenance/prune-logs', [MaintenanceController::class, 'pruneLogs'])->name('admin.maintenance.prune-logs')->middleware('permission:14');
     Route::get('/admin/security', [AdminController::class, 'security'])->name('admin.security')->middleware('permission:14');
     Route::get('/admin/security/politique/create', [AdminController::class, 'policyCreate'])->name('admin.policy.create')->middleware('permission:14');
     Route::post('/admin/security/politique', [AdminController::class, 'policyStore'])->name('admin.policy.store')->middleware('permission:14');
