@@ -138,6 +138,18 @@ test('plugins page renders for an admin and is forbidden otherwise', function ()
         ->assertForbidden();
 });
 
+test('plugin lifecycle and registry actions are forbidden without permission 14', function (string $method, string $uri) {
+    $this->actingAs(adminFakeUser(can: false))
+        ->call($method, $uri)
+        ->assertForbidden();
+})->with([
+    ['POST', '/admin/plugins/demo/install'],
+    ['POST', '/admin/plugins/demo/enable'],
+    ['POST', '/admin/plugins/demo/disable'],
+    ['DELETE', '/admin/plugins/demo'],
+    ['POST', '/admin/plugins/registries'],
+]);
+
 // ── Monitoring (audit log) ───────────────────────────────────────────────────
 
 test('monitoring page renders the admin.monitoring view', function () {

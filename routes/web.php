@@ -216,7 +216,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/admin/features/{feature}', [FeatureController::class, 'toggle'])->name('admin.features.toggle')->middleware('permission:14');
 
     // ── Plugins — community plugin marketplace (WIP placeholder) ──────────────
-    Route::get('/admin/plugins', [PluginController::class, 'index'])->name('admin.plugins')->middleware('permission:14');
+    Route::middleware('permission:14')->group(function () {
+        Route::get('/admin/plugins', [PluginController::class, 'index'])->name('admin.plugins');
+        Route::post('/admin/plugins/{slug}/install', [PluginController::class, 'install'])->name('admin.plugins.install')->where('slug', '[a-z0-9-]+');
+        Route::post('/admin/plugins/{slug}/enable', [PluginController::class, 'enable'])->name('admin.plugins.enable')->where('slug', '[a-z0-9-]+');
+        Route::post('/admin/plugins/{slug}/disable', [PluginController::class, 'disable'])->name('admin.plugins.disable')->where('slug', '[a-z0-9-]+');
+        Route::delete('/admin/plugins/{slug}', [PluginController::class, 'uninstall'])->name('admin.plugins.uninstall')->where('slug', '[a-z0-9-]+');
+        Route::post('/admin/plugins/registries', [PluginController::class, 'storeRegistry'])->name('admin.plugins.registries.store');
+        Route::post('/admin/plugins/registries/{registry}/toggle', [PluginController::class, 'toggleRegistry'])->name('admin.plugins.registries.toggle');
+        Route::delete('/admin/plugins/registries/{registry}', [PluginController::class, 'destroyRegistry'])->name('admin.plugins.registries.destroy');
+    });
 
     // ── Paramétrage — reference table CRUD ────────────────────────────────────
     Route::get('/admin/references', [ReferenceController::class, 'index'])->name('admin.references')->middleware('permission:5');

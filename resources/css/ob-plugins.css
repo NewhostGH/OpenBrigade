@@ -1,0 +1,50 @@
+/* Administration ▸ Plugins — store-style catalog */
+
+.ob-plugin-icon-fallback {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: var(--table-header-bg);
+    color: var(--table-header-text);
+    flex-shrink: 0;
+}
+
+.ob-plugin-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Source-registry chip: background hue is derived per registry in the view,
+   so every card from the same dépôt carries the same colour. */
+.ob-plugin-registry-badge {
+    color: #fff;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Matching colour dot next to each registry row on the Dépôts tab. */
+.ob-plugin-registry-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    vertical-align: baseline;
+}
+
+/* Pagination — same treatment as the commandbar footer (Journal d'activité):
+   pager flush with the count label, redundant "Showing X to Y" line hidden. */
+.ob-plugins-pagination .pagination {
+    margin-bottom: 0;
+}
+
+.ob-plugins-pagination nav p {
+    display: none;
+}
