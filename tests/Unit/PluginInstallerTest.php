@@ -144,3 +144,14 @@ test('refuses a plugin requiring a newer app version', function () {
 
     pluginInstaller()->install(pluginEntry($sha));
 })->throws(InvalidPluginException::class);
+
+test('refuses an archive-bomb with too many entries', function () {
+    $files = ['plugin.json' => '{}'];
+    for ($i = 0; $i < 600; $i++) {
+        $files["f{$i}.txt"] = 'x';
+    }
+    [$bytes, $sha] = pluginZip($files);
+    Http::fake(['plugins.example.org/*' => Http::response($bytes)]);
+
+    pluginInstaller()->install(pluginEntry($sha));
+})->throws(InvalidPluginException::class);

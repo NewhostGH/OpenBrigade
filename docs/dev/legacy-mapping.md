@@ -113,7 +113,7 @@ at folder granularity (they are binary assets copied as-is).
 | `save_info_adherent.php`       | `PersonnelController.php` (`update`)                                                                 |
 | `upd_personnel_salarie.php`    | `PersonnelController.php` (salarié contract/hours card)                                              |
 | `personnel_contact.php`        | `PersonnelController.php` (`updateContacts` — contact handles card)                                  |
-| `personnel_maitre.php`         | **WIP** (animaux module)                                                                             |
+| `personnel_maitre.php`         | `animaux` plugin (official registry) — handler/animal management                                    |
 | `personnel_tenues.php`         | `PersonnelController.php` (`tenues`) + `personnel/tenues.blade.php`                                  |
 | `save_personnel_tenues.php`    | `PersonnelController.php` (`tenues` save)                                                            |
 | `personnel_preferences.php`    | `PersonnelController.php` (`preferences`) + `personnel/preferences.blade.php`                       |
@@ -437,12 +437,12 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file            | New implementation                                                              |
 | ---------------------- | ------------------------------------------------------------------------------- |
-| `addons.php`           | `admin.plugins` (redirect) — community plugins, WIP placeholder                 |
+| `addons.php`           | `admin.plugins` (redirect) — native Plugins marketplace                          |
 | `addons_save.php`      | `admin.fonctionnalites` (redirect) — feature/module toggles now in `ob_feature` |
-| `install_addon.php`    | **WIP**                                                                         |
-| `download_addon.php`   | **WIP**                                                                         |
-| `download_module.php`  | **WIP**                                                                         |
-| `download_package.php` | **WIP**                                                                         |
+| `install_addon.php`    | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
+| `download_addon.php`   | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
+| `download_module.php`  | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
+| `download_package.php` | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
 
 ## PDF generation
 
@@ -519,7 +519,7 @@ rather than ported as standalone files.
 | `fonctions_import.php`      | **WIP**                                                               |
 | `fonctions_unzip.php`       | **WIP**                                                               |
 | `fonctions_mail.php`        | **WIP**                                                               |
-| `fonctions_sms.php`         | **WIP**                                                               |
+| `fonctions_sms.php`         | `App\Services\Sms` (smsgatewayme, smsmode, Clickatell, SMSEagle, http); credits not ported |
 | `fonctions_dps.php`         | **WIP**                                                               |
 | `fonctions_specific.php`    | **WIP**                                                               |
 
@@ -569,7 +569,7 @@ Replaced by Composer packages where a Laravel equivalent exists; otherwise **WIP
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `lib/PBKDF2/`       | N/A — replaced by Laravel Hash/bcrypt                                                                                                                          |
 | `lib/PHPMailer/`    | N/A — replaced by Laravel Mail (when mail ported)                                                                                                              |
-| `lib/SMSGatewayMe/` | **WIP**                                                                                                                                                        |
+| `lib/SMSGatewayMe/` | `App\Services\Sms\Drivers\SmsGatewayMeSender` (v4 HTTP API — no bundled SDK)                                                                                    |
 | `lib/fpdf/`         | Replaced by client-side pdf-lib (`resources/js/ob-pdf-personnel.js`, `ob-pdf-bilan.js`) for livret / carte / bilans; remaining `pdf_*.php` pages still **WIP** |
 | `lib/phpqrcode/`    | **WIP**                                                                                                                                                        |
 | `lib/vendor/`       | N/A — replaced by Composer `vendor/`                                                                                                                           |

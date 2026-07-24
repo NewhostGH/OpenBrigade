@@ -28,11 +28,37 @@ test('maps stored providers onto the driver set', function () {
     expect(smsSettings(['sms_provider' => 'log'])->driver())->toBe('log')
         ->and(smsSettings(['sms_provider' => 'none'])->driver())->toBe('null')
         ->and(smsSettings(['sms_provider' => 'SMSGateway.me'])->driver())->toBe('smsgatewayme')
-        ->and(smsSettings(['sms_provider' => 'smsgatewayme'])->driver())->toBe('smsgatewayme');
+        ->and(smsSettings(['sms_provider' => 'smsgatewayme'])->driver())->toBe('smsgatewayme')
+        ->and(smsSettings(['sms_provider' => 'smsmode'])->driver())->toBe('smsmode')
+        ->and(smsSettings(['sms_provider' => 'Clickatell'])->driver())->toBe('clickatell')
+        ->and(smsSettings(['sms_provider' => 'SMSEagle'])->driver())->toBe('smseagle')
+        ->and(smsSettings(['sms_provider' => 'http'])->driver())->toBe('http');
 });
 
 test('an unknown provider disables SMS instead of erroring', function () {
-    expect(smsSettings(['sms_provider' => 'clickatell'])->driver())->toBe('null');
+    expect(smsSettings(['sms_provider' => 'carrier-pigeon'])->driver())->toBe('null');
+});
+
+test('resolves each gateway credential from settings with env fallback', function () {
+    config([
+        'sms.drivers.smsmode' => ['api_key' => 'env-mode', 'endpoint' => 'https://rest.smsmode.com'],
+        'sms.drivers.clickatell' => ['api_key' => 'env-ck', 'endpoint' => 'https://platform.clickatell.com'],
+        'sms.drivers.smseagle' => ['host' => 'env-host', 'token' => 'env-eagle'],
+        'sms.drivers.http' => ['url' => 'https://gw/send?to={to}', 'method' => 'GET', 'token' => 'env-http'],
+    ]);
+
+    $stored = smsSettings(['sms_password' => 'db-secret', 'sms_api_id' => 'db-host']);
+    expect($stored->smsModeOptions())->toMatchArray(['api_key' => 'db-secret'])
+        ->and($stored->clickatellOptions())->toMatchArray(['api_key' => 'db-secret'])
+        ->and($stored->smsEagleOptions())->toMatchArray(['host' => 'db-host', 'token' => 'db-secret'])
+        // http URL comes from the sms_api_id row (settings-first).
+        ->and($stored->httpOptions())->toMatchArray(['url' => 'db-host', 'method' => 'GET', 'token' => 'db-secret']);
+
+    $empty = smsSettings([]);
+    expect($empty->smsModeOptions())->toMatchArray(['api_key' => 'env-mode'])
+        ->and($empty->clickatellOptions())->toMatchArray(['api_key' => 'env-ck'])
+        ->and($empty->smsEagleOptions())->toMatchArray(['host' => 'env-host', 'token' => 'env-eagle'])
+        ->and($empty->httpOptions())->toMatchArray(['url' => 'https://gw/send?to={to}', 'token' => 'env-http']);
 });
 
 test('smsgatewayme credentials come from settings with env fallback', function () {

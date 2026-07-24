@@ -9,10 +9,11 @@ return [
     |
     | The provider-agnostic SMS layer (see App\Services\Sms) resolves one of the
     | drivers below. "log" writes to the log (dev-safe, sends nothing), "null"
-    | silently discards, and "smsgatewayme" talks to the SMSGateway.me device
-    | API. See docs/admin/sms.md for setup.
+    | silently discards, and the rest talk to a real gateway. See
+    | docs/admin/sms.md for setup.
     |
-    | Supported: "log", "null", "smsgatewayme"
+    | Supported: "log", "null", "smsgatewayme", "smsmode", "clickatell",
+    |            "smseagle", "http"
     |
     */
 
@@ -42,6 +43,28 @@ return [
             'token' => env('SMSGATEWAYME_TOKEN'),
             'device_id' => env('SMSGATEWAYME_DEVICE_ID'),
             'endpoint' => env('SMSGATEWAYME_ENDPOINT', 'https://smsgateway.me/api/v4'),
+        ],
+
+        'smsmode' => [
+            'api_key' => env('SMSMODE_API_KEY'),
+            'endpoint' => env('SMSMODE_ENDPOINT', 'https://rest.smsmode.com'),
+        ],
+
+        'clickatell' => [
+            'api_key' => env('CLICKATELL_API_KEY'),
+            'endpoint' => env('CLICKATELL_ENDPOINT', 'https://platform.clickatell.com'),
+        ],
+
+        'smseagle' => [
+            'host' => env('SMSEAGLE_HOST'),
+            'token' => env('SMSEAGLE_TOKEN'),
+        ],
+
+        // Generic gateway: URL template with {to} {message} {from} {token}.
+        'http' => [
+            'url' => env('SMS_HTTP_URL'),
+            'method' => env('SMS_HTTP_METHOD', 'GET'),
+            'token' => env('SMS_HTTP_TOKEN'),
         ],
 
     ],

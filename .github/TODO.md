@@ -119,11 +119,11 @@ settings themselves are live); masked SMS-password input → COMM.)*
 
 ## Plugins / modules (Phase 3B)
 
-- [ ] Inventory plugin/module files (`addons.php`, `install_addon.php`, `download_*.php`)
-- [ ] Define module boundaries; migrate config, routes, assets, permissions
-- [ ] Animaux module (`personnel_maitre.php`, `cav_edit.php` — `ob_feature` flag exists, status wip)
-- [ ] SMS gateway integration (`lib/SMSGatewayMe/`, `fonctions_sms.php`)
-- [ ] Feature tests per module; remove legacy loaders after cutover
+- [x] Inventory plugin/module files (`addons.php`, `install_addon.php`, `download_*.php`) — superseded by the native Administration ▸ Plugins marketplace; legacy loaders retired (redirect to `admin.plugins`, `bridgeable=false`)
+- [x] Define module boundaries; migrate config, routes, assets, permissions — the marketplace (registries, install pipeline, `ob_plugin` runtime, `PluginLoader`) is the module boundary; lifecycle covered by `tests/Feature/PluginLifecycleTest.php`
+- [x] Animaux module — shipped as an installable plugin (slug `animaux`) in the official registry; removed from the core Fonctionnalités screen (dropped the `ob_feature` row)
+- [x] SMS gateway integration (`lib/SMSGatewayMe/`, `fonctions_sms.php`) — base feature, not a plugin: smsgatewayme + smsmode + Clickatell + SMSEagle + generic HTTP drivers (`App\Services\Sms`)
+- [x] Feature tests per module; remove legacy loaders after cutover
 
 ## Cutover & decommission (Phase 4)
 

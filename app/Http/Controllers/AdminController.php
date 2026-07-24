@@ -519,7 +519,7 @@ class AdminController extends Controller
 
         $rows = DB::table('configuration')
             ->whereIn('NAME', array_merge(
-                ['mail_allowed', 'sms_provider', 'sms_user', 'sms_password', 'sms_api_id'],
+                ['mail_allowed', 'sms_allowed', 'sms_provider', 'sms_user', 'sms_password', 'sms_api_id'],
                 MailSettingService::keys(),
             ))
             ->get()

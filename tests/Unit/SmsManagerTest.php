@@ -2,9 +2,13 @@
 
 use App\Contracts\SmsSender;
 use App\Notifications\Channels\SmsChannel;
+use App\Services\Sms\Drivers\ClickatellSender;
+use App\Services\Sms\Drivers\HttpSmsSender;
 use App\Services\Sms\Drivers\LogSmsSender;
 use App\Services\Sms\Drivers\NullSmsSender;
+use App\Services\Sms\Drivers\SmsEagleSender;
 use App\Services\Sms\Drivers\SmsGatewayMeSender;
+use App\Services\Sms\Drivers\SmsModeSender;
 use App\Services\Sms\SmsManager;
 use App\Services\Sms\SmsMessage;
 use App\Services\Sms\SmsResult;
@@ -37,10 +41,116 @@ it('resolves the smsgatewayme driver', function () {
     expect((new SmsManager)->driver())->toBeInstanceOf(SmsGatewayMeSender::class);
 });
 
+it('resolves the additional gateway drivers', function () {
+    config(['sms.driver' => 'smsmode']);
+    expect((new SmsManager)->driver())->toBeInstanceOf(SmsModeSender::class);
+
+    config(['sms.driver' => 'clickatell']);
+    expect((new SmsManager)->driver())->toBeInstanceOf(ClickatellSender::class);
+
+    config(['sms.driver' => 'smseagle']);
+    expect((new SmsManager)->driver())->toBeInstanceOf(SmsEagleSender::class);
+
+    config(['sms.driver' => 'http']);
+    expect((new SmsManager)->driver())->toBeInstanceOf(HttpSmsSender::class);
+});
+
 it('throws on an unknown driver', function () {
     config(['sms.driver' => 'carrier-pigeon']);
     (new SmsManager)->driver();
 })->throws(InvalidArgumentException::class);
+
+// ── smsmode driver ───────────────────────────────────────────────────────────
+
+it('fails cleanly when smsmode is not configured', function () {
+    $result = (new SmsModeSender(['api_key' => null, 'endpoint' => 'https://rest.smsmode.com']))
+        ->send(new SmsMessage('+33600000000', 'hi'));
+
+    expect($result->success)->toBeFalse()
+        ->and($result->error)->toContain('not configured');
+});
+
+it('posts to smsmode with the api key header and returns the reference', function () {
+    Http::fake(['*/sms/v1/messages' => Http::response(['messageId' => 'abc-123'], 201)]);
+
+    $result = (new SmsModeSender(['api_key' => 'mode-key', 'endpoint' => 'https://rest.smsmode.com']))
+        ->send(new SmsMessage('+33600000000', 'hi', 'OB'));
+
+    expect($result->success)->toBeTrue()
+        ->and($result->reference)->toBe('abc-123');
+
+    Http::assertSent(fn ($request) => $request->hasHeader('X-Api-Key', 'mode-key')
+        && $request['recipient']['to'] === '+33600000000'
+        && $request['body']['text'] === 'hi'
+        && $request['from'] === 'OB');
+});
+
+// ── Clickatell driver ────────────────────────────────────────────────────────
+
+it('posts to clickatell and treats a non-accepted message as a failure', function () {
+    Http::fake(['*/messages' => Http::response(['messages' => [['accepted' => false, 'error' => 'bad number']]], 200)]);
+
+    $result = (new ClickatellSender(['api_key' => 'ck', 'endpoint' => 'https://platform.clickatell.com']))
+        ->send(new SmsMessage('33600000000', 'hi'));
+
+    expect($result->success)->toBeFalse()
+        ->and($result->error)->toContain('bad number');
+});
+
+it('posts to clickatell with a normalised number and returns the api message id', function () {
+    Http::fake(['*/messages' => Http::response(['messages' => [['accepted' => true, 'apiMessageId' => 'MSG9']]], 202)]);
+
+    $result = (new ClickatellSender(['api_key' => 'ck', 'endpoint' => 'https://platform.clickatell.com']))
+        ->send(new SmsMessage('33600000000', 'hi'));
+
+    expect($result->success)->toBeTrue()
+        ->and($result->reference)->toBe('MSG9');
+
+    Http::assertSent(fn ($request) => $request->hasHeader('Authorization', 'ck')
+        && $request['to'] === ['+33600000000']
+        && $request['content'] === 'hi');
+});
+
+// ── SMSEagle driver ──────────────────────────────────────────────────────────
+
+it('posts to the smseagle appliance with the access token header', function () {
+    Http::fake(['*/api/v2/messages/sms' => Http::response([['id' => 55]], 200)]);
+
+    $result = (new SmsEagleSender(['host' => '10.0.0.5', 'token' => 'eagle']))
+        ->send(new SmsMessage('+33600000000', 'hi'));
+
+    expect($result->success)->toBeTrue()
+        ->and($result->reference)->toBe('55');
+
+    Http::assertSent(fn ($request) => $request->hasHeader('access-token', 'eagle')
+        && $request->url() === 'http://10.0.0.5/api/v2/messages/sms'
+        && $request['to'] === ['+33600000000']);
+});
+
+// ── Generic HTTP driver ──────────────────────────────────────────────────────
+
+it('fails cleanly when the generic http gateway has no url', function () {
+    $result = (new HttpSmsSender(['url' => '', 'method' => 'GET', 'token' => 't']))
+        ->send(new SmsMessage('+33600000000', 'hi'));
+
+    expect($result->success)->toBeFalse()
+        ->and($result->error)->toContain('not configured');
+});
+
+it('substitutes placeholders into the generic http url template', function () {
+    Http::fake(['gw.test/*' => Http::response('OK', 200)]);
+
+    $result = (new HttpSmsSender([
+        'url' => 'https://gw.test/send?phone={to}&text={message}&key={token}',
+        'method' => 'GET',
+        'token' => 'sec ret',
+    ]))->send(new SmsMessage('+33600000000', 'hé ho'));
+
+    expect($result->success)->toBeTrue();
+
+    Http::assertSent(fn ($request) => $request->url()
+        === 'https://gw.test/send?phone=%2B33600000000&text=h%C3%A9%20ho&key=sec%20ret');
+});
 
 // ── SMSGateway.me driver ─────────────────────────────────────────────────────
 

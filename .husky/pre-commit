@@ -59,11 +59,18 @@ echo "i18n check passed"
 
 # 3b. Compiled-Blade syntax check — view:cache alone never parses its output,
 # so e.g. adjacent directives (@endif@endfeature) ship a render-time fatal.
-echo "Running Blade lint..."
+# Lint only staged templates (the full sweep runs in CI via BladeLintTest).
+STAGED_BLADE=$(git diff --cached --name-only --diff-filter=ACM -- '*.blade.php')
 
-php artisan ob:views:lint
+if [ -n "$STAGED_BLADE" ]; then
+    echo "Running Blade lint on staged template(s)..."
 
-echo "Blade lint passed"
+    echo "$STAGED_BLADE" | xargs php artisan ob:views:lint
+
+    echo "Blade lint passed"
+else
+    echo "No staged Blade templates to lint"
+fi
 
 # 4. PHPStan
 echo "Running PHPStan..."

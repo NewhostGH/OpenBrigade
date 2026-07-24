@@ -19,19 +19,22 @@ class PluginStateService
     /** Slugs of the enabled plugins, in installation order. */
     public function enabledPlugins(): array
     {
-        if ($this->enabled === null) {
-            try {
-                $this->enabled = Plugin::query()
-                    ->where('enabled', true)
-                    ->orderBy('id')
-                    ->pluck('slug')
-                    ->all();
-            } catch (Throwable) {
-                $this->enabled = [];
-            }
+        if ($this->enabled !== null) {
+            return $this->enabled;
         }
 
-        return $this->enabled;
+        try {
+            // Only memoise a *successful* read: a failed early read (e.g. before
+            // Eloquent is ready) must not poison later calls with an empty set,
+            // or enabled plugins would stay un-booted for the whole request.
+            return $this->enabled = Plugin::query()
+                ->where('enabled', true)
+                ->orderBy('id')
+                ->pluck('slug')
+                ->all();
+        } catch (Throwable) {
+            return [];
+        }
     }
 
     /** @return Collection<int,Plugin> */

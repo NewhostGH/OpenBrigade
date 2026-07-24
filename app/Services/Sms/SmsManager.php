@@ -6,9 +6,13 @@ namespace App\Services\Sms;
 
 use App\Contracts\SmsSender;
 use App\Services\ServiceInterface;
+use App\Services\Sms\Drivers\ClickatellSender;
+use App\Services\Sms\Drivers\HttpSmsSender;
 use App\Services\Sms\Drivers\LogSmsSender;
 use App\Services\Sms\Drivers\NullSmsSender;
+use App\Services\Sms\Drivers\SmsEagleSender;
 use App\Services\Sms\Drivers\SmsGatewayMeSender;
+use App\Services\Sms\Drivers\SmsModeSender;
 use App\Services\SmsSettingService;
 use InvalidArgumentException;
 
@@ -54,6 +58,10 @@ class SmsManager implements ServiceInterface
             'log' => new LogSmsSender,
             'null' => new NullSmsSender,
             'smsgatewayme' => new SmsGatewayMeSender($settings->smsGatewayMeOptions()),
+            'smsmode' => new SmsModeSender($settings->smsModeOptions()),
+            'clickatell' => new ClickatellSender($settings->clickatellOptions()),
+            'smseagle' => new SmsEagleSender($settings->smsEagleOptions()),
+            'http' => new HttpSmsSender($settings->httpOptions()),
             default => throw new InvalidArgumentException("Unsupported SMS driver [{$name}]."),
         };
     }

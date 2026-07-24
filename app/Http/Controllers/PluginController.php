@@ -154,6 +154,12 @@ class PluginController extends Controller
             $manifest = $this->installer->install($entry);
         } catch (InvalidPluginException $e) {
             return $this->flashError($e->getMessage());
+        } catch (\Throwable $e) {
+            // Never a 500: an unexpected failure (DB, filesystem, …) becomes a
+            // flash message like every pipeline refusal. Logged for diagnosis.
+            report($e);
+
+            return $this->flashError(__('admin.plugins.err_install', ['reason' => $e->getMessage()]));
         }
 
         Audit::action('plugin.installed', ['plugin' => $slug, 'version' => $manifest->version]);

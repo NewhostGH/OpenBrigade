@@ -50,17 +50,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(SmsSettingService::class);
         $this->app->singleton(MailSettingService::class);
 
-        // Plugin runtime: register every enabled plugin's autoloader and
-        // service provider. Fully guarded — a broken plugin (or a missing
-        // ob_plugin table) logs and is surfaced on the admin page, but can
-        // never take the application down.
+        // Plugin runtime singletons. The actual boot() — reading the ob_plugin
+        // table and registering each enabled plugin's provider/routes — runs in
+        // this provider's boot(), NOT here: called during register(), the very
+        // first enabledPlugins() read runs before Eloquent is ready, hits the
+        // service's Throwable guard and memoises an empty enabled-set, leaving
+        // every enabled plugin silently un-booted (routes 404) for the request.
         $this->app->singleton(PluginStateService::class);
         $this->app->singleton(PluginLoader::class);
-        try {
-            $this->app->make(PluginLoader::class)->boot($this->app);
-        } catch (\Throwable) {
-            // No plugins load; the marketplace page reports the failure.
-        }
 
         // Register singleton services (instantiated once per container)
         $this->app->singleton(BrigadeService::class, function ($app) {
@@ -108,6 +105,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Plugin runtime: register every enabled plugin's autoloader and
+        // service provider (routes, views, migrations, nav). Runs here — with
+        // Eloquent and the database ready — so enabled plugins actually boot.
+        // Fully guarded: a broken plugin (or a missing ob_plugin table) is
+        // logged and surfaced on the admin page, never breaking the app.
+        try {
+            $this->app->make(PluginLoader::class)->boot($this->app);
+        } catch (\Throwable) {
+            // No plugins load; the marketplace page reports the failure.
+        }
+
         // Apply the administrable timezone (configuration row `timezone`),
         // falling back to the config/env default.
         $this->configureTimezone();
