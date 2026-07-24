@@ -83,9 +83,12 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'dispo.php', fn () => redirect()->route('availability.index'))->name('legacy_bridge.dispo');
     Route::match(['GET', 'POST'], 'document_modal.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.document_modal');
     Route::match(['GET', 'POST'], 'documents.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.documents');
-    Route::match(['GET', 'POST'], 'download_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.download_addon');
-    Route::match(['GET', 'POST'], 'download_module.php', [LegacyBridgeController::class, 'show'])->middleware('permission:78')->name('legacy_bridge.download_module');
-    Route::match(['GET', 'POST'], 'download_package.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.download_package');
+    // Legacy addon/module/package downloaders are superseded by the native
+    // Administration ▸ Plugins marketplace — redirect instead of running the
+    // legacy installer PHP (see config/legacy_bridge.php, bridgeable=false).
+    Route::match(['GET', 'POST'], 'download_addon.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.download_addon');
+    Route::match(['GET', 'POST'], 'download_module.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.download_module');
+    Route::match(['GET', 'POST'], 'download_package.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.download_package');
     Route::match(['GET', 'POST'], 'dps.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.dps');
     Route::match(['GET', 'POST'], 'dps_calc.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.dps_calc');
     Route::match(['GET', 'POST'], 'dps_save.php', [LegacyBridgeController::class, 'show'])->middleware('permission:15')->name('legacy_bridge.dps_save');
@@ -206,7 +209,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'ins_section.php', [LegacyBridgeController::class, 'show'])->middleware('permission:55')->name('legacy_bridge.ins_section');
     Route::match(['GET', 'POST'], 'ins_type_materiel.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.ins_type_materiel');
     Route::match(['GET', 'POST'], 'ins_vehicule.php', fn () => redirect()->route('vehicle.create'))->name('legacy_bridge.ins_vehicule');
-    Route::match(['GET', 'POST'], 'install_addon.php', [LegacyBridgeController::class, 'show'])->middleware('permission:14')->name('legacy_bridge.install_addon');
+    Route::match(['GET', 'POST'], 'install_addon.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.install_addon');
     Route::match(['GET', 'POST'], 'intervention_edit.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.intervention_edit');
     Route::match(['GET', 'POST'], 'jvectormap.php', fn () => redirect()->route('organization.map'))->name('legacy_bridge.jvectormap');
     Route::match(['GET', 'POST'], 'liste_victimes.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.liste_victimes');

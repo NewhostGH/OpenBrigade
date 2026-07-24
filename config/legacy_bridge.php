@@ -459,23 +459,25 @@ return [
             'type' => 'page',
             'bridgeable' => true,
         ],
+        // Retired: superseded by the native Administration ▸ Plugins
+        // marketplace. The routes redirect there; not bridged to legacy PHP.
         'download_addon.php' => [
             'route' => 'download_addon',
             'permission' => 14,
             'type' => 'page',
-            'bridgeable' => true,
+            'bridgeable' => false,
         ],
         'download_module.php' => [
             'route' => 'download_module',
-            'permission' => 78,
+            'permission' => 14,
             'type' => 'page',
-            'bridgeable' => true,
+            'bridgeable' => false,
         ],
         'download_package.php' => [
             'route' => 'download_package',
             'permission' => 14,
             'type' => 'page',
-            'bridgeable' => true,
+            'bridgeable' => false,
         ],
         'dps.php' => [
             'route' => 'dps',
@@ -1005,11 +1007,12 @@ return [
             'type' => 'create',
             'bridgeable' => true,
         ],
+        // Retired: superseded by the native Administration ▸ Plugins marketplace.
         'install_addon.php' => [
             'route' => 'install_addon',
             'permission' => 14,
             'type' => 'page',
-            'bridgeable' => true,
+            'bridgeable' => false,
         ],
         'intervention_edit.php' => [
             'route' => 'intervention_edit',

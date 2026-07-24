@@ -11,9 +11,9 @@ no code changes.
 Caller / Notification ─▶ NotificationService::sendSms()  ─▶ SmsManager
                                                               │ resolves config('sms.driver')
                                                               ▼
-                                         ┌──────────────┬──────────────┬───────────────┐
-                                         │ log (default)│ null         │ smsgatewayme  │
-                                         └──────────────┴──────────────┴───────────────┘
+        ┌───────┬──────┬──────────────┬─────────┬────────────┬──────────┬──────┐
+        │ log   │ null │ smsgatewayme │ smsmode │ clickatell │ smseagle │ http │
+        └───────┴──────┴──────────────┴─────────┴────────────┴──────────┴──────┘
 ```
 
 - **`App\Services\Sms\SmsManager`** — resolves and caches the configured driver
@@ -33,8 +33,39 @@ Recipient numbers come from the notifiable's `routeNotificationForSms()`
 | `log`          | **Default.** Writes the message to the log and sends nothing. Send-safe. |
 | `null`         | Silently discards every message.                                         |
 | `smsgatewayme` | Sends via a device registered on [SMSGateway.me](https://smsgateway.me). |
+| `smsmode`      | [smsmode©](https://www.smsmode.com) REST API (API-key auth).             |
+| `clickatell`   | Clickatell one-API (`platform.clickatell.com`, API-key auth).            |
+| `smseagle`     | Self-hosted [SMSEagle](https://www.smseagle.eu) appliance (APIv2).       |
+| `http`         | Generic gateway: a URL template you fill with placeholders.              |
 
 Set `SMS_DRIVER=log` in any environment where real SMS must never be sent.
+
+Each real driver reads its secret from `SMS_*` env vars (below) or the matching
+Administration ▸ Notifications setting row.
+
+```dotenv
+# smsmode — REST API key; optional sender via SMS_FROM
+SMSMODE_API_KEY=your-api-key
+# SMSMODE_ENDPOINT=https://rest.smsmode.com
+
+# Clickatell — one-API integration key
+CLICKATELL_API_KEY=your-api-key
+# CLICKATELL_ENDPOINT=https://platform.clickatell.com
+
+# SMSEagle — appliance host (bare host or full URL) + access token
+SMSEAGLE_HOST=10.0.0.5
+SMSEAGLE_TOKEN=your-access-token
+
+# Generic HTTP — {to} {message} {from} {token} are rawurlencoded on send
+SMS_HTTP_URL=https://gateway.example/send?to={to}&text={message}&key={token}
+SMS_HTTP_METHOD=GET            # or POST
+SMS_HTTP_TOKEN=your-secret
+```
+
+> **Balance / credits are not ported.** The legacy `getSMSCredit_*` /
+> `show_sms_account_balance` helpers (remaining-credit display) have no
+> equivalent — the `SmsSender` contract only sends. Check credit on the
+> provider's own dashboard.
 
 ## Configuring from the admin UI (Administration ▸ Notifications)
 
@@ -45,12 +76,16 @@ back to the corresponding `SMS_*` env value**, so an install configured through
 `.env` keeps working untouched. Changes apply immediately — the driver and its
 credentials are resolved at send time (`App\Services\SmsSettingService`).
 
-| Setting row    | Meaning                                 | Env fallback             |
-| -------------- | --------------------------------------- | ------------------------ |
-| `sms_provider` | Driver: `log`, `null` or `smsgatewayme` | `SMS_DRIVER`             |
-| `sms_user`     | Reserved for future providers           | —                        |
-| `sms_password` | API token (SMSGateway.me)               | `SMSGATEWAYME_TOKEN`     |
-| `sms_api_id`   | Device ID (SMSGateway.me)               | `SMSGATEWAYME_DEVICE_ID` |
+| Setting row    | Meaning                                              | Env fallback                        |
+| -------------- | --------------------------------------------------- | ----------------------------------- |
+| `sms_provider` | Driver name (see the table above)                   | `SMS_DRIVER`                        |
+| `sms_user`     | Sender id for smsmode; unused by the others         | —                                   |
+| `sms_password` | API key / token / secret for the selected driver    | `SMSGATEWAYME_TOKEN`, `SMSMODE_API_KEY`, `CLICKATELL_API_KEY`, `SMSEAGLE_TOKEN`, `SMS_HTTP_TOKEN` |
+| `sms_api_id`   | Device ID (SMSGateway.me) or host (SMSEagle)        | `SMSGATEWAYME_DEVICE_ID`, `SMSEAGLE_HOST` |
+
+The generic `http` driver's URL template and method come from `config/sms.php`
+(`SMS_HTTP_URL` / `SMS_HTTP_METHOD`) only; just its secret is taken from the
+`sms_password` row.
 
 Legacy spellings of the provider (`smsgateway.me`, `smsgateway`) are
 normalised; an unknown provider resolves to the `null` driver (SMS disabled)
