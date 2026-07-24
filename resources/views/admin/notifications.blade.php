@@ -147,7 +147,11 @@
                                             <option value="log" @selected($provider->VALUE === 'log')>{{ __('admin.notifications.provider_log') }}</option>
                                             <option value="null" @selected($provider->VALUE === 'null')>{{ __('admin.notifications.provider_null') }}</option>
                                             <option value="smsgatewayme" @selected(in_array($provider->VALUE, ['smsgatewayme', 'smsgateway.me', 'smsgateway'], true))>SMSGateway.me</option> {{-- i18n-ignore --}}
-                                            @if (! in_array($provider->VALUE, ['', 'log', 'null', 'smsgatewayme', 'smsgateway.me', 'smsgateway'], true))
+                                            <option value="smsmode" @selected($provider->VALUE === 'smsmode')>smsmode</option> {{-- i18n-ignore --}}
+                                            <option value="clickatell" @selected($provider->VALUE === 'clickatell')>Clickatell</option> {{-- i18n-ignore --}}
+                                            <option value="smseagle" @selected($provider->VALUE === 'smseagle')>SMSEagle</option> {{-- i18n-ignore --}}
+                                            <option value="http" @selected($provider->VALUE === 'http')>{{ __('admin.notifications.provider_http') }}</option>
+                                            @if (! in_array($provider->VALUE, ['', 'log', 'null', 'smsgatewayme', 'smsgateway.me', 'smsgateway', 'smsmode', 'clickatell', 'smseagle', 'http'], true))
                                                 <option value="{{ $provider->VALUE }}" selected>{{ __('admin.notifications.provider_unknown', ['value' => $provider->VALUE]) }}</option>
                                             @endif
                                         </select>

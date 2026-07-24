@@ -14,9 +14,11 @@ use Throwable;
  * for anything left empty — so an install configured through .env keeps
  * working untouched.
  *
- * Provider mapping: `log` and `null` pass through; `smsgatewayme` (and its
- * legacy spellings) maps token = sms_password, device_id = sms_api_id.
- * An unknown provider resolves to the null driver with a one-time warning.
+ * Provider mapping: `log` and `null` pass through; every real gateway reads
+ * its secret from sms_password. `smsgatewayme` also takes device_id from
+ * sms_api_id, `smseagle` takes its host from sms_api_id, and `smsmode` takes
+ * an optional sender id from sms_user. An unknown provider resolves to the
+ * null driver with a one-time warning.
  */
 class SmsSettingService
 {
@@ -40,6 +42,10 @@ class SmsSettingService
             'log' => 'log',
             'null', 'none', 'aucun' => 'null',
             'smsgatewayme', 'smsgateway.me', 'smsgateway' => 'smsgatewayme',
+            'smsmode', 'sms mode' => 'smsmode',
+            'clickatell' => 'clickatell',
+            'smseagle' => 'smseagle',
+            'http' => 'http',
             default => $this->unknown($stored),
         };
     }
@@ -59,6 +65,77 @@ class SmsSettingService
             'device_id' => $this->get('sms_api_id') !== '' ? $this->get('sms_api_id') : ($config['device_id'] ?? ''),
             'endpoint' => $config['endpoint'] ?? 'https://smsgateway.me/api/v4',
         ];
+    }
+
+    /**
+     * Driver options for the smsmode sender: api key from sms_password (env
+     * fallback), optional sender id from sms_user, endpoint from config.
+     *
+     * @return array<string,mixed>
+     */
+    public function smsModeOptions(): array
+    {
+        $config = (array) config('sms.drivers.smsmode');
+
+        return [
+            'api_key' => $this->stored('sms_password', $config['api_key'] ?? ''),
+            'endpoint' => $config['endpoint'] ?? 'https://rest.smsmode.com',
+        ];
+    }
+
+    /**
+     * Driver options for the Clickatell sender: api key from sms_password
+     * (env fallback), endpoint from config.
+     *
+     * @return array<string,mixed>
+     */
+    public function clickatellOptions(): array
+    {
+        $config = (array) config('sms.drivers.clickatell');
+
+        return [
+            'api_key' => $this->stored('sms_password', $config['api_key'] ?? ''),
+            'endpoint' => $config['endpoint'] ?? 'https://platform.clickatell.com',
+        ];
+    }
+
+    /**
+     * Driver options for the SMSEagle sender: host from sms_api_id and access
+     * token from sms_password (env fallback for both).
+     *
+     * @return array<string,mixed>
+     */
+    public function smsEagleOptions(): array
+    {
+        $config = (array) config('sms.drivers.smseagle');
+
+        return [
+            'host' => $this->stored('sms_api_id', $config['host'] ?? ''),
+            'token' => $this->stored('sms_password', $config['token'] ?? ''),
+        ];
+    }
+
+    /**
+     * Driver options for the generic HTTP sender: URL template and method from
+     * config, secret token from sms_password (env fallback).
+     *
+     * @return array<string,mixed>
+     */
+    public function httpOptions(): array
+    {
+        $config = (array) config('sms.drivers.http');
+
+        return [
+            'url' => $config['url'] ?? '',
+            'method' => $config['method'] ?? 'GET',
+            'token' => $this->stored('sms_password', $config['token'] ?? ''),
+        ];
+    }
+
+    /** Stored value for a key, falling back to the given default when empty. */
+    private function stored(string $key, mixed $fallback): mixed
+    {
+        return $this->get($key) !== '' ? $this->get($key) : $fallback;
     }
 
     /** Raw stored value ('' when missing or unreadable). */
