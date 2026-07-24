@@ -88,6 +88,31 @@ test('enabled plugins boot and a broken one is isolated', function () {
         ->and($loader->loadFailures()['life-boom'])->toContain('boom');
 });
 
+test('a failed enabledPlugins read is not memoised', function () {
+    // Regression: PluginLoader::boot() runs early; if the first read fails
+    // (table not ready) and that empty result is cached, plugins stay
+    // un-booted for the whole request. A later read must recover.
+    Schema::dropIfExists('ob_plugin');
+
+    $state = new PluginStateService;
+    expect($state->enabledPlugins())->toBe([]);   // read failed → empty, uncached
+
+    Schema::create('ob_plugin', function (Blueprint $t) {
+        $t->id();
+        $t->string('slug')->unique();
+        $t->string('name');
+        $t->string('version');
+        $t->string('min_app_version')->default('');
+        $t->string('max_app_version')->default('');
+        $t->boolean('enabled')->default(false);
+        $t->timestamp('installed_at')->nullable();
+        $t->timestamps();
+    });
+    recordPlugin('life-ok', enabled: true);
+
+    expect($state->enabledPlugins())->toBe(['life-ok']);   // recovers, not stuck on []
+});
+
 test('a disabled plugin is never booted', function () {
     writePlugin('life-off', 'ObPlugin\\LifeOff',
         'public function register(): void { app()->instance("life-off-booted", true); }');

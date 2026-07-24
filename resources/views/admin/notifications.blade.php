@@ -131,6 +131,13 @@
             <div class="card-body p-0">
                 <table class="table table-sm mb-0 align-middle">
                     <tbody>
+                        @include('admin.partials.setting-toggle', [
+                            's' => $rows->get('sms_allowed'),
+                            'label' => 'admin.notifications.sms_allowed',
+                            'hint' => 'admin.notifications.sms_allowed_hint',
+                            'default' => '1',
+                            'back' => 'notifications',
+                        ])
                         @php($provider = $rows->get('sms_provider'))
                         <tr>
                             <td class="ps-3" style="width:40%;vertical-align:middle;font-size:var(--font-size-sm);">
@@ -145,13 +152,12 @@
                                         <select name="VALUE" class="form-select form-select-sm ob-setting-row-select" style="max-width:280px;">
                                             <option value="" @selected(($provider->VALUE ?? '') === '')>{{ __('admin.notifications.provider_env', ['driver' => $envDriver]) }}</option>
                                             <option value="log" @selected($provider->VALUE === 'log')>{{ __('admin.notifications.provider_log') }}</option>
-                                            <option value="null" @selected($provider->VALUE === 'null')>{{ __('admin.notifications.provider_null') }}</option>
                                             <option value="smsgatewayme" @selected(in_array($provider->VALUE, ['smsgatewayme', 'smsgateway.me', 'smsgateway'], true))>SMSGateway.me</option> {{-- i18n-ignore --}}
                                             <option value="smsmode" @selected($provider->VALUE === 'smsmode')>smsmode</option> {{-- i18n-ignore --}}
                                             <option value="clickatell" @selected($provider->VALUE === 'clickatell')>Clickatell</option> {{-- i18n-ignore --}}
                                             <option value="smseagle" @selected($provider->VALUE === 'smseagle')>SMSEagle</option> {{-- i18n-ignore --}}
                                             <option value="http" @selected($provider->VALUE === 'http')>{{ __('admin.notifications.provider_http') }}</option>
-                                            @if (! in_array($provider->VALUE, ['', 'log', 'null', 'smsgatewayme', 'smsgateway.me', 'smsgateway', 'smsmode', 'clickatell', 'smseagle', 'http'], true))
+                                            @if (! in_array($provider->VALUE, ['', 'log', 'smsgatewayme', 'smsgateway.me', 'smsgateway', 'smsmode', 'clickatell', 'smseagle', 'http'], true))
                                                 <option value="{{ $provider->VALUE }}" selected>{{ __('admin.notifications.provider_unknown', ['value' => $provider->VALUE]) }}</option>
                                             @endif
                                         </select>

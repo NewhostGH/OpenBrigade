@@ -51,13 +51,14 @@ test('resolves each gateway credential from settings with env fallback', functio
     expect($stored->smsModeOptions())->toMatchArray(['api_key' => 'db-secret'])
         ->and($stored->clickatellOptions())->toMatchArray(['api_key' => 'db-secret'])
         ->and($stored->smsEagleOptions())->toMatchArray(['host' => 'db-host', 'token' => 'db-secret'])
-        ->and($stored->httpOptions())->toMatchArray(['url' => 'https://gw/send?to={to}', 'method' => 'GET', 'token' => 'db-secret']);
+        // http URL comes from the sms_api_id row (settings-first).
+        ->and($stored->httpOptions())->toMatchArray(['url' => 'db-host', 'method' => 'GET', 'token' => 'db-secret']);
 
     $empty = smsSettings([]);
     expect($empty->smsModeOptions())->toMatchArray(['api_key' => 'env-mode'])
         ->and($empty->clickatellOptions())->toMatchArray(['api_key' => 'env-ck'])
         ->and($empty->smsEagleOptions())->toMatchArray(['host' => 'env-host', 'token' => 'env-eagle'])
-        ->and($empty->httpOptions())->toMatchArray(['token' => 'env-http']);
+        ->and($empty->httpOptions())->toMatchArray(['url' => 'https://gw/send?to={to}', 'token' => 'env-http']);
 });
 
 test('smsgatewayme credentials come from settings with env fallback', function () {

@@ -7,23 +7,30 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Animaux is no longer a core feature: it ships as an installable plugin from
- * the official registry (slug `animaux`), so it must not appear on the
- * Administration ▸ Fonctionnalités screen as a WIP core toggle.
+ * the official registry (slug `animaux`), so enabling/disabling the plugin —
+ * not a settings toggle — governs it.
  *
- * We only remove the `ob_feature` registry row — the legacy `configuration`
- * row (id 81, "Activer la gestion des animaux") is left untouched so the
- * legacy bridge and any not-yet-migrated code keep reading it. down() restores
- * the feature row from that legacy row, mirroring the original backfill.
+ * Two things must go, or "Activer la gestion des animaux" keeps showing up:
+ *  - the `ob_feature` row (Administration ▸ Fonctionnalités), and
+ *  - the legacy `configuration` row (id 81) must be HIDDEN, otherwise the
+ *    Options screen (AdminController::settings) — which lists visible legacy
+ *    rows not mapped to an ob_feature — would surface it again once unmapped.
+ *
+ * The legacy row's VALUE is left intact (only HIDDEN flips) so the bridge and
+ * any not-yet-migrated code keep reading it.
  */
 return new class extends Migration
 {
     public function up(): void
     {
         DB::table('ob_feature')->where('key', 'animaux')->delete();
+        DB::table('configuration')->where('NAME', 'animaux')->update(['HIDDEN' => 1]);
     }
 
     public function down(): void
     {
+        DB::table('configuration')->where('NAME', 'animaux')->update(['HIDDEN' => 0]);
+
         $row = DB::table('configuration')->where('NAME', 'animaux')->first();
 
         if ($row === null || DB::table('ob_feature')->where('key', 'animaux')->exists()) {

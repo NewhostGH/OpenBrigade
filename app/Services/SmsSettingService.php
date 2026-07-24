@@ -16,9 +16,10 @@ use Throwable;
  *
  * Provider mapping: `log` and `null` pass through; every real gateway reads
  * its secret from sms_password. `smsgatewayme` also takes device_id from
- * sms_api_id, `smseagle` takes its host from sms_api_id, and `smsmode` takes
- * an optional sender id from sms_user. An unknown provider resolves to the
- * null driver with a one-time warning.
+ * sms_api_id, `smseagle` takes its host from sms_api_id, `http` takes its URL
+ * template from sms_api_id, and `smsmode` takes an optional sender id from
+ * sms_user. An unknown provider resolves to the null driver with a one-time
+ * warning.
  */
 class SmsSettingService
 {
@@ -126,7 +127,9 @@ class SmsSettingService
         $config = (array) config('sms.drivers.http');
 
         return [
-            'url' => $config['url'] ?? '',
+            // URL template lives in the sms_api_id row (env fallback), so it is
+            // editable from the admin UI and required for this driver.
+            'url' => $this->stored('sms_api_id', $config['url'] ?? ''),
             'method' => $config['method'] ?? 'GET',
             'token' => $this->stored('sms_password', $config['token'] ?? ''),
         ];
@@ -169,7 +172,35 @@ class SmsSettingService
             DB::table('configuration')->where('NAME', $name)->update(['VALUE' => $value]);
         }
 
+        $this->ensureSmsAllowedRow();
+
         $this->cache = null;
+    }
+
+    /**
+     * SMS is allowed by default (absent row = allowed), but the admin toggle
+     * needs a real row to write to — create it once (enabled), hidden like the
+     * other notification settings.
+     */
+    private function ensureSmsAllowedRow(): void
+    {
+        if (DB::table('configuration')->where('NAME', 'sms_allowed')->exists()) {
+            return;
+        }
+
+        DB::table('configuration')->insert([
+            'ID' => ((int) DB::table('configuration')->max('ID')) + 1,
+            'NAME' => 'sms_allowed',
+            'VALUE' => '1',
+            'DESCRIPTION' => 'Autoriser l\'envoi de SMS (Notifications)',
+            'ORDERING' => 930,
+            'HIDDEN' => 1,
+            'TAB' => 92,
+            'YESNO' => 1,
+            'IS_FILE' => 0,
+            'CARD_NAME' => 'Notifications',
+            'DISPLAY_NAME' => null,
+        ]);
     }
 
     private function unknown(string $stored): string
