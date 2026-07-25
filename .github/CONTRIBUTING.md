@@ -299,6 +299,7 @@ A maintainer will review your PR. Please be patient — this is a community proj
 - [ ] `composer analyse` passes (PHPStan / Larastan).
 - [ ] `composer test` passes (Pest, including `ConventionsTest`).
 - [ ] Existing features are not broken.
+- [ ] A line was added under `## [Unreleased]` in [`CHANGELOG.md`](../CHANGELOG.md) if the change is user-visible (see [versioning.md](../docs/dev/versioning.md)).
 - [ ] The PR description clearly explains the changes.
 - [ ] No secrets or credentials are included.
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\ReleaseVersion;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
@@ -26,10 +27,10 @@ return new class extends Migration
         }
 
         // This migration IS the 5.5 → 6.0.0 shift: stamp the installed version
-        // (configuration row 1, NAME 'version' — the reference schema still
-        // carries the legacy value). That row is the version SSOT: it overlays
+        // (configuration row NAME 'version' — the reference schema still carries
+        // the legacy value). That row is the version SSOT: it overlays
         // config('brigade.version') / config('app.version') at boot.
-        DB::table('configuration')->where('ID', 1)->update(['VALUE' => '6.0.0']);
+        ReleaseVersion::stamp('6.0.0');
     }
 
     public function down(): void
