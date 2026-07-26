@@ -266,7 +266,7 @@ album photos).
 - [x] User preferences (`personnel_preferences.php`) — `/personnel/{id}/preferences` page; PP_ID 1 (tooltips toggle), PP_ID 4 (org chart order), PP_ID 15 (items per page); self-edit or perm 2; upsert into `personnel_preferences`; preferences icon in personnel show header
 - [x] Salarié data (`upd_personnel_salarie.php`) — TS_ contract/hours fields card on personnel show page (perm 2)
 - [x] Emergency contacts (`personnel_contact.php`)
-- [ ] Contact types referential CRUD (`contact_type` table) — the "Identifiants de contact" card on the profile only renders when `contact_type` has rows, but there is currently no UI to manage those types; add an admin/référentiel CRUD card (icon, label) so contact handles can be configured without touching the DB
+- [x] Contact types referential CRUD (`contact_type` table) — admin référentiel CRUD under Paramétrage (`/admin/references/contact-type`, perm 5): add/edit/delete contact-handle types (name + Font Awesome icon), with a usage guard that blocks deleting a type still referenced by `personnel_contact`
 - [x] Homonym management (`homonymes_*.php`) — detect same-name records on personnel show; side-by-side merge page with selective data transfer (competences, formations, participations), radiate/delete options (perm 2/3)
 - [x] Contact / email lists (`listecontacts.php`, `listemails.php`) — emails.txt + contacts.csv bulk export from personnel list
 - [x] Qualifications export (`qualifications_xls.php`) — XLS / CSV via `TableExportService`, section-scoped, filter & `?cols=` aware

@@ -305,6 +305,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/references/position', [ReferenceController::class, 'positionStore'])->name('admin.references.position.store')->middleware('permission:18');
     Route::patch('/admin/references/position/{id}', [ReferenceController::class, 'positionUpdate'])->name('admin.references.position.update')->middleware('permission:18');
     Route::delete('/admin/references/position/{id}', [ReferenceController::class, 'positionDestroy'])->name('admin.references.position.destroy')->middleware('permission:18');
+    // Contact types (contact handles referential)
+    Route::get('/admin/references/contact-type', [ReferenceController::class, 'contactTypeIndex'])->name('admin.references.contact-type')->middleware('permission:5');
+    Route::post('/admin/references/contact-type', [ReferenceController::class, 'contactTypeStore'])->name('admin.references.contact-type.store')->middleware('permission:5');
+    Route::patch('/admin/references/contact-type/{id}', [ReferenceController::class, 'contactTypeUpdate'])->name('admin.references.contact-type.update')->middleware('permission:5');
+    Route::delete('/admin/references/contact-type/{id}', [ReferenceController::class, 'contactTypeDestroy'])->name('admin.references.contact-type.destroy')->middleware('permission:5');
     Route::middleware('feature:cotisations')->group(function () {
         Route::get('/dues', [DuesController::class, 'index'])->name('dues.index')->middleware('permission:53');
         Route::post('/dues', [DuesController::class, 'batchSave'])->name('dues.save')->middleware('permission:53');
