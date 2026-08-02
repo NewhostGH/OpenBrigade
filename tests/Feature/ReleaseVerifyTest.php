@@ -1,13 +1,14 @@
 <?php
 
 use App\Services\ReleaseVerificationService;
+use Mockery\MockInterface;
 
 /**
  * The command's job is to map the report status to an exit code and orchestrate
  * the webhook; the checks themselves are covered by the service unit test. So
  * these tests bind a mock service returning a controlled report.
  */
-function fakeVerifier(string $status, bool $webhook = false): Mockery\MockInterface
+function fakeVerifier(string $status, bool $webhook = false): MockInterface
 {
     $report = [
         'status' => $status,
