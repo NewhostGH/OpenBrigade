@@ -366,7 +366,7 @@ at folder granularity (they are binary assets copied as-is).
 | `reminder.php`          | **WIP**                                                                                  |
 | `histo_sms.php`         | **WIP**                                                                                  |
 | `push_monitor.php`      | **WIP**                                                                                  |
-| `rss.php`               | **WIP**                                                                                  |
+| `rss.php`               | `EventFeedController.php` + `EventFeedService` / `RssFeedService` (`GET /feeds/events`)   |
 
 ## Geolocation / maps
 

@@ -17,6 +17,7 @@ use App\Http\Controllers\DutyController;
 use App\Http\Controllers\DutyTypeController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventFeedController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\GeolocationController;
 use App\Http\Controllers\HealthController;
@@ -62,6 +63,11 @@ Route::get('/', function () {
 // Public health-check for uptime probes / load balancers. JSON, no auth — it
 // reports service availability only, never data. (Laravel's bare /up stays.)
 Route::get('/health', HealthController::class)->name('health');
+
+// Public RSS 2.0 feed of upcoming events (legacy rss.php). No auth — it exposes
+// only events explicitly flagged visible outside the organisation, never member
+// data. Optional filters: ?section={S_ID} (+ descendants), ?types=FOR,INT.
+Route::get('/feeds/events', EventFeedController::class)->name('feed.events');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
