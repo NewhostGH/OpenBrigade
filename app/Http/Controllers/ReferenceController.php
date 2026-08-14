@@ -30,6 +30,7 @@ class ReferenceController extends Controller
             'equipe' => DB::table('equipe')->count(),
             'poste' => DB::table('poste')->count(),
             'contact_type' => DB::table('contact_type')->count(),
+            'poste_hierarchie' => DB::table('poste_hierarchie')->count(),
         ];
 
         return view('admin.references.index', compact('counts'));
@@ -1046,5 +1047,140 @@ class ReferenceController extends Controller
 
         return redirect()->route('admin.references.contact-type')
             ->with('success', 'Identifiant de contact supprimé.');
+    }
+
+    // ── Hiérarchie de compétences (poste_hierarchie) ───────────────────────────
+    //
+    // A hierarchy groups competences (postes) into ordered levels and drives three
+    // behaviours on activities/qualifications: hide lower competences, allow
+    // cascading expiry prolongation, and make that prolongation mandatory. A poste
+    // belongs to at most one hierarchy through its PH_CODE / PH_LEVEL columns.
+
+    public function competenceHierarchyIndex(): View
+    {
+        $hierarchies = DB::table('poste_hierarchie')
+            ->orderBy('PH_CODE')
+            ->get();
+
+        // Member competences per hierarchy, ordered by level (niveau croissant).
+        $members = DB::table('poste as p')
+            ->join('equipe as e', 'e.EQ_ID', '=', 'p.EQ_ID')
+            ->whereNotNull('p.PH_CODE')
+            ->orderBy('p.PH_LEVEL')
+            ->orderBy('p.TYPE')
+            ->get(['p.PS_ID', 'p.TYPE', 'p.DESCRIPTION', 'p.PH_CODE', 'p.PH_LEVEL', 'e.EQ_NOM'])
+            ->groupBy('PH_CODE');
+
+        // Competences not yet attached to any hierarchy, for the assignment select.
+        $available = DB::table('poste as p')
+            ->join('equipe as e', 'e.EQ_ID', '=', 'p.EQ_ID')
+            ->whereNull('p.PH_CODE')
+            ->orderBy('e.EQ_ORDER')
+            ->orderBy('p.TYPE')
+            ->get(['p.PS_ID', 'p.TYPE', 'p.DESCRIPTION', 'e.EQ_NOM']);
+
+        return view('admin.references.competence-hierarchy', compact('hierarchies', 'members', 'available'));
+    }
+
+    public function competenceHierarchyStore(Request $request): RedirectResponse
+    {
+        $request->merge(['PH_CODE' => strtoupper((string) $request->input('PH_CODE'))]);
+
+        $v = $request->validate([
+            'PH_CODE' => ['required', 'string', 'max:15', 'regex:/^[A-Z0-9_]+$/', 'unique:poste_hierarchie,PH_CODE'],
+            'PH_NAME' => ['required', 'string', 'max:30'],
+        ]);
+
+        $updateExpiry = $request->boolean('PH_UPDATE_LOWER_EXPIRY');
+
+        DB::table('poste_hierarchie')->insert([
+            'PH_CODE' => $v['PH_CODE'],
+            'PH_NAME' => $v['PH_NAME'],
+            'PH_HIDE_LOWER' => $request->boolean('PH_HIDE_LOWER') ? 1 : 0,
+            'PH_UPDATE_LOWER_EXPIRY' => $updateExpiry ? 1 : 0,
+            // "Mandatory" only makes sense when prolongation is enabled.
+            'PH_UPDATE_MANDATORY' => $updateExpiry && $request->boolean('PH_UPDATE_MANDATORY') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.references.competence-hierarchy')
+            ->with('success', 'Hiérarchie de compétences créée.');
+    }
+
+    public function competenceHierarchyUpdate(Request $request, string $code): RedirectResponse
+    {
+        if (! DB::table('poste_hierarchie')->where('PH_CODE', $code)->exists()) {
+            abort(404);
+        }
+
+        $request->merge(['PH_CODE' => strtoupper((string) $request->input('PH_CODE'))]);
+
+        $v = $request->validate([
+            'PH_CODE' => ['required', 'string', 'max:15', 'regex:/^[A-Z0-9_]+$/',
+                Rule::unique('poste_hierarchie', 'PH_CODE')->ignore($code, 'PH_CODE')],
+            'PH_NAME' => ['required', 'string', 'max:30'],
+        ]);
+
+        $updateExpiry = $request->boolean('PH_UPDATE_LOWER_EXPIRY');
+
+        DB::transaction(function () use ($v, $code, $request, $updateExpiry) {
+            DB::table('poste_hierarchie')->where('PH_CODE', $code)->update([
+                'PH_CODE' => $v['PH_CODE'],
+                'PH_NAME' => $v['PH_NAME'],
+                'PH_HIDE_LOWER' => $request->boolean('PH_HIDE_LOWER') ? 1 : 0,
+                'PH_UPDATE_LOWER_EXPIRY' => $updateExpiry ? 1 : 0,
+                'PH_UPDATE_MANDATORY' => $updateExpiry && $request->boolean('PH_UPDATE_MANDATORY') ? 1 : 0,
+            ]);
+
+            // Keep the member competences pointing at the renamed hierarchy.
+            if ($v['PH_CODE'] !== $code) {
+                DB::table('poste')->where('PH_CODE', $code)->update(['PH_CODE' => $v['PH_CODE']]);
+            }
+        });
+
+        return redirect()->route('admin.references.competence-hierarchy')
+            ->with('success', 'Hiérarchie de compétences mise à jour.');
+    }
+
+    public function competenceHierarchyDestroy(string $code): RedirectResponse
+    {
+        DB::transaction(function () use ($code) {
+            DB::table('poste_hierarchie')->where('PH_CODE', $code)->delete();
+            // Detach the member competences (mirrors the legacy delete cascade).
+            DB::table('poste')->where('PH_CODE', $code)->update(['PH_CODE' => null, 'PH_LEVEL' => null]);
+        });
+
+        return redirect()->route('admin.references.competence-hierarchy')
+            ->with('success', 'Hiérarchie de compétences supprimée.');
+    }
+
+    public function competenceHierarchyMemberAdd(Request $request, string $code): RedirectResponse
+    {
+        if (! DB::table('poste_hierarchie')->where('PH_CODE', $code)->exists()) {
+            abort(404);
+        }
+
+        $v = $request->validate([
+            'PS_ID' => ['required', 'integer', 'exists:poste,PS_ID'],
+            'PH_LEVEL' => ['required', 'integer', 'min:1', 'max:99'],
+        ]);
+
+        DB::table('poste')->where('PS_ID', $v['PS_ID'])->update([
+            'PH_CODE' => $code,
+            'PH_LEVEL' => $v['PH_LEVEL'],
+        ]);
+
+        return redirect()->route('admin.references.competence-hierarchy')
+            ->with('success', 'Compétence ajoutée à la hiérarchie.');
+    }
+
+    public function competenceHierarchyMemberRemove(string $code, int $psId): RedirectResponse
+    {
+        DB::table('poste')
+            ->where('PS_ID', $psId)
+            ->where('PH_CODE', $code)
+            ->update(['PH_CODE' => null, 'PH_LEVEL' => null]);
+
+        return redirect()->route('admin.references.competence-hierarchy')
+            ->with('success', 'Compétence retirée de la hiérarchie.');
     }
 }
