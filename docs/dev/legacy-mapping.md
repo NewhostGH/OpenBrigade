@@ -493,8 +493,8 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file           | New implementation                   |
 | --------------------- | ------------------------------------ |
-| `qrcode.php`          | **WIP**                              |
-| `qrcode_pic.php`      | **WIP**                              |
+| `qrcode.php`          | `PersonnelController::qrCode` → `personnel/qr-code.blade.php` |
+| `qrcode_pic.php`      | `QrCodeService` (SVG, inline) — identity payload; URL variant deferred |
 | `cav_edit.php`        | **WIP**                              |
 | `paginator.class.php` | N/A — replaced by Laravel pagination |
 
@@ -571,7 +571,7 @@ Replaced by Composer packages where a Laravel equivalent exists; otherwise **WIP
 | `lib/PHPMailer/`    | N/A — replaced by Laravel Mail (when mail ported)                                                                                                              |
 | `lib/SMSGatewayMe/` | **WIP**                                                                                                                                                        |
 | `lib/fpdf/`         | Replaced by client-side pdf-lib (`resources/js/ob-pdf-personnel.js`, `ob-pdf-bilan.js`) for livret / carte / bilans; remaining `pdf_*.php` pages still **WIP** |
-| `lib/phpqrcode/`    | **WIP**                                                                                                                                                        |
+| `lib/phpqrcode/`    | Replaced by Composer `endroid/qr-code`, wrapped by `App\Services\QrCodeService`                                                                                 |
 | `lib/vendor/`       | N/A — replaced by Composer `vendor/`                                                                                                                           |
 | `lib/index.php`     | N/A                                                                                                                                                            |
 

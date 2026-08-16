@@ -111,6 +111,12 @@ class Personnel extends Model
         return $this->belongsTo(Section::class, 'P_SECTION', 'S_ID');
     }
 
+    /** The nationality of this person (legacy pays reference table). */
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'P_PAYS', 'ID');
+    }
+
     /** The primary permission group of this person. */
     public function groupe(): BelongsTo
     {

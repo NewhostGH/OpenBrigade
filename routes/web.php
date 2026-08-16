@@ -460,6 +460,8 @@ Route::middleware('auth')->group(function () {
         ->name('personnel.export.formations')->middleware('permission:0');
     Route::get('personnel/{personnel}/vcard', [PersonnelController::class, 'exportVcard'])
         ->name('personnel.vcard')->middleware('permission:0');
+    Route::get('personnel/{personnel}/qr-code', [PersonnelController::class, 'qrCode'])
+        ->name('personnel.qr-code')->middleware('permission:0');
     Route::get('personnel/{personnel}/export/meetings', [PersonnelController::class, 'exportMeetingsXls'])
         ->name('personnel.export.meetings')->middleware('permission:0');
     Route::get('personnel/{personnel}/logbook-data', [PersonnelController::class, 'logbookData'])

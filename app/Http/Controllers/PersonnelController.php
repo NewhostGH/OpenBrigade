@@ -31,6 +31,7 @@ use App\Rules\Phone;
 use App\Services\FeatureService;
 use App\Services\PermissionResolver;
 use App\Services\PersonnelExportService;
+use App\Services\QrCodeService;
 use App\Services\SectionScopeService;
 use App\Services\TableExportService;
 use App\Services\UploadSecurityService;
@@ -1315,6 +1316,27 @@ class PersonnelController extends Controller
         return response($vcf, 200, [
             'Content-Type' => 'text/vcard; charset=UTF-8',
             'Content-Availabilitysition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
+
+    /**
+     * Identity QR code for a personnel (legacy qrcode.php / qrcode_pic.php).
+     * Everyone may view their own; viewing another member's requires the
+     * technical-admin permission (legacy check_rights($id, 14)).
+     */
+    public function qrCode(Personnel $personnel, QrCodeService $qrCode): View
+    {
+        if (auth()->id() !== $personnel->P_ID && ! auth()->user()->hasPermission(14)) {
+            abort(403);
+        }
+
+        $personnel->loadMissing(['section', 'country']);
+
+        $text = (new PersonnelExportService)->buildQrText($personnel);
+
+        return view('personnel.qr-code', [
+            'personnel' => $personnel,
+            'qrSvg' => $qrCode->svg($text),
         ]);
     }
 
