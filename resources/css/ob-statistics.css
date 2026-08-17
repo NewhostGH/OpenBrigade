@@ -191,3 +191,40 @@
         break-inside: avoid;
     }
 }
+/* ── Financial report — "Cotisations par section" ─────────────────────────── */
+.ob-finrep-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ob-finrep-field label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted-soft);
+    margin: 0;
+}
+
+.ob-finrep-table td,
+.ob-finrep-table th {
+    white-space: nowrap;
+}
+
+.ob-finrep-section {
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.ob-finrep-rejets {
+    color: var(--color-danger);
+}
+
+.ob-finrep-subtotal {
+    background: var(--brand-bg);
+    font-weight: 500;
+}
+
+.ob-finrep-total td {
+    background: var(--component-bg);
+    border-top: 2px solid var(--component-border);
+    font-weight: 700;
+}

@@ -143,7 +143,7 @@ return [
                 ['key' => 'stats.dashboard', 'label' => 'Tableau de bord',      'url' => '/statistics/dashboard',          'icon' => 'chart-line',  'permission' => 27],
                 ['key' => 'stats.report',    'label' => 'Bilan annuel',          'url' => '/statistics/annual-report',       'icon' => 'chart-pie',   'permission' => 27],
                 ['key' => 'stats.reporting', 'label' => 'Reporting',             'url' => '/legacy/export.php',               'icon' => 'file-export', 'permission' => 27],
-                ['key' => 'stats.dues',      'label' => 'Cotisations',           'url' => '/legacy/report_dues.php',   'icon' => 'coins',       'permission' => 53],
+                ['key' => 'stats.dues',      'label' => 'Cotisations',           'url' => '/statistics/financial-report',    'icon' => 'coins',       'permission' => 53],
             ],
         ],
 

@@ -18,6 +18,7 @@ use App\Http\Controllers\DutyTypeController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\GeolocationController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\Legacy\LegacyBridgeController;
@@ -418,6 +419,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/statistics/annual-report/overview', [StatisticsController::class, 'reportOverview'])->name('statistics.annual-report.overview')->middleware('permission:27');
     Route::get('/statistics/annual-report/activities', [StatisticsController::class, 'reportActivities'])->name('statistics.annual-report.activities')->middleware('permission:27');
     Route::get('/statistics/annual-report/training', [StatisticsController::class, 'reportTraining'])->name('statistics.annual-report.training')->middleware('permission:27');
+    // Financial report — "Cotisations par section" (replaces report_cotisations.php)
+    Route::get('/statistics/financial-report', [FinancialReportController::class, 'index'])->name('statistics.financial-report')->middleware('permission:53');
+    Route::get('/statistics/financial-report/export/xls', [FinancialReportController::class, 'exportXls'])->name('statistics.financial-report.export.xls')->middleware('permission:53');
+    Route::get('/statistics/financial-report/export/csv', [FinancialReportController::class, 'exportCsv'])->name('statistics.financial-report.export.csv')->middleware('permission:53');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');
