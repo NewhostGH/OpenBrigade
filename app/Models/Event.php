@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * Legacy table: evenement
@@ -35,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $E_ADDRESS
  * @property string|null $E_COMMENT
  * @property string|null $E_COMMENT2
- * @property \Illuminate\Support\Carbon|null $E_CREATE_DATE
+ * @property Carbon|null $E_CREATE_DATE
  * @property string|null $TE_CODE
  * @property int|string|null $E_PARENT
  * @property int|null $S_ID
