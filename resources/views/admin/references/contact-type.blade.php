@@ -12,18 +12,7 @@
 
 <div class="mx-3 mt-3">
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible py-2 mb-3">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible py-2 mb-3">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+    {{-- Flash messages (success/error) are rendered globally by layout.app --}}
 
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
