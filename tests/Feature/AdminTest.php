@@ -185,6 +185,7 @@ test('parametrage index renders the admin.references.index view', function () {
             'grade' => 0,
             'equipe' => 0,
             'poste' => 0,
+            'contact_type' => 0,
         ],
     ]);
 
@@ -192,6 +193,35 @@ test('parametrage index renders the admin.references.index view', function () {
         ->assertOk()
         ->assertViewIs('admin.references.index');
 });
+
+test('contact-type referential renders the admin.references.contact-type view', function () {
+    adminStubView(ReferenceController::class, 'contactTypeIndex', 'admin.references.contact-type', [
+        'items' => collect([
+            (object) ['CT_ID' => 1, 'CONTACT_TYPE' => 'WhatsApp', 'CT_ICON' => 'fab fa-whatsapp', 'nb_used' => 3],
+        ]),
+    ]);
+
+    $this->actingAs(adminFakeUser())->get('/admin/references/contact-type')
+        ->assertOk()
+        ->assertViewIs('admin.references.contact-type')
+        ->assertViewHas('items')
+        ->assertSee('WhatsApp');
+});
+
+test('contact-type referential is forbidden without permission', function () {
+    $this->actingAs(adminFakeUser(can: false))->get('/admin/references/contact-type')
+        ->assertForbidden();
+});
+
+test('contact-type write actions are forbidden without permission', function (string $method, string $uri) {
+    $this->actingAs(adminFakeUser(can: false))
+        ->call($method, $uri)
+        ->assertForbidden();
+})->with([
+    ['POST', '/admin/references/contact-type'],
+    ['PATCH', '/admin/references/contact-type/1'],
+    ['DELETE', '/admin/references/contact-type/1'],
+]);
 
 // ── Permissions ────────────────────────────────────────────────────────────
 

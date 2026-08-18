@@ -17,6 +17,7 @@
             ['route' => 'admin.references.participation-type','icon' => 'users',          'label' => 'Fonctions activité',   'count' => $counts['type_participation'],'desc' => 'Chef de groupe, Équipier…'],
             ['route' => 'admin.references.team',           'icon' => 'sitemap',        'label' => 'Types de compétence',  'count' => $counts['equipe'],            'desc' => 'Groupes de compétences (PSE, CFF…)'],
             ['route' => 'admin.references.position',       'icon' => 'id-badge',       'label' => 'Compétences',          'count' => $counts['poste'],             'desc' => 'Diplômes et qualifications'],
+            ['route' => 'admin.references.contact-type',   'icon' => 'address-card',   'label' => 'Identifiants de contact','count' => $counts['contact_type'],     'desc' => 'Skype, WhatsApp, Zello…'],
             ['route' => 'admin.references.equipment-category',  'icon' => 'layer-group',    'label' => 'Catégories matériel',  'count' => $counts['categorie_materiel'], 'desc' => 'EPI, outillage, véhicule…'],
             ['route' => 'admin.references.equipment-type',     'icon' => 'toolbox',        'label' => 'Types de matériel',    'count' => $counts['type_materiel'],     'desc' => 'EPI, outillage…'],
             ['route' => 'admin.references.consumable-category','icon' => 'layer-group',    'label' => 'Catégories consommable','count' => $counts['categorie_consommable'], 'desc' => 'Médicaments, carburant…'],

@@ -29,6 +29,7 @@ class ReferenceController extends Controller
             'categorie_grade' => DB::table('categorie_grade')->where('CG_CODE', '<>', 'ALL')->count(),
             'equipe' => DB::table('equipe')->count(),
             'poste' => DB::table('poste')->count(),
+            'contact_type' => DB::table('contact_type')->count(),
         ];
 
         return view('admin.references.index', compact('counts'));
@@ -977,5 +978,73 @@ class ReferenceController extends Controller
 
         return redirect()->route('admin.references.position', ['eq' => $eqId])
             ->with('success', 'Compétence supprimée.');
+    }
+
+    // ── Contact types (contact handles referential) ───────────────────────────
+
+    public function contactTypeIndex(): View
+    {
+        $items = DB::table('contact_type as ct')
+            ->leftJoin('personnel_contact as pc', 'pc.CT_ID', '=', 'ct.CT_ID')
+            ->groupBy('ct.CT_ID', 'ct.CONTACT_TYPE', 'ct.CT_ICON')
+            ->orderBy('ct.CONTACT_TYPE')
+            ->selectRaw('ct.CT_ID, ct.CONTACT_TYPE, ct.CT_ICON, COUNT(pc.P_ID) as nb_used')
+            ->get();
+
+        return view('admin.references.contact-type', compact('items'));
+    }
+
+    public function contactTypeStore(Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'CONTACT_TYPE' => ['required', 'string', 'max:20', 'unique:contact_type,CONTACT_TYPE'],
+            'CT_ICON' => ['required', 'string', 'max:40'],
+        ]);
+
+        // CT_ID is a manual tinyint primary key (no auto-increment on the legacy table).
+        $nextId = (int) DB::table('contact_type')->max('CT_ID') + 1;
+
+        DB::table('contact_type')->insert([
+            'CT_ID' => $nextId,
+            'CONTACT_TYPE' => $v['CONTACT_TYPE'],
+            'CT_ICON' => $v['CT_ICON'],
+        ]);
+
+        return redirect()->route('admin.references.contact-type')
+            ->with('success', 'Identifiant de contact créé.');
+    }
+
+    public function contactTypeUpdate(Request $request, int $id): RedirectResponse
+    {
+        abort_if(DB::table('contact_type')->where('CT_ID', $id)->doesntExist(), 404);
+
+        $v = $request->validate([
+            'CONTACT_TYPE' => ['required', 'string', 'max:20', 'unique:contact_type,CONTACT_TYPE,'.$id.',CT_ID'],
+            'CT_ICON' => ['required', 'string', 'max:40'],
+        ]);
+
+        DB::table('contact_type')->where('CT_ID', $id)->update([
+            'CONTACT_TYPE' => $v['CONTACT_TYPE'],
+            'CT_ICON' => $v['CT_ICON'],
+        ]);
+
+        return redirect()->route('admin.references.contact-type')
+            ->with('success', 'Identifiant de contact mis à jour.');
+    }
+
+    public function contactTypeDestroy(int $id): RedirectResponse
+    {
+        abort_if(DB::table('contact_type')->where('CT_ID', $id)->doesntExist(), 404);
+
+        $used = DB::table('personnel_contact')->where('CT_ID', $id)->count();
+        if ($used > 0) {
+            return redirect()->route('admin.references.contact-type')
+                ->with('error', "Cet identifiant est renseigné par {$used} membre(s) et ne peut pas être supprimé.");
+        }
+
+        DB::table('contact_type')->where('CT_ID', $id)->delete();
+
+        return redirect()->route('admin.references.contact-type')
+            ->with('success', 'Identifiant de contact supprimé.');
     }
 }
