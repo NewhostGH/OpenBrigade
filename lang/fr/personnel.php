@@ -401,4 +401,11 @@ return [
     'merge_btn' => 'Fusionner',
     'merge_confirm' => 'Confirmer la fusion des fiches N°:principal et N°:doublon ?',
 
+    // ── QR code ────────────────────────────────────────────────────────────────
+    'qr_title' => 'QR-code',
+    'qr_menu' => 'QR-code',
+    'qr_back' => 'Retour à la fiche',
+    'qr_desc' => 'Ce QR-code contient les informations de la fiche de :name.',
+    'qr_hint' => 'Il peut être lu par une application de lecture de QR-code installée sur un smartphone.',
+
 ];

@@ -92,3 +92,9 @@
 .ob-multiselect-item.ob-selected .ob-multiselect-check {
     display: inline;
 }
+
+/* ── Identity QR code page ──────────────────────────────────────────────── */
+.ob-pers-qr svg {
+    max-width: 100%;
+    height: auto;
+}

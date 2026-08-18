@@ -43,6 +43,56 @@ class PersonnelExportService
         return $vcard->serialize();
     }
 
+    // ── QR-code payload ───────────────────────────────────────────────────────
+
+    /**
+     * Human-readable identity card encoded into a personnel QR code, mirroring
+     * the legacy `extract_qr_code()` "data" payload (fonctions.php). Empty fields
+     * are omitted so the code stays as small as the available data allows.
+     */
+    public function buildQrText(Personnel $personnel): string
+    {
+        $prenom = ucfirst(mb_strtolower((string) $personnel->P_PRENOM));
+        $prenom2 = trim((string) $personnel->P_PRENOM2);
+        if ($prenom2 !== '' && $prenom2 !== 'none') {
+            $prenom .= ' '.ucfirst(mb_strtolower($prenom2));
+        }
+
+        $lines = [
+            trim($personnel->civiliteLabel().' '.$prenom.' '.strtoupper((string) $personnel->P_NOM)),
+        ];
+
+        if ($personnel->P_BIRTHDATE || $personnel->P_BIRTHPLACE) {
+            $born = $personnel->P_SEXE === 'F' ? 'Née' : 'Né';
+            if ($personnel->P_BIRTHDATE) {
+                $born .= ' le '.$personnel->P_BIRTHDATE->format('d-m-Y');
+            }
+            if ($personnel->P_BIRTHPLACE) {
+                $born .= ' à '.$personnel->P_BIRTHPLACE;
+            }
+            $lines[] = $born;
+        }
+
+        if ($personnel->country?->NAME) {
+            $lines[] = 'Nationalité : '.$personnel->country->NAME;
+        }
+        if ($personnel->section?->S_CODE) {
+            $lines[] = 'Section : '.$personnel->section->S_CODE;
+        }
+        if ($personnel->P_ADDRESS) {
+            $lines[] = 'Adresse : '.$personnel->P_ADDRESS;
+            $lines[] = trim(($personnel->P_ZIP_CODE ?? '').' '.($personnel->P_CITY ?? ''));
+        }
+        if ($personnel->P_EMAIL) {
+            $lines[] = 'Email : '.$personnel->P_EMAIL;
+        }
+        if ($personnel->P_PHONE) {
+            $lines[] = 'Téléphone : '.$personnel->P_PHONE;
+        }
+
+        return implode("\n", array_filter($lines, fn ($line) => trim($line) !== ''));
+    }
+
     // ── Livret data (client-side PDF) ─────────────────────────────────────────
 
     public function logbookData(Personnel $personnel): array

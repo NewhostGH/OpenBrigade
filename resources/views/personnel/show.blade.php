@@ -44,6 +44,13 @@
                                 <i class="fas fa-address-card me-2 text-muted"></i> {{ __('personnel.export_vcard') }}
                             </a>
                         </li>
+                        @if(auth()->id() === $personnel->P_ID || auth()->user()->hasPermission(14))
+                        <li>
+                            <a class="dropdown-item" href="{{ route('personnel.qr-code', $personnel) }}">
+                                <i class="fas fa-qrcode me-2 text-muted"></i> {{ __('personnel.qr_menu') }}
+                            </a>
+                        </li>
+                        @endif
                         <li>
                             <button type="button" class="dropdown-item" data-livret-btn
                                 onclick="window.__downloadLivretPdf && window.__downloadLivretPdf({{ $personnel->P_ID }})">
