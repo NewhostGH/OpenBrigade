@@ -24,12 +24,12 @@
         <input type="hidden" name="perPage" value="{{ request('perPage', 50) }}">
         <input type="text" name="q" value="{{ $search }}" class="form-control form-control-sm" placeholder="{{ __('common.search_placeholder') }}"
             data-ob-search="filterForm">
-        <select name="period" class="form-select form-select-sm">
+        <select name="period" class="form-select form-select-sm" onchange="this.form.submit()">
             <option value="upcoming" @selected($period === 'upcoming')>{{ __('event.filter_upcoming') }}</option>
             <option value="past" @selected($period === 'past')>{{ __('event.filter_past') }}</option>
             <option value="all" @selected($period === 'all')>{{ __('event.filter_all') }}</option>
         </select>
-        <select name="type" class="form-select form-select-sm">
+        <select name="type" class="form-select form-select-sm" onchange="this.form.submit()">
             <option value="ALL" @selected($type === 'ALL')>{{ __('event.filter_all_types') }}</option>
             @foreach($types as $t)
                 <option value="{{ $t->TE_CODE }}" @selected($type === $t->TE_CODE)>
@@ -38,7 +38,7 @@
             @endforeach
         </select>
         @feature('multi_site')
-        <select name="section" class="form-select form-select-sm">
+        <select name="section" class="form-select form-select-sm" onchange="this.form.submit()">
             <option value="" @selected($filtSect === null)>{{ __('event.filter_my_sections') }}</option>
             @foreach($sections as $s)
                 <option value="{{ $s->S_ID }}" @selected($filtSect === $s->S_ID)>
