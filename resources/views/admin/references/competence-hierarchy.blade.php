@@ -12,18 +12,7 @@
 
 <div class="mx-3 mt-3">
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible py-2 mb-3">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible py-2 mb-3">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+    {{-- Flash messages (success/error) are rendered globally by layout.app --}}
 
     <p class="text-muted mb-3" style="font-size:var(--font-size-sm);">
         {{ __('admin.references.competence_hierarchy.intro') }}
