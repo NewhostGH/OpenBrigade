@@ -75,6 +75,7 @@ test('unauthenticated users are redirected from admin pages to login', function 
     '/admin/notifications',
     '/admin/monitoring',
     '/admin/references',
+    '/admin/references/competence-hierarchy',
     '/admin/permissions',
     '/admin/backup',
     '/admin/maintenance',
@@ -90,6 +91,7 @@ test('users without the required permission get 403', function (string $path) {
     '/admin/notifications',
     '/admin/monitoring',
     '/admin/references',
+    '/admin/references/competence-hierarchy',
     '/admin/permissions',
     '/admin/backup',
     '/admin/maintenance',
@@ -186,6 +188,7 @@ test('parametrage index renders the admin.references.index view', function () {
             'equipe' => 0,
             'poste' => 0,
             'contact_type' => 0,
+            'poste_hierarchie' => 0,
         ],
     ]);
 
@@ -222,6 +225,30 @@ test('contact-type write actions are forbidden without permission', function (st
     ['PATCH', '/admin/references/contact-type/1'],
     ['DELETE', '/admin/references/contact-type/1'],
 ]);
+
+test('competence hierarchy index renders the admin.references.competence-hierarchy view', function () {
+    adminStubView(ReferenceController::class, 'competenceHierarchyIndex', 'admin.references.competence-hierarchy', [
+        'hierarchies' => collect([
+            (object) ['PH_CODE' => 'SAP', 'PH_NAME' => 'Secourisme', 'PH_HIDE_LOWER' => 1,
+                'PH_UPDATE_LOWER_EXPIRY' => 1, 'PH_UPDATE_MANDATORY' => 0],
+        ]),
+        'members' => collect([
+            'SAP' => collect([
+                (object) ['PS_ID' => 1, 'TYPE' => 'PSE1', 'DESCRIPTION' => 'Premiers secours 1',
+                    'PH_CODE' => 'SAP', 'PH_LEVEL' => 1, 'EQ_NOM' => 'Secours'],
+            ]),
+        ]),
+        'available' => collect([
+            (object) ['PS_ID' => 2, 'TYPE' => 'PSE2', 'DESCRIPTION' => 'Premiers secours 2', 'EQ_NOM' => 'Secours'],
+        ]),
+    ]);
+
+    $this->actingAs(adminFakeUser())->get('/admin/references/competence-hierarchy')
+        ->assertOk()
+        ->assertViewIs('admin.references.competence-hierarchy')
+        ->assertViewHasAll(['hierarchies', 'members', 'available'])
+        ->assertSee('SAP');
+});
 
 // ── Permissions ────────────────────────────────────────────────────────────
 

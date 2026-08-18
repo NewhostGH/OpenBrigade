@@ -95,7 +95,6 @@ Needs the notification / messaging infrastructure above.
 ### Organisation (ORGA)
 
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
-- [ ] Competence hierarchy (`hierarchie_competence.php`)
 
 ### Configuration — Admin (ADMIN)
 
@@ -363,6 +362,7 @@ album photos).
 - [x] Section Cotisation tab — RIB file upload and remaining fields — `CODE_BANQUE`, `ETABLISSEMENT`, `GUICHET`, `COMPTE`, `CLE_RIB` fields added; RIB file upload (PDF/JPG/PNG, stored in private storage, migration `2026_06_15_180000`); download route `organization.sections.rib.download`
 - [x] Position (poste) management — `Compétences` page at `/admin/references/position`; CRUD with boolean flags (formation, secourisme, expirable, diplôme, etc.); edit modal per row; delete blocked if used in qualifications or event requirements; perm 18
 - [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
+- [x] Competence hierarchy (`hierarchie_competence.php`) — `Hiérarchies de compétences` page at `/admin/references/competence-hierarchy`; CRUD over `poste_hierarchie` (code, description, 3 flags: masquer inférieures / prolonger expiration / prolongation obligatoire); attach/detach member competences at ordered levels (`poste.PH_CODE`/`PH_LEVEL`); code rename cascades to member postes; delete detaches members; edit modal per row; perm 18
 - [x] Protect the organizational root section (`S_ID = 0`): `destroySection` returns 302 with error; `updateSection` forces `S_INACTIVE = false`; reparent already pinned to `-1`
 - [x] **Section deactivation / radiation** (`radier_section.php`) — "Zone sensible" card on the
   section Informations tab; confirm modal offers *deactivate only* vs *deactivate + radiate all

@@ -310,6 +310,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/references/contact-type', [ReferenceController::class, 'contactTypeStore'])->name('admin.references.contact-type.store')->middleware('permission:5');
     Route::patch('/admin/references/contact-type/{id}', [ReferenceController::class, 'contactTypeUpdate'])->name('admin.references.contact-type.update')->middleware('permission:5');
     Route::delete('/admin/references/contact-type/{id}', [ReferenceController::class, 'contactTypeDestroy'])->name('admin.references.contact-type.destroy')->middleware('permission:5');
+    // Competence hierarchy (poste_hierarchie)
+    Route::get('/admin/references/competence-hierarchy', [ReferenceController::class, 'competenceHierarchyIndex'])->name('admin.references.competence-hierarchy')->middleware('permission:18');
+    Route::post('/admin/references/competence-hierarchy', [ReferenceController::class, 'competenceHierarchyStore'])->name('admin.references.competence-hierarchy.store')->middleware('permission:18');
+    Route::post('/admin/references/competence-hierarchy/{code}/members', [ReferenceController::class, 'competenceHierarchyMemberAdd'])->name('admin.references.competence-hierarchy.member.add')->middleware('permission:18');
+    Route::delete('/admin/references/competence-hierarchy/{code}/members/{psId}', [ReferenceController::class, 'competenceHierarchyMemberRemove'])->name('admin.references.competence-hierarchy.member.remove')->middleware('permission:18');
+    Route::patch('/admin/references/competence-hierarchy/{code}', [ReferenceController::class, 'competenceHierarchyUpdate'])->name('admin.references.competence-hierarchy.update')->middleware('permission:18');
+    Route::delete('/admin/references/competence-hierarchy/{code}', [ReferenceController::class, 'competenceHierarchyDestroy'])->name('admin.references.competence-hierarchy.destroy')->middleware('permission:18');
     Route::middleware('feature:cotisations')->group(function () {
         Route::get('/dues', [DuesController::class, 'index'])->name('dues.index')->middleware('permission:53');
         Route::post('/dues', [DuesController::class, 'batchSave'])->name('dues.save')->middleware('permission:53');

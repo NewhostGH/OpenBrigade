@@ -149,9 +149,9 @@ at folder granularity (they are binary assets copied as-is).
 | `save_habilitations.php`         | `PermissionController.php` (`setGrant`/`setUserGrant`/`toggleCeiling`/`group*`)                                                                                |
 | `upd_habilitations.php`          | `PermissionController.php`                                                                                                                                     |
 | `habilitations_xls.php`          | `PermissionController.php` (`exportGroup` — per group/role member export XLS/CSV)                                                                              |
-| `hierarchie_competence.php`      | **WIP**                                                                                                                                                        |
-| `save_hierarchie_competence.php` | **WIP**                                                                                                                                                        |
-| `upd_hierarchie_competence.php`  | **WIP**                                                                                                                                                        |
+| `hierarchie_competence.php`      | `ReferenceController.php` (`competenceHierarchy*`) + `resources/views/admin/references/competence-hierarchy.blade.php` (list + member management, `poste_hierarchie`) |
+| `save_hierarchie_competence.php` | `ReferenceController.php` (`competenceHierarchyStore`/`Update`/`Destroy`)                                                                                       |
+| `upd_hierarchie_competence.php`  | `ReferenceController.php` (`competenceHierarchyUpdate`, edit modal in `competence-hierarchy.blade.php`)                                                          |
 
 ## Organisation (sections / teams / groups / posts)
 
