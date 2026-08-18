@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property int $P_ID
  * @property string|null $P_NOM
  * @property string|null $P_PRENOM
+ * @property string|null $P_PRENOM2
  * @property string|null $P_CODE
  * @property string|null $P_EMAIL
  * @property string|null $P_PHONE
@@ -49,6 +50,7 @@ use Illuminate\Support\Carbon;
  * @property int|string|null $P_CIVILITE
  * @property string|null $P_STATUT
  * @property int|null $P_SECTION
+ * @property int|null $P_PAYS
  * @property int|null $P_OLD_MEMBER
  * @property string|null $P_PHOTO
  * @property int|null $GP_ID
@@ -69,6 +71,7 @@ use Illuminate\Support\Carbon;
  * @property float|null $TS_RELIQUAT_CP
  * @property float|null $TS_RELIQUAT_RTT
  * @property-read Section|null $section
+ * @property-read Country|null $country
  * @property-read Collection<int, Dues> $cotisations
  * @property-read Collection<int, Qualification> $qualifications
  */
