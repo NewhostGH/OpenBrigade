@@ -13,7 +13,16 @@
 
 return [
 
-    'version' => env('APP_VERSION', '5.5'),
+    /*
+     * Code version — the single source of truth is the root VERSION file
+     * (kept in sync with CHANGELOG.md; see docs/dev/versioning.md). APP_VERSION
+     * overrides it when set; '5.5' is the last-resort fallback if the file is
+     * unreadable. This is the *code* version; the *installed* version (what the
+     * DB has been migrated to) lives in configuration row `version` and overlays
+     * this at boot — see App\Services\GeneralSettingService::appVersion().
+     */
+    'version' => env('APP_VERSION')
+        ?: (trim((string) @file_get_contents(dirname(__DIR__).'/VERSION')) ?: '5.5'),
 
     /*
      * Maximum file upload size in megabytes.
