@@ -15,19 +15,18 @@ to cut a release.
 
 ## [Unreleased]
 
-### Added
+_Changes landing after 6.0.0 are listed here._
 
-- Versioning & changelog policy: a root [`VERSION`](VERSION) file as the code-version
-  single source of truth, this changelog (Keep a Changelog + SemVer), an `ob:version`
-  console command reporting the code / installed / changelog versions, and
-  [`docs/dev/versioning.md`](docs/dev/versioning.md) documenting the release process.
+## [6.0.0]
 
-## [6.0.0] - 2026-05-06
+> **Not yet released.** This is the upcoming first native release; it has not been
+> tagged. On release, this heading gains its date (`## [6.0.0] - YYYY-MM-DD`) per
+> [`docs/dev/versioning.md`](docs/dev/versioning.md).
 
 The first native Laravel release. OpenBrigade is rebuilt on **Laravel 12 / PHP 8.4**,
 migrating the legacy eBrigade 5.5 PHP application menu by menu. This entry summarises
-the baseline state shipped with the initial native release; finer-grained history
-lives in the migration tracker ([`.github/TODO.md`](.github/TODO.md)).
+the baseline state of the upcoming native release; finer-grained history lives in the
+migration tracker ([`.github/TODO.md`](.github/TODO.md)).
 
 ### Added
 
@@ -43,6 +42,10 @@ lives in the migration tracker ([`.github/TODO.md`](.github/TODO.md)).
 - Notification / messaging infrastructure, Redis queues + scheduler,
   observability (`/health`, structured logging, error tracking) and backup /
   restore robustness.
+- Versioning & changelog policy: a root [`VERSION`](VERSION) file as the code-version
+  single source of truth, this changelog (Keep a Changelog + SemVer), an `ob:version`
+  console command reporting the code / installed / changelog versions, and
+  [`docs/dev/versioning.md`](docs/dev/versioning.md) documenting the release process.
 
 ### Changed
 
@@ -50,5 +53,5 @@ lives in the migration tracker ([`.github/TODO.md`](.github/TODO.md)).
   (`configuration` row `version`, stamped by the baseline migration), overlaying
   `config('brigade.version')` at boot.
 
-[Unreleased]: https://github.com/NewhostGH/OpenBrigade/compare/v6.0.0...HEAD
-[6.0.0]: https://github.com/NewhostGH/OpenBrigade/releases/tag/v6.0.0
+[Unreleased]: https://github.com/NewhostGH/OpenBrigade/commits/main
+[6.0.0]: https://github.com/NewhostGH/OpenBrigade/tree/main
