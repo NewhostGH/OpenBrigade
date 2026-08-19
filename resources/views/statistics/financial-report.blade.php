@@ -32,8 +32,9 @@
 
         <x-slot:filters>
             @feature('multi_site')
-            <div>
-                <x-ob-section-select :selected="$sectionId"
+            <div class="ob-finrep-field">
+                <label for="finrep-section">{{ __('statistics.financial_col_section') }}</label>
+                <x-ob-section-select :selected="$sectionId" id="finrep-section"
                     all-label="{{ __('statistics.financial_all_sections') }}" />
             </div>
             @endfeature

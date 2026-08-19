@@ -219,7 +219,7 @@
 }
 
 .ob-finrep-subtotal {
-    background: var(--brand-bg);
+    background: color-mix(in srgb, var(--brand-bg) 8%, #fff);
     font-weight: 500;
 }
 
@@ -227,4 +227,5 @@
     background: var(--component-bg);
     border-top: 2px solid var(--component-border);
     font-weight: 700;
+    padding: 12px 16px;
 }

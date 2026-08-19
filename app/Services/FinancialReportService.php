@@ -49,10 +49,10 @@ class FinancialReportService implements ServiceInterface
     /**
      * Build the full report for the given scope and date range.
      *
-     * @param  ?int  $sectionId    navbar/filter section (null = no narrowing)
+     * @param  ?int  $sectionId  navbar/filter section (null = no narrowing)
      * @param  bool  $subsections  include descendant sections in the scope
-     * @param  string  $from       inclusive start date (Y-m-d)
-     * @param  string  $to         inclusive end date (Y-m-d)
+     * @param  string  $from  inclusive start date (Y-m-d)
+     * @param  string  $to  inclusive end date (Y-m-d)
      * @return array{paymentTypes: array<int,string>, sections: array<int,array<string,mixed>>, totals: array<string,mixed>}
      */
     public function report(?int $sectionId, bool $subsections, string $from, string $to): array
@@ -174,7 +174,7 @@ class FinancialReportService implements ServiceInterface
     /**
      * Sum of collected fees, grouped by section, profession and payment type.
      *
-     * @return array<int,array<string,array<int,float>>>  [sid][prof][tpId] => amount
+     * @return array<int,array<string,array<int,float>>> [sid][prof][tpId] => amount
      */
     private function cotisations(?int $sectionId, bool $subsections, string $from, string $to): array
     {
@@ -207,7 +207,7 @@ class FinancialReportService implements ServiceInterface
      * Matches the legacy filter: a rejection counts when it is the final
      * rejection (REGUL_ID = 3) or has not yet been regularised (REGULARISE = 0).
      *
-     * @return array<int,array<string,float>>  [sid][prof] => amount
+     * @return array<int,array<string,float>> [sid][prof] => amount
      */
     private function rejets(?int $sectionId, bool $subsections, string $from, string $to): array
     {
@@ -238,7 +238,7 @@ class FinancialReportService implements ServiceInterface
      * point in the range (engaged on/before the end, not left before the
      * start), excluding radiated/old members and the legacy `admin` account.
      *
-     * @return array<int,int>  [sid => count]
+     * @return array<int,int> [sid => count]
      */
     private function effectifs(?int $sectionId, bool $subsections, string $from, string $to): array
     {
