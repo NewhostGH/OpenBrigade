@@ -231,3 +231,23 @@ test('event detail hides the informational status flag badges when unset', funct
         ->assertDontSee(__('event.flag_exterieur'))
         ->assertDontSee(__('event.flag_hidden'));
 });
+
+// ── Event creation — schedule date validation ─────────────────────────────
+
+test('a schedule end date before its start date is rejected with a friendly message', function () {
+    // Validation fails before any DB write, so no database is touched.
+    $this->actingAs(eventFakeUser())
+        ->from('/events/create')
+        ->post('/events', [
+            'TE_CODE' => 'FOR',
+            'E_LIBELLE' => 'Test',
+            'S_ID' => 1,
+            'horaires' => [
+                ['EH_DATE_DEBUT' => '2026-01-10', 'EH_DATE_FIN' => '2026-01-05'],
+            ],
+        ])
+        ->assertRedirect('/events/create')
+        ->assertSessionHasErrors([
+            'horaires.0.EH_DATE_FIN' => __('event.validation_date_fin_after'),
+        ]);
+});

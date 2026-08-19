@@ -302,6 +302,7 @@ return [
     'form_date_fin_label' => 'Date fin',
     'form_heure_debut_label' => 'Heure début',
     'form_heure_fin_label' => 'Heure fin',
+    'validation_date_fin_after' => 'La date de fin d\'un créneau doit être postérieure ou égale à sa date de début.',
     'form_section_status' => 'Statut',
     'form_open_to_ext' => 'Ouvert aux externes',
     'form_visible_outside' => 'Visible de l\'extérieur',
