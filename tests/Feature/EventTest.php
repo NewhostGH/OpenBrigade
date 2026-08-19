@@ -251,3 +251,74 @@ test('a schedule end date before its start date is rejected with a friendly mess
             'horaires.0.EH_DATE_FIN' => __('event.validation_date_fin_after'),
         ]);
 });
+
+// ── Event report (evenement_rapport.php) ──────────────────────────────────
+
+/**
+ * Render the real event.report view with an in-memory event and empty
+ * collections — no database access.
+ */
+function eventStubReport(): void
+{
+    app()->bind(EventController::class, function () {
+        $ctrl = Mockery::mock(EventController::class)->makePartial();
+
+        $event = (new Event)->forceFill([
+            'E_CODE' => 'EVT001',
+            'E_LIBELLE' => 'Gala annuel',
+            'TE_CODE' => 'MAN',
+            'E_TEL' => '0102030405',
+        ]);
+        $event->setRelation('type', null);
+        $event->setRelation('chef', null);
+        $event->setRelation('horaires', Collection::make([]));
+
+        $empty = Collection::make([]);
+        $ctrl->shouldReceive('report')->andReturn(
+            view('event.report', [
+                'event' => $event,
+                'vehicules' => $empty,
+                'materiels' => $empty,
+                'eventLog' => $empty,
+                'figures' => [
+                    'participants' => 12, 'vehicules' => 0, 'materiels' => 0,
+                    'messages' => 0, 'interventions' => 0,
+                ],
+            ])
+        );
+
+        return $ctrl;
+    });
+}
+
+test('unauthenticated users are redirected from the event report to login', function () {
+    $this->get('/events/EVT001/report')->assertRedirect('/login');
+});
+
+test('the event report route is registered', function () {
+    expect(route('event.report', 'EVT001'))->toContain('/events/EVT001/report');
+});
+
+test('legacy evenement_rapport.php redirects to the native report', function () {
+    $this->actingAs(eventFakeUser())
+        ->get('/legacy/evenement_rapport.php?evenement=EVT042')
+        ->assertRedirect(route('event.report', 'EVT042'));
+});
+
+test('authenticated users can view the event report', function () {
+    eventStubReport();
+
+    $this->actingAs(eventFakeUser())->get('/events/EVT001/report')
+        ->assertStatus(200)
+        ->assertViewIs('event.report')
+        ->assertSee('Gala annuel')
+        ->assertSee(__('event.report_section_responsable'))
+        ->assertSee(__('event.report_section_log'));
+});
+
+test('the event report passes the expected view data', function () {
+    eventStubReport();
+
+    $this->actingAs(eventFakeUser())->get('/events/EVT001/report')
+        ->assertViewHasAll(['event', 'vehicules', 'materiels', 'eventLog', 'figures']);
+});

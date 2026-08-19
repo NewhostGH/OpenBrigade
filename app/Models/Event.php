@@ -38,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $E_COMMENT2
  * @property Carbon|null $E_CREATE_DATE
  * @property string|null $TE_CODE
+ * @property int|string|null $E_CHEF
  * @property int|string|null $E_PARENT
  * @property int|null $S_ID
  * @property int|null $E_EQUIPE

@@ -61,6 +61,10 @@
                     <i class="fas fa-calendar-plus me-1"></i> iCal
                 </a>
                 @if(auth()->user()->hasPermission(15))
+                    <a href="{{ route('event.report', $event->E_CODE) }}"
+                       class="btn btn-sm btn-outline-secondary" title="{{ __('event.btn_report_title') }}">
+                        <i class="fas fa-file-alt me-1"></i> {{ __('event.btn_report') }}
+                    </a>
                     <button type="button" class="btn btn-sm btn-outline-secondary"
                             data-bs-toggle="modal" data-bs-target="#duplicateModal"
                             title="{{ __('event.btn_duplicate_title') }}">
