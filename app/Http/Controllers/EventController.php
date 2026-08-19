@@ -1378,6 +1378,68 @@ class EventController extends Controller
         return view('event.trombinoscope', compact('event', 'participants'));
     }
 
+    /**
+     * Printable event report — native successor to legacy `evenement_rapport.php`.
+     * Assembles the identity, key figures, engaged vehicles/matériel and the
+     * main-courante log into a print-optimised page (browser print → PDF).
+     *
+     * Gated by permission 15 (event management) or being the event's chef,
+     * mirroring the legacy `check_rights(15) || is_chef_evenement` guard.
+     * Intervention/victim statistics and the "centres d'accueil" section are
+     * intentionally omitted — that data model (DPS) is not yet migrated.
+     */
+    public function report(string $code): View
+    {
+        $event = Event::with(['type', 'chef', 'horaires'])->findOrFail($code);
+
+        $user = auth()->user();
+        $isChef = (int) $event->E_CHEF === (int) $user->P_ID
+            || DB::table('evenement_chef')
+                ->where('E_CODE', $event->E_CODE)
+                ->where('E_CHEF', $user->P_ID)
+                ->exists();
+        abort_unless($user->hasPermission(15) || $isChef, 403);
+
+        $vehicules = DB::table('evenement_vehicule as ev')
+            ->join('vehicule as v', 'ev.V_ID', '=', 'v.V_ID')
+            ->where('ev.E_CODE', $code)
+            ->orderBy('v.V_INDICATIF')
+            ->select('v.V_ID', 'v.V_IMMATRICULATION', 'v.V_INDICATIF', 'ev.EV_KM')
+            ->get();
+
+        $materiels = DB::table('evenement_materiel as em')
+            ->join('materiel as m', 'em.MA_ID', '=', 'm.MA_ID')
+            ->where('em.E_CODE', $code)
+            ->orderBy('m.MA_MODELE')
+            ->select('m.MA_ID', 'm.MA_MODELE', 'm.MA_NUMERO_SERIE', 'em.EM_NB')
+            ->get();
+
+        $eventLog = DB::table('evenement_log as el')
+            ->leftJoin('type_evenement_log as tel', 'tel.TEL_CODE', '=', 'el.TEL_CODE')
+            ->leftJoin('pompier as p', 'p.P_ID', '=', 'el.EL_AUTHOR')
+            ->where('el.E_CODE', $code)
+            ->orderByDesc('el.EL_DEBUT')
+            ->select(
+                'el.EL_ID', 'el.TEL_CODE', 'el.EL_DEBUT', 'el.EL_TITLE',
+                'el.EL_COMMENTAIRE', 'el.EL_IMPORTANT', 'tel.TEL_DESCRIPTION',
+                'p.P_NOM', 'p.P_PRENOM'
+            )
+            ->get();
+
+        $participantCount = DB::table('evenement_participation')
+            ->where('E_CODE', $code)->where('EP_ABSENT', 0)->distinct()->count('P_ID');
+
+        $figures = [
+            'participants' => $participantCount,
+            'vehicules' => $vehicules->count(),
+            'materiels' => (int) $materiels->sum('EM_NB'),
+            'messages' => $eventLog->count(),
+            'interventions' => $eventLog->where('TEL_CODE', 'I')->count(),
+        ];
+
+        return view('event.report', compact('event', 'vehicules', 'materiels', 'eventLog', 'figures'));
+    }
+
     /** Add a required position to an event (or set global count if ps_id=0). */
     public function storeRequiredPosition(Request $request, string $code): RedirectResponse
     {

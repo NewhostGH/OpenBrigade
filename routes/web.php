@@ -134,6 +134,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{code}/export/vehicles', [EventController::class, 'exportVehicles'])->name('event.export.vehicles')->middleware('permission:0');
     Route::get('/events/{code}/ical', [EventController::class, 'exportIcal'])->name('event.ical')->middleware('permission:0');
     Route::get('/events/{code}/trombinoscope', [EventController::class, 'trombinoscope'])->name('event.trombinoscope')->middleware('permission:0');
+    // Event report — printable summary (replaces evenement_rapport.php); chef-or-15 gated in-controller
+    Route::get('/events/{code}/report', [EventController::class, 'report'])->name('event.report')->middleware('permission:0');
     // Required positions (postes requis)
     Route::post('/events/{code}/required-positions', [EventController::class, 'storeRequiredPosition'])->name('event.required-position.store')->middleware('permission:15');
     Route::patch('/events/{code}/required-positions/{psId}', [EventController::class, 'updateRequiredPosition'])->name('event.required-position.update')->middleware('permission:15');

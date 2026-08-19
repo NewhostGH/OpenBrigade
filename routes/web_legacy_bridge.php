@@ -152,7 +152,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'evenement_rapport.php', function (Request $r) {
         $ev = $r->query('evenement');
 
-        return $ev ? redirect()->route('event.show', $ev) : redirect()->route('event.index');
+        return $ev ? redirect()->route('event.report', $ev) : redirect()->route('event.index');
     })->name('legacy_bridge.evenement_rapport');
     Route::match(['GET', 'POST'], 'evenement_save.php', function (Request $r) {
         $evt = $r->input('evenement') ?: $r->query('evenement');
