@@ -746,6 +746,20 @@ return [
             'empty' => "Aucun type d'activité.",
         ],
 
+        // Identifiants de contact
+        'contact_type' => [
+            'title' => 'Identifiants de contact',
+            'new_title' => 'Nouvel identifiant de contact',
+            'list_title' => 'Identifiants de contact (:count)',
+            'col_icon_class' => "Classe d'icône",
+            'col_usage' => 'Utilisations',
+            'ph_name' => 'Ex. WhatsApp',
+            'ph_icon' => 'Ex. fab fa-whatsapp',
+            'icon_hint' => "La classe d'icône utilise Font Awesome (ex. <code>fab fa-skype</code>, <code>fas fa-broadcast-tower</code>).",
+            'delete_confirm' => 'Supprimer l\'identifiant « :name » ?',
+            'empty' => 'Aucun identifiant de contact défini.',
+        ],
+
         // Types de consommable
         'consumable_type' => [
             'title' => 'Types de consommable',

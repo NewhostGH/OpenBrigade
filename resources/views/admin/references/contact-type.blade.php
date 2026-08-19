@@ -1,13 +1,13 @@
 @extends('layout.app')
 
-@section('title', 'Identifiants de contact — ' . config('app.name'))
+@section('title', __('admin.references.contact_type.title') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Administration'],
-    ['label' => 'Paramétrage', 'url' => route('admin.references')],
-    ['label' => 'Identifiants de contact'],
+    ['label' => __('admin.administration')],
+    ['label' => __('admin.references.title'), 'url' => route('admin.references')],
+    ['label' => __('admin.references.contact_type.title')],
 ]"/>
 
 <div class="mx-3 mt-3">
@@ -17,7 +17,7 @@
     {{-- Add form --}}
     <div class="ob-widget-card mb-3">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>Nouvel identifiant de contact</div>
+            <div class="ob-widget-card-title"><i class="fas fa-plus me-2"></i>{{ __('admin.references.contact_type.new_title') }}</div>
         </div>
         <div class="p-3">
             <form method="POST" action="{{ route('admin.references.contact-type.store') }}">
@@ -31,16 +31,16 @@
                 @endif
                 <div class="row g-2 align-items-end">
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Nom <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.col_name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="CONTACT_TYPE" value="{{ old('CONTACT_TYPE') }}"
                                class="form-control form-control-sm" maxlength="20" required
-                               style="width:180px;" placeholder="Ex. WhatsApp">
+                               style="width:180px;" placeholder="{{ __('admin.references.contact_type.ph_name') }}">
                     </div>
                     <div class="col-auto">
-                        <label class="form-label form-label-sm">Classe d'icône <span class="text-danger">*</span></label>
+                        <label class="form-label form-label-sm">{{ __('admin.references.contact_type.col_icon_class') }} <span class="text-danger">*</span></label>
                         <input type="text" name="CT_ICON" value="{{ old('CT_ICON') }}"
                                class="form-control form-control-sm" maxlength="40" required
-                               style="width:220px;" placeholder="Ex. fab fa-whatsapp">
+                               style="width:220px;" placeholder="{{ __('admin.references.contact_type.ph_icon') }}">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-sm btn-primary">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="form-text mt-1" style="font-size:var(--font-size-xs);">
-                    La classe d'icône utilise Font Awesome (ex. <code>fab fa-skype</code>, <code>fas fa-broadcast-tower</code>).
+                    {!! __('admin.references.contact_type.icon_hint') !!}
                 </div>
             </form>
         </div>
@@ -58,16 +58,16 @@
     {{-- List --}}
     <div class="ob-widget-card">
         <div class="ob-widget-card-header">
-            <div class="ob-widget-card-title"><i class="fas fa-address-card me-2"></i>Identifiants de contact ({{ $items->count() }})</div>
+            <div class="ob-widget-card-title"><i class="fas fa-address-card me-2"></i>{{ __('admin.references.contact_type.list_title', ['count' => $items->count()]) }}</div>
         </div>
         <div class="table-responsive">
             <table class="table table-sm table-hover mb-0">
                 <thead class="table-light">
                     <tr>
                         <th style="width:40px;"></th>
-                        <th>Nom</th>
-                        <th>Classe d'icône</th>
-                        <th style="width:110px;">Utilisations</th>
+                        <th>{{ __('admin.references.col_name') }}</th>
+                        <th>{{ __('admin.references.contact_type.col_icon_class') }}</th>
+                        <th style="width:110px;">{{ __('admin.references.contact_type.col_usage') }}</th>
                         <th style="width:60px;"></th>
                     </tr>
                 </thead>
@@ -93,7 +93,7 @@
                         <td class="align-middle text-muted" style="font-size:var(--font-size-sm);">{{ $item->nb_used }}</td>
                         <td class="align-middle text-end">
                             <form method="POST" action="{{ route('admin.references.contact-type.destroy', $item->CT_ID) }}"
-                                  onsubmit="return confirm('Supprimer l\'identifiant « {{ addslashes($item->CONTACT_TYPE) }} » ?')">
+                                  onsubmit="return confirm('{{ addslashes(__('admin.references.contact_type.delete_confirm', ['name' => $item->CONTACT_TYPE])) }}')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <i class="fas fa-trash"></i>
@@ -102,7 +102,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center text-muted py-4">Aucun identifiant de contact défini.</td></tr>
+                    <tr><td colspan="5" class="text-center text-muted py-4">{{ __('admin.references.contact_type.empty') }}</td></tr>
                 @endforelse
                 </tbody>
             </table>

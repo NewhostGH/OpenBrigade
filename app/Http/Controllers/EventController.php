@@ -1267,6 +1267,11 @@ class EventController extends Controller
             'E_WEBEX_PIN' => ['nullable', 'string', 'max:20'],
             'E_WEBEX_START' => ['nullable', 'date_format:H:i'],
             'E_AUTOCLOSE_BEFORE' => ['nullable', 'integer', 'min:0', 'max:999'],
+        ], [
+            'horaires.*.EH_DATE_FIN.after_or_equal' => __('event.validation_date_fin_after'),
+        ], [
+            'horaires.*.EH_DATE_DEBUT' => __('event.form_date_debut_label'),
+            'horaires.*.EH_DATE_FIN' => __('event.form_date_fin_label'),
         ]);
     }
 

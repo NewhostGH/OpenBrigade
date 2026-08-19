@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EventController;
+use App\Models\Event;
 use App\Models\User;
 use App\Services\NavigationService;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -145,4 +146,108 @@ test('event list passes all required view variables', function () {
     eventStubIndex();
     $this->actingAs(eventFakeUser())->get('/events')
         ->assertViewHasAll(['items', 'period', 'search', 'type', 'filtSect', 'types', 'sections']);
+});
+
+// ── Event detail — status flag badges (stubbed controller) ────────────────
+
+/**
+ * Render the real event.show view with an in-memory Event carrying the given
+ * attributes and empty relations/collections — no database access.
+ */
+function eventStubShow(array $eventAttrs): void
+{
+    app()->bind(EventController::class, function () use ($eventAttrs) {
+        $ctrl = Mockery::mock(EventController::class)->makePartial();
+
+        $event = (new Event)->forceFill(array_merge([
+            'E_CODE' => 'EVT001',
+            'E_LIBELLE' => 'Activité test',
+            'E_CANCELED' => 0,
+            'E_CLOSED' => 0,
+            'E_OPEN_TO_EXT' => 0,
+            'E_VISIBLE_OUTSIDE' => 0,
+            'E_EXTERIEUR' => 0,
+            'E_VISIBLE_INSIDE' => 1,
+            'E_ALLOW_REINFORCEMENT' => 0,
+        ], $eventAttrs));
+        $event->setRelation('horaires', Collection::make([]));
+        $event->setRelation('chef', null);
+        $event->setRelation('section', null);
+
+        $empty = Collection::make([]);
+        $ctrl->shouldReceive('show')->andReturn(
+            view('event.show', [
+                'event' => $event,
+                'typeLabel' => 'Type',
+                'participants' => $empty,
+                'candidates' => $empty,
+                'vehicules' => $empty,
+                'allVehicles' => $empty,
+                'functions' => $empty,
+                'equipes' => $empty,
+                'renforts' => $empty,
+                'materiels' => $empty,
+                'allMateriels' => $empty,
+                'requiredPositions' => $empty,
+                'availablePositions' => $empty,
+                'activeCount' => 0,
+                'renfortRequest' => null,
+                'renfortVehicleTypes' => $empty,
+                'renfortMaterials' => $empty,
+                'optionGroups' => $empty,
+                'eventOptions' => $empty,
+                'eventLog' => $empty,
+                'logTypes' => $empty,
+            ])
+        );
+
+        return $ctrl;
+    });
+}
+
+test('event detail surfaces the four informational status flag badges when set', function () {
+    eventStubShow([
+        'E_OPEN_TO_EXT' => 1,
+        'E_VISIBLE_OUTSIDE' => 1,
+        'E_EXTERIEUR' => 1,
+        'E_VISIBLE_INSIDE' => 0,
+    ]);
+
+    $this->actingAs(eventFakeUser())->get('/events/EVT001')
+        ->assertStatus(200)
+        ->assertSee(__('event.flag_open_to_ext'))
+        ->assertSee(__('event.flag_visible_outside'))
+        ->assertSee(__('event.flag_exterieur'))
+        ->assertSee(__('event.flag_hidden'));
+});
+
+test('event detail hides the informational status flag badges when unset', function () {
+    eventStubShow([]); // all flags off, E_VISIBLE_INSIDE = 1 (not hidden)
+
+    $this->actingAs(eventFakeUser())->get('/events/EVT001')
+        ->assertStatus(200)
+        ->assertDontSee(__('event.flag_open_to_ext'))
+        ->assertDontSee(__('event.flag_visible_outside'))
+        ->assertDontSee(__('event.flag_exterieur'))
+        ->assertDontSee(__('event.flag_hidden'));
+});
+
+// ── Event creation — schedule date validation ─────────────────────────────
+
+test('a schedule end date before its start date is rejected with a friendly message', function () {
+    // Validation fails before any DB write, so no database is touched.
+    $this->actingAs(eventFakeUser())
+        ->from('/events/create')
+        ->post('/events', [
+            'TE_CODE' => 'FOR',
+            'E_LIBELLE' => 'Test',
+            'S_ID' => 1,
+            'horaires' => [
+                ['EH_DATE_DEBUT' => '2026-01-10', 'EH_DATE_FIN' => '2026-01-05'],
+            ],
+        ])
+        ->assertRedirect('/events/create')
+        ->assertSessionHasErrors([
+            'horaires.0.EH_DATE_FIN' => __('event.validation_date_fin_after'),
+        ]);
 });
