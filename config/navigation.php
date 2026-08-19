@@ -105,6 +105,7 @@ return [
                 ['key' => 'comm.chat',    'label' => 'Chat',    'url' => '/legacy/chat.php',           'icon' => 'comments',  'permission' => 51],
                 ['key' => 'comm.alert',   'label' => 'Alerte',  'url' => '/legacy/alerte_create.php',  'icon' => 'bell',      'permission' => 43],
                 ['key' => 'comm.message', 'label' => 'Message', 'url' => '/legacy/mail_create.php',    'icon' => 'paper-plane', 'permission' => 43],
+                ['key' => 'comm.sms_history', 'label' => 'Historique SMS', 'url' => '/communication/sms-history', 'icon' => 'sms', 'permission' => 23],
             ],
         ],
 
