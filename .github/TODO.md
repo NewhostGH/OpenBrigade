@@ -148,8 +148,12 @@ How the app is built, shipped and upgraded in production.
 - [ ] **In-app update / maintenance flow** — successor to legacy `update_app.php`
   / `upgrade.php`: surface migration status, run pending migrations, and toggle
   maintenance mode from the admin UI.
-- [ ] **Release verification** — post-deploy smoke checks (health endpoint,
-  critical workflows) and monitoring hooks tied to the observability work.
+- [x] **Release verification** — `ob:release:verify` post-deploy smoke-check
+  gate (`ReleaseVerificationService`): infrastructure liveness (reuses the
+  `/health` probes), pending migrations, built assets, prod-config sanity,
+  installed-version SSOT and critical routes; worst-wins status, non-zero exit
+  for the CD gate, `--strict`/`--json` flags and an optional monitoring webhook.
+  Config in `config/release.php`; see `docs/admin/release-verification.md`.
 
 ---
 
