@@ -12,6 +12,7 @@ sources of truth** — each topic is owned by exactly one file.
 | [ARCHITECTURE.md](dev/ARCHITECTURE.md)     | **Where things live** — project file structure, layer responsibilities, the legacy bridge                                  |
 | [DEVELOPMENT.md](dev/DEVELOPMENT.md)       | **How to run it** — setup (Docker/local/devcontainer), database, authentication, seeding, frontend assets, quality tooling |
 | [legacy-mapping.md](dev/legacy-mapping.md) | **Legacy → Laravel file map** — every `archive/legacy_app/` file and its native target (or WIP)                            |
+| [versioning.md](dev/versioning.md)         | **How releases are versioned** — SemVer policy, the `CHANGELOG.md` workflow, `ob:version`, and cutting a tagged release     |
 
 ## Admin docs (`admin/`)
 
