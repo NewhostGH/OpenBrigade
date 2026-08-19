@@ -1319,7 +1319,7 @@
                     <select name="V_ID" class="form-select form-select-sm" required>
                         <option value="">{{ __('event.form_choose') }}</option>
                         @php
-                            $assignedIds = $event->vehicules()->pluck('vehicule.V_ID')->toArray();
+                            $assignedIds = collect($vehicules)->pluck('V_ID')->all();
                         @endphp
                         @foreach($allVehicles as $v)
                             @if(!in_array($v->V_ID, $assignedIds))
