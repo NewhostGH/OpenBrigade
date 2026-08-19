@@ -135,4 +135,21 @@ return [
     'training_empty' => 'Aucune formation enregistrée pour :year.',
     'tfoot_total' => 'Total',
 
+    // ── financial report — "Cotisations par section" (report_cotisations.php) ──
+    'financial_title' => 'Cotisations par section',
+    'financial_breadcrumb' => 'Cotisations',
+    'financial_all_sections' => 'Toutes sections',
+    'financial_from' => 'Du',
+    'financial_to' => 'Au',
+    'financial_show' => 'Afficher',
+    'financial_col_section' => 'Section',
+    'financial_col_effectif' => 'Effectif',
+    'financial_col_profession' => 'Profession',
+    'financial_col_rejets' => 'Rejets',
+    'financial_col_total' => 'Total',
+    'financial_subtotal' => 'Sous-total',
+    'financial_grand_total' => 'TOTAL',
+    'financial_no_data' => 'Aucune cotisation sur la période sélectionnée.',
+    'financial_footnote' => 'Effectif : membres actifs sur la période. Rejets : paiements rejetés non régularisés. Total : cotisations et régularisations, déduction faite des rejets.',
+
 ];
