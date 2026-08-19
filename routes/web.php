@@ -37,6 +37,7 @@ use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\ReplacementController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\ShortcutController;
+use App\Http\Controllers\SmsHistoryController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TotpController;
 use App\Http\Controllers\UnavailabilityController;
@@ -429,6 +430,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/statistics/financial-report', [FinancialReportController::class, 'index'])->name('statistics.financial-report')->middleware('permission:53');
     Route::get('/statistics/financial-report/export/xls', [FinancialReportController::class, 'exportXls'])->name('statistics.financial-report.export.xls')->middleware('permission:53');
     Route::get('/statistics/financial-report/export/csv', [FinancialReportController::class, 'exportCsv'])->name('statistics.financial-report.export.csv')->middleware('permission:53');
+    // SMS history — "Historique SMS" (replaces histo_sms.php)
+    Route::get('/communication/sms-history', [SmsHistoryController::class, 'index'])->name('communication.sms-history')->middleware('permission:23');
     Route::get('personnel/{personnel}/photo', [PersonnelController::class, 'photo'])
         ->name('personnel.photo')
         ->middleware('permission:0');
