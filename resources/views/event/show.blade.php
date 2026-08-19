@@ -24,6 +24,28 @@
                 @else
                     <span class="ob-badge ob-badge-actif ms-2">{{ __('event.status_open') }}</span>
                 @endif
+
+                {{-- Informational status flags (display-only; persisted on the event form) --}}
+                @if($event->E_OPEN_TO_EXT)
+                    <span class="ob-badge ob-badge-ext ms-2" title="{{ __('event.flag_open_to_ext_title') }}">
+                        <i class="fas fa-user-friends me-1"></i>{{ __('event.flag_open_to_ext') }}
+                    </span>
+                @endif
+                @if($event->E_VISIBLE_OUTSIDE)
+                    <span class="ob-badge ob-badge-int ms-2" title="{{ __('event.flag_visible_outside_title') }}">
+                        <i class="fas fa-eye me-1"></i>{{ __('event.flag_visible_outside') }}
+                    </span>
+                @endif
+                @if($event->E_EXTERIEUR)
+                    <span class="ob-badge ob-badge-archive ms-2" title="{{ __('event.flag_exterieur_title') }}">
+                        <i class="fas fa-map-marker-alt me-1"></i>{{ __('event.flag_exterieur') }}
+                    </span>
+                @endif
+                @if(!$event->E_VISIBLE_INSIDE)
+                    <span class="ob-badge ob-badge-bloqued ms-2" title="{{ __('event.flag_hidden_title') }}">
+                        <i class="fas fa-eye-slash me-1"></i>{{ __('event.flag_hidden') }}
+                    </span>
+                @endif
             </div>
             <div class="d-flex gap-2">
                 <a href="{{ route('event.trombinoscope', $event->E_CODE) }}"
