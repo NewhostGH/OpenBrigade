@@ -76,7 +76,7 @@ Needs the notification / messaging infrastructure above.
 - [ ] SMS history view
 - [ ] Push notification monitor
 - [ ] Reminders / relances (`reminder.php`)
-- [ ] RSS feed (`rss.php`)
+- [x] RSS feed (`rss.php`)
 
 ### Client / finance (CLI)
 

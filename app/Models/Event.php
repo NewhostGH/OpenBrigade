@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * Legacy table: evenement
@@ -32,14 +33,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|string $E_CODE
  * @property string|null $E_LIBELLE
  * @property string|null $E_LIEU
+ * @property string|null $E_ADDRESS
  * @property string|null $E_COMMENT
+ * @property string|null $E_COMMENT2
+ * @property Carbon|null $E_CREATE_DATE
  * @property string|null $TE_CODE
  * @property int|string|null $E_PARENT
  * @property int|null $S_ID
  * @property int|null $E_EQUIPE
  * @property bool $E_CANCELED
  * @property bool $E_CLOSED
+ * @property bool $E_VISIBLE_OUTSIDE
+ * @property string|null $first_start Aggregated earliest schedule start (see EventFeedService::visibleEvents)
  * @property-read Section|null $section
+ * @property-read EventType|null $type
  * @property-read Event|null $parent
  * @property-read Collection<int, EventSchedule> $horaires
  */
@@ -76,6 +83,12 @@ class Event extends Model
     public function section(): BelongsTo
     {
         return $this->belongsTo(Section::class, 'S_ID', 'S_ID');
+    }
+
+    /** The event type (formation, intervention, …) — reference catalogue. */
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(EventType::class, 'TE_CODE', 'TE_CODE');
     }
 
     /** The primary lead person for this event. */
