@@ -1,0 +1,142 @@
+/* ── Universal calendar (FullCalendar) ─────────────────────────────────────
+   Maps FullCalendar's own CSS custom properties onto the OpenBrigade design
+   tokens so the calendar reads as part of the app. FullCalendar ships its
+   base styles in JS (bundled by Vite); these only re-theme it. Scoped to the
+   calendar container so nothing leaks. */
+
+[data-ob-calendar] {
+    --fc-border-color: var(--brand-border, #e3e6ea);
+    --fc-neutral-bg-color: var(--sidebar-bg, #fafafa);
+    --fc-page-bg-color: transparent;
+    --fc-today-bg-color: color-mix(in srgb, var(--brand-bg, #2B2350) 6%, transparent);
+    --fc-highlight-color: color-mix(in srgb, var(--brand-bg, #2B2350) 10%, transparent);
+
+    --fc-button-bg-color: var(--brand-bg, #2B2350);
+    --fc-button-border-color: var(--brand-bg, #2B2350);
+    --fc-button-hover-bg-color: var(--brand-bg-hover-strong, #3a3168);
+    --fc-button-hover-border-color: var(--brand-bg-hover-strong, #3a3168);
+    --fc-button-active-bg-color: var(--brand-separator, #6868b9);
+    --fc-button-active-border-color: var(--brand-separator, #6868b9);
+    --fc-button-text-color: #ffffff;
+
+    font-size: var(--font-size-sm, 0.875rem);
+}
+
+/* App-consistent toolbar title + buttons */
+[data-ob-calendar] .fc-toolbar-title {
+    font-size: var(--font-size-base, 1rem);
+    font-weight: 600;
+}
+
+[data-ob-calendar] .fc .fc-button {
+    padding: 0.2rem 0.55rem;
+    font-size: var(--font-size-sm, 0.875rem);
+    border-radius: var(--radius-md, 6px);
+}
+
+/* Day numbers are anchors — strip the global link styling (blue + underline) */
+[data-ob-calendar] .fc a {
+    text-decoration: none;
+}
+
+[data-ob-calendar] .fc-daygrid-day-number {
+    color: var(--text-body, #212529);
+}
+
+/* Coloured header row (day-of-week names), matching the app's table headers */
+[data-ob-calendar] .fc .fc-col-header-cell {
+    background: var(--table-header-bg, #495565);
+}
+
+[data-ob-calendar] .fc .fc-col-header-cell-cushion {
+    color: var(--table-header-text, #ffffff);
+    font-weight: 600;
+    padding: 6px 4px;
+    text-decoration: none;
+}
+
+/* Alternating week-row shading; keep the "today" highlight on top */
+[data-ob-calendar] .fc-daygrid-body tr:nth-child(even) .fc-daygrid-day {
+    background: color-mix(in srgb, var(--sidebar-bg, #fafafa) 55%, transparent);
+}
+
+[data-ob-calendar] .fc .fc-day-today {
+    background: var(--fc-today-bg-color) !important;
+}
+
+/* Wash out past days (cell + their events) */
+[data-ob-calendar] .fc-day-past .fc-daygrid-day-frame {
+    opacity: 0.5;
+}
+
+/* Circle around today's date number */
+[data-ob-calendar] .fc-day-today .fc-daygrid-day-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.7em;
+    height: 1.7em;
+    margin: 2px;
+    padding: 0 0.2em;
+    border-radius: 999px;
+    background: var(--brand-bg, #2B2350);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* ── Event colours ──────────────────────────────────────────────────────────
+   Activities blue, accepted absences pink, pending absences light-pink stripes.
+   Set via classNames from the events feed; !important beats FullCalendar's own
+   per-event background rules. */
+[data-ob-calendar] .fc-ev-activity {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+    color: #ffffff !important;
+}
+
+[data-ob-calendar] .fc-ev-activity.fc-ev-closed {
+    background: #94a3b8 !important;
+    border-color: #64748b !important;
+}
+
+[data-ob-calendar] .fc-ev-abs-ok {
+    background: #ec4899 !important;
+    border-color: #db2777 !important;
+    color: #ffffff !important;
+}
+
+[data-ob-calendar] .fc-ev-abs-pending {
+    background: repeating-linear-gradient(45deg, #fce7f3, #fce7f3 6px, #f9a8d4 6px, #f9a8d4 12px) !important;
+    border-color: #f472b6 !important;
+    color: #9d174d !important;
+}
+
+/* Legend block under the calendar */
+.ob-cal-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: var(--font-size-sm, 0.875rem);
+}
+
+.ob-cal-legend-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.ob-cal-legend-dot--activity {
+    background: #2563eb;
+}
+
+.ob-cal-legend-dot--abs-ok {
+    background: #ec4899;
+}
+
+.ob-cal-legend-dot--abs-pending {
+    background: repeating-linear-gradient(45deg, #fce7f3, #fce7f3 4px, #f9a8d4 4px, #f9a8d4 8px);
+    border: 1px solid #f472b6;
+}

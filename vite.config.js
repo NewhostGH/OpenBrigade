@@ -23,6 +23,7 @@ export default defineConfig({
                 'resources/js/ob-pdf-report.js',
                 'resources/js/ob-pdf-personnel.js',
                 'resources/js/ob-dashboard.js',
+                'resources/js/ob-calendar.js',
             ],
             refresh: true,
         }),
