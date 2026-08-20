@@ -35,6 +35,17 @@ return [
     'new_type' => 'Nouveau type',
     'export_xls_title' => 'Exporter le mois en XLS',
     'export_csv_title' => 'Exporter le mois en CSV',
+    'export_pdf_title' => 'Version imprimable / PDF du mois',
+
+    // On-call printable roster
+    'print_heading' => 'Astreintes',
+    'print_btn' => 'Imprimer / PDF',
+    'print_col_debut' => 'Début',
+    'print_col_fin' => 'Fin',
+    'print_col_personnel' => 'Personnel',
+    'print_col_role' => 'Rôle',
+    'print_empty' => 'Aucune astreinte sur ce mois.',
+    'print_count' => ':count astreinte(s)',
 
     // Week navigation
     'prev_week' => 'Semaine précédente',

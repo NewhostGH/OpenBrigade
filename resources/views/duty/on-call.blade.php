@@ -31,12 +31,16 @@
        class="btn btn-sm btn-outline-secondary">
         <i class="fas fa-chevron-right"></i>
     </a>
+    <a href="{{ route('duty.on-call.print', ['month' => $month, 'year' => $year] + request()->only('section')) }}"
+       class="btn btn-sm btn-outline-secondary ms-auto" title="{{ __('duty.export_pdf_title') }}" target="_blank">
+        <i class="fas fa-file-pdf me-1"></i> PDF
+    </a>
     <a href="{{ route('duty.on-call.export.xls', ['month' => $month, 'year' => $year]) }}"
-       class="btn btn-sm btn-outline-secondary ms-auto" title="{{ __('duty.export_xls_title') }}"
+       class="btn btn-sm btn-outline-secondary" title="{{ __('duty.export_xls_title') }}">
         <i class="fas fa-file-excel me-1"></i> XLS
     </a>
     <a href="{{ route('duty.on-call.export.csv', ['month' => $month, 'year' => $year]) }}"
-       class="btn btn-sm btn-outline-secondary" title="{{ __('duty.export_csv_title') }}"
+       class="btn btn-sm btn-outline-secondary" title="{{ __('duty.export_csv_title') }}">
         <i class="fas fa-file-csv me-1"></i> CSV
     </a>
 </div>

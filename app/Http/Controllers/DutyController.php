@@ -150,6 +150,20 @@ class DutyController extends Controller
     }
 
     /**
+     * Print-optimised on-call roster for the month (guard export → PDF via the
+     * browser print dialog). Shares the section-scoped query with the list and
+     * the XLS/CSV exports, but returns the full month unpaginated.
+     */
+    public function printOnCall(Request $request): View
+    {
+        [$month, $year, $first] = $this->onCallPeriod($request);
+
+        $slots = $this->buildOnCallQuery($request)->get();
+
+        return view('duty.on-call-print', compact('slots', 'month', 'year', 'first'));
+    }
+
+    /**
      * Resolve and normalise the requested on-call month/year (wrapping at the
      * year boundary), returning [month, year, firstDayOfMonth].
      *
