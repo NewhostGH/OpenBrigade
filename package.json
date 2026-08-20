@@ -17,6 +17,10 @@
     "vite": "^6.0.0"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.21",
+    "@fullcalendar/daygrid": "^6.1.21",
+    "@fullcalendar/interaction": "^6.1.21",
+    "@fullcalendar/list": "^6.1.21",
     "bs5-lightbox": "^1.8.5",
     "echarts": "^6.1.0",
     "leaflet": "^1.9.4",

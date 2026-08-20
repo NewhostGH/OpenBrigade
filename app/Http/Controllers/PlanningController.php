@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -10,37 +11,32 @@ use Illuminate\View\View;
 class PlanningController extends Controller
 {
     /**
-     * Personal agenda — events the user is signed up for + their absences,
-     * displayed in a month grid.
+     * Personal agenda — the calendar shell. Events (the activities the user is
+     * signed up for + their absences) are fetched by FullCalendar from the
+     * {@see self::events()} JSON feed as the user navigates.
      */
-    public function index(Request $request): View
+    public function index(): View
+    {
+        return view('planning.index');
+    }
+
+    /**
+     * JSON events feed for the personal calendar. FullCalendar appends
+     * ?start=&end= for the visible range; returns the signed-in user's
+     * activities and absences within it as FullCalendar event objects.
+     */
+    public function events(Request $request): JsonResponse
     {
         $user = auth()->user();
         $pid = (int) $user->P_ID;
 
-        // Month navigation
-        $year = (int) $request->integer('year', now()->year);
-        $month = (int) $request->integer('month', now()->month);
+        $from = $request->query('start')
+            ? Carbon::parse($request->query('start'))->toDateString()
+            : now()->startOfMonth()->toDateString();
+        $to = $request->query('end')
+            ? Carbon::parse($request->query('end'))->toDateString()
+            : now()->endOfMonth()->toDateString();
 
-        // Clamp month
-        if ($month < 1) {
-            $month = 12;
-            $year--;
-        }
-        if ($month > 12) {
-            $month = 1;
-            $year++;
-        }
-
-        $first = Carbon::create($year, $month, 1)->startOfDay();
-        $last = $first->copy()->endOfMonth();
-
-        $prevYear = $month === 1 ? $year - 1 : $year;
-        $prevMonth = $month === 1 ? 12 : $month - 1;
-        $nextYear = $month === 12 ? $year + 1 : $year;
-        $nextMonth = $month === 12 ? 1 : $month + 1;
-
-        // ── Events the user is signed up for ─────────────────────────────────
         $events = DB::table('evenement_participation as ep')
             ->join('evenement as e', 'ep.E_CODE', '=', 'e.E_CODE')
             ->join('evenement_horaire as eh', function ($j) {
@@ -51,92 +47,60 @@ class PlanningController extends Controller
             ->where('ep.P_ID', $pid)
             ->where('ep.EP_ABSENT', 0)
             ->where('e.E_CANCELED', 0)
-            ->whereBetween('eh.EH_DATE_DEBUT', [
-                $first->toDateString(),
-                $last->toDateString(),
-            ])
+            ->whereBetween('eh.EH_DATE_DEBUT', [$from, $to])
             ->select(
                 'e.E_CODE',
                 'e.E_LIBELLE',
                 'e.E_CLOSED',
-                'te.TE_ICON',
-                'te.TE_LIBELLE',
                 DB::raw('DATE(eh.EH_DATE_DEBUT) as event_date'),
-                DB::raw("TIME_FORMAT(eh.EH_DEBUT,'%H:%i') as event_time")
+                DB::raw("TIME_FORMAT(eh.EH_DEBUT,'%H:%i') as event_time"),
+                DB::raw("TIME_FORMAT(eh.EH_FIN,'%H:%i') as event_end")
             )
-            ->orderBy('eh.EH_DATE_DEBUT')
-            ->get();
+            ->get()
+            ->map(function ($e) {
+                $hasStart = $e->event_time && $e->event_time !== '00:00';
+                $hasEnd = $e->event_end && $e->event_end !== '00:00';
 
-        // ── User absences / indisponibilités ──────────────────────────────────
+                return [
+                    'title' => $e->E_LIBELLE ?: $e->E_CODE,
+                    'start' => $hasStart ? $e->event_date.'T'.$e->event_time : $e->event_date,
+                    'end' => $hasStart && $hasEnd ? $e->event_date.'T'.$e->event_end : null,
+                    'url' => route('event.show', $e->E_CODE),
+                    'classNames' => $e->E_CLOSED ? ['fc-ev-activity', 'fc-ev-closed'] : ['fc-ev-activity'],
+                ];
+            });
+
         $absences = DB::table('indisponibilite as i')
             ->leftJoin('type_indisponibilite as ti', 'i.TI_CODE', '=', 'ti.TI_CODE')
             ->where('i.P_ID', $pid)
             ->where('i.I_CANCEL', 0)
-            ->where(function ($q) use ($first, $last) {
-                $q->whereBetween('i.I_DEBUT', [$first->toDateString(), $last->toDateString()])
-                    ->orWhereBetween('i.I_FIN', [$first->toDateString(), $last->toDateString()])
-                    ->orWhere(function ($inner) use ($first, $last) {
-                        $inner->where('i.I_DEBUT', '<=', $first->toDateString())
-                            ->where('i.I_FIN', '>=', $last->toDateString());
+            ->where(function ($q) use ($from, $to) {
+                $q->whereBetween('i.I_DEBUT', [$from, $to])
+                    ->orWhereBetween('i.I_FIN', [$from, $to])
+                    ->orWhere(function ($inner) use ($from, $to) {
+                        $inner->where('i.I_DEBUT', '<=', $from)
+                            ->where('i.I_FIN', '>=', $to);
                     });
             })
-            ->select(
-                'i.I_CODE',
-                'i.I_DEBUT',
-                'i.I_FIN',
-                'i.I_ACCEPT',
-                'i.I_COMMENT',
-                'ti.TI_LIBELLE'
-            )
-            ->get();
+            ->select('i.I_DEBUT', 'i.I_FIN', 'i.I_ACCEPT', 'ti.TI_LIBELLE')
+            ->get()
+            ->map(fn ($a) => [
+                'title' => $a->TI_LIBELLE ?: __('planning.absence_default'),
+                'start' => Carbon::parse($a->I_DEBUT)->toDateString(),
+                // FullCalendar treats all-day `end` as exclusive.
+                'end' => Carbon::parse($a->I_FIN ?: $a->I_DEBUT)->addDay()->toDateString(),
+                'allDay' => true,
+                'classNames' => $a->I_ACCEPT ? ['fc-ev-abs-ok'] : ['fc-ev-abs-pending'],
+            ]);
 
-        // ── Build month calendar grid ──────────────────────────────────────────
-        // Group events and absences by date string for fast lookup
-        $eventsByDate = $events->groupBy('event_date');
-        $absencesByDate = [];
-        foreach ($absences as $abs) {
-            $start = Carbon::parse($abs->I_DEBUT)->startOfDay();
-            $end = Carbon::parse($abs->I_FIN)->endOfDay();
-            $cursor = $start->copy();
-            while ($cursor->lte($end)) {
-                $key = $cursor->format('Y-m-d');
-                $absencesByDate[$key][] = $abs;
-                $cursor->addDay();
-            }
-        }
-
-        // Build 6-week grid starting from Monday of the first week
-        $gridStart = $first->copy()->startOfWeek();
-        $gridEnd = $last->copy()->endOfWeek();
-        $weeks = [];
-        $cursor = $gridStart->copy();
-        while ($cursor->lte($gridEnd)) {
-            $week = [];
-            for ($d = 0; $d < 7; $d++) {
-                $key = $cursor->format('Y-m-d');
-                $week[] = [
-                    'date' => $cursor->copy(),
-                    'key' => $key,
-                    'inMonth' => (int) $cursor->month === $month,
-                    'isToday' => $cursor->isToday(),
-                    'events' => $eventsByDate->get($key, collect()),
-                    'absences' => $absencesByDate[$key] ?? [],
-                ];
-                $cursor->addDay();
-            }
-            $weeks[] = $week;
-        }
-
-        return view('planning.index', compact(
-            'weeks', 'year', 'month', 'first',
-            'prevYear', 'prevMonth', 'nextYear', 'nextMonth'
-        ));
+        return response()->json($events->concat($absences)->values());
     }
 
     /**
      * Print-optimised export of the signed-in user's monthly planning — their
      * events and absences for the month as chronological lists, printed via the
-     * browser dialog (Save as PDF). Same personal, self-scoped data as index().
+     * browser dialog (Save as PDF). Same personal, self-scoped data as the
+     * calendar.
      */
     public function print(Request $request): View
     {

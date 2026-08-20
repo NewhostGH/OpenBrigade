@@ -40,32 +40,6 @@ function planningFakeUser(array $attrs = []): User
     return $user;
 }
 
-/**
- * Bind PlanningController so index() returns the real view rendered with stub
- * data, keeping the assertion at the HTTP/view level without touching the DB.
- */
-function planningStubIndex(User $user): void
-{
-    $now = now();
-    app()->bind(PlanningController::class, function () use ($now) {
-        $ctrl = Mockery::mock(PlanningController::class)->makePartial();
-        $ctrl->shouldReceive('index')->andReturn(
-            view('planning.index', [
-                'weeks' => [],
-                'year' => $now->year,
-                'month' => $now->month,
-                'first' => $now->copy()->startOfMonth(),
-                'prevYear' => $now->year,
-                'prevMonth' => $now->month - 1 ?: 12,
-                'nextYear' => $now->year,
-                'nextMonth' => $now->month + 1 > 12 ? 1 : $now->month + 1,
-            ])
-        );
-
-        return $ctrl;
-    });
-}
-
 beforeEach(function () {
     planningStubNav();
     $this->withoutMiddleware(ValidateCsrfToken::class);
@@ -91,28 +65,42 @@ test('legacy myagenda.php redirects to planning.index', function () {
         ->assertRedirect(route('planning.index'));
 });
 
-// ── Planning index (stubbed controller) ──────────────────────────────────────
+// ── Planning calendar (index renders the FullCalendar shell, no DB) ───────────
 
 test('authenticated users can access the planning', function () {
-    $user = planningFakeUser();
-    planningStubIndex($user);
-
-    $this->actingAs($user)->get('/planning')->assertStatus(200);
+    $this->actingAs(planningFakeUser())->get('/planning')->assertStatus(200);
 });
 
-test('planning index renders the planning.index view', function () {
-    $user = planningFakeUser();
-    planningStubIndex($user);
-
-    $this->actingAs($user)->get('/planning')->assertViewIs('planning.index');
+test('planning index renders the calendar shell', function () {
+    $this->actingAs(planningFakeUser())->get('/planning')
+        ->assertViewIs('planning.index')
+        ->assertSee('data-ob-calendar', false);
 });
 
-test('planning index passes all required view variables', function () {
-    $user = planningFakeUser();
-    planningStubIndex($user);
+// ── Planning events feed (JSON) ──────────────────────────────────────────────
 
-    $this->actingAs($user)->get('/planning')
-        ->assertViewHasAll(['weeks', 'year', 'month', 'first', 'prevYear', 'prevMonth', 'nextYear', 'nextMonth']);
+test('the planning events route is registered', function () {
+    expect(route('planning.events'))->toContain('/planning/events');
+});
+
+test('unauthenticated users are redirected from the planning events feed to login', function () {
+    $this->get('/planning/events')->assertRedirect('/login');
+});
+
+test('the events feed returns JSON', function () {
+    // Stub the controller so the feed renders without a database.
+    app()->bind(PlanningController::class, function () {
+        $ctrl = Mockery::mock(PlanningController::class)->makePartial();
+        $ctrl->shouldReceive('events')->andReturn(response()->json([
+            ['title' => 'Formation PSC1', 'start' => '2026-08-10', 'url' => '/events/EVT1'],
+        ]));
+
+        return $ctrl;
+    });
+
+    $this->actingAs(planningFakeUser())->get('/planning/events')
+        ->assertStatus(200)
+        ->assertJsonFragment(['title' => 'Formation PSC1']);
 });
 
 // ── Planning print/PDF export (stubbed controller) ───────────────────────────
