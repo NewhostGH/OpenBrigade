@@ -131,3 +131,50 @@ test('garde index passes week=0 by default', function () {
     $this->actingAs($user)->get('/duty')
         ->assertViewHas('weekOffset', 0);
 });
+
+// ── On-call printable roster (PDF export) ────────────────────────────────────
+
+/** Bind DutyController so printOnCall() renders the real print view DB-free. */
+function gardeStubPrint(): void
+{
+    $now = now();
+    app()->bind(DutyController::class, function () use ($now) {
+        $ctrl = Mockery::mock(DutyController::class)->makePartial();
+        $slot = (object) [
+            'AS_ID' => 1,
+            'AS_DEBUT' => $now->copy()->startOfMonth()->setTime(8, 0)->toDateTimeString(),
+            'AS_FIN' => $now->copy()->startOfMonth()->setTime(20, 0)->toDateTimeString(),
+            'P_ID' => 7, 'P_NOM' => 'Martin', 'P_PRENOM' => 'Lea',
+            'GP_ID' => 2, 'GP_DESCRIPTION' => 'Chef de garde',
+        ];
+        $ctrl->shouldReceive('printOnCall')->andReturn(
+            view('duty.on-call-print', [
+                'slots' => collect([$slot]),
+                'month' => (int) $now->month,
+                'year' => (int) $now->year,
+                'first' => $now->copy()->startOfMonth(),
+            ])
+        );
+
+        return $ctrl;
+    });
+}
+
+test('unauthenticated users are redirected from the on-call print to login', function () {
+    $this->get('/duty/on-call/print')->assertRedirect('/login');
+});
+
+test('the on-call print route is registered', function () {
+    expect(route('duty.on-call.print'))->toContain('/duty/on-call/print');
+});
+
+test('authenticated users can view the printable on-call roster', function () {
+    gardeStubPrint();
+
+    $this->actingAs(gardeFakeUser())->get('/duty/on-call/print')
+        ->assertStatus(200)
+        ->assertViewIs('duty.on-call-print')
+        ->assertSee(__('duty.print_heading'))
+        ->assertSee('Lea MARTIN')
+        ->assertSee('Chef de garde');
+});
