@@ -114,3 +114,58 @@ test('planning index passes all required view variables', function () {
     $this->actingAs($user)->get('/planning')
         ->assertViewHasAll(['weeks', 'year', 'month', 'first', 'prevYear', 'prevMonth', 'nextYear', 'nextMonth']);
 });
+
+// ── Planning print/PDF export (stubbed controller) ───────────────────────────
+
+/** Bind PlanningController so print() renders the real print view DB-free. */
+function planningStubPrint(User $user): void
+{
+    $now = now();
+    app()->bind(PlanningController::class, function () use ($now, $user) {
+        $ctrl = Mockery::mock(PlanningController::class)->makePartial();
+        $event = (object) [
+            'E_CODE' => 'EVT1', 'E_LIBELLE' => 'Formation PSC1', 'E_CLOSED' => 0,
+            'TE_LIBELLE' => 'Formation', 'event_date' => $now->copy()->startOfMonth()->toDateString(),
+            'event_time' => '09:00',
+        ];
+        $absence = (object) [
+            'I_DEBUT' => $now->copy()->startOfMonth()->addDays(4)->toDateString(),
+            'I_FIN' => $now->copy()->startOfMonth()->addDays(6)->toDateString(),
+            'I_ACCEPT' => 1, 'I_COMMENT' => 'Congés', 'TI_LIBELLE' => 'Vacances',
+        ];
+        $ctrl->shouldReceive('print')->andReturn(
+            view('planning.print', [
+                'events' => collect([$event]),
+                'absences' => collect([$absence]),
+                'first' => $now->copy()->startOfMonth(),
+                'user' => $user,
+                'year' => $now->year,
+                'month' => $now->month,
+            ])
+        );
+
+        return $ctrl;
+    });
+}
+
+test('the planning print route is registered', function () {
+    expect(route('planning.print'))->toContain('/planning/print');
+});
+
+test('unauthenticated users are redirected from the planning print to login', function () {
+    $this->get('/planning/print')->assertRedirect('/login');
+});
+
+test('authenticated users can view the printable planning', function () {
+    $user = planningFakeUser(['P_NOM' => 'Durand', 'P_PRENOM' => 'Paul']);
+    planningStubPrint($user);
+
+    $this->actingAs($user)->get('/planning/print')
+        ->assertStatus(200)
+        ->assertViewIs('planning.print')
+        ->assertSee('Paul DURAND')
+        ->assertSee(__('planning.print_section_events'))
+        ->assertSee('Formation PSC1')
+        ->assertSee(__('planning.print_section_absences'))
+        ->assertSee('Vacances');
+});

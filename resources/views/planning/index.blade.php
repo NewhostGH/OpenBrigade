@@ -34,6 +34,11 @@
                 {{ __('planning.this_month') }}
             </a>
         @endif
+
+        <a href="{{ route('planning.print', ['year' => $year, 'month' => $month]) }}"
+           class="btn btn-sm btn-outline-secondary ms-auto" title="{{ __('planning.export_pdf_title') }}" target="_blank">
+            <i class="fas fa-file-pdf me-1"></i> PDF
+        </a>
     </div>
 </div>
 
