@@ -162,6 +162,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
     Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');
     Route::get('/duty/on-call/export/csv', [DutyController::class, 'exportOnCallCsv'])->name('duty.on-call.export.csv')->middleware('permission:52');
+    Route::get('/duty/on-call/print', [DutyController::class, 'printOnCall'])->name('duty.on-call.print')->middleware('permission:52');
     Route::get('/garde/types', [DutyTypeController::class, 'index'])->name('duty.types.index')->middleware('permission:5');
     Route::post('/garde/types', [DutyTypeController::class, 'store'])->name('duty.types.store')->middleware('permission:5');
     Route::patch('/garde/types/{id}', [DutyTypeController::class, 'update'])->name('duty.types.update')->middleware('permission:5');
