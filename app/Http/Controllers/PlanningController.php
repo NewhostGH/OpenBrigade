@@ -132,4 +132,69 @@ class PlanningController extends Controller
             'prevYear', 'prevMonth', 'nextYear', 'nextMonth'
         ));
     }
+
+    /**
+     * Print-optimised export of the signed-in user's monthly planning — their
+     * events and absences for the month as chronological lists, printed via the
+     * browser dialog (Save as PDF). Same personal, self-scoped data as index().
+     */
+    public function print(Request $request): View
+    {
+        $user = auth()->user();
+        $pid = (int) $user->P_ID;
+
+        $year = (int) $request->integer('year', now()->year);
+        $month = (int) $request->integer('month', now()->month);
+        if ($month < 1) {
+            $month = 12;
+            $year--;
+        }
+        if ($month > 12) {
+            $month = 1;
+            $year++;
+        }
+
+        $first = Carbon::create($year, $month, 1)->startOfDay();
+        $last = $first->copy()->endOfMonth();
+
+        $events = DB::table('evenement_participation as ep')
+            ->join('evenement as e', 'ep.E_CODE', '=', 'e.E_CODE')
+            ->join('evenement_horaire as eh', function ($j) {
+                $j->on('eh.E_CODE', '=', 'ep.E_CODE')
+                    ->on('eh.EH_ID', '=', 'ep.EH_ID');
+            })
+            ->join('type_evenement as te', 'e.TE_CODE', '=', 'te.TE_CODE')
+            ->where('ep.P_ID', $pid)
+            ->where('ep.EP_ABSENT', 0)
+            ->where('e.E_CANCELED', 0)
+            ->whereBetween('eh.EH_DATE_DEBUT', [$first->toDateString(), $last->toDateString()])
+            ->select(
+                'e.E_CODE',
+                'e.E_LIBELLE',
+                'e.E_CLOSED',
+                'te.TE_LIBELLE',
+                DB::raw('DATE(eh.EH_DATE_DEBUT) as event_date'),
+                DB::raw("TIME_FORMAT(eh.EH_DEBUT,'%H:%i') as event_time")
+            )
+            ->orderBy('eh.EH_DATE_DEBUT')
+            ->get();
+
+        $absences = DB::table('indisponibilite as i')
+            ->leftJoin('type_indisponibilite as ti', 'i.TI_CODE', '=', 'ti.TI_CODE')
+            ->where('i.P_ID', $pid)
+            ->where('i.I_CANCEL', 0)
+            ->where(function ($q) use ($first, $last) {
+                $q->whereBetween('i.I_DEBUT', [$first->toDateString(), $last->toDateString()])
+                    ->orWhereBetween('i.I_FIN', [$first->toDateString(), $last->toDateString()])
+                    ->orWhere(function ($inner) use ($first, $last) {
+                        $inner->where('i.I_DEBUT', '<=', $first->toDateString())
+                            ->where('i.I_FIN', '>=', $last->toDateString());
+                    });
+            })
+            ->select('i.I_DEBUT', 'i.I_FIN', 'i.I_ACCEPT', 'i.I_COMMENT', 'ti.TI_LIBELLE')
+            ->orderBy('i.I_DEBUT')
+            ->get();
+
+        return view('planning.print', compact('events', 'absences', 'first', 'user', 'year', 'month'));
+    }
 }

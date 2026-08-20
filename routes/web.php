@@ -333,6 +333,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dues/export', [DuesController::class, 'export'])->name('dues.export')->middleware('permission:53');
     });
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index')->middleware('permission:0');
+    Route::get('/planning/print', [PlanningController::class, 'print'])->name('planning.print')->middleware('permission:0');
     Route::middleware('feature:vehicules')->group(function () {
         Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicle.index')->middleware('permission:42');
         // List exports (static segments before the {vehicle} wildcard).
