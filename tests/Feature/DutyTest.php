@@ -77,13 +77,13 @@ test('unauthenticated users are redirected from /duty to login', function () {
 });
 
 test('unauthenticated users are redirected from the on-call exports to login', function () {
-    $this->get('/duty/on-call/export/xls')->assertRedirect('/login');
-    $this->get('/duty/on-call/export/csv')->assertRedirect('/login');
+    $this->get('/duty/monthly/export/xls')->assertRedirect('/login');
+    $this->get('/duty/monthly/export/csv')->assertRedirect('/login');
 });
 
 test('the on-call export routes are registered', function () {
-    expect(route('duty.on-call.export.xls'))->toContain('/duty/on-call/export/xls');
-    expect(route('duty.on-call.export.csv'))->toContain('/duty/on-call/export/csv');
+    expect(route('duty.on-call.export.xls'))->toContain('/duty/monthly/export/xls');
+    expect(route('duty.on-call.export.csv'))->toContain('/duty/monthly/export/csv');
 });
 
 // ── Legacy bridge redirects ──────────────────────────────────────────────────
@@ -106,21 +106,21 @@ test('authenticated users can access the garde roster', function () {
     $user = gardeFakeUser();
     gardeStubIndex($user);
 
-    $this->actingAs($user)->get('/duty')->assertStatus(200);
+    $this->actingAs($user)->get('/duty/weekly')->assertStatus(200);
 });
 
 test('garde index renders the garde.index view', function () {
     $user = gardeFakeUser();
     gardeStubIndex($user);
 
-    $this->actingAs($user)->get('/duty')->assertViewIs('duty.index');
+    $this->actingAs($user)->get('/duty/weekly')->assertViewIs('duty.index');
 });
 
 test('garde index passes all required view variables', function () {
     $user = gardeFakeUser();
     gardeStubIndex($user);
 
-    $this->actingAs($user)->get('/duty')
+    $this->actingAs($user)->get('/duty/weekly')
         ->assertViewHasAll(['days', 'monday', 'sunday', 'prevWeek', 'nextWeek', 'weekOffset', 'roles']);
 });
 
@@ -128,6 +128,53 @@ test('garde index passes week=0 by default', function () {
     $user = gardeFakeUser();
     gardeStubIndex($user);
 
-    $this->actingAs($user)->get('/duty')
+    $this->actingAs($user)->get('/duty/weekly')
         ->assertViewHas('weekOffset', 0);
+});
+
+// ── Garde du jour (today's guard) ────────────────────────────────────────────
+
+/** Bind DutyController so today() renders the real view DB-free. */
+function gardeStubToday(): void
+{
+    $now = now();
+    app()->bind(DutyController::class, function () use ($now) {
+        $ctrl = Mockery::mock(DutyController::class)->makePartial();
+        $slot = (object) [
+            'AS_ID' => 1,
+            'AS_DEBUT' => $now->copy()->startOfDay()->setTime(8, 0)->toDateTimeString(),
+            'AS_FIN' => $now->copy()->startOfDay()->setTime(20, 0)->toDateTimeString(),
+            'P_ID' => 5, 'P_NOM' => 'Durand', 'P_PRENOM' => 'Paul',
+            'P_PHONE' => '0600000000', 'GP_DESCRIPTION' => 'Chef de garde',
+        ];
+        $slots = collect([$slot]);
+        $ctrl->shouldReceive('today')->andReturn(
+            view('duty.today', [
+                'slots' => $slots,
+                'byRole' => $slots->groupBy('GP_DESCRIPTION'),
+                'day' => $now->copy()->startOfDay(),
+            ])
+        );
+
+        return $ctrl;
+    });
+}
+
+test('the garde du jour route is registered', function () {
+    expect(route('duty.today'))->toContain('/duty/today');
+});
+
+test('unauthenticated users are redirected from garde du jour to login', function () {
+    $this->get('/duty/today')->assertRedirect('/login');
+});
+
+test('authenticated users can view the garde du jour', function () {
+    gardeStubToday();
+
+    $this->actingAs(gardeFakeUser())->get('/duty/today')
+        ->assertStatus(200)
+        ->assertViewIs('duty.today')
+        ->assertSee(__('duty.today_heading'))
+        ->assertSee('Paul DURAND')
+        ->assertSee('Chef de garde');
 });

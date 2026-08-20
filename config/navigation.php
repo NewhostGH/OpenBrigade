@@ -52,8 +52,9 @@ return [
             'label' => 'Garde',
             'icon' => 'clipboard-list',
             'items' => [
-                ['key' => 'duty.board',   'label' => 'Tableau de garde', 'url' => '/duty',                                            'icon' => 'shield-alt',   'permission' => 61],
-                ['key' => 'duty.today',   'label' => 'Garde du jour',    'url' => '/duty',                                            'icon' => 'calendar-day', 'permission' => 61],
+                ['key' => 'duty.today',   'label' => 'Garde du jour',       'url' => '/duty/today',   'icon' => 'calendar-day',   'permission' => 61],
+                ['key' => 'duty.board',   'label' => 'Garde de la semaine', 'url' => '/duty/weekly',   'icon' => 'calendar-week',  'permission' => 61],
+                ['key' => 'duty.on-call', 'label' => 'Garde du mois',       'url' => '/duty/monthly', 'icon' => 'calendar-alt',   'permission' => 52],
             ],
         ],
 
@@ -68,7 +69,6 @@ return [
                 ['key' => 'planning.absences',     'label' => 'Absences',        'url' => '/unavailability',   'icon' => 'user-times',     'permission' => 11],
                 ['key' => 'planning.rest',         'label' => 'Repos',           'url' => '/legacy/repos_saisie.php',                    'icon' => 'bed',            'permission' => 11],
                 ['key' => 'planning.replacement',  'label' => 'Remplacements',   'url' => '/replacements',     'icon' => 'exchange-alt',   'permission' => 41, 'feature' => 'remplacements'],
-                ['key' => 'planning.on-call',      'label' => 'Astreintes',      'url' => '/duty/on-call',     'icon' => 'bell',           'permission' => 52],
             ],
         ],
 

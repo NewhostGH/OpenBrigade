@@ -95,6 +95,41 @@ class DutyController extends Controller
     }
 
     /**
+     * "Garde du jour" — a focused view of the guard/on-call slots that cover
+     * today for the user's section, grouped by role. Distinct from the weekly
+     * "Tableau de garde" (index) which shows the whole week as a grid; both read
+     * the same `astreinte` table.
+     */
+    public function today(Request $request): View
+    {
+        $user = auth()->user();
+        $sectionId = (int) $user->P_SECTION;
+
+        $day = now()->startOfDay();
+        $dayEnd = now()->endOfDay();
+
+        $slots = DB::table('astreinte as a')
+            ->join('pompier as p', 'a.P_ID', '=', 'p.P_ID')
+            ->join('groupe as g', 'a.GP_ID', '=', 'g.GP_ID')
+            ->where('a.S_ID', $sectionId)
+            ->where('a.AS_DEBUT', '<=', $dayEnd->toDateTimeString())
+            ->where('a.AS_FIN', '>=', $day->toDateTimeString())
+            ->orderBy('g.GP_DESCRIPTION')
+            ->orderBy('a.AS_DEBUT')
+            ->orderBy('p.P_NOM')
+            ->select(
+                'a.AS_ID', 'a.AS_DEBUT', 'a.AS_FIN',
+                'p.P_ID', 'p.P_NOM', 'p.P_PRENOM', 'p.P_PHONE',
+                'g.GP_DESCRIPTION'
+            )
+            ->get();
+
+        $byRole = $slots->groupBy('GP_DESCRIPTION');
+
+        return view('duty.today', compact('slots', 'byRole', 'day'));
+    }
+
+    /**
      * Astreintes management list — admin view for managing on-call slots.
      */
     public function onCall(Request $request): View

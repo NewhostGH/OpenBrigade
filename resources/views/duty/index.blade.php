@@ -1,31 +1,25 @@
 @extends('layout.app')
 
-@section('title', 'Tableau de garde — ' . config('app.name'))
+@section('title', __('duty.title_schedule') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => __('duty.breadcrumb_duty')],
+    ['label' => __('duty.breadcrumb_duty'), 'url' => route('duty.index')],
+    ['label' => __('duty.title_schedule')],
 ]"/>
 
-<div class="ob-toolbar mx-3 mt-3">
+<div class="mx-3 mt-3">
+    <x-duty-period-nav active="week" />
+</div>
+
+<div class="ob-toolbar mx-3">
     <div class="ob-toolbar-title">
         <h1>{{ __('duty.title_schedule') }}</h1>
-        @if(auth()->user()->hasPermission(26))
-            {{-- TODO: Migrate code --}}
-            <a href="{{ url('/legacy/astreinte_edit.php') }}" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus me-1"></i> {{ __('duty.new_on_call') }}
-            </a>
-        @endif
-        @if(auth()->user()->hasPermission(5))
-            <a href="{{ route('duty.types.index') }}" class="btn btn-sm btn-outline-secondary">
-                <i class="fas fa-cog me-1"></i> {{ __('duty.guard_types_btn') }}
-            </a>
-        @endif
     </div>
 
-    {{-- Week navigation --}}
-    <div class="d-flex align-items-center gap-3 mt-2">
+    {{-- Bottom row: week navigation (left) + actions (bottom-right) --}}
+    <div class="d-flex align-items-center gap-3 mt-2 flex-wrap">
         <a href="{{ route('duty.index', ['week' => $prevWeek]) }}"
            class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-chevron-left"></i> {{ __('duty.prev_week') }}
@@ -45,6 +39,20 @@
                 {{ __('duty.current_week') }}
             </a>
         @endif
+
+        <div class="ms-auto d-flex gap-2">
+            @if(auth()->user()->hasPermission(26))
+                {{-- TODO: Migrate code --}}
+                <a href="{{ url('/legacy/astreinte_edit.php') }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus me-1"></i> {{ __('duty.new_on_call') }}
+                </a>
+            @endif
+            @if(auth()->user()->hasPermission(5))
+                <a href="{{ route('duty.types.index') }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-cog me-1"></i> {{ __('duty.guard_types_btn') }}
+                </a>
+            @endif
+        </div>
     </div>
 </div>
 
