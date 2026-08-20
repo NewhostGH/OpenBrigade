@@ -158,11 +158,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/events/{code}/log', [EventController::class, 'logStore'])->name('event.log.store')->middleware('permission:15');
     Route::patch('/events/{code}/log/{logId}', [EventController::class, 'logUpdate'])->name('event.log.update')->middleware('permission:15');
     Route::delete('/events/{code}/log/{logId}', [EventController::class, 'logDestroy'])->name('event.log.destroy')->middleware('permission:15');
-    Route::get('/duty', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
-    Route::get('/duty/on-call', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
-    Route::get('/duty/on-call/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');
-    Route::get('/duty/on-call/export/csv', [DutyController::class, 'exportOnCallCsv'])->name('duty.on-call.export.csv')->middleware('permission:52');
-    Route::get('/duty/on-call/print', [DutyController::class, 'printOnCall'])->name('duty.on-call.print')->middleware('permission:52');
+    // Guard views — day / week / month, all reading the same astreinte data.
+    // Route names stay stable; /duty redirects to the weekly (main) view.
+    Route::redirect('/duty', '/duty/weekly');
+    Route::get('/duty/today', [DutyController::class, 'today'])->name('duty.today')->middleware('permission:61');
+    Route::get('/duty/weekly', [DutyController::class, 'index'])->name('duty.index')->middleware('permission:61');
+    Route::get('/duty/monthly', [DutyController::class, 'onCall'])->name('duty.on-call')->middleware('permission:52');
+    Route::get('/duty/monthly/export/xls', [DutyController::class, 'exportOnCallXls'])->name('duty.on-call.export.xls')->middleware('permission:52');
+    Route::get('/duty/monthly/export/csv', [DutyController::class, 'exportOnCallCsv'])->name('duty.on-call.export.csv')->middleware('permission:52');
     Route::get('/garde/types', [DutyTypeController::class, 'index'])->name('duty.types.index')->middleware('permission:5');
     Route::post('/garde/types', [DutyTypeController::class, 'store'])->name('duty.types.store')->middleware('permission:5');
     Route::patch('/garde/types/{id}', [DutyTypeController::class, 'update'])->name('duty.types.update')->middleware('permission:5');

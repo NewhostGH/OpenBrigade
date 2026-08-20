@@ -1,15 +1,19 @@
 @extends('layout.app')
 
-@section('title', 'Astreintes — ' . config('app.name'))
+@section('title', __('duty.title_on_call') . ' — ' . config('app.name'))
 
 @section('content')
 
 <x-ob-breadcrumb :items="[
-    ['label' => 'Garde', 'url' => route('duty.index')],
-    ['label' => 'Astreintes'],
+    ['label' => __('duty.breadcrumb_duty'), 'url' => route('duty.index')],
+    ['label' => __('duty.title_on_call')],
 ]"/>
 
-<div class="mx-3 mt-3 d-flex align-items-center gap-3">
+<div class="mx-3 mt-3">
+    <x-duty-period-nav active="month" />
+</div>
+
+<div class="mx-3 d-flex align-items-center gap-3">
     @if(auth()->user()->hasPermission(26))
         {{-- TODO: Migrate code --}}
         <a href="{{ url('/legacy/astreinte_edit.php') }}" class="btn btn-sm btn-primary">

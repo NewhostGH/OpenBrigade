@@ -10,9 +10,24 @@ return [
 
     // Titres / breadcrumb
     'breadcrumb_duty' => 'Garde',
-    'title_schedule' => 'Tableau de garde',
-    'title_on_call' => 'Astreintes',
+    'title_schedule' => 'Garde de la semaine',
+    'title_today' => 'Garde du jour',
+    'title_on_call' => 'Garde du mois',
     'title_types' => 'Types de garde',
+
+    // Period switcher (day / week / month — all read the same astreinte data)
+    'period_day' => 'Jour',
+    'period_week' => 'Semaine',
+    'period_month' => 'Mois',
+
+    // Garde du jour
+    'today_heading' => 'Garde du jour',
+    'today_for_date' => 'Personnel de garde le :date',
+    'today_empty' => 'Personne de garde aujourd\'hui.',
+    'today_no_role' => 'Sans rôle',
+    'today_from' => 'de',
+    'today_to' => 'à',
+    'today_count' => ':count personne(s) de garde',
 
     // Actions
     'new_on_call' => 'Nouvelle astreinte',

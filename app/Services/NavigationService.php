@@ -21,6 +21,11 @@ class NavigationService
         $pinnedSet = array_flip($pinnedKeys);
         $groups = [];
 
+        // The single "active" item is the one whose path is the LONGEST prefix
+        // of the current path — so on /duty/on-call only "Astreintes" lights up,
+        // not the parent /duty items in another group.
+        $activePath = $this->activePath($currentPath);
+
         foreach (config('navigation.top', []) as $group) {
             if (isset($group['permission']) && ! $this->can($user, $group['permission'])) {
                 continue;
@@ -30,7 +35,7 @@ class NavigationService
                 continue;
             }
 
-            $items = $this->resolveItems($group['items'], $user, $currentPath, $pinnedSet);
+            $items = $this->resolveItems($group['items'], $user, $currentPath, $pinnedSet, $activePath);
 
             if (empty($items)) {
                 continue;
@@ -138,7 +143,44 @@ class NavigationService
         return $map;
     }
 
-    private function resolveItems(array $rawItems, ?User $user, string $currentPath, array $pinnedSet): array
+    /**
+     * The longest nav item path that is a boundary-aware prefix of the current
+     * path. Only the item(s) carrying exactly this path are marked active, so a
+     * parent path (e.g. /duty) never lights up while on a child (/duty/on-call).
+     * Returns '' when nothing matches.
+     */
+    private function activePath(string $currentPath): string
+    {
+        $best = '';
+
+        foreach (config('navigation.top', []) as $group) {
+            foreach ($group['items'] ?? [] as $item) {
+                if ($item === null || ! isset($item['url'])) {
+                    continue;
+                }
+
+                $itemPath = parse_url($item['url'], PHP_URL_PATH) ?? '';
+                if ($this->pathMatches($currentPath, $itemPath) && strlen($itemPath) > strlen($best)) {
+                    $best = $itemPath;
+                }
+            }
+        }
+
+        return $best;
+    }
+
+    /** True when $itemPath is $currentPath itself or a path-segment ancestor of it. */
+    private function pathMatches(string $currentPath, string $itemPath): bool
+    {
+        if ($itemPath === '') {
+            return false;
+        }
+
+        return $currentPath === $itemPath
+            || str_starts_with($currentPath, rtrim($itemPath, '/').'/');
+    }
+
+    private function resolveItems(array $rawItems, ?User $user, string $currentPath, array $pinnedSet, string $activePath): array
     {
         $resolved = [];
 
@@ -158,7 +200,7 @@ class NavigationService
             }
 
             $itemPath = parse_url($item['url'], PHP_URL_PATH) ?? '';
-            $active = $itemPath !== '' && str_starts_with($currentPath, $itemPath);
+            $active = $itemPath !== '' && $itemPath === $activePath;
 
             $resolved[] = [
                 'key' => $item['key'],
