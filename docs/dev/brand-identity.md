@@ -56,7 +56,7 @@ All UI text lives in `lang/fr/*.php` (Blade hardcoding is blocked by the i18n li
 
 Font Awesome 6 Free, `fas` only. One icon per action: add `fa-plus`, edit `fa-pen` (not
 `fa-edit`), delete `fa-trash`, save `fa-save`, cancel `fa-times`, confirm `fa-check`, view
-`fa-eye`, back `fa-arrow-left`, search `fa-search`, refresh `fa-sync`, Excel `fa-file-excel`,
+`fa-eye`, duplicate `fa-copy`, back `fa-arrow-left`, search `fa-search`, refresh `fa-sync`, Excel `fa-file-excel`,
 download `fa-download`, print `fa-print`.
 
 - Icon before text, `me-1`, `aria-hidden="true"`.
