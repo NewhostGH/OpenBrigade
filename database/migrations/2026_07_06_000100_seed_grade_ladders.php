@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Fresh installs only ever shipped one placeholder grade ('-', non renseigné) —
+ * Fresh installs only ever shipped one placeholder grade ('-', non renseigné):
  * every category was empty, so an admin had to type in every rank by hand
  * before the grades feature was usable. This seeds a starter ladder per
  * category (highest G_LEVEL = most senior); admins can freely rename, add to,
@@ -21,10 +21,10 @@ use Illuminate\Support\Facades\DB;
  * territorial agents, civil security, airport firefighters, or anything
  * else) get a generic "Universel" category (UNIV) instead: 120 numbered
  * levels (Niveau 1..120), seeded fully INACTIVE (G_FLAG=0) so they never
- * clutter a picker by default — an admin renames and activates only the
+ * clutter a picker by default: an admin renames and activates only the
  * levels their structure actually needs.
  *
- * No custom icons are seeded here — static default icons ship separately
+ * No custom icons are seeded here: static default icons ship separately
  * under public/images/grades/, named "{CATEGORY}_{CODE}.svg".
  */
 return new class extends Migration
@@ -36,7 +36,7 @@ return new class extends Migration
             ['CG_CODE' => 'UNIV', 'CG_DESCRIPTION' => 'Universel (générique)'],
         ]);
 
-        // Superseded by the generic UNIV ladder — hide from pickers, keep any existing assignments.
+        // Superseded by the generic UNIV ladder: hide from pickers, keep any existing assignments.
         DB::table('categorie_grade')->whereIn('CG_CODE', ['HOSP', 'PATS', 'SC', 'SSLIA'])->update(['CG_ACTIVE' => 0]);
 
         $rows = [

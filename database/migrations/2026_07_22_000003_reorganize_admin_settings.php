@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Schema;
  *
  * - photo_obligatoire (68) and ameliorations (80) join the Général tab;
  * - the import-API rows (64/65/66) join the Avancé tab with clear names;
- * - the mail/SMS rows (28, 9-12) move OFF the settings page (HIDDEN=1) —
+ * - the mail/SMS rows (28, 9-12) move OFF the settings page (HIDDEN=1):
  *   they are rendered by the new Administration ▸ Notifications page;
- * - the maintenance rows (37/41) and auto_optimize (14) also go HIDDEN —
+ * - the maintenance rows (37/41) and auto_optimize (14) also go HIDDEN:
  *   they are rendered by the Administration ▸ Maintenance page.
  */
 return new class extends Migration

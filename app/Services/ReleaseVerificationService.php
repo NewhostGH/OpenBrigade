@@ -13,18 +13,18 @@ use Throwable;
  * release actually serving correctly?" right after a deploy.
  *
  * It composes three layers, each reported as one entry:
- *   1. Infrastructure liveness — delegated to {@see HealthCheckService} (DB,
+ *   1. Infrastructure liveness: delegated to {@see HealthCheckService} (DB,
  *      cache, storage, queue, mail, …) and folded in as a single
  *      `infrastructure` check so the release gate fails when a backing service
  *      is down.
- *   2. Release integrity — checks that only make sense at deploy time: pending
+ *   2. Release integrity: checks that only make sense at deploy time: pending
  *      migrations, built front-end assets, production configuration sanity and
  *      the installed-version SSOT.
- *   3. Critical workflows — the named routes the app cannot serve without.
+ *   3. Critical workflows: the named routes the app cannot serve without.
  *
  * Each check is isolated (a thrown check degrades only its own entry) and
- * returns `{status, ...detail}` with status in ok|degraded|down|skipped — the
- * same vocabulary and worst-wins aggregation as HealthCheckService — so the
+ * returns `{status, ...detail}` with status in ok|degraded|down|skipped: the
+ * same vocabulary and worst-wins aggregation as HealthCheckService: so the
  * report drops straight into the CD pipeline gate (issue #73) and the optional
  * monitoring webhook.
  */
@@ -63,8 +63,8 @@ class ReleaseVerificationService implements ServiceInterface
     }
 
     /**
-     * A report passes the release gate when nothing is `down`, and — in strict
-     * mode — nothing is `degraded` either.
+     * A report passes the release gate when nothing is `down`, and: in strict
+     * mode: nothing is `degraded` either.
      *
      * @param  array{status:string}  $report
      */
@@ -203,7 +203,7 @@ class ReleaseVerificationService implements ServiceInterface
     }
 
     /**
-     * The deployed version — the installed-version SSOT — must match the version
+     * The deployed version: the installed-version SSOT: must match the version
      * being released when the pipeline pins one.
      *
      * @return array<string,mixed>

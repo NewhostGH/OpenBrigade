@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 // ── Sidebar collapse / de-collapse ──────────────────────────────────────────
 // Sub-menu visibility (.ob-div-lateral) is handled by a CSS rule on
-// .ob-col-lateral.collapsed — Bootstrap's own collapse state is preserved
+// .ob-col-lateral.collapsed: Bootstrap's own collapse state is preserved
 // across cycles so no manual .show()/.hide() on sub-menus is needed.
 $(document).ready(function () {
     if (sessionStorage.getItem('isCollapsed') == 1) {
@@ -67,11 +67,11 @@ $(document).ready(function () {
             const available  = window.innerHeight - margin * 2;
 
             if (fullHeight > available) {
-                // Taller than the viewport — pin to top and scroll inside.
+                // Taller than the viewport: pin to top and scroll inside.
                 submenu.style.top       = margin + 'px';
                 submenu.style.maxHeight = available + 'px';
             } else {
-                // Fits — align with the icon, nudged up if it would overflow bottom.
+                // Fits: align with the icon, nudged up if it would overflow bottom.
                 let top = row.top;
                 if (top + fullHeight + margin > window.innerHeight) {
                     top = window.innerHeight - fullHeight - margin;

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Seed the observability settings (NAME/VALUE rows in `configuration`) so the
  * Journal d'activité ▸ Paramètres tab has an ID to PATCH for each toggle.
- * Idempotent and self-healing — the admin screen also calls ensureSeeded().
+ * Idempotent and self-healing: the admin screen also calls ensureSeeded().
  */
 return new class extends Migration
 {

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Native photo-album module — replaces the legacy SPGM gallery.
+ * Native photo-album module: replaces the legacy SPGM gallery.
  *
  *  - ob_photo_album : one album per row, scoped to a section.
  *  - ob_photo       : individual photos stored on disk

@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('consumable.title') . ' — ' . config('app.name'))
+@section('title', __('consumable.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -20,7 +20,7 @@
     :export-csv-url="route('consumable.export.csv', request()->query())">
 
     @if(auth()->user()->hasPermission(71))
-        {{-- TODO: Migrate code — upd_consumable.php has no native create route yet --}}
+        {{-- TODO: Migrate code: upd_consumable.php has no native create route yet --}}
         <a href="{{ url('/legacy/upd_consumable.php?action=insert') }}" class="btn btn-sm btn-primary">
             <i class="fas fa-plus me-1"></i> {{ __('consumable.new_consumable') }}
         </a>
@@ -36,7 +36,7 @@
             <option value="" @selected($filtSect === null)>{{ __('consumable.all_sections') }}</option>
             @foreach($sections as $s)
                 <option value="{{ $s->S_ID }}" @selected($filtSect === $s->S_ID)>
-                    {{ $s->S_CODE }} — {{ $s->S_DESCRIPTION }}
+                    {{ $s->S_CODE }} - {{ $s->S_DESCRIPTION }}
                 </option>
             @endforeach
         </select>

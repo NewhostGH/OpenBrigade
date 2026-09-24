@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  * While enabled, only administrators (permission 14 / super admin) can use
  * the app; everyone else gets the 503 page carrying the maintenance text.
  * Guests keep the whole login flow (with a notice banner on the login page)
- * so an administrator can still sign in to turn the mode off — matching the
+ * so an administrator can still sign in to turn the mode off: matching the
  * legacy "seul admin peut se connecter" behaviour.
  */
 class MaintenanceMode
@@ -42,7 +42,7 @@ class MaintenanceMode
         $user = $request->user();
 
         if ($user === null) {
-            // Login flow stays reachable — surface the notice on the page.
+            // Login flow stays reachable: surface the notice on the page.
             View::share('maintenanceNotice', $text);
 
             return $next($request);

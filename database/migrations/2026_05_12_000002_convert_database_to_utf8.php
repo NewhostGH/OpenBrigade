@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 |--------------------------------------------------------------------------
 |
 | The legacy eBrigade schema was created with latin1 (ISO-8859-1). This
-| migration converts every table — and the database itself — to utf8mb4
+| migration converts every table (and the database itself) to utf8mb4
 | (Unicode, full 4-byte support) with the utf8mb4_unicode_ci collation.
 |
 | Strategy: ALTER TABLE … CONVERT TO CHARACTER SET utf8mb4 rewrites every

@@ -1,5 +1,5 @@
 {{--
-    ob-table  —  Universal data table (no outer card, no form, no controls bar).
+    ob-table: Universal data table (no outer card, no form, no controls bar).
 
     The outer card + form is provided by <x-ob-commandbar>.
     Column-toggle, export, and card-toggle controls live in <x-ob-toolbar>
@@ -31,7 +31,7 @@
     default       bool      Default visibility in localStorage   (default: true)
     mobile        bool      false → d-none d-md-table-cell       (default: true)
     cardShow      bool      Show in card mode                    (default: false)
-    sortField     string    DB field for ORDER BY — makes header clickable
+    sortField     string    DB field for ORDER BY, makes header clickable
     thWidth       string    Inline width on <th>, e.g. '40px'
     badgeMap      array     For badge type: ['RAW' => ['Label', 'css-class']]
     imageAlt      callable  fn($item) → alt text
@@ -197,13 +197,13 @@
                         @case('date')
                             {{ $rawVal instanceof \Carbon\Carbon
                                 ? $rawVal->format('d/m/Y')
-                                : ($rawVal ? \Carbon\Carbon::parse($rawVal)->format('d/m/Y') : '—') }}
+                                : ($rawVal ? \Carbon\Carbon::parse($rawVal)->format('d/m/Y') : __('common.empty_value')) }}
                             @break
 
                         @case('bool')
                             {!! $rawVal
                                 ? '<i class="fas fa-check text-success"></i>'
-                                : '<span class="text-muted">—</span>' !!}
+                                : '<span class="text-muted">'.__('common.empty_value').'</span>' !!}
                             @break
 
                         @case('html')
@@ -211,7 +211,7 @@
                             @break
 
                         @default
-                            {{ $rawVal !== null && $rawVal !== '' ? $rawVal : '—' }}
+                            {{ $rawVal !== null && $rawVal !== '' ? $rawVal : __('common.empty_value') }}
 
                     @endswitch
                 </td>

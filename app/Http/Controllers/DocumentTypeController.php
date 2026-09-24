@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
- * Document type & security configuration — manage `type_document` (category,
+ * Document type & security configuration: manage `type_document` (category,
  * required feature to view, syndicate flag) for the library. Permission 47.
  * The per-document security levels (`document_security`) are shown read-only as
  * reference data.

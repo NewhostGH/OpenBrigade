@@ -14,8 +14,8 @@ ownership & migration policy), [installation.md](../admin/installation.md)
 
 ## The three versions
 
-Three version values coexist. `App\Services\VersionService` is the one place that
-names and compares them; nothing else should re-derive them.
+Three version values coexist. `App\Services\VersionService` is the one place
+that names and compares them; nothing else should re-derive them.
 
 | Version       | Where it lives                                                   | Means                                          |
 | ------------- | ---------------------------------------------------------------- | ---------------------------------------------- |
@@ -23,20 +23,19 @@ names and compares them; nothing else should re-derive them.
 | **installed** | database, `configuration` row `version`                          | The version the running instance is migrated to |
 | **changelog** | top `## [x.y.z]` heading in `CHANGELOG.md`                        | The latest documented release                  |
 
-On a correctly released instance all three agree. The **code** version is the
-SSOT for the source; the **installed** version is the SSOT for a running instance
-and overlays `config('brigade.version')` / `config('app.version')` at boot (see
-`App\Services\GeneralSettingService::appVersion()` and
-`App\Providers\AppServiceProvider::configureAppIdentity()`).
+On a correctly released instance all three agree. **code** is the SSOT for the
+source; **installed** is the SSOT for a running instance and overlays
+`config('brigade.version')` / `config('app.version')` at boot (see
+`GeneralSettingService::appVersion()`, `AppServiceProvider::configureAppIdentity()`).
 
-`APP_VERSION` in `.env` overrides the code version when set — a deploy-time escape
-hatch only; the committed source of truth is the `VERSION` file.
+`APP_VERSION` in `.env` overrides the code version when set: a deploy-time
+escape hatch only; the `VERSION` file is the committed source of truth.
 
 ### Drift
 
-When **code ≠ installed** the code has been deployed but its release migration has
-not run yet. `VersionService::hasDrift()` reports this and `php artisan ob:version`
-warns about it. Running `php artisan migrate` clears the drift.
+When **code ≠ installed**, code has deployed but its release migration hasn't
+run yet. `VersionService::hasDrift()` reports it, `php artisan ob:version`
+warns; `php artisan migrate` clears it.
 
 ## `ob:version`
 
@@ -51,12 +50,12 @@ Use it in deploy scripts and post-deploy [release verification](../../.github/TO
 
 Given a version `MAJOR.MINOR.PATCH`, increment:
 
-- **MAJOR** — incompatible changes: a removed/renamed route, a breaking schema
+- **MAJOR**: incompatible changes: a removed/renamed route, a breaking schema
   change with no backward-compatible path, a dropped legacy bridge target, or any
   change flagged `BREAKING CHANGE:` in a commit.
-- **MINOR** — backward-compatible functionality: a migrated menu, a new screen,
+- **MINOR**: backward-compatible functionality: a migrated menu, a new screen,
   a new export.
-- **PATCH** — backward-compatible bug fixes only.
+- **PATCH**: backward-compatible bug fixes only.
 
 Pre-release builds use a suffix (`6.1.0-rc.1`); build metadata uses `+` (`6.1.0+ci.42`).
 The native migration itself shipped as **6.0.0** (legacy eBrigade was 5.5).
@@ -64,15 +63,15 @@ The native migration itself shipped as **6.0.0** (legacy eBrigade was 5.5).
 ## Keeping the changelog
 
 `CHANGELOG.md` always carries an `## [Unreleased]` section at the top. **Every PR
-that changes user-visible behaviour adds a line there** under the appropriate
+that changes user-visible behavior adds a line there** under the appropriate
 Keep a Changelog group (`Added` / `Changed` / `Deprecated` / `Removed` / `Fixed`
 / `Security`). Documentation-only or internal-refactor PRs may skip it.
 
 ## Cutting a release
 
 1. **Pick the version** per the SemVer policy above from the `Unreleased` entries.
-2. **Bump the code version** — write the new version to [`VERSION`](../../VERSION).
-3. **Roll the changelog** — rename `## [Unreleased]` to `## [x.y.z] - YYYY-MM-DD`,
+2. **Bump the code version**: write the new version to [`VERSION`](../../VERSION).
+3. **Roll the changelog**: rename `## [Unreleased]` to `## [x.y.z] - YYYY-MM-DD`,
    add a fresh empty `## [Unreleased]`, and update the compare/tag links at the
    bottom of `CHANGELOG.md`.
 4. **Add a release migration** that stamps the installed version so any instance
@@ -92,14 +91,14 @@ Keep a Changelog group (`Added` / `Changed` / `Deprecated` / `Removed` / `Fixed`
    };
    ```
 
-   `ReleaseVersion::stamp()` is the single place that writes `configuration.version`
-   — never inline the update. Migrations are **forward-only and backward-compatible
+   `ReleaseVersion::stamp()` is the single place that writes `configuration.version`:
+   never inline the update. Migrations are **forward-only and backward-compatible
    where possible** (see [database-migration.md](../admin/database-migration.md)).
 5. **Commit** with a `chore(release): x.y.z` message, **tag** `vX.Y.Z`, and push
    the tag. The tag is the immutable release marker referenced from `CHANGELOG.md`.
 
 ## See also
 
-- [CHANGELOG.md](../../CHANGELOG.md) — the maintained changelog
-- [database-migration.md](../admin/database-migration.md) — migration policy
-- [.github/TODO.md](../../.github/TODO.md) — release-strategy backlog & tracker
+- [CHANGELOG.md](../../CHANGELOG.md): the maintained changelog
+- [database-migration.md](../admin/database-migration.md): migration policy
+- [.github/TODO.md](../../.github/TODO.md): release-strategy backlog & tracker

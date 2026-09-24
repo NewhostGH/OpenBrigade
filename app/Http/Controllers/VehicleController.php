@@ -97,7 +97,7 @@ class VehicleController extends Controller
     {
         $service = new TableExportService;
         // The 'indicatif' / 'immat' columns are alwaysVisible, so resolveColumns
-        // skips them — prepend them explicitly to keep the export self-describing.
+        // skips them: prepend them explicitly to keep the export self-describing.
         $columns = $service->resolveColumns($this->vehicleColumns(), $request, [
             ['Indicatif',       fn ($v) => $v->V_INDICATIF ?? ''],
             ['Immatriculation', fn ($v) => $v->V_IMMATRICULATION ?? ''],
@@ -122,34 +122,34 @@ class VehicleController extends Controller
                 'key' => 'type', 'label' => 'Type', 'type' => 'html',
                 'value' => fn ($v) => $v->TV_CODE
                     ? '<i class="'.self::tvIcon($v->TV_CODE).' fa-lg" title="'.e($v->TV_LIBELLE ?? $v->TV_CODE).'"></i>'
-                    : '—',
+                    : __('common.empty_value'),
                 'exportValue' => fn ($v) => $v->TV_LIBELLE ?? $v->TV_CODE ?? '',
                 'mobile' => false, 'default' => true,
             ],
             [
                 'key' => 'indicatif', 'label' => 'Indicatif', 'type' => 'text',
-                'value' => fn ($v) => $v->V_INDICATIF ?? '—',
+                'value' => fn ($v) => $v->V_INDICATIF ?? __('common.empty_value'),
                 'alwaysVisible' => true, 'sortField' => 'V_INDICATIF', 'mobile' => true,
             ],
             [
                 'key' => 'immat', 'label' => 'Immatriculation', 'type' => 'text',
-                'value' => fn ($v) => $v->V_IMMATRICULATION ?? '—',
+                'value' => fn ($v) => $v->V_IMMATRICULATION ?? __('common.empty_value'),
                 'alwaysVisible' => true, 'sortField' => 'V_IMMATRICULATION', 'mobile' => true,
             ],
             // Only meaningful with several sites.
             ...(app(FeatureService::class)->isEnabled('multi_site') ? [[
                 'key' => 'section', 'label' => 'Section', 'type' => 'text',
-                'value' => fn ($v) => $v->section->S_CODE ?? '—',
+                'value' => fn ($v) => $v->section->S_CODE ?? __('common.empty_value'),
                 'mobile' => false, 'default' => true,
             ]] : []),
             [
                 'key' => 'modele', 'label' => 'Modèle', 'type' => 'text',
-                'value' => fn ($v) => $v->V_MODELE ?? '—',
+                'value' => fn ($v) => $v->V_MODELE ?? __('common.empty_value'),
                 'mobile' => false, 'default' => true,
             ],
             [
                 'key' => 'annee', 'label' => 'Année', 'type' => 'text',
-                'value' => fn ($v) => $v->V_ANNEE ?? '—',
+                'value' => fn ($v) => $v->V_ANNEE ?? __('common.empty_value'),
                 'mobile' => false, 'default' => false,
             ],
             [
@@ -170,7 +170,7 @@ class VehicleController extends Controller
                 'key' => 'assurance', 'label' => 'Assurance', 'type' => 'html',
                 'value' => fn ($v) => $v->V_ASS_DATE
                     ? $warn($v->V_ASS_DATE).e(Carbon::parse($v->V_ASS_DATE)->format('d/m/Y'))
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => true,
                 'exportValue' => fn ($v) => $v->V_ASS_DATE ? Carbon::parse($v->V_ASS_DATE)->format('d/m/Y') : '',
             ],
@@ -178,7 +178,7 @@ class VehicleController extends Controller
                 'key' => 'ct', 'label' => 'Contrôle technique', 'type' => 'html',
                 'value' => fn ($v) => $v->V_CT_DATE
                     ? $warn($v->V_CT_DATE).e(Carbon::parse($v->V_CT_DATE)->format('d/m/Y'))
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => true,
                 'exportValue' => fn ($v) => $v->V_CT_DATE ? Carbon::parse($v->V_CT_DATE)->format('d/m/Y') : '',
             ],
@@ -186,7 +186,7 @@ class VehicleController extends Controller
                 'key' => 'revision', 'label' => 'Révision', 'type' => 'html',
                 'value' => fn ($v) => $v->V_REV_DATE
                     ? $warn($v->V_REV_DATE).e(Carbon::parse($v->V_REV_DATE)->format('d/m/Y'))
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => false,
                 'exportValue' => fn ($v) => $v->V_REV_DATE ? Carbon::parse($v->V_REV_DATE)->format('d/m/Y') : '',
             ],
@@ -194,7 +194,7 @@ class VehicleController extends Controller
                 'key' => 'titre', 'label' => "Titre d'accès", 'type' => 'html',
                 'value' => fn ($v) => $v->V_TITRE_DATE
                     ? $warn($v->V_TITRE_DATE).e(Carbon::parse($v->V_TITRE_DATE)->format('d/m/Y'))
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => false,
                 'exportValue' => fn ($v) => $v->V_TITRE_DATE ? Carbon::parse($v->V_TITRE_DATE)->format('d/m/Y') : '',
             ],
@@ -202,7 +202,7 @@ class VehicleController extends Controller
                 'key' => 'neige', 'label' => 'Neige', 'type' => 'html',
                 'value' => fn ($v) => $v->V_FLAG1
                     ? '<i class="fas fa-snowflake text-info" title="Équipement neige"></i>'
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => false,
                 'exportValue' => fn ($v) => $v->V_FLAG1 ? 'Oui' : '',
             ],
@@ -210,7 +210,7 @@ class VehicleController extends Controller
                 'key' => 'clim', 'label' => 'Clim', 'type' => 'html',
                 'value' => fn ($v) => $v->V_FLAG2
                     ? '<i class="fas fa-wind text-primary" title="Climatisation"></i>'
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => false,
                 'exportValue' => fn ($v) => $v->V_FLAG2 ? 'Oui' : '',
             ],
@@ -218,7 +218,7 @@ class VehicleController extends Controller
                 'key' => 'pa', 'label' => 'PA', 'type' => 'html',
                 'value' => fn ($v) => $v->V_FLAG3
                     ? '<i class="fas fa-bullhorn text-warning" title="Public Address"></i>'
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => false,
                 'exportValue' => fn ($v) => $v->V_FLAG3 ? 'Oui' : '',
             ],
@@ -226,7 +226,7 @@ class VehicleController extends Controller
                 'key' => 'att', 'label' => 'Att.', 'type' => 'html',
                 'value' => fn ($v) => $v->V_FLAG4
                     ? '<i class="fas fa-link text-secondary" title="Attelage"></i>'
-                    : '—',
+                    : __('common.empty_value'),
                 'mobile' => false, 'default' => false,
                 'exportValue' => fn ($v) => $v->V_FLAG4 ? 'Oui' : '',
             ],
@@ -336,8 +336,8 @@ class VehicleController extends Controller
 
     private function validateVehicle(Request $request): array
     {
-        // HTML submits "" for empty <select> — pre-convert numeric fields to null/int.
-        // VP_ID is varchar('OP','LIM'…) — keep as string, just normalise empty → null.
+        // HTML submits "" for empty <select>: pre-convert numeric fields to null/int.
+        // VP_ID is varchar('OP','LIM'…): keep as string, just normalise empty → null.
         $intOrNull = fn (string $key) => $request->filled($key) ? (int) $request->input($key) : null;
         $strOrNull = fn (string $key) => $request->filled($key) ? $request->input($key) : null;
 
@@ -346,7 +346,7 @@ class VehicleController extends Controller
             'V_ANNEE' => $intOrNull('V_ANNEE'),
             'V_KM' => $intOrNull('V_KM'),
             'V_KM_REVISION' => $intOrNull('V_KM_REVISION'),
-            // V_EXTERNE handled via $request->boolean() — remove from validate to avoid
+            // V_EXTERNE handled via $request->boolean(): remove from validate to avoid
             // boolean failing when the checkbox is absent from the POST body.
         ]);
 

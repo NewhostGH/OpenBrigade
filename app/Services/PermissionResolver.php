@@ -9,17 +9,17 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Full ACL with groups — section-scoped permission resolution with explicit
+ * Full ACL with groups: section-scoped permission resolution with explicit
  * allow *and* deny at every tier.
  *
  * A feature (F_ID) is decided for a user in a section by the first matching
  * rule (most specific wins):
  *
- *   1. user deny        — a per-person override refuses it            → DENY
- *   2. user allow       — a per-person override grants it             → ALLOW
- *   3. section deny     — any section in the chain caps it (ceiling)  → DENY
- *   4. group/role deny  — a held group/role explicitly refuses it     → DENY
- *   5. group/role allow — a held group/role grants it                 → ALLOW
+ *   1. user deny        : a per-person override refuses it            → DENY
+ *   2. user allow       : a per-person override grants it             → ALLOW
+ *   3. section deny     : any section in the chain caps it (ceiling)  → DENY
+ *   4. group/role deny  : a held group/role explicitly refuses it     → DENY
+ *   5. group/role allow : a held group/role grants it                 → ALLOW
  *   6. (nothing grants it)                                            → DENY
  *
  * "In scope" for a user-override or role row means section_id < 0 (the -1
@@ -55,7 +55,7 @@ class PermissionResolver
 
     /**
      * Does the user have feature $fid, evaluated in section $sId under an
-     * optional single-role filter? Pure (no session) — used by tests and the
+     * optional single-role filter? Pure (no session), used by tests and the
      * "Mes droits" preview.
      */
     public function allows(User $user, int $fid, ?int $sId = null, ?int $roleFilter = null): bool
@@ -64,14 +64,14 @@ class PermissionResolver
             return false;
         }
 
-        // Super-admin (account flag) bypasses every tier — uncappable.
+        // Super-admin (account flag) bypasses every tier, uncappable.
         if ($this->isSuperAdmin($user)) {
             return true;
         }
 
         $chain = $this->sectionChain($sId);
 
-        // 1 & 2 — per-person override is the most specific tier.
+        // 1 & 2: per-person override is the most specific tier.
         $userEffect = $this->userEffect($user, $fid, $chain);
         if ($userEffect === self::DENY) {
             return false;
@@ -80,12 +80,12 @@ class PermissionResolver
             return true;
         }
 
-        // 3 — section ceiling.
+        // 3: section ceiling.
         if (! $this->ceilingAllows($fid, $chain)) {
             return false;
         }
 
-        // 4 & 5 — group/role grants (a deny on any held principal wins).
+        // 4 & 5: group/role grants (a deny on any held principal wins).
         return $this->groupRoleEffect($user, $fid, $chain, $roleFilter) === self::ALLOW;
     }
 
@@ -183,7 +183,7 @@ class PermissionResolver
     /**
      * The section the user EXPLICITLY chose via the navbar switcher.
      * Unlike activeSectionId() this never falls back to P_SECTION, so null
-     * means "no restriction chosen — show everything accessible."
+     * means "no restriction chosen: show everything accessible."
      */
     public function chosenSectionId(): ?int
     {
@@ -228,7 +228,7 @@ class PermissionResolver
         return (int) $user->GP_ID === -1 || (int) ($user->GP_ID2 ?? $user->GP_ID) === -1;
     }
 
-    /** Super-admin is the account flag pompier.P_SUPERADMIN — uncappable full access. */
+    /** Super-admin is the account flag pompier.P_SUPERADMIN: uncappable full access. */
     public function isSuperAdmin(User $user): bool
     {
         return (bool) ($user->P_SUPERADMIN ?? false);

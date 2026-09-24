@@ -7,7 +7,7 @@
 |
 | Configuration for the post-deploy smoke-check gate (`ob:release:verify`,
 | App\Services\ReleaseVerificationService). These are the "release
-| verification" knobs of the RELEASE epic — a CD pipeline (issue #73) runs the
+| verification" knobs of the RELEASE epic: a CD pipeline (issue #73) runs the
 | command right after a deploy and gates the release on its exit code.
 |
 */
@@ -29,8 +29,8 @@ return [
     'manifest_path' => public_path('build/manifest.json'),
 
     /*
-     * Optional expected deployed version. When set — e.g. the pipeline passes
-     * the tag being released — verification fails if it does not match the
+     * Optional expected deployed version. When set: e.g. the pipeline passes
+     * the tag being released: verification fails if it does not match the
      * installed-version SSOT (configuration row 1, see config('brigade.version')).
      * Empty skips the assertion.
      */
@@ -38,7 +38,7 @@ return [
 
     /*
      * Optional monitoring / deploy webhook. When set, the report is POSTed here
-     * after every verification (best-effort — a failed ping never fails the
+     * after every verification (best-effort: a failed ping never fails the
      * deploy). Point it at a deploy tracker, uptime service or chat webhook.
      */
     'webhook' => env('RELEASE_VERIFY_WEBHOOK_URL', ''),

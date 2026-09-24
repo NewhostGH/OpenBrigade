@@ -86,7 +86,7 @@ class Event extends Model
         return $this->belongsTo(Section::class, 'S_ID', 'S_ID');
     }
 
-    /** The event type (formation, intervention, …) — reference catalogue. */
+    /** The event type (formation, intervention, …): reference catalogue. */
     public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'TE_CODE', 'TE_CODE');

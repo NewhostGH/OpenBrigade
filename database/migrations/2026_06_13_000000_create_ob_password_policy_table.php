@@ -27,26 +27,26 @@ return new class extends Migration
             // Length
             $table->unsignedTinyInteger('min_length')->default(12);
 
-            // Complexity (all off by default — NCSC stance)
+            // Complexity (all off by default: NCSC stance)
             $table->boolean('require_uppercase')->default(false);
             $table->boolean('require_lowercase')->default(false);
             $table->boolean('require_digits')->default(false);
             $table->boolean('require_special')->default(false);
 
-            // Rotation (0 = disabled — NCSC stance)
+            // Rotation (0 = disabled: NCSC stance)
             $table->unsignedSmallInteger('expiry_days')->default(0)->comment('0 = no forced rotation');
 
             // Throttle / lockout (0 = disabled)
             $table->unsignedTinyInteger('max_attempts')->default(10)->comment('0 = no lockout');
 
-            // Blocklist (on by default — NCSC stance)
+            // Blocklist (on by default: NCSC stance)
             $table->boolean('blocklist_check')->default(true);
 
             $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
 
-        // Default policy — NCSC stance: length-first, no complexity, no forced rotation.
+        // Default policy (NCSC stance): length-first, no complexity, no forced rotation.
         DB::table('ob_password_policy')->insert([
             'name' => 'Politique par défaut (NCSC)',
             'min_length' => 12,
@@ -62,7 +62,7 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
 
-        // Admin policy — ANSSI-grade: longer minimum, digits required.
+        // Admin policy (ANSSI-grade): longer minimum, digits required.
         DB::table('ob_password_policy')->insert([
             'name' => 'Politique administrateurs (ANSSI)',
             'min_length' => 16,

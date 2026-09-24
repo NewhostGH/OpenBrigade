@@ -16,7 +16,7 @@ return [
 
     /*
     | Extensions that must never be accepted, whatever the feature whitelist
-    | says — executables, scripts and server-side code. Checked case-insensitively
+    | says: executables, scripts and server-side code. Checked case-insensitively
     | and against every extension part of the filename (e.g. "x.php.png").
     */
     'forbidden_extensions' => [
@@ -32,9 +32,9 @@ return [
     | regardless of the declared extension. Matched at offset 0.
     */
     'magic_byte_blocklist' => [
-        '4d5a',       // MZ — Windows PE / DOS executable
-        '7f454c46',   // .ELF — Linux executable
-        '23212f',     // #!/ — script shebang
+        '4d5a',       // MZ: Windows PE / DOS executable
+        '7f454c46',   // .ELF: Linux executable
+        '23212f',     // #!/: script shebang
         'cafebabe',   // Java class / Mach-O fat binary
         'feedface',   // Mach-O 32-bit
         'feedfacf',   // Mach-O 64-bit

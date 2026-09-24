@@ -6,23 +6,18 @@ labels: enhancement
 assignees: ''
 ---
 
-## Problem / Motivation
+## Problem / motivation
 
-Is your feature request related to a problem? Describe it clearly.  
-_e.g. "I find it frustrating when..."_
+Is this related to a problem? Describe it (e.g. "I find it frustrating when...").
 
-## Proposed Solution
+## Proposed solution
 
-A clear and concise description of what you would like to happen.
+What you would like to happen, and who benefits / in what scenario.
 
-## Alternatives Considered
+## Alternatives considered
 
-Describe any alternative solutions or features you have considered.
+Any alternative solutions or features considered.
 
-## Use Case
+## Additional context
 
-Who would benefit from this feature and in what scenario?
-
-## Additional Context
-
-Add any other context, mockups, or screenshots about the feature request here.
+Mockups, screenshots, or other context.

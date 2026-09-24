@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * SMSEagle driver — sends through a self-hosted SMSEagle appliance over its
+ * SMSEagle driver: sends through a self-hosted SMSEagle appliance over its
  * APIv2 (access-token auth). The appliance host is stored as the SMS API id
  * (bare host or full URL) and the access token as the SMS password.
  * See docs/admin/sms.md. Replaces the legacy provider 8 in fonctions_sms.php.
@@ -27,7 +27,7 @@ class SmsEagleSender implements SmsSender
         $token = $this->config['token'] ?? null;
 
         if ($host === '' || empty($token)) {
-            Log::warning('SmsEagle: missing host or token — SMS not sent', ['to' => $message->to]);
+            Log::warning('SmsEagle: missing host or token: SMS not sent', ['to' => $message->to]);
 
             return SmsResult::failed($this->name(), 'SMSEagle is not configured (host/token missing).');
         }

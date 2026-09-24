@@ -71,7 +71,7 @@ class CompanyController extends Controller
     private function export(Request $request, string $format)
     {
         $service = new TableExportService;
-        // 'nom' is alwaysVisible, so resolveColumns skips it — prepend it.
+        // 'nom' is alwaysVisible, so resolveColumns skips it: prepend it.
         $columns = $service->resolveColumns($this->companyColumns(), $request, [
             ['Nom', fn ($c) => $c->C_NAME ?? ''],
         ]);
@@ -88,10 +88,10 @@ class CompanyController extends Controller
     {
         return [
             ['key' => 'nom', 'label' => 'Nom', 'type' => 'text', 'value' => fn ($c) => $c->C_NAME, 'alwaysVisible' => true, 'sortField' => 'C_NAME', 'mobile' => true],
-            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($c) => $c->TC_LIBELLE ?? $c->TC_CODE ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->TC_LIBELLE ?? $c->TC_CODE ?? ''],
-            ['key' => 'ville', 'label' => 'Ville', 'type' => 'text', 'value' => fn ($c) => $c->C_CITY ? $c->C_CITY.($c->C_ZIP_CODE ? ' ('.$c->C_ZIP_CODE.')' : '') : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_CITY ?? ''],
-            ['key' => 'telephone', 'label' => 'Téléphone', 'type' => 'html', 'value' => fn ($c) => $c->C_PHONE ? '<a href="tel:'.e($c->C_PHONE).'" class="text-decoration-none">'.e($c->C_PHONE).'</a>' : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_PHONE ?? ''],
-            ['key' => 'email', 'label' => 'E-mail', 'type' => 'html', 'value' => fn ($c) => $c->C_EMAIL ? '<a href="mailto:'.e($c->C_EMAIL).'" class="text-decoration-none">'.e($c->C_EMAIL).'</a>' : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_EMAIL ?? ''],
+            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($c) => $c->TC_LIBELLE ?? $c->TC_CODE ?? __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->TC_LIBELLE ?? $c->TC_CODE ?? ''],
+            ['key' => 'ville', 'label' => 'Ville', 'type' => 'text', 'value' => fn ($c) => $c->C_CITY ? $c->C_CITY.($c->C_ZIP_CODE ? ' ('.$c->C_ZIP_CODE.')' : '') : __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_CITY ?? ''],
+            ['key' => 'telephone', 'label' => 'Téléphone', 'type' => 'html', 'value' => fn ($c) => $c->C_PHONE ? '<a href="tel:'.e($c->C_PHONE).'" class="text-decoration-none">'.e($c->C_PHONE).'</a>' : __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_PHONE ?? ''],
+            ['key' => 'email', 'label' => 'E-mail', 'type' => 'html', 'value' => fn ($c) => $c->C_EMAIL ? '<a href="mailto:'.e($c->C_EMAIL).'" class="text-decoration-none">'.e($c->C_EMAIL).'</a>' : __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($c) => $c->C_EMAIL ?? ''],
         ];
     }
 }

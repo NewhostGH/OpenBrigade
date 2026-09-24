@@ -13,7 +13,7 @@ api.pwnedpasswords.com:443
 HTTPS
 ClamAV
 TCP
-LDAP —
+LDAP -
 LDAP
 SMTP
 MAIL_HOST:MAIL_PORT

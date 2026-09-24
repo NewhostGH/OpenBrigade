@@ -58,7 +58,7 @@ class AppIdentityService
         return $this->values['cisname'] ?: config('app.name', 'OpenBrigade');
     }
 
-    /** Long organisation name (e.g. "Croix-Rouge Française — UL Dupont"). */
+    /** Long organisation name (e.g. "Croix-Rouge Française - UL Dupont"). */
     public function longName(): string
     {
         $this->load();

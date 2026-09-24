@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * Legacy table: document_security. Primary key: DS_ID.
  *
  * A per-document access level. F_ID is the feature id required to view a
- * document carrying this level (0 = public). Reference data — read-only in the
+ * document carrying this level (0 = public). Reference data: read-only in the
  * native app.
  *
  * @property int $DS_ID

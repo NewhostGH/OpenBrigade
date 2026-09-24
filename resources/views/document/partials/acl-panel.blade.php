@@ -1,4 +1,4 @@
-{{-- ACL management panel — rendered standalone (full page) and injected into the
+{{-- ACL management panel: rendered standalone (full page) and injected into the
      in-page "Partager" modal via AJAX. Forms are marked data-acl-form so the
      modal can submit them without leaving the page.
      Vars: $type, $id, $name, $aces, $groups, $roles, $people, $groupNames,
@@ -6,7 +6,7 @@
 <div data-acl-panel>
     <p class="text-muted mb-2" style="font-size:var(--font-size-sm);">
         <i class="fas fa-{{ $type === 'folder' ? 'folder' : 'file' }} me-1 text-secondary"></i>
-        <strong>{{ $name }}</strong> — {{ __('document.acl_desc_partial') }}
+        <strong>{{ $name }}</strong> - {{ __('document.acl_desc_partial') }}
     </p>
 
     @if (session('success'))

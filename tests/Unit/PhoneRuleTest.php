@@ -32,7 +32,7 @@ test('rejects numbers with too few digits', function () {
         ->and(phoneFails('+33 6 12'))->toBeTrue();
 });
 
-test('ignores empty values — presence is the nullable rule\'s concern', function () {
+test('ignores empty values - presence is the nullable rule\'s concern', function () {
     expect(phoneFails(''))->toBeFalse()
         ->and(phoneFails('   '))->toBeFalse()
         ->and(phoneFails(null))->toBeFalse();

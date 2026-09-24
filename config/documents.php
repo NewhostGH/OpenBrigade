@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Canonical location: storage/app/private/{storage_subpath}/{S_ID}/{DF_ID}/
-    | {D_NAME} — organised per section (section 0 = root / no section), with a
+    | {D_NAME}: organised per section (section 0 = root / no section), with a
     | sub-folder segment only for documents inside a folder.
     |
     | legacy_subpath is the old location ({legacy_root}/user-data/files_section,

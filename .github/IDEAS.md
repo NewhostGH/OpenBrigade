@@ -1,11 +1,8 @@
-# OpenBrigade — Long-term ideas
+# OpenBrigade: Long-term ideas
 
-Forward-looking, large-scope ideas that go **beyond** the legacy migration
-([TODO.md](TODO.md)). These are not committed work items — they are directions
-to evaluate once the app is feature-complete and stable in production. Each may
-become its own multi-step project (and graduate into `TODO.md`) when picked up.
-
----
+Forward-looking ideas beyond the legacy migration ([TODO.md](TODO.md)). Not
+committed work items: evaluate once the app is feature-complete and stable in
+production; each may graduate into `TODO.md` when picked up.
 
 ## Schema modernization
 
@@ -34,7 +31,7 @@ Responders operate in the field, often with poor connectivity.
 
 ## Accessibility (WCAG)
 
-Public-service org → accessibility should be a first-class goal, not an
+As a public-service org, accessibility should be a first-class goal, not an
 afterthought.
 
 - Audit the `ob-*` component system and key pages against WCAG 2.1 AA

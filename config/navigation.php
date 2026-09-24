@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------
 |
 | Defines the sidebar navigation tree. Each group and item can carry an
-| optional 'permission' key — the integer feature ID checked via
+| optional 'permission' key: the integer feature ID checked via
 | User::hasPermission(). Items without a permission are visible to any
 | authenticated user.
 |

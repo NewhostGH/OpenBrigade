@@ -11,7 +11,7 @@ return [
     // Titres / breadcrumb
     'title' => 'Véhicules',
     'new_vehicle' => 'Nouveau véhicule',
-    'edit_title' => 'Modifier — :name',
+    'edit_title' => 'Modifier - :name',
     'breadcrumb_edit' => 'Modifier',
     'breadcrumb_new' => 'Nouveau véhicule',
 
@@ -42,7 +42,7 @@ return [
     'label_position' => 'Statut / Position',
     'label_km' => 'Kilométrage actuel',
     'label_km_revision' => 'Km prochaine révision',
-    'choose' => '— Choisir —',
+    'choose' => '- Choisir -',
 
     // Expiry date field labels (used in form $dateFields array and show.blade)
     'exp_insurance' => 'Assurance',
@@ -72,13 +72,13 @@ return [
     'danger_zone_desc' => 'Supprime définitivement ce véhicule et toutes ses affectations à des activités.',
     'confirm_delete' => 'Supprimer définitivement ce véhicule ?',
 
-    // Show page — side-nav sections
+    // Show page: side-nav sections
     'nav_info' => 'Informations',
     'nav_activities' => 'Activités',
     'nav_equipment' => 'Matériel',
     'nav_documents' => 'Documents',
 
-    // Show page — identity labels
+    // Show page: identity labels
     'dt_type' => 'Type',
     'dt_model' => 'Modèle',
     'dt_indicatif' => 'Indicatif',
@@ -91,7 +91,7 @@ return [
     'dt_km_revision' => 'révision à :km km',
     'dt_inventaire' => 'N° inventaire',
 
-    // Show page — activities
+    // Show page: activities
     'section_activities' => 'Activités',
     'col_activity' => 'Activité',
     'col_function' => 'Fonction',
@@ -101,9 +101,9 @@ return [
     'stat_km_total' => 'Km cumulés :',
     'empty_activities' => 'Aucune activité en :year.',
 
-    // Show page — equipment
+    // Show page: equipment
     'section_equipment_title' => 'Matériel embarqué',
-    'load_equipment_placeholder' => '— Embarquer du matériel —',
+    'load_equipment_placeholder' => '- Embarquer du matériel -',
     'col_eq_type' => 'Type',
     'col_eq_model' => 'Modèle',
     'col_eq_serial' => 'N° série',
@@ -113,7 +113,7 @@ return [
     'btn_unload' => 'Débarquer',
     'empty_equipment' => 'Aucun matériel assigné à ce véhicule.',
 
-    // Show page — documents
+    // Show page: documents
     'section_documents_title' => 'Documents',
     'col_doc_name' => 'Nom',
     'col_doc_category' => 'Catégorie',
@@ -121,11 +121,11 @@ return [
     'empty_documents' => 'Aucun document associé à ce véhicule.',
 
     // Index page
-    'index_title' => 'Véhicules — :app',
+    'index_title' => 'Véhicules - :app',
 
     // Form page
-    'form_edit_title' => 'Modifier — :app',
-    'form_new_title' => 'Nouveau véhicule — :app',
+    'form_edit_title' => 'Modifier - :app',
+    'form_new_title' => 'Nouveau véhicule - :app',
     'placeholder_inventaire' => 'N° inventaire',
     'unit_km' => 'km',
     'option_other' => 'Autre',
@@ -133,7 +133,7 @@ return [
     'attach_btn_title' => 'Embarquer',
 
     // Show page
-    'show_title' => ':vehicle — :app',
+    'show_title' => ':vehicle - :app',
     'nav_label_info' => 'Informations',
     'btn_unload_title' => 'Débarquer',
 

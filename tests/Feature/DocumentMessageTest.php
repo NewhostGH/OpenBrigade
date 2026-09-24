@@ -23,7 +23,7 @@ function docMsgStubNav(): void
     app()->instance(NavigationService::class, $nav);
 
     // The document index renders <x-ob-section-select>, whose component reads
-    // the multi_site flag — stub it off so the view renders DB-free.
+    // the multi_site flag: stub it off so the view renders DB-free.
     $features = Mockery::mock(FeatureService::class);
     $features->shouldReceive('isEnabled')->andReturn(false);
     app()->instance(FeatureService::class, $features);

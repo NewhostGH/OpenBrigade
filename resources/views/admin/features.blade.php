@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Fonctionnalités — ' . config('app.name'))
+@section('title', 'Fonctionnalités | ' . config('app.name'))
 
 @push('scripts')
     <script>

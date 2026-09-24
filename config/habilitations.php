@@ -26,8 +26,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | Super-admin is an ACCOUNT-LEVEL flag (pompier.P_SUPERADMIN), not a group.
-    | A super-admin bypasses every permission check — uncappable by section
-    | ceilings — and at least one is guaranteed to exist at all times (the
+    | A super-admin bypasses every permission check: uncappable by section
+    | ceilings: and at least one is guaranteed to exist at all times (the
     | controllers refuse to clear/remove the last one). See PermissionResolver.
     |
     | The dedicated seeded super-admin account uses this login code.
@@ -57,7 +57,7 @@ return [
         7 => ['name' => 'Guest',   'usage' => 'all',      'ordering' => 40, 'default' => 'guest'],
     ],
 
-    // The "accès interdit" block sentinel — kept as-is, never a base group.
+    // The "accès interdit" block sentinel: kept as-is, never a base group.
     'block_group_id' => -1,
 
     /*
@@ -79,7 +79,7 @@ return [
     |
     | Each legacy permission (fonctionnalite.F_ID) is classified on two axes so
     | the base-group default grants can be derived instead of hand-listed. This
-    | is NOT a runtime enforcement path — runtime access stays the granular ACL
+    | is NOT a runtime enforcement path: runtime access stays the granular ACL
     | (per-permission allow/deny + section ceilings + per-user overrides).
     |
     |  - domain  = config when TF_ID ∈ config_categories; else data.

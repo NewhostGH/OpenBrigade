@@ -42,7 +42,7 @@ test('the availability route is registered', function () {
 });
 
 test('authenticated users see the availability grid', function () {
-    // The route is gated by the `disponibilites` feature — enable it here.
+    // The route is gated by the `disponibilites` feature: enable it here.
     $feat = Mockery::mock(FeatureService::class);
     $feat->shouldReceive('isEnabled')->andReturn(true);
     app()->instance(FeatureService::class, $feat);

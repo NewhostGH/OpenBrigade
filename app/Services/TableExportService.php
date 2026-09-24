@@ -47,7 +47,7 @@ class TableExportService
                 continue;
             }
             if ($col['alwaysVisible'] ?? false) {
-                // e.g. the 'name' html column — always shown, but exported via $prepend instead
+                // e.g. the 'name' html column: always shown, but exported via $prepend instead
                 continue;
             }
 

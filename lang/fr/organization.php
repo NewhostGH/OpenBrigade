@@ -95,11 +95,11 @@ return [
     'interdiction_saved' => 'Interdiction enregistrée.',
     'interdiction_deleted' => 'Interdiction supprimée.',
     'interdiction_delete_confirm' => 'Supprimer cette interdiction ?',
-    // Info tab — card titles
+    // Info tab: card titles
     'card_mandatory_info' => 'Informations obligatoires',
     'card_contact' => 'Contact',
     'card_optional_info' => 'Informations facultatives',
-    // Info tab — field labels (show view)
+    // Info tab: field labels (show view)
     'field_code' => 'Code',
     'field_name' => 'Nom',
     'field_order' => 'Ordre garde',
@@ -124,13 +124,13 @@ return [
     'card_roles' => 'Rôles dans la section',
     'no_roles' => 'Aucun rôle attribué dans cette section.',
     'view_in_org_chart' => 'Voir dans l\'organigramme',
-    // Personnalisation tab — card titles
+    // Personnalisation tab: card titles
     'card_letterhead' => 'Papier à entête',
     'card_badge' => 'Badge',
     'card_lock' => 'Interdire les modifications sur les activités terminées',
     'card_default_texts' => 'Textes par défaut pour devis et factures',
     'card_president_sig' => 'Image de la signature du président',
-    // Personnalisation tab — labels
+    // Personnalisation tab: labels
     'label_pdf_model' => 'Modèle (.PDF)',
     'label_reset_letterhead' => 'Modèle par défaut',
     'label_default_model' => 'Modèle par défaut utilisé (pdf_page.pdf)',
@@ -147,7 +147,7 @@ return [
     'lock_days_after' => 'jours après la fin',
     'confirm_reset_lh' => 'Réinitialiser le papier à entête ? Le modèle par défaut sera utilisé.',
     'confirm_reset_badge' => 'Réinitialiser l\'image de fond du badge ?',
-    // Default texts — field labels
+    // Default texts: field labels
     'label_pdf_signature' => 'Signature des documents',
     'label_devis_debut' => 'Début du devis',
     'label_devis_fin' => 'Fin du devis',
@@ -164,7 +164,7 @@ return [
     'agr_clasp_placeholder' => 'Agrafe…',
     'agr_save_title' => 'Enregistrer',
     'agr_clear_title' => 'Effacer',
-    // Cotisation tab — card titles
+    // Cotisation tab: card titles
     'card_bank' => 'Coordonnées bancaires',
     'label_iban' => 'IBAN',
     'iban_placeholder' => 'FR76 XXXX XXXX XXXX XXXX XXXX XXX',
@@ -172,7 +172,7 @@ return [
     'card_rib' => 'RIB (coordonnées françaises)',
     'rib_used_for' => 'Utilisé pour les prélèvements',
     'card_rib_doc' => 'Document RIB',
-    // Cotisation tab — labels
+    // Cotisation tab: labels
     'label_rib_download' => 'Télécharger le document enregistré',
     'label_rib_replace' => 'Remplacer le document',
     'label_rib_upload' => 'Téléverser un document',
@@ -189,7 +189,7 @@ return [
     'form_title_edit' => 'Modifier section',
     'label_code_required' => 'Code *',
     'label_section_inactive' => 'Section inactive',
-    'label_root_option' => '— racine (sous l\'organisation) —',
+    'label_root_option' => '- racine (sous l\'organisation) -',
     'confirm_delete' => 'Supprimer la section :code ? Cette action est irréversible.',
 
     // ── _node.blade.php ───────────────────────────────────────────────────

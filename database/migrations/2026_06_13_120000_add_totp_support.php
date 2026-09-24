@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
  * TOTP / two-factor authentication support.
  *
  * - pompier: three columns for Fortify's TwoFactorAuthenticatable trait.
- * - ob_password_policy: require_2fa flag — when true, users in groups that
+ * - ob_password_policy: require_2fa flag: when true, users in groups that
  *   carry this policy are redirected to TOTP enrolment after their first
  *   successful password login.
  */

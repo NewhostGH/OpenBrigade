@@ -11,7 +11,7 @@ use Throwable;
  *
  * The legacy rows sms_provider / sms_user / sms_password / sms_api_id drive
  * the provider-agnostic SMS layer, with config/sms.php (env) as the fallback
- * for anything left empty — so an install configured through .env keeps
+ * for anything left empty: so an install configured through .env keeps
  * working untouched.
  *
  * Provider mapping: `log` and `null` pass through; every real gateway reads
@@ -179,7 +179,7 @@ class SmsSettingService
 
     /**
      * SMS is allowed by default (absent row = allowed), but the admin toggle
-     * needs a real row to write to — create it once (enabled), hidden like the
+     * needs a real row to write to: create it once (enabled), hidden like the
      * other notification settings.
      */
     private function ensureSmsAllowedRow(): void

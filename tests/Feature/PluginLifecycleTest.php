@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 
 // The full migration set can't run on the sqlite test DB (a MySQL-only
-// `SET sql_mode` migration), so the repo avoids RefreshDatabase — we create
+// `SET sql_mode` migration), so the repo avoids RefreshDatabase: we create
 // just the ob_plugin table this suite needs.
 beforeEach(function () {
     Schema::dropIfExists('ob_plugin');

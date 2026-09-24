@@ -1,4 +1,4 @@
-// window.EVT_SHOW_CONFIG = { participantsUrl, equipesUrl } — set by the Blade template
+// window.EVT_SHOW_CONFIG = { participantsUrl, equipesUrl }: set by the Blade template
 
 import { initSectionNav } from './ob-section-nav.js';
 

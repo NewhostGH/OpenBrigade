@@ -1,4 +1,4 @@
-// window.PERS_SHOW_CONFIG = { cotisUrl, qualUrl } — set by the Blade template
+// window.PERS_SHOW_CONFIG = { cotisUrl, qualUrl }: set by the Blade template
 
 import { initSectionNav } from './ob-section-nav.js';
 

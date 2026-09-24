@@ -1,31 +1,59 @@
-# LDAP / Active Directory Authentication
+# LDAP / Active Directory authentication
 
-OpenBrigade can delegate password verification to an LDAP directory (OpenLDAP,
-Active Directory, FreeIPA, etc.) via `directorytree/ldaprecord-laravel`.
+OpenBrigade can delegate password verification to one or more LDAP
+directories (OpenLDAP, Active Directory, FreeIPA, etc.) via
+`directorytree/ldaprecord-laravel`.
 
-When LDAP is enabled, local user accounts in `pompier` are still required —
-LDAP only replaces the password check. Group assignments, permissions, and all
-other profile data remain in the OpenBrigade database.
+Local user accounts in `pompier` are still required: LDAP only replaces the
+password check. Group assignments, permissions and all other profile data
+stay in the OpenBrigade database.
 
 ---
 
 ## How it works
 
-1. User submits their username and password on the login page.
-2. AuthService looks up the local `pompier` account.
-3. If `LDAP_ENABLED=true`, instead of verifying against `P_MDP`, it:
-   - **Bind method** (default): binds with the service account, searches for
-     the user's DN by login/email, then tries to bind as that user.
-   - **UPN method** (Active Directory shortcut): constructs the bind DN as
-     `{login}{LDAP_UPN_SUFFIX}` and tries binding directly.
-4. A successful LDAP bind means the password is correct; the rest of the login
+1. User submits username and password on the login page.
+2. `AuthService` looks up the local `pompier` account.
+3. `LdapAuthService` tries each enabled domain (`ldap_domains` table, priority
+   order): **bind** (default) binds with the service account, searches for
+   the user's DN, then binds as that user; **UPN** (AD shortcut) constructs
+   the bind DN as `{login}{upn_suffix}` and binds directly.
+4. A successful bind means the password is correct; the rest of the login
    flow (lockout checks, TOTP, session creation) continues as normal.
+
+With no domain configured in the database, `LdapAuthService` falls back to a
+single legacy connection defined by `LDAP_*` env vars (see
+[Legacy .env fallback](#legacy-env-fallback)).
 
 ---
 
-## Configuration
+## Configuring domains (admin UI)
 
-All LDAP settings live in `.env`. No database rows are needed.
+**Administration → Sécurité → Authentification** manages LDAP domains: add,
+edit, delete, test connection, configure attribute maps and OU rules. Stored
+in `ldap_domains` (model `App\Models\LdapDomain`), tried in ascending
+`priority` order.
+
+Each domain has: `name`, `enabled`, `priority`, `host`, `port`, `base_dn`,
+`username`/`password` (service account), `timeout`, `use_tls`,
+`use_starttls`, `auth_method` (`bind`/`upn`), `upn_suffix`, `user_filter`,
+`restrict_to_ou`.
+
+- **Attribute maps** (`App\Models\LdapAttributeMap`): copy an LDAP attribute
+  onto a local `pompier` field after a successful bind, with an `overwrite`
+  flag.
+- **OU rules** (`App\Models\LdapOuRule`, priority order): `allow`/`deny` an OU
+  (optionally with an extra LDAP filter), or `assign` a group/section to
+  users found there.
+- **Test connection**: `POST /admin/security/ldap/{id}/test` (route
+  `admin.ldap.test`) attempts a service-account bind only, not end-user auth.
+
+---
+
+## Legacy .env fallback
+
+Used only when no row exists in `ldap_domains`. All settings live in `.env`;
+see `config/ldap.php`.
 
 ### Required variables
 
@@ -40,13 +68,13 @@ LDAP_PASSWORD=<service-account-password>
 ### Optional variables
 
 ```env
-# Port (default 389; use 636 for LDAPS)
+# Port (default 389, use 636 for LDAPS)
 LDAP_PORT=389
 
 # Use TLS (LDAPS on port 636)
 LDAP_TLS=false
 
-# Use STARTTLS (upgrades plain connection; requires server support)
+# Use STARTTLS (upgrades plain connection, requires server support)
 LDAP_STARTTLS=false
 
 # Connection timeout in seconds
@@ -70,46 +98,17 @@ LDAP_LOGGING=false
 
 ## Authentication methods
 
-### `bind` (default — OpenLDAP, FreeIPA, generic LDAP)
-
-The service account (defined by `LDAP_USERNAME` / `LDAP_PASSWORD`) performs a
-search to find the user's Distinguished Name. The DN is then used to attempt a
-second bind as the end user.
-
-The `LDAP_USER_FILTER` must match exactly one entry per login. The default
-filter tries both `uid` and `mail` attributes:
-
-```ldap
-(&(objectClass=person)(|(uid={login})(mail={login})))
-```
-
-For Active Directory with the `bind` method, you typically want:
-
-```env
-LDAP_USER_FILTER=(&(objectClass=user)(|(sAMAccountName={login})(userPrincipalName={login})))
-```
-
-### `upn` (Active Directory — simpler, no service account search needed)
-
-Builds the bind DN as `{login}{LDAP_UPN_SUFFIX}`. No prior search is
-performed, so `LDAP_USERNAME` / `LDAP_PASSWORD` are only used for the
-test-connection button in the admin panel.
-
-```env
-LDAP_AUTH_METHOD=upn
-LDAP_UPN_SUFFIX=@corp.example.com
-```
-
----
-
-## Testing the connection
-
-**Administration → Sécurité → Authentification** shows the current LDAP
-configuration and a **"Tester la connexion"** button. This tests that the
-service account can bind to the directory — it does not test user authentication.
-
-If the button is disabled, `LDAP_ENABLED` is false. The button triggers
-`POST /admin/security/ldap-test`.
+- **`bind`** (default, OpenLDAP/FreeIPA/generic): the service account
+  (`LDAP_USERNAME`/`LDAP_PASSWORD`, or the domain's) searches for the user's
+  DN, then binds as that user. The filter must match exactly one entry per
+  login; default tries `uid` and `mail`:
+  `(&(objectClass=person)(|(uid={login})(mail={login})))`. For Active
+  Directory:
+  `LDAP_USER_FILTER=(&(objectClass=user)(|(sAMAccountName={login})(userPrincipalName={login})))`
+- **`upn`** (Active Directory, no search needed): builds the bind DN as
+  `{login}{upn_suffix}`; service-account credentials are only used for the
+  test-connection button. `LDAP_AUTH_METHOD=upn`,
+  `LDAP_UPN_SUFFIX=@corp.example.com`.
 
 ---
 
@@ -118,11 +117,11 @@ If the button is disabled, `LDAP_ENABLED` is false. The button triggers
 Production deployments **must** use TLS or STARTTLS. LDAP over plain TCP
 exposes passwords in transit.
 
-| Option   | Env                                   | Notes                                            |
-| -------- | ------------------------------------- | ------------------------------------------------ |
-| LDAPS    | `LDAP_TLS=true`, `LDAP_PORT=636`      | Wraps the entire connection in TLS. Recommended. |
-| STARTTLS | `LDAP_STARTTLS=true`, `LDAP_PORT=389` | Upgrades after connection. Check server support. |
-| None     | (default)                             | Suitable only for local dev / localhost.         |
+| Option   | Env                                   | Notes                                           |
+| -------- | -------------------------------------- | ------------------------------------------------ |
+| LDAPS    | `LDAP_TLS=true`, `LDAP_PORT=636`       | Wraps the entire connection in TLS. Recommended. |
+| STARTTLS | `LDAP_STARTTLS=true`, `LDAP_PORT=389`  | Upgrades after connection. Check server support. |
+| None     | (default)                              | Suitable only for local dev / localhost.         |
 
 ---
 
@@ -139,14 +138,11 @@ exposes passwords in transit.
 
 ---
 
-## Development — emulating LDAP with Docker
+## Development: emulating LDAP with Docker
 
-For local development without a real directory, run a lightweight OpenLDAP
-container.
-
-### Quick start with Bitnami OpenLDAP
-
-Add to `docker-compose.override.yml` (never commit credentials):
+For local development without a real directory, run a lightweight Bitnami
+OpenLDAP container. Add to `docker-compose.override.yml` (never commit
+credentials):
 
 ```yaml
 services:
@@ -171,7 +167,7 @@ Corresponding `.env` (development only):
 
 ```env
 LDAP_ENABLED=true
-LDAP_HOST=ldap          # Docker service name, resolved inside the network
+LDAP_HOST=ldap                # Docker service name, resolved inside the network
 LDAP_PORT=1389
 LDAP_BASE_DN=dc=local,dc=com
 LDAP_USERNAME=cn=admin,dc=local,dc=com
@@ -180,80 +176,20 @@ LDAP_USER_FILTER=(&(objectClass=inetOrgPerson)(uid={login}))
 LDAP_LOGGING=true
 ```
 
-The Bitnami image creates users in `ou=users,dc=local,dc=com` with the
-`inetOrgPerson` class and `uid` set to the username.
-
-### Seeding test users
-
-```bash
-# Enter the LDAP container
-docker compose exec ldap bash
-
-# Add an extra user (requires ldif)
-cat > /tmp/user.ldif <<EOF
-dn: cn=johndoe,ou=users,dc=local,dc=com
-objectClass: inetOrgPerson
-cn: johndoe
-sn: Doe
-uid: johndoe
-userPassword: SuperPass123!
-EOF
-
-ldapadd -x -H ldap://localhost:1389 \
-  -D "cn=admin,dc=local,dc=com" \
-  -w dev-secret \
-  -f /tmp/user.ldif
-```
-
-The login (`P_CODE`) in `pompier` must match the `uid` attribute (or whatever
-attribute `LDAP_USER_FILTER` targets).
-
-### Verifying the bind manually
+The Bitnami image creates users in `ou=users,dc=local,dc=com`
+(`inetOrgPerson`, `uid` = username). The login (`P_CODE`) in `pompier` must
+match the `uid` attribute. Add extra users with `ldapadd` (needs an ldif
+file); verify a bind manually:
 
 ```bash
-ldapsearch -x \
-  -H ldap://localhost:389 \
-  -D "uid=dev1,ou=users,dc=local,dc=com" \
-  -w "DevPass1!" \
+ldapsearch -x -H ldap://localhost:389 \
+  -D "uid=dev1,ou=users,dc=local,dc=com" -w "DevPass1!" \
   -b "dc=local,dc=com" "(uid=dev1)"
 ```
 
-A non-zero exit code means the bind failed (wrong DN, wrong password, or the
-server is unreachable).
+A non-zero exit code means the bind failed (wrong DN, wrong password, or
+unreachable server).
 
-### Alternative: glauth (lightweight, no Docker volumes)
-
-[glauth](https://github.com/glauth/glauth) is a single static binary that
-reads users from a TOML file — ideal for CI or very quick local tests.
-
-```toml
-# glauth.cfg
-[ldap]
-  enabled = true
-  listen = "0.0.0.0:389"
-
-[ldaps]
-  enabled = false
-
-[backend]
-  datastore = "config"
-  baseDN = "dc=local,dc=com"
-
-[[users]]
-  name = "dev1"
-  unixid = 5001
-  primarygroup = 5501
-  passsha256 = "..."   # echo -n "DevPass1!" | sha256sum
-
-[[groups]]
-  name = "firefighters"
-  unixid = 5501
-```
-
-Run with:
-
-```bash
-./glauth64 -c glauth.cfg
-```
-
-`LDAP_USER_FILTER` for glauth: `(&(objectClass=*)(uid={login}))`
+**Alternative**: [glauth](https://github.com/glauth/glauth) is a single
+static binary reading users from a TOML file, useful for CI. User filter:
+`(&(objectClass=*)(uid={login}))`.

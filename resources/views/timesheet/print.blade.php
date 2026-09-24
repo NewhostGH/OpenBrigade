@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('timesheet.print_heading') . ' — ' . config('app.name'))
+@section('title', __('timesheet.print_heading') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -21,11 +21,11 @@
         <p class="ob-widget-empty p-3">{{ __('timesheet.no_staff') }}</p>
     @else
         <h2 style="font-size:var(--font-size-lg); margin-bottom:4px;">
-            {{ __('timesheet.print_heading') }} — {{ strtoupper($person->P_NOM) }} {{ $person->P_PRENOM }}
+            {{ __('timesheet.print_heading') }} - {{ strtoupper($person->P_NOM) }} {{ $person->P_PRENOM }}
         </h2>
         <p class="mb-2" style="font-size:var(--font-size-sm)">
-            {{ ucfirst($first->locale('fr')->isoFormat('D MMM')) }} – {{ ucfirst($end->locale('fr')->isoFormat('D MMM YYYY')) }}
-            — <span class="ob-ts-badge {{ $statusClass }}">{{ $statusLabel }}</span>
+            {{ ucfirst($first->locale('fr')->isoFormat('D MMM')) }} - {{ ucfirst($end->locale('fr')->isoFormat('D MMM YYYY')) }}
+            - <span class="ob-ts-badge {{ $statusClass }}">{{ $statusLabel }}</span>
         </p>
 
         <div class="ob-ts-wrap">
@@ -51,11 +51,11 @@
                     @foreach($days as $day)
                         <tr class="{{ $day['isWeekend'] ? 'ob-ts-weekend' : '' }}">
                             <td class="ob-ts-day">{{ $day['label'] }}</td>
-                            <td>{{ $day['debut1'] ?: '—' }}</td>
-                            <td>{{ $day['fin1'] ?: '—' }}</td>
-                            <td>{{ $day['debut2'] ?: '—' }}</td>
-                            <td>{{ $day['fin2'] ?: '—' }}</td>
-                            <td>{{ $day['overtime'] === '0:00' ? '—' : $day['overtime'] }}</td>
+                            <td>{{ $day['debut1'] ?: __('common.empty_value') }}</td>
+                            <td>{{ $day['fin1'] ?: __('common.empty_value') }}</td>
+                            <td>{{ $day['debut2'] ?: __('common.empty_value') }}</td>
+                            <td>{{ $day['fin2'] ?: __('common.empty_value') }}</td>
+                            <td>{{ $day['overtime'] === '0:00' ? __('common.empty_value') : $day['overtime'] }}</td>
                             <td class="ob-ts-total">{{ $day['total'] }}</td>
                             <td class="ob-ts-absence">{{ $day['absence'] }}</td>
                             <td style="text-align:left">{{ $day['comment'] }}</td>

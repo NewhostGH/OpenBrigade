@@ -15,7 +15,7 @@ return [
     'title_on_call' => 'Garde du mois',
     'title_types' => 'Types de garde',
 
-    // Period switcher (day / week / month — all read the same astreinte data)
+    // Period switcher (day / week / month: all read the same astreinte data)
     'period_day' => 'Jour',
     'period_week' => 'Semaine',
     'period_month' => 'Mois',
@@ -81,7 +81,7 @@ return [
 
     // Types modal titles
     'modal_create_title' => 'Nouveau type de garde',
-    'modal_edit_title' => 'Modifier — :name',
+    'modal_edit_title' => 'Modifier - :name',
     'confirm_delete_type' => 'Supprimer le type « :name » ?',
 
     // Type form labels

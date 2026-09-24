@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', "Modifier la charte — " . config('app.name'))
+@section('title', "Modifier la charte | " . config('app.name'))
 
 @section('content')
 

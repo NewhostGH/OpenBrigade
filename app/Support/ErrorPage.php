@@ -26,7 +26,7 @@ class ErrorPage
      * Which Blade layout the error view should extend.
      *
      * The normal app shell stays visible for 4xx errors so the user keeps
-     * their navigation — except when they must authenticate again (401, 419)
+     * their navigation: except when they must authenticate again (401, 419)
      * or are not logged in. Server-side failures (5xx) render standalone
      * because the shell itself may depend on the broken backend.
      */

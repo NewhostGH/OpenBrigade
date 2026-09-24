@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
- * SMS history — native successor to legacy `histo_sms.php` ("Historique SMS").
+ * SMS history: native successor to legacy `histo_sms.php` ("Historique SMS").
  * Read-only listing gated by permission 23 (send SMS) and section-scoped
  * through {@see SectionScopeService}.
  */
@@ -49,13 +49,13 @@ class SmsHistoryController extends Controller
                 'value' => fn ($r) => '<a href="'.route('personnel.show', $r->P_ID).'" class="text-decoration-none fw-semibold">'
                     .e(strtoupper($r->P_NOM ?? '').' '.ucfirst(mb_strtolower($r->P_PRENOM ?? ''))).'</a>'],
             ['key' => 'section', 'label' => __('communication.sms_col_section'), 'type' => 'text', 'mobile' => false,
-                'value' => fn ($r) => $r->recipient_section ?: '—'],
+                'value' => fn ($r) => $r->recipient_section ?: __('common.empty_value')],
             ['key' => 'date', 'label' => __('communication.sms_col_date'), 'type' => 'text', 'mobile' => true,
-                'value' => fn ($r) => $r->S_DATE ? Carbon::parse($r->S_DATE)->format('d/m/Y H:i') : '—'],
+                'value' => fn ($r) => $r->S_DATE ? Carbon::parse($r->S_DATE)->format('d/m/Y H:i') : __('common.empty_value')],
             ['key' => 'nb', 'label' => __('communication.sms_col_nb'), 'type' => 'text', 'mobile' => false,
                 'value' => fn ($r) => (int) $r->S_NB],
             ['key' => 'account', 'label' => __('communication.sms_col_account'), 'type' => 'text', 'mobile' => false,
-                'value' => fn ($r) => trim(($r->account_code ?? '').' — '.($r->S_PROVIDER ?? ''), ' —') ?: '—'],
+                'value' => fn ($r) => trim(($r->account_code ?? '').' - '.($r->S_PROVIDER ?? ''), ' -') ?: __('common.empty_value')],
             ['key' => 'text', 'label' => __('communication.sms_col_text'), 'type' => 'text', 'mobile' => false,
                 'value' => fn ($r) => $r->S_TEXTE ?? ''],
         ];

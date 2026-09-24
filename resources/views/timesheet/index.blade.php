@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('timesheet.title') . ' — ' . config('app.name'))
+@section('title', __('timesheet.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -40,7 +40,7 @@
             <a href="{{ route('timesheet.index', ['person' => $personId, 'week' => $prevWeek]) }}"
                class="btn btn-sm btn-outline-secondary"><i class="fas fa-chevron-left"></i></a>
             <span class="fw-semibold" style="font-size:var(--font-size-sm); min-width:180px; text-align:center">
-                {{ ucfirst($first->locale('fr')->isoFormat('D MMM')) }} – {{ ucfirst($end->locale('fr')->isoFormat('D MMM YYYY')) }}
+                {{ ucfirst($first->locale('fr')->isoFormat('D MMM')) }} - {{ ucfirst($end->locale('fr')->isoFormat('D MMM YYYY')) }}
             </span>
             <a href="{{ route('timesheet.index', ['person' => $personId, 'week' => $nextWeek]) }}"
                class="btn btn-sm btn-outline-secondary"><i class="fas fa-chevron-right"></i></a>

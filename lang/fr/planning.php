@@ -14,7 +14,7 @@ return [
     // Navigation mensuelle
     'this_month' => 'Ce mois-ci',
 
-    // Personnel filter (managers — permission 56)
+    // Personnel filter (managers: permission 56)
     'people_title' => 'Personnel',
     'select_all' => 'Tout cocher',
     'select_none' => 'Tout décocher',
@@ -48,7 +48,7 @@ return [
     'export_pdf_title' => 'Version imprimable / PDF du mois',
     'print_btn' => 'Imprimer / PDF',
     'print_heading' => 'Mon planning',
-    'print_for' => 'Planning de :name — :month',
+    'print_for' => 'Planning de :name - :month',
     'print_section_events' => 'Activités',
     'print_section_absences' => 'Absences',
     'print_events_empty' => 'Aucune activité ce mois-ci.',

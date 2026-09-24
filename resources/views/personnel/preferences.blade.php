@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Préférences — ' . $personnel->P_PRENOM . ' ' . strtoupper($personnel->P_NOM) . ' — ' . config('app.name'))
+@section('title', 'Préférences | ' . $personnel->P_PRENOM . ' ' . strtoupper($personnel->P_NOM) . ' | ' . config('app.name'))
 
 @section('content')
 

@@ -18,27 +18,27 @@ return [
     'root' => 'Racine',
     'empty_folder' => 'Ce dossier est vide.',
 
-    // modals — create folder
+    // modals: create folder
     'modal_create_folder_title' => 'Nouveau dossier',
     'folder_name_label' => 'Nom du dossier',
     'folder_inherit_note' => 'Créé dans le dossier courant ; il héritera de son type de document.',
 
-    // modals — upload
+    // modals: upload
     'modal_upload_title' => 'Ajouter un document',
     'upload_files_label' => 'Fichier(s)',
-    'upload_hint' => ':exts — max :max Mo.',
+    'upload_hint' => ':exts, :max Mo maximum.',
     'upload_type_label' => 'Type',
     'upload_visibility_note' => 'La visibilité se gère ensuite via « Partager ».',
     'btn_send' => 'Envoyer',
 
-    // modals — edit doc
+    // modals: edit doc
     'modal_edit_doc_title' => 'Modifier le document',
     'doc_name_label' => 'Nom du fichier',
     'doc_type_label' => 'Type',
     'doc_folder_label' => 'Dossier',
     'btn_delete_doc' => 'Supprimer',
 
-    // modals — rename folder
+    // modals: rename folder
     'modal_rename_folder_title' => 'Renommer le dossier',
 
     // ACL modal
@@ -61,7 +61,7 @@ return [
     'acl_desc' => 'Autorisations propres à :target. Les dossiers transmettent leurs autorisations à leur contenu ; un refus l\'emporte toujours.',
     'acl_desc_partial' => 'les dossiers transmettent leurs autorisations à leur contenu ; un refus l\'emporte toujours.',
     'acl_card_title' => 'Autorisations',
-    'acl_empty' => 'Aucune autorisation propre — la sécurité de section / type s\'applique.',
+    'acl_empty' => 'Aucune autorisation propre : la sécurité de section / type s\'applique.',
     'acl_th_beneficiary' => 'Bénéficiaire',
     'acl_th_effect' => 'Effet',
     'acl_th_rights' => 'Droits',

@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
- * Section-scoped habilitation administration (full ACL with groups): four tabs —
- *   1. Plafonds par section  — per-section deny-list (ob_section_permission)
- *   2. Groups d'accès        — global groups × feature grants, allow/deny (ob_group_permission)
- *   3. Rôles organisationnels — roles × feature grants, allow/deny, section-filtered
- *   4. Dérogations            — per-person allow/deny overrides (ob_user_permission)
+ * Section-scoped habilitation administration (full ACL with groups): four tabs:
+ *   1. Plafonds par section  : per-section deny-list (ob_section_permission)
+ *   2. Groups d'accès        : global groups × feature grants, allow/deny (ob_group_permission)
+ *   3. Rôles organisationnels : roles × feature grants, allow/deny, section-filtered
+ *   4. Dérogations            : per-person allow/deny overrides (ob_user_permission)
  *
  * The resolution precedence lives in {@see PermissionResolver}: user deny >
  * user allow > section deny > group/role deny > group/role allow > default deny.

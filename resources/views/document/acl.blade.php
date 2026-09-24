@@ -1,6 +1,6 @@
 @extends($layout)
 
-@section('title', 'Partage — ' . config('app.name'))
+@section('title', 'Partage | ' . config('app.name'))
 
 @section('content')
 

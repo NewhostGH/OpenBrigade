@@ -7,7 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 /**
- * SMS history — native successor to legacy `histo_sms.php` ("Historique SMS").
+ * SMS history: native successor to legacy `histo_sms.php` ("Historique SMS").
  *
  * Read-only listing of sent SMS from the legacy `smslog` table, joined to the
  * recipient ({@see User} → `pompier`) and to both the recipient's

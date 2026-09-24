@@ -1,5 +1,5 @@
 {{--
-    One boolean observability setting as a table row — an auto-submitting toggle
+    One boolean observability setting as a table row : an auto-submitting toggle
     posting to admin.settings.save with _back=monitoring (Paramètres tab).
 
     Params:

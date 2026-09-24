@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>{{ __('auth_views.reset_confirm_title') }} — {{ config('app.name') }}</title>
+    <title>{{ __('auth_views.reset_confirm_title') }} | {{ config('app.name') }}</title>
     @vite('resources/css/app.css')
 </head>
 

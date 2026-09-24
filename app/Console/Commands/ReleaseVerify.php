@@ -44,7 +44,7 @@ class ReleaseVerify extends Command
      */
     private function renderReport(array $report, bool $strict): void
     {
-        $this->info("Release verification — {$report['version']}");
+        $this->info("Release verification - {$report['version']}");
         $this->newLine();
 
         $rows = [];

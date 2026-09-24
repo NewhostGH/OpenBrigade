@@ -21,13 +21,13 @@ return [
     |--------------------------------------------------------------------------
     |
     | Set LDAP_ENABLED=true to delegate password verification to the LDAP
-    | directory. The local pompier account must still exist — LDAP only
+    | directory. The local pompier account must still exist: LDAP only
     | replaces the password check. Connection details live in LDAP_* env vars.
     |
     | LDAP_AUTH_METHOD:
-    |   bind  — search for the user DN via the service account, then bind as
+    |   bind : search for the user DN via the service account, then bind as
     |           that user. Requires LDAP_USERNAME / LDAP_PASSWORD.
-    |   upn   — use "login@domain" directly as the bind DN (AD/UPN style).
+    |   upn  : use "login@domain" directly as the bind DN (AD/UPN style).
     |           Set LDAP_UPN_SUFFIX=@corp.example.com.
     |
     */

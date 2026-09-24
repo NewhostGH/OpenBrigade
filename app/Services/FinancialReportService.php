@@ -21,7 +21,7 @@ use App\Models\PaymentType;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Financial report — "Cotisations par section".
+ * Financial report: "Cotisations par section".
  *
  * Native successor to legacy `report_cotisations.php`. Aggregates membership
  * fees (personnel_cotisation) collected over a date range, broken down by
@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\DB;
 class FinancialReportService implements ServiceInterface
 {
     /** Placeholder shown for members with no profession set. */
-    public const NO_PROFESSION = '—';
+    public const NO_PROFESSION = '-';
 
     public function __construct(
         private readonly SectionScopeService $scope,
@@ -279,7 +279,7 @@ class FinancialReportService implements ServiceInterface
             ->get(['S_ID', 'S_CODE', 'S_DESCRIPTION'])
             ->map(fn ($s) => [
                 'S_ID' => (int) $s->S_ID,
-                'label' => trim(($s->S_CODE ? $s->S_CODE.' — ' : '').($s->S_DESCRIPTION ?? '')) ?: 'Section '.$s->S_ID,
+                'label' => trim(($s->S_CODE ? $s->S_CODE.' - ' : '').($s->S_DESCRIPTION ?? '')) ?: 'Section '.$s->S_ID,
             ])
             ->all();
     }

@@ -20,9 +20,9 @@ use Illuminate\View\View;
  * Self-service password reset (guest-accessible).
  *
  * Flow:
- *   1. GET  /password/reset          — show the request form (matricule or email)
- *   2. POST /password/reset          — validate identity, store token in `demande`, send email
- *   3. GET  /password/reset/{token}  — confirm token, generate new temporary password, send it
+ *   1. GET  /password/reset          : show the request form (matricule or email)
+ *   2. POST /password/reset          : validate identity, store token in `demande`, send email
+ *   3. GET  /password/reset/{token}  : confirm token, generate new temporary password, send it
  */
 class PasswordResetController extends Controller
 {
@@ -87,7 +87,7 @@ class PasswordResetController extends Controller
 
         $this->notificationService->sendEmail(
             (string) $person->P_EMAIL,
-            "Renouvellement de mot de passe — {$appName}",
+            "Renouvellement de mot de passe | {$appName}",
             $body,
         );
 
@@ -128,7 +128,7 @@ class PasswordResetController extends Controller
 
             $this->notificationService->sendEmail(
                 (string) $row->P_EMAIL,
-                "Nouveau mot de passe — {$appName}",
+                "Nouveau mot de passe | {$appName}",
                 $body,
             );
         }

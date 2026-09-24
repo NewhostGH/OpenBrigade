@@ -1,4 +1,4 @@
-// window.PERS_FORM_GRADE_URL — set by the Blade template before this module loads
+// window.PERS_FORM_GRADE_URL: set by the Blade template before this module loads
 
 function updateGradePreview(val) {
     var img = document.getElementById('gradePreview');
@@ -50,7 +50,7 @@ window.previewPhoto       = previewPhoto;
         }
     });
 
-    // Multi-select pill toggles — listen to `change` on the hidden checkbox so
+    // Multi-select pill toggles: listen to `change` on the hidden checkbox so
     // the browser's native label→checkbox toggle doesn't double-fire.
     document.querySelectorAll('[data-ob-multiselect] .ob-multiselect-cb').forEach(function (cb) {
         cb.addEventListener('change', function () {
@@ -58,7 +58,7 @@ window.previewPhoto       = previewPhoto;
         });
     });
 
-    // Urgence person picker — prefill fields on selection; lock fields when linked.
+    // Urgence person picker: prefill fields on selection; lock fields when linked.
     var urgenceSelect = document.getElementById('P_URGENCE_PERSON_ID');
     if (urgenceSelect) {
         function syncUrgenceFields() {

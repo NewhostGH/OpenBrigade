@@ -1,4 +1,4 @@
-// Disponibilités grid — the personnel checkbox filter shows/hides grid rows
+// Disponibilités grid: the personnel checkbox filter shows/hides grid rows
 // client-side (all scoped rows are already rendered server-side).
 
 function applyFilter(root, grid) {

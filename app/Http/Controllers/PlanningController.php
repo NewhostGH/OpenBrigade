@@ -45,7 +45,7 @@ class PlanningController extends Controller
     }
 
     /**
-     * FullCalendar events feed — activities + absences for the selected people.
+     * FullCalendar events feed: activities + absences for the selected people.
      * Requested ids are intersected with the viewer's visible set (so the client
      * can never pull outside its scope); with no selection it defaults to self.
      * FullCalendar appends ?start=&end=.
@@ -66,7 +66,7 @@ class PlanningController extends Controller
 
         $requested = array_filter(array_map('intval', (array) $request->query('people', [])));
         // `filtered` = the selection is explicit (from the checkbox list), so an
-        // empty set genuinely means "nobody" — the viewer can hide their own too.
+        // empty set genuinely means "nobody": the viewer can hide their own too.
         // Without it (first load / no JS) fall back to the signed-in user.
         $pids = $request->has('filtered')
             ? array_values(array_intersect($requested, $visibleIds))

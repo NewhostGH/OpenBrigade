@@ -138,7 +138,7 @@ class BilanPdf {
 
             // Discreet context line just below the text zone
             const footTop = this.bottomLimit + 2 * MM;
-            const footL = (title || '') + (subtitle ? '  —  ' + subtitle : '');
+            const footL = (title || '') + (subtitle ? ' - ' + subtitle : '');
             this._text(footL, this.marginX, footTop, 6, this.regular, C.gray);
         } else {
             // Fallback drawn header when the entity has no letterhead
@@ -152,7 +152,7 @@ class BilanPdf {
             // Footer
             const footTop = A4H - 10 * MM;
             this._line(this.marginX, footTop, A4W - this.marginX, footTop, C.sep, 0.4);
-            const footL = (section || '') + (year ? '  —  ' + year : '');
+            const footL = (section || '') + (year ? ' - ' + year : '');
             this._text(footL, this.marginX, footTop + 2 * MM, 7, this.regular, C.gray);
             const appW = this.regular.widthOfTextAtSize(L.appName, 7);
             this._text(L.appName, A4W - this.marginX - appW, footTop + 2 * MM, 7, this.regular, C.gray);

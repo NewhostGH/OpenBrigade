@@ -1,8 +1,8 @@
-# Password Reset (Admin Guide)
+# Password reset (admin guide)
 
 There is currently no self-service password-reset flow in the UI. Until one is
-implemented, an administrator with shell access can reset any account's password
-using the dedicated Artisan command below.
+implemented, an administrator with shell access can reset any account's
+password using the Artisan command below.
 
 ---
 
@@ -35,7 +35,7 @@ php artisan user:reset-password SP001 \
 
 | Option           | Description                                      |
 | ---------------- | ------------------------------------------------ |
-| `identifier`     | Positional arg — matricule (`P_CODE`) or e-mail  |
+| `identifier`     | Positional arg (matricule (`P_CODE`) or e-mail)  |
 | `--password=`    | New password (skips the interactive prompt)      |
 | `--force-change` | Forces the user to change password on next login |
 | `--unblock`      | Resets `GP_ID` to 1 if the account is blocked    |
@@ -44,24 +44,8 @@ php artisan user:reset-password SP001 \
 
 ## Manual reset via Tinker (fallback)
 
-If the Artisan command is unavailable, the same result can be achieved through
-the Tinker REPL.
-
-**With Docker Compose:**
-
-```bash
-docker compose exec app php artisan tinker --execute="
-\$u = App\Models\User::where('P_CODE', 'SP001')->firstOrFail();
-\$u->forceFill([
-    'P_MDP'              => password_hash('TemporaryPass1!', PASSWORD_DEFAULT),
-    'P_MDP_EXPIRY'       => now()->toDateString(),
-    'P_PASSWORD_FAILURE' => null,
-])->save();
-echo 'Done — ' . \$u->P_NOM . ' ' . \$u->P_PRENOM . PHP_EOL;
-"
-```
-
-**Without Docker:**
+If the Artisan command is unavailable, use the Tinker REPL (prefix with
+`docker compose exec app` under Docker):
 
 ```bash
 php artisan tinker --execute="
@@ -71,15 +55,13 @@ php artisan tinker --execute="
     'P_MDP_EXPIRY'       => now()->toDateString(),
     'P_PASSWORD_FAILURE' => null,
 ])->save();
-echo 'Done — ' . \$u->P_NOM . ' ' . \$u->P_PRENOM . PHP_EOL;
+echo 'Done: ' . \$u->P_NOM . ' ' . \$u->P_PRENOM . PHP_EOL;
 "
 ```
 
 Replace `SP001` with the member's **matricule** (`P_CODE`) and
-`TemporaryPass1!` with any temporary password you choose.
-
-Setting `P_MDP_EXPIRY` to today's date forces the member to change their
-password on first login. Clear it (`null`) if you do not want that behaviour.
+`TemporaryPass1!` with any temporary password. Setting `P_MDP_EXPIRY` to
+today's date forces a change on first login; clear it (`null`) to skip that.
 
 ---
 
@@ -112,13 +94,13 @@ The `--unblock` option on `user:reset-password` does this in one step.
 | `P_PASSWORD_FAILURE` | `pompier` | Consecutive failed-login counter; `null` = no failures                  |
 
 Legacy MD5 hashes are automatically upgraded to bcrypt the next time the member
-logs in successfully — no manual migration needed.
+logs in successfully: no manual migration needed.
 
 ---
 
 ## See also
 
-- `app/Console/Commands/ResetUserPassword.php` — the Artisan command
-- `app/Services/Auth/AuthService.php` — login, hash upgrade, failure tracking
-- `archive/legacy_app/change_password.php` — legacy self-service change flow
+- `app/Console/Commands/ResetUserPassword.php`: the Artisan command
+- `app/Services/Auth/AuthService.php`: login, hash upgrade, failure tracking
+- `archive/legacy_app/change_password.php`: legacy self-service change flow
   (not yet ported to Laravel)

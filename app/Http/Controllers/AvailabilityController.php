@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
- * Disponibilités — "who is available when". A people × days grid for one week
+ * Disponibilités: "who is available when". A people × days grid for one week
  * (navigable): each cell shows the period(s) a person declared themselves
  * available (from `disponibilite`). The number of periods per 24h honours the
  * `dispo_periodes` setting. Managers (permission 56) see the people in their
@@ -46,7 +46,7 @@ class AvailabilityController extends Controller
      */
     private function board(Request $request): array
     {
-        // One navigable week (Monday–Sunday).
+        // One navigable week (Monday-Sunday).
         $week = (int) $request->integer('week', 0);
         $first = now()->startOfWeek(Carbon::MONDAY)->addWeeks($week);
         $end = $first->copy()->endOfWeek(Carbon::SUNDAY);
@@ -54,7 +54,7 @@ class AvailabilityController extends Controller
         $personnel = $this->visiblePersonnel($request)->values();
         $pids = $personnel->pluck('P_ID')->map(fn ($id) => (int) $id)->all();
 
-        // Availability periods per 24h honour the `dispo_periodes` setting (1–4).
+        // Availability periods per 24h honour the `dispo_periodes` setting (1-4).
         // Each mode maps to a specific set of period IDs with mode-specific
         // names (mirrors the legacy day split), so the slots and legend change
         // with the setting.

@@ -188,8 +188,8 @@ class EventController extends Controller
         return [
             ['key' => 'icon', 'label' => '', 'type' => 'html', 'value' => fn ($e) => '<i class="fas fa-'.self::typeIcon($e->TE_CODE ?? '').'" style="color:var(--text-muted-soft)" title="'.e($e->TE_LIBELLE ?? '').'"></i>', 'alwaysVisible' => true, 'exportable' => false, 'mobile' => true],
             ['key' => 'activite', 'label' => 'Activité', 'type' => 'html', 'value' => fn ($e) => '<a href="'.route('event.show', $e->E_CODE).'" class="text-decoration-none fw-semibold">'.e($e->E_LIBELLE ?? $e->E_CODE).'</a>', 'alwaysVisible' => true, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIBELLE ?? $e->E_CODE, 'sortField' => 'E_INTITULE', 'mobile' => true],
-            ['key' => 'lieu', 'label' => 'Lieu', 'type' => 'text', 'value' => fn ($e) => $e->E_LIEU ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIEU ?? ''],
-            ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'value' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->locale('fr')->isoFormat('ddd D MMM YYYY').($e->first_time ? ' <span class="text-muted">'.substr($e->first_time, 0, 5).'</span>' : '') : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->format('d/m/Y') : ''],
+            ['key' => 'lieu', 'label' => 'Lieu', 'type' => 'text', 'value' => fn ($e) => $e->E_LIEU ?? __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->E_LIEU ?? ''],
+            ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'value' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->locale('fr')->isoFormat('ddd D MMM YYYY').($e->first_time ? ' <span class="text-muted">'.substr($e->first_time, 0, 5).'</span>' : '') : __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($e) => $e->first_date ? Carbon::parse($e->first_date)->format('d/m/Y') : ''],
             ['key' => 'statut', 'label' => 'Statut', 'type' => 'badge', 'value' => fn ($e) => $e->E_CANCELED ? 'ANNULEE' : ($e->E_CLOSED ? 'CLOSE' : 'OPEN'), 'badgeMap' => ['ANNULEE' => ['Annulée', 'ob-badge-bloqued'], 'CLOSE' => ['Clôturée', 'ob-badge-archive'], 'OPEN' => ['Ouverte', 'ob-badge-actif']], 'exportable' => true, 'exportValue' => fn ($e) => $e->E_CANCELED ? 'Annulée' : ($e->E_CLOSED ? 'Clôturée' : 'Ouverte'), 'mobile' => false],
         ];
     }
@@ -213,7 +213,7 @@ class EventController extends Controller
         // Teams with member/vehicle counts (also needed by participant modals).
         $equipes = $this->loadTeams($code);
 
-        // Enrolled participants — one row per person.
+        // Enrolled participants: one row per person.
         $participants = DB::table('evenement_participation as ep')
             ->join('pompier as p', 'ep.P_ID', '=', 'p.P_ID')
             ->leftJoin('type_participation as tp', 'tp.TP_ID', '=', 'ep.TP_ID')
@@ -235,7 +235,7 @@ class EventController extends Controller
             )
             ->get();
 
-        // Members not yet enrolled — candidates for the add-participant modal.
+        // Members not yet enrolled: candidates for the add-participant modal.
         $candidates = DB::table('pompier as p')
             ->where('p.P_OLD_MEMBER', 0)
             ->whereNotExists(function ($q) use ($code) {
@@ -311,7 +311,7 @@ class EventController extends Controller
             ->select('drm.TYPE_MATERIEL', 'tm.TM_CODE', 'tm.TM_DESCRIPTION', 'cm.CM_DESCRIPTION as CAT_DESCRIPTION')
             ->get();
 
-        // Required positions (postes requis) — with actual qualified headcount.
+        // Required positions (postes requis): with actual qualified headcount.
         $activeCount = DB::table('evenement_participation')
             ->where('E_CODE', $code)
             ->where('EP_ABSENT', 0)
@@ -342,7 +342,7 @@ class EventController extends Controller
                         })
                         ->distinct()
                         ->count('ep.P_ID');
-                    $row->label = $row->TYPE.' – '.$row->DESCRIPTION;
+                    $row->label = $row->TYPE.' - '.$row->DESCRIPTION;
                 }
 
                 return $row;
@@ -695,7 +695,7 @@ class EventController extends Controller
     /**
      * True when the mandatory-photo setting is on, the target member is the
      * authenticated user themself and their profile photo is missing.
-     * Registration BY someone else (manager, admin) is never blocked — see
+     * Registration BY someone else (manager, admin) is never blocked: see
      * the setting's description. Guarded: an unreadable setting must never
      * block registrations.
      */
@@ -928,7 +928,7 @@ class EventController extends Controller
             ->get(['e.E_CODE', 'e.E_LIBELLE', 'h.first_day', 's.S_CODE'])
             ->map(fn ($e) => (object) [
                 'E_CODE' => (int) $e->E_CODE,
-                'label' => ($e->E_LIBELLE ?: $e->E_CODE).' — '.Carbon::parse($e->first_day)->format('d/m/Y')
+                'label' => ($e->E_LIBELLE ?: $e->E_CODE).' - '.Carbon::parse($e->first_day)->format('d/m/Y')
                     .($e->S_CODE ? ' ('.$e->S_CODE.')' : ''),
             ]);
     }
@@ -961,7 +961,7 @@ class EventController extends Controller
             ->map(fn ($e) => (object) [
                 'E_CODE' => (int) $e->E_CODE,
                 'TE_CODE' => $e->TE_CODE,
-                'label' => '#'.$e->E_CODE.' — '.($e->E_LIBELLE ?: $e->E_CODE).' — '
+                'label' => '#'.$e->E_CODE.' - '.($e->E_LIBELLE ?: $e->E_CODE).' - '
                     .Carbon::parse($e->first_day)->format('d/m/Y').($e->S_CODE ? ' ('.$e->S_CODE.')' : ''),
             ]);
 
@@ -1522,14 +1522,14 @@ class EventController extends Controller
     }
 
     /**
-     * Printable event report — native successor to legacy `evenement_rapport.php`.
+     * Printable event report: native successor to legacy `evenement_rapport.php`.
      * Assembles the identity, key figures, engaged vehicles/matériel and the
      * main-courante log into a print-optimised page (browser print → PDF).
      *
      * Gated by permission 15 (event management) or being the event's chef,
      * mirroring the legacy `check_rights(15) || is_chef_evenement` guard.
      * Intervention/victim statistics and the "centres d'accueil" section are
-     * intentionally omitted — that data model (DPS) is not yet migrated.
+     * intentionally omitted: that data model (DPS) is not yet migrated.
      */
     public function report(string $code): View
     {

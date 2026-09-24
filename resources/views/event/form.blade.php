@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($event ? __('event.btn_edit') : __('event.form_title_new')) . ' — ' . config('app.name'))
+@section('title', ($event ? __('event.btn_edit') : __('event.form_title_new')) . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -37,7 +37,7 @@
     <div class="ob-widget-card-header">
         <div class="ob-widget-card-title">
             <i class="fas fa-{{ $isEdit ? 'edit' : 'plus-circle' }}"></i>
-            {{ $isEdit ? __('event.btn_edit') . ' — ' . ($event->E_LIBELLE ?? $event->E_CODE) : __('event.form_title_new') }}
+            {{ $isEdit ? __('event.btn_edit') . ' - ' . ($event->E_LIBELLE ?? $event->E_CODE) : __('event.form_title_new') }}
         </div>
         @if($isEdit)
             <a href="{{ route('event.show', $event->E_CODE) }}" class="btn btn-sm btn-outline-secondary">
@@ -152,7 +152,7 @@
                                 @foreach ($sections as $s)
                                     <option value="{{ $s->S_ID }}"
                                             {{ (int) $val('S_ID', $userSection) === (int) $s->S_ID ? 'selected' : '' }}>
-                                        {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — ' . $s->S_DESCRIPTION : '' }}
+                                        {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' - ' . $s->S_DESCRIPTION : '' }}
                                     </option>
                                 @endforeach
                             </select>

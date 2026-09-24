@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Cartographie — ' . config('app.name'))
+@section('title', 'Cartographie | ' . config('app.name'))
 
 @section('content')
 

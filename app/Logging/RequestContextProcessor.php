@@ -40,7 +40,7 @@ class RequestContextProcessor implements ProcessorInterface
                 $extra['p_id'] = $user->getAuthIdentifier();
             }
         } catch (Throwable) {
-            // No request context available — leave extra as-is.
+            // No request context available: leave extra as-is.
         }
 
         return $record->with(extra: $extra);

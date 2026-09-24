@@ -26,7 +26,7 @@
         <div class="ob-widget-card">
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
-                    <i class="fas fa-layer-group me-2"></i>{{ __('admin.permissions.ceiling_title', ['section' => $selected->S_DESCRIPTION ?? '—']) }}
+                    <i class="fas fa-layer-group me-2"></i>{{ __('admin.permissions.ceiling_title', ['section' => $selected->S_DESCRIPTION ?? __('common.empty_value')]) }}
                 </div>
             </div>
             <div class="p-3">

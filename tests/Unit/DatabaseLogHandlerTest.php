@@ -61,9 +61,9 @@ it('extracts an exception into the dedicated trace columns', function () {
 it('honours the channel minimum level', function () {
     $logger = (new DatabaseLogger)(['level' => 'error']);
 
-    $logger->warning('Below threshold — dropped');
-    $logger->error('At threshold — kept');
+    $logger->warning('Below threshold - dropped');
+    $logger->error('At threshold - kept');
 
     expect(ObLogEntry::query()->count())->toBe(1)
-        ->and(ObLogEntry::query()->first()->message)->toBe('At threshold — kept');
+        ->and(ObLogEntry::query()->first()->message)->toBe('At threshold - kept');
 })->skip(fn () => ! class_exists(Level::class), 'Monolog Level enum required');

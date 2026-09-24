@@ -10,8 +10,8 @@ use Illuminate\Support\Str;
  *
  * Super-admin is the account flag `pompier.P_SUPERADMIN` (not a group). This
  * provisioner is idempotent and shared by the rebuild migration and the
- * production CoreSeeder so a fresh install — whether bootstrapped by `migrate`
- * alone or `migrate --seed` — always ends with exactly one seeded super-admin
+ * production CoreSeeder so a fresh install: whether bootstrapped by `migrate`
+ * alone or `migrate --seed`: always ends with exactly one seeded super-admin
  * account, without ever overwriting an existing one's password.
  */
 class SuperAdminProvisioner

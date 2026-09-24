@@ -28,7 +28,7 @@
                 <button type="submit" class="btn btn-sm btn-outline-primary"><i class="fas fa-save"></i></button>
             </form>
         @else
-            <span class="text-muted">—</span>
+            <span class="text-muted">{{ __('common.empty_value') }}</span>
         @endif
     </td>
 </tr>

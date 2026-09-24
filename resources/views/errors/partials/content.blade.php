@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="ob-error-foot">
-            {{ date('Y') }} — {{ config('app.name') }}
+            {{ date('Y') }} - {{ config('app.name') }}
         </div>
     </main>
 </div>

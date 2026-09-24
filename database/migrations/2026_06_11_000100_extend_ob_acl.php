@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Full ACL with groups — extends the section-scoped ceiling model into a
+ * Full ACL with groups: extends the section-scoped ceiling model into a
  * complete access-control list with explicit allow *and* deny at every tier.
  *
  *  - ob_group_permission.effect : a group/role grant is now allow|deny (was
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Schema;
  *                                 overrides allows from sibling groups/roles.
  *  - ob_user_permission         : per-person override, section-scoped (section_id
  *                                 0 = global, inherited to descendants like roles).
- *                                 The most specific tier — beats every group/role
+ *                                 The most specific tier: beats every group/role
  *                                 grant and the section ceiling.
  *
  * Resolution precedence (first match wins), see {@see PermissionResolver}:
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->enum('effect', ['allow', 'deny'])->default('allow')->after('feature_id');
         });
 
-        // Existing grants are all positive — make that explicit.
+        // Existing grants are all positive: make that explicit.
         DB::table('ob_group_permission')->update(['effect' => 'allow']);
 
         // Per-person override (the most specific ACL tier).

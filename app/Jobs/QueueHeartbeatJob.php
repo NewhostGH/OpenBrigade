@@ -18,7 +18,7 @@ class QueueHeartbeatJob implements ShouldQueue
 
     public const CACHE_KEY = 'ob:queue:heartbeat';
 
-    /** A heartbeat is not worth retrying — the next one is 5 minutes away. */
+    /** A heartbeat is not worth retrying: the next one is 5 minutes away. */
     public int $tries = 1;
 
     public function handle(): void

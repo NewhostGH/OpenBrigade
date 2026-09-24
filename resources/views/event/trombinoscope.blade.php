@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($event->E_LIBELLE ?? $event->E_CODE) . ' — Trombinoscope — ' . config('app.name'))
+@section('title', ($event->E_LIBELLE ?? $event->E_CODE) . ' | Trombinoscope | ' . config('app.name'))
 
 @section('content')
 
@@ -15,7 +15,7 @@
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
                 <i class="fas fa-id-badge me-1"></i>
-                {{ __('event.trombi_heading') }} — {{ $event->E_LIBELLE ?? $event->E_CODE }}
+                {{ __('event.trombi_heading') }} - {{ $event->E_LIBELLE ?? $event->E_CODE }}
             </div>
             <div class="ob-widget-card-actions">
                 <span class="badge bg-secondary me-2">{{ __('event.trombi_participants', ['count' => $participants->count()]) }}</span>

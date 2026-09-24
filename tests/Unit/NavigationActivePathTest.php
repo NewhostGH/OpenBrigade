@@ -7,7 +7,7 @@ use App\Services\NavigationService;
  * Focused unit tests for the navbar active-item resolution: the active item is
  * the LONGEST nav path that is a boundary-prefix of the current path, so a
  * parent path never lights up while on a child. Exercised via reflection
- * against the real navigation config — no database required.
+ * against the real navigation config: no database required.
  */
 function navActivePath(string $currentPath): string
 {

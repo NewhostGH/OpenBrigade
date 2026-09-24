@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * The mandatory-photo rule only blocks SELF-registration — a manager
+ * The mandatory-photo rule only blocks SELF-registration: a manager
  * registering someone else is never blocked. Say so in the setting's
  * description (shown as the row tooltip on the settings page).
  */

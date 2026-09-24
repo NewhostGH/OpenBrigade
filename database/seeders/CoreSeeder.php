@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
  * guarantees a super-admin account exists. Shares {@see BaseHabilitations} with
  * the rebuild migration so the two never drift; safe to run on any environment.
  *
- * It does NOT seed dev fixtures — see {@see DevelopmentDataSeeder}.
+ * It does NOT seed dev fixtures: see {@see DevelopmentDataSeeder}.
  */
 class CoreSeeder extends Seeder
 {
@@ -40,7 +40,7 @@ class CoreSeeder extends Seeder
      * Ensure the organizational root section (S_ID = 0, S_PARENT = -1) exists.
      * Legacy-imported DBs already have it; this covers fresh installs so that
      * SuperAdminProvisioner::rootSectionId() returns 0 and the navbar switcher
-     * can show it. Uses insertOrIgnore — safe to call on every seeder run.
+     * can show it. Uses insertOrIgnore: safe to call on every seeder run.
      */
     private function seedRootSection(): void
     {

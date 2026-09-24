@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Bilan — Formations — ' . config('app.name'))
+@section('title', 'Bilan | Formations | ' . config('app.name'))
 
 @section('content')
 
@@ -101,10 +101,10 @@
                                     @foreach($formationsList as $f)
                                         <tr>
                                             <td class="text-nowrap">{{ \Carbon\Carbon::parse($f->date)->format('d/m/Y') }}</td>
-                                            <td>{{ $f->label ?: '—' }}</td>
-                                            <td class="text-muted" style="font-size:var(--font-size-xs)">{{ $f->type ?: '—' }}</td>
-                                            <td class="text-muted" style="font-size:var(--font-size-xs)">{{ $f->lieu ?: '—' }}</td>
-                                            <td class="text-end">{{ $f->duree_h ?: '—' }}</td>
+                                            <td>{{ $f->label ?: __('common.empty_value') }}</td>
+                                            <td class="text-muted" style="font-size:var(--font-size-xs)">{{ $f->type ?: __('common.empty_value') }}</td>
+                                            <td class="text-muted" style="font-size:var(--font-size-xs)">{{ $f->lieu ?: __('common.empty_value') }}</td>
+                                            <td class="text-end">{{ $f->duree_h ?: __('common.empty_value') }}</td>
                                             <td class="text-end">{{ $f->nb_participants }}</td>
                                         </tr>
                                     @endforeach

@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('duty.title_schedule') . ' — ' . config('app.name'))
+@section('title', __('duty.title_schedule') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -96,7 +96,7 @@
                                             <div class="ob-duty-role">
                                                 {{ $slot->GP_DESCRIPTION }}
                                                 &mdash;
-                                                {{ substr($slot->AS_DEBUT, 11, 5) }}–{{ substr($slot->AS_FIN, 11, 5) }}
+                                                {{ substr($slot->AS_DEBUT, 11, 5) }}-{{ substr($slot->AS_FIN, 11, 5) }}
                                             </div>
                                             @if($slot->P_PHONE)
                                                 <a href="tel:{{ $slot->P_PHONE }}" class="ob-duty-phone">

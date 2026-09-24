@@ -17,8 +17,8 @@ test('assemble pivots amounts, rejets and totals per section', function () {
     $service = makeFinancialReportService();
 
     $sections = [
-        ['S_ID' => 1, 'label' => 'A — Alpha'],
-        ['S_ID' => 2, 'label' => 'B — Beta'],
+        ['S_ID' => 1, 'label' => 'A - Alpha'],
+        ['S_ID' => 2, 'label' => 'B - Beta'],
     ];
     $effectifs = [1 => 10, 2 => 5];
     $paymentTypes = [1 => 'Espèces', 2 => 'Chèque'];
@@ -44,7 +44,7 @@ test('assemble pivots amounts, rejets and totals per section', function () {
     expect($report['sections'])->toHaveCount(2);
 
     $alpha = $report['sections'][0];
-    expect($alpha['label'])->toBe('A — Alpha');
+    expect($alpha['label'])->toBe('A - Alpha');
     expect($alpha['effectifs'])->toBe(10);
 
     // Empty profession sorts first and is displayed with the placeholder.
@@ -88,7 +88,7 @@ test('assemble emits a zeroed subtotal for a section with headcount but no payme
     $service = makeFinancialReportService();
 
     $report = $service->assemble(
-        [['S_ID' => 3, 'label' => 'C — Gamma']],
+        [['S_ID' => 3, 'label' => 'C - Gamma']],
         [3 => 7],
         [],
         [],

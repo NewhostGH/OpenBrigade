@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('duty.print_heading') . ' — ' . ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) . ' — ' . config('app.name'))
+@section('title', __('duty.print_heading') . ' | ' . ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -24,7 +24,7 @@
         <div class="ob-widget-card-header">
             <div class="ob-widget-card-title">
                 <i class="fas fa-shield-alt me-1"></i>
-                {{ __('duty.print_heading') }} — {{ ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) }}
+                {{ __('duty.print_heading') }} - {{ ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) }}
                 <span class="ob-badge ob-badge-archive ms-1">{{ __('duty.print_count', ['count' => $slots->count()]) }}</span>
             </div>
         </div>
@@ -47,7 +47,7 @@
                             <td style="font-size:var(--font-size-sm)">{{ \Carbon\Carbon::parse($s->AS_DEBUT)->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}</td>
                             <td style="font-size:var(--font-size-sm)">{{ \Carbon\Carbon::parse($s->AS_FIN)->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}</td>
                             <td style="font-size:var(--font-size-sm)">{{ $s->P_PRENOM }} {{ strtoupper($s->P_NOM) }}</td>
-                            <td style="font-size:var(--font-size-sm)">{{ $s->GP_DESCRIPTION ?: '—' }}</td>
+                            <td style="font-size:var(--font-size-sm)">{{ $s->GP_DESCRIPTION ?: __('common.empty_value') }}</td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -12,7 +12,7 @@ use Throwable;
  * service provider with the application.
  *
  * Every plugin is isolated in its own try/catch: a broken plugin logs an
- * error and lands in loadFailures() (surfaced on the admin page) — it can
+ * error and lands in loadFailures() (surfaced on the admin page): it can
  * never take the whole application down.
  */
 class PluginLoader

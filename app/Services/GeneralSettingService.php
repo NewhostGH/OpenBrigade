@@ -47,7 +47,7 @@ class GeneralSettingService
     private ?array $cache = null;
 
     /**
-     * Installed application version (configuration row 1 — the SSOT, stamped
+     * Installed application version (configuration row 1: the SSOT, stamped
      * by the release migrations; '' → keep the APP_VERSION default).
      */
     public function appVersion(): string

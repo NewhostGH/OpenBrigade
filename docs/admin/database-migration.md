@@ -1,25 +1,19 @@
-# Database & Migrations (Admin Guide)
+# Database and migrations (admin guide)
 
-How the OpenBrigade database schema is created, evolved, and validated against a
-legacy eBrigade installation. For day-to-day developer setup see
-[../dev/DEVELOPMENT.md](../dev/DEVELOPMENT.md).
+Schema creation, evolution and validation against legacy eBrigade. Dev setup:
+[../dev/development.md](../dev/development.md).
 
 ---
 
 ## How the schema is owned
 
-OpenBrigade's schema is owned **entirely by Laravel migrations** under
-`database/migrations/`. There is no PHP setup wizard and no manual SQL import step.
+Schema is owned **entirely by Laravel migrations** under `database/migrations/`
+(no PHP setup wizard, no manual SQL import).
 
-The migration timeline is:
-
-1. **Baseline** — `2026_05_06_..._migrate_legacy_5_5_to_openbrigade_6_0_0.php`
-   imports the full legacy eBrigade 5.5 schema as the OpenBrigade 6.0.0 starting
-   point.
-2. **Forward-only changes** — every later migration is an additive change on top of
-   the baseline (sessions table, UTF-8 conversion, native feature tables, column
-   tweaks). Migrations are never edited after they ship; corrections are new
-   migrations.
+1. **Baseline**: `2026_05_06_..._migrate_legacy_5_5_to_openbrigade_6_0_0.php`
+   imports the full legacy eBrigade 5.5 schema as the 6.0.0 starting point.
+2. **Forward-only changes**: every later migration is additive. Migrations are
+   never edited after they ship; corrections are new migrations.
 
 ### Table naming
 
@@ -28,8 +22,8 @@ The migration timeline is:
 | Legacy tables (from the baseline) | Keep original eBrigade names | `pompier`, `configuration`, `personnel_cotisation` |
 | Native OpenBrigade tables         | Prefixed `ob_`               | `ob_backup_settings`, `ob_user_shortcuts`          |
 
-The `ob_` prefix makes it immediately clear which tables are inherited vs native. See
-[../dev/CONVENTIONS.md](../dev/CONVENTIONS.md) §2.
+The `ob_` prefix makes it immediately clear which tables are inherited vs. native. See
+[../dev/conventions.md](../dev/conventions.md) §2.
 
 ---
 
@@ -45,29 +39,25 @@ php artisan migrate:rollback   # roll back the last batch
 php artisan migrate:fresh --seed   # DROP all tables and rebuild (DESTRUCTIVE)
 ```
 
-Docker — prefix each command with `docker compose exec app`, e.g.:
+Docker: prefix each command with `docker compose exec app`, e.g.:
 
 ```bash
 docker compose exec app php artisan migrate --seed
 ```
 
-> `migrate:fresh` and `migrate:rollback` are destructive. Take a backup first (see
-> [backup-and-restore.md](backup-and-restore.md)).
+> `migrate:fresh` and `migrate:rollback` are destructive. Take a backup first
+> (see [backup-and-restore.md](backup-and-restore.md)).
 
-### Recommended first-run order
-
-1. Ensure the database service is healthy and `.env` is configured.
-2. `php artisan migrate`
-3. `php artisan migrate:status` — confirm everything applied.
-4. `php artisan legacy:migration:validate` — confirm the baseline tables exist.
+**First run**: `.env` configured → `migrate` → `migrate:status` (confirm
+applied) → `legacy:migration:validate` (confirm baseline tables exist).
 
 ---
 
 ## Legacy parity validation
 
-The `legacy:migration:validate` Artisan command (defined in `routes/console.php`)
-reads `database/migrations/legacy/reference.sql`, checks each legacy table exists in
-the current OpenBrigade database, and reports row counts.
+`legacy:migration:validate` (in `routes/console.php`) reads
+`database/migrations/legacy/reference.sql`, checks each legacy table exists,
+and reports row counts.
 
 ```bash
 php artisan legacy:migration:validate
@@ -88,10 +78,10 @@ php artisan legacy:migration:validate --table=pompier --table=evenement
 php artisan legacy:migration:validate --strict
 ```
 
-### Strict mode — legacy source connection
+### Strict mode: legacy source connection
 
-`--strict` compares row counts against a **live legacy database**. Configure the
-optional `legacy` connection in `.env`:
+`--strict` compares row counts against a **live legacy database**. Configure
+the optional `legacy` connection in `.env`:
 
 ```env
 LEGACY_DB_HOST=legacy-db-host
@@ -111,20 +101,20 @@ check.
 To move a production eBrigade 5.x database into OpenBrigade:
 
 1. **Back up** the legacy database (`mysqldump`).
-2. Point OpenBrigade's `.env` at a **fresh, empty** database.
-3. Run `php artisan migrate` — this builds the OpenBrigade schema from the baseline.
-4. Import your legacy data into the matching tables (the baseline preserves legacy
-   table and column names, so a straight data load works for the shared tables).
-5. Set the `LEGACY_DB_*` variables to your old database and run
+2. Point `.env` at a **fresh, empty** database, run `php artisan migrate`
+   (builds the schema from the baseline).
+3. Import legacy data into the matching tables (baseline preserves legacy
+   table/column names, so a straight load works for shared tables).
+4. Set `LEGACY_DB_*` to the old database and run
    `php artisan legacy:migration:validate --strict` to confirm row-count parity.
-6. Reset an admin password (see [../dev/DEVELOPMENT.md](../dev/DEVELOPMENT.md) §3) and
-   verify login.
+5. Reset an admin password ([../dev/development.md](../dev/development.md) §3)
+   and verify login.
 
 ---
 
 ## See also
 
-- [backup-and-restore.md](backup-and-restore.md) — taking and restoring backups
-- [installation.md](installation.md) — deploying OpenBrigade
-- [../dev/DEVELOPMENT.md](../dev/DEVELOPMENT.md) — local setup, seeding, auth
-- [../dev/ARCHITECTURE.md](../dev/ARCHITECTURE.md) — `database/` layout
+- [backup-and-restore.md](backup-and-restore.md): taking and restoring backups
+- [installation.md](installation.md): deploying OpenBrigade
+- [../dev/development.md](../dev/development.md): local setup, seeding, auth
+- [../dev/architecture.md](../dev/architecture.md): `database/` layout

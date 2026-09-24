@@ -25,7 +25,7 @@ return [
 
     'codes' => [
 
-        // ── 4xx — client side ───────────────────────────────────────────
+        // ── 4xx : client side ───────────────────────────────────────────
         400 => ['title' => 'Requête incorrecte', 'node' => 'client',
             'message' => "Le serveur n'a pas pu interpréter la requête en raison d'une syntaxe invalide."],
         401 => ['title' => 'Authentification requise', 'node' => 'client', 'relogin' => true,
@@ -59,7 +59,7 @@ return [
         429 => ['title' => 'Trop de requêtes', 'node' => 'client',
             'message' => 'Vous avez effectué trop de requêtes en peu de temps. Patientez quelques instants avant de réessayer.'],
 
-        // ── 5xx — server / network side ─────────────────────────────────
+        // ── 5xx : server / network side ─────────────────────────────────
         500 => ['title' => 'Erreur interne', 'node' => 'server',
             'message' => "Une erreur inattendue est survenue de notre côté. L'équipe technique a été informée. Réessayez dans quelques instants."],
         502 => ['title' => 'Passerelle incorrecte', 'node' => 'network',

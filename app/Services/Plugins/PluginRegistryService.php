@@ -10,7 +10,7 @@ use Throwable;
 /**
  * KASM-style multi-registry catalog: every enabled registry URL serves a
  * registry.json; catalogs are merged (first registry wins on slug collision),
- * cached one hour per registry, and a broken registry degrades only itself —
+ * cached one hour per registry, and a broken registry degrades only itself:
  * its error is surfaced next to the others' plugins.
  *
  * registry.json schema:
@@ -19,7 +19,7 @@ use Throwable;
  *     "author"?, "category"?, "icon"?, "screenshots"?: [url, …],
  *     "homepage"? } ] }
  *
- * The same slug may appear several times — one entry per compatibility
+ * The same slug may appear several times: one entry per compatibility
  * track (e.g. a 6.x line and a 7.x line maintained in parallel). The
  * catalog keeps, per slug, the best entry COMPATIBLE with the running app
  * version; when no track is compatible the newest entry is kept but marked
@@ -76,7 +76,7 @@ class PluginRegistryService
 
     /**
      * Pick, among a slug's tracks, the highest-version entry compatible with
-     * the running app version — or the highest-version entry marked
+     * the running app version: or the highest-version entry marked
      * incompatible when none fits.
      *
      * @param  array<int,array<string,mixed>>  $entries
@@ -109,7 +109,7 @@ class PluginRegistryService
         return $this->catalog()['plugins'][$slug] ?? null;
     }
 
-    /** @return iterable<int,PluginRegistry> — overridable seam for tests. */
+    /** @return iterable<int,PluginRegistry> Overridable seam for tests. */
     protected function registries(): iterable
     {
         try {

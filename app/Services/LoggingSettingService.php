@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
  *
  * Mirrors {@see SecuritySettingService}: values live as NAME/VALUE rows in the
  * legacy `configuration` table, reads are memoised per request and fall back to
- * typed defaults, and a missing row (or table) never breaks a page — the logging
+ * typed defaults, and a missing row (or table) never breaks a page: the logging
  * pipeline simply behaves as the defaults.
  *
  * Logging is organised into logical **canaux** (channels), each with its own
@@ -80,7 +80,7 @@ class LoggingSettingService
         return $defaults;
     }
 
-    /** Setting names, in display order — used by the admin tab and the seeder. */
+    /** Setting names, in display order: used by the admin tab and the seeder. */
     public static function keys(): array
     {
         return array_keys(self::allDefaults());
@@ -142,7 +142,7 @@ class LoggingSettingService
 
     /**
      * Ensure every observability setting has a row in `configuration`, creating
-     * missing ones with their default. Idempotent — used by both the seeding
+     * missing ones with their default. Idempotent: used by both the seeding
      * migration and the admin screen so the page never 500s on an absent row.
      */
     public function ensureSeeded(): void

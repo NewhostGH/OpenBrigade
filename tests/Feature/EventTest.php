@@ -148,11 +148,11 @@ test('event list passes all required view variables', function () {
         ->assertViewHasAll(['items', 'period', 'search', 'type', 'filtSect', 'types', 'sections']);
 });
 
-// ── Event detail — status flag badges (stubbed controller) ────────────────
+// ── Event detail: status flag badges (stubbed controller) ────────────────
 
 /**
  * Render the real event.show view with an in-memory Event carrying the given
- * attributes and empty relations/collections — no database access.
+ * attributes and empty relations/collections: no database access.
  */
 function eventStubShow(array $eventAttrs): void
 {
@@ -233,7 +233,7 @@ test('event detail hides the informational status flag badges when unset', funct
         ->assertDontSee(__('event.flag_hidden'));
 });
 
-// ── Event creation — schedule date validation ─────────────────────────────
+// ── Event creation: schedule date validation ─────────────────────────────
 
 test('a schedule end date before its start date is rejected with a friendly message', function () {
     // Validation fails before any DB write, so no database is touched.
@@ -257,7 +257,7 @@ test('a schedule end date before its start date is rejected with a friendly mess
 
 /**
  * Render the real event.report view with an in-memory event and empty
- * collections — no database access.
+ * collections: no database access.
  */
 function eventStubReport(): void
 {

@@ -17,7 +17,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * Section document library — browse folders and documents, download files.
+ * Section document library: browse folders and documents, download files.
  * All query/business logic lives in {@see DocumentService}; this controller
  * stays thin (CONVENTIONS §3). Upload/edit/folder management is permission 47.
  */
@@ -39,7 +39,7 @@ class DocumentController extends Controller
         $documents = $this->documents->documents($user, $sectionId, $folderId, $typeCode);
 
         // Explorer listing: the current folder's sub-folders first (only on the
-        // first page), then the paginated documents — folders and files together.
+        // first page), then the paginated documents: folders and files together.
         $rows = collect();
         if ($documents->currentPage() === 1) {
             $rows = $this->documents->subFolders($folders, $folderId)->map(function ($f) use ($user, $sectionId) {
@@ -236,7 +236,7 @@ class DocumentController extends Controller
             ->with($flash, $message);
     }
 
-    /** Stream a library document — permission, type/doc security and section checked. */
+    /** Stream a library document: permission, type/doc security and section checked. */
     public function download(Request $request, Document $document): BinaryFileResponse
     {
         $user = $request->user();
@@ -269,7 +269,7 @@ class DocumentController extends Controller
     }
 
     /**
-     * Column definitions for the explorer table — rows are sub-folders
+     * Column definitions for the explorer table: rows are sub-folders
      * (is_folder = true) and documents together. Reused by the export.
      */
     private function columns(int $sectionId): array
@@ -291,10 +291,10 @@ class DocumentController extends Controller
                         : e($d->D_NAME)),
                 'exportable' => true, 'exportValue' => fn ($d) => $d->D_NAME],
             ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'mobile' => false,
-                'value' => fn ($d) => $isFolder($d) ? 'Dossier' : ($d->TD_LIBELLE ?? $d->TD_CODE ?? '—'),
+                'value' => fn ($d) => $isFolder($d) ? 'Dossier' : ($d->TD_LIBELLE ?? $d->TD_CODE ?? __('common.empty_value')),
                 'exportable' => true, 'exportValue' => fn ($d) => $isFolder($d) ? 'Dossier' : ($d->TD_LIBELLE ?? '')],
             ['key' => 'created_by', 'label' => 'Ajouté par', 'type' => 'text', 'mobile' => false,
-                'value' => fn ($d) => $isFolder($d) ? '—' : ($d->created_by_name ?: '—'),
+                'value' => fn ($d) => $isFolder($d) ? __('common.empty_value') : ($d->created_by_name ?: __('common.empty_value')),
                 'exportable' => true, 'exportValue' => fn ($d) => $isFolder($d) ? '' : ($d->created_by_name ?? '')],
             ['key' => 'date', 'label' => 'Date', 'type' => 'date', 'mobile' => true,
                 'value' => fn ($d) => $isFolder($d) ? null : $d->D_CREATED_DATE,

@@ -20,14 +20,14 @@ class PruneObLogs extends Command
     public function handle(LoggingSettingService $settings): int
     {
         if (! Schema::hasTable('ob_log_entry')) {
-            $this->warn('ob_log_entry table not present — nothing to prune.');
+            $this->warn('ob_log_entry table not present: nothing to prune.');
 
             return self::SUCCESS;
         }
 
         $days = $settings->int('obs_db_retention_days');
         if ($days <= 0) {
-            $this->info('DB log retention is unlimited (0) — nothing to prune.');
+            $this->info('DB log retention is unlimited (0): nothing to prune.');
 
             return self::SUCCESS;
         }

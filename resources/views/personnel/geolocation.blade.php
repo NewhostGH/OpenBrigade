@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Géolocalisation — ' . config('app.name'))
+@section('title', 'Géolocalisation | ' . config('app.name'))
 
 @section('content')
 
@@ -15,7 +15,7 @@
         <option value="" {{ $sectionId === null ? 'selected' : '' }}>{{ __('personnel.geo_all_sections') }}</option>
         @foreach ($sections as $sec)
             <option value="{{ $sec->S_ID }}" {{ $sectionId === (int)$sec->S_ID ? 'selected' : '' }}>
-                {{ $sec->S_CODE }}{{ $sec->S_DESCRIPTION ? ' — ' . $sec->S_DESCRIPTION : '' }}
+                {{ $sec->S_CODE }}{{ $sec->S_DESCRIPTION ? ' - ' . $sec->S_DESCRIPTION : '' }}
             </option>
         @endforeach
     </select>

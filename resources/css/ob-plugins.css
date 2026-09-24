@@ -1,4 +1,4 @@
-/* Administration ▸ Plugins — store-style catalog */
+/* Administration ▸ Plugins: store-style catalog */
 
 .ob-plugin-icon-fallback {
     width: 48px;
@@ -39,7 +39,7 @@
     vertical-align: baseline;
 }
 
-/* Pagination — same treatment as the commandbar footer (Journal d'activité):
+/* Pagination: same treatment as the commandbar footer (Journal d'activité):
    pager flush with the count label, redundant "Showing X to Y" line hidden. */
 .ob-plugins-pagination .pagination {
     margin-bottom: 0;

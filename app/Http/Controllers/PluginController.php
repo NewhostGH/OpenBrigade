@@ -16,7 +16,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 
 /**
- * Administration ▸ Plugins — KASM-style marketplace: catalogs merged from
+ * Administration ▸ Plugins: KASM-style marketplace, catalogs merged from
  * every enabled registry, one-click install/enable/disable/uninstall, and
  * registry management. Every pipeline refusal is a translated flash message,
  * never a 500.
@@ -45,7 +45,7 @@ class PluginController extends Controller
                 'installed' => $row !== null,
                 'enabled' => (bool) ($row->enabled ?? false),
                 'installed_version' => $row->version ?? null,
-                // Only a COMPATIBLE catalog entry may offer an update — a 7.x
+                // Only a COMPATIBLE catalog entry may offer an update: a 7.x
                 // track must never be offered to a 6.x install.
                 'update_available' => $row !== null
                     && ($entry['compatible'] ?? true)
@@ -93,7 +93,7 @@ class PluginController extends Controller
         try {
             $registries = PluginRegistry::query()->orderByDesc('is_default')->orderBy('name')->get();
         } catch (\Throwable) {
-            // Table not migrated yet — show an empty registry list, not a 500.
+            // Table not migrated yet: show an empty registry list, not a 500.
             $registries = collect();
         }
 

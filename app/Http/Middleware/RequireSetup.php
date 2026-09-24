@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  * redirected to the setup wizard; everyone else is left alone.
  *
  * Existing eBrigade databases already have `already_configured = 1`, so this is
- * a no-op there — the wizard only appears on genuinely fresh installs.
+ * a no-op there: the wizard only appears on genuinely fresh installs.
  */
 class RequireSetup
 {

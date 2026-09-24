@@ -27,7 +27,7 @@ return new class extends Migration
         }
 
         // This migration IS the 5.5 → 6.0.0 shift: stamp the installed version
-        // (configuration row NAME 'version' — the reference schema still carries
+        // (configuration row NAME 'version': the reference schema still carries
         // the legacy value). That row is the version SSOT: it overlays
         // config('brigade.version') / config('app.version') at boot.
         ReleaseVersion::stamp('6.0.0');

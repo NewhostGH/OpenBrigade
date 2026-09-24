@@ -21,8 +21,6 @@
 
 ## Quick Start (Docker)
 
-The easiest way to run OpenBrigade locally is with Docker Compose:
-
 ```bash
 git clone https://github.com/NewHostGH/OpenBrigade.git
 cd OpenBrigade
@@ -30,90 +28,48 @@ cp .env.example .env   # edit credentials as needed
 docker compose --profile minimal up -d   # app + db; use --profile full for clamav + error tracking
 ```
 
-The stack uses nested Compose profiles — `app` ⊂ `minimal` ⊂ `full` ⊂ `dev`.
+The stack uses nested Compose profiles: `app` ⊂ `minimal` ⊂ `full` ⊂ `dev`.
 Pass `--profile` or set `COMPOSE_PROFILES` in `.env`; with no profile nothing starts.
+Open `http://localhost:8080` and follow the setup wizard. Frontend assets are
+built with Vite during the Docker image build (no CDN). For local (non-Docker)
+builds: `npm install && npm run build`.
 
-Then open `http://localhost:8080` in your browser and follow the setup wizard.
-
-See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for development setup instructions including the VS Code Dev Container.
-
-Frontend assets are built with Vite (npm) during Docker image build, so no CDN is required for Bootstrap.
-
-For local (non-Docker) frontend build:
-
-```bash
-npm install
-npm run build
-```
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for full setup (incl. VS Code Dev Container).
 
 Documentation:
 
-- [Documentation index](docs/README.md) — full doc map (developer + admin)
-- [Developer setup](docs/dev/DEVELOPMENT.md) — environment, database, auth, assets, tooling
-- [Database Migration Guide](docs/admin/database-migration.md) — schema, migrations, parity
+- [Documentation index](docs/README.md): full doc map (developer + admin)
+- [Developer setup](docs/dev/development.md): environment, database, auth, assets, tooling
+- [Database Migration Guide](docs/admin/database-migration.md): schema, migrations, parity
 
-### Data Migration Validation
-
-OpenBrigade ships with an Artisan command to validate legacy table migration status:
+### Data migration validation
 
 ```bash
-php artisan legacy:migration:validate
+php artisan legacy:migration:validate                                    # checks legacy tables exist + row counts
+php artisan legacy:migration:validate --strict                           # compare against a live legacy DB (needs LEGACY_DB_* in .env)
+php artisan legacy:migration:validate --table=personnel --table=evenement  # scope to specific tables
 ```
 
-This command reads `database/migrations/legacy/reference.sql`, checks each legacy table exists in the current OpenBrigade database, and reports row counts.
-
-To compare row counts against a live legacy database, set these optional variables in `.env`:
-
-```env
-LEGACY_DB_HOST=legacy-db-host
-LEGACY_DB_PORT=3306
-LEGACY_DB_DATABASE=ebrigade_legacy
-LEGACY_DB_USERNAME=legacy_user
-LEGACY_DB_PASSWORD=legacy_password
-```
-
-Then run strict parity validation:
-
-```bash
-php artisan legacy:migration:validate --strict
-```
-
-Useful options:
-
-```bash
-php artisan legacy:migration:validate --table=personnel --table=evenement
-```
-
----
-
-## Requirements (manual install)
-
-| Dependency | Version |
-|------------|---------|
-| PHP        | 8.4 |
-| MySQL / MariaDB | 5.7+ / 10.3+ |
-| Web server | Nginx 1.24+ or Apache 2.4+ |
+Reads `database/migrations/legacy/reference.sql`. For `--strict`, set
+`LEGACY_DB_HOST`, `LEGACY_DB_PORT`, `LEGACY_DB_DATABASE`, `LEGACY_DB_USERNAME`,
+`LEGACY_DB_PASSWORD` in `.env`.
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines on how to:
-
-- Fork the repository
-- Create a branch
-- Submit a pull request
-- Report a bug or request a feature
+Contributions are welcome! See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for
+branching, commits, PRs, and how to report bugs or request features.
 
 ---
 
 ## License
 
-GNU General Public License v2.0 or later. See [LICENSE](LICENSE) for details ([version française](docs/legal/licence-fr.txt)).
+GNU General Public License v2.0 or later. See [LICENSE](LICENSE) for details ([version française](docs/legal/license-fr.txt)).
 
 ---
 
 ## Credits
 
-Originally developed as **eBrigade** by Nicolas MARCHE (eBrigade Technologies), Copyright © 2004–2021.  
-See [README-eBrigade 5.3.2.txt](README-eBrigade%205.3.2.txt) for the original release notes.
+Originally developed as **eBrigade** by Nicolas MARCHE (eBrigade Technologies), Copyright © 2004-2021.  
+See [README-eBrigade 5.3.2.txt](archive/legacy_app/README-eBrigade%205.3.2.txt) for the original release notes.

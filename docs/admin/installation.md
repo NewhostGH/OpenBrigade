@@ -1,10 +1,8 @@
-# Installation & Deployment (Admin Guide)
+# Installation and deployment (admin guide)
 
-How to deploy OpenBrigade to a server. For local development setup use
-[../dev/DEVELOPMENT.md](../dev/DEVELOPMENT.md) instead.
-
-OpenBrigade is a **Laravel 12 / PHP 8.4** application backed by **MySQL/MariaDB**, with
-frontend assets built by **Vite**.
+Deploying OpenBrigade to a server (**Laravel 12 / PHP 8.4**, **MySQL/MariaDB**,
+frontend built by **Vite**). Local dev setup:
+[../dev/development.md](../dev/development.md).
 
 ---
 
@@ -20,12 +18,11 @@ frontend assets built by **Vite**.
 
 ---
 
-## Option A — Docker Compose
+## Option A: Docker Compose
 
-The shipped `docker-compose.yml` is split into nested Compose **profiles** —
-`app` ⊂ `minimal` (app + db) ⊂ `full` (+ clamav + GlitchTip error tracking) ⊂
-`dev` (+ DBGate). Pass `--profile` or set `COMPOSE_PROFILES` in `.env`; with no
-profile, nothing starts.
+`docker-compose.yml` uses nested Compose **profiles**: `app` ⊂ `minimal`
+(app + db) ⊂ `full` (+ clamav + GlitchTip) ⊂ `dev` (+ DBGate). Pass `--profile`
+or set `COMPOSE_PROFILES` in `.env`; with no profile, nothing starts.
 
 ```bash
 git clone https://github.com/NewHostGH/OpenBrigade.git
@@ -37,18 +34,18 @@ docker compose exec app php artisan migrate --seed
 docker compose exec app sh -lc "npm ci && npm run build"
 ```
 
-| Service     | Default URL                           |
-| ----------- | ------------------------------------- |
-| Application | <http://localhost:8080> (`APP_PORT`)  |
-| Database    | `localhost:3306` (`DB_PORT_EXTERNAL`) |
-| CloudBeaver | <http://localhost:8081> (`CB_PORT`)   |
+| Service     | Default URL                              |
+| ----------- | ----------------------------------------- |
+| Application | <http://localhost:8080> (`APP_PORT`)     |
+| Database    | `localhost:3306` (`DB_PORT_EXTERNAL`)    |
+| DBGate (dev profile only) | <http://localhost:8888> (`DBGATE_PORT`) |
 
-For production behind a reverse proxy, set `APP_URL`, terminate TLS at the proxy, and
-do **not** expose the database/CloudBeaver ports publicly.
+Behind a reverse proxy: set `APP_URL`, terminate TLS at the proxy, and do
+**not** expose the database/DBGate ports publicly.
 
 ---
 
-## Option B — Manual deployment
+## Option B: Manual deployment
 
 ```bash
 git clone https://github.com/NewHostGH/OpenBrigade.git
@@ -77,7 +74,7 @@ Point the web server document root at `public/`. Ensure `storage/` and
 
 ### Apache
 
-Enable `mod_rewrite`; the shipped `public/.htaccess` handles front-controller routing.
+Enable `mod_rewrite`; `public/.htaccess` handles front-controller routing.
 
 ### Nginx
 
@@ -98,10 +95,10 @@ location ~ \.php$ {
 
 - [ ] `php artisan migrate:status` shows all migrations applied.
 - [ ] `php artisan legacy:migration:validate` passes (baseline tables present).
-- [ ] Reset/seed an admin login (see [../dev/DEVELOPMENT.md](../dev/DEVELOPMENT.md) §3)
+- [ ] Reset/seed an admin login (see [../dev/development.md](../dev/development.md) §3)
       and confirm login works.
 - [ ] Mail is configured (`MAIL_*` in `.env`) and a test message sends.
-- [ ] The Laravel scheduler runs (needed for automatic backups) — add the cron entry
+- [ ] The Laravel scheduler runs (needed for automatic backups); add the cron entry
       from [backup-and-restore.md](backup-and-restore.md).
 - [ ] A first database backup has been taken and a restore tested.
 - [ ] Database/admin ports are not publicly exposed; TLS is enforced.
@@ -113,7 +110,7 @@ location ~ \.php$ {
 1. Take a database backup ([backup-and-restore.md](backup-and-restore.md)).
 2. `git pull` the new version.
 3. `composer install --no-dev --optimize-autoloader`
-4. `php artisan migrate` (forward-only — never edit shipped migrations).
+4. `php artisan migrate` (forward-only, never edit shipped migrations).
 5. `npm ci && npm run build`
 6. `php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache`
 
@@ -121,6 +118,6 @@ location ~ \.php$ {
 
 ## See also
 
-- [database-migration.md](database-migration.md) — schema and parity validation
-- [backup-and-restore.md](backup-and-restore.md) — backups and the scheduler
-- [../dev/DEVELOPMENT.md](../dev/DEVELOPMENT.md) — environment, auth, seeding
+- [database-migration.md](database-migration.md): schema and parity validation
+- [backup-and-restore.md](backup-and-restore.md): backups and the scheduler
+- [../dev/development.md](../dev/development.md): environment, auth, seeding

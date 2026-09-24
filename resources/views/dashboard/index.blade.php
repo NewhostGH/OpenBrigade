@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('dashboard.index.title') . ' – ' . config('app.name'))
+@section('title', __('dashboard.index.title') . ' | ' . config('app.name'))
 
 @section('content')
 <div class="ob-dash-wrap">
@@ -56,7 +56,7 @@
         @foreach([1, 2, 3] as $col)
         <div class="ob-dash-column" data-col="{{ $col }}">
 
-            {{-- Drop hint — only visible in edit mode when the column has no visible widgets --}}
+            {{-- Drop hint: only visible in edit mode when the column has no visible widgets --}}
             <div class="ob-col-drop-hint" aria-hidden="true">
                 <i class="fas fa-plus-circle"></i> {{ __('dashboard.index.drop_hint') }}
             </div>
@@ -94,7 +94,7 @@
     </div>
 </div>
 
-{{-- Fixed edit-mode toggle — position:fixed, takes no layout space --}}
+{{-- Fixed edit-mode toggle: position:fixed, takes no layout space --}}
 <button id="ob-dash-edit-toggle" class="ob-btn-edit-mode" type="button">
     <i class="fas fa-sliders-h"></i> {{ __('dashboard.index.btn_customize') }}
 </button>

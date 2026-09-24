@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('repos.title') . ' — ' . config('app.name'))
+@section('title', __('repos.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -115,7 +115,7 @@
             <span class="text-muted" style="font-size:var(--font-size-xs)">
                 <span class="ob-repos-badge">J</span> {{ __('repos.col_day_rest') }}
                 <span class="ob-repos-badge ob-repos-badge--night ms-2">N</span> {{ __('repos.col_night_rest') }}
-                — {{ __('repos.hint') }}
+                - {{ __('repos.hint') }}
             </span>
         </div>
     </form>

@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($policy ? __('common.edit') : __('common.create')) . " une politique — " . config('app.name'))
+@section('title', ($policy ? __('common.edit') : __('common.create')) . " une politique | " . config('app.name'))
 
 @section('content')
 

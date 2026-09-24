@@ -13,7 +13,7 @@ use Throwable;
  * Monolog handler that persists records to the unified `ob_log_entry` table.
  *
  * Wired through the custom `database` channel (config/logging.php), which
- * accepts every record — the effective minimum level is enforced here PER CANAL
+ * accepts every record: the effective minimum level is enforced here PER CANAL
  * (obs_level_<canal>) so an admin can tune each logical channel independently.
  *
  * The handler is deliberately defensive: anything that goes wrong while logging
@@ -53,7 +53,7 @@ class DatabaseLogHandler extends AbstractProcessingHandler
                 'created_at' => $record->datetime,
             ];
 
-            // These were promoted to columns — don't duplicate them in context.
+            // These were promoted to columns: don't duplicate them in context.
             unset($context['duration_ms'], $context['memory_mb']);
 
             // Pull a captured exception out of context into the dedicated columns.
@@ -78,7 +78,7 @@ class DatabaseLogHandler extends AbstractProcessingHandler
     /**
      * True when the record is less severe than the canal's configured minimum
      * level. On any failure (settings unreadable, bad level name) it returns
-     * false — i.e. keep the record rather than silently drop the trail.
+     * false, i.e. keep the record rather than silently drop the trail.
      */
     private function belowCanalLevel(Level $level, string $canal): bool
     {

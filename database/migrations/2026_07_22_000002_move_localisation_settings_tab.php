@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
  * Group the localisation-related settings (timezone, currency, phone format)
  * under their own « Localisation » tab on the settings page instead of the
  * catch-all « Avancé » tab. The timezone description loses its legacy
- * type-the-identifier instructions — the UI now renders a dropdown.
+ * type-the-identifier instructions: the UI now renders a dropdown.
  */
 return new class extends Migration
 {

@@ -3,7 +3,7 @@
         <div class="ob-widget-card-title">
             <i class="fas fa-ambulance"></i> {{ __('dashboard.mc.title') }}
         </div>
-        {{-- TODO: Migrate code — ec_mode=MC filter has no native equivalent yet --}}
+        {{-- TODO: Migrate code: ec_mode=MC filter has no native equivalent yet --}}
         <a class="ob-widget-card-link" href="{{ url('/legacy/evenement_choice.php?ec_mode=MC&page=1') }}">
             <i class="fas fa-external-link-alt"></i>
         </a>
@@ -19,7 +19,7 @@
                        href="{{ route('event.show', $e->E_CODE) }}">
                         {{ $e->E_LIBELLE }}
                     </a>
-                    <div class="ob-dash-event-meta">{{ $e->DEBUTDATE }}–{{ $e->FINDATE }}</div>
+                    <div class="ob-dash-event-meta">{{ $e->DEBUTDATE }}-{{ $e->FINDATE }}</div>
                 </div>
                 <div class="ob-dash-event-date">{{ $e->FORMDATE }}</div>
             </div>

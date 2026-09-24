@@ -4,7 +4,7 @@ use App\Models\PluginRegistry;
 use App\Services\Plugins\PluginRegistryService;
 use Illuminate\Support\Facades\Http;
 
-/** Registry service with a fixed (unsaved) registry list — no DB. */
+/** Registry service with a fixed (unsaved) registry list: no DB. */
 function registryService(array $registries): PluginRegistryService
 {
     return new class($registries) extends PluginRegistryService
@@ -73,7 +73,7 @@ test('a broken registry degrades only itself', function () {
         ->and($catalog['errors'])->toHaveKey('Two');
 });
 
-test('a slug may ship one track per app line — the compatible one wins', function () {
+test('a slug may ship one track per app line - the compatible one wins', function () {
     config(['brigade.version' => '6.0.0']);
     Http::fake([
         'one.example.org/*' => Http::response(registryPayload([

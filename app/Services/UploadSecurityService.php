@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Log;
  * Cross-cutting safety gate for every file upload in the app.
  *
  * Two layers, both administrable from Sécurité ▸ Renforcement:
- *  1. Validation / MIME hardening — size, extension whitelist, a hard forbidden
+ *  1. Validation / MIME hardening: size, extension whitelist, a hard forbidden
  *     extension/magic-byte blocklist, and (when enabled) a check that the
  *     declared extension matches the real MIME type detected from the bytes.
- *  2. Malware scanning — streams the file to a clamd daemon when scanning is on.
+ *  2. Malware scanning: streams the file to a clamd daemon when scanning is on.
  *
  * Callers use {@see assertSafe()} (validate + scan). On rejection an
  * {@see UploadRejectedException} is thrown, which controllers turn into a normal
@@ -171,7 +171,7 @@ class UploadSecurityService
         // guessExtension() maps the real (finfo) MIME back to a canonical
         // extension; compare in a small equivalence-aware way. When finfo cannot
         // positively identify the bytes it yields application/octet-stream ('bin'):
-        // don't block on that — the extension whitelist and the magic-byte
+        // don't block on that: the extension whitelist and the magic-byte
         // blocklist already gate genuinely dangerous content.
         $guessed = strtolower((string) $file->guessExtension());
         if ($guessed === '' || $guessed === 'bin') {
@@ -185,7 +185,7 @@ class UploadSecurityService
             'tiff' => ['tif', 'tiff'],
             'htm' => ['htm', 'html'],
             'html' => ['htm', 'html'],
-            // OOXML / ODF documents are ZIP containers — finfo reports them as zip.
+            // OOXML / ODF documents are ZIP containers: finfo reports them as zip.
             'docx' => ['docx', 'zip'],
             'xlsx' => ['xlsx', 'zip'],
             'pptx' => ['pptx', 'zip'],

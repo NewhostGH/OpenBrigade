@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * A publicly-visible event with its section, type and one schedule attached as
- * relations — no database required.
+ * relations: no database required.
  */
 function feedEvent(array $attrs = []): Event
 {
@@ -81,9 +81,9 @@ it('renders each visible event as an RSS item', function () {
         ->and((string) $doc->channel->title)->toBe('CIS Test')
         ->and((string) $doc->channel->link)->toBe('https://cis.test')
         ->and($doc->channel->item)->toHaveCount(1)
-        ->and((string) $doc->channel->item[0]->title)->toBe('Formation — PSC1 session')
+        ->and((string) $doc->channel->item[0]->title)->toBe('Formation - PSC1 session')
         ->and((string) $doc->channel->item[0]->link)->toBe(url('/events/42'))
-        ->and((string) $doc->channel->item[0]->description)->toContain('Organisé par : DUP — Dupont')
+        ->and((string) $doc->channel->item[0]->description)->toContain('Organisé par : DUP - Dupont')
         ->and((string) $doc->channel->item[0]->description)->toContain('Lieu : Paris');
 });
 

@@ -34,7 +34,7 @@
                 </div>
                 <div class="ob-dash-event-date">
                     {{ $e->FORMDATE }}<br>
-                    <span>{{ $e->DEBUTDATE }}–{{ $e->FINDATE }}</span>
+                    <span>{{ $e->DEBUTDATE }}-{{ $e->FINDATE }}</span>
                 </div>
             </div>
         @empty

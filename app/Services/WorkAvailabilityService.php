@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
  * be "available" for a slot they are absent, resting, or already working.
  *
  * The day is split into four fixed clock periods (matching the availability
- * grid): 1 = Matin 06–12, 2 = Après-midi 12–18, 3 = Soir 18–24, 4 = Nuit 00–06.
+ * grid): 1 = Matin 06-12, 2 = Après-midi 12-18, 3 = Soir 18-24, 4 = Nuit 00-06.
  *
  *  - Accepting an absence or a repos (`indisponibilite`) clears the person's
  *    overlapping availability (`disponibilite`).

@@ -2,7 +2,7 @@
 
 use App\Services\GeneralSettingService;
 
-// Without a database the service must fall back to its typed defaults —
+// Without a database the service must fall back to its typed defaults :
 // several consumers run at boot (timezone) or on every request (maintenance
 // mode), so this path is the safety net.
 

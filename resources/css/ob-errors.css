@@ -3,7 +3,7 @@
 | Error / status pages (404, 403, 401, 419, 429, 500, 503) + no-JS notice
 |--------------------------------------------------------------------------
 |
-| Styling for the error views (resources/views/errors/*) — card, the
+| Styling for the error views (resources/views/errors/*): card, the
 | client → réseau → serveur connection diagram, and the <noscript> banners
 | on the app + login layouts. Tokens come from variables.css.
 |
@@ -18,7 +18,7 @@
     background: var(--page-bg);
 }
 
-/* Centres the card — full-viewport when standalone, within the content
+/* Centres the card: full-viewport when standalone, within the content
    region when embedded in the app shell (.ob-space-left). */
 .ob-error-wrap {
     min-height: 100vh;

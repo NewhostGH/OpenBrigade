@@ -37,7 +37,7 @@ class ObPhoto extends Model
         return $this->belongsTo(ObPhotoAlbum::class, 'album_id');
     }
 
-    /** Auth-gated URL — served through PhotoController::photoServe(). */
+    /** Auth-gated URL: served through PhotoController::photoServe(). */
     public function url(): string
     {
         return route('photo.serve', $this->id);

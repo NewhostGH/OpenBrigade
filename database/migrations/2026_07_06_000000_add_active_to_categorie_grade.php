@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Lets an admin hide a whole grade category (e.g. "Armée de Terre") from the
- * personnel form without deleting its grades — a hospital shouldn't see
+ * personnel form without deleting its grades: a hospital shouldn't see
  * military ranks in the assignment dropdown, but the data stays intact.
  */
 return new class extends Migration

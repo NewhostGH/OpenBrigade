@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
  * One row of the unified observability log (ob_log_entry).
  *
  * Written by App\Logging\DatabaseLogHandler; read by the Journal d'activité
- * admin screens. Entries are immutable — only `created_at` is tracked.
+ * admin screens. Entries are immutable: only `created_at` is tracked.
  *
  * @property int $id
  * @property string $level
@@ -45,7 +45,7 @@ class ObLogEntry extends Model
         'memory_mb' => 'integer',
     ];
 
-    /** PSR-3 levels in ascending severity — shared by the service and the UI. */
+    /** PSR-3 levels in ascending severity: shared by the service and the UI. */
     public const LEVELS = [
         'debug', 'info', 'notice', 'warning',
         'error', 'critical', 'alert', 'emergency',

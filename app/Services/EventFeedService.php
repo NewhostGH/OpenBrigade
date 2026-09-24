@@ -68,7 +68,7 @@ class EventFeedService implements ServiceInterface
             $url = route('event.show', $event->E_CODE);
             $typeLabel = $event->type?->TE_LIBELLE;
             $title = $typeLabel
-                ? $typeLabel.' — '.$event->E_LIBELLE
+                ? $typeLabel.' - '.$event->E_LIBELLE
                 : (string) $event->E_LIBELLE;
 
             return [
@@ -89,7 +89,7 @@ class EventFeedService implements ServiceInterface
         $lines = [];
 
         if ($event->section) {
-            $lines[] = 'Organisé par : '.trim($event->section->S_CODE.' — '.$event->section->S_DESCRIPTION, ' —');
+            $lines[] = 'Organisé par : '.trim($event->section->S_CODE.' - '.$event->section->S_DESCRIPTION, ' -');
         }
 
         $start = $event->horaires->first()?->EH_DATE_DEBUT;

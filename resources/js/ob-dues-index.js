@@ -1,4 +1,4 @@
-// window.COTIS_PAID_COUNT — initial paid count set by the Blade template
+// window.COTIS_PAID_COUNT: initial paid count set by the Blade template
 
 (function () {
     let paidCount = window.COTIS_PAID_COUNT || 0;

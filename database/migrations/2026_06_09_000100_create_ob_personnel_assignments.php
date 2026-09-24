@@ -38,7 +38,7 @@ return new class extends Migration
             $table->index('person_id');
         });
 
-        // Ensure section_id defaults to 0 (global sentinel — section-scoped design keeps
+        // Ensure section_id defaults to 0 (global sentinel: section-scoped design keeps
         // NOT NULL so the three-column unique index works reliably).
         Schema::table('ob_user_assignment', function (Blueprint $table) {
             $table->smallInteger('section_id')->default(0)->change();

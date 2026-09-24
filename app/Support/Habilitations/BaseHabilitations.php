@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
  * two never drift. Pure/stateless except for reading the legacy `fonctionnalite`
  * catalog (the permission definitions) to classify it.
  *
- * Permissions are classified on two axes — domain (config|data) and read/write —
+ * Permissions are classified on two axes: domain (config|data) and read/write,
  * plus a critical marker (legacy F_FLAG). The classification drives the SEEDED
  * default grants for the four base groups; it is not a runtime enforcement path.
  *
@@ -121,7 +121,7 @@ class BaseHabilitations
 
         return match ($default) {
             // Everything except critical (delete personnel, security, admin
-            // technique, delete data, organigramme…) — critical is super-admin only.
+            // technique, delete data, organigramme…): critical is super-admin only.
             'admin' => $pick(fn ($p) => ! $p['is_critical']),
             // Look-but-don't-touch: the read-oriented permissions.
             'auditor' => $pick(fn ($p) => $p['is_read']),
@@ -176,7 +176,7 @@ class BaseHabilitations
 
     /**
      * Write the canonical base data (permission catalog, base groups + default
-     * grants, per-organisation-type roles). Idempotent — safe to re-run. Shared
+     * grants, per-organisation-type roles). Idempotent: safe to re-run. Shared
      * by the rebuild migration and the production CoreSeeder.
      *
      * @return array<int,array<string,int>> orgType => [archetype => role id],
@@ -235,7 +235,7 @@ class BaseHabilitations
 
     /**
      * (Re)seed a single organisation type's section roles and reset their grants
-     * back to the preset defaults. Idempotent per type — used by both the global
+     * back to the preset defaults. Idempotent per type: used by both the global
      * seed above and the admin "reset roles" action when switching org type.
      *
      * Only the preset roles for this type are touched; custom (non-system) roles

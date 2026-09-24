@@ -22,7 +22,7 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('_totp_user_id'));
         });
         // NB: the 'auth' limiter (login / password-reset throttling) is registered
-        // in AppServiceProvider::boot(), which — unlike this provider — is listed
+        // in AppServiceProvider::boot(), which (unlike this provider) is listed
         // in bootstrap/providers.php and therefore always boots.
 
         // Prevent Fortify from registering its own login / register / etc. views,

@@ -672,7 +672,7 @@ class ReferenceController extends Controller
 
         $grades = $query->orderBy('g.G_CATEGORY')->orderByDesc('g.G_LEVEL')->get();
 
-        // Members holding each grade (excludes externals) — shown per row and
+        // Members holding each grade (excludes externals): shown per row and
         // guards deletion.
         $counts = DB::table('pompier')
             ->where('P_STATUT', '<>', 'EXT')
@@ -718,7 +718,7 @@ class ReferenceController extends Controller
             'G_LEVEL' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        // G_GRADE (the code) is immutable — members reference it via P_GRADE.
+        // G_GRADE (the code) is immutable: members reference it via P_GRADE.
         DB::table('grade')->where('G_GRADE', $grade)->update([
             'G_DESCRIPTION' => $data['G_DESCRIPTION'],
             'G_CATEGORY' => $data['G_CATEGORY'],

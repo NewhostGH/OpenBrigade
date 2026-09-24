@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
  * Forward-only repair: add the compatibility-window columns to `ob_plugin` on
  * installs whose create-migration ran before those columns existed (the
  * columns are declared in 2026_07_23_000002_create_plugin_tables, but a DB that
- * migrated before that edit never got them — PluginStateService::record() then
+ * migrated before that edit never got them: PluginStateService::record() then
  * fails to insert). Guarded so fresh installs, which already have the columns,
  * are untouched.
  */

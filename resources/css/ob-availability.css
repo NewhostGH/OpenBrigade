@@ -113,7 +113,7 @@
     color: #fff;
 }
 
-/* Locked slot: absent, resting or already working — can't be declared available. */
+/* Locked slot: absent, resting or already working, can't be declared available. */
 .ob-av-slot.is-blocked {
     background: repeating-linear-gradient(
         45deg,

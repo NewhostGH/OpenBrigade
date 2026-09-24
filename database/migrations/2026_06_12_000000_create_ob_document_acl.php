@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Per-object ACL for the document library — granular rights on a single file or
+ * Per-object ACL for the document library: granular rights on a single file or
  * folder, granted to a user / group / role / everyone, with explicit allow or
  * deny. Folder ACEs are inherited by descendant folders and documents; the
  * item's own ACEs override. See {@see DocumentAclService}.

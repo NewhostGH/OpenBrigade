@@ -11,7 +11,7 @@
 // ── 1. No inline <style> blocks in Blade views ───────────────────────────────
 //
 // All CSS must live in resources/css/<module>.css and be bundled via Vite.
-// Rule: Convention §4 — "No <style> blocks in Blade views."
+// Rule: Convention §4: "No <style> blocks in Blade views."
 test('no inline style blocks in blade views', function () {
     $views = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator(resource_path('views'))
@@ -27,7 +27,7 @@ test('no inline style blocks in blade views', function () {
         foreach ($lines as $n => $line) {
             // Allow @vite directives and HTML comments, flag actual <style> tags
             if (preg_match('/<style[\s>]/i', $line) && ! str_contains($line, '{{--')) {
-                $violations[] = "$rel:".($n + 1).' — '.trim($line);
+                $violations[] = "$rel:".($n + 1).' - '.trim($line);
             }
         }
     }
@@ -46,7 +46,7 @@ test('no inline style blocks in blade views', function () {
 // archive/legacy_app path must have "TODO: Migrate code" on the same line or
 // the immediately preceding non-blank line.
 //
-// Rule: Convention §7 — "Legacy references must be flagged."
+// Rule: Convention §7: "Legacy references must be flagged."
 test('all legacy references are flagged with TODO: Migrate code', function () {
     $dirs = [
         resource_path('views'),
@@ -100,7 +100,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
                 if (str_contains($line, 'TODO: Migrate code')) {
                     continue;
                 }
-                // Check the preceding 5 non-blank lines — covers multi-line HTML
+                // Check the preceding 5 non-blank lines: covers multi-line HTML
                 // attributes where the <a> tag and the href: are on separate lines,
                 // and PHP arrays where the comment precedes the opening bracket.
                 $found = false;
@@ -119,7 +119,7 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
                 if ($found) {
                     continue;
                 }
-                $violations[] = "$rel:".($i + 1).' — '.trim($line);
+                $violations[] = "$rel:".($i + 1).' - '.trim($line);
             }
         }
     }
@@ -136,10 +136,10 @@ test('all legacy references are flagged with TODO: Migrate code', function () {
 // ── 3. No bare legacy PHP links missing the /legacy/ prefix ──────────────────
 //
 
-// A link like url('/ins_personnel.php') routes to nowhere — the file is only
+// A link like url('/ins_personnel.php') routes to nowhere: the file is only
 // reachable under /legacy/. This was the navbar quick-add bug.
 //
-// Rule: Convention §7 — "A legacy URL without /legacy/ prefix is a routing bug."
+// Rule: Convention §7: "A legacy URL without /legacy/ prefix is a routing bug."
 test('no legacy php files referenced without /legacy/ prefix', function () {
     $views = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator(resource_path('views'))
@@ -157,7 +157,7 @@ test('no legacy php files referenced without /legacy/ prefix', function () {
         $lines = file($file->getRealPath());
         foreach ($lines as $n => $line) {
             if (preg_match($barePattern, $line)) {
-                $violations[] = "$rel:".($n + 1).' — '.trim($line);
+                $violations[] = "$rel:".($n + 1).' - '.trim($line);
             }
         }
     }
@@ -167,5 +167,48 @@ test('no legacy php files referenced without /legacy/ prefix', function () {
             "Legacy PHP files referenced without /legacy/ prefix (Convention §7).\n"
             ."Change url('/ins_foo.php') → url('/legacy/ins_foo.php').\n\n"
             .implode("\n", $violations)
+        );
+});
+
+// ── 4. No en dashes ──────────────────────────────────────────────────────────
+//
+// Brand identity §4: the en dash (U+2013) is never used, write a hyphen instead.
+// The em dash is allowed but used sparingly, which is left to review.
+test('no en dashes in owned files', function () {
+    $roots = ['app', 'config', 'database', 'lang', 'resources', 'routes', 'tests', 'docs', '.github', 'plugins', 'docker', '.husky'];
+    $rootFiles = ['README.md', 'CHANGELOG.md', 'AGENTS.md', 'CLAUDE.md'];
+    $extensions = ['php', 'js', 'mjs', 'css', 'md', 'yml', 'yaml', 'json', 'txt', 'sh', 'ps1', 'conf', 'ini'];
+
+    $files = array_map(fn ($f) => base_path($f), $rootFiles);
+    foreach ($roots as $root) {
+        if (! is_dir(base_path($root))) {
+            continue;
+        }
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(base_path($root), FilesystemIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $file) {
+            if (in_array($file->getExtension(), $extensions, true)) {
+                $files[] = $file->getPathname();
+            }
+        }
+    }
+
+    $violations = [];
+    foreach ($files as $path) {
+        if (! is_file($path) || str_contains($path, DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR)) {
+            continue;
+        }
+        foreach (file($path) as $n => $line) {
+            if (preg_match('/\x{2013}/u', $line)) {
+                $violations[] = str_replace(base_path().DIRECTORY_SEPARATOR, '', $path).':'.($n + 1).': '.trim($line);
+            }
+        }
+    }
+
+    expect($violations)
+        ->toBeEmpty(
+            "En dashes found (docs/dev/brand-identity.md §4). Write a hyphen instead.\n\n"
+            .implode("\n", array_slice($violations, 0, 50))
         );
 });

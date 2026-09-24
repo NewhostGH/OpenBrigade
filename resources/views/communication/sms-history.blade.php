@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('communication.sms_title') . ' — ' . config('app.name'))
+@section('title', __('communication.sms_title') . ' | ' . config('app.name'))
 
 @section('content')
 

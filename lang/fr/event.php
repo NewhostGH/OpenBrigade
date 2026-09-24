@@ -20,12 +20,12 @@ return [
     'filter_my_sections' => 'Toutes mes sections',
     'row_action_view' => 'Voir le détail',
 
-    // ── show — statuses ────────────────────────────────────────────────────
+    // ── show: statuses ────────────────────────────────────────────────────
     'status_canceled' => 'Annulé',
     'status_closed' => 'Clôturé',
     'status_open' => 'Ouvert',
 
-    // ── show — header actions ──────────────────────────────────────────────
+    // ── show: header actions ──────────────────────────────────────────────
     'btn_trombinoscope' => 'Trombinoscope',
     'btn_trombinoscope_title' => 'Trombinoscope des participants',
     'btn_export_xls' => 'XLS',
@@ -38,7 +38,7 @@ return [
     'btn_report_title' => 'Rapport imprimable de l\'activité',
     'btn_back' => 'Retour',
 
-    // ── show — report (evenement_rapport.php) ──────────────────────────────
+    // ── show: report (evenement_rapport.php) ──────────────────────────────
     'report_heading' => 'Rapport',
     'report_toggle_label' => 'Sections à afficher :',
     'report_btn_print' => 'Imprimer / PDF',
@@ -60,7 +60,7 @@ return [
     'report_log_message' => 'Message',
     'btn_detach_title' => 'Détacher',
 
-    // ── show — identity fields ─────────────────────────────────────────────
+    // ── show: identity fields ─────────────────────────────────────────────
     'field_type' => 'Type',
     'field_lieu' => 'Lieu',
     'field_section' => 'Section',
@@ -85,11 +85,11 @@ return [
     'conf_code' => 'Code:',
     'consignes_label' => 'Consignes :',
 
-    // ── show — créneaux ────────────────────────────────────────────────────
+    // ── show: créneaux ────────────────────────────────────────────────────
     'creneaux_heading' => 'Créneaux',
     'no_creneau' => 'Aucun créneau',
 
-    // ── show — participants section ────────────────────────────────────────
+    // ── show: participants section ────────────────────────────────────────
     'section_participants' => 'Participants',
     'btn_enroll' => 'Inscrire',
     'participants_empty' => 'Aucun participant inscrit.',
@@ -97,9 +97,9 @@ return [
     'th_grade' => 'Grade',
     'th_function' => 'Fonction',
     'th_team' => 'Équipe',
-    'option_no_team' => '— aucune —',
+    'option_no_team' => '- aucune -',
 
-    // ── show — équipes section ─────────────────────────────────────────────
+    // ── show: équipes section ─────────────────────────────────────────────
     'section_equipes' => 'Équipes',
     'equipes_empty' => 'Aucune équipe définie pour cette activité.',
     'team_personnel_label' => 'Personnel',
@@ -108,7 +108,7 @@ return [
     'team_remove_title' => 'Retirer de l\'équipe',
     'unassigned_count' => ':count participant(s) sans équipe',
 
-    // ── show — véhicules section ───────────────────────────────────────────
+    // ── show: véhicules section ───────────────────────────────────────────
     'section_vehicules' => 'Véhicules',
     'btn_assign_vehicle' => 'Assigner',
     'btn_export_vehicles_title' => 'Exporter la liste des véhicules',
@@ -117,7 +117,7 @@ return [
     'th_indicatif' => 'Indicatif',
     'th_km' => 'Km',
 
-    // ── show — matériel section ────────────────────────────────────────────
+    // ── show: matériel section ────────────────────────────────────────────
     'section_materiels' => 'Matériel',
     'btn_assign_materiel' => 'Assigner',
     'materiels_empty' => 'Aucun matériel assigné à cette activité.',
@@ -125,7 +125,7 @@ return [
     'th_reference' => 'Référence',
     'th_qty' => 'Qté',
 
-    // ── show — renforts section ────────────────────────────────────────────
+    // ── show: renforts section ────────────────────────────────────────────
     'section_renforts' => 'Renforts',
     'btn_attach' => 'Rattacher',
     'renforts_empty' => 'Aucun renfort rattaché à cette activité.',
@@ -134,7 +134,7 @@ return [
     'th_inscrits' => 'Inscrits',
     'renfort_canceled' => 'Annulé',
 
-    // ── show — demande de renfort section ──────────────────────────────────
+    // ── show: demande de renfort section ──────────────────────────────────
     'section_renfort_request' => 'Demande de renfort',
     'btn_manage_renfort' => 'Gérer',
     'renfort_request_empty' => 'Aucune demande de renfort enregistrée.',
@@ -144,7 +144,7 @@ return [
     'renfort_point_label' => 'Point de regroupement :',
     'renfort_specific_label' => 'Demande spécifique :',
 
-    // ── show — postes requis section ───────────────────────────────────────
+    // ── show: postes requis section ───────────────────────────────────────
     'section_postes' => 'Postes requis',
     'postes_empty' => 'Aucun poste requis défini.',
     'th_poste' => 'Poste / Qualification',
@@ -157,7 +157,7 @@ return [
     'title_insufficient' => 'Insuffisant',
     'hint_zero_remove' => '0 = supprimer',
 
-    // ── show — options d'inscription section ───────────────────────────────
+    // ── show: options d'inscription section ───────────────────────────────
     'section_options' => 'Options d\'inscription',
     'btn_add_group' => 'Groupe',
     'btn_add_option' => 'Option',
@@ -173,12 +173,12 @@ return [
     'opt_type_date' => 'Date',
     'opt_type_hour' => 'Heure',
 
-    // ── show — groupes d'options section ──────────────────────────────────
+    // ── show: groupes d'options section ──────────────────────────────────
     'section_option_groups' => 'Groupes d\'options',
     'th_group_name' => 'Nom du groupe',
     'th_order' => 'Ordre',
 
-    // ── show — main courante section ───────────────────────────────────────
+    // ── show: main courante section ───────────────────────────────────────
     'section_log' => 'Main courante',
     'log_empty' => 'Aucune entrée.',
     'th_debut' => 'Début',
@@ -187,7 +187,7 @@ return [
     'th_auteur' => 'Auteur',
     'log_important_title' => 'Important',
 
-    // ── show — modals ──────────────────────────────────────────────────────
+    // ── show: modals ──────────────────────────────────────────────────────
     // log modals
     'modal_add_log_title' => 'Ajouter une entrée',
     'modal_edit_log_title' => 'Modifier une entrée',
@@ -205,7 +205,7 @@ return [
     'materiel_label' => 'Matériel',
     'qty_label' => 'Quantité',
     'team_label' => 'Équipe',
-    'option_all_teams' => '— toutes —',
+    'option_all_teams' => '- toutes -',
     'btn_assign' => 'Assigner',
 
     // véhicule modal
@@ -235,7 +235,7 @@ return [
     'renfort_number_label' => 'Activité renfort',
     'renfort_number_help' => 'Activité à rattacher en tant que renfort (en cours ou à venir, non encore rattachée).',
     'renfort_number_placeholder' => 'ex. 12345',
-    'renfort_select_placeholder' => '— Choisir une activité —',
+    'renfort_select_placeholder' => '- Choisir une activité -',
     'renfort_select_group_renforts' => 'Renforts',
     'renfort_select_group_others' => 'Autres activités',
     'renfort_select_empty' => 'Aucune activité ne peut être rattachée pour le moment.',
@@ -275,7 +275,7 @@ return [
     'opt_type_date_long' => 'Date (JJ-MM-AAAA)',
     'opt_type_hour_long' => 'Heure (HH:mm)',
     'option_group_label' => 'Groupe',
-    'option_no_group' => '— aucun groupe —',
+    'option_no_group' => '- aucun groupe -',
     'option_order_label' => 'Ordre dans le groupe',
     'option_order_label_short' => 'Ordre',
     'option_desc_label' => 'Description / aide',
@@ -303,7 +303,7 @@ return [
     'form_section_identity' => 'Identification',
     'form_type_label' => 'Type',
     'form_renfort_parent_label' => 'Activité principale',
-    'form_renfort_parent_none' => '— Non rattaché —',
+    'form_renfort_parent_none' => '- Non rattaché -',
     'form_renfort_parent_hint' => 'Rattachez ce renfort à l’activité qui l’a demandé.',
     'form_renfort_parent_empty' => 'Aucune activité en cours n’accepte ou ne demande de renfort.',
     'form_renfort_attached' => 'Ce renfort est rattaché à',
@@ -317,7 +317,7 @@ return [
     'form_heure_rdv_label' => 'Heure de rendez-vous',
     'form_section_org' => 'Organisation',
     'form_chef_label' => 'Responsable',
-    'form_chef_none' => '— Aucun —',
+    'form_chef_none' => '- Aucun -',
     'form_tel_label' => 'Tél. responsable',
     'form_effectif_label' => 'Effectif',
     'form_section_contact' => 'Contact sur place',
@@ -352,7 +352,7 @@ return [
     'form_comment_hint' => '(visible)',
     'form_btn_save' => 'Enregistrer',
     'form_btn_create' => 'Créer l\'activité',
-    'form_choose' => '— Choisir —',
+    'form_choose' => '- Choisir -',
 
     // danger zone
     'danger_zone_title' => 'Zone dangereuse',
@@ -382,7 +382,7 @@ return [
     'renfort_tx_note_label' => 'Message aux sections (facultatif)',
     'renfort_tx_btn' => 'Transmettre',
     'renfort_tx_no_section' => 'Choisissez au moins une section.',
-    'renfort_tx_sent' => 'Demande transmise à :sections section(s) — :recipients destinataire(s).',
+    'renfort_tx_sent' => 'Demande transmise à :sections section(s) - :recipients destinataire(s).',
     'renfort_tx_some_empty' => ':count section(s) sans destinataire joignable.',
     'renfort_tx_history' => 'Historique des transmissions',
     'renfort_tx_history_empty' => 'La demande n’a pas encore été transmise.',
@@ -392,7 +392,7 @@ return [
     'renfort_tx_channel_in_app' => 'Notification dans l’application',
 
     // E-mail
-    'renfort_tx_mail_subject' => 'Demande de renfort — :event',
+    'renfort_tx_mail_subject' => 'Demande de renfort - :event',
     'renfort_tx_mail_intro' => ':sender (:section) sollicite un renfort de votre section.',
     'renfort_tx_mail_event' => 'Activité',
     'renfort_tx_mail_when' => 'Date',

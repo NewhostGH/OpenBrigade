@@ -1,4 +1,4 @@
-// Dashboard widget layout — edit mode with drag-and-drop, hide/show, persistence
+// Dashboard widget layout: edit mode with drag-and-drop, hide/show, persistence
 
 (function () {
     const grid       = document.getElementById('ob-dash-columns');

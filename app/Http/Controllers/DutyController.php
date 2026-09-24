@@ -35,7 +35,7 @@ class DutyController extends Controller
     }
 
     /**
-     * FullCalendar events feed — section-scoped astreinte slots overlapping the
+     * FullCalendar events feed: section-scoped astreinte slots overlapping the
      * requested range (FullCalendar appends ?start=&end=), coloured per role.
      */
     public function calendarEvents(Request $request): JsonResponse
@@ -154,7 +154,7 @@ class DutyController extends Controller
     }
 
     /**
-     * "Garde du jour" — a focused view of the guard/on-call slots that cover
+     * "Garde du jour": a focused view of the guard/on-call slots that cover
      * today for the user's section, grouped by role. Distinct from the weekly
      * "Tableau de garde" (index) which shows the whole week as a grid; both read
      * the same `astreinte` table.
@@ -189,7 +189,7 @@ class DutyController extends Controller
     }
 
     /**
-     * Astreintes management list — admin view for managing on-call slots.
+     * Astreintes management list: admin view for managing on-call slots.
      */
     public function onCall(Request $request): View
     {
@@ -311,7 +311,7 @@ class DutyController extends Controller
             ['key' => 'debut', 'label' => 'Début', 'type' => 'html', 'value' => fn ($s) => Carbon::parse($s->AS_DEBUT)->locale('fr')->isoFormat('ddd D MMM, HH:mm'), 'alwaysVisible' => true, 'mobile' => true],
             ['key' => 'fin', 'label' => 'Fin', 'type' => 'text', 'value' => fn ($s) => Carbon::parse($s->AS_FIN)->locale('fr')->isoFormat('ddd D MMM, HH:mm'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($s) => Carbon::parse($s->AS_FIN)->format('d/m/Y H:i')],
             ['key' => 'personnel', 'label' => 'Personnel', 'type' => 'text', 'value' => fn ($s) => $s->P_PRENOM.' '.strtoupper($s->P_NOM), 'alwaysVisible' => true, 'mobile' => true],
-            ['key' => 'role', 'label' => 'Rôle', 'type' => 'text', 'value' => fn ($s) => $s->GP_DESCRIPTION ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($s) => $s->GP_DESCRIPTION ?? ''],
+            ['key' => 'role', 'label' => 'Rôle', 'type' => 'text', 'value' => fn ($s) => $s->GP_DESCRIPTION ?? __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($s) => $s->GP_DESCRIPTION ?? ''],
         ];
     }
 }

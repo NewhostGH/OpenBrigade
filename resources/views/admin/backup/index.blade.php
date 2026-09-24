@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Sauvegarde — ' . config('app.name'))
+@section('title', 'Sauvegarde | ' . config('app.name'))
 
 @section('content')
 
@@ -252,7 +252,7 @@
 <script>
 document.getElementById('restoreModal').addEventListener('show.bs.modal', function (e) {
     var btn = e.relatedTarget;
-    document.getElementById('restoreFilename').textContent = btn.dataset.filename + ' — ' + btn.dataset.date;
+    document.getElementById('restoreFilename').textContent = btn.dataset.filename + ' - ' + btn.dataset.date;
     document.getElementById('restoreFilenameInput').value = btn.dataset.filename;
     this.querySelector('[name="confirm"]').value = '';
 });

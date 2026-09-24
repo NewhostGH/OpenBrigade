@@ -18,7 +18,7 @@
     width: var(--sidebar-collapsed-width);
 }
 
-/* When collapsed, hide sub-menus and group labels — Bootstrap's own
+/* When collapsed, hide sub-menus and group labels: Bootstrap's own
    collapse state is preserved so expanding works after de-collapse. */
 .ob-col-lateral.collapsed .ob-div-lateral {
     display: none !important;
@@ -30,7 +30,7 @@
 
 /* Collapsed flyout: when the sidebar is collapsed, hovering a group icon
    floats its sub-menu out to the right. The sidebar clips its own overflow,
-   so the panel must escape via position:fixed — sidebar.js sets top/left and
+   so the panel must escape via position:fixed; sidebar.js sets top/left and
    toggles display; this class supplies the panel styling. */
 .ob-div-lateral.ob-flyout {
     position:      fixed;
@@ -269,7 +269,7 @@
     color: var(--sidebar-border);
 }
 
-/* Hide browser-native "×" clear button — we provide our own */
+/* Hide browser-native "×" clear button: we provide our own */
 .ob-sidebar-search-input::-webkit-search-cancel-button { display: none; }
 
 .ob-sidebar-search-clear {

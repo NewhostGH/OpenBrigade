@@ -117,7 +117,7 @@ class User extends Authenticatable
         return app(PermissionResolver::class)->allows($this, $fid, $sectionId);
     }
 
-    /** Super-admin is the account flag pompier.P_SUPERADMIN — uncappable full access. */
+    /** Super-admin is the account flag pompier.P_SUPERADMIN: uncappable full access. */
     public function isSuperAdmin(): bool
     {
         return app(PermissionResolver::class)->isSuperAdmin($this);

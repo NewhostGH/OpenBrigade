@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
- * Repos (régime de travail mixte) — a monthly personnel × days grid where each
+ * Repos (régime de travail mixte): a monthly personnel × days grid where each
  * cell offers a "Jour" and a "Nuit" half-day rest toggle. Rest periods are
  * stored as `indisponibilite` rows with TI_CODE = 'RT' (auto-validated) and, via
  * {@see WorkAvailabilityService}, clear the person's overlapping availability.

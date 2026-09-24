@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Anonymous weekly telemetry ping — the "Aider à améliorer" opt-in
+ * Anonymous weekly telemetry ping: the "Aider à améliorer" opt-in
  * (configuration row 80, `ameliorations`).
  *
  * The payload is strictly anonymous and fully listed below: a stable
- * instance hash (derived from the app key — no way back to a URL or an
+ * instance hash (derived from the app key: no way back to a URL or an
  * identity), version numbers, the organisation type and a member count
- * rounded to the nearest ten. No names, no emails, no hostnames, no IPs —
+ * rounded to the nearest ten. No names, no emails, no hostnames, no IPs,
  * unlike the legacy push_monitoring_info() this replaces.
  */
 class TelemetryPing extends Command
@@ -28,14 +28,14 @@ class TelemetryPing extends Command
     public function handle(GeneralSettingService $settings, OrganisationSetupService $setup): int
     {
         if (! $settings->telemetryEnabled()) {
-            $this->info('Telemetry is disabled (setting 80) — nothing sent.');
+            $this->info('Telemetry is disabled (setting 80): nothing sent.');
 
             return self::SUCCESS;
         }
 
         $url = (string) config('brigade.telemetry_url');
         if ($url === '') {
-            $this->info('No telemetry endpoint configured — nothing sent.');
+            $this->info('No telemetry endpoint configured: nothing sent.');
 
             return self::SUCCESS;
         }

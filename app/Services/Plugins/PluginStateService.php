@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Throwable;
 
 /**
- * Installed-plugin state (ob_plugin) — the boot-time seam consulted by
+ * Installed-plugin state (ob_plugin): the boot-time seam consulted by
  * PluginLoader on every request, so it is memoised and Throwable-guarded
  * (no table → no plugins, never a broken boot).
  */

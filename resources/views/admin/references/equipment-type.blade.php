@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.references.equipment_type.title') . ' — ' . config('app.name'))
+@section('title', __('admin.references.equipment_type.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -43,7 +43,7 @@
                         <select name="TM_USAGE" class="form-select form-select-sm" style="width:160px;">
                             @forelse($categories as $cat)
                                 <option value="{{ $cat->TM_USAGE }}" {{ old('TM_USAGE', 'DIVERS') === $cat->TM_USAGE ? 'selected' : '' }}>
-                                    {{ $cat->TM_USAGE }} — {{ $cat->CM_DESCRIPTION }}
+                                    {{ $cat->TM_USAGE }} - {{ $cat->CM_DESCRIPTION }}
                                 </option>
                             @empty
                                 <option value="DIVERS">DIVERS</option>

@@ -335,9 +335,9 @@ class DashboardService
                 'P_BIRTHDATE' => 'Date de naissance',
                 'P_BIRTHPLACE' => 'Lieu de naissance',
                 'P_BIRTH_DEP' => 'Département de naissance',
-                'P_RELATION_NOM' => 'Nom – contact urgence',
-                'P_RELATION_PRENOM' => 'Prénom – contact urgence',
-                'P_RELATION_PHONE' => 'Téléphone – contact urgence',
+                'P_RELATION_NOM' => 'Nom - contact urgence',
+                'P_RELATION_PRENOM' => 'Prénom - contact urgence',
+                'P_RELATION_PHONE' => 'Téléphone - contact urgence',
             ];
             foreach ($checks as $field => $label) {
                 $val = $user->$field ?? '';
@@ -531,7 +531,7 @@ class DashboardService
         $base = DB::table('vehicule as v')->join('vehicule_position as vp', 'vp.VP_ID', '=', 'v.VP_ID')
             ->whereIn('v.S_ID', $family)->where('vp.VP_OPERATIONNEL', '>=', 0);
 
-        // TODO: Migrate code — vehicle.index has no filter/sort params yet; link to index for now
+        // TODO: Migrate code: vehicle.index has no filter/sort params yet; link to index for now
         $vehiculeUrl = route('vehicle.index');
 
         // Unavailable
@@ -824,14 +824,14 @@ class DashboardService
             if (! empty($section->P_WHATSAPP)) {
                 $label = $section->P_CODE;
                 if ($section->P_DESCRIPTION && $section->P_DESCRIPTION !== $section->P_CODE) {
-                    $label .= ' – '.$section->P_DESCRIPTION;
+                    $label .= ' - '.$section->P_DESCRIPTION;
                 }
                 $links[] = ['label' => $label, 'whatsapp' => $section->P_WHATSAPP, 'sectionId' => (int) $section->S_PARENT];
             }
             if (! empty($section->S_WHATSAPP)) {
                 $label = $section->S_CODE;
                 if ($section->S_DESCRIPTION && $section->S_DESCRIPTION !== $section->S_CODE) {
-                    $label .= ' – '.$section->S_DESCRIPTION;
+                    $label .= ' - '.$section->S_DESCRIPTION;
                 }
                 $links[] = ['label' => $label, 'whatsapp' => $section->S_WHATSAPP, 'sectionId' => $sectionId];
             }
@@ -991,7 +991,7 @@ class DashboardService
     }
 
     // ── Open replacement requests (no volunteer yet) ────────────────────────
-    // The remplacement table has no personal P_ID column — it identifies
+    // The remplacement table has no personal P_ID column: it identifies
     // requests by E_CODE + SUBSTITUTE (0 = nobody has volunteered yet).
 
     public function getReplacementRequests(User $user): array

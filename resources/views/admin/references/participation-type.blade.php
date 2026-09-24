@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.references.participation_type.title') . ' — ' . config('app.name'))
+@section('title', __('admin.references.participation_type.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -75,7 +75,7 @@
                                     @php($prevTeam = $p->EQ_NOM)
                                 @endif
                                 <option value="{{ $p->PS_ID }}" @selected(old('PS_ID') == $p->PS_ID)>
-                                    {{ $p->TYPE }} — {{ $p->DESCRIPTION }}
+                                    {{ $p->TYPE }} - {{ $p->DESCRIPTION }}
                                 </option>
                             @endforeach
                         </select>
@@ -91,7 +91,7 @@
                                     @php($prevTeam = $p->EQ_NOM)
                                 @endif
                                 <option value="{{ $p->PS_ID }}" @selected(old('PS_ID2') == $p->PS_ID)>
-                                    {{ $p->TYPE }} — {{ $p->DESCRIPTION }}
+                                    {{ $p->TYPE }} - {{ $p->DESCRIPTION }}
                                 </option>
                             @endforeach
                         </select>
@@ -205,7 +205,7 @@
                                                             @php($prevTeam = $p->EQ_NOM)
                                                         @endif
                                                         <option value="{{ $p->PS_ID }}" @selected($item->PS_ID == $p->PS_ID)>
-                                                            {{ $p->TYPE }} — {{ $p->DESCRIPTION }}
+                                                            {{ $p->TYPE }} - {{ $p->DESCRIPTION }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -221,7 +221,7 @@
                                                             @php($prevTeam = $p->EQ_NOM)
                                                         @endif
                                                         <option value="{{ $p->PS_ID }}" @selected($item->PS_ID2 == $p->PS_ID)>
-                                                            {{ $p->TYPE }} — {{ $p->DESCRIPTION }}
+                                                            {{ $p->TYPE }} - {{ $p->DESCRIPTION }}
                                                         </option>
                                                     @endforeach
                                                 </select>

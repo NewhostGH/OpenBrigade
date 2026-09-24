@@ -28,7 +28,7 @@ return [
     'toggle_all_cols' => 'Tout basculer',
     'card_view_title' => 'Vue carte / tableau',
     'card_view_label' => 'Vue carte',
-    'export_xls_title' => 'Exporter Excel (.xlsx) — colonnes visibles',
-    'export_csv_title' => 'Exporter CSV — colonnes visibles',
+    'export_xls_title' => 'Exporter Excel (.xlsx) - colonnes visibles',
+    'export_csv_title' => 'Exporter CSV - colonnes visibles',
 
 ];

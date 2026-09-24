@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * A feature (F_ID) granted to a group/role. Replaces the legacy `habilitation`
  * table. `effect` makes the grant explicit: allow grants the feature, deny
- * refuses it — a deny on any held group/role overrides allows from the others
+ * refuses it: a deny on any held group/role overrides allows from the others
  * (see {@see App\Services\PermissionResolver}). Table: ob_group_permission.
  */
 class ObGroupPermission extends Model

@@ -2,7 +2,7 @@
 
 @php $isEdit = $section !== null; @endphp
 
-@section('title', ($isEdit ? __('organization.bc_edit') : __('organization.form_title_new')) . ' — ' . config('app.name'))
+@section('title', ($isEdit ? __('organization.bc_edit') : __('organization.form_title_new')) . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -64,7 +64,7 @@ if ($isEdit) {
                             @endif
                             @foreach ($parents as $p)
                                 <option value="{{ $p->S_ID }}" @selected((string) $val('S_PARENT') === (string) $p->S_ID)>
-                                    {{ $p->S_CODE }} — {{ $p->S_DESCRIPTION }}
+                                    {{ $p->S_CODE }} - {{ $p->S_DESCRIPTION }}
                                 </option>
                             @endforeach
                         </select>

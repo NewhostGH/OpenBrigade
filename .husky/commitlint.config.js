@@ -24,7 +24,7 @@ export default {
         ],
 
         // Subject line rules
-        'subject-case': [0],           // no case enforcement — allows French text
+        'subject-case': [0],           // no case enforcement: allows French text
         'subject-max-length': [2, 'always', 100],
         'subject-empty': [2, 'never'],
 

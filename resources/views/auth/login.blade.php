@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
-    <title>{{ __('auth_views.login_page_title') }} — {{ config('app.name') }}</title>
+    <title>{{ __('auth_views.login_page_title') }} | {{ config('app.name') }}</title>
     @vite('resources/css/app.css')
 </head>
 
@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="ob-login-footer">
-                    {{ date('Y') }} — {{ config('app.name') }}
+                    {{ date('Y') }} - {{ config('app.name') }}
                 </div>
 
             </div>

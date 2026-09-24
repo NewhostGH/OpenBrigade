@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('photo.title_albums') . ' — ' . config('app.name'))
+@section('title', __('photo.title_albums') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -51,7 +51,7 @@
         @foreach ($albums as $album)
             <div class="col">
                 <div class="ob-photo-album-card card h-100 shadow-sm">
-                    {{-- Cover — full clickable block link --}}
+                    {{-- Cover: full clickable block link --}}
                     <a href="{{ route('photo.album', $album) }}" class="ob-photo-album-cover" tabindex="-1">
                         @if ($album->coverPhoto)
                             <img src="{{ $album->coverPhoto->url() }}" alt="{{ e($album->name) }}"
@@ -63,7 +63,7 @@
                         @endif
                     </a>
                     <div class="card-body p-2">
-                        {{-- Plain link — NOT stretched-link so footer buttons remain clickable --}}
+                        {{-- Plain link: NOT stretched-link so footer buttons remain clickable --}}
                         <a href="{{ route('photo.album', $album) }}" class="ob-photo-album-name text-decoration-none">
                             {{ $album->name }}
                         </a>

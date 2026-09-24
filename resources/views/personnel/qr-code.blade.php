@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('personnel.qr_title') . ' — ' . strtoupper($personnel->P_NOM) . ' ' . $personnel->P_PRENOM . ' — ' . config('app.name'))
+@section('title', __('personnel.qr_title') . ' | ' . strtoupper($personnel->P_NOM) . ' ' . $personnel->P_PRENOM . ' | ' . config('app.name'))
 
 @section('content')
 

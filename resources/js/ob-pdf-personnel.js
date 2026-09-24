@@ -18,7 +18,7 @@ const L = {
     // Print line / header
     imprime: 'Imprimé le ',
     page: 'Page ',
-    passeportHeader: 'Passeport du bénévole  —  ',
+    passeportHeader: 'Passeport du bénévole - ',
     passeportTitle: 'Passeport du bénévole',
 
     // Identity block labels

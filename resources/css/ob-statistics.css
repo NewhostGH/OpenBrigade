@@ -1,5 +1,5 @@
 /* =============================================================================
-   ob-statistics.css — Statistics KPI dashboard & bilan annuel
+   ob-statistics.css: Statistics KPI dashboard & bilan annuel
    ============================================================================= */
 
 /* ── KPI cards ──────────────────────────────────────────────────────────── */
@@ -191,7 +191,7 @@
         break-inside: avoid;
     }
 }
-/* ── Financial report — "Cotisations par section" ─────────────────────────── */
+/* ── Financial report: "Cotisations par section" ─────────────────────────── */
 .ob-finrep-field {
     display: flex;
     flex-direction: column;

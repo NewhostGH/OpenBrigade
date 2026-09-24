@@ -1,25 +1,19 @@
-# Development Environment
+# Development environment
 
-Everything needed to get OpenBrigade running locally and to work on it day to day:
-environment setup, database, authentication, seeding, frontend assets, and quality
-tooling.
+**Single source of truth** for running and developing OpenBrigade: setup,
+database, auth, seeding, frontend assets, quality tooling. See
+[conventions.md](conventions.md) (how to write code), [architecture.md](architecture.md)
+(where things live), [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) (branches, commits, PRs).
 
-This is the **single source of truth** for "how do I run and develop this project".
-For *how to write the code* see [CONVENTIONS.md](CONVENTIONS.md); for *where things
-live* see [ARCHITECTURE.md](ARCHITECTURE.md); for *contribution process* (branches,
-commits, PRs) see [CONTRIBUTING.md](../../.github/CONTRIBUTING.md).
-
-OpenBrigade is a **Laravel 12 / PHP 8.4** application backed by **MySQL/MariaDB**.
-Frontend assets are bundled with **Vite** (npm). Quality is enforced by **Pint**
-(format), **PHPStan/Larastan** (static analysis) and **Pest** (tests).
+**Laravel 12 / PHP 8.4** backed by **MySQL/MariaDB**. Frontend bundled with
+**Vite** (npm). Quality enforced by **Pint** (format), **PHPStan/Larastan**
+(static analysis), **Pest** (tests).
 
 ---
 
 ## 1. Setup
 
-Pick one of the three options below. Docker is recommended.
-
-### Option A — Docker Compose (recommended)
+### Option A: Docker Compose (recommended)
 
 Requires [Docker](https://docs.docker.com/get-docker/) and Docker Compose.
 
@@ -28,7 +22,7 @@ cp .env.example .env        # adjust credentials if needed
 docker compose --profile dev up -d
 ```
 
-The stack is split into nested Compose **profiles** — pass `--profile` (or set
+The stack is split into nested Compose **profiles**: pass `--profile` (or set
 `COMPOSE_PROFILES` in `.env`, which `.env.example.dev` defaults to `dev`). With
 no profile, `docker compose up` starts nothing.
 
@@ -42,9 +36,9 @@ no profile, `docker compose up` starts nothing.
 | Service                         | URL / port              | Notes                                         |
 | ------------------------------- | ----------------------- | --------------------------------------------- |
 | Application (`openbrigade_app`) | <http://localhost:8080> | `APP_PORT`, Apache → port 80                  |
-| Database (`openbrigade_db`)     | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL` — `minimal`+ |
-| GlitchTip (`..._glitchtip_web`) | <http://localhost:8000> | Error tracking, `GLITCHTIP_PORT` — `full`+    |
-| DBGate (`openbrigade_dbgate`)   | <http://localhost:8888> | Web DB browser, `DBGATE_PORT` — `dev` only    |
+| Database (`openbrigade_db`)     | `localhost:3306`        | MariaDB 11.4, `DB_PORT_EXTERNAL`: `minimal`+ |
+| GlitchTip (`..._glitchtip_web`) | <http://localhost:8000> | Error tracking, `GLITCHTIP_PORT`: `full`+    |
+| DBGate (`openbrigade_dbgate`)   | <http://localhost:8888> | Web DB browser, `DBGATE_PORT`: `dev` only    |
 
 After the containers are up, run migrations and seed development data:
 
@@ -56,7 +50,7 @@ docker compose exec app sh -lc "npm ci && npm run build"
 Stop everything with `docker compose down` (add `-v` to also drop the database
 volume).
 
-### Option B — VS Code Dev Container
+### Option B: VS Code Dev Container
 
 Requires [VS Code](https://code.visualstudio.com/) and the
 [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
@@ -66,7 +60,7 @@ Requires [VS Code](https://code.visualstudio.com/) and the
 3. The container builds from `.devcontainer/Dockerfile`; the app is forwarded on
    port `8080`.
 
-### Option C — Manual
+### Option C: manual
 
 | Dependency      | Version                                                                                          |
 | --------------- | ------------------------------------------------------------------------------------------------ |
@@ -93,8 +87,8 @@ php artisan serve            # http://localhost:8000
 
 ## 2. Database & migrations
 
-The schema is owned by Laravel migrations under `database/migrations/`. The first
-migration imports the legacy eBrigade baseline; every later migration is a
+Schema owned by Laravel migrations under `database/migrations/`. The first
+migration imports the legacy eBrigade baseline; every later one is a
 forward-only change on top of it.
 
 ```bash
@@ -112,7 +106,7 @@ Full reference, the legacy baseline, the `ob_` table-prefix rule, and the
 
 ## 3. Authentication
 
-Authentication reads the **legacy `pompier` table directly** — there is no separate
+Authentication reads the **legacy `pompier` table directly**: no separate
 `users` table. The Laravel `User` model maps to `pompier`, so existing legacy
 accounts log in unchanged.
 
@@ -120,7 +114,7 @@ accounts log in unchanged.
 | ------------------- | ---------------------------------------------------------------------------------------- |
 | Auth provider model | `config/auth.php` → `App\Models\User`                                                    |
 | Table mapping       | `app/Models/User.php` → `protected $table = 'pompier'`                                   |
-| Login logic         | `app/Services/Auth/AuthService.php` — by `P_EMAIL` or `P_CODE`, requires `P_FIN IS NULL` |
+| Login logic         | `app/Services/Auth/AuthService.php`: by `P_EMAIL` or `P_CODE`, requires `P_FIN IS NULL` |
 
 Password checking accepts **both** legacy MD5 hashes and modern `password_hash()`
 values. On a successful login against a legacy MD5 hash, the stored hash is
@@ -128,14 +122,14 @@ transparently upgraded to a modern one.
 
 ### Additional auth stack
 
-Three capabilities layer on top of the base login. Each has its own reference under
+Three capabilities layer on top of base login, each documented under
 [`docs/security/`](../security/):
 
 | Capability                     | Config               | Service / docs                                                                              |
 | ------------------------------ | -------------------- | ------------------------------------------------------------------------------------------- |
 | TOTP two-factor (via Fortify)  | `config/fortify.php` | [security/totp.md](../security/totp.md)                                                     |
-| LDAP authentication delegation | `config/ldap.php`    | `Auth/LdapAuthService` — [security/ldap.md](../security/ldap.md)                            |
-| Password policies              | —                    | `PasswordPolicyService` — [security/password-policies.md](../security/password-policies.md) |
+| LDAP authentication delegation | `config/ldap.php`    | `Auth/LdapAuthService` - [security/ldap.md](../security/ldap.md)                            |
+| Password policies              | -                    | `PasswordPolicyService` - [security/password-policies.md](../security/password-policies.md) |
 
 ### Reset a password
 
@@ -177,20 +171,20 @@ Under Docker, prefix every command with `docker compose exec app`.
 
 ## 5. Frontend assets (CSS / JS / Vite)
 
-All source lives under `resources/`. **Nothing is loaded from a CDN** — Bootstrap,
+All source lives under `resources/`. **Nothing is loaded from a CDN**: Bootstrap,
 FontAwesome, Leaflet, etc. are npm packages bundled by Vite into `public/build/`
-(git-ignored). Blade views load bundles via the `@vite()` helper.
+(git-ignored). Blade views load bundles via `@vite()`.
 
 ### CSS structure (`resources/css/`)
 
-`app.css` is an **import hub only** — never add rules there. Add your code to the
-file that matches the area, or create a new `resources/css/<module>.css` and add an
-`@import './<module>.css';` line at the bottom of `app.css`.
+`app.css` is an **import hub only**: never add rules there. Add code to the
+matching file, or create `resources/css/<module>.css` and `@import` it at the
+bottom of `app.css`.
 
 | File                                                                                           | What goes there                                                        |
 | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | `app.css`                                                                                      | Import hub only                                                        |
-| `variables.css`                                                                                | Design tokens (`--sidebar-*`, `--font-size-*`, colours)                |
+| `variables.css`                                                                                | Design tokens (`--sidebar-*`, `--font-size-*`, colors)                |
 | `base.css`                                                                                     | `body`, resets, global utilities                                       |
 | `ob-layout.css`                                                                                | Content offset, responsive `@media`                                    |
 | `ob-navbar.css` / `ob-sidebar.css`                                                             | Shell chrome                                                           |
@@ -204,7 +198,7 @@ scripts are their own files (`ob-<module>-<page>.js`) loaded with
 `@push('scripts') @vite('resources/js/ob-foo.js') @endpush`.
 
 Per-page JS that needs Blade data must read it from a plain (non-module) `<script>`
-block: `window.MY_DATA = @json($data);` — the deferred ES module then reads
+block: `window.MY_DATA = @json($data);`: the deferred ES module then reads
 `window.MY_DATA`.
 
 ### Build & dev server
@@ -228,17 +222,16 @@ docker compose exec app php artisan view:clear
 
 ### Navigation menu
 
-Top-level navigation is defined in **`config/navigation.php`** (not the database) and
-rendered server-side by `App\Services\NavigationService`. Each group/item carries an
-optional `permission` key (integer feature ID). Adding an entry needs no rebuild. See
-the inline comments in that file for the field reference.
+Top-level navigation is defined in **`config/navigation.php`** (not the
+database), rendered server-side by `NavigationService`. Each group/item
+carries an optional `permission` key (integer feature ID); adding an entry
+needs no rebuild. Field reference: inline comments in that file.
 
 ---
 
 ## 6. Quality tooling
 
-Run these before pushing — CI runs the same three steps and fails the build on any
-error.
+Run before pushing; CI runs the same three steps and fails the build on any error.
 
 ```bash
 composer pint -- --test     # code style check (drop --test to auto-fix)
@@ -247,14 +240,14 @@ composer test               # Pest test suite
 ```
 
 `tests/Feature/ConventionsTest.php` mechanically enforces the most important
-[conventions](CONVENTIONS.md) (no inline `<style>`, legacy refs flagged, no missing
+[conventions](conventions.md) (no inline `<style>`, legacy refs flagged, no missing
 `/legacy/` prefix). Keep it green.
 
 ---
 
 ## See also
 
-- [CONVENTIONS.md](CONVENTIONS.md) — binding coding rules and UI component patterns
-- [ARCHITECTURE.md](ARCHITECTURE.md) — directory layout and layer responsibilities
-- [admin/database-migration.md](../admin/database-migration.md) — schema, baseline, parity
-- [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) — branches, commits, PR process
+- [conventions.md](conventions.md): binding coding rules and UI component patterns
+- [architecture.md](architecture.md): directory layout and layer responsibilities
+- [admin/database-migration.md](../admin/database-migration.md): schema, baseline, parity
+- [CONTRIBUTING.md](../../.github/CONTRIBUTING.md): branches, commits, PR process

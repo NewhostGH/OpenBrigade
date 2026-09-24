@@ -28,7 +28,7 @@ class ObFeature extends Model
         'legacy_config_id' => 'integer',
     ];
 
-    /** Not yet migrated to the native app — surfaced with a WIP marker. */
+    /** Not yet migrated to the native app: surfaced with a WIP marker. */
     public function isWip(): bool
     {
         return $this->status === 'wip';

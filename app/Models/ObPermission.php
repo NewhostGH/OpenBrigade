@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * `id` is preserved from the legacy `fonctionnalite.F_ID`, so the grant tables
  * (ob_group_permission, ob_section_permission, ob_user_permission) keep
- * referencing it unchanged. Each row is classified on two axes — domain
- * (config|data) and read/write — plus a critical marker. The classification is
+ * referencing it unchanged. Each row is classified on two axes: domain
+ * (config|data) and read/write: plus a critical marker. The classification is
  * back-filled by the rebuild migration via {@see App\Support\Habilitations\BaseHabilitations}
  * and drives the SEEDED base-group default grants; it is not a runtime
  * enforcement path (that stays {@see App\Services\PermissionResolver}).

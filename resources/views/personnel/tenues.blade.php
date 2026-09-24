@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', strtoupper($personnel->P_NOM) . ' ' . $personnel->P_PRENOM . ' — Dotation — ' . config('app.name'))
+@section('title', strtoupper($personnel->P_NOM) . ' ' . $personnel->P_PRENOM . ' | Dotation | ' . config('app.name'))
 
 @section('content')
 
@@ -71,7 +71,7 @@
                                 </td>
                                 <td>
                                     @if($item->TT_CODE === 'NONE' || $sizes->isEmpty())
-                                        <span class="text-muted">—</span>
+                                        <span class="text-muted">{{ __('common.empty_value') }}</span>
                                         @if($canFullUpdate || $canSizeOnly)
                                             <input type="hidden" name="items[{{ $item->MA_ID }}][tv_id]" value="0">
                                         @endif
@@ -86,7 +86,7 @@
                                             @endforeach
                                         </select>
                                     @else
-                                        {{ $item->current_size ?? '—' }}
+                                        {{ $item->current_size ?? __('common.empty_value') }}
                                     @endif
                                 </td>
                                 <td class="text-end">
@@ -155,7 +155,7 @@
                             </td>
                             <td>
                                 @if($type->TT_CODE === 'NONE' || $sizes->isEmpty())
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">{{ __('common.empty_value') }}</span>
                                     <input type="hidden" name="new[{{ $type->TM_ID }}][tv_id]" value="0">
                                 @else
                                     <select name="new[{{ $type->TM_ID }}][tv_id]"

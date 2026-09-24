@@ -1,4 +1,4 @@
-{{-- Scoped section dropdown — see App\View\Components\ObSectionSelect. --}}
+{{-- Scoped section dropdown: see App\View\Components\ObSectionSelect. --}}
 @if($multiSite)
 <select {{ $attributes->merge(['class' => 'form-select form-select-sm']) }}
         name="{{ $name }}"

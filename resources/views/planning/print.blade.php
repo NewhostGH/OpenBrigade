@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('planning.print_heading') . ' — ' . ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) . ' — ' . config('app.name'))
+@section('title', __('planning.print_heading') . ' | ' . ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -19,7 +19,7 @@
     </div>
 
     <h2 style="font-size:var(--font-size-lg); margin-bottom:8px;">
-        {{ __('planning.print_heading') }} — {{ ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) }}
+        {{ __('planning.print_heading') }} - {{ ucfirst($first->locale('fr')->isoFormat('MMMM YYYY')) }}
     </h2>
 
     @foreach($people as $person)
@@ -50,9 +50,9 @@
                             @foreach($person['events'] as $e)
                                 <tr>
                                     <td style="font-size:var(--font-size-sm)">{{ \Carbon\Carbon::parse($e->event_date)->locale('fr')->isoFormat('ddd D MMM') }}</td>
-                                    <td style="font-size:var(--font-size-sm)">{{ $e->event_time && $e->event_time !== '00:00' ? $e->event_time : '—' }}</td>
+                                    <td style="font-size:var(--font-size-sm)">{{ $e->event_time && $e->event_time !== '00:00' ? $e->event_time : __('common.empty_value') }}</td>
                                     <td style="font-size:var(--font-size-sm)">{{ $e->E_LIBELLE ?: $e->E_CODE }}</td>
-                                    <td style="font-size:var(--font-size-sm)">{{ $e->TE_LIBELLE ?? '—' }}</td>
+                                    <td style="font-size:var(--font-size-sm)">{{ $e->TE_LIBELLE ?? __('common.empty_value') }}</td>
                                     <td style="font-size:var(--font-size-sm)">{{ $e->E_CLOSED ? __('planning.status_closed') : __('planning.status_open') }}</td>
                                 </tr>
                             @endforeach
@@ -87,7 +87,7 @@
                                     </td>
                                     <td style="font-size:var(--font-size-sm)">{{ $a->TI_LIBELLE ?: __('planning.absence_default') }}</td>
                                     <td style="font-size:var(--font-size-sm)">{{ $a->I_ACCEPT ? __('planning.status_accepted') : __('planning.pending') }}</td>
-                                    <td style="font-size:var(--font-size-sm)">{{ $a->I_COMMENT ?: '—' }}</td>
+                                    <td style="font-size:var(--font-size-sm)">{{ $a->I_COMMENT ?: __('common.empty_value') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

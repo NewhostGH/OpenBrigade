@@ -83,7 +83,7 @@ function fakeResolver()
 }
 
 /**
- * Build the fixture user — only P_ID and GP_ID matter to the resolver.
+ * Build the fixture user: only P_ID and GP_ID matter to the resolver.
  */
 function resolverFakeUser(): User
 {

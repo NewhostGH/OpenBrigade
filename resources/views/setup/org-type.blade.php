@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('setup.admin_title') . ' — ' . config('app.name'))
+@section('title', __('setup.admin_title') . ' | ' . config('app.name'))
 
 @section('content')
 

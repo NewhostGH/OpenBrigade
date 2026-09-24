@@ -7,7 +7,7 @@ namespace App\Services\Plugins;
  *
  * Required: name, slug, version, description, min_app_version, provider
  * (FQCN of the plugin's service provider). Optional: max_app_version
- * (inclusive compatibility cap — without it a plugin would forever claim
+ * (inclusive compatibility cap: without it a plugin would forever claim
  * compatibility with future OpenBrigade majors), authors (list of strings),
  * autoload (PSR-4 prefix => relative directory map).
  */

@@ -32,7 +32,7 @@ class OrganizationController extends Controller
                 ['code' => 'A2',     'label' => 'Recherche cynophile'],
                 ['code' => 'B',      'label' => 'Actions de soutien aux populations sinistrées'],
                 ['code' => 'C',      'label' => 'Encadrement des bénévoles lors des actions de soutien'],
-                ['code' => 'D',      'label' => 'Availabilitysitif prévisionnel de secours — agrément'],
+                ['code' => 'D',      'label' => 'Availabilitysitif prévisionnel de secours - agrément'],
                 ['code' => 'D-Aqua', 'label' => 'Sécurité de la pratique des activités aquatiques'],
             ],
         ],
@@ -131,7 +131,7 @@ class OrganizationController extends Controller
             ->groupBy('section_id');
 
         // Active members grouped by their home section (P_SECTION) so each
-        // section node can expand to its individual members — same filter as
+        // section node can expand to its individual members: same filter as
         // memberCounts() so the branch size matches the displayed count.
         $membersBySection = DB::table('pompier')
             ->where('P_OLD_MEMBER', 0)
@@ -205,7 +205,7 @@ class OrganizationController extends Controller
 
         $memberCount = (int) ($this->memberCounts()[$section->S_ID] ?? 0);
 
-        // Active member headcount (radiation target) — excludes already-radiated
+        // Active member headcount (radiation target): excludes already-radiated
         // and external members, mirroring the legacy radier_section selection.
         $activeMemberCount = (int) DB::table('pompier')
             ->where('P_SECTION', $section->S_ID)
@@ -298,13 +298,13 @@ class OrganizationController extends Controller
         $hasChildren = DB::table('section')->where('S_PARENT', $section->S_ID)->exists();
         if ($hasChildren) {
             return redirect()->route('organization.sections')
-                ->with('error', 'Cette section a des sous-sections — déplacez-les d\'abord.');
+                ->with('error', 'Cette section a des sous-sections. Déplacez-les d\'abord.');
         }
 
         $hasMembers = DB::table('pompier')->where('P_SECTION', $section->S_ID)->exists();
         if ($hasMembers) {
             return redirect()->route('organization.sections')
-                ->with('error', 'Cette section contient des membres — réaffectez-les d\'abord.');
+                ->with('error', 'Cette section contient des membres. Réaffectez-les d\'abord.');
         }
 
         $section->delete();
@@ -517,7 +517,7 @@ class OrganizationController extends Controller
         $section->update(['S_PDF_PAGE' => '']);
 
         return redirect()->route('organization.sections.show', [$section->S_ID, 'tab' => 'personalisation'])
-            ->with('success', 'Papier à entête réinitialisé — le modèle par défaut sera utilisé.');
+            ->with('success', 'Papier à entête réinitialisé. Le modèle par défaut sera utilisé.');
     }
 
     public function resetBadge(Section $section): RedirectResponse
@@ -671,7 +671,7 @@ class OrganizationController extends Controller
             ->get();
 
         $markers = $rows->map(function ($r) {
-            $label = ($r->S_CODE ? $r->S_CODE.' — ' : '').($r->S_DESCRIPTION ?: 'Section '.$r->P_SECTION);
+            $label = ($r->S_CODE ? $r->S_CODE.' - ' : '').($r->S_DESCRIPTION ?: 'Section '.$r->P_SECTION);
 
             return [
                 'name' => $label,
@@ -716,7 +716,7 @@ class OrganizationController extends Controller
             : [];
 
         return DB::table('section')
-            ->where('S_ID', '!=', 0) // the org root (0) is offered via the "— racine —" option
+            ->where('S_ID', '!=', 0) // the org root (0) is offered via the "(racine)" option
             ->when($excluded !== [], fn ($q) => $q->whereNotIn('S_ID', $excluded))
             ->orderBy('S_ORDER')
             ->orderBy('S_CODE')

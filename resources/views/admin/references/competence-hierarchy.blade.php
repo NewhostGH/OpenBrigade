@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.references.competence_hierarchy.title') . ' — ' . config('app.name'))
+@section('title', __('admin.references.competence_hierarchy.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -138,7 +138,7 @@
                                         @foreach($available->groupBy('EQ_NOM') as $team => $items)
                                             <optgroup label="{{ $team }}">
                                                 @foreach($items as $p)
-                                                    <option value="{{ $p->PS_ID }}">{{ $p->TYPE }} — {{ $p->DESCRIPTION }}</option>
+                                                    <option value="{{ $p->PS_ID }}">{{ $p->TYPE }} - {{ $p->DESCRIPTION }}</option>
                                                 @endforeach
                                             </optgroup>
                                         @endforeach
