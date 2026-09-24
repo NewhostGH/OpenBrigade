@@ -252,9 +252,9 @@ module names only; `images/` mapped at folder granularity.
 | `config_prelevements.php`     | **WIP**                                                                                         |
 | `virements.php`               | `DuesController.php` (`transfers`) + `dues/transfers.blade.php`                                 |
 | `virements_extract.php`       | `DuesController.php` (`transfers`): bridge redirects to `dues.transfers`                       |
-| `element_facturable.php`      | **WIP**                                                                                         |
-| `save_element_facturable.php` | **WIP**                                                                                         |
-| `del_element_facturable.php`  | **WIP**                                                                                         |
+| `element_facturable.php`      | `BillableElementController` + `billable-element/index.blade.php`                                |
+| `save_element_facturable.php` | `BillableElementController` (`store` / `update`)                                                |
+| `del_element_facturable.php`  | `BillableElementController` (`destroy`)                                                         |
 | `save_detail_facture.php`     | **WIP**                                                                                         |
 | `note_frais_edit.php`         | **WIP**                                                                                         |
 | `note_frais_save.php`         | **WIP**                                                                                         |

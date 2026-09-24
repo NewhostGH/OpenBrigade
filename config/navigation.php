@@ -83,6 +83,7 @@ return [
             'feature' => 'client',
             'items' => [
                 ['key' => 'companies.list', 'label' => 'Liste', 'url' => '/companies', 'icon' => 'list', 'permission' => 29, 'feature' => 'client'],
+                ['key' => 'companies.billable', 'label' => 'Éléments facturables', 'url' => '/billable-elements', 'icon' => 'file-invoice-dollar', 'permission' => 29, 'feature' => 'client'],
             ],
         ],
 

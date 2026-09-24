@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\BillableElementController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConsumableController;
 use App\Http\Controllers\ContextController;
@@ -553,6 +554,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/companies', [CompanyController::class, 'index'])->name('company.index')->middleware(['permission:29', 'feature:client']);
     Route::get('/companies/export/xls', [CompanyController::class, 'exportXls'])->name('company.export.xls')->middleware(['permission:29', 'feature:client']);
     Route::get('/companies/export/csv', [CompanyController::class, 'exportCsv'])->name('company.export.csv')->middleware(['permission:29', 'feature:client']);
+    Route::get('/billable-elements', [BillableElementController::class, 'index'])->name('billable-element.index')->middleware(['permission:29', 'feature:client']);
+    Route::post('/billable-elements', [BillableElementController::class, 'store'])->name('billable-element.store')->middleware(['permission:29', 'feature:client']);
+    Route::patch('/billable-elements/{billableElement}', [BillableElementController::class, 'update'])->name('billable-element.update')->middleware(['permission:29', 'feature:client']);
+    Route::delete('/billable-elements/{billableElement}', [BillableElementController::class, 'destroy'])->name('billable-element.destroy')->middleware(['permission:29', 'feature:client']);
     Route::get('/legacy', fn () => redirect()->route('dashboard'))->name('dashboard.legacy');
     Route::get('/about', function () {
         // TODO: Migrate code

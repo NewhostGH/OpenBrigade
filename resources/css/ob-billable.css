@@ -1,0 +1,31 @@
+/* ── Billable elements (Clients ▸ Éléments facturables) ───────────────── */
+
+.ob-billable-errors {
+    font-size: var(--font-size-sm);
+}
+
+.ob-billable-hint {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted-soft);
+}
+
+.ob-billable-price {
+    width: 110px;
+    text-align: right;
+}
+
+.ob-billable-col-section {
+    width: 110px;
+}
+
+.ob-billable-col-type {
+    width: 220px;
+}
+
+.ob-billable-col-price {
+    width: 150px;
+}
+
+.ob-billable-col-actions {
+    width: 130px;
+}

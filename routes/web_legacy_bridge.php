@@ -56,7 +56,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'del_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:71')->name('legacy_bridge.del_consommable');
     Route::match(['GET', 'POST'], 'del_edit_categorie.php', [LegacyBridgeController::class, 'show'])->middleware('permission:19')->name('legacy_bridge.del_edit_categorie');
     Route::match(['GET', 'POST'], 'del_edit_categorie_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:19')->name('legacy_bridge.del_edit_categorie_consommable');
-    Route::match(['GET', 'POST'], 'del_element_facturable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:29')->name('legacy_bridge.del_element_facturable');
+    Route::match(['GET', 'POST'], 'del_element_facturable.php', fn () => redirect()->route('billable-element.index'))->name('legacy_bridge.del_element_facturable');
     Route::match(['GET', 'POST'], 'del_equipe.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.del_equipe');
     Route::match(['GET', 'POST'], 'del_grade.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.del_grade');
     Route::match(['GET', 'POST'], 'del_groupe.php', [LegacyBridgeController::class, 'show'])->middleware('permission:9')->name('legacy_bridge.del_groupe');
@@ -96,7 +96,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'edit_categorie_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.edit_categorie_consommable');
     Route::match(['GET', 'POST'], 'edit_categorie_grades.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.edit_categorie_grades');
     Route::match(['GET', 'POST'], 'edit_grades.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.edit_grades');
-    Route::match(['GET', 'POST'], 'element_facturable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:29')->name('legacy_bridge.element_facturable');
+    Route::match(['GET', 'POST'], 'element_facturable.php', fn () => redirect()->route('billable-element.index'))->name('legacy_bridge.element_facturable');
     Route::match(['GET', 'POST'], 'equipe.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.equipe');
     Route::match(['GET', 'POST'], 'error.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.error');
     Route::match(['GET', 'POST'], 'evenement_add_renfort.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.evenement_add_renfort');
@@ -305,7 +305,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'save_edit_categorie.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_edit_categorie');
     Route::match(['GET', 'POST'], 'save_edit_categorie_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_edit_categorie_consommable');
     Route::match(['GET', 'POST'], 'save_edit_categorie_grades.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.save_edit_categorie_grades');
-    Route::match(['GET', 'POST'], 'save_element_facturable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:17')->name('legacy_bridge.save_element_facturable');
+    Route::match(['GET', 'POST'], 'save_element_facturable.php', fn () => redirect()->route('billable-element.index'))->name('legacy_bridge.save_element_facturable');
     Route::match(['GET', 'POST'], 'save_equipe.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.save_equipe');
     Route::match(['GET', 'POST'], 'save_folder.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.save_folder'); // migrated → DocumentController
     Route::match(['GET', 'POST'], 'save_garde.php', [LegacyBridgeController::class, 'show'])->middleware('permission:6')->name('legacy_bridge.save_garde');
@@ -367,7 +367,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'upd_company_role.php', [LegacyBridgeController::class, 'show'])->middleware('permission:37')->name('legacy_bridge.upd_company_role');
     Route::match(['GET', 'POST'], 'upd_consommable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:42')->name('legacy_bridge.upd_consommable');
     Route::match(['GET', 'POST'], 'upd_document.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.upd_document'); // migrated → DocumentController
-    Route::match(['GET', 'POST'], 'upd_element_facturable.php', [LegacyBridgeController::class, 'show'])->middleware('permission:29')->name('legacy_bridge.upd_element_facturable');
+    Route::match(['GET', 'POST'], 'upd_element_facturable.php', fn () => redirect()->route('billable-element.index'))->name('legacy_bridge.upd_element_facturable');
     Route::match(['GET', 'POST'], 'upd_equipe.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.upd_equipe');
     Route::match(['GET', 'POST'], 'upd_folder.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.upd_folder'); // migrated → DocumentController
     Route::match(['GET', 'POST'], 'upd_grades.php', [LegacyBridgeController::class, 'show'])->middleware('permission:18')->name('legacy_bridge.upd_grades');

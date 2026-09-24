@@ -17,6 +17,10 @@ to cut a release.
 
 _Changes landing after 6.0.0 are listed here._
 
+### Added
+
+- Clients: native "Éléments facturables" page (per-section catalogue of invoice lines with a default price), replacing the legacy `element_facturable.php` screens (#33).
+
 ## [6.0.0]
 
 > **Not yet released.** This is the upcoming first native release; it has not been
