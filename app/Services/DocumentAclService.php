@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\DB;
  * ACEs on the item itself and on every ancestor folder (inheritance), filtered
  * to the ACEs whose principal matches the user (the user, one of their groups
  * or roles, or "everyone"). Within that set an allow grants rights and a deny
- * removes them — **deny wins per-right**. RIGHT_FULL expands to every right.
+ * removes them: **deny wins per-right**. RIGHT_FULL expands to every right.
  *
  * When no ACE applies anywhere in the chain, {@see effectiveRights()} returns
- * null so the caller falls back to the legacy section/type security — making
+ * null so the caller falls back to the legacy section/type security: making
  * the ACL a strictly additive, backwards-compatible overlay.
  *
  * Registered as a singleton so the per-request lookups below are memoised. The

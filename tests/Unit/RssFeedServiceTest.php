@@ -17,11 +17,11 @@ function sampleChannel(array $overrides = []): array
 function sampleItem(array $overrides = []): array
 {
     return array_merge([
-        'title' => 'Formation — PSC1',
+        'title' => 'Formation - PSC1',
         'link' => 'https://example.test/events/42',
         'guid' => 'https://example.test/events/42',
         'pubDate' => 'Tue, 04 Aug 2026 10:00:00 +0000',
-        'description' => "Organisé par : DUP — Dupont\nLieu : Paris",
+        'description' => "Organisé par : DUP - Dupont\nLieu : Paris",
     ], $overrides);
 }
 
@@ -38,7 +38,7 @@ it('builds a well-formed RSS 2.0 document', function () {
         ->and((string) $doc->channel->link)->toBe('https://example.test')
         ->and((string) $doc->channel->language)->toBe('fr')
         ->and($doc->channel->item)->toHaveCount(1)
-        ->and((string) $doc->channel->item[0]->title)->toBe('Formation — PSC1');
+        ->and((string) $doc->channel->item[0]->title)->toBe('Formation - PSC1');
 });
 
 it('marks the guid as a non-permalink', function () {

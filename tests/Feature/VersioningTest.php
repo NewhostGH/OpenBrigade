@@ -49,7 +49,7 @@ test('ReleaseVersion::stamp() writes the installed version row', function () {
 
         expect(DB::table('configuration')->where('NAME', 'version')->value('VALUE'))->toBe('6.1.0');
     } finally {
-        // The suite assumes a schemaless :memory: database — never leak the table.
+        // The suite assumes a schemaless :memory: database: never leak the table.
         Schema::dropIfExists('configuration');
     }
 });

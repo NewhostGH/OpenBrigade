@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var map = L.map('geoMap').setView(defaultCenter, defaultZoom);
 
-    // OpenStreetMap tile layer — free, no API key required
+    // OpenStreetMap tile layer: free, no API key required
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,

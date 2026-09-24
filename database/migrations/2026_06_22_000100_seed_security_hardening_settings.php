@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
  *
  * The table's ID column is a non-auto-increment primary key, so each new row is
  * assigned the next free ID. Rows are HIDDEN and given a distinct TAB so they
- * never surface on the generic settings page — they are edited only through the
+ * never surface on the generic settings page: they are edited only through the
  * dedicated security screen. Idempotent: existing rows are left untouched.
  */
 return new class extends Migration

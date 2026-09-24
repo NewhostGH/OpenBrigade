@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * A plugin registry — a URL serving a registry.json catalog (KASM-style:
+ * A plugin registry: a URL serving a registry.json catalog (KASM-style:
  * admins can add third-party registries next to the official one).
  *
  * @property int $id

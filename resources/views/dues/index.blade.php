@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Cotisations — ' . config('app.name'))
+@section('title', 'Cotisations | ' . config('app.name'))
 
 @section('content')
 
@@ -232,12 +232,12 @@
 
                         {{-- Entrée --}}
                         <td class="d-none d-lg-table-cell" style="font-size:var(--font-size-xs);white-space:nowrap;">
-                            {{ $row->P_DATE_ENGAGEMENT ? \Carbon\Carbon::parse($row->P_DATE_ENGAGEMENT)->format('d/m/Y') : '—' }}
+                            {{ $row->P_DATE_ENGAGEMENT ? \Carbon\Carbon::parse($row->P_DATE_ENGAGEMENT)->format('d/m/Y') : __('common.empty_value') }}
                         </td>
 
                         {{-- Sortie --}}
                         <td class="d-none d-lg-table-cell" style="font-size:var(--font-size-xs);white-space:nowrap;">
-                            {{ $row->P_FIN ? \Carbon\Carbon::parse($row->P_FIN)->format('d/m/Y') : '—' }}
+                            {{ $row->P_FIN ? \Carbon\Carbon::parse($row->P_FIN)->format('d/m/Y') : __('common.empty_value') }}
                         </td>
 
                         {{-- Paid checkbox --}}

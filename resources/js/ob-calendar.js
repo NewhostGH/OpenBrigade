@@ -44,7 +44,7 @@ function mount(el) {
             },
         noEventsContent: el.dataset.emptyText || undefined,
         buttonText: { today: "Aujourd'hui", month: 'Mois', list: 'Liste' },
-        // Render timed events as full blocks showing the start–end range.
+        // Render timed events as full blocks showing the start-end range.
         eventDisplay: 'block',
         displayEventEnd: true,
         eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },

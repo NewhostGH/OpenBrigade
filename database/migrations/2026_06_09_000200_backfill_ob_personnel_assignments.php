@@ -58,13 +58,13 @@ return new class extends Migration
         }
 
         // Existing rows already carry their original section_id from the legacy data.
-        // Nothing to collapse — the three-column unique (person_id, section_id, group_id)
+        // Nothing to collapse: the three-column unique (person_id, section_id, group_id)
         // remains and supports section-scoped roles.
     }
 
     public function down(): void
     {
-        // Not reversible — original GP_ID/GP_ID2 values still exist on pompier.
+        // Not reversible: original GP_ID/GP_ID2 values still exist on pompier.
         DB::table('ob_personnel_group')->delete();
         DB::table('ob_personnel_section')->delete();
     }

@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Mes droits — ' . config('app.name'))
+@section('title', 'Mes droits | ' . config('app.name'))
 
 @push('scripts')
     <script>
@@ -53,7 +53,7 @@
                                 {!! str_repeat('&nbsp;&nbsp;&nbsp;', (int) ($s->depth ?? 0)) !!}{{ ($s->depth ?? 0) > 0 ? '└ ' : '' }}{{ $s->S_DESCRIPTION }}
                             </option>
                         @empty
-                            <option>—</option>
+                            <option>{{ __('common.empty_value') }}</option>
                         @endforelse
                     </select>
                 </form>
@@ -151,7 +151,7 @@
                                         @elseif ($hasUserAllow)
                                             <span style="color:var(--color-primary);font-style:italic;">{{ __('my_permissions.origin_user_allow') }}</span>{{ !empty($sources) ? ' · ' . implode(' · ', $sources) : '' }}
                                         @else
-                                            {{ $granted ? implode(' · ', $sources) : '—' }}
+                                            {{ $granted ? implode(' · ', $sources) : __('common.empty_value') }}
                                         @endif
                                     </td>
                                 </tr>

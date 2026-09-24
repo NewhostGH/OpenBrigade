@@ -6,8 +6,8 @@ use App\Services\VersionService;
 use Illuminate\Console\Command;
 
 /**
- * Report the application's version state — the code version (VERSION file),
- * the installed version (database) and the latest CHANGELOG entry — and warn
+ * Report the application's version state: the code version (VERSION file),
+ * the installed version (database) and the latest CHANGELOG entry: and warn
  * when they drift (code deployed but its release migration not yet applied).
  *
  * Handy in deploy scripts and release verification: `php artisan ob:version`

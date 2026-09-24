@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('auth_views.connected_title') . ' — ' . config('app.name'))
+@section('title', __('auth_views.connected_title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -97,13 +97,13 @@
                                             <i class="{{ $brIcon }}" style="color:{{ $brColor }};" title="{{ $br }}"></i>
                                         </td>
                                         <td class="align-middle" style="font-size:var(--font-size-sm); white-space:nowrap;">
-                                            {{ $row->A_DEBUT ? \Carbon\Carbon::parse($row->A_DEBUT)->format('H:i') : '—' }}
+                                            {{ $row->A_DEBUT ? \Carbon\Carbon::parse($row->A_DEBUT)->format('H:i') : __('common.empty_value') }}
                                         </td>
                                         <td class="align-middle" style="font-size:var(--font-size-sm); white-space:nowrap;">
-                                            {{ $row->A_FIN ? \Carbon\Carbon::parse($row->A_FIN)->format('H:i') : '—' }}
+                                            {{ $row->A_FIN ? \Carbon\Carbon::parse($row->A_FIN)->format('H:i') : __('common.empty_value') }}
                                         </td>
                                         <td class="align-middle text-muted" style="font-size:var(--font-size-sm);">
-                                            {{ $row->A_IP ?? '—' }}
+                                            {{ $row->A_IP ?? __('common.empty_value') }}
                                         </td>
                                     </tr>
                                 @endforeach

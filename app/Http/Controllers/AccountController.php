@@ -103,7 +103,7 @@ class AccountController extends Controller
         }
 
         // Home, not back to the form: after a forced change (expired password,
-        // first login) the user's journey continues from the root — which the
+        // first login) the user's journey continues from the root: which the
         // middlewares re-route to the setup wizard when appropriate.
         return redirect('/')
             ->with('success', __('Mot de passe modifié avec succès.'));
@@ -227,13 +227,13 @@ class AccountController extends Controller
         $this->authService->resetPasswordTo($personnel->P_ID, $newPass);
 
         $comment = ($mode === 'auto')
-            ? 'Envoi automatique à '.($personnel->P_EMAIL ?? '—')
+            ? 'Envoi automatique à '.($personnel->P_EMAIL ?? __('common.empty_value'))
             : 'Envoi manuel';
         $this->logHistory('REGENMDP', $authUser->P_ID, $personnel->P_ID, $comment);
 
         $sent = false;
         if ($mode === 'auto') {
-            // TODO: COMM — send credentials email via NotificationService when the
+            // TODO: COMM: send credentials email via NotificationService when the
             // communication module is implemented. The $newPass and $personnel->P_EMAIL
             // are ready; wire them up in the COMM phase.
             $sent = false;
@@ -294,7 +294,7 @@ class AccountController extends Controller
 
     /**
      * Record a business-activity event. Consolidated onto the structured
-     * `activity` canal (ob_log_entry) — the legacy log_history table is retired.
+     * `activity` canal (ob_log_entry): the legacy log_history table is retired.
      * The acting pompier is captured automatically; $targetId identifies the
      * affected record when it differs from the actor.
      */

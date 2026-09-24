@@ -40,6 +40,7 @@ return [
     'no' => 'Non',
     'all' => 'Tous',
     'none' => 'Aucun',
+    'empty_value' => '-', // placeholder for an empty cell / field value
     'loading' => 'Chargement…',
     'no_results' => 'Aucun résultat.',
 

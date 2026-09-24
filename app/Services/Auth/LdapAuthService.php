@@ -18,9 +18,9 @@ use LdapRecord\LdapRecordException;
  * domains exist and LDAP_ENABLED=true.
  *
  * For each domain, two auth methods are supported:
- *   bind — search for the user DN via the service account, then bind as that
+ *   bind: search for the user DN via the service account, then bind as that
  *           user.  Requires a username / password on the domain record.
- *   upn  — construct the bind DN as "{login}{upn_suffix}" and bind directly.
+ *   upn : construct the bind DN as "{login}{upn_suffix}" and bind directly.
  *           Typical for Active Directory.
  *
  * After a successful bind the service:

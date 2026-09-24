@@ -1,5 +1,5 @@
 {{--
-    One boolean configuration row as a table row — an auto-submitting toggle
+    One boolean configuration row as a table row : an auto-submitting toggle
     posting to admin.settings.save.
 
     Params:
@@ -28,7 +28,7 @@
                 </div>
             </form>
         @else
-            <span class="text-muted">—</span>
+            <span class="text-muted">{{ __('common.empty_value') }}</span>
         @endif
     </td>
 </tr>

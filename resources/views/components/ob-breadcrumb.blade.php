@@ -1,5 +1,5 @@
 {{--
-    ob-breadcrumb  —  Page path navigation.
+    ob-breadcrumb: Page path navigation.
 
     Always prepends the Dashboard home icon automatically.
     The last item is rendered as plain text (current page, no link).

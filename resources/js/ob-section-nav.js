@@ -3,7 +3,7 @@
 // Build a side-nav from the rendered section blocks so the menu can never drift
 // out of sync with the blade (order, presence). Each section declares its own
 // nav metadata via data attributes:
-//   data-nav-label        (required — omit to opt a section out of the nav)
+//   data-nav-label        (required; omit to opt a section out of the nav)
 //   data-nav-icon         (Font Awesome classes; default 'fas fa-circle')
 //   data-nav-badge        (optional badge text/count)
 //   data-nav-badge-class  (optional; default 'ob-badge-archive')

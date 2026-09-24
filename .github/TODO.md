@@ -1,37 +1,29 @@
 # OpenBrigade Migration TODO
 
 Working tracker for migrating the legacy eBrigade app (`archive/legacy_app/`) into
-the native Laravel application, menu by menu. Large, forward-looking ideas that go
-beyond the migration live in [IDEAS.md](IDEAS.md).
+the native Laravel application, menu by menu. Large forward-looking ideas beyond
+the migration live in [IDEAS.md](IDEAS.md).
 
-Rules and process live elsewhere — read them first:
-[CONVENTIONS.md](../docs/dev/CONVENTIONS.md) (how code is written),
-[ARCHITECTURE.md](../docs/dev/ARCHITECTURE.md) (where things live),
-[DEVELOPMENT.md](../docs/dev/DEVELOPMENT.md) (how to run it),
+Rules and process: [conventions.md](../docs/dev/conventions.md) (how code is
+written), [architecture.md](../docs/dev/architecture.md) (where things live),
+[development.md](../docs/dev/development.md) (how to run it),
 [legacy-mapping.md](../docs/dev/legacy-mapping.md) (legacy file map),
 [CONTRIBUTING.md](CONTRIBUTING.md) (branches, commits, PRs).
 
-When you complete an item, tick its checkbox and move it down to **Shipped**.
-Update the legacy file map (linked above) when a file moves from legacy to
-native. Keep the gates green: `composer pint -- --test`, `composer analyse`,
-`composer test`.
+When you complete an item, tick its checkbox and move it to **Shipped**. Update
+the legacy file map when a file moves from legacy to native. Keep the gates
+green: `composer pint -- --test`, `composer analyse`, `composer test`.
 
 Legend: `[ ]` open · `[x]` done · WIP = implemented but parity not verified.
-The **Backlog** is grouped so earlier groups underpin later ones; **Shipped**
-keeps the record of completed work.
+The **Backlog** is grouped so earlier groups underpin later ones.
 
 ---
 
 ## Backlog
 
-## Cross-cutting foundations
-
-These underpin much of the feature work below (notifications/queues unblock the
-whole Communication menu, reminders and guard generation).
-
 ### Production readiness
 
-- [ ] **RGPD / data-privacy compliance** — the app holds medical aptitude, home
+- [ ] **RGPD / data-privacy compliance**: the app holds medical aptitude, home
   addresses, emergency contacts and member geolocation. Implement: data-subject
   export (portability), right-to-erasure workflow, retention policy + automated
   purge, consent tracking, a processing register, and access logging on
@@ -41,13 +33,13 @@ whole Communication menu, reminders and guard generation).
 
 ### Personnel (PERSO)
 
-- [ ] Diploma print layout config (`diplome_edit.php`) — complex PDF field positioning admin screen
+- [ ] Diploma print layout config (`diplome_edit.php`): complex PDF field positioning admin screen
 - [ ] Custom member fields (`specific_info.php`)
-- [ ] `export_badges.php` — member badge/ID card PDF export
+- [ ] `export_badges.php`: member badge/ID card PDF export
 
-### Activité — Events & Interventions (ACT)
+### Activité: Events & Interventions (ACT)
 
-- [ ] Participant notifications (`evenement_notify.php`) — needs the notification layer
+- [ ] Participant notifications (`evenement_notify.php`): needs the notification layer
 - [ ] Event report (`evenement_rapport.php`)
 - [ ] Editable PDF for conventions
 - [ ] Event billing & tariffs (`evenement_facturation*.php`, `evenement_tarif*.php`)
@@ -59,13 +51,13 @@ whole Communication menu, reminders and guard generation).
 - [ ] Schedule (horaires) management
 - [ ] Planning exports
 
-### Garde — On-call roster (GAR)
+### Garde: On-call roster (GAR)
 
 - [ ] Use the new calendar library when implemented (see PLA)
 - [ ] Automatic piquet/guard generation
 - [ ] Rest periods (`repos_*.php`)
-- [ ] Guard exports — PDF
-- [ ] Demande de renfort — transmit the request to another section (email, or in-app message/notification): currently the request is only stored/displayed on the event; add a way to actually communicate it to the target section so they can respond with renfort sub-events — needs the notification layer
+- [ ] Guard exports: PDF
+- [ ] Demande de renfort, transmit the request to another section (email, or in-app message/notification): currently the request is only stored/displayed on the event; add a way to actually communicate it to the target section so they can respond with renfort sub-events, needs the notification layer
 
 ### Communication (COMM)
 
@@ -96,9 +88,9 @@ Needs the notification / messaging infrastructure above.
 
 - [ ] Guard order & responsables (`choice_section_order.php`, `upd_responsable.php`)
 
-### Configuration — Admin (ADMIN)
+### Configuration: Admin (ADMIN)
 
-*(cleared — see Shipped ▸ Configuration — Admin. Deferrals: in-app update
+*(cleared, see Shipped ▸ Configuration, Admin. Deferrals: in-app update
 flow → Release strategy; import-API endpoints → API & integrations (the
 settings themselves are live); masked SMS-password input → COMM.)*
 
@@ -118,11 +110,9 @@ settings themselves are live); masked SMS-password input → COMM.)*
 
 ## Plugins / modules (Phase 3B)
 
-- [x] Inventory plugin/module files (`addons.php`, `install_addon.php`, `download_*.php`) — superseded by the native Administration ▸ Plugins marketplace; legacy loaders retired (redirect to `admin.plugins`, `bridgeable=false`)
-- [x] Define module boundaries; migrate config, routes, assets, permissions — the marketplace (registries, install pipeline, `ob_plugin` runtime, `PluginLoader`) is the module boundary; lifecycle covered by `tests/Feature/PluginLifecycleTest.php`
-- [x] Animaux module — shipped as an installable plugin (slug `animaux`) in the official registry; removed from the core Fonctionnalités screen (dropped the `ob_feature` row)
-- [x] SMS gateway integration (`lib/SMSGatewayMe/`, `fonctions_sms.php`) — base feature, not a plugin: smsgatewayme + smsmode + Clickatell + SMSEagle + generic HTTP drivers (`App\Services\Sms`)
-- [x] Feature tests per module; remove legacy loaders after cutover
+Shipped: marketplace (registries, install pipeline, `ob_plugin` runtime,
+`PluginLoader`), Animaux plugin, SMS gateway integration, feature tests. See
+`docs/admin/plugins.md` / `docs/dev/plugins.md`.
 
 ## Cutover & decommission (Phase 4)
 
@@ -137,334 +127,46 @@ settings themselves are live); masked SMS-password input → COMM.)*
 
 How the app is built, shipped and upgraded in production.
 
-- [ ] **CD pipeline** — extend the existing CI (`.github/workflows/ci.yml`) into
+- [ ] **CD pipeline**: extend the existing CI (`.github/workflows/ci.yml`) into
   a deploy pipeline (build assets, run migrations, zero-downtime release,
   rollback path); gate on the green checks (pint/phpstan/test).
-- [ ] **Migration & release runbook** — documented deploy steps, DB-migration
+- [ ] **Migration & release runbook**: documented deploy steps, DB-migration
   policy (forward-only, backward-compatible where possible), and a rollback
   procedure.
-- [ ] **Environments** — clearly defined local / staging / production configs
+- [ ] **Environments**: clearly defined local / staging / production configs
   and secrets management; staging mirrors production for UAT.
-- [ ] **In-app update / maintenance flow** — successor to legacy `update_app.php`
+- [ ] **In-app update / maintenance flow**: successor to legacy `update_app.php`
   / `upgrade.php`: surface migration status, run pending migrations, and toggle
   maintenance mode from the admin UI.
-- [x] **Release verification** — `ob:release:verify` post-deploy smoke-check
-  gate (`ReleaseVerificationService`): infrastructure liveness (reuses the
-  `/health` probes), pending migrations, built assets, prod-config sanity,
-  installed-version SSOT and critical routes; worst-wins status, non-zero exit
-  for the CD gate, `--strict`/`--json` flags and an optional monitoring webhook.
-  Config in `config/release.php`; see `docs/admin/release-verification.md`.
+- [x] **Release verification**: `ob:release:verify` post-deploy smoke-check
+  gate (`ReleaseVerificationService`); see `docs/admin/release-verification.md`.
 
 ---
 
 ## Shipped
 
-## Release strategy
+One line per fully-done area; see the linked docs for detail.
 
-- [x] **Versioning & changelog** — SemVer 2.0.0 + a Keep-a-Changelog `CHANGELOG.md`.
-  Root `VERSION` file is the code-version SSOT (wired into `config/brigade.php`),
-  distinct from the DB-stamped installed version (`configuration.version`, written
-  only via `App\Support\ReleaseVersion::stamp()`); `App\Services\VersionService`
-  compares the two + the changelog and reports drift. `php artisan ob:version`
-  (`--json`) surfaces the state for deploy scripts. Process documented in
-  `docs/dev/versioning.md`; contributors add an `[Unreleased]` line per PR.
-
-## Production readiness
-
-- [x] **Notification / messaging infrastructure** — unified layer: `config/mail.php`
-  transport (Mailpit in dev), queued `App\Mail\PlainMessage` mailable on a branded
-  markdown layout, `NotificationService` (email + SMS entry point), and Laravel
-  Notifications wired with a provider-agnostic **SMS channel** (`App\Contracts\SmsSender`,
-  `SmsManager`, log/null/**SMSGateway.me** drivers, `SmsChannel`). `User` is `Notifiable`
-  (mail → `P_EMAIL`, sms → `P_PHONE2`/`P_PHONE`). Password-reset mail now flows through it.
-  See `docs/admin/sms.md`. (In-app/database channel + COMM compose screens remain under COMM.)
-- [x] **Queues + scheduler** — Redis queue connection + `queue-worker` service
-  (predis, `queue:work`); mail/SMS sends run async. Dedicated `scheduler` service
-  (`schedule:work`) actually runs `routes/console.php`: due backups, log pruning,
-  qualification/aptitude **expiry reminders** (`reminders:expiry`, per-poste
-  `DAYS_WARNING`), and the weekly restore drill. (Automatic guard/piquet generation
-  stays under Garde; retention purge under RGPD.)
-- [x] **Observability** — structured logging (Monolog → `ob_log_entry` + files),
-  error tracking (self-hosted Sentry/GlitchTip), a `/health` endpoint, and basic
-  uptime/performance monitoring. Admin UI under Journal d'activité ▸ Paramètres.
-  See `docs/admin/observability.md`.
-- [x] **Redis, queue & mail health probes** (#6) — `checkRedis` (timed PING),
-  `checkQueue` (pending depth, failed_jobs 24 h, worker liveness via the scheduled
-  `QueueHeartbeatJob` cache stamp) and `checkMail` (SMTP EHLO handshake +
-  NotificationService failure count) in `/health` and the Santé tab; the missing
-  `jobs`/`job_batches`/`failed_jobs` tables now exist.
-- [x] **Backup robustness** — the schedule now actually runs (dedicated
-  `scheduler` service). Backups bundle **DB + all stored files** (profile & album
-  photos, documents, RIB, section assets, charter, theme — the whole `storage/app`
-  tree) into a `.zip` (`BackupService`), mirror to an optional **off-site** S3-compatible disk
-  (`BACKUP_OFFSITE_DISK`), keep count-based retention, and a weekly
-  **restore-drill** (`backup:restore-drill`) restores the latest backup into a
-  scratch DB to prove recoverability. See `docs/admin/backup-and-restore.md`.
-
-## Foundations
-
-- [X] **i18n / l10n scaffolding (French only for now)** — move hard-coded UI
-  strings into a `lang/fr` layer and route them through Laravel localization, so
-  copy is centralized and a second locale is later a drop-in. No translations
-  yet — implementation + French strings only.
-- [X] **Security headers & upload safety** — CSP/HSTS/security headers
-middleware, rate limiting on auth and sensitive endpoints, and validation +
-type/size + malware scanning on all uploads (profile photos, RIB, documents,
-album photos).
-
-### Dashboard
-
-- [x] Native dashboard replacing `index_d.php` (widget architecture, 20 widgets)
-- [x] Widget layout persistence (`save_accueil.php`) — `ob_dashboard_layout` table, `DashboardService::getWidgetLayout()`, `POST /dashboard/layout`, HTML5 drag-and-drop with debounced save
-
-### Authentication & account (AUTH)
-
-- [x] Login / logout (legacy-hash upgrade)
-- [x] Password change (`change_password.php`, `save_password.php`)
-- [x] Lost password / send credentials (`lost_password.php`, `send_id.php`) — mailing not set up yet
-- [x] Charter acceptance on first login (`charte.php`)
-- [x] Connected users view (`connected_users.php`)
-- [x] TOTP two-factor authentication (laravel/fortify) — `TotpController`, `docs/security/totp.md`
-- [x] LDAP authentication delegation — multi-domain, OU rules, attribute mapping, local-password fallback; `docs/security/ldap.md`
-- [x] Per-group password policies (NCSC/ANSSI-aligned) — complexity/history/expiry, HIBP check, strength meter, enforcement middleware; `PasswordPolicyService`, `docs/security/password-policies.md`
-
-### Cross-cutting
-
-- [x] Universal `ob-*` component system (breadcrumb, toolbar, table, commandbar, badge, avatar, toggle)
-- [x] `TableExportService` — universal XLS/CSV export
-- [x] All list pages migrated to the `ob-*` component set
-- [x] **Error / empty pages** — data-driven custom pages for the full HTTP status
-  set (400/401/403/404/405/407/408/409/410/411/412/413/416/418/419/429/500/502/503/504/505),
-  metadata in `config/error_pages.php`, resolved by `App\Support\ErrorPage`. Each shows a
-  client → réseau → serveur connection diagram with the failing node highlighted
-  (`errors/partials/diagram`). 4xx keep the normal app shell for authenticated users;
-  5xx and re-login codes (401/419) render standalone (`errors/standalone`). 503 honours
-  the `php artisan down --message`. No-JS `<noscript>` notice on the app + login layouts
-  (replaces legacy `error.php` / `noscript.php`)
-- [x] Convention enforcement — CONVENTIONS.md + `ConventionsTest`
-- [x] Static-analysis remediation — model `@property` docblocks, PHPStan at 0 errors, Pint clean
-
-### Data isolation by section (multi_site)
-
-- [x] `SectionScopeService` — visible-set authority, navbar switcher, `<x-ob-section-select>`
-- [x] Wired into Personnel, Véhicules, Cotisations, Organisation controllers
-- [x] Extend scoping to remaining section-tied controllers (Evenement, Garde, Materiel, Consommable, Message) — Document was already done; Statistique is single-section by design (deferred)
-- [x] Organizational root section (`S_ID = 0`, `S_PARENT = -1`) is now a first-class, selectable & assignable section; `-1` (`SectionScopeService::ALL`) is the dedicated "all / global" sentinel everywhere (request filters, resolver chain/scope, `ob_user_assignment` / `ob_user_permission` global rows). Migration `2026_06_16_000100` re-sentinels existing global rows `0 → -1`. Navbar switcher reflects the explicit choice (`chosenSectionId`) so "Toutes mes sections" highlights correctly
-- [x] **Seed the organizational root section** (`S_ID = 0`, `S_PARENT = -1`) in `CoreSeeder` — `seedRootSection()` uses `insertOrIgnore` (idempotent); runs before `BaseHabilitations` and `SuperAdminProvisioner` so the super-admin gets `P_SECTION = 0` on fresh installs
-- [x] Section-scope test for the root: `PermissionRootScopeTest` — 10 unit tests covering `sectionChain` with root (S_ID=0), root ceiling deny cascade, child deny non-cascade, and `effectiveDenied` union across the full ancestor chain; `AdminTest` stub updated with `categorie_consommable` count
-- [x] `GeolocationController::index` — replaced exact `P_SECTION =` match with `SectionScopeService::apply()` so the map honours section isolation, navbar scope and root subtree
-- [x] `PermissionController::exportGroup` — fixed `section_id > 0` guard to `!== null` so root section (`S_ID = 0`) is included; absent/empty = no filter convention
-- [x] Dropped `section_flat` — `DashboardService::getDuty()` and the hours-to-validate widget now derive `NIV` depth from the `section` tree (`getSectionFamilyUp()`) instead of the denormalized cache; migration `2026_06_16_000200` drops the table, `rebuild_section_flat.php` bridge retired (`bridgeable => false`)
-
-### Login screen (Phase 2B)
-
-- [x] Parity tests with the legacy login page
-- [x] Modernised login screen
-
-## Features by menu
-
-### Personnel (PERSO)
-
-- [x] Member list, profile view/edit, create/add
-- [x] Trombinoscope and org chart
-- [x] Exports — XLS, CSV, vCard, PDF livret/carte (client-side pdf-lib + section letterhead)
-- [x] Qualifications and training records
-- [x] On-call availability / indisponibility
-- [x] Full list parity, universal search
-- [x] Cotisations — per-member CRUD and org-wide page
-- [x] Géolocalisation — Leaflet map
-- [x] Tenues / uniforms (`personnel_tenues.php`) — dotation habillement card on personnel show + dedicated manage page (`/personnel/{id}/tenues`); perm 70 = full edit (add/update/delete items, model/year/size/nb); self = size-only update; read-only view for others
-- [x] User preferences (`personnel_preferences.php`) — `/personnel/{id}/preferences` page; PP_ID 1 (tooltips toggle), PP_ID 4 (org chart order), PP_ID 15 (items per page); self-edit or perm 2; upsert into `personnel_preferences`; preferences icon in personnel show header
-- [x] Salarié data (`upd_personnel_salarie.php`) — TS_ contract/hours fields card on personnel show page (perm 2)
-- [x] Emergency contacts (`personnel_contact.php`)
-- [x] Contact types referential CRUD (`contact_type` table) — admin référentiel CRUD under Paramétrage (`/admin/references/contact-type`, perm 5): add/edit/delete contact-handle types (name + Font Awesome icon), with a usage guard that blocks deleting a type still referenced by `personnel_contact`
-- [x] Homonym management (`homonymes_*.php`) — detect same-name records on personnel show; side-by-side merge page with selective data transfer (competences, formations, participations), radiate/delete options (perm 2/3)
-- [x] Contact / email lists (`listecontacts.php`, `listemails.php`) — emails.txt + contacts.csv bulk export from personnel list
-- [x] Qualifications export (`qualifications_xls.php`) — XLS / CSV via `TableExportService`, section-scoped, filter & `?cols=` aware
-- [x] Meeting participation export (`personnel_reunion_xls.php`) — per-member meeting participation XLS from the personnel show page (`export_badges.php` still pending)
-- [x] Trainings CRUD (`personnel_formation.php`) — formations card on personnel show page (add/edit/delete, perm 4; perm 40 for others)
-- [x] Per-member formations XLS export (`formations_xls.php`) — button in Formations card
-
-### Activité — Events & Interventions (ACT)
-
-- [x] Event list, detail, create/edit/delete
-- [x] Participants, équipes, renforts, matériel and vehicle assignment
-- [x] Calendar view
-- [x] Exports (XLS + iCal)
-- [x] Event duplication (`evenement_duplicate.php`)
-- [x] Required competences / diplomas per event (`evenement_competences.php`) — `Postes requis` card on event show: required positions from `evenement_competences`, with actual vs required headcount (counts enrolled participants holding each qualification); inline qty update; delete; add via modal; perm 15
-- [x] Per-event trombinoscope (`evenement_trombinoscope.php`) — photo grid of non-absent participants, grouped by function, with grade image and profile link; button in event show header
-- [x] Event list export (`evenement_xls.php`) — XLS / CSV via `TableExportService`, period/type/section/search-aware
-- [x] Per-event vehicle export (`evenement_vehicule_xls.php`) — XLS via `TableExportService`, button in the event detail Véhicules card
-- [x] Main courante (incident log) — `evenement_log` card on event show: list + add/edit/delete modals (perm 15), important-row highlighting, in event section nav
-- [x] Event options & participant choices (`evenement_options.php`, `evenement_option_choix.php`) — option groups + checkbox/text/dropdown/date options (perm 15), per-participant choices modal, cascade delete
-
-### Garde — On-call roster (GAR)
-
-- [x] Roster display and assignment
-- [x] Guard sheet and replacement management
-- [x] Replacement-request list export (XLS / CSV) — mine/section tabs, via `TableExportService`
-- [x] Guard exports — XLS / CSV (monthly on-call/astreinte roster via `TableExportService`, section-scoped, `?cols=` aware)
-- [x] Type de garde management (`type_garde.php`)
-- [x] Demande de renfort (`demande_renfort.php`) — `Demande de renfort` card on event show (vehicle counts, material categories, meeting point, specific request); dedicated manage page at `/events/{code}/renfort-request` with per-type vehicle inputs and category checkboxes; perm 15 to edit
-
-### Planning (PLA)
-
-- [x] Weekly/monthly planning view
-- [x] Personal agenda
-
-### Client (CLI)
-
-- [x] Company/client list and detail
-- [x] Client list export (XLS / CSV) — section-scoped, search/type-filtered, `?cols=` aware via `TableExportService`
-
-### Logistique — Vehicles (VEH)
-
-- [x] Vehicle list, detail, CRUD, type management
-- [x] Vehicle assignment to events — full event history on vehicle show page; year filter, function type column, total km stats, pagination; pre-existing `$typeVehicule`→`$vehicleType` bug fixed
-- [x] Vehicle exports (XLS / CSV) — `TableExportService`, section/status/search-aware, `?cols=` selection
-
-### Inventaire — Equipment & Consumables (MAT / CONSO)
-
-- [x] Equipment list and detail/edit
-- [x] Consumable stock management
-- [x] Type management (matériel, consommable)
-- [x] Equipment category management — `categorie_materiel` CRUD in ReferenceController; TM_USAGE field in equipment-type form uses category dropdown; icon preview with FontAwesome
-- [x] Embarkation tracking (`materiel_embarquer.php`) — assign/unassign equipment to vehicle from vehicle show page; `equipmentAttach`/`Detach` in `VehicleController`; perm 17; available equipment grouped by type in select; detach button per row
-- [x] Consumable category CRUD (`edit_categorie_consommable.php`) — `/admin/references/consumable-category`; inline edit (name, description, icon, order); delete blocked if used by consumable types; badge count on each row; card in references index; perm 5
-- [x] Equipment/consumable exports (XLS / CSV) — `TableExportService`, section/search-aware, `?cols=` selection
-
-### Communication (COMM)
-
-- [x] Internal messaging and chat board
-
-### Document (DOC)
-
-- [x] Native library — `ob-*` file-explorer (collapsible folder tree, folders + files in one table, type icons, list/card views); `Document`/`DocumentFolder`/`TypeDocument`/`DocumentSecurity` models + `DocumentService`
-- [x] Folder management — create / rename / delete (permission 47)
-- [x] Document upload and edit — upload (multi-file), retype, move, delete (permission 47)
-- [x] File serving and download — native `document.download`, type/doc-security + section checked (PDF inline, else attachment)
-- [x] Document exports — XLS/CSV via `TableExportService` (visible columns, current folder/type)
-- [x] Document type & security config — `type_document` CRUD (`DocumentTypeController`, perm 47), `document_security` shown as reference. (Legacy `config_doc.php` is PDF attestation text, not library config — tracked under the PDF/billing items, not here.)
-- [x] **Per-object ACL on files & folders** — granular rights (read / download / write / delete / share / fullcontrol) granted to **users / groups / roles / everyone** with explicit **allow *and* deny** (deny wins); folder ACEs **inherited** by descendant folders & documents, the item's own ACEs override. Overlays the section/type security — **no ACE keeps the legacy behaviour** (backward compatible). `ob_document_acl` + `ObDocumentAcl` + `DocumentAclService` (resolver, memoised, 9 unit tests); enforced on every gate (download/write/delete/share); **"Partager"** page (`DocumentAclController`) per file/folder. See [project_documents] memory.
-
-### Photos (PHOTO)
-
-- [x] Native album photo library — `ob-*` grid + bs5-lightbox; `ob_photo_album` + `ob_photo` tables; `PhotoService`, `PhotoController`, section-scoped, perm 44 view / 47 manage
-- [x] Public storage — `storage/app/public/photos/{S_ID}/{album_id}/{filename}` served via `storage:link` symlink
-- [x] Album CRUD — create, rename/describe, delete (with photo file cleanup)
-- [x] Photo upload (multi-file per album), caption edit, set cover, delete
-- [x] bs5-lightbox integration — full-screen gallery with keyboard nav, grouped per album
-- [x] Drag-and-drop reorder of photos within an album (`sort_order`) — HTML5 native drag, AJAX PATCH to `photo.reorder`, `PhotoService::reorder()` persists positions; drag cursor + dragover outline via CSS
-- [x] Bulk delete photos — select-mode toggle, per-card checkmark overlay, floating bulk-action bar, `photo.bulk-destroy` route + controller action (perm 47)
-- [x] Photo download (single + zip album) — `photo.download` per photo (perm 44), `photo.album.download` ZIP stream with collision-safe filenames; download button on each card + toolbar button
-
-### Statistique (STAT)
-
-- [x] Participation and event statistics (charts)
-- [x] Bilan annuel — Généralités / Activités / Formations with pdf-lib export (WIP)
-
-### Organisation (ORGA)
-
-- [x] Section list + CRUD, organigramme tree
-- [x] Cartographie — Leaflet map of sections
-- [x] Groups and roles (habilitations) — section-scoped, ceiling-based model
-- [x] Rebuilt base habilitations — super-admin account flag (`pompier.P_SUPERADMIN`, uncappable, last-one protected), four capability base groups (Admin/Auditor/User/Guest), classified permission catalog (`ob_permission`), per-org-type section roles, and a production/dev seeding split (`CoreSeeder` vs `DevelopmentDataSeeder`)
-- [x] Section show page — tabs Informations, Organigramme, Personnalisation (letterhead, badge, lock delay, devis/facture texts, signature), Agréments & Médailles
-- [x] Section Cotisation tab — RIB file upload and remaining fields — `CODE_BANQUE`, `ETABLISSEMENT`, `GUICHET`, `COMPTE`, `CLE_RIB` fields added; RIB file upload (PDF/JPG/PNG, stored in private storage, migration `2026_06_15_180000`); download route `organization.sections.rib.download`
-- [x] Position (poste) management — `Compétences` page at `/admin/references/position`; CRUD with boolean flags (formation, secourisme, expirable, diplôme, etc.); edit modal per row; delete blocked if used in qualifications or event requirements; perm 18
-- [x] Team (equipe) management — `Types de compétence` page at `/admin/references/team`; CRUD with inline edit; delete blocked if contains postes; badge links to filtered position list; both pages added to references index; perm 18
-- [x] Competence hierarchy (`hierarchie_competence.php`) — `Hiérarchies de compétences` page at `/admin/references/competence-hierarchy`; CRUD over `poste_hierarchie` (code, description, 3 flags: masquer inférieures / prolonger expiration / prolongation obligatoire); attach/detach member competences at ordered levels (`poste.PH_CODE`/`PH_LEVEL`); code rename cascades to member postes; delete detaches members; edit modal per row; perm 18
-- [x] Protect the organizational root section (`S_ID = 0`): `destroySection` returns 302 with error; `updateSection` forces `S_INACTIVE = false`; reparent already pinned to `-1`
-- [x] **Section deactivation / radiation** (`radier_section.php`) — "Zone sensible" card on the
-  section Informations tab; confirm modal offers *deactivate only* vs *deactivate + radiate all
-  active members* (`P_OLD_MEMBER=4`, `GP_ID/GP_ID2=-1`, `P_FIN=now`, one transaction, live count);
-  reactivation (radiated members not auto-restored); root section protected; silent `S_INACTIVE`
-  form checkbox removed. **Event interdictions** (`section_stop.php`) — new *Interdictions* tab,
-  CRUD over `section_stop_evenement` (block event type/all over a date range, active toggle,
-  comment); `SectionStopEvenement` model; audited; i18n
-- [x] Habilitations export (`habilitations_xls.php`)
-- [x] **First-run setup wizard** (`wizard.php`) + **organisation-type activation** — guarded
-  first-run screen (`OrganisationSetupService`, `SetupController`, `RequireSetup` middleware)
-  collecting org type + short/long name, URL, admin email, app title, and optional
-  description & logo; persists the canonical `configuration` keys and flips
-  `already_configured`. Fresh installs ship unconfigured with the legacy `admin`
-  account disabled (`reference.sql`); super-admins always reach `/setup`. Activation
-  filters the habilitations roles tab to the active `ob_group.org_type` (+ custom roles).
-  Admin screen at `/admin/organisation-type` changes the type (non-destructive) with a
-  consequences panel, an opt-in reset of the type's preset roles, and an opt-in delete of
-  custom roles that remaps their members to a chosen preset role. `docs`/lang under `setup`
-- [x] **Rank & grade management rework** — full grade model, feature-gated (`grades`):
-  category enable/disable (`CG_ACTIVE`, hides from pickers, keeps existing assignments)
-  with an "Active" toggle in the grade-category admin UI; grade CRUD with drag-to-reorder
-  and a member-count-aware delete guard; real official ladders seeded for Sapeurs-Pompiers,
-  Armée de terre and Police nationale (sourced from Wikipedia/Wikimedia, `Actuel (épaules)`
-  insignia), plus a generic 120-level `Universel` category seeded fully inactive for any
-  other org type; static per-grade icons under `public/images/grades/{CATEGORY}_{CODE}.svg`
-  (real insignia for SP/ARMY/POL, generated shape+color+tier badges for the rest), admin-
-  uploaded icon takes priority; all grade UI (personnel show/edit, event show/trombinoscope,
-  personnel list column + export) fully hidden — not just disabled — when the feature is off
-- [x] **Organigramme tab as an interactive org-chart** — single ECharts tree (canvas,
-  orthogonal TB) merging the section hierarchy, per-section role holders and a *Membres*
-  branch under every section, plus a *Rôles globaux* branch (`section_id = -1` sentinel);
-  per-branch colour palette, per-type shapes, member avatar photos (`/personnel/{id}/photo`),
-  expand/collapse by click or toolbar, automatic canvas sizing with scroll centring,
-  PNG export, click-through to member/section pages and a "Voir dans l'organigramme"
-  focus link from the section show page
-
-### Configuration — Admin (ADMIN)
-
-- [x] Application settings CRUD (tabbed UI)
-- [x] Parametrage reference tables (type-evenement/participation/materiel/consommable/vehicule)
-- [x] Theme and icon configuration, grade icons
-- [x] Audit log view
-- [x] Backup and restore
-- [x] Maintenance page (replaces `upgrade.php`)
-- [x] Habilitations — section-scoped ceiling model, 3-tab admin UI, `PermissionResolver`
-- [x] Feature/module unification — `ob_feature` registry, `FeatureService`, `feature:` middleware, Fonctionnalités admin page
-- [x] Tests and parity for migrated ADMIN pages; bridge routes redirect to native
-- [x] Full ACL with groups — allow/deny at every tier (user override > section deny > group/role deny > group/role allow > default deny); `ob_user_permission` + `ob_group_permission.effect`; tri-state matrices + 4th "Dérogations" tab; resolver precedence tests. See CONVENTIONS §9.
-- [x] Surface user-level overrides in "Mes droits" — personal allow/deny rows from `ob_user_permission` shown in the preview table with dedicated icons and strikethrough styling
-- [x] `paramfnv` vehicle function types (`type_fonction_vehicule`) — CRUD at `/admin/references/vehicle-function`; inline list with name/description/order; perm 5
-- [x] Grade category (`categorie_grade`) CRUD — at `/admin/references/grade-category`; inline description edit; delete blocked if grades assigned; badge count; link to grade icons page; perm 5
-- [x] **Legacy settings wired & reorganised** — timezone (76, region-grouped dropdown),
-  currency (98/99 → `App\Support\Money`), phone prefix/length (100/101 → `App\Rules\Phone`),
-  app name & site URL (38/7, env-instantiated, Organisation tab), mandatory profile
-  photo (68, self-registration guard + dashboard nag), telemetry opt-in (80 →
-  `ob:telemetry:ping`, anonymous payload to telemetry.openbrigade.fr), maintenance
-  mode/text (37/41 → `MaintenanceMode` middleware, 503 + login notice, admin bypass),
-  DB optimization (14 → `ob:db:optimize`, weekly + manual). Tabs reworked: new
-  **Localisation** tab, Général renamed **Options**, empty legacy Options tab retired,
-  dead Google-Maps rows (57/60) obsoleted. Import-API settings (64/65/66) live on
-  Avancé — endpoints stay with the API epic. **Installed version (row 1) is the SSOT**
-  stamped by the release migrations, overlaying brigade/app version + Sentry release.
-- [x] **Notifications page** (`/admin/notifications`) — mail transport (8 rows) and
-  SMS provider (9-12, DB-backed `SmsSettingService`, send-time resolution) with the
-  `.env` as instantiator and the interface as source of truth; `MailSettingService::apply()`
-  overlays `config('mail.*')` at boot; emptied fields revert to `.env`.
-- [x] **Maintenance utilities** — audited action buttons (clear caches, optimize DB,
-  prune logs) + maintenance-settings card on the Maintenance page. `update_app.php`
-  deferred to the Release epic; `decrypt.php`/`debug_data.php` dropped; `buildsql.php`
-  obsolete (no stored SQL functions).
-- [x] **Plugins marketplace** — KASM-style multi-registry store: `ob_plugin` +
-  `ob_plugin_registry` (per-registry SSL/SHA-256 verification toggles, official
-  registry seeded), composer-less runtime (`plugin.json` manifest, PSR-4 loader,
-  per-plugin failure isolation), paranoid install pipeline (mandatory sha256,
-  traversal/bomb guards, compatibility window `min/max_app_version` with parallel
-  tracks per app line), store UI (search, categories, pagination, detail sheets,
-  per-registry colour chips, Dépôts tab). Docs: `docs/admin/plugins.md` +
-  `docs/dev/plugins.md` (ob/plugin/name conventions).
-- [x] `paramfn` participation function enhanced fields — `PS_ID`/`PS_ID2` (required competence + alternative) and `INSTRUCTOR` flag added to `type_participation` create/edit; grouped competence dropdowns with optgroups per team; edit modal on each row; perm 5. Legacy `paramfn.php` bridge retired for this functionality.
-
-### Settings wired
-
-- [x] Password policies — complexity, history, expiry (IDs 15, 16, 17, 70) — handled via Administration > Sécurité (annotated obsolete in `AdminController::settings()`)
-- [x] Session policies (IDs 34, 36, 49) — handled via Administration > Sécurité
-- [x] Action history (ID 25) — handled via Administration > Sécurité
-- [x] Sensitive data handling (ID 33), file ACLs (ID 42), terms of use (ID 48) — handled via Sécurité / document ACL system
-- [x] First-login banner (ID 69) — handled via Administration > Sécurité
-- [x] Organisation identity — name, description, contact mail, logo, login image (IDs 6, 8, 39, 40, 71, 75) — `AppIdentityService` reads and memoises all 6 settings; sidebar uses org name + logo; login page uses org name + splash background image
-
-### API & integrations (Phase 3)
-
-- [x] iCal export
+- **Release strategy**: SemVer 2.0.0 + Keep-a-Changelog `CHANGELOG.md`, `VERSION` file, `php artisan ob:version`. See `docs/dev/versioning.md`.
+- **Production readiness**: notification/messaging infra (mail+SMS, queues+scheduler), observability (structured logging, Sentry/GlitchTip, `/health`), Redis/queue/mail health probes, backup robustness (off-site mirror, weekly restore drill). See `docs/admin/observability.md`, `docs/admin/backup-and-restore.md`, `docs/admin/sms.md`.
+- **Foundations**: French-only i18n scaffolding (`lang/fr`), security headers/rate limiting/upload malware scanning.
+- **Dashboard**: native widget-based dashboard (20 widgets) replacing `index_d.php`, with layout persistence.
+- **Authentication & account (AUTH)**: login/logout, password change/reset, charter acceptance, connected-users view, TOTP 2FA, LDAP delegation, per-group password policies. See `docs/security/totp.md`, `docs/security/ldap.md`, `docs/security/password-policies.md`.
+- **Cross-cutting**: universal `ob-*` component set on all list pages, `TableExportService`, data-driven error/empty pages for the full HTTP status set, `ConventionsTest` enforcement, PHPStan/Pint clean.
+- **Data isolation (multi_site)**: `SectionScopeService` wired across all section-tied controllers, organizational root section (`S_ID = 0`) as first-class, `section_flat` dropped in favor of live tree derivation.
+- **Login screen**: parity tests + modernized UI.
+- **Personnel (PERSO)**: full CRUD, trombinoscope, org chart, exports (XLS/CSV/vCard/PDF), qualifications, cotisations, géolocalisation, tenues, preferences, salarié data, contacts, homonym merge, trainings.
+- **Activité (ACT)**: event CRUD, participants/équipes/renforts/matériel/vehicles, calendar, exports (XLS+iCal), duplication, required competences, per-event trombinoscope, main courante, event options.
+- **Garde (GAR)**: roster display/assignment, replacement management, exports, type de garde management, demande de renfort.
+- **Planning (PLA)**: weekly/monthly view, personal agenda.
+- **Client (CLI)**: company CRUD + exports.
+- **Vehicles (VEH)**: CRUD, type management, event-assignment history, exports.
+- **Equipment/Consumables (MAT/CONSO)**: CRUD, category management, embarkation tracking, exports.
+- **Communication (COMM)**: internal messaging board.
+- **Document (DOC)**: native `ob-*` file-explorer library, folder/type/security config, per-object ACL (allow/deny, inherited). See [project_documents] memory.
+- **Photos (PHOTO)**: native album library, upload/reorder/bulk delete, lightbox, download/zip.
+- **Statistique (STAT)**: participation charts, bilan annuel (WIP parity).
+- **Organisation (ORGA)**: section CRUD, cartographie, habilitations (full section-scoped ACL), section deactivation/radiation, first-run setup wizard, rank/grade rework, interactive org-chart. See [project_habilitations] memory.
+- **Configuration: Admin (ADMIN)**: settings CRUD, référentiels, theme/icons, audit log, backup/restore, maintenance, habilitations UI, feature registry, legacy settings wired, notifications page, plugins marketplace. See `docs/admin/plugins.md`.
+- **Settings wired**: password/session policies, action history, sensitive-data handling, first-login banner, org identity — all via Administration ▸ Sécurité / Organisation.
+- **API & integrations**: iCal export.

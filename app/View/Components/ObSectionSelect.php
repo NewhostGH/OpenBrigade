@@ -9,7 +9,7 @@ use Illuminate\View\Component;
 use Illuminate\View\View;
 
 /**
- * Section dropdown, scoped by SectionScopeService — the user only ever sees
+ * Section dropdown, scoped by SectionScopeService: the user only ever sees
  * sections inside their visible set (memberships + descendants, narrowed by
  * the navbar switcher). Renders nothing when the multi_site feature is off.
  *
@@ -57,7 +57,7 @@ class ObSectionSelect extends Component
         foreach ($scope->options(ignoreChosen: true) as $opt) {
             $label = (string) $opt['S_CODE'];
             if ($opt['S_DESCRIPTION']) {
-                $label .= ($label !== '' ? ' — ' : '').Str::limit($opt['S_DESCRIPTION'], 22);
+                $label .= ($label !== '' ? ' - ' : '').Str::limit($opt['S_DESCRIPTION'], 22);
             }
 
             $this->options[] = [

@@ -17,7 +17,7 @@ function setupStubNav(): void
     app()->instance(NavigationService::class, $nav);
 }
 
-/** Fake super-admin (no DB) — always allowed to configure the install. */
+/** Fake super-admin (no DB): always allowed to configure the install. */
 function setupFakeAdmin(): User
 {
     /** @var User&MockInterface $user */
@@ -57,7 +57,7 @@ test('a fresh install redirects an admin to the setup wizard', function () {
 test('the authentication page stays reachable on a fresh install', function () {
     // Regression: with an expired super-admin password, RequireAuthSetup sends
     // every request to account.auth while RequireSetup sent account.auth to
-    // /setup — an infinite redirect loop on a freshly created install.
+    // /setup: an infinite redirect loop on a freshly created install.
     setupNotCompleted();
 
     app()->bind(AccountController::class, function () {

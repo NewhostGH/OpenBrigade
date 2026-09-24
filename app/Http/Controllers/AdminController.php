@@ -60,7 +60,7 @@ class AdminController extends Controller
                 // Uncaught on purpose: reported to Sentry/GlitchTip (when enabled)
                 // and logged to the `error` canal. Returns a 500 to the caller.
                 throw new \RuntimeException(
-                    'Incident simulé depuis le diagnostic d’observabilité — '.now()->toIso8601String()
+                    'Incident simulé depuis le diagnostic d’observabilité - '.now()->toIso8601String()
                 );
 
             case 'log':
@@ -143,7 +143,7 @@ class AdminController extends Controller
             $perf['max_ms'] = (int) (clone $base)->max('duration_ms');
             $perf['slow'] = (clone $base)->orderByDesc('duration_ms')->limit(10)->get();
         } catch (\Throwable) {
-            // ob_log_entry not migrated yet — leave the empty snapshot.
+            // ob_log_entry not migrated yet: leave the empty snapshot.
         }
 
         return ['report' => $report, 'perf' => $perf];
@@ -438,7 +438,7 @@ class AdminController extends Controller
 
         $tabs = [
             // TAB 2 (the legacy « Options ») is gone: every remaining row in it
-            // is obsolete-filtered, moved or hidden — tab 1 takes the name over.
+            // is obsolete-filtered, moved or hidden: tab 1 takes the name over.
             1 => ['label' => 'Options',          'icon' => 'sliders-h'],
             3 => ['label' => 'Technique',         'icon' => 'shield-alt'],
             4 => ['label' => 'Organisation',      'icon' => 'building'],
@@ -500,7 +500,7 @@ class AdminController extends Controller
             67 => ['type' => 'obsolete', 'note' => 'Le verrou de crontab de mailing est géré par Laravel Queue. Ce réglage n\'a plus d\'effet.'],
         ];
 
-        // Drop obsolete settings from the page entirely — they no longer have any
+        // Drop obsolete settings from the page entirely: they no longer have any
         // effect. What replaced them is surfaced as informational notes in the
         // views (e.g. the Organisation tab points to .env / the setup wizard).
         $obsoleteIds = collect($annotations)
@@ -514,7 +514,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Administration ▸ Notifications — email + SMS gateway settings, rendered
+     * Administration ▸ Notifications: email + SMS gateway settings, rendered
      * from the hidden configuration rows (mail_allowed, mail_*, sms_*).
      */
     public function notifications(): View
@@ -773,7 +773,7 @@ class AdminController extends Controller
 
         return [
             ['key' => 'date', 'label' => 'Date', 'type' => 'html', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true,
-                'value' => fn ($log) => $log->created_at ? '<span style="white-space:nowrap">'.e($log->created_at->format('d/m/Y H:i:s')).'</span>' : '—',
+                'value' => fn ($log) => $log->created_at ? '<span style="white-space:nowrap">'.e($log->created_at->format('d/m/Y H:i:s')).'</span>' : __('common.empty_value'),
                 'exportValue' => fn ($log) => $log->created_at?->format('d/m/Y H:i:s') ?? ''],
             ['key' => 'canal', 'label' => 'Canal', 'type' => 'badge', 'mobile' => true, 'exportable' => true,
                 'value' => fn ($log) => $log->channel, 'badgeMap' => $canalMap,
@@ -795,7 +795,7 @@ class AdminController extends Controller
                 },
                 'exportValue' => fn ($log) => $log->message],
             ['key' => 'user', 'label' => 'Utilisateur', 'type' => 'text', 'mobile' => false, 'exportable' => true,
-                'value' => fn ($log) => $log->actor ? $log->actor->P_PRENOM.' '.$log->actor->P_NOM : '—',
+                'value' => fn ($log) => $log->actor ? $log->actor->P_PRENOM.' '.$log->actor->P_NOM : __('common.empty_value'),
                 'exportValue' => fn ($log) => $log->actor ? $log->actor->P_PRENOM.' '.$log->actor->P_NOM : ''],
             ['key' => 'details', 'label' => 'Détails', 'type' => 'html', 'mobile' => false, 'default' => false, 'exportable' => false,
                 'value' => function ($log) {
@@ -807,7 +807,7 @@ class AdminController extends Controller
                         $parts .= '<pre class="mb-0" style="font-size:var(--font-size-xs);white-space:pre-wrap;max-height:280px;overflow:auto;">'.e($log->exception_message."\n\n".$log->exception_trace).'</pre>';
                     }
                     if ($parts === '') {
-                        return '—';
+                        return __('common.empty_value');
                     }
 
                     return '<details><summary style="cursor:pointer;"><i class="fas fa-code"></i></summary>'.$parts.'</details>';

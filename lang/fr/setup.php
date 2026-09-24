@@ -36,7 +36,7 @@ return [
     'change_type_intro' => "Le type d'organisation détermine le jeu de rôles préconfigurés. Le changer n'affecte pas immédiatement vos rôles existants.",
 
     'consequences_heading' => 'Ce que le changement implique',
-    'consequence_roles_kept' => 'Vos rôles existants (et leurs attributions aux membres) sont conservés — rien n’est supprimé.',
+    'consequence_roles_kept' => 'Vos rôles existants (et leurs attributions aux membres) sont conservés. Rien n’est supprimé.',
     'consequence_active_set' => 'Les listes de rôles affichent désormais le jeu préconfiguré du nouveau type, plus vos rôles personnalisés.',
     'consequence_reset_optional' => 'Vous pouvez, en option, réinitialiser les rôles préconfigurés du type choisi à leurs valeurs par défaut (action destructive ci-dessous).',
 
@@ -50,7 +50,7 @@ return [
 
     // Delete custom roles + remap
     'delete_roles_heading' => 'Supprimer des rôles personnalisés',
-    'delete_roles_intro' => 'Sélectionnez les rôles personnalisés à supprimer. Pour chacun, choisissez le rôle préconfiguré vers lequel réaffecter ses membres — ou « Retirer » pour supprimer les affectations.',
+    'delete_roles_intro' => 'Sélectionnez les rôles personnalisés à supprimer. Pour chacun, choisissez le rôle préconfiguré vers lequel réaffecter ses membres, ou « Retirer » pour supprimer les affectations.',
     'delete_roles_none_custom' => 'Aucun rôle personnalisé à supprimer.',
     'delete_roles_col_role' => 'Rôle personnalisé',
     'delete_roles_col_members' => 'Membres',

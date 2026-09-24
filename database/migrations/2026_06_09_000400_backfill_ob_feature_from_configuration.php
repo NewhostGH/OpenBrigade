@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
  * Back-fills `ob_feature` from the legacy `configuration` table.
  *
  * Source rows: the toggleable settings of TAB 1 ("Fonctionnalités") and
- * TAB 6 ("Modules") — i.e. YESNO = 1 and HIDDEN = 0. Hidden organisation-type
+ * TAB 6 ("Modules"): i.e. YESNO = 1 and HIDDEN = 0. Hidden organisation-type
  * switches (army/sslia/hospital/sdis/syndicate/assoc) are intentionally skipped.
  *
  * Each feature is marked `native` when a Laravel implementation exists, or

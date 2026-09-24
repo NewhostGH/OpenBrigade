@@ -1,5 +1,5 @@
 /**
- * OBLightbox — lightweight vanilla JS image viewer.
+ * OBLightbox: lightweight vanilla JS image viewer.
  *
  * Trigger: any element with [data-lb-src="url"].
  * Gallery:  add [data-lb-gallery="name"] on multiple elements to enable prev/next.
@@ -100,7 +100,7 @@
         if (e.key === 'ArrowRight')  { navigate(1); }
     });
 
-    // Global click delegation — catches both static and dynamically added triggers.
+    // Global click delegation: catches both static and dynamically added triggers.
     document.addEventListener('click', function (e) {
         var trigger = e.target.closest('[data-lb-src]');
         if (!trigger) return;

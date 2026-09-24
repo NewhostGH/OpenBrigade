@@ -1,5 +1,5 @@
 {{--
-    ob-commandbar  —  Table card wrapper + footer bar.
+    ob-commandbar: Table card wrapper + footer bar.
 
     Renders the outer card (ob-commandbar-wrap), a <form> for bulk actions,
     and a footer with selection count, action buttons, and pagination.
@@ -14,7 +14,7 @@
     ─────
     (default)    The <x-ob-table> component
     actions      Bulk-action buttons shown in the footer left area
-    pagination   {{ $items->links() }} — shown in the footer right area
+    pagination   {{ $items->links() }}, shown in the footer right area
     hidden       Hidden <input> fields needed for form submission
 --}}
 

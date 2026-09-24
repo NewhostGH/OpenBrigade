@@ -175,7 +175,7 @@ class ReposSuggestionService
     }
 
     /**
-     * ISO-week windows (Mon–Sun) overlapping the month, each clipped to it.
+     * ISO-week windows (Mon-Sun) overlapping the month, each clipped to it.
      *
      * @return array<int, array{0: Carbon, 1: Carbon}>
      */

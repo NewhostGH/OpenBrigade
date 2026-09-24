@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Configuration — ' . config('app.name'))
+@section('title', 'Configuration | ' . config('app.name'))
 
 @push('scripts')
 <script>
@@ -69,7 +69,7 @@
                                     <div class="fw-semibold">{{ __('admin.settings.org_card_title') }}</div>
                                     <div class="text-muted" style="font-size:var(--font-size-xs);">
                                         {{ __('admin.settings.org_card_current') }} <strong>{{ $orgTypeLabel }}</strong>
-                                        — {{ __('admin.settings.org_card_manage_hint') }}
+                                        - {{ __('admin.settings.org_card_manage_hint') }}
                                     </div>
                                 </div>
                                 <a href="{{ route('setup.org-type') }}" class="btn btn-sm btn-primary">
@@ -82,10 +82,10 @@
                                     <i class="fas fa-info-circle me-1"></i>{{ __('admin.settings.elsewhere_title') }}
                                 </div>
                                 <ul class="mb-0 ps-3">
-                                    <li>{{ __('admin.settings.elsewhere_app_name') }} — <em>{{ __('admin.settings.elsewhere_app_name_where') }}</em></li>
-                                    <li>{{ __('admin.settings.elsewhere_app_url') }} — <em>{{ __('admin.settings.elsewhere_app_url_where') }}</em></li>
-                                    <li>{{ __('admin.settings.elsewhere_favicon') }} — <em>{{ __('admin.settings.elsewhere_favicon_where') }}</em></li>
-                                    <li>{{ __('admin.settings.elsewhere_org_type') }} — <em>{{ __('admin.settings.elsewhere_org_type_where') }}</em></li>
+                                    <li>{{ __('admin.settings.elsewhere_app_name') }} - <em>{{ __('admin.settings.elsewhere_app_name_where') }}</em></li>
+                                    <li>{{ __('admin.settings.elsewhere_app_url') }} - <em>{{ __('admin.settings.elsewhere_app_url_where') }}</em></li>
+                                    <li>{{ __('admin.settings.elsewhere_favicon') }} - <em>{{ __('admin.settings.elsewhere_favicon_where') }}</em></li>
+                                    <li>{{ __('admin.settings.elsewhere_org_type') }} - <em>{{ __('admin.settings.elsewhere_org_type_where') }}</em></li>
                                 </ul>
                             </div>
                         @endif
@@ -164,7 +164,7 @@
                                                 </form>
 
                                             @elseif($row->ID == 76)
-                                                {{-- Timezone: dropdown grouped by region. Inline form only — a block
+                                                {{-- Timezone: dropdown grouped by region. Inline form only, a block
                                                      php directive would pair with the earlier inline ones. --}}
                                                 @php($tzByRegion = collect(timezone_identifiers_list())->groupBy(fn ($tz) => str_contains($tz, '/') ? strtok($tz, '/') : __('admin.settings.tz_other')))
                                                 <form method="POST" action="{{ route('admin.settings.save', $row->ID) }}"

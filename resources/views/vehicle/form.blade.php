@@ -10,7 +10,7 @@
 
     $val = fn(string $field, $default = null) => old($field, $isEdit ? ($vehicule->$field ?? $default) : $default);
 
-    // Breadcrumb built in PHP — @if cannot live inside a PHP expression
+    // Breadcrumb built in PHP: @if cannot live inside a PHP expression
     $breadcrumb = [['label' => __('vehicle.title'), 'url' => route('vehicle.index')]];
     if ($isEdit) {
         $breadcrumb[] = ['label' => $vehicule->V_IMMATRICULATION ?: $vehicule->V_INDICATIF,
@@ -78,7 +78,7 @@
             <div class="row g-4">
 
                 {{-- ════════════════════════════════════════════════════════
-                     LEFT COLUMN — primary fields
+                     LEFT COLUMN: primary fields
                      ════════════════════════════════════════════════════════ --}}
                 <div class="col-lg-7">
 
@@ -138,7 +138,7 @@
                                     @endif
                                     <option value="{{ $t->TV_CODE }}"
                                             {{ $val('TV_CODE') === $t->TV_CODE ? 'selected' : '' }}>
-                                        {{ $t->TV_CODE }}{{ $t->TV_LIBELLE ? ' — ' . $t->TV_LIBELLE : '' }}
+                                        {{ $t->TV_CODE }}{{ $t->TV_LIBELLE ? ' - ' . $t->TV_LIBELLE : '' }}
                                     </option>
                                 @endforeach
                                 @if($currentUsage !== null) </optgroup> @endif
@@ -166,7 +166,7 @@
                             <label class="form-label fw-semibold" for="S_ID">
                                 {{ __('vehicle.label_section') }} <span class="text-danger">*</span>
                             </label>
-                            {{-- @error n'est pas compilé dans les attributs de composant — expression liée obligatoire. --}}
+                            {{-- @error n'est pas compilé dans les attributs de composant: expression liée obligatoire. --}}
                             <x-ob-section-select id="S_ID" name="S_ID" required
                                                  :selected="$val('S_ID', $userSection)"
                                                  :class="$errors->has('S_ID') ? 'is-invalid' : ''" />
@@ -225,7 +225,7 @@
                 </div>{{-- /col-lg-7 --}}
 
                 {{-- ════════════════════════════════════════════════════════
-                     RIGHT COLUMN — dates, equipment, comment
+                     RIGHT COLUMN: dates, equipment, comment
                      ════════════════════════════════════════════════════════ --}}
                 <div class="col-lg-5">
 

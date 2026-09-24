@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\File;
  * Compile Blade templates and PARSE the compiled PHP.
  *
  * Blade compilation never validates its output: a template like
- * `@endif@endfeature` (adjacent directives — the second is silently left
+ * `@endif@endfeature` (adjacent directives: the second is silently left
  * uncompiled) produces invalid PHP that `view:cache` happily writes and that
  * only explodes at render time. This command catches that class of bug in
  * pre-commit / CI by token-parsing the compiled output.
  *
- * With no arguments it sweeps every template (the CI path — see
+ * With no arguments it sweeps every template (the CI path: see
  * tests/Feature/BladeLintTest.php). Given one or more paths it lints only
  * those files, so the pre-commit hook can check just the staged templates.
  */
@@ -59,7 +59,7 @@ class LintViews extends Command
             }
         }
 
-        // Never leave a lint-time cache behind — runtime recompiles on demand.
+        // Never leave a lint-time cache behind: runtime recompiles on demand.
         $this->callSilent('view:clear');
 
         if ($errors > 0) {
@@ -113,7 +113,7 @@ class LintViews extends Command
     private function parses(string $code, string $source): bool
     {
         try {
-            // In-process syntax check — no per-file php -l subprocess.
+            // In-process syntax check: no per-file php -l subprocess.
             $tokens = token_get_all($code, TOKEN_PARSE);
             unset($tokens);
 

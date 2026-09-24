@@ -26,4 +26,5 @@ Closes #<!-- issue number, if applicable -->
 - [ ] Code runs without PHP errors or warnings
 - [ ] Existing features are not broken
 - [ ] No secrets or credentials are included
-- [ ] Documentation updated (if applicable)
+- [ ] Docs updated in the owning file (see `AGENTS.md` "Keeping the docs up to date"), or no doc impact
+- [ ] User-facing text, colors, icons and images follow `docs/dev/brand-identity.md`

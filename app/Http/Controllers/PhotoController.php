@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use ZipArchive;
 
 /**
- * Section photo-album library — browse albums and photos.
+ * Section photo-album library: browse albums and photos.
  * Business logic lives in {@see PhotoService}; this controller stays thin.
  *
  * Permissions: 44 = view, 47 = manage (create / upload / delete).
@@ -32,7 +32,7 @@ class PhotoController extends Controller
         private readonly DocumentService $documentService,
     ) {}
 
-    /** Album grid — one card per album with cover photo and count. */
+    /** Album grid: one card per album with cover photo and count. */
     public function index(Request $request): View
     {
         $sectionId = $this->resolveSectionId($request);
@@ -131,7 +131,7 @@ class PhotoController extends Controller
         return back()->with('success', 'Légende enregistrée.');
     }
 
-    /** Persist a new photo order — expects JSON body {"ids":[…]}. */
+    /** Persist a new photo order: expects JSON body {"ids":[…]}. */
     public function reorder(Request $request, ObPhotoAlbum $album): JsonResponse
     {
         abort_unless($this->sectionScope->allows((int) $album->S_ID), 403);
@@ -317,7 +317,7 @@ class PhotoController extends Controller
         );
     }
 
-    /** Serve a photo file — auth + section-scope enforced, no direct URL guessing. */
+    /** Serve a photo file: auth + section-scope enforced, no direct URL guessing. */
     public function photoServe(ObPhoto $photo): StreamedResponse
     {
         abort_unless($this->sectionScope->allows((int) $photo->S_ID), 403);

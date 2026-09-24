@@ -4,7 +4,7 @@ use App\Services\WorkAvailabilityService;
 
 /**
  * Pure period-maths of the coherence service (no DB). Periods:
- * 1 = Matin 06–12, 2 = Après-midi 12–18, 3 = Soir 18–24, 4 = Nuit 00–06.
+ * 1 = Matin 06-12, 2 = Après-midi 12-18, 3 = Soir 18-24, 4 = Nuit 00-06.
  */
 test('a clock range maps to the overlapping availability periods', function () {
     $s = new WorkAvailabilityService;
@@ -18,7 +18,7 @@ test('a clock range maps to the overlapping availability periods', function () {
 test('a range that wraps past midnight covers both ends', function () {
     $s = new WorkAvailabilityService;
 
-    // 20:00 → 08:00 covers Soir (18–24), Nuit (00–06) and the start of Matin (06–08).
+    // 20:00 → 08:00 covers Soir (18-24), Nuit (00-06) and the start of Matin (06-08).
     expect($s->periodsForTime('20:00', '08:00'))->toEqualCanonicalizing([1, 3, 4]);
 });
 

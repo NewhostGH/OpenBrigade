@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\DB;
  * by section goes through this service, so the isolation rule lives in
  * exactly one place:
  *
- *   visible = (the user's sections — P_SECTION, ob_personnel_section
- *              memberships and ob_user_assignment role sections — each
+ *   visible = (the user's sections: P_SECTION, ob_personnel_section
+ *              memberships and ob_user_assignment role sections: each
  *              expanded to its descendants: a section always sees below
  *              itself, never above)
  *           ∩ (the navbar-chosen section + its descendants, when chosen)
@@ -52,7 +52,7 @@ class SectionScopeService implements ServiceInterface
     ) {}
 
     /**
-     * Section IDs the user may EVER see — memberships + descendants, before
+     * Section IDs the user may EVER see: memberships + descendants, before
      * the navbar choice narrows anything. This is also the set of sections
      * the user may choose in the switcher (otherwise, once narrowed, they
      * could never switch sideways). Null = unrestricted (multi_site off).
@@ -74,7 +74,7 @@ class SectionScopeService implements ServiceInterface
             return $this->baseVisible = [];
         }
 
-        // Super-admin (account flag) is uncappable — sees every section's data,
+        // Super-admin (account flag) is uncappable: sees every section's data,
         // mirroring the PermissionResolver short-circuit.
         if ($this->resolver->isSuperAdmin($user)) {
             return $this->baseVisible = null;
@@ -85,7 +85,7 @@ class SectionScopeService implements ServiceInterface
 
     /**
      * Section IDs whose data the authenticated user may see, or null when
-     * unrestricted (multi_site off). Can be empty — the caller's whereIn()
+     * unrestricted (multi_site off). Can be empty: the caller's whereIn()
      * then matches nothing, which is the safe default.
      *
      * @return int[]|null
@@ -122,7 +122,7 @@ class SectionScopeService implements ServiceInterface
 
     /**
      * Final scope for a listing: an explicit `?section=` filter intersected
-     * with the visible set — a request parameter can narrow the scope but
+     * with the visible set: a request parameter can narrow the scope but
      * never widen it. Null = unrestricted.
      *
      * @return int[]|null
@@ -163,7 +163,7 @@ class SectionScopeService implements ServiceInterface
 
     /**
      * May the user attach data to / read data from this section? Gated by the
-     * base set (true membership), not the navbar choice — a transient view
+     * base set (true membership), not the navbar choice: a transient view
      * filter must never block assigning a record to a section the user owns.
      */
     public function allows(int $sectionId): bool
@@ -279,7 +279,7 @@ class SectionScopeService implements ServiceInterface
 
     /**
      * Sections for the navbar switcher, as depth-annotated objects in
-     * org-chart tree order. Always the full base set — never narrowed by
+     * org-chart tree order. Always the full base set: never narrowed by
      * the current choice.
      */
     public function switcherSections(): Collection

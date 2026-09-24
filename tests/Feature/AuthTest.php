@@ -42,7 +42,7 @@ function authStubNav(): void
     app()->instance(NavigationService::class, $nav);
 }
 
-// Disable CSRF verification for the whole file — these tests exercise the form
+// Disable CSRF verification for the whole file: these tests exercise the form
 // logic, not token handling (covered by the middleware unit tests). The
 // throttle is disabled too: these tests fire many login attempts from the same
 // IP and are not about rate limiting (covered by its own test below).
@@ -71,7 +71,7 @@ test('authenticated users are redirected from /login to dashboard', function () 
         ->assertRedirect(route('dashboard'));
 });
 
-// ── POST /login — validation ─────────────────────────────────────────────────
+// ── POST /login: validation ─────────────────────────────────────────────────
 
 test('login fails when login field is missing', function () {
     $this->post('/login', ['password' => 'secret'])
@@ -88,7 +88,7 @@ test('login fails when both fields are missing', function () {
         ->assertSessionHasErrors(['login', 'password']);
 });
 
-// ── POST /login — authentication ─────────────────────────────────────────────
+// ── POST /login: authentication ─────────────────────────────────────────────
 
 test('login fails with wrong credentials and shows error', function () {
     $authService = Mockery::mock(AuthService::class);
@@ -130,7 +130,7 @@ test('login input is repopulated after failed attempt', function () {
     $this->get('/login')->assertSee('someone');
 });
 
-// ── POST /login — rate limiting (throttle:auth) ──────────────────────────────
+// ── POST /login: rate limiting (throttle:auth) ──────────────────────────────
 
 test('login is throttled after too many attempts from the same IP', function () {
     // Keep the throttle middleware enabled for this test only, and start from a

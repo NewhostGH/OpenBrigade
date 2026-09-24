@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * Sentry / GlitchTip configuration.
  *
  * GlitchTip is Sentry-API compatible, so the official sentry/sentry-laravel SDK
- * reports to it unchanged — point SENTRY_LARAVEL_DSN at the GlitchTip project
+ * reports to it unchanged: point SENTRY_LARAVEL_DSN at the GlitchTip project
  * DSN (see docker-compose.yml and .env.example).
  *
  * Reporting is gated at runtime by the `obs_error_tracking` setting
@@ -26,7 +26,7 @@ return [
 
     'environment' => env('SENTRY_ENVIRONMENT', env('APP_ENV', 'production')),
 
-    // Capture the authenticated user's id/ip — never the request body by default.
+    // Capture the authenticated user's id/ip: never the request body by default.
     'send_default_pii' => env('SENTRY_SEND_DEFAULT_PII', false),
 
     // Performance tracing. Off by default (0.0); raise the sample rate to profile.

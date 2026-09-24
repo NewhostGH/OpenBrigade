@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 /**
- * Document library business logic — single source of truth for folder trees,
+ * Document library business logic: single source of truth for folder trees,
  * the library listing, per-document visibility, and on-disk file paths. Keeps
  * {@see App\Http\Controllers\DocumentController} thin (CONVENTIONS §3).
  *
  * Library documents are those not attached to any entity (event, person,
- * vehicle…) — see {@see Document::scopeLibrary()}.
+ * vehicle…): see {@see Document::scopeLibrary()}.
  */
 class DocumentService implements ServiceInterface
 {
@@ -126,7 +126,7 @@ class DocumentService implements ServiceInterface
             ->leftJoin('document_security as ds', 'd.DS_ID', '=', 'ds.DS_ID')
             ->leftJoin('pompier as p', 'd.D_CREATED_BY', '=', 'p.P_ID')
             ->where('d.S_ID', $sectionId)
-            // library documents only — not attached to any entity
+            // library documents only: not attached to any entity
             ->where('d.E_CODE', 0)->where('d.P_ID', 0)->where('d.V_ID', 0)
             ->where('d.M_ID', 0)->where('d.NF_ID', 0)->where('d.VI_ID', 0)->where('d.EL_ID', 0)
             ->where('d.DF_ID', $folderId);
@@ -307,7 +307,7 @@ class DocumentService implements ServiceInterface
     }
 
     /**
-     * Canonical on-disk directory for a section/folder's files —
+     * Canonical on-disk directory for a section/folder's files:
      * storage/app/private/documents/{S_ID}/{DF_ID} (section 0 = root, and the
      * folder segment is omitted for files directly in a section's root).
      */
@@ -379,7 +379,7 @@ class DocumentService implements ServiceInterface
     /**
      * Store one uploaded file on disk and record the document row. Per-document
      * visibility is governed by the ACL, so DS_ID is fixed to 1 (public/legacy
-     * default) — restrict access with the "Partager" ACL instead.
+     * default): restrict access with the "Partager" ACL instead.
      */
     public function storeUpload(int $sectionId, int $folderId, UploadedFile $file, string $typeCode, int $userId): void
     {
@@ -408,7 +408,7 @@ class DocumentService implements ServiceInterface
 
     /**
      * Edit a document: rename it, change its type and/or move it to another
-     * folder — a single on-disk move covers both the rename and the relocation.
+     * folder: a single on-disk move covers both the rename and the relocation.
      */
     public function updateDocument(Document $document, string $name, string $typeCode, int $newFolderId): void
     {

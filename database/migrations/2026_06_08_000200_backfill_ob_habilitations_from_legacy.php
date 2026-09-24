@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
  *
  * Global group membership (pompier.GP_ID / GP_ID2) is intentionally NOT copied:
  * it stays on the pompier record. No ob_section_permission rows are seeded, so
- * every section is initially unrestricted — behaviour stays backwards-compatible
+ * every section is initially unrestricted: behaviour stays backwards-compatible
  * until an admin defines a ceiling.
  */
 return new class extends Migration

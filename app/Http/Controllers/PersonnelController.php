@@ -95,7 +95,7 @@ class PersonnelController extends Controller
     }
 
     /**
-     * Single source of truth for personnel list columns — used by both
+     * Single source of truth for personnel list columns: used by both
      * the index view (via <x-ob-table>) and the XLS/CSV export.
      */
     private function personnelColumns(): array
@@ -158,7 +158,7 @@ class PersonnelController extends Controller
                 'key' => 'phone',
                 'label' => 'Téléphone',
                 'type' => 'html',
-                'value' => fn ($p) => implode('<br>', array_filter([$p->P_PHONE, $p->P_PHONE2])) ?: '—',
+                'value' => fn ($p) => implode('<br>', array_filter([$p->P_PHONE, $p->P_PHONE2])) ?: __('common.empty_value'),
                 'mobile' => false,
                 'default' => true,
                 'exportable' => true,
@@ -179,7 +179,7 @@ class PersonnelController extends Controller
                 'key' => 'section',
                 'label' => 'Section principale',
                 'type' => 'text',
-                'value' => fn ($p) => $p->section?->S_CODE ?: '—',
+                'value' => fn ($p) => $p->section?->S_CODE ?: __('common.empty_value'),
                 'mobile' => false,
                 'default' => true,
                 'exportable' => true,
@@ -447,8 +447,8 @@ class PersonnelController extends Controller
     {
         return [
             ['key' => 'personnel', 'label' => 'Personnel', 'type' => 'html', 'value' => fn ($q) => '<a href="'.route('personnel.show', $q->P_ID).'" class="text-decoration-none">'.e($q->P_PRENOM.' '.strtoupper($q->P_NOM)).'</a>', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($q) => $q->P_PRENOM.' '.$q->P_NOM],
-            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($q) => $q->PS_TYPE ?? '—', 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($q) => $q->PS_TYPE ?? ''],
-            ['key' => 'valeur', 'label' => 'Valeur', 'type' => 'text', 'value' => fn ($q) => $q->Q_VAL ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($q) => $q->Q_VAL ?? ''],
+            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($q) => $q->PS_TYPE ?? __('common.empty_value'), 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($q) => $q->PS_TYPE ?? ''],
+            ['key' => 'valeur', 'label' => 'Valeur', 'type' => 'text', 'value' => fn ($q) => $q->Q_VAL ?? __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($q) => $q->Q_VAL ?? ''],
             ['key' => 'expiration', 'label' => 'Expiration', 'type' => 'date', 'value' => fn ($q) => $q->Q_EXPIRATION, 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($q) => $q->Q_EXPIRATION ? Carbon::parse($q->Q_EXPIRATION)->format('d/m/Y') : ''],
             ['key' => 'statut', 'label' => 'Statut', 'type' => 'badge', 'value' => fn ($q) => $q->status ?? 'ok', 'badgeMap' => ['expired' => ['Expirée', 'ob-badge-bloqued'], 'expiring' => ['Expire bientôt', 'ob-badge-ben'], 'ok' => ['Valide', 'ob-badge-actif']], 'exportable' => true, 'exportValue' => fn ($q) => $q->status === 'expired' ? 'Expirée' : ($q->status === 'expiring' ? 'Expire bientôt' : 'Valide'), 'mobile' => true],
         ];
@@ -488,7 +488,7 @@ class PersonnelController extends Controller
             ? DB::table('company')->where('C_ID', $personnel->C_ID)->first(['C_ID', 'C_NAME'])
             : null;
 
-        // Participation — last 50 events (dates come from evenement_horaire)
+        // Participation: last 50 events (dates come from evenement_horaire)
         $participation = DB::table('evenement_participation as ep')
             ->join('evenement as e', 'ep.E_CODE', '=', 'e.E_CODE')
             ->leftJoin(
@@ -555,14 +555,14 @@ class PersonnelController extends Controller
             ->orderBy('s.S_DESCRIPTION')
             ->get(['a.id', 'a.section_id', 'g.name as role_name', 's.S_CODE as section_code', 's.S_DESCRIPTION as section_name'])
             ->each(fn ($r) => $r->section_name = $r->section_id < 0
-                ? '— global —'
-                : ($r->section_code ? $r->section_code.($r->section_name ? ' — '.$r->section_name : '') : 'Section '.$r->section_id));
+                ? '(global)'
+                : ($r->section_code ? $r->section_code.($r->section_name ? ' - '.$r->section_name : '') : 'Section '.$r->section_id));
 
         $cotisations = $personnel->cotisations->sortByDesc('ANNEE');
         $today = now()->toDateString();
         $warn30 = now()->addDays(30)->toDateString();
 
-        // Homonym detection — same surname + first name, different record.
+        // Homonym detection: same surname + first name, different record.
         $homonyms = DB::table('pompier as p')
             ->join('section as s', 'p.P_SECTION', '=', 's.S_ID')
             ->where('p.P_NOM', $personnel->P_NOM)
@@ -1442,7 +1442,7 @@ class PersonnelController extends Controller
     /**
      * Active grades grouped by category label for the P_GRADE dropdown, or null
      * when the grades feature is disabled (the form then hides the field
-     * entirely — @feature('grades') skips rendering it).
+     * entirely: @feature('grades') skips rendering it).
      *
      * @return Collection<string,Collection<int,\stdClass>>|null
      */
@@ -1458,7 +1458,7 @@ class PersonnelController extends Controller
             ->where(fn ($q) => $q->whereNull('cg.CG_ACTIVE')->orWhere('cg.CG_ACTIVE', 1))
             ->orderBy('g.G_CATEGORY')->orderByDesc('g.G_LEVEL')
             ->get(['g.G_GRADE', 'g.G_DESCRIPTION', 'cg.CG_DESCRIPTION as cat_label'])
-            ->groupBy(fn ($g) => $g->cat_label ?: '—');
+            ->groupBy(fn ($g) => $g->cat_label ?: __('common.empty_value'));
     }
 
     public function store(Request $request)

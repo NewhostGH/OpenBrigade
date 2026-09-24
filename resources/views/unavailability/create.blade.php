@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('unavailability.declare_absence') . ' — ' . config('app.name'))
+@section('title', __('unavailability.declare_absence') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -45,10 +45,10 @@
                     <div class="col-md-6">
                         <label class="form-label form-label-sm">{{ __('unavailability.field_type') }} <span class="text-danger">*</span></label>
                         <select name="type" class="form-select form-select-sm" required>
-                            <option value="">—</option>
+                            <option value="">{{ __('common.empty_value') }}</option>
                             @foreach($types as $t)
                                 <option value="{{ $t->TI_CODE }}" @selected(old('type') === $t->TI_CODE)>
-                                    {{ $t->TI_LIBELLE }}@if($t->TI_FLAG) — {{ __('unavailability.type_needs_validation') }}@endif
+                                    {{ $t->TI_LIBELLE }}@if($t->TI_FLAG) - {{ __('unavailability.type_needs_validation') }}@endif
                                 </option>
                             @endforeach
                         </select>

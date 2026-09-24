@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Documents — ' . config('app.name'))
+@section('title', 'Documents | ' . config('app.name'))
 
 @section('content')
 
@@ -230,7 +230,7 @@
     </div>
 @endif
 
-{{-- ACL ("Partager") modal — content loaded into the iframe on demand. --}}
+{{-- ACL ("Partager") modal: content loaded into the iframe on demand. --}}
 <div class="modal fade" id="aclModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

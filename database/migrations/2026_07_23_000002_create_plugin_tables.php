@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Plugin marketplace storage:
  *
- * - ob_plugin — one row per installed plugin (code lives in plugins/<slug>).
- * - ob_plugin_registry — KASM-style registry list: admins can add third-party
+ * - ob_plugin: one row per installed plugin (code lives in plugins/<slug>).
+ * - ob_plugin_registry: KASM-style registry list; admins can add third-party
  *   registry URLs serving a registry.json catalog; seeded with the official
  *   OpenBrigade registry (not removable from the UI).
  */

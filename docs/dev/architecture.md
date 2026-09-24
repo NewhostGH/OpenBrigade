@@ -1,11 +1,11 @@
-# Architecture & Project Structure
+# Architecture & project structure
 
-**The single source of truth for where things live.** OpenBrigade is a standard
-Laravel 12 application. Legacy eBrigade pages are being migrated into it menu by menu;
-until a page is ported it is served through the legacy bridge (see §Legacy bridge).
+**Single source of truth for where things live.** Standard Laravel 12 app;
+legacy eBrigade pages are migrated in menu by menu, served through the legacy
+bridge until ported (see §Legacy bridge).
 
-Companion docs: [CONVENTIONS.md](CONVENTIONS.md) (how to write code),
-[DEVELOPMENT.md](DEVELOPMENT.md) (how to run it).
+Companion docs: [conventions.md](conventions.md) (how to write code),
+[development.md](development.md) (how to run it).
 
 ---
 
@@ -22,7 +22,7 @@ resources/      Blade views, CSS and JS source (bundled by Vite)
 routes/         web.php, api.php, console.php, web_legacy_bridge.php
 storage/        Logs, cache, sessions, uploaded files, DB backups
 tests/          Pest tests (Feature/, Unit/)
-archive/        Frozen legacy eBrigade app (archive/legacy_app/) — read-only
+archive/        Frozen legacy eBrigade app (archive/legacy_app/): read-only
 .github/        CI, issue/PR templates, CONTRIBUTING, TODO
 ```
 
@@ -34,7 +34,7 @@ app/
 ├── Exceptions/            Custom exceptions / handler
 ├── Http/
 │   ├── Controllers/       Request handlers, one per domain (PersonnelController, …)
-│   │   └── Legacy/        LegacyBridgeController — serves not-yet-migrated pages
+│   │   └── Legacy/        LegacyBridgeController: serves not-yet-migrated pages
 │   ├── Middleware/        e.g. permission middleware
 │   └── Requests/          Form Request validation (e.g. Auth/LoginRequest)
 ├── Models/
@@ -46,10 +46,12 @@ app/
 
 ### Layer responsibilities
 
-- **Controllers** — thin: validate, delegate to a service/model, return a view or
-  redirect. No raw SQL, no business logic (see [CONVENTIONS.md](CONVENTIONS.md) §3).
-- **Services** (`app/Services/`) — reusable business logic; implement
+- **Controllers**: thin: validate, delegate to a service/model, return a view or
+  redirect. No raw SQL, no business logic (see [conventions.md](conventions.md) §3).
+- **Services** (`app/Services/`): reusable business logic; implement
   `ServiceInterface` where appropriate.
+- **Models**: Eloquent; derived values live here as accessors. Two models may map to
+  the same legacy table: shared behavior goes in a `Concerns/` trait.
 
   | Service                  | Responsibility                                                                                                                             |
   | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -60,37 +62,34 @@ app/
   | `DashboardService`       | Aggregate dashboard widget data                                                                                                            |
   | `BrigadeService`         | Brigade identity / global settings                                                                                                         |
   | `PermissionResolver`     | Section-scoped, ceiling-based permission resolution (see CONVENTIONS §9)                                                                   |
-  | `SectionScopeService`    | Data-isolation authority for `multi_site` — per-request visible section set (see CONVENTIONS §10)                                          |
-  | `PasswordPolicyService`  | Per-group password policy (length, expiry, attempts, blocklist) — see [../security/password-policies.md](../security/password-policies.md) |
-  | `DocumentService`        | Document library — folders/files for a section (uses `DocumentAclService`)                                                                 |
+  | `SectionScopeService`    | Data-isolation authority for `multi_site`: per-request visible section set (see CONVENTIONS §10)                                          |
+  | `PasswordPolicyService`  | Per-group password policy (length, expiry, attempts, blocklist): see [../security/password-policies.md](../security/password-policies.md) |
+  | `DocumentService`        | Document library: folders/files for a section (uses `DocumentAclService`)                                                                 |
   | `DocumentAclService`     | Per-folder document ACL resolution (principal sets + ancestor chain)                                                                       |
   | `NotificationService`    | Plain-text email dispatch, honouring the `mail_allowed` flag                                                                               |
   | `TableExportService`     | Universal XLSX / CSV export                                                                                                                |
   | `ICalExportService`      | iCal export                                                                                                                                |
-  | `PersonnelExportService` | vCard / PDF data (livret, carte adhérent — rendered client-side with pdf-lib + section letterhead)                                         |
-
-- **Models** — Eloquent; derived values live here as accessors. Two models may map to
-  the same legacy table — shared behaviour goes in a `Concerns/` trait.
+  | `PersonnelExportService` | vCard / PDF data (livret, carte adhérent: rendered client-side with pdf-lib + section letterhead)                                         |
 
 ## `config/`
 
 | File                                                      | Purpose                                                                                           |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `app.php`                                                 | Application identity (name, env, debug, URL)                                                      |
-| `auth.php`                                                | Auth guards/providers — `users` provider → `App\Models\User` (table `pompier`)                    |
-| `fortify.php`                                             | Laravel Fortify config — enables TOTP two-factor (see [../security/totp.md](../security/totp.md)) |
+| `auth.php`                                                | Auth guards/providers: `users` provider → `App\Models\User` (table `pompier`)                    |
+| `fortify.php`                                             | Laravel Fortify config: enables TOTP two-factor (see [../security/totp.md](../security/totp.md)) |
 | `ldap.php`                                                | LDAP connections + auth settings (see [../security/ldap.md](../security/ldap.md))                 |
 | `habilitations.php`                                       | Obsolete-feature list for the permission matrices (SSOT for those)                                |
-| `documents.php`                                           | Document library — storage subpath, supported extensions, size cap, feature IDs                   |
+| `documents.php`                                           | Document library: storage subpath, supported extensions, size cap, feature IDs                   |
 | `brigade.php`                                             | Brigade-specific settings (version, features)                                                     |
-| `personnel.php`                                           | Personnel lookup maps (statuts, badges, civilités) — SSOT for those                               |
+| `personnel.php`                                           | Personnel lookup maps (statuts, badges, civilités): SSOT for those                               |
 | `navigation.php`                                          | Top-level menu definition (rendered by `NavigationService`)                                       |
 | `legacy_bridge.php`                                       | Which legacy `.php` pages the bridge still serves                                                 |
 | `backup.php`                                              | Backup destination, schedule, retention                                                           |
 | `database.php`                                            | Connections (default + optional `legacy` for parity validation)                                   |
 | `cache.php` / `queue.php` / `session.php` / `logging.php` | Framework subsystems                                                                              |
 
-> New lookup maps and external URLs belong in `config/` (SSOT, rule 1) — never inline.
+> New lookup maps and external URLs belong in `config/` (SSOT, rule 1): never inline.
 
 ## `database/`
 
@@ -146,23 +145,23 @@ resources/
 ```
 
 Asset structure and the build pipeline are documented in
-[DEVELOPMENT.md](DEVELOPMENT.md) §5.
+[development.md](development.md) §5.
 
 ## `storage/`
 
-- `logs/` — application logs
-- `framework/` — cache, sessions, compiled views
-- `app/backups/` — database dumps written by the backup feature
-- `app/private/documents/{S_ID}/{DF_ID}/` — document-library files (auth-gated via `DocumentController`)
-- `app/private/profile_pictures/` — personnel portrait photos (auth-gated via `PersonnelController::photo()`)
-- `app/private/sections/{S_ID}/pdf/` — section letterhead PDFs (auth-gated via `OrganizationController`)
-- `app/private/sections/{S_ID}/images/` — section badge images (auth-gated via `OrganizationController`)
-- `app/photos/{S_ID}/{album_id}/` — photo-album images (auth-gated via `PhotoController::photoServe()`)
+- `logs/`: application logs
+- `framework/`: cache, sessions, compiled views
+- `app/backups/`: database dumps written by the backup feature
+- `app/private/documents/{S_ID}/{DF_ID}/`: document-library files (auth-gated via `DocumentController`)
+- `app/private/profile_pictures/`: personnel portrait photos (auth-gated via `PersonnelController::photo()`)
+- `app/private/sections/{S_ID}/pdf/`: section letterhead PDFs (auth-gated via `OrganizationController`)
+- `app/private/sections/{S_ID}/images/`: section badge images (auth-gated via `OrganizationController`)
+- `app/photos/{S_ID}/{album_id}/`: photo-album images (auth-gated via `PhotoController::photoServe()`)
 
 ### Public vs private storage policy
 
-**`public/`** must only contain files that belong to the application itself and carry no
-expectation of privacy — UI assets, default avatars, app-bundled PDFs:
+**`public/`** only contains files with no expectation of privacy (UI assets,
+default avatars, app-bundled PDFs):
 
 | Path             | Contents                                                               |
 | ---------------- | ---------------------------------------------------------------------- |
@@ -180,26 +179,21 @@ relocate files from legacy public paths into the canonical private tree.
 ## Feature flags & gating
 
 Optional capabilities (Véhicules, Matériel, Cotisations, Cartographie, Animaux, …)
-are switched on/off from one place. The two legacy `configuration` buckets —
-TAB 1 "Fonctionnalités" and TAB 6 "Modules" — are unified into the native
-`ob_feature` registry.
+are switched on/off from one place: the native `ob_feature` registry, unifying
+the two legacy `configuration` buckets (TAB 1 "Fonctionnalités", TAB 6 "Modules").
 
 - **`ob_feature`** (one row per capability): `key` (mirrors `configuration.NAME`),
   `name`, `category` (`fonctionnalite` | `module`), `status` (`native` | `wip`),
-  `enabled`, `legacy_config_id`. Back-filled from `configuration`; toggles are
-  written back to the legacy row so un-migrated code keeps working.
-- **`FeatureService`** — per-request-cached `isEnabled(key)` / `all()` /
+  `enabled`, `legacy_config_id`. Toggles write back to the legacy row so
+  un-migrated code keeps working.
+- **`FeatureService`**: per-request-cached `isEnabled(key)` / `all()` /
   `setEnabled()`. The single read/write point; never query `ob_feature` directly.
-- **Route gate** — `Route::…->middleware('feature:vehicules')` (alias
-  `RequireFeature`) responds **404** when the flag is off, so a disabled screen
-  behaves as if it does not exist.
-- **Nav gate** — add `'feature' => 'key'` to a `config/navigation.php` group or
-  item and `NavigationService` hides it when the flag is off.
-- **Admin UI** — Administration ▸ **Fonctionnalités** (`/admin/fonctionnalites`)
-  lists every capability with a toggle; `status = wip` (not yet migrated, e.g.
-  Animaux) shows a **WIP** marker but remains toggleable. Administration ▸
-  **Plugins** (`/admin/plugins`) is a WIP placeholder for a future community
-  marketplace.
+- **Route gate**: `Route::…->middleware('feature:vehicules')` responds **404**
+  when the flag is off.
+- **Nav gate**: add `'feature' => 'key'` to a `config/navigation.php` entry.
+- **Admin UI**: Administration ▸ **Fonctionnalités** (`/admin/fonctionnalites`)
+  lists every capability with a toggle; `status = wip` shows a **WIP** marker
+  but stays toggleable.
 
 To gate a newly-migrated screen: add `feature:<key>` to its route(s) and a
 `'feature' => '<key>'` hook to its nav entry, then flip the row to `status = native`.
@@ -208,23 +202,22 @@ To gate a newly-migrated screen: add `feature:<key>` to its route(s) and a
 
 ## Legacy bridge
 
-Until every menu is migrated, the legacy eBrigade app is kept available read-only
-under `archive/legacy_app/` and reached through:
+Until every menu is migrated, legacy eBrigade (`archive/legacy_app/`, read-only)
+is reached through:
 
-- `routes/web_legacy_bridge.php` — `/legacy/...` route entries
-- `app/Http/Controllers/Legacy/LegacyBridgeController.php` — executes the legacy script
-- `config/legacy_bridge.php` — the allow-list of bridged pages
+- `routes/web_legacy_bridge.php`: `/legacy/...` route entries
+- `app/Http/Controllers/Legacy/LegacyBridgeController.php`: executes the legacy script
+- `config/legacy_bridge.php`: the allow-list of bridged pages
 
-When a page is migrated, its route moves to `web.php`, its bridge entry is removed,
-and any remaining references are flagged per [CONVENTIONS.md](CONVENTIONS.md) §7. The
-end state (Phase 4) deletes `archive/legacy_app/` and the bridge entirely. Migration
-status is tracked in [TODO.md](../../.github/TODO.md); the full file map is in
-[legacy-mapping.md](legacy-mapping.md).
+When a page is migrated: move its route to `web.php`, remove its bridge entry,
+flag remaining references per [conventions.md](conventions.md) §7. Phase 4
+deletes `archive/legacy_app/` and the bridge entirely. Status:
+[TODO.md](../../.github/TODO.md); full file map: [legacy-mapping.md](legacy-mapping.md).
 
 ---
 
 ## See also
 
-- [CONVENTIONS.md](CONVENTIONS.md) — binding coding rules and UI patterns
-- [DEVELOPMENT.md](DEVELOPMENT.md) — setup, database, auth, assets, tooling
-- [legacy-mapping.md](legacy-mapping.md) — legacy file → new implementation map
+- [conventions.md](conventions.md): binding coding rules and UI patterns
+- [development.md](development.md): setup, database, auth, assets, tooling
+- [legacy-mapping.md](legacy-mapping.md): legacy file → new implementation map

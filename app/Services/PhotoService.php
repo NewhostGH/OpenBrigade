@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Photo-album business logic — single source of truth for album/photo
+ * Photo-album business logic: single source of truth for album/photo
  * listing, file storage, and deletion. Keeps {@see PhotoController} thin.
  *
  * Files are stored in the public disk under photos/{S_ID}/{album_id}/{name}

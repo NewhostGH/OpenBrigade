@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
  * captured error traces in one table.
  *
  * Rows are written by the custom Monolog `database` channel
- * (App\Logging\DatabaseLogHandler) — every Log::*, every uncaught exception
+ * (App\Logging\DatabaseLogHandler): every Log::*, every uncaught exception
  * (severity ≥ the configured level) and every slow request lands here, enriched
  * with the acting pompier and request metadata. The same events are mirrored to
  * the file channel and, when enabled, to Sentry/GlitchTip.

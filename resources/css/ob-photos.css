@@ -1,6 +1,6 @@
 /* ── Photo album module ──────────────────────────────────────────────────── */
 
-/* Album index — card grid */
+/* Album index: card grid */
 .ob-photo-album-card {
     transition: box-shadow 0.15s ease, transform 0.15s ease;
     border: 1px solid var(--bs-border-color);
@@ -11,7 +11,7 @@
     transform: translateY(-2px);
 }
 
-/* Cover image — 4:3 aspect ratio, click → album */
+/* Cover image: 4:3 aspect ratio, click → album */
 .ob-photo-album-cover {
     display: block;
     position: relative;
@@ -39,7 +39,7 @@
     background: var(--bs-tertiary-bg);
 }
 
-/* Card title — plain link, NOT stretched-link (stretched-link breaks footer buttons) */
+/* Card title: plain link, NOT stretched-link (stretched-link breaks footer buttons) */
 .ob-photo-album-name {
     font-size: var(--font-size-sm);
     color: var(--bs-body-color);
@@ -52,7 +52,7 @@
     text-decoration: underline;
 }
 
-/* Card footer actions — positioned above card z-stack, large enough to tap */
+/* Card footer actions: positioned above card z-stack, large enough to tap */
 .ob-photo-album-actions {
     display: flex;
     align-items: center;
@@ -67,7 +67,7 @@
     display: contents;
 }
 
-/* ── Album detail — photo grid ───────────────────────────────────────────── */
+/* ── Album detail: photo grid ───────────────────────────────────────────── */
 
 .ob-photo-grid {
     display: grid;
@@ -166,7 +166,7 @@
     display: flex;
 }
 
-/* Cover badge — bottom-left star */
+/* Cover badge: bottom-left star */
 .ob-photo-cover-badge {
     position: absolute;
     bottom: 5px;

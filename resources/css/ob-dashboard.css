@@ -510,7 +510,7 @@
 
 .ob-dash-about-arrow { color: var(--text-muted-soft); }
 
-/* ── Edit mode toggle — fixed pill at bottom-right, takes no layout space ── */
+/* ── Edit mode toggle: fixed pill at bottom-right, takes no layout space ── */
 .ob-btn-edit-mode {
     position:      fixed;
     bottom:        24px;

@@ -11,7 +11,7 @@ use Throwable;
  *
  * The .env values act as the *instantiator*: on first render the rows are
  * seeded from the effective config so the interface shows what the install
- * currently uses. From then on the stored rows are the source of truth —
+ * currently uses. From then on the stored rows are the source of truth:
  * `apply()` overlays every non-empty row onto config('mail.*') at boot.
  * Emptying a field falls back to the .env default again.
  */

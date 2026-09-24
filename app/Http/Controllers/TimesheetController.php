@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
- * Horaires de travail — weekly timesheet for salaried staff (P_STATUT SAL/FONC).
+ * Horaires de travail: weekly timesheet for salaried staff (P_STATUT SAL/FONC).
  *
- * One navigable week (Monday–Sunday) is shown for a single selected person as
+ * One navigable week (Monday-Sunday) is shown for a single selected person as
  * seven day-rows: two work slots (morning/afternoon), overtime, a computed
  * daily total and a free comment. Absences (accepted `indisponibilite`) are
  * surfaced read-only for context.
@@ -339,7 +339,7 @@ class TimesheetController extends Controller
             $values['CREATED_DATE'] = $now;
         }
 
-        // CREATED_DATE is NOT NULL — seed it on first insert.
+        // CREATED_DATE is NOT NULL: seed it on first insert.
         if (! DB::table('horaires_validation')->where($keys)->exists()) {
             $values['CREATED_BY'] ??= $userId;
             $values['CREATED_DATE'] ??= $now;

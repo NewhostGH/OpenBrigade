@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.references.consumable_category.title') . ' — ' . config('app.name'))
+@section('title', __('admin.references.consumable_category.title') . ' | ' . config('app.name'))
 
 @section('content')
 

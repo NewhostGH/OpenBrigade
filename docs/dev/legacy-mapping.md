@@ -1,25 +1,22 @@
 # Legacy → Laravel mapping
 
-Maps every file under `archive/legacy_app/` to its counterpart in the new Laravel
-implementation. The legacy app is a flat procedural PHP codebase (one script per
-page/action); the new app is an MVC Laravel app under `app/`, `routes/`,
-`resources/views/`.
+Maps every file under `archive/legacy_app/` (flat procedural PHP, one script
+per page/action) to its counterpart in the new MVC Laravel app (`app/`,
+`routes/`, `resources/views/`).
 
 ## Legend
 
-- A path under `app/...` / `resources/...` means the legacy file's behaviour is (at
+- A path under `app/...` / `resources/...`: the legacy file's behavior is (at
   least partly) ported there.
-- **WIP** = not yet ported. The feature still lives only in legacy (often reachable
-  through `routes/web_legacy_bridge.php` / `LegacyBridgeController`), or has no new
-  equivalent yet. Behaviour is unchanged from the legacy version.
+- **WIP**: not yet ported, still legacy-only (often via
+  `routes/web_legacy_bridge.php` / `LegacyBridgeController`), behavior unchanged.
 
-**Scope** — per request, this excludes `webfonts/`, `user-data/`, `sql/`,
-`scripts/`; for `lib/` only the module names are listed. Static `images/` are mapped
-at folder granularity (they are binary assets copied as-is).
+**Scope**: excludes `webfonts/`, `user-data/`, `sql/`, `scripts/`; `lib/` lists
+module names only; `images/` mapped at folder granularity.
 
-> Helper grouping note: legacy `fonctions_*.php` were a shared procedural function
-> library. Their logic is being dissolved into Eloquent models, controllers and
-> form requests rather than ported 1:1; each is listed in its domain below.
+> Legacy `fonctions_*.php` (shared procedural helpers) are dissolved into
+> Eloquent models/controllers/form requests rather than ported 1:1; each is
+> listed in its domain below.
 
 ---
 
@@ -44,13 +41,13 @@ at folder granularity (they are binary assets copied as-is).
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
 | `index.php`        | `app/Http/Controllers/DashboardController.php` + `resources/views/dashboard/`                                                  |
 | `index_d.php`      | `DashboardController.php`                                                                                                      |
-| `save_accueil.php` | `DashboardController::saveLayout()` — `POST /dashboard/layout`, persists widget order/column per user in `ob_dashboard_layout` |
+| `save_accueil.php` | `DashboardController::saveLayout()`: `POST /dashboard/layout`, persists widget order/column per user in `ob_dashboard_layout` |
 | `myagenda.php`     | `PlanningController.php` (personal agenda merged into the planning view)                                                       |
 | `noscript.php`     | **WIP**                                                                                                                        |
 | `error.php`        | **WIP**                                                                                                                        |
-| `config.php`       | N/A — replaced by Laravel `config/` + `.env`                                                                                   |
+| `config.php`       | N/A: replaced by Laravel `config/` + `.env`                                                                                   |
 | `wizard.php`       | **WIP** (first-run setup)                                                                                                      |
-| `rebuild_section_flat.php` | **Retired** — `section_flat` table dropped; depth derived from `section.S_PARENT` tree at query time in `DashboardService` |
+| `rebuild_section_flat.php` | **Retired**: `section_flat` table dropped; depth derived from `section.S_PARENT` tree at query time in `DashboardService` |
 
 ## Events (événements)
 
@@ -63,7 +60,7 @@ at folder granularity (they are binary assets copied as-is).
 | `evenement_display.php`            | `EventController.php` (`show`)                                                               |
 | `evenement_modal.php`              | `event/show.blade.php`                                                                       |
 | `evenement_choice.php`             | `EventController.php`                                                                        |
-| `evenement_duplicate.php`          | `EventController.php` (`duplicate`) — copy with date-shift, optional participants/vehicles  |
+| `evenement_duplicate.php`          | `EventController.php` (`duplicate`): copy with date-shift, optional participants/vehicles  |
 | `evenement_inscription.php`        | `EventController.php` (`participantStore`)                                                   |
 | `evenement_info_participant.php`   | `EventController.php` (`participantUpdate`)                                                  |
 | `evenement_equipes.php`            | `EventController.php` (`equipe*`)                                                            |
@@ -79,7 +76,7 @@ at folder granularity (they are binary assets copied as-is).
 | `evenement_list_xls.php`           | `EventController.php` (`exportParticipants`)                                                 |
 | `evenement_xls.php`                | `EventController.php` (`exportListXls`/`exportListCsv`)                                      |
 | `evenement_vehicule_xls.php`       | `EventController.php` (per-event vehicle XLS)                                                |
-| `evenement_competences.php`        | `EventController.php` (`Postes requis` — required positions vs enrolled headcount)          |
+| `evenement_competences.php`        | `EventController.php` (`Postes requis`: required positions vs enrolled headcount)          |
 | `evenement_diplome.php`            | **WIP**                                                                                      |
 | `evenement_options.php`            | `EventController.php` (`optionGroupStore/Update/Destroy`, `optionStore/Update/Destroy`, `dropdownChoiceStore/Destroy`) + `event/show.blade.php` (Options d'inscription card + modals) |
 | `evenement_option_choix.php`       | `EventController.php` (`participantChoicesSave`) + `event/show.blade.php` (`#choicesModal-{P_ID}` per participant)                                                                    |
@@ -92,7 +89,7 @@ at folder granularity (they are binary assets copied as-is).
 | `evenement_facturation_num.php`    | **WIP**                                                                                      |
 | `evenement_tarif.php`              | **WIP**                                                                                      |
 | `evenement_tarif_formation.php`    | **WIP**                                                                                      |
-| `repo_events.php`                  | `StatisticsController.php` — bridge redirects to `statistics.index`                          |
+| `repo_events.php`                  | `StatisticsController.php`: bridge redirects to `statistics.index`                          |
 | `bilan_participation.php`          | `StatisticsController.php` (bilan annuel, WIP parity)                                        |
 
 ## Personnel / members
@@ -112,8 +109,8 @@ at folder granularity (they are binary assets copied as-is).
 | `personnel_reunion_xls.php`    | `PersonnelController.php` (per-member meeting participation XLS)                                      |
 | `save_info_adherent.php`       | `PersonnelController.php` (`update`)                                                                 |
 | `upd_personnel_salarie.php`    | `PersonnelController.php` (salarié contract/hours card)                                              |
-| `personnel_contact.php`        | `PersonnelController.php` (`updateContacts` — contact handles card)                                  |
-| `personnel_maitre.php`         | `animaux` plugin (official registry) — handler/animal management                                    |
+| `personnel_contact.php`        | `PersonnelController.php` (`updateContacts`: contact handles card)                                  |
+| `personnel_maitre.php`         | `animaux` plugin (official registry): handler/animal management                                    |
 | `personnel_tenues.php`         | `PersonnelController.php` (`tenues`) + `personnel/tenues.blade.php`                                  |
 | `save_personnel_tenues.php`    | `PersonnelController.php` (`tenues` save)                                                            |
 | `personnel_preferences.php`    | `PersonnelController.php` (`preferences`) + `personnel/preferences.blade.php`                       |
@@ -121,7 +118,7 @@ at folder granularity (they are binary assets copied as-is).
 | `personnel_formation.php`      | `PersonnelController.php` (`storeTraining`/`updateTraining`/`destroyTraining`) + `personnel/show.blade.php` (Formations card + modals) |
 | `save_personnel_formation.php` | `PersonnelController.php` (`storeTraining`/`updateTraining`)                                                                           |
 | `del_personnel_formation.php`  | `PersonnelController.php` (`destroyTraining`)                                                                                          |
-| `formations_xls.php`           | `PersonnelController::exportFormationsXls()` — GET `/personnel/{id}/export/formations`, XLS button in Formations card                  |
+| `formations_xls.php`           | `PersonnelController::exportFormationsXls()`: GET `/personnel/{id}/export/formations`, XLS button in Formations card                  |
 | `diplome_edit.php`             | **WIP** (complex PDF field-positioning admin screen)                                                                                   |
 | `qualifications.php`           | `PersonnelController.php` (`*Qualification`) + `personnel/qualifications.blade.php`                  |
 | `qualifications_xls.php`       | `PersonnelController.php` (qualifications XLS/CSV, section-scoped)                                    |
@@ -134,7 +131,7 @@ at folder granularity (they are binary assets copied as-is).
 | `livesearch.php`               | **WIP**                                                                                              |
 | `user_info.php`                | **WIP**                                                                                              |
 | `specific_info.php`            | **WIP** (custom member fields)                                                                       |
-| `homonymes_manage.php`         | `PersonnelController.php` (`merge` — homonym detection + merge tool)                                 |
+| `homonymes_manage.php`         | `PersonnelController.php` (`merge`: homonym detection + merge tool)                                 |
 | `homonymes_modal.php`          | `personnel/merge.blade.php`                                                                          |
 | `vcard.php`                    | `PersonnelController.php` (`exportVcard`) + `app/Services/PersonnelExportService.php` (`buildVcard`) |
 | `vcard_class.php`              | `PersonnelExportService.php` (Sabre VObject)                                                         |
@@ -148,7 +145,7 @@ at folder granularity (they are binary assets copied as-is).
 | `habilitations.php`              | `app/Http/Controllers/PermissionController.php` + `resources/views/admin/permissions/index.blade.php` + `app/Services/PermissionResolver.php` (resolution); "Mes droits" preview in `MyPermissionsController.php` |
 | `save_habilitations.php`         | `PermissionController.php` (`setGrant`/`setUserGrant`/`toggleCeiling`/`group*`)                                                                                |
 | `upd_habilitations.php`          | `PermissionController.php`                                                                                                                                     |
-| `habilitations_xls.php`          | `PermissionController.php` (`exportGroup` — per group/role member export XLS/CSV)                                                                              |
+| `habilitations_xls.php`          | `PermissionController.php` (`exportGroup`: per group/role member export XLS/CSV)                                                                              |
 | `hierarchie_competence.php`      | `ReferenceController.php` (`competenceHierarchy*`) + `resources/views/admin/references/competence-hierarchy.blade.php` (list + member management, `poste_hierarchie`) |
 | `save_hierarchie_competence.php` | `ReferenceController.php` (`competenceHierarchyStore`/`Update`/`Destroy`)                                                                                       |
 | `upd_hierarchie_competence.php`  | `ReferenceController.php` (`competenceHierarchyUpdate`, edit modal in `competence-hierarchy.blade.php`)                                                          |
@@ -189,12 +186,12 @@ at folder granularity (they are binary assets copied as-is).
 | `upd_vehicule.php`       | `VehicleController.php` (`edit`/`update`)                                                   |
 | `save_vehicule.php`      | `VehicleController.php` (`store`/`update`)                                                  |
 | `del_vehicule.php`       | `VehicleController.php` (`destroy`)                                                         |
-| `materiel_embarquer.php` | `VehicleController::equipmentAttach/Detach` — assign/unassign equipment from vehicle show page |
+| `materiel_embarquer.php` | `VehicleController::equipmentAttach/Detach`: assign/unassign equipment from vehicle show page |
 | `edit_categorie_consommable.php` | `ReferenceController::consumableCategory*` + `admin/references/consumable-category.blade.php` |
 | `save_edit_categorie_consommable.php` | `ReferenceController::consumableCategoryStore/Update` |
 | `del_categorie_consommable.php` | `ReferenceController::consumableCategoryDestroy` |
 | `vehicule_xls.php`       | `VehicleController.php` (XLS/CSV list export)                                               |
-| `vehicule_load.php` (event history tab) | `VehicleController::show()` — full year-filtered paginated event history with function type + km stats (was last-10-only) |
+| `vehicule_load.php` (event history tab) | `VehicleController::show()`: full year-filtered paginated event history with function type + km stats (was last-10-only) |
 | `paramfnv.php`           | `ReferenceController.php` (`vehicleFunction*`) + `admin/references/vehicle-function.blade.php` |
 | `paramfnv_edit.php`      | `ReferenceController.php`                                                                   |
 | `paramfnv_save.php`      | `ReferenceController.php` (`vehicleFunctionStore`/`Update`)                                 |
@@ -254,7 +251,7 @@ at folder granularity (they are binary assets copied as-is).
 | `save_prelevements.php`       | `DuesController.php` (`saveDirectDebits`)                                                       |
 | `config_prelevements.php`     | **WIP**                                                                                         |
 | `virements.php`               | `DuesController.php` (`transfers`) + `dues/transfers.blade.php`                                 |
-| `virements_extract.php`       | `DuesController.php` (`transfers`) — bridge redirects to `dues.transfers`                       |
+| `virements_extract.php`       | `DuesController.php` (`transfers`): bridge redirects to `dues.transfers`                       |
 | `element_facturable.php`      | **WIP**                                                                                         |
 | `save_element_facturable.php` | **WIP**                                                                                         |
 | `del_element_facturable.php`  | **WIP**                                                                                         |
@@ -280,7 +277,7 @@ at folder granularity (they are binary assets copied as-is).
 | `configuration_icone_grade.php`  | `ReferenceController.php` (`gradeIconUpload`/`gradeIconDestroy`)                 |
 | `edit_categorie_grades.php`      | `ReferenceController.php` (`gradeCategory*`) + `admin/references/grade-category.blade.php` |
 | `save_edit_categorie_grades.php` | `ReferenceController.php` (`gradeCategoryStore`/`Update`)                        |
-| `del_categorie_grade.php`        | `ReferenceController.php` (`gradeCategoryDestroy` — blocked if grades assigned)  |
+| `del_categorie_grade.php`        | `ReferenceController.php` (`gradeCategoryDestroy`: blocked if grades assigned)  |
 
 ## Duty / on-call (gardes, astreintes, piquets)
 
@@ -292,7 +289,7 @@ at folder granularity (they are binary assets copied as-is).
 | `astreintes_updates.php`   | `DutyController.php`                                                                                     |
 | `feuille_garde.php`        | `DutyController.php` (`index`) + `duty/index.blade.php`                                                  |
 | `save_garde.php`           | `DutyController.php`                                                                                     |
-| `tableau_garde.php`        | `DutyController.php` (`index`) — bridge redirects to `duty.index`                                        |
+| `tableau_garde.php`        | `DutyController.php` (`index`): bridge redirects to `duty.index`                                        |
 | `tableau_garde_create.php` | **WIP**                                                                                                  |
 | `tableau_garde_status.php` | **WIP**                                                                                                  |
 | `tableau_garde_xls.php`    | `DutyController.php` (monthly on-call/astreinte roster XLS/CSV)                                          |
@@ -301,7 +298,7 @@ at folder granularity (they are binary assets copied as-is).
 | `save_piquet.php`          | **WIP**                                                                                                  |
 | `type_garde.php`           | `DutyTypeController.php` (`index`) + `duty/types.blade.php`                                              |
 | `save_type_garde.php`      | `DutyTypeController.php` (`store`/`update`)                                                              |
-| `del_type_garde.php`       | `DutyTypeController.php` (`destroy` — blocked if guards exist)                                           |
+| `del_type_garde.php`       | `DutyTypeController.php` (`destroy`: blocked if guards exist)                                           |
 | `demande_renfort.php`      | `EventController.php` (`renfortRequest` card + manage page); transmit-to-section still **WIP**           |
 
 ## Availability / unavailability / replacements
@@ -342,7 +339,7 @@ at folder granularity (they are binary assets copied as-is).
 | `delete_event_file.php`                       | **WIP**                                                                                     |
 | `upload.php`                                  | `DocumentController.php`                                                                    |
 | `showfile.php`                                | `DocumentController@download` for library docs; still bridged for entity files              |
-| `config_doc.php`                              | Not library config — PDF attestation/convention text (tracked under the PDF/billing items)  |
+| `config_doc.php`                              | Not library config: PDF attestation/convention text (tracked under the PDF/billing items)  |
 | Document type config                          | `DocumentTypeController.php` + `document/types.blade.php` (`type_document` CRUD, perm 47)   |
 | `observations_modal.php`                      | **WIP**                                                                                     |
 | `document_folders` / `document_security` docs | see `archive/legacy_app/documentation/` below                                               |
@@ -404,7 +401,7 @@ at folder granularity (they are binary assets copied as-is).
 | `configuration.php`       | `app/Http/Controllers/AdminController.php` (`settings`) + `resources/views/admin/settings.blade.php` |
 | `save_configuration.php`  | `AdminController.php` (`saveSetting`/`uploadSetting`/`deleteSetting`)                                |
 | `configuration_db.php`    | `MaintenanceController.php`                                                                          |
-| `configuration_theme.php` | `AdminController.php` (`uploadSetting`/`deleteSetting` — theme images)                               |
+| `configuration_theme.php` | `AdminController.php` (`uploadSetting`/`deleteSetting`: theme images)                               |
 | `parametrage.php`         | `app/Http/Controllers/ReferenceController.php` (`index`) + `admin/references/index.blade.php`        |
 | `company.php`             | `app/Http/Controllers/CompanyController.php` + `resources/views/company/index.blade.php`             |
 | `save_company.php`        | `CompanyController.php`                                                                              |
@@ -437,12 +434,12 @@ at folder granularity (they are binary assets copied as-is).
 
 | Legacy file            | New implementation                                                              |
 | ---------------------- | ------------------------------------------------------------------------------- |
-| `addons.php`           | `admin.plugins` (redirect) — native Plugins marketplace                          |
-| `addons_save.php`      | `admin.fonctionnalites` (redirect) — feature/module toggles now in `ob_feature` |
-| `install_addon.php`    | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
-| `download_addon.php`   | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
-| `download_module.php`  | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
-| `download_package.php` | `admin.plugins` (redirect) — retired, `bridgeable=false`                         |
+| `addons.php`           | `admin.plugins` (redirect): native Plugins marketplace                          |
+| `addons_save.php`      | `admin.fonctionnalites` (redirect): feature/module toggles now in `ob_feature` |
+| `install_addon.php`    | `admin.plugins` (redirect): retired, `bridgeable=false`                         |
+| `download_addon.php`   | `admin.plugins` (redirect): retired, `bridgeable=false`                         |
+| `download_module.php`  | `admin.plugins` (redirect): retired, `bridgeable=false`                         |
+| `download_package.php` | `admin.plugins` (redirect): retired, `bridgeable=false`                         |
 
 ## PDF generation
 
@@ -452,13 +449,13 @@ at folder granularity (they are binary assets copied as-is).
 | `pdf_asa.php`                      | **WIP**                                                                                                                            |
 | `pdf_attestation_fiscale.php`      | **WIP**                                                                                                                            |
 | `pdf_attestation_formation.php`    | **WIP**                                                                                                                            |
-| `pdf_bilans.php`                   | `StatistiqueController.php` (bilan annuel) — client-side pdf-lib (`resources/js/ob-pdf-bilan.js`) — **WIP** (parity not verified)  |
+| `pdf_bilans.php`                   | `StatistiqueController.php` (bilan annuel), client-side pdf-lib (`resources/js/ob-pdf-bilan.js`), **WIP** (parity not verified)  |
 | `pdf_bulletin.php`                 | **WIP**                                                                                                                            |
-| `pdf_carte_adherent.php`           | `PersonnelController.php` (`carteData`) + `PersonnelExportService.php` — client-side pdf-lib (`resources/js/ob-pdf-personnel.js`)  |
+| `pdf_carte_adherent.php`           | `PersonnelController.php` (`carteData`) + `PersonnelExportService.php`: client-side pdf-lib (`resources/js/ob-pdf-personnel.js`)  |
 | `pdf_courrier_nouvel_adherent.php` | **WIP**                                                                                                                            |
 | `pdf_diplome.php`                  | **WIP**                                                                                                                            |
 | `pdf_document.php`                 | **WIP**                                                                                                                            |
-| `pdf_livret.php`                   | `PersonnelController.php` (`livretData`) + `PersonnelExportService.php` — client-side pdf-lib (`resources/js/ob-pdf-personnel.js`) |
+| `pdf_livret.php`                   | `PersonnelController.php` (`livretData`) + `PersonnelExportService.php`: client-side pdf-lib (`resources/js/ob-pdf-personnel.js`) |
 | `export_badges.php`                | **WIP**                                                                                                                            |
 
 ## Exports
@@ -494,9 +491,9 @@ at folder granularity (they are binary assets copied as-is).
 | Legacy file           | New implementation                   |
 | --------------------- | ------------------------------------ |
 | `qrcode.php`          | `PersonnelController::qrCode` → `personnel/qr-code.blade.php` |
-| `qrcode_pic.php`      | `QrCodeService` (SVG, inline) — identity payload; URL variant deferred |
+| `qrcode_pic.php`      | `QrCodeService` (SVG, inline): identity payload; URL variant deferred |
 | `cav_edit.php`        | **WIP**                              |
-| `paginator.class.php` | N/A — replaced by Laravel pagination |
+| `paginator.class.php` | N/A: replaced by Laravel pagination |
 
 ## Shared procedural helper library (`fonctions_*`)
 
@@ -506,7 +503,7 @@ rather than ported as standalone files.
 | Legacy file                 | New implementation                                                    |
 | --------------------------- | --------------------------------------------------------------------- |
 | `fonctions.php`             | Distributed across `app/Models/*` and controllers                     |
-| `fonctions_sql.php`         | N/A — replaced by Eloquent / query builder                            |
+| `fonctions_sql.php`         | N/A: replaced by Eloquent / query builder                            |
 | `fonctions_parameters.php`  | `ParametrageController.php` / `AdminController.php`                   |
 | `fonctions_menu.php`        | `resources/views/layout/sidebar.blade.php` + `ShortcutController.php` |
 | `fonctions_infos.php`       | `DashboardController.php` (widgets)                                   |
@@ -527,7 +524,7 @@ rather than ported as standalone files.
 
 ## `api/` (REST import/export)
 
-All endpoints are **WIP** — no equivalent under `routes/api.php` yet.
+All endpoints are **WIP**: no equivalent under `routes/api.php` yet.
 
 | Legacy file                         | New implementation |
 | ----------------------------------- | ------------------ |
@@ -548,8 +545,8 @@ All endpoints are **WIP** — no equivalent under `routes/api.php` yet.
 
 | Legacy file                  | New implementation                           |
 | ---------------------------- | -------------------------------------------- |
-| `conf/index.php`             | N/A — replaced by Laravel `config/` + `.env` |
-| `conf/optional.php.template` | N/A — replaced by `.env.example`             |
+| `conf/index.php`             | N/A: replaced by Laravel `config/` + `.env` |
+| `conf/optional.php.template` | N/A: replaced by `.env.example`             |
 
 ## `documentation/`
 
@@ -561,18 +558,18 @@ Design notes; not application code. Kept for reference.
 | `documentation/db-info_document_security.md`           | Reference                                           |
 | `documentation/db_modify_document_security_options.md` | Reference                                           |
 
-## `lib/` (third-party modules — names only)
+## `lib/` (third-party modules: names only)
 
 Replaced by Composer packages where a Laravel equivalent exists; otherwise **WIP**.
 
 | Legacy module       | New implementation                                                                                                                                             |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lib/PBKDF2/`       | N/A — replaced by Laravel Hash/bcrypt                                                                                                                          |
-| `lib/PHPMailer/`    | N/A — replaced by Laravel Mail (when mail ported)                                                                                                              |
-| `lib/SMSGatewayMe/` | `App\Services\Sms\Drivers\SmsGatewayMeSender` (v4 HTTP API — no bundled SDK)                                                                                    |
+| `lib/PBKDF2/`       | N/A: replaced by Laravel Hash/bcrypt                                                                                                                          |
+| `lib/PHPMailer/`    | N/A: replaced by Laravel Mail (when mail ported)                                                                                                              |
+| `lib/SMSGatewayMe/` | `App\Services\Sms\Drivers\SmsGatewayMeSender` (v4 HTTP API: no bundled SDK)                                                                                    |
 | `lib/fpdf/`         | Replaced by client-side pdf-lib (`resources/js/ob-pdf-personnel.js`, `ob-pdf-bilan.js`) for livret / carte / bilans; remaining `pdf_*.php` pages still **WIP** |
 | `lib/phpqrcode/`    | Replaced by Composer `endroid/qr-code`, wrapped by `App\Services\QrCodeService`                                                                                 |
-| `lib/vendor/`       | N/A — replaced by Composer `vendor/`                                                                                                                           |
+| `lib/vendor/`       | N/A: replaced by Composer `vendor/`                                                                                                                           |
 | `lib/index.php`     | N/A                                                                                                                                                            |
 
 ---
@@ -593,7 +590,7 @@ component system.
 | `css/print.css`, `css/export-print.css`                                    | **WIP**                                                                   |
 | `css/Chart.css`                                                            | **WIP**                                                                   |
 | `css/imginput.css`                                                         | `resources/css/ob-avatar.css`                                             |
-| `css/all.css`, `css/css.php`, `css/index.php`                              | N/A — replaced by Vite build                                              |
+| `css/all.css`, `css/css.php`, `css/index.php`                              | N/A: replaced by Vite build                                              |
 | `css/bootstrap*.css`, `css/croppie.css`, `css/jquery-jvectormap-2.0.5.css` | **WIP** (vendor)                                                          |
 
 ### `js/`
@@ -616,7 +613,7 @@ swal, etc.) are **WIP** / being dropped.
 | `js/all.js`, `js/checkForm.js`, `js/dateFunctions.js`, etc.                                                                                                                                                                                                                                                                  | `resources/js/app.js` (shared helpers)                      |
 | Other page scripts (`consommable.js`, `materiel.js`, `dispo.js`, `indispo.js`, `planning.js`, `section.js`, `equipe.js`, `poste.js`, `qualifications.js`, `documents.js`, `chat.js`, `habilitations.js`, `tableau_garde.js`, `feuille_garde.js`, `remplacement*.js`, `note_de_frais.js`, `sitac`/`victimes`/`scanner`, etc.) | **WIP**                                                     |
 | Vendor: `jquery*.js`, `bootstrap*.js`, `Chart.bundle.min.js`, `moment-with-locales.min.js`, `js/fullcalendar/`, `js/tablesorter/`, `js/tinymce/`, `js/tokeninput/`, `js/columnFilters/`, `js/scanner/`                                                                                                                       | **WIP** (vendor; mostly dropped)                            |
-| `js/color.php`, `js/index.php`                                                                                                                                                                                                                                                                                               | N/A — replaced by Vite build                                |
+| `js/color.php`, `js/index.php`                                                                                                                                                                                                                                                                                               | N/A: replaced by Vite build                                |
 
 ### `images/`
 
@@ -638,4 +635,4 @@ domain/upload images are copied to `public/images/`.
 
 ## Excluded from this map (per request)
 
-`webfonts/`, `user-data/`, `sql/`, `scripts/` — not enumerated.
+`webfonts/`, `user-data/`, `sql/`, `scripts/`: not enumerated.

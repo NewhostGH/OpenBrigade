@@ -46,11 +46,11 @@ return [
 
     // Titres d'icônes / tooltips
     'icon_capped' => 'Plafonné par la section',
-    'icon_user_deny' => 'Dérogation personnelle — refus',
-    'icon_user_allow' => 'Dérogation personnelle — accordée',
+    'icon_user_deny' => 'Dérogation personnelle - refus',
+    'icon_user_allow' => 'Dérogation personnelle - accordée',
 
     // Libellés dans la colonne Origine
-    'origin_user_deny' => 'Dérogation personnelle — refus',
+    'origin_user_deny' => 'Dérogation personnelle - refus',
     'origin_user_allow' => 'Dérogation personnelle',
 
 ];

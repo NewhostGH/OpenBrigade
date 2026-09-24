@@ -1,13 +1,11 @@
 # Security hardening (Renforcement)
 
-OpenBrigade exposes a set of defence-in-depth controls under
-**Administration → Sécurité → Renforcement** (`/admin/security?tab=hardening`,
-permission `14`). Every control is a setting stored in the legacy
-`configuration` table and read through
+Defense-in-depth controls under **Administration → Sécurité → Renforcement**
+(`/admin/security?tab=hardening`, permission `14`). Every control is a
+setting stored in the legacy `configuration` table, read through
 [`App\Services\SecuritySettingService`](../../app/Services/SecuritySettingService.php).
-
-The controls fall into three groups: HTTP security headers, authentication rate
-limiting, and upload safety (including optional ClamAV malware scanning).
+Three groups: HTTP security headers, authentication rate limiting, upload
+safety (incl. optional ClamAV scanning).
 
 ---
 
@@ -15,12 +13,12 @@ limiting, and upload safety (including optional ClamAV malware scanning).
 
 Applied by [`App\Http\Middleware\SecurityHeaders`](../../app/Http/Middleware/SecurityHeaders.php)
 on every web response. `X-Frame-Options`, `X-Content-Type-Options`,
-`Referrer-Policy` and `Permissions-Policy` are always sent. Two are toggleable:
+`Referrer-Policy` and `Permissions-Policy` are always sent; two are toggleable:
 
 | Setting               | Default          | Effect                                                                                                                       |
 | --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `sec_csp_enabled`     | on               | Emit a `Content-Security-Policy` restricting script/style/img/connect origins.                                               |
-| `sec_csp_report_only` | off              | Send the policy as `Content-Security-Policy-Report-Only` (logs violations without enforcing) — use to test before enforcing. |
+| `sec_csp_report_only` | off              | Send the policy as `Content-Security-Policy-Report-Only` (logs violations without enforcing), use to test before enforcing. |
 | `sec_hsts_enabled`    | off              | Emit `Strict-Transport-Security`. **Only sent over a real HTTPS request**, so an HTTP-only deployment is never locked out.   |
 | `sec_hsts_max_age`    | 15552000 (180 d) | HSTS `max-age` in seconds.                                                                                                   |
 
@@ -32,9 +30,9 @@ on every web response. `X-Frame-Options`, `X-Content-Type-Options`,
 
 ## Authentication rate limiting
 
-The `throttle:auth` middleware (registered in
-[`FortifyServiceProvider`](../../app/Providers/FortifyServiceProvider.php)) guards
-the login and password-reset POST endpoints, keyed by client IP.
+The `throttle:auth` middleware (the `auth` rate limiter, registered in
+[`AppServiceProvider`](../../app/Providers/AppServiceProvider.php)) guards the
+login and password-reset POST endpoints, keyed by client IP.
 
 | Setting                      | Default | Effect                    |
 | ---------------------------- | ------- | ------------------------- |
@@ -48,15 +46,15 @@ Exceeding the limit returns HTTP 429 until the window resets.
 
 ## Upload safety
 
-Every file upload in the app (profile photos, RIB, library documents, album
-photos, grade icons, theme images) is routed through
+Every file upload (profile photos, RIB, library documents, album photos,
+grade icons, theme images) is routed through
 [`App\Services\UploadSecurityService::assertSafe()`](../../app/Services/UploadSecurityService.php),
 which runs two layers.
 
 ### 1. MIME hardening (`sec_upload_mime_hardening`, default on)
 
-- Rejects any file whose declared extension — at **any** part of the name, so
-  `invoice.php.png` is caught — is on the forbidden list in
+- Rejects any file whose declared extension, at **any** part of the name (so
+  `invoice.php.png` is caught), is on the forbidden list in
   [`config/uploads.php`](../../config/uploads.php) (executables, scripts,
   server-side code).
 - Rejects files whose leading magic bytes match a dangerous binary signature
@@ -68,11 +66,11 @@ which runs two layers.
 
 When enabled, each upload is streamed to a [ClamAV](https://www.clamav.net/)
 `clamd` daemon over the INSTREAM protocol by
-[`App\Support\ClamavScanner`](../../app/Support/ClamavScanner.php) (no extra
-Composer dependency — the wire protocol is implemented directly).
+[`App\Support\ClamavScanner`](../../app/Support/ClamavScanner.php) (wire
+protocol implemented directly, no extra Composer dependency).
 
-- A detected threat → the upload is rejected and the signature is logged.
-- The daemon being unreachable → **fail-open by default** (the upload proceeds
+- A detected threat: the upload is rejected and the signature is logged.
+- The daemon being unreachable: **fail-open by default** (the upload proceeds
   and a warning is logged), so a clamd outage never blocks all uploads. Set
   `uploads.clamav.fail_open` to `false` in `config/uploads.php` to fail closed.
 
@@ -125,6 +123,6 @@ confirm the daemon answers.
 
 ### Verifying
 
-Upload the harmless [EICAR test file](https://www.eicar.org/download-anti-malware-testfile/)
-— with scanning on it must be rejected as malware. A normal image must still
+Upload the harmless [EICAR test file](https://www.eicar.org/download-anti-malware-testfile/):
+with scanning on it must be rejected as malware. A normal image must still
 upload successfully.

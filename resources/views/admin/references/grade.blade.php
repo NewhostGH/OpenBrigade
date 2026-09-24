@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.references.grade.title') . ' — ' . config('app.name'))
+@section('title', __('admin.references.grade.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -99,7 +99,7 @@
                                     <td style="font-size:var(--font-size-sm);">{{ $g->G_DESCRIPTION }}</td>
                                     <td class="text-center" style="font-size:var(--font-size-sm);">{{ $g->G_LEVEL }}</td>
                                     <td class="text-center">
-                                        @if($members > 0)<span class="ob-badge ob-badge-int">{{ $members }}</span>@else<span class="text-muted">—</span>@endif
+                                        @if($members > 0)<span class="ob-badge ob-badge-int">{{ $members }}</span>@else<span class="text-muted">{{ __('common.empty_value') }}</span>@endif
                                     </td>
                                     <td class="text-center">
                                         @if($g->G_FLAG)<span class="ob-badge ob-badge-actif">{{ __('common.yes') }}</span>@else<span class="ob-badge ob-badge-archive">{{ __('common.no') }}</span>@endif

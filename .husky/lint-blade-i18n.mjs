@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Blade i18n lint — fails when a Blade template contains a hardcoded
+ * Blade i18n lint: fails when a Blade template contains a hardcoded
  * human-readable string instead of routing it through Laravel localization
  * (`__('...')`, `@lang('...')` or `trans('...')`).
  *

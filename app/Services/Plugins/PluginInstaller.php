@@ -14,7 +14,7 @@ use ZipArchive;
  * sha256 published by the registry is mandatory, zip entries are checked
  * against path traversal and archive caps, and the manifest must match the
  * catalog slug and support this app version. Any refusal throws a
- * translated InvalidPluginException — the UI flashes it, never a 500.
+ * translated InvalidPluginException: the UI flashes it, never a 500.
  */
 class PluginInstaller
 {
@@ -52,7 +52,7 @@ class PluginInstaller
             if (! PluginManifest::compatible((string) config('brigade.version'), $manifest->minAppVersion, $manifest->maxAppVersion)) {
                 throw new InvalidPluginException(__('admin.plugins.err_app_version', [
                     'range' => $manifest->maxAppVersion !== ''
-                        ? $manifest->minAppVersion.' – '.$manifest->maxAppVersion
+                        ? $manifest->minAppVersion.' - '.$manifest->maxAppVersion
                         : '≥ '.$manifest->minAppVersion,
                 ]));
             }
@@ -68,7 +68,7 @@ class PluginInstaller
             $this->state->record($manifest);
 
             // Updating a plugin that is already enabled must apply the new
-            // version's migrations immediately — the fresh code boots on the
+            // version's migrations immediately: the fresh code boots on the
             // very next request.
             if ($wasEnabled) {
                 $this->runMigrations($slug);
@@ -100,7 +100,7 @@ class PluginInstaller
 
     public function disable(string $slug): void
     {
-        // Migrations are deliberately NOT rolled back — disabling must never
+        // Migrations are deliberately NOT rolled back: disabling must never
         // destroy data. Documented in docs/admin/plugins.md.
         $this->state->setEnabled($slug, false);
     }
@@ -122,7 +122,7 @@ class PluginInstaller
 
     /**
      * Download the package and verify its sha256. Both verifications can be
-     * relaxed per registry (dev / intercepting proxies) — the UI badges any
+     * relaxed per registry (dev / intercepting proxies): the UI badges any
      * registry running without them.
      */
     private function download(string $url, string $sha256, bool $verifySsl = true, bool $verifyChecksum = true): string

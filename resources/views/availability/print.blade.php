@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('availability.print_heading') . ' — ' . config('app.name'))
+@section('title', __('availability.print_heading') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -26,7 +26,7 @@
     </div>
 
     <h2 style="font-size:var(--font-size-lg); margin-bottom:8px;">
-        {{ __('availability.print_heading') }} — {{ ucfirst($first->locale('fr')->isoFormat('D MMM')) }}
+        {{ __('availability.print_heading') }} - {{ ucfirst($first->locale('fr')->isoFormat('D MMM')) }}
         → {{ ucfirst($first->copy()->addDays(count($days) - 1)->locale('fr')->isoFormat('D MMM YYYY')) }}
     </h2>
 

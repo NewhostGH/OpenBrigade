@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', e($album->name) . ' — ' . __('photo.title_albums') . ' — ' . config('app.name'))
+@section('title', e($album->name) . ' | ' . __('photo.title_albums') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -136,7 +136,7 @@
 @endif
 
 @if ($canManage)
-    {{-- Combined "Ajouter des photos" modal — two tabs: Upload + Doc library --}}
+    {{-- Combined "Ajouter des photos" modal with two tabs: Upload + Doc library --}}
     <div class="modal fade" id="photoAddModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">

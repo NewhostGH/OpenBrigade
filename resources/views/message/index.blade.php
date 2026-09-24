@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('message.title') . ' — ' . config('app.name'))
+@section('title', __('message.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -48,7 +48,7 @@
                         {{ $msg->M_OBJET ?: __('message.no_subject') }}
                     </div>
                     <div style="font-size:var(--font-size-xs);color:var(--text-muted-soft)">
-                        {{ $msg->author ?? '—' }}
+                        {{ $msg->author ?? __('common.empty_value') }}
                         &mdash;
                         {{ $msg->M_DATE ? \Carbon\Carbon::parse($msg->M_DATE)->locale('fr')->isoFormat('D MMM YYYY') : '' }}
                     </div>

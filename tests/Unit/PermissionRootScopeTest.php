@@ -9,7 +9,7 @@ use App\Services\PermissionResolver;
  * A resolver with the correct sectionChain that includes the org root (S_ID=0).
  *
  * The existing fakeResolver in PermissionResolverTest stops at $sId > 0 and
- * never exercises section 0 — this variant mirrors the real implementation's
+ * never exercises section 0: this variant mirrors the real implementation's
  * `$current >= 0` loop so root-section ceiling cascades can be tested.
  *
  * Tree:   0 (org root, S_PARENT=-1) ──▶ 1 ──▶ 2

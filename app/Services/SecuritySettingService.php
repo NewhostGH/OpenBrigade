@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
  * Values live as NAME/VALUE rows in the legacy `configuration` table (so they
  * survive backups and reuse the existing admin plumbing). Reads are memoised
  * per request and fall back to typed defaults, so a missing row never breaks a
- * page — it simply behaves as the default.
+ * page: it simply behaves as the default.
  */
 class SecuritySettingService
 {
@@ -40,7 +40,7 @@ class SecuritySettingService
     /** @var array<string,string>|null */
     private ?array $cache = null;
 
-    /** Setting names, in display order — used by the admin tab and the seeder. */
+    /** Setting names, in display order: used by the admin tab and the seeder. */
     public static function keys(): array
     {
         return array_keys(self::DEFAULTS);
@@ -81,7 +81,7 @@ class SecuritySettingService
 
     /**
      * Ensure every hardening setting has a row in the `configuration` table,
-     * creating missing ones with their default value. Idempotent — used by both
+     * creating missing ones with their default value. Idempotent: used by both
      * the seeding migration and the admin screen so the page never 500s on a row
      * that isn't there yet. The table's ID column is a non-auto-increment PK, so
      * each new row gets the next free ID.

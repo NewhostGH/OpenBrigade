@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('organization.page_sections') . ' — ' . config('app.name'))
+@section('title', __('organization.page_sections') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -43,9 +43,9 @@
                             <td class="font-monospace fw-semibold">{{ $s->S_CODE }}</td>
                             <td>{{ $s->S_DESCRIPTION }}</td>
                             <td class="text-muted" style="font-size:var(--font-size-xs);">
-                                {{ $s->parent_name ? ($s->parent_code . ' — ' . $s->parent_name) : '—' }}
+                                {{ $s->parent_name ? ($s->parent_code . ' - ' . $s->parent_name) : __('common.empty_value') }}
                             </td>
-                            <td>{{ $s->S_CITY ?: '—' }}</td>
+                            <td>{{ $s->S_CITY ?: __('common.empty_value') }}</td>
                             <td class="text-center">
                                 <span class="ob-badge ob-badge-int">{{ (int) ($counts[$s->S_ID] ?? 0) }}</span>
                             </td>

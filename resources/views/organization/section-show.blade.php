@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($section->S_CODE ?: 'Section') . ' — Organisation — ' . config('app.name'))
+@section('title', ($section->S_CODE ?: 'Section') . ' | Organisation | ' . config('app.name'))
 
 @section('content')
 
@@ -21,7 +21,7 @@
                 <i class="fas fa-layer-group me-2"></i>
                 <span class="font-monospace fw-semibold">{{ $section->S_CODE }}</span>
                 @if ($section->S_DESCRIPTION)
-                    <span class="text-muted fw-normal ms-2">— {{ $section->S_DESCRIPTION }}</span>
+                    <span class="text-muted fw-normal ms-2">- {{ $section->S_DESCRIPTION }}</span>
                 @endif
                 @if ($section->S_INACTIVE)
                     <span class="ob-badge ob-badge-archive ms-2">{{ __('organization.status_inactive') }}</span>
@@ -74,7 +74,7 @@
     </ul>
 
     {{-- ════════════════════════════════════════════════════════════════════════
-         Tab 1 — Informations
+         Tab 1: Informations
     ═══════════════════════════════════════════════════════════════════════════ --}}
     @if ($activeTab === 'informations')
 
@@ -86,18 +86,18 @@
                     </div>
                     <div class="ob-widget-card-body">
                         <dl class="ob-info-grid mb-0">
-                            <div class="ob-info-item"><dt>{{ __('organization.field_code') }}</dt><dd>{{ $section->S_CODE ?: '—' }}</dd></div>
-                            <div class="ob-info-item"><dt>{{ __('organization.field_name') }}</dt><dd>{{ $section->S_DESCRIPTION ?: '—' }}</dd></div>
-                            <div class="ob-info-item"><dt>{{ __('organization.field_order') }}</dt><dd>{{ $section->S_ORDER ?? '—' }}</dd></div>
+                            <div class="ob-info-item"><dt>{{ __('organization.field_code') }}</dt><dd>{{ $section->S_CODE ?: __('common.empty_value') }}</dd></div>
+                            <div class="ob-info-item"><dt>{{ __('organization.field_name') }}</dt><dd>{{ $section->S_DESCRIPTION ?: __('common.empty_value') }}</dd></div>
+                            <div class="ob-info-item"><dt>{{ __('organization.field_order') }}</dt><dd>{{ $section->S_ORDER ?? __('common.empty_value') }}</dd></div>
                             <div class="ob-info-item">
                                 <dt>{{ __('organization.field_parent_section') }}</dt>
                                 <dd>
                                     @if ($section->parent)
                                         <a href="{{ route('organization.sections.show', $section->parent->S_ID) }}">
                                             {{ $section->parent->S_CODE }}
-                                            @if ($section->parent->S_DESCRIPTION)— {{ $section->parent->S_DESCRIPTION }}@endif
+                                            @if ($section->parent->S_DESCRIPTION)- {{ $section->parent->S_DESCRIPTION }}@endif
                                         </a>
-                                    @else —
+                                    @else {{ __('common.empty_value') }}
                                     @endif
                                 </dd>
                             </div>
@@ -200,7 +200,7 @@
                         <form method="POST" action="{{ route('organization.sections.deactivate', $section->S_ID) }}" class="modal-content">
                             @csrf @method('PATCH')
                             <div class="modal-header">
-                                <h5 class="modal-title">{{ __('organization.deactivate_modal_title') }} — {{ $section->S_CODE }}</h5>
+                                <h5 class="modal-title">{{ __('organization.deactivate_modal_title') }} - {{ $section->S_CODE }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('common.close') }}"></button>
                             </div>
                             <div class="modal-body">
@@ -232,7 +232,7 @@
         @endif
 
     {{-- ════════════════════════════════════════════════════════════════════════
-         Tab 2 — Organigramme
+         Tab 2: Organigramme
     ═══════════════════════════════════════════════════════════════════════════ --}}
     @elseif ($activeTab === 'organigramme')
 
@@ -279,7 +279,7 @@
         </div>
 
     {{-- ════════════════════════════════════════════════════════════════════════
-         Tab 3 — Personnalisation
+         Tab 3: Personnalisation
     ═══════════════════════════════════════════════════════════════════════════ --}}
     @elseif ($activeTab === 'personalisation')
 
@@ -465,7 +465,7 @@
         </form>
 
     {{-- ════════════════════════════════════════════════════════════════════════
-         Tab 4 — Agréments & Médailles
+         Tab 4: Agréments & Médailles
     ═══════════════════════════════════════════════════════════════════════════ --}}
     @elseif ($activeTab === 'agrements')
 
@@ -596,7 +596,7 @@
         </script>
 
     {{-- ════════════════════════════════════════════════════════════════════════
-         Tab 5 — Cotisation / RIB
+         Tab 5: Cotisation / RIB
     ═══════════════════════════════════════════════════════════════════════════ --}}
     @elseif ($activeTab === 'cotisation')
 
@@ -723,7 +723,7 @@
         </form>
 
     {{-- ════════════════════════════════════════════════════════════════════════
-         Tab 6 — Interdictions (section_stop_evenement)
+         Tab 6: Interdictions (section_stop_evenement)
     ═══════════════════════════════════════════════════════════════════════════ --}}
     @elseif ($activeTab === 'interdictions')
 

@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.plugins.title') . ' — ' . config('app.name'))
+@section('title', __('admin.plugins.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -18,7 +18,7 @@
             <strong>{{ __('admin.plugins.load_failures') }}</strong>
             <ul class="mb-0">
                 @foreach ($loadFailures as $slug => $reason)
-                    <li><code>{{ $slug }}</code> — {{ $reason }}</li>
+                    <li><code>{{ $slug }}</code> - {{ $reason }}</li>
                 @endforeach
             </ul>
         </div>
@@ -28,7 +28,7 @@
     @foreach ($registryErrors as $registryName => $reason)
         <div class="alert alert-warning py-2" style="font-size:var(--font-size-sm);">
             <i class="fas fa-plug-circle-xmark me-1"></i>
-            {{ __('admin.plugins.registry_error', ['name' => $registryName]) }} — {{ $reason }}
+            {{ __('admin.plugins.registry_error', ['name' => $registryName]) }} - {{ $reason }}
         </div>
     @endforeach
 
@@ -121,7 +121,7 @@
                                                 @endif
                                                 @if (! ($plugin['compatible'] ?? true) || ($plugin['installed_incompatible'] ?? false))
                                                     <span class="ob-badge ob-badge-bloqued"
-                                                          title="{{ __('admin.plugins.requires_range', ['range' => ($plugin['min_app_version'] ?? '?').(($plugin['max_app_version'] ?? '') !== '' ? ' – '.$plugin['max_app_version'] : ' +')]) }}">
+                                                          title="{{ __('admin.plugins.requires_range', ['range' => ($plugin['min_app_version'] ?? '?').(($plugin['max_app_version'] ?? '') !== '' ? ' - '.$plugin['max_app_version'] : ' +')]) }}">
                                                         {{ __('admin.plugins.state_incompatible') }}
                                                     </span>
                                                 @endif
@@ -154,7 +154,7 @@
                                         </form>
                                     @else
                                         <span class="text-muted align-self-center" style="font-size:var(--font-size-xs);">
-                                            {{ __('admin.plugins.requires_range', ['range' => ($plugin['min_app_version'] ?? '?').(($plugin['max_app_version'] ?? '') !== '' ? ' – '.$plugin['max_app_version'] : ' +')]) }}
+                                            {{ __('admin.plugins.requires_range', ['range' => ($plugin['min_app_version'] ?? '?').(($plugin['max_app_version'] ?? '') !== '' ? ' - '.$plugin['max_app_version'] : ' +')]) }}
                                         </span>
                                     @endif
                                 @else
@@ -191,7 +191,7 @@
                                     @endif
                                 @endif
                                 @if (! empty($plugin['registry']))
-                                    {{-- Source registry — one colour per dépôt so origins read at a glance --}}
+                                    {{-- Source registry: one colour per dépôt so origins read at a glance --}}
                                     <span class="ob-badge ob-plugin-registry-badge ms-auto align-self-center"
                                           style="background:hsl({{ crc32($plugin['registry']) % 360 }}, 45%, 38%);">
                                         <i class="fas fa-box-open me-1"></i>{{ $plugin['registry'] }}
@@ -240,7 +240,7 @@
                                                 @endif
                                                 @if (! empty($plugin['min_app_version']))
                                                     <tr><td class="text-muted">{{ __('admin.plugins.detail_compat') }}</td>
-                                                        <td>{{ __('admin.plugins.requires_range', ['range' => $plugin['min_app_version'].(($plugin['max_app_version'] ?? '') !== '' ? ' – '.$plugin['max_app_version'] : ' +')]) }}</td></tr>
+                                                        <td>{{ __('admin.plugins.requires_range', ['range' => $plugin['min_app_version'].(($plugin['max_app_version'] ?? '') !== '' ? ' - '.$plugin['max_app_version'] : ' +')]) }}</td></tr>
                                                 @endif
                                                 @if (! empty($plugin['homepage']))
                                                     <tr><td class="text-muted">{{ __('admin.plugins.detail_homepage') }}</td>

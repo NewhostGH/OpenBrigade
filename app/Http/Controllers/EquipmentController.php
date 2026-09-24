@@ -93,11 +93,11 @@ class EquipmentController extends Controller
     private function equipmentColumns(): array
     {
         return [
-            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($m) => $m->TM_LIBELLE ?? '—', 'alwaysVisible' => true, 'mobile' => true],
-            ['key' => 'modele', 'label' => 'Modèle', 'type' => 'text', 'value' => fn ($m) => $m->MA_MODELE ?: '—', 'alwaysVisible' => true, 'mobile' => true],
-            ['key' => 'serie', 'label' => 'N° série', 'type' => 'text', 'value' => fn ($m) => $m->MA_NUMERO_SERIE ?: '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($m) => $m->MA_NUMERO_SERIE ?? ''],
-            ['key' => 'lieu', 'label' => 'Lieu', 'type' => 'text', 'value' => fn ($m) => $m->MA_LIEU_STOCKAGE ?: '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($m) => $m->MA_LIEU_STOCKAGE ?? ''],
-            ['key' => 'revision', 'label' => 'Révision', 'type' => 'html', 'value' => fn ($m) => $m->MA_REV_DATE ? ((Carbon::parse($m->MA_REV_DATE)->lte(now()->addDays(30))) ? '<i class="fas fa-exclamation-triangle text-warning me-1" title="Révision prochaine"></i>' : '').e(Carbon::parse($m->MA_REV_DATE)->format('d/m/Y')) : '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($m) => $m->MA_REV_DATE ? Carbon::parse($m->MA_REV_DATE)->format('d/m/Y') : ''],
+            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($m) => $m->TM_LIBELLE ?? __('common.empty_value'), 'alwaysVisible' => true, 'mobile' => true],
+            ['key' => 'modele', 'label' => 'Modèle', 'type' => 'text', 'value' => fn ($m) => $m->MA_MODELE ?: __('common.empty_value'), 'alwaysVisible' => true, 'mobile' => true],
+            ['key' => 'serie', 'label' => 'N° série', 'type' => 'text', 'value' => fn ($m) => $m->MA_NUMERO_SERIE ?: __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($m) => $m->MA_NUMERO_SERIE ?? ''],
+            ['key' => 'lieu', 'label' => 'Lieu', 'type' => 'text', 'value' => fn ($m) => $m->MA_LIEU_STOCKAGE ?: __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($m) => $m->MA_LIEU_STOCKAGE ?? ''],
+            ['key' => 'revision', 'label' => 'Révision', 'type' => 'html', 'value' => fn ($m) => $m->MA_REV_DATE ? ((Carbon::parse($m->MA_REV_DATE)->lte(now()->addDays(30))) ? '<i class="fas fa-exclamation-triangle text-warning me-1" title="Révision prochaine"></i>' : '').e(Carbon::parse($m->MA_REV_DATE)->format('d/m/Y')) : __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($m) => $m->MA_REV_DATE ? Carbon::parse($m->MA_REV_DATE)->format('d/m/Y') : ''],
             ['key' => 'qte', 'label' => 'Qté', 'type' => 'text', 'value' => fn ($m) => $m->MA_NB ?? 1, 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($m) => $m->MA_NB ?? 1],
         ];
     }

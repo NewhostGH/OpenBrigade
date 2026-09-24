@@ -293,8 +293,8 @@ class UnavailabilityController extends Controller
     private function indispoColumns(bool $canManage, int $selfId): array
     {
         return [
-            ['key' => 'personnel', 'label' => 'Personnel', 'type' => 'text', 'value' => fn ($i) => $i->person_name ?? '—', 'alwaysVisible' => true, 'mobile' => true],
-            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($i) => $i->TI_LIBELLE ?? '—', 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($i) => $i->TI_LIBELLE ?? ''],
+            ['key' => 'personnel', 'label' => 'Personnel', 'type' => 'text', 'value' => fn ($i) => $i->person_name ?? __('common.empty_value'), 'alwaysVisible' => true, 'mobile' => true],
+            ['key' => 'type', 'label' => 'Type', 'type' => 'text', 'value' => fn ($i) => $i->TI_LIBELLE ?? __('common.empty_value'), 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($i) => $i->TI_LIBELLE ?? ''],
             ['key' => 'debut', 'label' => 'Début', 'type' => 'date', 'value' => fn ($i) => $i->I_DEBUT, 'alwaysVisible' => true, 'mobile' => true, 'exportable' => true, 'exportValue' => fn ($i) => $i->I_DEBUT ? Carbon::parse($i->I_DEBUT)->format('d/m/Y') : ''],
             ['key' => 'fin', 'label' => 'Fin', 'type' => 'date', 'value' => fn ($i) => $i->I_FIN, 'mobile' => false, 'exportable' => true, 'exportValue' => fn ($i) => $i->I_FIN ? Carbon::parse($i->I_FIN)->format('d/m/Y') : ''],
             ['key' => 'statut', 'label' => 'Statut', 'type' => 'badge', 'value' => fn ($i) => match ($i->I_STATUS) {

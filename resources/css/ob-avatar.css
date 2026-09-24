@@ -1,5 +1,5 @@
 /* =============================================================================
-   ob-avatar.css  —  User photos and grade badge images
+   ob-avatar.css: User photos and grade badge images
    ============================================================================= */
 
 /* ── Avatar sizes ───────────────────────────────────────────────────────── */
@@ -13,7 +13,7 @@
     background: var(--avatar-bg);
 }
 
-/* Small — list rows */
+/* Small: list rows */
 .ob-avatar-sm {
     width: 34px;
     height: 34px;
@@ -23,7 +23,7 @@
     background: var(--avatar-bg);
 }
 
-/* Round — card view */
+/* Round: card view */
 .ob-avatar-round {
     width: 56px;
     height: 56px;

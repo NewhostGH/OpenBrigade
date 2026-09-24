@@ -20,7 +20,7 @@ use ZipArchive;
  * non-destructive restore drill that proves a backup is recoverable.
  *
  * Archive formats:
- *   - .zip  when uploads are bundled — contains `database.sql` + `uploads/…`
+ *   - .zip  when uploads are bundled: contains `database.sql` + `uploads/…`
  *   - .sql  DB-only (legacy behaviour, when include_uploads is off)
  */
 class BackupService implements ServiceInterface
@@ -81,7 +81,7 @@ class BackupService implements ServiceInterface
 
         $this->pruneOldBackups();
 
-        // Off-site failure must not void a good local backup — log and carry on.
+        // Off-site failure must not void a good local backup: log and carry on.
         $offsiteError = $this->mirrorOffsite($relPath, $filename);
         if ($offsiteError !== null) {
             Log::warning('BackupService: off-site mirror failed', [

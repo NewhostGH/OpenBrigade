@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * One access-control entry (ACE) on a document-library object. Grants (allow) or
  * refuses (deny) a set of `rights` to a principal on one folder or document.
- * Folder ACEs cascade to descendants — see {@see App\Services\DocumentAclService}.
+ * Folder ACEs cascade to descendants: see {@see App\Services\DocumentAclService}.
  *
  * @property int $id
  * @property string $resource_type folder|document

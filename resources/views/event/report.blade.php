@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($event->E_LIBELLE ?? $event->E_CODE) . ' — ' . __('event.report_heading') . ' — ' . config('app.name'))
+@section('title', ($event->E_LIBELLE ?? $event->E_CODE) . ' | ' . __('event.report_heading') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -142,9 +142,9 @@
                     <tbody>
                         @foreach($vehicules as $v)
                         <tr>
-                            <td style="font-size:var(--font-size-sm)">{{ $v->V_INDICATIF ?: '—' }}</td>
-                            <td style="font-size:var(--font-size-sm)">{{ $v->V_IMMATRICULATION ?: '—' }}</td>
-                            <td class="text-end" style="font-size:var(--font-size-sm)">{{ $v->EV_KM ? $v->EV_KM.' km' : '—' }}</td>
+                            <td style="font-size:var(--font-size-sm)">{{ $v->V_INDICATIF ?: __('common.empty_value') }}</td>
+                            <td style="font-size:var(--font-size-sm)">{{ $v->V_IMMATRICULATION ?: __('common.empty_value') }}</td>
+                            <td class="text-end" style="font-size:var(--font-size-sm)">{{ $v->EV_KM ? $v->EV_KM.' km' : __('common.empty_value') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -178,7 +178,7 @@
                         @foreach($materiels as $m)
                         <tr>
                             <td style="font-size:var(--font-size-sm)">{{ $m->MA_MODELE }}</td>
-                            <td style="font-size:var(--font-size-sm)">{{ $m->MA_NUMERO_SERIE ?: '—' }}</td>
+                            <td style="font-size:var(--font-size-sm)">{{ $m->MA_NUMERO_SERIE ?: __('common.empty_value') }}</td>
                             <td class="text-center" style="font-size:var(--font-size-sm)">{{ $m->EM_NB }}</td>
                         </tr>
                         @endforeach
@@ -216,7 +216,7 @@
                                 @else
                                     <i class="far fa-file-alt me-1" title="{{ __('event.report_log_message') }}"></i>
                                 @endif
-                                {{ $l->EL_DEBUT ? \Carbon\Carbon::parse($l->EL_DEBUT)->format('d/m/Y H:i') : '—' }}
+                                {{ $l->EL_DEBUT ? \Carbon\Carbon::parse($l->EL_DEBUT)->format('d/m/Y H:i') : __('common.empty_value') }}
                             </td>
                             <td style="font-size:var(--font-size-sm)">
                                 {{ $l->EL_TITLE ?: ($l->TEL_DESCRIPTION ?? '') }}

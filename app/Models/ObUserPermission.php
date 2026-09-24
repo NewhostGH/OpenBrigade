@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * (effect=allow) or refuses (effect=deny) a feature (F_ID) for one person,
  * optionally scoped to a section (section_id = -1 means global, inherited to
  * descendants like a role; 0 is the real root section). Beats every group/role grant and the section
- * ceiling — see {@see App\Services\PermissionResolver}. Table: ob_user_permission.
+ * ceiling: see {@see App\Services\PermissionResolver}. Table: ob_user_permission.
  */
 class ObUserPermission extends Model
 {

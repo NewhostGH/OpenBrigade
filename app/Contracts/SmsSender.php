@@ -11,7 +11,7 @@ use App\Services\Sms\SmsResult;
 /**
  * A single SMS provider. Implementations live under App\Services\Sms\Drivers
  * and are resolved by {@see SmsManager} from config('sms').
- * Adding a new provider means adding one driver — no caller changes.
+ * Adding a new provider means adding one driver: no caller changes.
  */
 interface SmsSender
 {

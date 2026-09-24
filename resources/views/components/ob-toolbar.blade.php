@@ -1,5 +1,5 @@
 {{--
-    ob-toolbar  —  Filter / action bar above list pages.
+    ob-toolbar: Filter / action bar above list pages.
 
     Props
     ─────
@@ -10,10 +10,10 @@
     filterAction    string   If set, wraps the filters slot in a <form> (GET)
     filterId        string   id for that form  (default: filterForm)
 
-    Table controls — rendered automatically in secondary row (right-aligned)
+    Table controls, rendered automatically in secondary row (right-aligned)
     ─────────────────────────────────────────────────────────────────────────
     tableId         string   Associated table id  (required for controls)
-    columns         array    ob-table column defs — used to build col-toggle
+    columns         array    ob-table column defs, used to build col-toggle
     exportXlsUrl    string   XLSX export base URL
     exportCsvUrl    string   CSV  export base URL
     showCardToggle  bool     Render card/table view toggle button
@@ -21,7 +21,7 @@
     Slots
     ─────
     (default)    Action buttons in the header (right of title)
-    filters      Filter inputs — one child per grid cell
+    filters      Filter inputs, one child per grid cell
     secondary    Left-side secondary controls (per-page, toggles, clear …)
                  Table controls are appended automatically on the right.
 --}}

@@ -2,7 +2,7 @@
  * ob-table.js
  *
  * Auto-initialises every [data-ob-table] container found in the DOM.
- * Configuration is read from data-* attributes — zero inline scripts in Blade.
+ * Configuration is read from data-* attributes: zero inline scripts in Blade.
  *
  * The col-toggle checkboxes, card-toggle button, and export links can live
  * anywhere on the page (e.g. inside ob-toolbar). They are located globally
@@ -69,7 +69,7 @@ class ObTable {
     }
 
     // ── Helpers scoped to the table container ────────────────────────────────
-    // (only used for [data-col] cells — controls are global)
+    // (only used for [data-col] cells; controls are global)
 
     _$ (sel)  { return this.el.querySelector(sel); }
     _$$ (sel) { return this.el.querySelectorAll(sel); }
@@ -89,7 +89,7 @@ class ObTable {
     _initColVisibility () {
         this._applyVisibility();
 
-        // Checkboxes may be in the toolbar — search globally
+        // Checkboxes may be in the toolbar; search globally
         this._for('[data-col-toggle]').forEach(cb => {
             cb.checked = this.cols[cb.dataset.colToggle] !== false;
             cb.addEventListener('change', () => {

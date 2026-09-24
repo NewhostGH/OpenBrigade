@@ -7,15 +7,15 @@ namespace App\Services;
  *
  * Three versions coexist and this service is the one place that names them:
  *
- * - **code**       — the checked-out source version (root VERSION file, surfaced
+ * - **code**      : the checked-out source version (root VERSION file, surfaced
  *                    as config('brigade.version')).
- * - **installed**  — what the running instance has been migrated to
+ * - **installed** : what the running instance has been migrated to
  *                    (`configuration.version`, via GeneralSettingService).
- * - **changelog**  — the latest released version documented in CHANGELOG.md.
+ * - **changelog** : the latest released version documented in CHANGELOG.md.
  *
  * On a correctly released instance code === installed === changelog. Drift
  * (code ≠ installed) means the code was deployed but its release migration has
- * not run yet — surfaced by `ob:version` and available for health/monitoring.
+ * not run yet: surfaced by `ob:version` and available for health/monitoring.
  */
 class VersionService implements ServiceInterface
 {
@@ -35,7 +35,7 @@ class VersionService implements ServiceInterface
 
     /**
      * Latest released version documented in CHANGELOG.md ('' when none or the
-     * file is unreadable). The `[Unreleased]` heading is skipped by design —
+     * file is unreadable). The `[Unreleased]` heading is skipped by design:
      * only a concrete semantic version matches.
      */
     public function changelogLatest(): string
@@ -56,7 +56,7 @@ class VersionService implements ServiceInterface
     }
 
     /**
-     * True when the code and installed versions disagree — i.e. the code was
+     * True when the code and installed versions disagree: i.e. the code was
      * deployed but its release migration has not been applied. Never reports
      * drift when the installed version is unknown ('').
      */

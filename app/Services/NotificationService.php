@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 /**
- * Central notification dispatcher — the single entry point for outbound
+ * Central notification dispatcher: the single entry point for outbound
  * email and SMS. Email is queued (see {@see PlainMessage}) so sends never
  * block the request; the queue worker delivers them. Richer, event-driven
  * messages should use Laravel Notifications (App\Notifications\*) which run

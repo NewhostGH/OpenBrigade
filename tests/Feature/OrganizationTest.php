@@ -55,7 +55,7 @@ function orgStubIndex(): void
 
 /**
  * Bind OrganizationController so $method returns the real view rendered with
- * stub data — HTTP/view-level assertion without a DB call.
+ * stub data: HTTP/view-level assertion without a DB call.
  */
 function orgStubView(string $method, string $view, array $data): void
 {

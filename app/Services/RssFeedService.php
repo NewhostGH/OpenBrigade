@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 /**
  * Builds and streams RSS 2.0 feed responses. The format counterpart of
  * {@see ICalExportService}: callers hand over a plain channel/item structure
- * and this service produces a well-formed, correctly escaped XML document —
+ * and this service produces a well-formed, correctly escaped XML document:
  * never string-concatenated markup.
  *
  * @phpstan-type FeedChannel array{title: string, link: string, description: string, language?: string}

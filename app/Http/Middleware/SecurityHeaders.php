@@ -56,7 +56,7 @@ class SecurityHeaders
                 : 'Content-Security-Policy';
 
             // The plugin marketplace renders icons/screenshots hosted by the
-            // configured registries — any https image, on that page only.
+            // configured registries: any https image, on that page only.
             $imgSrc = $request->routeIs('admin.plugins')
                 ? "'self' data: https:"
                 : "'self' data: https://*.tile.openstreetmap.org";

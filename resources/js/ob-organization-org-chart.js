@@ -113,7 +113,7 @@ function walk(node, fn) {
 }
 
 /**
- * Set the per-node shape (symbol), size, itemStyle and — for members — the
+ * Set the per-node shape (symbol), size, itemStyle and, for members, the
  * profile-photo avatar. Each item type gets a distinct shape:
  *   • section  → rounded card    • role / group → sharp-cornered card
  *   • member   → profile-photo avatar (label beneath)    • root → pill
@@ -224,13 +224,13 @@ function setCollapsedRecursive(node, collapsed) {
     node.children.forEach(c => setCollapsedRecursive(c, collapsed));
 }
 
-/** Leaves of the currently visible (non-collapsed) tree — drives the width. */
+/** Leaves of the currently visible (non-collapsed) tree: drives the width. */
 function visibleLeaves(node) {
     if (node.collapsed || !node.children || !node.children.length) return 1;
     return node.children.reduce((sum, c) => sum + visibleLeaves(c), 0);
 }
 
-/** Depth of the currently visible tree — drives the height. */
+/** Depth of the currently visible tree: drives the height. */
 function visibleDepth(node) {
     if (node.collapsed || !node.children || !node.children.length) return 1;
     return 1 + Math.max(...node.children.map(visibleDepth));
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function render() {
         chart.setOption({
             // Animation is disabled on purpose: the tree symbol enter-animation
-            // leaves image symbols (member avatars) stuck at scale 0 — they
+            // leaves image symbols (member avatars) stuck at scale 0; they
             // never grow to full size and their photo is never requested. This
             // also affects native node-click expansion, so it must be global.
             animation: false,
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Full rebuild after any expand/collapse change. A merge (or even a
      * notMerge) setOption leaves the removed subtree's edge lines behind when
-     * animation is off, so the chart is cleared and rebuilt from the data —
+     * animation is off, so the chart is cleared and rebuilt from the data;
      * the `collapsed` flags on the nodes are the single source of truth.
      */
     function renderFresh() {
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastClickTime = now;
         }
         // Toggle collapse on any node that has children (replaces the native
-        // expandAndCollapse behaviour — see the series comment). params.data
+        // expandAndCollapse behaviour (see the series comment). params.data
         // is a clone, so resolve the real node through its key.
         if (d.children && d.children.length) {
             const node = nodeByKey.get(d._key);

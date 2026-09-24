@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Log;
  *   Audit::security('upload.rejected', ['reason' => $msg], 'warning');
  *
  * Actor (p_id), IP, method and URL are added automatically by
- * {@see RequestContextProcessor} — never pass them by hand.
+ * {@see RequestContextProcessor}: never pass them by hand.
  */
 class Audit
 {

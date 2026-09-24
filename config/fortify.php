@@ -34,7 +34,7 @@ return [
     | Features
     |--------------------------------------------------------------------------
     | Only twoFactorAuthentication is enabled. All other Fortify features are
-    | disabled — authentication, registration, profile updates etc. are handled
+    | disabled: authentication, registration, profile updates etc. are handled
     | by the app's custom auth layer.
     */
 

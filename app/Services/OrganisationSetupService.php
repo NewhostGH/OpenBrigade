@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Storage;
  * table and the activation of an organisation type's seeded role set.
  *
  * Canonical keys (matching the legacy schema):
- *   - `already_configured` (ID -1) — the first-run gate: 1 once the wizard ran.
- *   - `type_organisation`  (ID 79) — the active organisation type id.
- *   - identity settings 6/7/8/38/39 — short/url/email/app-title/long name.
+ *   - `already_configured` (ID -1): the first-run gate, 1 once the wizard ran.
+ *   - `type_organisation`  (ID 79): the active organisation type id.
+ *   - identity settings 6/7/8/38/39: short/url/email/app-title/long name.
  *
  * Persisting the type is non-destructive: roles for every type are already
  * seeded, so activation simply records the choice and the app filters role
@@ -44,7 +44,7 @@ class OrganisationSetupService
     /**
      * Identity fields collected by the wizard: config NAME => ID.
      *
-     * The site URL (7) and application title (38) are intentionally excluded —
+     * The site URL (7) and application title (38) are intentionally excluded:
      * they are instantiated from APP_URL / APP_NAME and managed from the
      * Organisation tab of Administration ▸ Options, not by the wizard.
      */
@@ -172,7 +172,7 @@ class OrganisationSetupService
 
     /**
      * Destructive: reset the given type's preset roles and their grants back to
-     * the seeded defaults. Only touches this type's system roles — custom roles
+     * the seeded defaults. Only touches this type's system roles: custom roles
      * and other types are untouched. Explicit admin action only.
      */
     public function resetRoles(int $orgType): void
@@ -205,7 +205,7 @@ class OrganisationSetupService
     }
 
     /**
-     * The preset roles of the given (or active) org type — the valid remap
+     * The preset roles of the given (or active) org type: the valid remap
      * targets when deleting a custom role.
      *
      * @return Collection<int,\stdClass>

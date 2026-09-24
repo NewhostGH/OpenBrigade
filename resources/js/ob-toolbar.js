@@ -2,8 +2,8 @@
  * ob-toolbar.js
  *
  * Toolbar-level behaviours shared across all list pages:
- *   - updateParam()   — update a URL query parameter and reload
- *   - Search debounce — auto-submits the parent <form> 600 ms after the user
+ *   - updateParam()   : update a URL query parameter and reload
+ *   - Search debounce  : auto-submits the parent <form> 600 ms after the user
  *                       stops typing in any [data-ob-search] input
  */
 

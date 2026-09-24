@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Activités — ' . config('app.name'))
+@section('title', 'Activités | ' . config('app.name'))
 
 @section('content')
 
@@ -42,7 +42,7 @@
             <option value="" @selected($filtSect === null)>{{ __('event.filter_my_sections') }}</option>
             @foreach($sections as $s)
                 <option value="{{ $s->S_ID }}" @selected($filtSect === $s->S_ID)>
-                    {{ $s->S_CODE }} — {{ $s->S_DESCRIPTION }}
+                    {{ $s->S_CODE }} - {{ $s->S_DESCRIPTION }}
                 </option>
             @endforeach
         </select>

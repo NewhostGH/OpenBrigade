@@ -13,7 +13,7 @@ use Illuminate\Http\Response;
  * Public RSS 2.0 feed of upcoming events (legacy `rss.php`).
  *
  * Exposes only events flagged visible outside the organisation, so it is
- * intentionally unauthenticated — no member data is ever surfaced.
+ * intentionally unauthenticated: no member data is ever surfaced.
  */
 class EventFeedController extends Controller
 {
@@ -39,7 +39,7 @@ class EventFeedController extends Controller
         $channel = [
             'title' => $identity->shortName(),
             'link' => $link,
-            'description' => $identity->shortName().' — Agenda public',
+            'description' => $identity->shortName().' - Agenda public',
             'language' => 'fr',
         ];
 

@@ -44,14 +44,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(AppIdentityService::class);
 
-        // Provider-agnostic SMS layer — driver resolved at send time from the
+        // Provider-agnostic SMS layer: driver resolved at send time from the
         // administrable settings (memoised per request) with env fallback.
         $this->app->singleton(SmsManager::class);
         $this->app->singleton(SmsSettingService::class);
         $this->app->singleton(MailSettingService::class);
 
-        // Plugin runtime singletons. The actual boot() — reading the ob_plugin
-        // table and registering each enabled plugin's provider/routes — runs in
+        // Plugin runtime singletons. The actual boot(): reading the ob_plugin
+        // table and registering each enabled plugin's provider/routes: runs in
         // this provider's boot(), NOT here: called during register(), the very
         // first enabledPlugins() read runs before Eloquent is ready, hits the
         // service's Throwable guard and memoises an empty enabled-set, leaving
@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
             return new FeatureService;
         });
 
-        // Per-request memoized observability settings — resolved on every logged
+        // Per-request memoized observability settings: resolved on every logged
         // record for per-canal level checks, so it must be a singleton.
         $this->app->singleton(LoggingSettingService::class);
 
@@ -95,7 +95,7 @@ class AppServiceProvider extends ServiceProvider
         // providers boot before app providers) and there it eagerly builds its
         // hub and gates event capture on config('sentry.dsn') being set. All
         // register() calls run before any boot(), so setting it here lands before
-        // Sentry boots — doing it in boot() would be too late and silently drop
+        // Sentry boots: doing it in boot() would be too late and silently drop
         // every event.
         $this->configureErrorTracking();
     }
@@ -106,8 +106,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Plugin runtime: register every enabled plugin's autoloader and
-        // service provider (routes, views, migrations, nav). Runs here — with
-        // Eloquent and the database ready — so enabled plugins actually boot.
+        // service provider (routes, views, migrations, nav). Runs here: with
+        // Eloquent and the database ready: so enabled plugins actually boot.
         // Fully guarded: a broken plugin (or a missing ob_plugin table) is
         // logged and surfaced on the admin page, never breaking the app.
         try {
@@ -120,7 +120,7 @@ class AppServiceProvider extends ServiceProvider
         // falling back to the config/env default.
         $this->configureTimezone();
 
-        // Application name (38) and public site URL (7) — instantiated from
+        // Application name (38) and public site URL (7): instantiated from
         // APP_NAME / APP_URL, overridden by the stored rows (Organisation tab).
         // Must run before the URL::forceRootUrl block below, which reads
         // config('app.url').
@@ -128,7 +128,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Overlay the administrable mail transport settings (Administration ▸
         // Notifications) onto config('mail.*'). The .env stays the default for
-        // anything left empty; a stored row is the source of truth. Guarded —
+        // anything left empty; a stored row is the source of truth. Guarded:
         // a missing table must never break boot (or mail entirely).
         try {
             app(MailSettingService::class)->apply();
@@ -136,13 +136,13 @@ class AppServiceProvider extends ServiceProvider
             // Keep the shipped .env config.
         }
 
-        // Register the "sms" notification channel (provider-agnostic — the
+        // Register the "sms" notification channel (provider-agnostic: the
         // active gateway is picked by config('sms.driver')).
         Notification::extend('sms', function ($app) {
             return $app->make(SmsChannel::class);
         });
 
-        // This is a Bootstrap 5 app — render paginators with the Bootstrap view
+        // This is a Bootstrap 5 app: render paginators with the Bootstrap view
         // so `$paginator->links()` matches the UI instead of the unstyled
         // Tailwind default (which renders oversized SVG arrows without Tailwind).
         Paginator::useBootstrapFive();
@@ -181,7 +181,7 @@ class AppServiceProvider extends ServiceProvider
             )->by($request->ip());
         });
 
-        // @feature('multi_site') … @endfeature — hide UI tied to a disabled
+        // @feature('multi_site') … @endfeature: hide UI tied to a disabled
         // feature flag. Fails open (enabled) so a missing ob_feature table
         // never blanks a page (e.g. tests without a database).
         Blade::if('feature', function (string $key): bool {
@@ -198,7 +198,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('pinnedShortcuts', $nav->getPinnedShortcuts($user));
 
             // Active section / role context switchers. Non-critical navbar
-            // enhancement — never let it break a page render (e.g. before the
+            // enhancement: never let it break a page render (e.g. before the
             // ob_ tables exist, or in tests without a database).
             $ctx = ['ctxSections' => collect(), 'ctxActiveSection' => null, 'ctxRoles' => collect(), 'ctxActiveRole' => null];
             if ($user !== null) {
@@ -233,7 +233,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Overlay the stored application name / site URL onto config('app.*').
      * Empty rows keep the .env defaults; a malformed URL is ignored so a typo
-     * can never take every absolute link down. Guarded — no DB, no override.
+     * can never take every absolute link down. Guarded: no DB, no override.
      */
     private function configureAppIdentity(): void
     {
@@ -263,7 +263,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Apply the administrable timezone (Administration ▸ Configuration,
      * row `timezone`) to the runtime. Invalid or unreadable values leave the
-     * shipped config('app.timezone') default in place — a bad setting must
+     * shipped config('app.timezone') default in place: a bad setting must
      * never break boot.
      */
     private function configureTimezone(): void
@@ -314,7 +314,7 @@ class AppServiceProvider extends ServiceProvider
             }
             Config::set('logging.channels.stack.channels', $stack !== [] ? $stack : ['daily']);
         } catch (\Throwable) {
-            // Keep shipped defaults — logging must never break boot.
+            // Keep shipped defaults: logging must never break boot.
         }
     }
 
@@ -326,7 +326,7 @@ class AppServiceProvider extends ServiceProvider
      * the `SENTRY_LARAVEL_DSN` env (config/sentry.php) as a fallback for existing
      * deployments. When disabled, the DSN is cleared so Sentry stays silent.
      *
-     * Must run in register() — see the call site for why.
+     * Must run in register(): see the call site for why.
      */
     private function configureErrorTracking(): void
     {
@@ -345,7 +345,7 @@ class AppServiceProvider extends ServiceProvider
                 Config::set('sentry.release', $version);
             }
         } catch (\Throwable) {
-            // Keep the shipped config/env DSN — never break boot over a setting.
+            // Keep the shipped config/env DSN: never break boot over a setting.
         }
     }
 }

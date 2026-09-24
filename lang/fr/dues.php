@@ -31,7 +31,7 @@ return [
     'pending_count' => ':count en attente',
     'total_collected' => 'Total encaissé :',
 
-    // Table headers — dues index
+    // Table headers: dues index
     'col_name' => 'Nom Prénom',
     'col_status' => 'Statut',
     'col_section' => 'Section',

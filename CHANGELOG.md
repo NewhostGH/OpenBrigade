@@ -5,10 +5,10 @@ All notable changes to **OpenBrigade** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-The version stamped here is the **code** version — the single source of truth is
+The version stamped here is the **code** version: the single source of truth is
 the [`VERSION`](VERSION) file at the repository root (surfaced as
-`config('brigade.version')`). The **installed** version — what a running instance
-has actually been migrated to — is stored in the database (`configuration` row
+`config('brigade.version')`). The **installed** version (what a running instance
+has actually been migrated to) is stored in the database (`configuration` row
 `version`) and stamped by a release migration; see
 [`docs/dev/versioning.md`](docs/dev/versioning.md) for how the two relate and how
 to cut a release.

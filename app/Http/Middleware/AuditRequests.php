@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Records every state-changing request (POST/PUT/PATCH/DELETE) to the audit
- * trail, in one place — so the whole backend is instrumented without touching
+ * trail, in one place: so the whole backend is instrumented without touching
  * each controller. Read requests (GET/HEAD/OPTIONS) are ignored to keep the
  * trail signal-dense.
  *

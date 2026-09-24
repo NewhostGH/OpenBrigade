@@ -23,7 +23,7 @@ namespace App\Models\Concerns;
  * Shared by the User (auth) and Personnel (domain) models, which both map to
  * the `pompier` table. The static helper exists so raw query-builder rows
  * (stdClass, no Eloquent instance) can resolve the exact same URL without
- * re-implementing the logic — see DashboardService duty/birthday widgets.
+ * re-implementing the logic: see DashboardService duty/birthday widgets.
  */
 trait HasAvatar
 {

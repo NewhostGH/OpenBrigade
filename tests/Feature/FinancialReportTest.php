@@ -37,7 +37,7 @@ function finrepFixture(): array
         'paymentTypes' => [1 => 'Espèces', 2 => 'Chèque'],
         'sections' => [[
             'S_ID' => 1,
-            'label' => 'CIS — Alpha',
+            'label' => 'CIS - Alpha',
             'effectifs' => 3,
             'lines' => [[
                 'profession' => 'SPV',
@@ -104,7 +104,7 @@ test('authenticated users can view the financial report', function () {
         ->assertStatus(200)
         ->assertViewIs('statistics.financial-report')
         ->assertSee('Cotisations par section')
-        ->assertSee('CIS — Alpha')
+        ->assertSee('CIS - Alpha')
         ->assertSee('SPV');
 });
 

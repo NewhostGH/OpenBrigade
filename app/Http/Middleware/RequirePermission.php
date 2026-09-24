@@ -40,7 +40,7 @@ class RequirePermission
 
         abort_if($user === null, 401);
 
-        // F_ID 0 means "any authenticated user" — no specific permission check needed.
+        // F_ID 0 means "any authenticated user": no specific permission check needed.
         if ($fid !== 0) {
             abort_unless($user->hasPermission($fid), 403, 'Permission refusée (F_ID: '.$fid.').');
         }

@@ -5,7 +5,7 @@ set -e
 echo "Running pre-commit checks..."
 
 # On Windows, PHP ships without a php.ini so we generate a minimal one.
-# On Linux/macOS the system php.ini is used directly — skip this block.
+# On Linux/macOS the system php.ini is used directly: skip this block.
 case "$(uname -s)" in
     MINGW*|CYGWIN*|MSYS*)
         OB_INI="${TEMP:-/tmp}/ob-php.ini"
@@ -57,7 +57,7 @@ npm run lint-i18n
 
 echo "i18n check passed"
 
-# 3b. Compiled-Blade syntax check — view:cache alone never parses its output,
+# 3b. Compiled-Blade syntax check: view:cache alone never parses its output,
 # so e.g. adjacent directives (@endif@endfeature) ship a render-time fatal.
 # Lint only staged templates (the full sweep runs in CI via BladeLintTest).
 STAGED_BLADE=$(git diff --cached --name-only --diff-filter=ACM -- '*.blade.php')

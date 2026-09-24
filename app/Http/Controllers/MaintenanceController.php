@@ -15,15 +15,15 @@ class MaintenanceController extends Controller
     {
         $phpVersion = PHP_VERSION;
         $laravelVersion = app()->version();
-        $dbVersion = DB::selectOne('SELECT VERSION() as v')->v ?? '—';
-        $appVersion = DB::table('configuration')->where('ID', 1)->value('VALUE') ?? '—';
+        $dbVersion = DB::selectOne('SELECT VERSION() as v')->v ?? __('common.empty_value');
+        $appVersion = DB::table('configuration')->where('ID', 1)->value('VALUE') ?? __('common.empty_value');
         $env = app()->environment();
         $debugMode = config('app.debug') ? 'Activé' : 'Désactivé';
 
         $status = $this->migrationStatus();
 
         // Maintenance-related configuration rows (hidden from the settings
-        // grid — this page is their home): mode, banner text, auto-optimize.
+        // grid: this page is their home), mode, banner text, auto-optimize.
         $maintSettings = DB::table('configuration')
             ->whereIn('NAME', ['maintenance_mode', 'maintenance_text', 'auto_optimize'])
             ->get()

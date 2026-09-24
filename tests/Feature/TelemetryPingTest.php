@@ -31,7 +31,7 @@ test('sends a strictly anonymous payload when opted in', function () {
     Http::assertSent(function ($request) {
         $data = $request->data();
 
-        // Exactly the documented keys — nothing else may ever leave.
+        // Exactly the documented keys: nothing else may ever leave.
         expect(array_keys($data))->toBe([
             'instance', 'app_version', 'php_version', 'laravel_version', 'org_type', 'members_rounded',
         ])

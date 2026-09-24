@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Clickatell driver — sends through the Clickatell one-API REST endpoint
+ * Clickatell driver: sends through the Clickatell one-API REST endpoint
  * (platform.clickatell.com). Configure CLICKATELL_API_KEY (stored as the SMS
  * password); the number is normalised to +E164. See docs/admin/sms.md.
  *
@@ -27,7 +27,7 @@ class ClickatellSender implements SmsSender
         $apiKey = $this->config['api_key'] ?? null;
 
         if (empty($apiKey)) {
-            Log::warning('Clickatell: missing api key — SMS not sent', ['to' => $message->to]);
+            Log::warning('Clickatell: missing api key, SMS not sent', ['to' => $message->to]);
 
             return SmsResult::failed($this->name(), 'Clickatell is not configured (API key missing).');
         }

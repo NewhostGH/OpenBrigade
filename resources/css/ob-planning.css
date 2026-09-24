@@ -1,5 +1,5 @@
 /* =============================================================================
-   ob-planning.css  —  Planning calendar grid
+   ob-planning.css: Planning calendar grid
    ============================================================================= */
 
 .ob-cal-grid { width: 100%; border-collapse: collapse; table-layout: fixed; }

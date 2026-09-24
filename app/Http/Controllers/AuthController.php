@@ -77,7 +77,7 @@ class AuthController extends Controller
             $normalizedIntended = str_replace('/index.php/index.php/', '/index.php/', $intended);
             $normalizedIntended = str_replace('index.php/index.php/', '/index.php/', $normalizedIntended);
 
-            // Legacy root (was index_d.php) — send straight to the dashboard.
+            // Legacy root (was index_d.php): send straight to the dashboard.
             if (in_array($normalizedIntended, ['/index.php/index.php', '/index.php/index_d.php', '/legacy/index_d.php'], true)) {
                 return redirect()->route('dashboard');
             }

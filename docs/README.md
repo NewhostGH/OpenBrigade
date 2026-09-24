@@ -1,18 +1,19 @@
-# OpenBrigade Documentation
+# OpenBrigade documentation
 
-OpenBrigade is a Laravel 12 fork of eBrigade. The legacy app is being migrated into a
-native Laravel application menu by menu. These documents are organised as **single
-sources of truth** — each topic is owned by exactly one file.
+Each topic below is owned by exactly one file (**single source of truth**). AI
+coding agents start at [AGENTS.md](../AGENTS.md) (repository root) for the
+short rules and doc-maintenance checklist, which points here for details.
 
 ## Developer docs (`dev/`)
 
-| Doc                                        | Owns                                                                                                                       |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| [CONVENTIONS.md](dev/CONVENTIONS.md)       | **How code is written** — SSOT rules, models, Blade, CSS/JS naming, exports, legacy flagging, UI component patterns        |
-| [ARCHITECTURE.md](dev/ARCHITECTURE.md)     | **Where things live** — project file structure, layer responsibilities, the legacy bridge                                  |
-| [DEVELOPMENT.md](dev/DEVELOPMENT.md)       | **How to run it** — setup (Docker/local/devcontainer), database, authentication, seeding, frontend assets, quality tooling |
-| [legacy-mapping.md](dev/legacy-mapping.md) | **Legacy → Laravel file map** — every `archive/legacy_app/` file and its native target (or WIP)                            |
-| [versioning.md](dev/versioning.md)         | **How releases are versioned** — SemVer policy, the `CHANGELOG.md` workflow, `ob:version`, and cutting a tagged release     |
+| Doc                                        | Owns                                                                                                                      |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| [conventions.md](dev/conventions.md)       | **How code is written**: SSOT rules, models, Blade, CSS/JS naming, exports, legacy flagging, UI component patterns        |
+| [architecture.md](dev/architecture.md)     | **Where things live**: project file structure, layer responsibilities, the legacy bridge                                  |
+| [development.md](dev/development.md)       | **How to run it**: setup (Docker/local/devcontainer), database, authentication, seeding, frontend assets, quality tooling |
+| [legacy-mapping.md](dev/legacy-mapping.md) | **Legacy → Laravel file map**: every `archive/legacy_app/` file and its native target (or WIP)                            |
+| [versioning.md](dev/versioning.md)         | **How releases are versioned**: SemVer policy, the `CHANGELOG.md` workflow, `ob:version`, and cutting a tagged release    |
+| [brand-identity.md](dev/brand-identity.md) | **How the product looks and sounds**: tone, French/English copy, symbols, colors, icons, images                           |
 
 ## Admin docs (`admin/`)
 
@@ -27,23 +28,22 @@ sources of truth** — each topic is owned by exactly one file.
 
 ## Security docs (`security/`)
 
-| Doc                                                   | Owns                                                                            |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [password-policies.md](security/password-policies.md) | Named password policies, per-group assignment, NCSC/ANSSI guidance              |
-| [totp.md](security/totp.md)                           | TOTP two-factor authentication — enrolment, login flow, recovery codes          |
-| [ldap.md](security/ldap.md)                           | LDAP/AD authentication delegation, configuration, dev emulation with Docker     |
-| [hardening.md](security/hardening.md)                 | Defence-in-depth controls — security headers, rate limiting, upload safety, CSP |
+| Doc                                                   | Owns                                                                           |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [password-policies.md](security/password-policies.md) | Named password policies, per-group assignment, NCSC/ANSSI guidance             |
+| [totp.md](security/totp.md)                           | TOTP two-factor authentication: enrolment, login flow, recovery codes          |
+| [ldap.md](security/ldap.md)                           | LDAP/AD authentication delegation, configuration, dev emulation with Docker    |
+| [hardening.md](security/hardening.md)                 | Defense-in-depth controls: security headers, rate limiting, upload safety, CSP |
 
 ## Legal (`legal/`)
 
 | Doc                                    | Owns                             |
 | -------------------------------------- | -------------------------------- |
-| [licence-fr.txt](legal/licence-fr.txt) | GNU GPL v2 licence (French text) |
+| [license-fr.txt](legal/license-fr.txt) | GNU GPL v2 license (French text) |
 
 ## Migration tracking
 
-The menu-by-menu migration status and the working agreement for making changes live
-in [.github/TODO.md](../.github/TODO.md). Contribution process (branches, commits, PRs)
-is in [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md).
+Menu-by-menu migration status: [.github/TODO.md](../.github/TODO.md).
+Contribution process (branches, commits, PRs): [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md).
 
 > `user/` is reserved for future end-user documentation.

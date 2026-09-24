@@ -6,23 +6,13 @@ labels: bug
 assignees: ''
 ---
 
-## Describe the Bug
+## Describe the bug
 
-A clear and concise description of the bug.
+A clear and concise description, plus steps to reproduce (1. Go to '...' 2. Click on '...' 3. See error).
 
-## Steps to Reproduce
+## Expected vs. actual behavior
 
-1. Go to '...'
-2. Click on '...'
-3. See error
-
-## Expected Behaviour
-
-What you expected to happen.
-
-## Actual Behaviour
-
-What actually happened (include error messages, screenshots, or stack traces if available).
+What you expected, and what actually happened (include error messages, screenshots, or stack traces).
 
 ## Environment
 

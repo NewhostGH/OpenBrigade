@@ -41,7 +41,7 @@ return [
     'bulk_contacts_title' => 'Télécharger carnet d\'adresses (.csv)',
     'bulk_contacts_label' => 'Contacts.csv',
 
-    // ── Show — header ────────────────────────────────────────────────────────
+    // ── Show: header ────────────────────────────────────────────────────────
     'btn_edit' => 'Modifier',
     'btn_preferences_title' => 'Préférences',
     'btn_export_title' => 'Exporter',
@@ -50,14 +50,14 @@ return [
     'export_carte' => 'Carte adhérent (PDF)',
     'photo_alt' => 'Photo :name',
 
-    // ── Show — quick stats ───────────────────────────────────────────────────
+    // ── Show: quick stats ───────────────────────────────────────────────────
     'stat_activites' => 'Activités',
     'stat_competences' => 'Compétences',
     'stat_cotisations' => 'Cotisations (net)',
     'stat_last_connect' => 'Dernière connexion',
     'stat_never' => 'jamais',
 
-    // ── Show — identity dl ───────────────────────────────────────────────────
+    // ── Show: identity dl ───────────────────────────────────────────────────
     'field_matricule' => 'Matricule',
     'field_section_principale' => 'Section principale',
     'field_section_title' => 'Section où le membre se situe dans l\'organigramme',
@@ -66,12 +66,12 @@ return [
     'field_engagement' => 'Engagement',
     'field_entreprise' => 'Entreprise',
 
-    // ── Show — badges status ─────────────────────────────────────────────────
+    // ── Show: badges status ─────────────────────────────────────────────────
     'badge_masque' => 'Masqué',
     'badge_nospam' => 'No spam',
     'badge_suspendu' => 'Suspendu',
 
-    // ── Show — coordonnées ───────────────────────────────────────────────────
+    // ── Show: coordonnées ───────────────────────────────────────────────────
     'section_coordonnees' => 'Coordonnées',
     'field_email' => 'Email',
     'field_telephone' => 'Téléphone',
@@ -81,7 +81,7 @@ return [
     'badge_adresse_invalide' => 'Adresse invalide',
     'depuis_le' => 'depuis le :date',
 
-    // ── Show — infos personnelles ────────────────────────────────────────────
+    // ── Show: infos personnelles ────────────────────────────────────────────
     'section_infos_perso' => 'Informations personnelles',
     'field_date_naissance' => 'Date de naissance',
     'field_lieu_naissance' => 'Lieu de naissance',
@@ -93,14 +93,14 @@ return [
     'licence_du' => 'du :date',
     'age_ans' => ':age ans',
 
-    // ── Show — contact d'urgence ─────────────────────────────────────────────
+    // ── Show: contact d'urgence ─────────────────────────────────────────────
     'section_urgence' => 'Contact d\'urgence',
     'field_nom' => 'Nom',
 
-    // ── Show — notes ─────────────────────────────────────────────────────────
+    // ── Show: notes ─────────────────────────────────────────────────────────
     'section_notes' => 'Notes',
 
-    // ── Show — compétences ───────────────────────────────────────────────────
+    // ── Show: compétences ───────────────────────────────────────────────────
     'section_competences' => 'Compétences',
     'col_competence' => 'Compétence',
     'col_valeur' => 'Valeur',
@@ -108,7 +108,7 @@ return [
     'empty_competences' => 'Aucune compétence enregistrée.',
     'confirm_del_competence' => 'Supprimer cette compétence ?',
 
-    // ── Show — formations ────────────────────────────────────────────────────
+    // ── Show: formations ────────────────────────────────────────────────────
     'section_formations' => 'Formations',
     'export_formations_title' => 'Exporter en XLS',
     'col_date' => 'Date',
@@ -120,7 +120,7 @@ return [
     'empty_formations' => 'Aucune formation enregistrée.',
     'confirm_del_formation' => 'Supprimer cette formation ?',
 
-    // ── Show — cotisations ───────────────────────────────────────────────────
+    // ── Show: cotisations ───────────────────────────────────────────────────
     'section_cotisations' => 'Cotisations',
     'col_annee' => 'Année',
     'col_periode' => 'Période',
@@ -131,7 +131,7 @@ return [
     'empty_cotisations' => 'Aucune cotisation enregistrée.',
     'confirm_del_cotisation' => 'Supprimer cette cotisation ?',
 
-    // ── Show — participation ─────────────────────────────────────────────────
+    // ── Show: participation ─────────────────────────────────────────────────
     'section_participation' => 'Participation aux activités',
     'export_meetings_title' => 'Exporter les réunions (XLS)',
     'col_activite' => 'Activité',
@@ -144,7 +144,7 @@ return [
     'participation_limit' => 'Affichage limité aux 50 dernières participations.',
     'empty_participation' => 'Aucune participation enregistrée.',
 
-    // ── Show — dotation ──────────────────────────────────────────────────────
+    // ── Show: dotation ──────────────────────────────────────────────────────
     'section_dotation' => 'Dotation habillement',
     'btn_gerer' => 'Gérer',
     'col_type_hab' => 'Type',
@@ -154,7 +154,7 @@ return [
     'col_nb' => 'Nb',
     'empty_dotation' => 'Aucune dotation habillement enregistrée.',
 
-    // ── Show — sections vides (futures fonctionnalités) ──────────────────────
+    // ── Show: sections vides (futures fonctionnalités) ──────────────────────
     'section_documents' => 'Documents',
     'feature_coming' => 'Fonctionnalité à venir',
     'empty_documents' => 'Aucun document enregistré.',
@@ -169,14 +169,14 @@ return [
     'section_historique' => 'Historique',
     'empty_historique' => 'Aucun historique disponible.',
 
-    // ── Show — géolocalisation ───────────────────────────────────────────────
+    // ── Show: géolocalisation ───────────────────────────────────────────────
     'section_geo' => 'Géolocalisation',
     'btn_carte_globale' => 'Carte globale',
     'field_coordonnees' => 'Coordonnées',
     'field_derniere_maj' => 'Dernière mise à jour',
     'empty_gps' => 'Aucune position GPS enregistrée.',
 
-    // ── Show — accès ─────────────────────────────────────────────────────────
+    // ── Show: accès ─────────────────────────────────────────────────────────
     'section_acces' => 'Droits d\'accès',
     'btn_identifiants' => 'Identifiants',
     'btn_gerer_acces' => 'Gérer',
@@ -187,7 +187,7 @@ return [
     'field_charte2_acceptee' => 'Charte 2 acceptée',
     'field_indicateurs' => 'Indicateurs',
     'section_sections' => 'Sections',
-    'section_principale_label' => '— principale :',
+    'section_principale_label' => '- principale :',
     'no_section_attribuee' => 'Aucune section attribuée.',
     'roles_par_section' => 'Rôles par section',
     'roles_organisationnels' => 'Rôles organisationnels',
@@ -195,11 +195,11 @@ return [
     'col_role' => 'Rôle',
     'empty_roles' => 'Aucun rôle attribué.',
 
-    // ── Show — identifiants contact ──────────────────────────────────────────
+    // ── Show: identifiants contact ──────────────────────────────────────────
     'section_identifiants' => 'Identifiants de contact',
     'contact_placeholder' => 'Identifiant :type',
 
-    // ── Show — salarié ───────────────────────────────────────────────────────
+    // ── Show: salarié ───────────────────────────────────────────────────────
     'section_salarie' => 'Informations du salarié',
     'label_heures_semaine' => 'Heures / semaine',
     'label_heures_jour' => 'Heures / jour',
@@ -209,27 +209,27 @@ return [
     'label_reliquat_cp' => 'Reliquat CP',
     'label_reliquat_rtt' => 'Reliquat RTT',
 
-    // ── Show — homonymes ─────────────────────────────────────────────────────
+    // ── Show: homonymes ─────────────────────────────────────────────────────
     'section_homonymes' => 'Homonymes détectés',
     'homonymes_intro' => 'Les fiches suivantes ont le même nom et prénom. Vérifiez s\'il s\'agit de doublons ou de simples homonymes.',
     'col_numero' => 'N°',
     'col_statut' => 'Statut',
     'badge_ancien' => 'Ancien',
     'badge_doublon_probable' => 'doublon probable',
-    'badge_doublon_title' => 'Même date de naissance — probable doublon',
+    'badge_doublon_title' => 'Même date de naissance : probable doublon',
     'badge_doublon_title_manage' => 'Gérer / fusionner ce doublon',
     'badge_homonyme' => 'homonyme',
-    'badge_homonyme_title' => 'Dates de naissance différentes — simple homonyme',
+    'badge_homonyme_title' => 'Dates de naissance différentes : simple homonyme',
     'btn_fusionner' => 'Fusionner',
-    'homonyme_non_applicable' => 'homonyme — fusion non applicable',
+    'homonyme_non_applicable' => 'homonyme : fusion non applicable',
 
-    // ── Show — modales ───────────────────────────────────────────────────────
+    // ── Show: modales ───────────────────────────────────────────────────────
     'modal_competence_title' => 'Compétence',
     'modal_competence_label' => 'Compétence',
     'modal_val_label' => 'Valeur / résultat',
     'modal_val_placeholder' => 'ex. Obtenu, 15/20…',
     'modal_exp_label' => 'Date d\'expiration',
-    'modal_choisir' => '— choisir —',
+    'modal_choisir' => '- choisir -',
 
     'modal_cotisation_title' => 'Cotisation',
     'modal_annee_label' => 'Année *',
@@ -249,7 +249,7 @@ return [
 
     // ── Form (create / edit) ─────────────────────────────────────────────────
     'form_new_title' => 'Nouveau personnel',
-    'form_edit_title' => 'Modifier — :name',
+    'form_edit_title' => 'Modifier - :name',
     'breadcrumb_modifier' => 'Modifier',
     'btn_voir_fiche' => 'Voir la fiche',
     'photo_click_label' => 'Cliquer pour changer',
@@ -275,7 +275,7 @@ return [
     'label_abrege_hint' => '(indicatif radio)',
     'placeholder_abrege' => 'ex. SP123',
     'label_grade' => 'Grade',
-    'grade_none' => '— aucun —',
+    'grade_none' => '- aucun -',
     'label_statut' => 'Statut',
     'label_profession' => 'Profession',
     'label_section_principale' => 'Section principale',
@@ -293,8 +293,8 @@ return [
 
     'urgence_intro' => 'Personne à contacter en cas d\'urgence.',
     'label_lier_membre' => 'Lier à un membre',
-    'lier_membre_hint' => '— les coordonnées sont synchronisées à chaque enregistrement',
-    'option_saisie_manuelle' => '— saisie manuelle —',
+    'lier_membre_hint' => '- les coordonnées sont synchronisées à chaque enregistrement',
+    'option_saisie_manuelle' => '- saisie manuelle -',
     'label_relation_prenom' => 'Prénom',
     'label_relation_nom' => 'Nom',
     'label_relation_phone' => 'Téléphone',
@@ -317,7 +317,7 @@ return [
     'hint_nospam' => 'Exclu des envois d\'emails groupés et communications automatiques.',
     'label_npai' => 'NPAI',
     'hint_npai_short' => '(adresse invalide)',
-    'hint_npai' => 'N\'habite Plus À l\'Adresse Indiquée — adresse postale réputée invalide.',
+    'hint_npai' => 'N\'habite Plus À l\'Adresse Indiquée : adresse postale réputée invalide.',
     'label_suspendu' => 'Suspendu',
     'hint_suspendu' => 'Compte temporairement suspendu ; accès à l\'application bloqué.',
     'label_date_npai' => 'Date NPAI',
@@ -333,7 +333,7 @@ return [
     'no_role_defini' => 'Aucun rôle défini.',
     'btn_add_role' => 'Ajouter un rôle',
     'role_remove_title' => 'Supprimer ce rôle',
-    'option_global' => '— global —',
+    'option_global' => '- global -',
     'label_groupes_acces' => 'Groupes d\'accès',
     'hint_groupes' => 'Groupes d\'accès attribués à ce membre. Les groupes accordent des droits globaux indépendamment de la section active.',
     'placeholder_search_group' => 'Rechercher un groupe…',
@@ -350,13 +350,13 @@ return [
 
     // ── Tenues ───────────────────────────────────────────────────────────────
     'tenues_title' => 'Dotation habillement',
-    'tenues_header' => 'Habillement en dotation — :name',
+    'tenues_header' => 'Habillement en dotation - :name',
     'tenues_articles_badge' => ':count article(s)',
     'tenue_nb_zero_hint' => 'Mettre Nb à 0 pour supprimer',
     'tenue_nb_zero_title' => '0 = supprimer',
     'tenues_ajouter_title' => 'Ajouter habillement',
     'tenues_nb_zero_note' => 'Nb = 0 : non ajouté',
-    'tenue_taille_placeholder' => '— taille —',
+    'tenue_taille_placeholder' => '- taille -',
 
     // ── Géolocalisation ───────────────────────────────────────────────────────
     'geo_title' => 'Géolocalisation',
@@ -365,7 +365,7 @@ return [
 
     // ── Préférences ───────────────────────────────────────────────────────────
     'prefs_title' => 'Mes préférences',
-    'prefs_title_other' => 'Préférences — :name',
+    'prefs_title_other' => 'Préférences - :name',
     'prefs_display_section' => 'Affichage',
     'prefs_tooltips' => 'Afficher les info-bulles (tooltips)',
     'prefs_orgchart_order' => 'Ordre de l\'organigramme',
@@ -381,9 +381,9 @@ return [
 
     // ── Fusion homonymes ──────────────────────────────────────────────────────
     'merge_title' => 'Fusion homonymes',
-    'merge_alert_same' => 'Les deux fiches ont la même date de naissance — il s\'agit très probablement de doublons.',
-    'merge_alert_diff' => 'Les deux fiches ont des dates de naissance <strong>différentes</strong> — ce sont des homonymes, pas des doublons. La fusion n\'est généralement pas appropriée.',
-    'merge_alert_unknown' => 'Les dates de naissance ne sont pas renseignées pour les deux fiches — impossible de confirmer qu\'il s\'agit de doublons.',
+    'merge_alert_same' => 'Les deux fiches ont la même date de naissance : il s\'agit très probablement de doublons.',
+    'merge_alert_diff' => 'Les deux fiches ont des dates de naissance <strong>différentes</strong> : ce sont des homonymes, pas des doublons. La fusion n\'est généralement pas appropriée.',
+    'merge_alert_unknown' => 'Les dates de naissance ne sont pas renseignées pour les deux fiches : impossible de confirmer qu\'il s\'agit de doublons.',
     'merge_card_principale' => 'Fiche principale',
     'merge_card_doublon' => 'Fiche doublon',
     'merge_col_nom' => 'Nom',

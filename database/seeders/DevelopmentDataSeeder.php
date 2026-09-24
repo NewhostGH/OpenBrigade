@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Throwaway fixtures for local development and tests only (never production —
+ * Throwaway fixtures for local development and tests only (never production:
  * gated in {@see DatabaseSeeder}). The canonical habilitation data and the
  * super-admin account are owned by {@see CoreSeeder}; this seeder only attaches
  * dev personnel to the already-seeded base groups/roles.

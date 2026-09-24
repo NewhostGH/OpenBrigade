@@ -47,7 +47,7 @@ return [
         'title' => 'À propos',
         'doc_online' => 'Documentation en ligne',
         'community' => 'Communauté eBrigade',
-        'support' => 'Support – :email',
+        'support' => 'Support - :email',
         'version' => 'version',
     ],
 
@@ -72,7 +72,7 @@ return [
     'cp' => [
         'title' => 'Congés à valider',
         'to_valdiate' => 'À valider',
-        'date_range' => '— :debut au :fin',
+        'date_range' => '- :debut au :fin',
     ],
 
     // ── Widget : Service / Astreinte ───────────────────────────────────────
@@ -88,7 +88,7 @@ return [
         'title' => 'Activités à venir',
         'closed_title' => 'Inscriptions fermées',
         'open_title' => 'Inscriptions ouvertes',
-        'session_prefix' => '– session n°',
+        'session_prefix' => '- session n°',
         'empty' => 'Aucune activité prévue.',
     ],
 
@@ -109,7 +109,7 @@ return [
 
     'horaires' => [
         'title' => 'Horaires à valider',
-        'week_label' => 'Semaine :week – :year',
+        'week_label' => 'Semaine :week - :year',
         'to_validate' => 'À valider',
     ],
 
@@ -136,7 +136,7 @@ return [
         'astreinte_title' => 'Astreinte',
         'closed_title' => 'Inscriptions fermées',
         'registered_title' => 'Inscrit',
-        'session_prefix' => '– session n°',
+        'session_prefix' => '- session n°',
         'empty' => 'Aucune participation prévue.',
     ],
 
@@ -153,7 +153,7 @@ return [
         'title' => 'Demande de remplaçant',
         'search_label' => 'Recherche de remplaçant',
         'in_progress' => 'En cours',
-        'date_range' => '– du :debut au :fin',
+        'date_range' => '- du :debut au :fin',
     ],
 
     // ── Widget : Statistiques manquantes ────────────────────────────────────

@@ -18,7 +18,7 @@ return [
         'message' => "Une erreur inattendue s'est produite. Réessayez ou contactez votre administrateur.",
     ],
 
-    // ── 4xx — côté client ───────────────────────────────────────────────────
+    // ── 4xx: côté client ───────────────────────────────────────────────────
     '400' => [
         'title' => 'Requête incorrecte',
         'message' => "Le serveur n'a pas pu interpréter la requête en raison d'une syntaxe invalide.",
@@ -84,7 +84,7 @@ return [
         'message' => 'Vous avez effectué trop de requêtes en peu de temps. Patientez quelques instants avant de réessayer.',
     ],
 
-    // ── 5xx — côté serveur / réseau ─────────────────────────────────────────
+    // ── 5xx: côté serveur / réseau ─────────────────────────────────────────
     '500' => [
         'title' => 'Erreur interne',
         'message' => "Une erreur inattendue est survenue de notre côté. L'équipe technique a été informée. Réessayez dans quelques instants.",
@@ -114,7 +114,7 @@ return [
     'btn_prev_page' => 'Page précédente',
 
     // ── Schéma de connexion (diagramme SVG) ─────────────────────────────────
-    'diagram_aria' => 'Schéma de connexion client, réseau, serveur — point de défaillance mis en évidence',
+    'diagram_aria' => 'Schéma de connexion client, réseau, serveur : point de défaillance mis en évidence',
     'diagram_client' => 'Client',
     'diagram_network' => 'Réseau',
     'diagram_server' => 'Serveur',

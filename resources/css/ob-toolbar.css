@@ -1,5 +1,5 @@
 /* =============================================================================
-   ob-toolbar.css  —  Filter / action bar above list pages
+   ob-toolbar.css: Filter / action bar above list pages
    ============================================================================= */
 
 .ob-toolbar {
@@ -70,7 +70,7 @@
     font-size: var(--font-size-sm);
 }
 
-/* Table controls auto-group — pushed to the right when secondary content exists */
+/* Table controls auto-group: pushed to the right when secondary content exists */
 .ob-toolbar-table-controls {
     display: flex;
     align-items: center;

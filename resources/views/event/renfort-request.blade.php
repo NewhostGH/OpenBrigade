@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($event->E_LIBELLE ?? $event->E_CODE) . ' — Demande de renfort — ' . config('app.name'))
+@section('title', ($event->E_LIBELLE ?? $event->E_CODE) . ' | Demande de renfort | ' . config('app.name'))
 
 @section('content')
 
@@ -18,7 +18,7 @@
             <div class="ob-widget-card-header">
                 <div class="ob-widget-card-title">
                     <i class="fas fa-ambulance me-1"></i>
-                    {{ __('event.renfort_req_heading') }} — {{ $event->E_LIBELLE ?? $event->E_CODE }}
+                    {{ __('event.renfort_req_heading') }} - {{ $event->E_LIBELLE ?? $event->E_CODE }}
                 </div>
                 <a href="{{ route('event.show', $event->E_CODE) }}" class="btn btn-sm btn-light">
                     <i class="fas fa-arrow-left me-1"></i> {{ __('event.btn_back') }}
@@ -60,7 +60,7 @@
                             @php $prevUsage = $vt->TV_USAGE; @endphp
                         @endif
                         <div class="col-6 col-sm-4 col-md-3">
-                            <label class="form-label mb-0" style="font-size:var(--font-size-xs)">{{ $vt->TV_CODE }} — {{ $vt->TV_LIBELLE }}</label>
+                            <label class="form-label mb-0" style="font-size:var(--font-size-xs)">{{ $vt->TV_CODE }} - {{ $vt->TV_LIBELLE }}</label>
                             <input type="number" name="vehicle_types[{{ $vt->TV_CODE }}]"
                                    class="form-control form-control-sm"
                                    min="0" max="999"
@@ -154,7 +154,7 @@
                                                @disabled($t->recipients->isEmpty())>
                                         <span class="d-block">
                                             <span class="fw-semibold">{{ $t->S_CODE }}</span>
-                                            @if($t->S_DESCRIPTION)<span class="text-muted"> — {{ $t->S_DESCRIPTION }}</span>@endif
+                                            @if($t->S_DESCRIPTION)<span class="text-muted"> - {{ $t->S_DESCRIPTION }}</span>@endif
                                             <span class="d-block text-muted" style="font-size:var(--font-size-xs)">
                                                 @if($t->recipients->isEmpty())
                                                     <i class="fas fa-exclamation-triangle me-1 text-warning"></i>{{ __('event.renfort_tx_no_recipient') }}
@@ -197,8 +197,8 @@
                     </span>
                     <span>
                         {{ __('event.renfort_tx_history_line', [
-                            'section' => $h->S_CODE ?? '—',
-                            'sender' => trim(strtoupper((string) $h->P_NOM).' '.$h->P_PRENOM) ?: '—',
+                            'section' => $h->S_CODE ?? __('common.empty_value'),
+                            'sender' => trim(strtoupper((string) $h->P_NOM).' '.$h->P_PRENOM) ?: __('common.empty_value'),
                             'count' => $h->recipients,
                         ]) }}
                         @if($h->message)<div class="text-muted fst-italic">« {{ $h->message }} »</div>@endif

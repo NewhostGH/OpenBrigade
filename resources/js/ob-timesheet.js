@@ -1,4 +1,4 @@
-// Horaires de travail — live per-day and week total computation as the user
+// Horaires de travail: live per-day and week total computation as the user
 // types. Mirrors the server-side calculation (slot1 + slot2 + overtime); the
 // authoritative totals are always recomputed on save.
 

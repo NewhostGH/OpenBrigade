@@ -14,7 +14,7 @@ class MessageController extends Controller
     ) {}
 
     /**
-     * Message board — consignes opérationnelles and news (actualités).
+     * Message board: consignes opérationnelles and news (actualités).
      */
     public function index(Request $request): View
     {

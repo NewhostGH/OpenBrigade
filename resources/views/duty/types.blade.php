@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Types de garde — ' . config('app.name'))
+@section('title', 'Types de garde | ' . config('app.name'))
 
 @section('content')
 
@@ -61,7 +61,7 @@
                             @if($item->EQ_JOUR)
                                 <i class="fas fa-sun text-warning" title="{{ __('duty.active_day') }}"></i>
                                 <div class="text-muted" style="font-size:var(--font-size-xs);">
-                                    {{ substr($item->EQ_DEBUT1 ?? '', 0, 5) }}–{{ substr($item->EQ_FIN1 ?? '', 0, 5) }}
+                                    {{ substr($item->EQ_DEBUT1 ?? '', 0, 5) }}-{{ substr($item->EQ_FIN1 ?? '', 0, 5) }}
                                 </div>
                             @else
                                 <i class="fas fa-minus text-muted"></i>
@@ -71,7 +71,7 @@
                             @if($item->EQ_NUIT)
                                 <i class="fas fa-moon text-primary" title="{{ __('duty.active_night') }}"></i>
                                 <div class="text-muted" style="font-size:var(--font-size-xs);">
-                                    {{ substr($item->EQ_DEBUT2 ?? '', 0, 5) }}–{{ substr($item->EQ_FIN2 ?? '', 0, 5) }}
+                                    {{ substr($item->EQ_DEBUT2 ?? '', 0, 5) }}-{{ substr($item->EQ_FIN2 ?? '', 0, 5) }}
                                 </div>
                             @else
                                 <i class="fas fa-minus text-muted"></i>

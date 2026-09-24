@@ -17,21 +17,21 @@ class StatisticsController extends Controller
         return view('statistics.index', $this->fetchStats($request));
     }
 
-    // ── Bilan annuel — Généralités ────────────────────────────────────────────
+    // ── Bilan annuel : Généralités ────────────────────────────────────────────
 
     public function reportOverview(Request $request): View
     {
         return view('statistics.annual-report.overview', $this->fetchGeneralites($request));
     }
 
-    // ── Bilan annuel — Activités opérationnelles ──────────────────────────────
+    // ── Bilan annuel : Activités opérationnelles ──────────────────────────────
 
     public function reportActivities(Request $request): View
     {
         return view('statistics.annual-report.activities', $this->fetchActivites($request));
     }
 
-    // ── Bilan annuel — Formations ─────────────────────────────────────────────
+    // ── Bilan annuel : Formations ─────────────────────────────────────────────
 
     public function reportTraining(Request $request): View
     {

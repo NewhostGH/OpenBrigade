@@ -66,7 +66,7 @@ class PasswordPolicyService implements ServiceInterface
     }
 
     /**
-     * Legacy accessor — returns the global default policy.
+     * Legacy accessor: returns the global default policy.
      * Callers that do not have a User object should use this.
      *
      * @return array{min_length:int,require_uppercase:bool,require_lowercase:bool,require_digits:bool,require_special:bool,expiry_days:int,max_attempts:int,blocklist_check:bool,require_2fa:bool}
@@ -219,7 +219,7 @@ class PasswordPolicyService implements ServiceInterface
     /**
      * Returns true when the password has appeared in a known data breach
      * (checked via the Have I Been Pwned k-anonymity API).
-     * Fails open — allows the password when the API is unreachable.
+     * Fails open: allows the password when the API is unreachable.
      */
     private function isCompromised(string $password): bool
     {
@@ -237,7 +237,7 @@ class PasswordPolicyService implements ServiceInterface
 
     /**
      * Returns true when every character in $s follows the same +1 or -1 Unicode
-     * code-point step — e.g. "abcde", "zyxwv", "12345", "9876543".
+     * code-point step: e.g. "abcde", "zyxwv", "12345", "9876543".
      */
     private function isConsecutiveSequence(string $s): bool
     {

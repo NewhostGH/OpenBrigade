@@ -31,7 +31,7 @@ class AuthService implements ServiceInterface
      * Attempt a login.
      *
      * Returns 'totp_required' when the password is correct but the user has
-     * confirmed TOTP enabled — the caller must redirect to the TOTP challenge.
+     * confirmed TOTP enabled: the caller must redirect to the TOTP challenge.
      * Returns true on full success, false on failure.
      *
      * @return bool|'totp_required'|'totp_setup_required'
@@ -85,7 +85,7 @@ class AuthService implements ServiceInterface
             }
         }
 
-        // TOTP challenge — confirmed enrolment takes priority.
+        // TOTP challenge: confirmed enrolment takes priority.
         if ($user->hasEnabledTwoFactorAuthentication()) {
             Session::put('_totp_user_id', $user->P_ID);
 

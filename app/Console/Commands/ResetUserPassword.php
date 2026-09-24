@@ -146,8 +146,8 @@ class ResetUserPassword extends Command
             ['Field', 'Value'],
             [
                 ['Name',           $name],
-                ['Matricule',      $user->P_CODE ?? '—'],
-                ['E-mail',         $user->P_EMAIL ?? '—'],
+                ['Matricule',      $user->P_CODE ?? __('common.empty_value')],
+                ['E-mail',         $user->P_EMAIL ?? __('common.empty_value')],
                 ['Last login',     $lastLogin],
                 ['Login failures', $failures],
                 ['Password expiry', $expiry],

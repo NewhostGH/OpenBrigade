@@ -13,7 +13,7 @@ use stdClass;
  * sections by email, and keeps a log of what was sent.
  *
  * Recipients in a target section are the members able to answer with a
- * reinforcement sub-event — those holding permission 15 (create/manage
+ * reinforcement sub-event: those holding permission 15 (create/manage
  * activities) in that section. When nobody qualifies, the section's
  * responsables (`section_role`) are used instead. Delivery goes through the
  * central {@see NotificationService} (queued, honours `mail_allowed`).
@@ -169,7 +169,7 @@ class ReinforcementTransmissionService
         $lines = [];
         $lines[] = __('event.renfort_tx_mail_intro', [
             'sender' => strtoupper((string) $sender->P_NOM).' '.$sender->P_PRENOM,
-            'section' => $section ?? '—',
+            'section' => $section ?? __('common.empty_value'),
         ]);
         $lines[] = '';
         $lines[] = __('event.renfort_tx_mail_event').' : '.($event->E_LIBELLE ?: $event->E_CODE);

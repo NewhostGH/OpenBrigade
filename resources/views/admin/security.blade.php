@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Sécurité — ' . config('app.name'))
+@section('title', 'Sécurité | ' . config('app.name'))
 
 @push('scripts')
 <script>
@@ -105,16 +105,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td style="vertical-align:middle;font-size:var(--font-size-xs);"> {{-- i18n-ignore --}}
                     @php
                         $rules = array_filter([
-                            $pol->require_uppercase ? 'A–Z' : null,
-                            $pol->require_lowercase ? 'a–z' : null,
-                            $pol->require_digits    ? '0–9' : null,
+                            $pol->require_uppercase ? 'A-Z' : null,
+                            $pol->require_lowercase ? 'a-z' : null,
+                            $pol->require_digits    ? '0-9' : null,
                             $pol->require_special   ? '!@#' : null,
                         ]);
                     @endphp
-                    {{ $rules ? implode(' · ', $rules) : '—' }}
+                    {{ $rules ? implode(' · ', $rules) : __('common.empty_value') }}
                 </td>
                 <td style="vertical-align:middle;font-size:var(--font-size-sm);">
-                    {{ $pol->expiry_days > 0 ? $pol->expiry_days . 'j' : '—' }}
+                    {{ $pol->expiry_days > 0 ? $pol->expiry_days . 'j' : __('common.empty_value') }}
                 </td>
                 <td style="vertical-align:middle;font-size:var(--font-size-sm);">
                     {{ $pol->max_attempts > 0 ? $pol->max_attempts : '∞' }}
@@ -123,11 +123,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     @if ($pol->require_2fa)
                         <i class="fas fa-check text-success"></i>
                     @else
-                        <span class="text-muted">—</span>
+                        <span class="text-muted">{{ __('common.empty_value') }}</span>
                     @endif
                 </td>
                 <td style="vertical-align:middle;font-size:var(--font-size-sm);">
-                    {{ $pol->groups_count > 0 ? $pol->groups_count : '—' }}
+                    {{ $pol->groups_count > 0 ? $pol->groups_count : __('common.empty_value') }}
                 </td>
                 <td style="vertical-align:middle;" class="pe-3">
                     <div class="d-flex gap-1 justify-content-end">
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <table class="table table-sm table-hover mb-0">
             <tbody>
 
-                {{-- Session expiration (ID 49) — WIP --}}
+                {{-- Session expiration (ID 49): WIP --}}
                 @php($s = $settings->get(49))
                 <tr class="text-muted">
                     <td class="ps-3" style="width:40%;vertical-align:middle;font-size:var(--font-size-sm);">
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </td>
                 </tr>
 
-                {{-- Days log (ID 36) — WIP --}}
+                {{-- Days log (ID 36): WIP --}}
                 @php($s = $settings->get(36))
                 <tr class="text-muted">
                     <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </td>
                 </tr>
 
-                {{-- Log actions (ID 25) — WIP --}}
+                {{-- Log actions (ID 25): WIP --}}
                 @php($s = $settings->get(25))
                 <tr class="text-muted">
                     <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </td>
                 </tr>
 
-                {{-- Confidential data (ID 33) — WIP --}}
+                {{-- Confidential data (ID 33): WIP --}}
                 @php($s = $settings->get(33))
                 <tr class="text-muted">
                     <td class="ps-3" style="vertical-align:middle;font-size:var(--font-size-sm);">
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     @foreach ($ldapDomains as $dom)
                     <tr>
                         <td class="ps-2" style="vertical-align:middle;font-size:var(--font-size-sm);">
-                            LDAP — {{ $dom->name }}
+                            LDAP - {{ $dom->name }}
                             @if ($dom->enabled)
                                 <span class="ob-badge ob-badge-int ms-1" style="font-size:10px;">{{ __('admin.active') }}</span>
                             @else
@@ -641,7 +641,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </td>
                         <td style="vertical-align:middle;font-size:var(--font-size-xs);"><code>MAIL_HOST:MAIL_PORT</code></td>
                         <td style="vertical-align:middle;font-size:var(--font-size-xs);">{{ __('admin.security.smtp_condition') }}</td>
-                        <td style="vertical-align:middle;font-size:var(--font-size-xs);">—</td>
+                        <td style="vertical-align:middle;font-size:var(--font-size-xs);">{{ __('common.empty_value') }}</td>
                         <td></td>
                     </tr>
 

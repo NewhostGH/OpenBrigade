@@ -13,7 +13,7 @@ return [
     'year_label' => 'Année :',
     'btn_annual_report' => 'Bilan annuel',
 
-    // KPI cards — index
+    // KPI cards: index
     'kpi_events_label' => 'Activités',
     'kpi_events_sub' => 'en :year',
     'kpi_participants_label' => 'Participations',
@@ -23,14 +23,14 @@ return [
     'kpi_members_label' => 'Membres actifs',
     'kpi_members_sub' => ':new nouveau(x) en :year',
 
-    // chart titles — index
+    // chart titles: index
     'chart_events_month' => 'Activités par mois',
     'chart_participants_month' => 'Participants par mois',
     'chart_events_type' => 'Répartition par type',
     'chart_new_members' => 'Nouveaux membres (5 ans)',
 
-    // top participants — index
-    'top_participants_title' => 'Top 10 participants — :year',
+    // top participants: index
+    'top_participants_title' => 'Top 10 participants - :year',
     'th_rank' => '#',
     'th_member' => 'Membre',
     'th_events' => 'Activités',
@@ -45,11 +45,11 @@ return [
     'tab_formations' => 'Formations',
 
     // ── annual-report/overview ─────────────────────────────────────────────
-    'overview_page_title' => 'Bilan — Généralités',
+    'overview_page_title' => 'Bilan - Généralités',
     'breadcrumb_generalites' => 'Généralités',
-    'overview_intro' => 'Retrouvez le bilan annuel complet du personnel et des moyens — véhicules, matériel et consommables.',
+    'overview_intro' => 'Retrouvez le bilan annuel complet du personnel et des moyens : véhicules, matériel et consommables.',
 
-    // overview — personnel
+    // overview: personnel
     'personnel_heading' => 'Personnel',
     'kpi_active_members' => 'Membres actifs',
     'kpi_active_members_sub' => 'au :date',
@@ -58,7 +58,7 @@ return [
     'chart_members_group' => 'Répartition par groupe',
     'chart_new_members_5y' => 'Évolution des engagements (5 ans)',
 
-    // overview — véhicules
+    // overview: véhicules
     'vehicles_heading' => 'Véhicules',
     'kpi_total_vehicles' => 'Total véhicules',
     'kpi_total_vehicles_sub' => 'en parc',
@@ -68,7 +68,7 @@ return [
     'th_qty' => 'Quantité',
     'no_vehicles' => 'Aucun véhicule enregistré.',
 
-    // overview — matériel
+    // overview: matériel
     'materiel_heading' => 'Matériel',
     'kpi_total_materiel' => 'Total matériel',
     'kpi_total_materiel_sub' => 'articles inventoriés',
@@ -76,7 +76,7 @@ return [
     'th_category' => 'Catégorie',
     'no_materiel' => 'Aucun matériel enregistré.',
 
-    // overview — consommables
+    // overview: consommables
     'consommables_heading' => 'Consommables',
     'kpi_total_consommables' => 'Total consommables',
     'kpi_total_consommables_sub' => 'articles inventoriés',
@@ -84,7 +84,7 @@ return [
     'no_consommables' => 'Aucun consommable enregistré.',
 
     // ── annual-report/activities ───────────────────────────────────────────
-    'activities_page_title' => 'Bilan — Activités',
+    'activities_page_title' => 'Bilan - Activités',
     'breadcrumb_activites' => 'Activités opérationnelles',
     'activities_intro' => 'Bilan annuel de l\'ensemble des activités opérationnelles de votre structure pour :year.',
 
@@ -111,7 +111,7 @@ return [
     'section_top10' => 'Top 10 participants',
 
     // ── annual-report/training ─────────────────────────────────────────────
-    'training_page_title' => 'Bilan — Formations',
+    'training_page_title' => 'Bilan - Formations',
     'breadcrumb_formations' => 'Formations',
     'training_intro' => 'Liste de toutes les formations prodiguées durant l\'année :year.',
 
@@ -135,7 +135,7 @@ return [
     'training_empty' => 'Aucune formation enregistrée pour :year.',
     'tfoot_total' => 'Total',
 
-    // ── financial report — "Cotisations par section" (report_cotisations.php) ──
+    // ── financial report: "Cotisations par section" (report_cotisations.php) ──
     'financial_title' => 'Cotisations par section',
     'financial_breadcrumb' => 'Cotisations',
     'financial_all_sections' => 'Toutes sections',

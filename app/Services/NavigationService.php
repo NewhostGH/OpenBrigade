@@ -22,7 +22,7 @@ class NavigationService
         $groups = [];
 
         // The single "active" item is the one whose path is the LONGEST prefix
-        // of the current path — so on /duty/on-call only "Astreintes" lights up,
+        // of the current path: so on /duty/on-call only "Astreintes" lights up,
         // not the parent /duty items in another group.
         $activePath = $this->activePath($currentPath);
 

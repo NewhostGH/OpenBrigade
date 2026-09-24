@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 /**
- * OPTIMIZE TABLE over every table — the successor of the legacy daily
+ * OPTIMIZE TABLE over every table: the successor of the legacy daily
  * database_optimize(). Scheduled weekly (Sundays 04:30), gated on the
  * auto_optimize setting (configuration row 14, Administration ▸
  * Maintenance); --force bypasses the gate for the manual button.
@@ -22,7 +22,7 @@ class DbOptimize extends Command
     public function handle(GeneralSettingService $settings): int
     {
         if (! $this->option('force') && ! $settings->autoOptimizeEnabled()) {
-            $this->info('Automatic optimization is disabled (setting 14) — skipped.');
+            $this->info('Automatic optimization is disabled (setting 14): skipped.');
 
             return self::SUCCESS;
         }

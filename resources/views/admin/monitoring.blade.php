@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.monitoring.title') . ' — ' . config('app.name'))
+@section('title', __('admin.monitoring.title') . ' | ' . config('app.name'))
 
 @push('scripts')
 <script>
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </ul>
 </div>
 
-{{-- ── Journaux (ob_log_entry) — unified structured log + activity ─────── --}}
+{{-- ── Journaux (ob_log_entry): unified structured log + activity ─────── --}}
 @if ($tab === 'logs')
     <x-ob-toolbar
         title="{{ __('admin.monitoring.tab_logs') }}"
@@ -128,8 +128,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="card-body">
                     <div class="d-flex gap-4 mb-3">
                         <div><div class="h4 mb-0">{{ $perf['count'] }}</div><div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.monitoring.perf_slow_24h') }}</div></div>
-                        <div><div class="h4 mb-0">{{ $perf['avg_ms'] ?? '—' }} <small>{{ __('admin.monitoring.settings.ms') }}</small></div><div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.monitoring.perf_avg') }}</div></div>
-                        <div><div class="h4 mb-0">{{ $perf['max_ms'] ?? '—' }} <small>{{ __('admin.monitoring.settings.ms') }}</small></div><div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.monitoring.perf_max') }}</div></div>
+                        <div><div class="h4 mb-0">{{ $perf['avg_ms'] ?? __('common.empty_value') }} <small>{{ __('admin.monitoring.settings.ms') }}</small></div><div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.monitoring.perf_avg') }}</div></div>
+                        <div><div class="h4 mb-0">{{ $perf['max_ms'] ?? __('common.empty_value') }} <small>{{ __('admin.monitoring.settings.ms') }}</small></div><div class="text-muted" style="font-size:var(--font-size-xs);">{{ __('admin.monitoring.perf_max') }}</div></div>
                     </div>
                     <table class="table table-sm mb-0">
                         <thead><tr><th>{{ __('admin.monitoring.col_date') }}</th><th>{{ __('admin.monitoring.col_route') }}</th><th class="text-end">{{ __('admin.monitoring.settings.ms') }}</th></tr></thead>
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
     </div>
 
-    {{-- Diagnostic — deliberately trigger an issue to test the pipeline --}}
+    {{-- Diagnostic: deliberately trigger an issue to test the pipeline --}}
     <div class="mx-3 mt-3">
         <div class="card border-warning-subtle">
             <div class="card-header"><i class="fas fa-flask me-1"></i> {{ __('admin.monitoring.diag.title') }}</div>

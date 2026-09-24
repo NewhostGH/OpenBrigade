@@ -36,7 +36,7 @@
     border-radius: var(--radius-md, 6px);
 }
 
-/* Day numbers are anchors — strip the global link styling (blue + underline) */
+/* Day numbers are anchors: strip the global link styling (blue + underline) */
 :is([data-ob-calendar], [data-ob-section-planning]) .fc a {
     text-decoration: none;
 }

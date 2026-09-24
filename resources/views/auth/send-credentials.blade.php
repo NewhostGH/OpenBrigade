@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('auth_views.creds_page_title') . ' — ' . config('app.name'))
+@section('title', __('auth_views.creds_page_title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -32,7 +32,7 @@
                         <dl class="ob-info-grid mb-4">
                             <div class="ob-info-item">
                                 <dt>{{ __('auth_views.creds_field_login') }}</dt>
-                                <dd>{{ $personnel->P_CODE ?? '—' }}</dd>
+                                <dd>{{ $personnel->P_CODE ?? __('common.empty_value') }}</dd>
                             </div>
                             <div class="ob-info-item">
                                 <dt>{{ __('auth_views.creds_field_email') }}</dt>
@@ -74,7 +74,7 @@
                             <div class="ob-info-item">
                                 <dt>{{ __('auth_views.creds_field_login') }}</dt>
                                 <dd>
-                                    <code class="user-select-all">{{ $personnel->P_CODE ?? '—' }}</code>
+                                    <code class="user-select-all">{{ $personnel->P_CODE ?? __('common.empty_value') }}</code>
                                 </dd>
                             </div>
                             <div class="ob-info-item">
@@ -111,7 +111,7 @@
                         @else
                             <div class="alert alert-warning mb-3">
                                 <i class="fas fa-exclamation-triangle me-1"></i>
-                                {{-- TODO: COMM — wire up NotificationService email sending --}}
+                                {{-- TODO: COMM: wire up NotificationService email sending --}}
                                 {{ __('auth_views.creds_auto_unavailable') }}
                             </div>
                             <p>

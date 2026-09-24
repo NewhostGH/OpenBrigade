@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.references.equipment_category.title') . ' — ' . config('app.name'))
+@section('title', __('admin.references.equipment_category.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -98,7 +98,7 @@
                                 <i class="fas fa-{{ $item->PICTURE }} me-1"></i>
                                 <span class="text-muted">{{ $item->PICTURE }}</span>
                             @else
-                                <span class="text-muted">—</span>
+                                <span class="text-muted">{{ __('common.empty_value') }}</span>
                             @endif
                         </td>
                         <td class="align-middle text-end">

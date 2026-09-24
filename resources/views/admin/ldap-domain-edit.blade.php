@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'LDAP — ' . $domain->name . ' — ' . config('app.name'))
+@section('title', 'LDAP | ' . $domain->name . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -209,7 +209,7 @@
                         <td style="vertical-align:middle;"><code>{{ $map->ldap_attr }}</code></td>
                         <td style="vertical-align:middle;"><code>{{ $localFields[$map->local_field] ?? $map->local_field }}</code></td>
                         <td class="text-center" style="vertical-align:middle;">
-                            @if ($map->overwrite) <i class="fas fa-check text-warning"></i> @else <span class="text-muted">—</span> @endif
+                            @if ($map->overwrite) <i class="fas fa-check text-warning"></i> @else <span class="text-muted">{{ __('common.empty_value') }}</span> @endif
                         </td>
                         <td style="vertical-align:middle;">
                             <form method="POST" action="{{ route('admin.ldap.attr.destroy', [$domain->id, $map->id]) }}">
@@ -249,47 +249,47 @@
                            list="ldap-attr-list" required>
                     <datalist id="ldap-attr-list">
                         {{-- Active Directory --}}
-                        <option value="sAMAccountName">sAMAccountName — identifiant AD</option> {{-- i18n-ignore --}}
-                        <option value="userPrincipalName">userPrincipalName — UPN (user@domain)</option> {{-- i18n-ignore --}}
-                        <option value="mail">mail — adresse e-mail principale</option> {{-- i18n-ignore --}}
-                        <option value="proxyAddresses">proxyAddresses — adresses e-mail secondaires</option> {{-- i18n-ignore --}}
-                        <option value="givenName">givenName — prénom</option> {{-- i18n-ignore --}}
-                        <option value="sn">sn — nom de famille</option> {{-- i18n-ignore --}}
-                        <option value="displayName">displayName — nom d'affichage</option> {{-- i18n-ignore --}}
-                        <option value="cn">cn — nom complet</option> {{-- i18n-ignore --}}
-                        <option value="department">department — département / service</option> {{-- i18n-ignore --}}
-                        <option value="title">title — intitulé de poste</option> {{-- i18n-ignore --}}
-                        <option value="company">company — organisation</option> {{-- i18n-ignore --}}
-                        <option value="telephoneNumber">telephoneNumber — téléphone fixe</option> {{-- i18n-ignore --}}
-                        <option value="mobile">mobile — téléphone mobile</option> {{-- i18n-ignore --}}
-                        <option value="facsimileTelephoneNumber">facsimileTelephoneNumber — fax</option> {{-- i18n-ignore --}}
-                        <option value="streetAddress">streetAddress — adresse postale</option> {{-- i18n-ignore --}}
-                        <option value="l">l — ville</option> {{-- i18n-ignore --}}
-                        <option value="postalCode">postalCode — code postal</option> {{-- i18n-ignore --}}
-                        <option value="co">co — pays</option> {{-- i18n-ignore --}}
-                        <option value="employeeID">employeeID — matricule employé</option> {{-- i18n-ignore --}}
-                        <option value="employeeNumber">employeeNumber — numéro employé</option> {{-- i18n-ignore --}}
+                        <option value="sAMAccountName">sAMAccountName - identifiant AD</option> {{-- i18n-ignore --}}
+                        <option value="userPrincipalName">userPrincipalName - UPN (user@domain)</option> {{-- i18n-ignore --}}
+                        <option value="mail">mail - adresse e-mail principale</option> {{-- i18n-ignore --}}
+                        <option value="proxyAddresses">proxyAddresses - adresses e-mail secondaires</option> {{-- i18n-ignore --}}
+                        <option value="givenName">givenName - prénom</option> {{-- i18n-ignore --}}
+                        <option value="sn">sn - nom de famille</option> {{-- i18n-ignore --}}
+                        <option value="displayName">displayName - nom d'affichage</option> {{-- i18n-ignore --}}
+                        <option value="cn">cn - nom complet</option> {{-- i18n-ignore --}}
+                        <option value="department">department - département / service</option> {{-- i18n-ignore --}}
+                        <option value="title">title - intitulé de poste</option> {{-- i18n-ignore --}}
+                        <option value="company">company - organisation</option> {{-- i18n-ignore --}}
+                        <option value="telephoneNumber">telephoneNumber - téléphone fixe</option> {{-- i18n-ignore --}}
+                        <option value="mobile">mobile - téléphone mobile</option> {{-- i18n-ignore --}}
+                        <option value="facsimileTelephoneNumber">facsimileTelephoneNumber - fax</option> {{-- i18n-ignore --}}
+                        <option value="streetAddress">streetAddress - adresse postale</option> {{-- i18n-ignore --}}
+                        <option value="l">l - ville</option> {{-- i18n-ignore --}}
+                        <option value="postalCode">postalCode - code postal</option> {{-- i18n-ignore --}}
+                        <option value="co">co - pays</option> {{-- i18n-ignore --}}
+                        <option value="employeeID">employeeID - matricule employé</option> {{-- i18n-ignore --}}
+                        <option value="employeeNumber">employeeNumber - numéro employé</option> {{-- i18n-ignore --}}
                         <option value="extensionAttribute1">extensionAttribute1</option> {{-- i18n-ignore --}}
                         <option value="extensionAttribute2">extensionAttribute2</option> {{-- i18n-ignore --}}
                         <option value="extensionAttribute3">extensionAttribute3</option> {{-- i18n-ignore --}}
-                        <option value="memberOf">memberOf — groupes AD</option> {{-- i18n-ignore --}}
-                        <option value="manager">manager — responsable hiérarchique (DN)</option> {{-- i18n-ignore --}}
-                        <option value="physicalDeliveryOfficeName">physicalDeliveryOfficeName — bureau</option> {{-- i18n-ignore --}}
+                        <option value="memberOf">memberOf - groupes AD</option> {{-- i18n-ignore --}}
+                        <option value="manager">manager - responsable hiérarchique (DN)</option> {{-- i18n-ignore --}}
+                        <option value="physicalDeliveryOfficeName">physicalDeliveryOfficeName - bureau</option> {{-- i18n-ignore --}}
                         <option value="description">description</option> {{-- i18n-ignore --}}
-                        <option value="info">info — notes</option> {{-- i18n-ignore --}}
-                        <option value="thumbnailPhoto">thumbnailPhoto — photo</option> {{-- i18n-ignore --}}
+                        <option value="info">info - notes</option> {{-- i18n-ignore --}}
+                        <option value="thumbnailPhoto">thumbnailPhoto - photo</option> {{-- i18n-ignore --}}
                         {{-- OpenLDAP / LDAP standard --}}
-                        <option value="uid">uid — identifiant Unix</option> {{-- i18n-ignore --}}
-                        <option value="uidNumber">uidNumber — UID numérique</option> {{-- i18n-ignore --}}
-                        <option value="gidNumber">gidNumber — GID groupe</option> {{-- i18n-ignore --}}
-                        <option value="homeDirectory">homeDirectory — répertoire home</option> {{-- i18n-ignore --}}
-                        <option value="loginShell">loginShell — shell</option> {{-- i18n-ignore --}}
-                        <option value="gecos">gecos — informations GECOS</option> {{-- i18n-ignore --}}
-                        <option value="shadowExpire">shadowExpire — expiration mot de passe</option> {{-- i18n-ignore --}}
-                        <option value="shadowLastChange">shadowLastChange — dernière modification MDP</option> {{-- i18n-ignore --}}
-                        <option value="ou">ou — unité organisationnelle</option> {{-- i18n-ignore --}}
-                        <option value="o">o — organisation</option> {{-- i18n-ignore --}}
-                        <option value="labeledURI">labeledURI — URL</option> {{-- i18n-ignore --}}
+                        <option value="uid">uid - identifiant Unix</option> {{-- i18n-ignore --}}
+                        <option value="uidNumber">uidNumber - UID numérique</option> {{-- i18n-ignore --}}
+                        <option value="gidNumber">gidNumber - GID groupe</option> {{-- i18n-ignore --}}
+                        <option value="homeDirectory">homeDirectory - répertoire home</option> {{-- i18n-ignore --}}
+                        <option value="loginShell">loginShell - shell</option> {{-- i18n-ignore --}}
+                        <option value="gecos">gecos - informations GECOS</option> {{-- i18n-ignore --}}
+                        <option value="shadowExpire">shadowExpire - expiration mot de passe</option> {{-- i18n-ignore --}}
+                        <option value="shadowLastChange">shadowLastChange - dernière modification MDP</option> {{-- i18n-ignore --}}
+                        <option value="ou">ou - unité organisationnelle</option> {{-- i18n-ignore --}}
+                        <option value="o">o - organisation</option> {{-- i18n-ignore --}}
+                        <option value="labeledURI">labeledURI - URL</option> {{-- i18n-ignore --}}
                     </datalist>
                 </div>
                 <div class="col-4">
@@ -351,7 +351,7 @@
                             @if ($rule->extra_filter)
                                 <code title="{{ $rule->extra_filter }}">…</code>
                             @else
-                                <span class="text-muted">—</span>
+                                <span class="text-muted">{{ __('common.empty_value') }}</span>
                             @endif
                         </td>
                         <td style="vertical-align:middle;">
@@ -363,10 +363,10 @@
                                 <span class="badge bg-info text-dark">{{ __('admin.ldap.action_assign') }}</span>
                             @endif
                         </td>
-                        <td style="vertical-align:middle;">{{ $rule->group?->name ?? '—' }}</td>
-                        <td style="vertical-align:middle;">{{ $rule->role?->name ?? '—' }}</td>
+                        <td style="vertical-align:middle;">{{ $rule->group?->name ?? __('common.empty_value') }}</td>
+                        <td style="vertical-align:middle;">{{ $rule->role?->name ?? __('common.empty_value') }}</td>
                         @if ($multiSite)
-                        <td style="vertical-align:middle;">{{ $rule->section?->S_CODE ?? '—' }}</td>
+                        <td style="vertical-align:middle;">{{ $rule->section?->S_CODE ?? __('common.empty_value') }}</td>
                         @endif
                         <td style="vertical-align:middle;">{{ $rule->priority }}</td>
                         <td style="vertical-align:middle;">
@@ -416,7 +416,7 @@
                             <div class="col-6">
                                 <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.col_group') }}</label>
                                 <select name="group_id" class="form-select form-select-sm">
-                                    <option value="">—</option>
+                                    <option value="">{{ __('common.empty_value') }}</option>
                                     @foreach ($groups as $g)
                                     <option value="{{ $g->id }}">{{ $g->name }}</option>
                                     @endforeach
@@ -425,7 +425,7 @@
                             <div class="col-6">
                                 <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.col_role') }}</label>
                                 <select name="role_id" class="form-select form-select-sm">
-                                    <option value="">—</option>
+                                    <option value="">{{ __('common.empty_value') }}</option>
                                     @foreach ($roles as $r)
                                     <option value="{{ $r->id }}">{{ $r->name }}</option>
                                     @endforeach
@@ -435,7 +435,7 @@
                             <div class="col-6">
                                 <label class="form-label fw-semibold" style="font-size:var(--font-size-xs);">{{ __('admin.ldap.col_section') }}</label>
                                 <select name="section_id" class="form-select form-select-sm">
-                                    <option value="">—</option>
+                                    <option value="">{{ __('common.empty_value') }}</option>
                                     @foreach ($sections as $s)
                                     <option value="{{ $s->S_ID }}">{{ $s->S_CODE }}</option>
                                     @endforeach

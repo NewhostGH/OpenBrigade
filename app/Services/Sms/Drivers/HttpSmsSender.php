@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Generic HTTP driver — covers any simple gateway exposing a URL that carries
+ * Generic HTTP driver: covers any simple gateway exposing a URL that carries
  * the message in its query string (e.g. the legacy "SMS Gateway Android"
  * provider 4). Configure SMS_HTTP_URL as a template with any of the
  * placeholders {to} {message} {from} {token}, each rawurlencoded on send, plus
@@ -28,7 +28,7 @@ class HttpSmsSender implements SmsSender
         $template = trim((string) ($this->config['url'] ?? ''));
 
         if ($template === '') {
-            Log::warning('HttpSms: missing url template — SMS not sent', ['to' => $message->to]);
+            Log::warning('HttpSms: missing url template: SMS not sent', ['to' => $message->to]);
 
             return SmsResult::failed($this->name(), 'Generic HTTP gateway is not configured (URL missing).');
         }

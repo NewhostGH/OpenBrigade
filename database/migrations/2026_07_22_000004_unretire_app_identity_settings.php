@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Un-retire the application name (38, application_title) and public site URL
- * (7, cisurl) on the Organisation tab. The .env instantiates the value — they
+ * (7, cisurl) on the Organisation tab. The .env instantiates the value: they
  * were governed by APP_NAME / APP_URL until now, so the env IS the current
  * truth and the stale legacy content is replaced. From then on the stored row
  * is the source of truth (applied at boot; an emptied row reverts to .env).

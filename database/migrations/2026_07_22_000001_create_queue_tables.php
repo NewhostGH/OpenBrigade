@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Stock Laravel queue tables. The compose stack runs `queue:work redis`, but
  * the `failed_jobs` table the failed-job driver points at (config/queue.php)
- * was never created — and the `database` queue driver needs `jobs`. Guarded so
+ * was never created: and the `database` queue driver needs `jobs`. Guarded so
  * an instance that somehow already has them migrates cleanly.
  */
 return new class extends Migration

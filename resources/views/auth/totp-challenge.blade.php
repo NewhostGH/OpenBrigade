@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('auth_views.totp_section_title') . ' — ' . config('app.name'))
+@section('title', __('auth_views.totp_section_title') . ' | ' . config('app.name'))
 
 @section('content')
 

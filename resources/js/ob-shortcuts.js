@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-// Siglet pin / unpin — shared between sidebar thumbtack and navbar × button.
+// Siglet pin / unpin: shared between sidebar thumbtack and navbar × button.
 
 function toggleShortcut(key, onDone) {
     const token = $('meta[name="csrf-token"]').attr('content');

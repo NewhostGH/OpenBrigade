@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Canonical feature/module registry.
  *
- * Unifies the two legacy `configuration` buckets — TAB 1 ("Fonctionnalités")
- * and TAB 6 ("Modules") — into a single `ob_feature` table that drives the
+ * Unifies the two legacy `configuration` buckets: TAB 1 ("Fonctionnalités")
+ * and TAB 6 ("Modules"): into a single `ob_feature` table that drives the
  * Administration ▸ Fonctionnalités screen and the runtime `feature:<key>`
  * gate (route middleware + sidebar visibility).
  *
  *  - key             : stable identifier, mirrors the legacy configuration.NAME.
  *  - group           : functional domain (logistique, personnel, planning, …).
  *  - status          : 'native' (migrated, gateable) | 'wip' (not yet
- *                      transitioned — surfaced with a WIP marker, never gated).
+ *                      transitioned: surfaced with a WIP marker, never gated).
  *  - enabled         : runtime on/off, kept in sync with the legacy
  *                      configuration row so un-migrated code keeps working.
  *  - legacy_config_id: the source configuration.ID, for two-way sync.

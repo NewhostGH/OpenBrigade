@@ -52,7 +52,7 @@ class HealthCheckService
         ];
     }
 
-    /** True when nothing is `down` — used to pick the HTTP status code. */
+    /** True when nothing is `down`: used to pick the HTTP status code. */
     public function isHealthy(array $report): bool
     {
         return $report['status'] !== 'down';
@@ -141,7 +141,7 @@ class HealthCheckService
 
     /**
      * Redis reachability + latency. Only meaningful when some subsystem
-     * actually rides on Redis (queue, cache or sessions) — otherwise skipped.
+     * actually rides on Redis (queue, cache or sessions): otherwise skipped.
      *
      * @return array<string,mixed>
      */
@@ -200,7 +200,7 @@ class HealthCheckService
                 $check['status'] = 'degraded';
             }
         } catch (Throwable) {
-            // failed_jobs not migrated yet — depth and liveness still stand.
+            // failed_jobs not migrated yet: depth and liveness still stand.
         }
 
         // Worker liveness via the heartbeat stamp. >15 min without a beat on a
@@ -263,7 +263,7 @@ class HealthCheckService
                 $check['status'] = 'degraded';
             }
         } catch (Throwable) {
-            // ob_log_entry not migrated yet — transport status still stands.
+            // ob_log_entry not migrated yet: transport status still stands.
         }
 
         return $check;

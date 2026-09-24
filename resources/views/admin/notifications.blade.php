@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', __('admin.notifications.title') . ' — ' . config('app.name'))
+@section('title', __('admin.notifications.title') . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -52,7 +52,7 @@
                                         </select>
                                     </form>
                                 @else
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">{{ __('common.empty_value') }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -99,7 +99,7 @@
                                         </select>
                                     </form>
                                 @else
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">{{ __('common.empty_value') }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -163,7 +163,7 @@
                                         </select>
                                     </form>
                                 @else
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">{{ __('common.empty_value') }}</span>
                                 @endif
                             </td>
                         </tr>

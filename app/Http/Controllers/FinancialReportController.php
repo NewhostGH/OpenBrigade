@@ -26,7 +26,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * Financial report — native successor to legacy `report_cotisations.php`
+ * Financial report: native successor to legacy `report_cotisations.php`
  * ("Cotisations par section"). Read-only aggregation gated by permission 53
  * (financial data) and section-scoped through {@see SectionScopeService}.
  */

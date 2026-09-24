@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Fusion homonymes — ' . strtoupper($personnel->P_NOM) . ' ' . $personnel->P_PRENOM . ' — ' . config('app.name'))
+@section('title', 'Fusion homonymes | ' . strtoupper($personnel->P_NOM) . ' ' . $personnel->P_PRENOM . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -64,7 +64,7 @@
                             </tr>
                             <tr>
                                 <td class="text-muted" style="font-size:var(--font-size-sm);">{{ __('personnel.merge_col_date_naiss') }}</td>
-                                <td>{{ $personnel->P_BIRTHDATE ? \Carbon\Carbon::parse($personnel->P_BIRTHDATE)->format('d/m/Y') : '—' }}
+                                <td>{{ $personnel->P_BIRTHDATE ? \Carbon\Carbon::parse($personnel->P_BIRTHDATE)->format('d/m/Y') : __('common.empty_value') }}
                                     @if ($personnel->P_BIRTHPLACE) à {{ $personnel->P_BIRTHPLACE }} @endif
                                 </td>
                             </tr>
@@ -74,11 +74,11 @@
                             </tr>
                             <tr>
                                 <td class="text-muted" style="font-size:var(--font-size-sm);">{{ __('personnel.merge_col_section') }}</td>
-                                <td>{{ $mainSection->S_CODE ?? '' }}{{ $mainSection->S_DESCRIPTION ? ' — ' . $mainSection->S_DESCRIPTION : '' }}</td>
+                                <td>{{ $mainSection->S_CODE ?? '' }}{{ $mainSection->S_DESCRIPTION ? ' - ' . $mainSection->S_DESCRIPTION : '' }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted" style="font-size:var(--font-size-sm);">{{ __('personnel.merge_col_cree_le') }}</td>
-                                <td>{{ $personnel->created_at ? \Carbon\Carbon::parse($personnel->created_at)->format('d/m/Y') : '—' }}</td>
+                                <td>{{ $personnel->created_at ? \Carbon\Carbon::parse($personnel->created_at)->format('d/m/Y') : __('common.empty_value') }}</td>
                             </tr>
                         </table>
                     </div>
@@ -107,7 +107,7 @@
                             </tr>
                             <tr>
                                 <td class="text-muted" style="font-size:var(--font-size-sm);">{{ __('personnel.merge_col_date_naiss') }}</td>
-                                <td>{{ $doublon->P_BIRTHDATE ? \Carbon\Carbon::parse($doublon->P_BIRTHDATE)->format('d/m/Y') : '—' }}
+                                <td>{{ $doublon->P_BIRTHDATE ? \Carbon\Carbon::parse($doublon->P_BIRTHDATE)->format('d/m/Y') : __('common.empty_value') }}
                                     @if ($doublon->P_BIRTHPLACE) à {{ $doublon->P_BIRTHPLACE }} @endif
                                 </td>
                             </tr>
@@ -117,11 +117,11 @@
                             </tr>
                             <tr>
                                 <td class="text-muted" style="font-size:var(--font-size-sm);">{{ __('personnel.merge_col_section') }}</td>
-                                <td>{{ $doublonSection->S_CODE ?? '' }}{{ $doublonSection->S_DESCRIPTION ? ' — ' . $doublonSection->S_DESCRIPTION : '' }}</td>
+                                <td>{{ $doublonSection->S_CODE ?? '' }}{{ $doublonSection->S_DESCRIPTION ? ' - ' . $doublonSection->S_DESCRIPTION : '' }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted" style="font-size:var(--font-size-sm);">{{ __('personnel.merge_col_cree_le') }}</td>
-                                <td>{{ $doublon->created_at ? \Carbon\Carbon::parse($doublon->created_at)->format('d/m/Y') : '—' }}</td>
+                                <td>{{ $doublon->created_at ? \Carbon\Carbon::parse($doublon->created_at)->format('d/m/Y') : __('common.empty_value') }}</td>
                             </tr>
                         </table>
                     </div>

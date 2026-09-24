@@ -20,10 +20,10 @@ use InvalidArgumentException;
  * Provider-agnostic SMS entry point. The driver and its credentials are
  * resolved at send time from the administrable settings (Administration ▸
  * Notifications, via {@see SmsSettingService}) with config/sms.php (env) as
- * fallback — so a settings change applies without a restart. Callers and the
+ * fallback: so a settings change applies without a restart. Callers and the
  * notification SMS channel never depend on a concrete provider.
  *
- * // TODO: COMM — persist an SMS history row per send (COMM ▸ SMS history view).
+ * // TODO: COMM: persist an SMS history row per send (COMM ▸ SMS history view).
  */
 class SmsManager implements ServiceInterface
 {

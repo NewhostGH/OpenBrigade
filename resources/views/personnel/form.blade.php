@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', ($personnel ? __('personnel.form_edit_title', ['name' => $personnel->P_NOM . ' ' . $personnel->P_PRENOM]) : __('personnel.form_new_title')) . ' — ' . config('app.name'))
+@section('title', ($personnel ? __('personnel.form_edit_title', ['name' => $personnel->P_NOM . ' ' . $personnel->P_PRENOM]) : __('personnel.form_new_title')) . ' | ' . config('app.name'))
 
 @section('content')
 
@@ -116,7 +116,7 @@
                                 <label class="form-label form-label-sm" for="P_CIVILITE">{{ __('personnel.label_civilite') }}</label>
                                 <select id="P_CIVILITE" name="P_CIVILITE"
                                         class="form-select form-select-sm @error('P_CIVILITE') is-invalid @enderror">
-                                    <option value="">—</option>
+                                    <option value="">{{ __('common.empty_value') }}</option>
                                     @foreach (config('personnel.civilites') as $code => $label)
                                         <option value="{{ $code }}" @selected((string)$val('P_CIVILITE')===(string)$code)>{{ $label }}</option>
                                     @endforeach
@@ -160,7 +160,7 @@
                                 <label class="form-label form-label-sm" for="P_SEXE">{{ __('personnel.label_sexe') }}</label>
                                 <select id="P_SEXE" name="P_SEXE"
                                         class="form-select form-select-sm @error('P_SEXE') is-invalid @enderror">
-                                    <option value="">—</option>
+                                    <option value="">{{ __('common.empty_value') }}</option>
                                     <option value="M" @selected($val('P_SEXE')==='M')>{{ __('personnel.sexe_masculin') }}</option>
                                     <option value="F" @selected($val('P_SEXE')==='F')>{{ __('personnel.sexe_feminin') }}</option>
                                 </select>
@@ -201,7 +201,7 @@
                                             <optgroup label="{{ $catLabel }}">
                                                 @foreach ($catGrades as $g)
                                                     @php if ($curGrade === $g->G_GRADE) $found = true; @endphp
-                                                    <option value="{{ $g->G_GRADE }}" @selected($curGrade === $g->G_GRADE)>{{ $g->G_GRADE }} — {{ $g->G_DESCRIPTION }}</option>
+                                                    <option value="{{ $g->G_GRADE }}" @selected($curGrade === $g->G_GRADE)>{{ $g->G_GRADE }} - {{ $g->G_DESCRIPTION }}</option>
                                                 @endforeach
                                             </optgroup>
                                         @endforeach
@@ -242,7 +242,7 @@
                             <div class="col-md-3">
                                 <label class="form-label form-label-sm" for="P_SECTION"
                                        title="{{ __('personnel.field_section_title') }}">{{ __('personnel.label_section_principale') }} <span class="text-danger">*</span></label>
-                                {{-- @error n'est pas compilé dans les attributs de composant — expression liée obligatoire. --}}
+                                {{-- @error n'est pas compilé dans les attributs de composant: expression liée obligatoire. --}}
                                 <x-ob-section-select id="P_SECTION" name="P_SECTION" required
                                                      :selected="$val('P_SECTION', auth()->user()->P_SECTION)"
                                                      :class="$errors->has('P_SECTION') ? 'is-invalid' : ''" />
@@ -550,7 +550,7 @@
                                                 <span class="ob-multiselect-label">
                                                     <span class="fw-semibold">{{ $s->S_CODE }}</span>
                                                     @if($s->S_DESCRIPTION)
-                                                        <span class="text-muted ms-1">— {{ $s->S_DESCRIPTION }}</span>
+                                                        <span class="text-muted ms-1">- {{ $s->S_DESCRIPTION }}</span>
                                                     @endif
                                                 </span>
                                                 <i class="fas fa-check ob-multiselect-check"></i>
@@ -595,7 +595,7 @@
                                                     @foreach ($sections as $s)
                                                         <option value="{{ $s->S_ID }}"
                                                                 @selected($ra['section_id'] === (int)$s->S_ID)>
-                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}
+                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' - '.$s->S_DESCRIPTION : '' }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -632,7 +632,7 @@
                                                     <option value="-1">{{ __('personnel.option_global') }}</option>
                                                     @foreach ($sections as $s)
                                                         <option value="{{ $s->S_ID }}">
-                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' — '.$s->S_DESCRIPTION : '' }}
+                                                            {{ $s->S_CODE }}{{ $s->S_DESCRIPTION ? ' - '.$s->S_DESCRIPTION : '' }}
                                                         </option>
                                                     @endforeach
                                                 </select>

@@ -84,7 +84,7 @@ Route::middleware('auth')->prefix('legacy')->group(function () {
     Route::match(['GET', 'POST'], 'document_modal.php', [LegacyBridgeController::class, 'show'])->middleware('permission:0')->name('legacy_bridge.document_modal');
     Route::match(['GET', 'POST'], 'documents.php', fn () => redirect()->route('document.index'))->name('legacy_bridge.documents');
     // Legacy addon/module/package downloaders are superseded by the native
-    // Administration ▸ Plugins marketplace — redirect instead of running the
+    // Administration ▸ Plugins marketplace: redirect instead of running the
     // legacy installer PHP (see config/legacy_bridge.php, bridgeable=false).
     Route::match(['GET', 'POST'], 'download_addon.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.download_addon');
     Route::match(['GET', 'POST'], 'download_module.php', fn () => redirect()->route('admin.plugins'))->middleware('permission:14')->name('legacy_bridge.download_module');

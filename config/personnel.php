@@ -12,7 +12,7 @@
 | controllers, views, and exports. Never re-declare these arrays inline.
 |
 | Status labels live ONCE in 'statuts'. Badge classes ('statut_badge_class')
-| and the editable subset ('statuts_assignable') reference those codes — they
+| and the editable subset ('statuts_assignable') reference those codes: they
 | never restate the labels. Helpers on the Personnel model zip labels+classes
 | into the [label, class] pairs that <x-ob-table> / ob-badge expect.
 |

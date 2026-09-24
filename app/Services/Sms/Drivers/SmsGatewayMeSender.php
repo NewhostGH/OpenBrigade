@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * SMSGateway.me driver — sends through an Android device registered on the
+ * SMSGateway.me driver: sends through an Android device registered on the
  * SMSGateway.me v4 API. Configure SMSGATEWAYME_TOKEN and SMSGATEWAYME_DEVICE_ID;
  * see docs/admin/sms.md. Replaces the legacy lib/SMSGatewayMe integration.
  */
@@ -26,7 +26,7 @@ class SmsGatewayMeSender implements SmsSender
         $deviceId = $this->config['device_id'] ?? null;
 
         if (empty($token) || empty($deviceId)) {
-            Log::warning('SmsGatewayMe: missing token or device id — SMS not sent', [
+            Log::warning('SmsGatewayMe: missing token or device id, SMS not sent', [
                 'to' => $message->to,
             ]);
 

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Console\Command\Command;
 
 // The command itself decides whether the user-configured schedule (frequency,
-// run time, start date, day of week/month — see ob_backup_settings) is due.
+// run time, start date, day of week/month: see ob_backup_settings) is due.
 Schedule::command('backup:run-scheduled')->everyMinute();
 
 // Trim the observability log to its configured retention window (daily, 03:10).
@@ -25,11 +25,11 @@ if (config('queue.default') !== 'sync') {
     Schedule::job(new QueueHeartbeatJob)->everyFiveMinutes();
 }
 
-// Anonymous opt-in telemetry ping (Mondays 03:30 — the command itself checks
+// Anonymous opt-in telemetry ping (Mondays 03:30: the command itself checks
 // the "Aider à améliorer" setting and sends nothing when it is off).
 Schedule::command('ob:telemetry:ping')->weeklyOn(1, '03:30');
 
-// Weekly OPTIMIZE TABLE pass (Sundays 04:30, off-peak — gated inside the
+// Weekly OPTIMIZE TABLE pass (Sundays 04:30, off-peak: gated inside the
 // command on the auto_optimize setting).
 Schedule::command('ob:db:optimize')->weeklyOn(0, '04:30')->withoutOverlapping();
 

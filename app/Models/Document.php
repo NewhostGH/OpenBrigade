@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Legacy table: document. Primary key: D_ID.
  *
  * A file in the section document library or attached to an entity (event,
- * person, vehicle…). The library shows only rows not attached to any entity —
+ * person, vehicle…). The library shows only rows not attached to any entity:
  * see {@see scopeLibrary()}. Physical files live on disk under
  * files_section/{S_ID}/{DF_ID}/{D_NAME}; the resolver is
  * {@see App\Services\DocumentService::filePath()}.
