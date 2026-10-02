@@ -92,6 +92,9 @@ competence), `type_formation` (`I`/`R`), `stagiaires`, `contact_entreprise`,
 
 ## Legacy inventory
 
+The eBrigade `api/` directory was removed from `archive/legacy_app/` once
+ported (git history keeps it). What it held:
+
 | Legacy file                                                  | Consumer                                               | Status                 |
 | ------------------------------------------------------------ | ------------------------------------------------------ | ---------------------- |
 | `api/export/search.php`                                      | External systems (export token)                        | `personnel/search`     |
@@ -107,6 +110,21 @@ Webservice" SOAP-call reports in `export-sql-liste.php`. The SOAP server itself
 is not part of the eBrigade sources shipped here. `import_api.php` /
 `fonctions_import.php` are an outbound client (pull from `import_api_url`),
 tracked separately in [legacy-mapping.md](../dev/legacy-mapping.md).
+
+### Parity notes
+
+Same request fields, same `errnum` codes and messages, same search output.
+Differences a client may notice:
+
+- `errnum` is a JSON number (`30`); eBrigade sent a string (`"30"`).
+- Refusals carry a real HTTP status; eBrigade always answered 200.
+- Import successes add the created or updated `id`.
+- Search with no criterion returns `errnum` 50 instead of an SQL error.
+- `UpdatePersonnel` works on any member whose `P_NOM` matches; eBrigade also
+  required `ID_API = P_ID`, which its own `ImportPersonnel` never set, so
+  members created through the API could not be updated.
+- A new member without `P_MDP` has no password (as with the native create form)
+  instead of a random one.
 
 ## Example
 

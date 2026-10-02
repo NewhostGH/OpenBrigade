@@ -524,22 +524,8 @@ rather than ported as standalone files.
 
 ## `api/` (REST import/export)
 
-Reference and consumer inventory: [admin/api.md](../admin/api.md).
-
-| Legacy file                         | New implementation                                             |
-| ----------------------------------- | -------------------------------------------------------------- |
-| `api/index.php`                     | Not needed (empty directory guard)                             |
-| `api/export/index.php`              | Not needed (empty directory guard)                             |
-| `api/export/search.php`             | `POST /api/v1/personnel/search` (`Api\PersonnelSearchService`) |
-| `api/export/test/index.php`         | Not needed (empty directory guard)                             |
-| `api/export/test/search_people.php` | Not ported (demo page, use `curl`)                             |
-| `api/import/index.php`              | Not needed (empty directory guard)                             |
-| `api/import/event.php`              | `POST /api/v1/events/import` (`Api\EventImportService`)        |
-| `api/import/people.php`             | `POST /api/v1/personnel/import` (`Api\PersonnelImportService`) |
-| `api/import/test/index.php`         | Not needed (empty directory guard)                             |
-| `api/import/test/event.php`         | Not ported (demo page, use `curl`)                             |
-| `api/import/test/insert_people.php` | Not ported (demo page, use `curl`)                             |
-| `api/import/test/update_people.php` | Not ported (demo page, use `curl`)                             |
+**Removed.** Ported to `/api/v1` (`App\Services\Api\*`), with aliases on the old
+paths. Endpoint map and consumer inventory: [admin/api.md](../admin/api.md).
 
 ## `conf/`
 
