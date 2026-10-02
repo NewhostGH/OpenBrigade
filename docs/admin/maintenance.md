@@ -21,6 +21,10 @@ deployments, never locks the admin out. Enforced by
 `App\Http\Middleware\MaintenanceMode` (web group); `/health` and `/up` stay
 outside the gate so uptime probes keep reporting during maintenance.
 
+From a shell (deploys, see [release-runbook.md](release-runbook.md)):
+`php artisan ob:maintenance on --message="..."` / `php artisan ob:maintenance off`
+set the same two rows.
+
 ## Database optimization
 
 The **Optimisation automatique de la base de données** toggle (row 14)
