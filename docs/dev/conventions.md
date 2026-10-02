@@ -60,6 +60,9 @@ service method called from both paths.
   `App\Services\ServiceInterface`.
 - Controllers stay thin: validate (via a Form Request where input is non-trivial),
   call a service/model, return a view or redirect.
+  Exception: the `/api/v1` webservices validate in their services through
+  `App\Services\Api\ApiInput`, to keep eBrigade's check order and `errnum` codes
+  ([admin/api.md](../admin/api.md)).
 
 ## 4. Blade views
 
