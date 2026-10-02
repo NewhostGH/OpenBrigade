@@ -25,7 +25,7 @@ Full setup (Docker Compose, VS Code Dev Container, manual install) is in
 **[docs/dev/development.md](../docs/dev/development.md)**. Short version:
 
 ```bash
-cp .env.example .env
+cp .env.example.dev .env
 docker compose --profile dev up -d
 docker compose exec app php artisan migrate --seed
 docker compose exec app sh -lc "npm ci && npm run build"

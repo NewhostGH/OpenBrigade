@@ -27,7 +27,7 @@ or set `COMPOSE_PROFILES` in `.env`; with no profile, nothing starts.
 ```bash
 git clone https://github.com/NewHostGH/OpenBrigade.git
 cd OpenBrigade
-cp .env.example .env          # set APP_KEY, DB creds, APP_URL, mail, etc.
+cp .env.example.prod .env     # set APP_KEY, DB creds, APP_URL, mail, etc.
 docker compose --profile full up -d
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
@@ -52,7 +52,7 @@ git clone https://github.com/NewHostGH/OpenBrigade.git
 cd OpenBrigade
 
 composer install --no-dev --optimize-autoloader
-cp .env.example .env
+cp .env.example.prod .env
 php artisan key:generate
 
 # configure DB credentials in .env, then:
@@ -107,17 +107,15 @@ location ~ \.php$ {
 
 ## Upgrading
 
-1. Take a database backup ([backup-and-restore.md](backup-and-restore.md)).
-2. `git pull` the new version.
-3. `composer install --no-dev --optimize-autoloader`
-4. `php artisan migrate` (forward-only, never edit shipped migrations).
-5. `npm ci && npm run build`
-6. `php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache`
+Follow the [release runbook](release-runbook.md): maintenance mode, backup,
+checkout, build, migrate, verify, and the rollback procedure.
 
 ---
 
 ## See also
 
+- [release-runbook.md](release-runbook.md): upgrades, migration policy, rollback
+- [environments.md](environments.md): local / staging / production, secrets
 - [database-migration.md](database-migration.md): schema and parity validation
 - [backup-and-restore.md](backup-and-restore.md): backups and the scheduler
 - [../dev/development.md](../dev/development.md): environment, auth, seeding

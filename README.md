@@ -24,7 +24,7 @@
 ```bash
 git clone https://github.com/NewHostGH/OpenBrigade.git
 cd OpenBrigade
-cp .env.example .env   # edit credentials as needed
+cp .env.example.prod .env   # edit credentials as needed
 docker compose --profile minimal up -d   # app + db; use --profile full for clamav + error tracking
 ```
 

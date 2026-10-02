@@ -99,6 +99,10 @@ COPY --from=vendor /app/vendor ./vendor
 RUN mkdir -p /opt/bootstrap/vendor \
     && cp -a ./vendor/. /opt/bootstrap/vendor/
 
+# The lock the cached vendor/ was installed from: start.sh compares it with the
+# bind-mounted composer.lock to refresh a stale vendor/ after an upgrade.
+COPY --from=vendor /app/composer.lock /opt/bootstrap/composer.lock
+
 # Copy built frontend assets
 COPY --from=frontend /app/public/build ./public/build
 

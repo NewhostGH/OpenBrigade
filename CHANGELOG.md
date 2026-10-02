@@ -19,7 +19,16 @@ _Changes landing after 6.0.0 are listed here._
 
 ### Added
 
+- Admin: `php artisan ob:maintenance on|off` and `php artisan backup:now`, used by the new
+  release runbook (`docs/admin/release-runbook.md`) to fence a deploy and back up before it (#74).
 - Clients: native "Éléments facturables" page (per-section catalogue of invoice lines with a default price), replacing the legacy `element_facturable.php` screens (#33).
+
+### Fixed
+
+- Docker: after an upgrade, the bind-mounted `vendor/` is refreshed from the rebuilt image
+  instead of keeping the previous release's Composer packages.
+- `.env.example.prod` ships `APP_DEBUG=false` and `LOG_LEVEL=info` (it had debug on, which
+  `ob:release:verify` rejects in production).
 
 ## [6.0.0]
 
