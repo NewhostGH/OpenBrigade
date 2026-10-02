@@ -20,7 +20,7 @@ short rules and doc-maintenance checklist, which points here for details.
 | Doc                                                  | Owns                                                                           |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
 | [installation.md](admin/installation.md)             | Deploying OpenBrigade (Docker / manual)                                        |
-| [release-runbook.md](admin/release-runbook.md)       | Deploy steps, DB-migration policy, rollback                                    |
+| [release-runbook.md](admin/release-runbook.md)       | Deploy steps, DB-migration policy, rollback, CD pipeline                       |
 | [environments.md](admin/environments.md)             | Local / staging / production configuration, secrets management                 |
 | [database-migration.md](admin/database-migration.md) | Schema ownership, migrations, legacy parity validation                         |
 | [backup-and-restore.md](admin/backup-and-restore.md) | DB + uploads backups, off-site mirror, scheduler, restore & restore drill      |

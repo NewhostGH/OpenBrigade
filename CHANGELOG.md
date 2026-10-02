@@ -21,6 +21,9 @@ _Changes landing after 6.0.0 are listed here._
 
 - Admin: `php artisan ob:maintenance on|off` and `php artisan backup:now`, used by the new
   release runbook (`docs/admin/release-runbook.md`) to fence a deploy and back up before it (#74).
+- Release pipeline: pushing a `vX.Y.Z` tag builds a release archive, deploys it to staging then
+  production with an atomic switch and automatic rollback when `ob:release:verify` fails, and
+  attaches the archive to the GitHub release (#73).
 - Clients: native "Éléments facturables" page (per-section catalogue of invoice lines with a default price), replacing the legacy `element_facturable.php` screens (#33).
 
 ### Fixed
