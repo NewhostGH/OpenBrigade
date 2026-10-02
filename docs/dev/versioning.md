@@ -96,6 +96,8 @@ Keep a Changelog group (`Added` / `Changed` / `Deprecated` / `Removed` / `Fixed`
    where possible** (see [database-migration.md](../admin/database-migration.md)).
 5. **Commit** with a `chore(release): x.y.z` message, **tag** `vX.Y.Z`, and push
    the tag. The tag is the immutable release marker referenced from `CHANGELOG.md`.
+   Pushing it starts the release pipeline (build, staging, production): see
+   [release-runbook.md](../admin/release-runbook.md) §5.
 
 ## See also
 

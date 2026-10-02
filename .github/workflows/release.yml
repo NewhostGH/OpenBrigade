@@ -1,0 +1,151 @@
+name: Release
+
+# Build a release archive from a tag and deploy it: staging first, then
+# production (gate production with required reviewers on its GitHub
+# environment). Manual runs deploy one ref to one environment.
+# Procedure and server setup: docs/admin/release-runbook.md §5.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Tag, branch or commit to deploy
+        required: true
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: release-${{ github.event.inputs.environment || 'tag' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: quality
+    runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.meta.outputs.name }}
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Release metadata
+        id: meta
+        run: |
+          sha=$(git rev-parse --short HEAD)
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            version="${GITHUB_REF_NAME#v}"
+            name="${GITHUB_REF_NAME}"
+          else
+            version=""
+            name="$(date -u +%Y%m%d%H%M%S)-${sha}"
+          fi
+          echo "name=${name}" >> "$GITHUB_OUTPUT"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Check the tag matches VERSION
+        if: github.ref_type == 'tag'
+        run: |
+          if [ "$(tr -d '[:space:]' < VERSION)" != "${{ steps.meta.outputs.version }}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match VERSION ($(cat VERSION))."
+            exit 1
+          fi
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+          extensions: mbstring, xml, ctype, json, intl, pdo_mysql, zip, gd, ldap
+
+      - name: Install production dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Build frontend assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Package
+        run: |
+          tar -czf "openbrigade-${{ steps.meta.outputs.name }}.tar.gz" \
+            --exclude=./.git --exclude=./.github --exclude=./node_modules \
+            --exclude=./tests --exclude=./storage --exclude=./.env \
+            --exclude="./openbrigade-*.tar.gz" .
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v5
+        with:
+          name: openbrigade-${{ steps.meta.outputs.name }}
+          path: openbrigade-${{ steps.meta.outputs.name }}.tar.gz
+          retention-days: 30
+
+  deploy-staging:
+    needs: build
+    if: github.ref_type == 'tag' || github.event.inputs.environment == 'staging'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: staging
+      name: ${{ needs.build.outputs.name }}
+      version: ${{ needs.build.outputs.version }}
+    secrets: inherit
+
+  deploy-production:
+    needs: [build, deploy-staging]
+    # On a tag, production follows a successful staging deploy; a manual run
+    # targets production directly.
+    if: |
+      always() && needs.build.result == 'success' &&
+      ((github.ref_type == 'tag' && needs.deploy-staging.result == 'success') ||
+       github.event.inputs.environment == 'production')
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: production
+      name: ${{ needs.build.outputs.name }}
+      version: ${{ needs.build.outputs.version }}
+    secrets: inherit
+
+  publish:
+    needs: [build, deploy-production]
+    if: always() && github.ref_type == 'tag' && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download archive
+        uses: actions/download-artifact@v6
+        with:
+          name: openbrigade-${{ needs.build.outputs.name }}
+
+      - name: Attach the archive to the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag \
+                 --title "$GITHUB_REF_NAME" --notes "See CHANGELOG.md."
+          gh release upload "$GITHUB_REF_NAME" "openbrigade-${{ needs.build.outputs.name }}.tar.gz" \
+            --repo "$GITHUB_REPOSITORY" --clobber

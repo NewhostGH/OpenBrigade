@@ -1,7 +1,7 @@
 # Release runbook
 
 How to ship a release to staging or production, the database-migration policy,
-and how to roll back. Cutting the release itself (version bump, changelog, tag)
+how to roll back, and the automated pipeline (§5). Cutting the release itself (version bump, changelog, tag)
 is in [versioning.md](../dev/versioning.md). Environment setup is in
 [environments.md](environments.md).
 
@@ -94,3 +94,54 @@ state). Restore the backup from step 2, then put the previous code back:
 
 After any rollback: open an issue with the cause, and keep the failed tag out
 of production until a fixed patch release is tagged.
+
+## 5. Automated deploys (CD)
+
+`.github/workflows/release.yml` runs §2 for **manual (non-Docker) installs**.
+Docker installs follow §2 by hand.
+
+| Trigger                          | Does                                                                                                       |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Push a tag `vX.Y.Z`              | CI → build archive → deploy **staging** → deploy **production** → attach the archive to the GitHub release |
+| Actions ▸ Release ▸ Run workflow | CI → build archive from a ref → deploy to the chosen environment                                           |
+
+The build fails if the tag does not match `VERSION`. Each deploy copies the
+archive and `scripts/deploy.sh` to the server and runs it:
+
+1. Extract into `releases/<name>`, link `shared/.env` and `shared/storage`.
+2. `backup:now`, `migrate --force`, `storage:link`, `optimize`: the previous
+   release keeps serving meanwhile (migrations are backward-compatible, §3).
+3. Switch the `current` symlink atomically, run `DEPLOY_RELOAD_CMD`, `queue:restart`.
+4. `ob:release:verify --strict` (with the tag's version). On failure, `current`
+   switches back to the previous release and the job fails: that is case A of
+   §4, done automatically. Case B stays manual.
+5. Keep the last 5 releases.
+
+No maintenance window is needed for backward-compatible releases. For a
+release whose `CHANGELOG.md` entry says otherwise, run `ob:maintenance on`
+before and `off` after.
+
+### One-time server setup
+
+- Web root `<DEPLOY_PATH>/current/public`; Nginx uses `$realpath_root`
+  ([installation.md](installation.md)) so PHP-FPM follows the symlink switch.
+- `<DEPLOY_PATH>/shared/.env` filled in ([environments.md](environments.md)).
+  Move an existing install's `storage/` to `shared/storage`.
+- A deploy user that owns `DEPLOY_PATH`, can run `php`, and may run the reload
+  command (e.g. a sudoers line for `systemctl reload php8.4-fpm`).
+- Cron or supervisor entries point at `current/` (scheduler, queue worker).
+
+### GitHub configuration
+
+Create the environments `staging` and `production` (Settings ▸ Environments).
+Give `production` **required reviewers**: a tag then waits for approval after
+staging succeeds. Per environment:
+
+| Name                 | Kind   | Value                                                   |
+| -------------------- | ------ | ------------------------------------------------------- |
+| `DEPLOY_HOST`        | var    | Server host name. Empty = this environment is skipped.  |
+| `DEPLOY_USER`        | var    | SSH user                                                |
+| `DEPLOY_PATH`        | var    | Install root (holds `releases/`, `shared/`, `current`)  |
+| `DEPLOY_RELOAD_CMD`  | var    | Optional, e.g. `sudo systemctl reload php8.4-fpm`       |
+| `DEPLOY_SSH_KEY`     | secret | Private key of a deploy-only key pair                   |
+| `DEPLOY_KNOWN_HOSTS` | secret | `ssh-keyscan <host>` output, checked before trusting it |
