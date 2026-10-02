@@ -524,22 +524,22 @@ rather than ported as standalone files.
 
 ## `api/` (REST import/export)
 
-All endpoints are **WIP**: no equivalent under `routes/api.php` yet.
+Reference and consumer inventory: [admin/api.md](../admin/api.md).
 
-| Legacy file                         | New implementation |
-| ----------------------------------- | ------------------ |
-| `api/index.php`                     | **WIP**            |
-| `api/export/index.php`              | **WIP**            |
-| `api/export/search.php`             | **WIP**            |
-| `api/export/test/index.php`         | **WIP**            |
-| `api/export/test/search_people.php` | **WIP**            |
-| `api/import/index.php`              | **WIP**            |
-| `api/import/event.php`              | **WIP**            |
-| `api/import/people.php`             | **WIP**            |
-| `api/import/test/index.php`         | **WIP**            |
-| `api/import/test/event.php`         | **WIP**            |
-| `api/import/test/insert_people.php` | **WIP**            |
-| `api/import/test/update_people.php` | **WIP**            |
+| Legacy file                         | New implementation                                             |
+| ----------------------------------- | -------------------------------------------------------------- |
+| `api/index.php`                     | Not needed (empty directory guard)                             |
+| `api/export/index.php`              | Not needed (empty directory guard)                             |
+| `api/export/search.php`             | `POST /api/v1/personnel/search` (`Api\PersonnelSearchService`) |
+| `api/export/test/index.php`         | Not needed (empty directory guard)                             |
+| `api/export/test/search_people.php` | Not ported (demo page, use `curl`)                             |
+| `api/import/index.php`              | Not needed (empty directory guard)                             |
+| `api/import/event.php`              | `POST /api/v1/events/import` (`Api\EventImportService`)        |
+| `api/import/people.php`             | `POST /api/v1/personnel/import` (`Api\PersonnelImportService`) |
+| `api/import/test/index.php`         | Not needed (empty directory guard)                             |
+| `api/import/test/event.php`         | Not ported (demo page, use `curl`)                             |
+| `api/import/test/insert_people.php` | Not ported (demo page, use `curl`)                             |
+| `api/import/test/update_people.php` | Not ported (demo page, use `curl`)                             |
 
 ## `conf/`
 

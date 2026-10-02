@@ -9,7 +9,8 @@ use Throwable;
  * Typed reader for the general-purpose settings of the legacy `configuration`
  * table (Administration ▸ Configuration) that are consumed across the app:
  * timezone, currency, phone formatting, mandatory profile photo, maintenance
- * mode, telemetry opt-in and automatic database optimisation.
+ * mode, telemetry opt-in, automatic database optimisation and the /api/v1
+ * tokens.
  *
  * Unlike the security/observability settings these rows ship with the install
  * SQL, so there is nothing to seed. Reads are memoised per request and fall
@@ -41,6 +42,9 @@ class GeneralSettingService
         'repos_timesheet_threshold_min' => 0,
         'repos_min_rest_days' => 0,
         'repos_min_rest_days_week' => 0,
+        'webservice_key' => '',
+        'import_api' => 0,
+        'import_api_token' => '',
     ];
 
     /** @var array<string,string>|null */

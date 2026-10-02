@@ -181,6 +181,10 @@ class AppServiceProvider extends ServiceProvider
             )->by($request->ip());
         });
 
+        // Named 'api' rate limiter for the /api/v1 webservices (docs/admin/api.md):
+        // 60 calls per minute per client IP, enough for a nightly sync script.
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
+
         // @feature('multi_site') … @endfeature: hide UI tied to a disabled
         // feature flag. Fails open (enabled) so a missing ob_feature table
         // never blanks a page (e.g. tests without a database).

@@ -102,8 +102,6 @@ settings themselves are live); masked SMS-password input → COMM.)*
 
 ## API & integrations (Phase 3)
 
-- [ ] Inventory legacy `api/` endpoints and consumers
-- [ ] Rewrite or proxy each as a versioned route under `routes/api.php`
 - [ ] QR-code generation
 - [ ] Geolocation helpers (`gmaps_evenement.php`, `localize*.php`, `map.php`, `zipcode.php`)
 - [ ] API tests and parity check; retire legacy API files
@@ -169,4 +167,4 @@ One line per fully-done area; see the linked docs for detail.
 - **Organisation (ORGA)**: section CRUD, cartographie, habilitations (full section-scoped ACL), section deactivation/radiation, first-run setup wizard, rank/grade rework, interactive org-chart. See [project_habilitations] memory.
 - **Configuration: Admin (ADMIN)**: settings CRUD, référentiels, theme/icons, audit log, backup/restore, maintenance, habilitations UI, feature registry, legacy settings wired, notifications page, plugins marketplace. See `docs/admin/plugins.md`.
 - **Settings wired**: password/session policies, action history, sensitive-data handling, first-login banner, org identity — all via Administration ▸ Sécurité / Organisation.
-- **API & integrations**: iCal export.
+- **API & integrations**: iCal export; `/api/v1` import/export webservices with legacy-path aliases (see `docs/admin/api.md`).

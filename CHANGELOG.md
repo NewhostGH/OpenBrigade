@@ -20,6 +20,9 @@ _Changes landing after 6.0.0 are listed here._
 ### Added
 
 - Clients: native "Éléments facturables" page (per-section catalogue of invoice lines with a default price), replacing the legacy `element_facturable.php` screens (#33).
+- API: token-protected `/api/v1` webservices to search members and import members and
+  activities, replacing the legacy `api/` scripts; the old `api/export/search.php` and
+  `api/import/*.php` paths keep working (#57, #58).
 
 ## [6.0.0]
 
