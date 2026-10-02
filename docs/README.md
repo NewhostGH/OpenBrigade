@@ -25,6 +25,7 @@ short rules and doc-maintenance checklist, which points here for details.
 | [sms.md](admin/sms.md)                               | Provider-agnostic SMS layer, SMSGateway.me setup, adding a provider            |
 | [observability.md](admin/observability.md)           | Structured logging, error tracking, `/health` endpoint, performance monitoring |
 | [passwords.md](admin/passwords.md)                   | Admin password-reset procedures (shell-side, until self-service is wired)      |
+| [api.md](admin/api.md)                               | Import/export webservices (`/api/v1`): tokens, endpoints, errors, inventory    |
 
 ## Security docs (`security/`)
 

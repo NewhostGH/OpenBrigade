@@ -524,22 +524,8 @@ rather than ported as standalone files.
 
 ## `api/` (REST import/export)
 
-All endpoints are **WIP**: no equivalent under `routes/api.php` yet.
-
-| Legacy file                         | New implementation |
-| ----------------------------------- | ------------------ |
-| `api/index.php`                     | **WIP**            |
-| `api/export/index.php`              | **WIP**            |
-| `api/export/search.php`             | **WIP**            |
-| `api/export/test/index.php`         | **WIP**            |
-| `api/export/test/search_people.php` | **WIP**            |
-| `api/import/index.php`              | **WIP**            |
-| `api/import/event.php`              | **WIP**            |
-| `api/import/people.php`             | **WIP**            |
-| `api/import/test/index.php`         | **WIP**            |
-| `api/import/test/event.php`         | **WIP**            |
-| `api/import/test/insert_people.php` | **WIP**            |
-| `api/import/test/update_people.php` | **WIP**            |
+**Removed.** Ported to `/api/v1` (`App\Services\Api\*`), with aliases on the old
+paths. Endpoint map and consumer inventory: [admin/api.md](../admin/api.md).
 
 ## `conf/`
 
