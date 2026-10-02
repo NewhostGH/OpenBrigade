@@ -7,6 +7,21 @@ if [ ! -f /var/www/html/vendor/autoload.php ] && [ -d /opt/bootstrap/vendor ]; t
 	echo "vendor/ missing in bind mount. Restoring from image cache..."
 	mkdir -p /var/www/html/vendor
 	cp -a /opt/bootstrap/vendor/. /var/www/html/vendor/
+	cp /opt/bootstrap/composer.lock /var/www/html/vendor/.ob-composer.lock 2>/dev/null || true
+fi
+
+# After an upgrade (new composer.lock checked out, image rebuilt), the bind-mounted
+# vendor/ still holds the previous release's packages. Refresh it when the image
+# was built from the checked-out lock but vendor/ was installed from another one.
+# A lock edited on the host (composer require in dev) never matches the image, so
+# a developer's own vendor/ is left alone.
+if [ -f /opt/bootstrap/composer.lock ] \
+	&& cmp -s /opt/bootstrap/composer.lock /var/www/html/composer.lock \
+	&& ! cmp -s /opt/bootstrap/composer.lock /var/www/html/vendor/.ob-composer.lock; then
+	echo "vendor/ installed from another composer.lock. Refreshing from image cache..."
+	find /var/www/html/vendor -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+	cp -a /opt/bootstrap/vendor/. /var/www/html/vendor/
+	cp /opt/bootstrap/composer.lock /var/www/html/vendor/.ob-composer.lock
 fi
 
 # Refresh public/build when missing OR when the image holds a newer build than

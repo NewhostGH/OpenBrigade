@@ -18,7 +18,7 @@ database, auth, seeding, frontend assets, quality tooling. See
 Requires [Docker](https://docs.docker.com/get-docker/) and Docker Compose.
 
 ```bash
-cp .env.example .env        # adjust credentials if needed
+cp .env.example.dev .env    # adjust credentials if needed
 docker compose --profile dev up -d
 ```
 
@@ -72,7 +72,7 @@ Requires [VS Code](https://code.visualstudio.com/) and the
 
 ```bash
 composer install
-cp .env.example .env
+cp .env.example.dev .env
 php artisan key:generate
 php artisan migrate --seed
 npm install
