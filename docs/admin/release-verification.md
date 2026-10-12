@@ -1,8 +1,8 @@
 # Release verification
 
 After a deploy, `ob:release:verify` runs **post-deploy smoke checks** and
-exits non-zero if the release is not serving correctly. It is the gate a CD
-pipeline (issue #73) runs after building assets and migrating, so a bad
+exits non-zero if the release is not serving correctly. It is the gate the CD
+pipeline ([release-runbook.md](release-runbook.md) §5) runs after building assets and migrating, so a bad
 release fails loudly instead of silently serving errors.
 
 ```bash

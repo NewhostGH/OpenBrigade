@@ -127,9 +127,8 @@ Shipped: marketplace (registries, install pipeline, `ob_plugin` runtime,
 
 How the app is built, shipped and upgraded in production.
 
-- [ ] **CD pipeline**: extend the existing CI (`.github/workflows/ci.yml`) into
-  a deploy pipeline (build assets, run migrations, zero-downtime release,
-  rollback path); gate on the green checks (pint/phpstan/test).
+- [x] **CD pipeline**: `.github/workflows/release.yml` + `scripts/deploy.sh`
+  (manual installs); see `docs/admin/release-runbook.md` §5.
 - [x] **Migration & release runbook**: `docs/admin/release-runbook.md`, with
   `ob:maintenance` and `backup:now` for shell-side deploys.
 - [x] **Environments**: `docs/admin/environments.md`.

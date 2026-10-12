@@ -9,6 +9,8 @@ on:
       - fix/**
       - docs/**
   pull_request:
+  # Reused as the quality gate of the release pipeline (release.yml).
+  workflow_call:
 
 jobs:
   quality:
