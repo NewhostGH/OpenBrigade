@@ -532,7 +532,7 @@ paths. Endpoint map and consumer inventory: [admin/api.md](../admin/api.md).
 | Legacy file                  | New implementation                           |
 | ---------------------------- | -------------------------------------------- |
 | `conf/index.php`             | N/A: replaced by Laravel `config/` + `.env` |
-| `conf/optional.php.template` | N/A: replaced by `.env.example`             |
+| `conf/optional.php.template` | N/A: replaced by `.env.example.*`           |
 
 ## `documentation/`
 

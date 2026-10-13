@@ -19,10 +19,22 @@ _Changes landing after 6.0.0 are listed here._
 
 ### Added
 
+- Admin: `php artisan ob:maintenance on|off` and `php artisan backup:now`, used by the new
+  release runbook (`docs/admin/release-runbook.md`) to fence a deploy and back up before it (#74).
+- Release pipeline: pushing a `vX.Y.Z` tag builds a release archive, deploys it to staging then
+  production with an atomic switch and automatic rollback when `ob:release:verify` fails, and
+  attaches the archive to the GitHub release (#73).
 - Clients: native "Éléments facturables" page (per-section catalogue of invoice lines with a default price), replacing the legacy `element_facturable.php` screens (#33).
 - API: token-protected `/api/v1` webservices to search members and import members and
   activities, replacing the legacy `api/` scripts; the old `api/export/search.php` and
   `api/import/*.php` paths keep working (#57, #58).
+
+### Fixed
+
+- Docker: after an upgrade, the bind-mounted `vendor/` is refreshed from the rebuilt image
+  instead of keeping the previous release's Composer packages.
+- `.env.example.prod` ships `APP_DEBUG=false` and `LOG_LEVEL=info` (it had debug on, which
+  `ob:release:verify` rejects in production).
 
 ## [6.0.0]
 

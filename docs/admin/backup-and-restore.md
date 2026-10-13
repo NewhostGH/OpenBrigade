@@ -53,6 +53,9 @@ archive over the project root (see Restore).
 prunes to the retention limit. Backups can be **downloaded** and **deleted**
 from the same page.
 
+**CLI:** `php artisan backup:now` does the same (run before every deploy by the
+[release runbook](release-runbook.md)).
+
 ---
 
 ## Automatic (scheduled) backups
