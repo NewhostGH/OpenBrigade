@@ -1,0 +1,87 @@
+name: Deploy
+
+# Reusable: ship a release archive built by release.yml to one environment
+# over SSH and run scripts/deploy.sh there (zero-downtime switch, verify,
+# automatic rollback). Skips cleanly when the environment has no DEPLOY_HOST.
+#
+# Per GitHub environment (staging, production):
+#   secrets: DEPLOY_SSH_KEY, DEPLOY_KNOWN_HOSTS
+#   vars:    DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH, DEPLOY_RELOAD_CMD (optional)
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      name:
+        description: Release name (archive suffix)
+        required: true
+        type: string
+      version:
+        description: Expected installed version ('' = skip the check)
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+      ARCHIVE: openbrigade-${{ inputs.name }}.tar.gz
+    steps:
+      - name: Check configuration
+        id: config
+        run: |
+          if [ -z "$DEPLOY_HOST" ]; then
+            echo "::notice::No DEPLOY_HOST for '${{ inputs.environment }}': deploy skipped."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout deploy script
+        if: steps.config.outputs.enabled == 'true'
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: scripts/deploy.sh
+          sparse-checkout-cone-mode: false
+
+      - name: Download archive
+        if: steps.config.outputs.enabled == 'true'
+        uses: actions/download-artifact@v6
+        with:
+          name: openbrigade-${{ inputs.name }}
+
+      - name: Configure SSH
+        if: steps.config.outputs.enabled == 'true'
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_deploy ~/.ssh/known_hosts
+
+      - name: Upload
+        if: steps.config.outputs.enabled == 'true'
+        run: |
+          scp -i ~/.ssh/id_deploy "$ARCHIVE" scripts/deploy.sh "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+
+      - name: Release
+        if: steps.config.outputs.enabled == 'true'
+        env:
+          RELOAD_CMD: ${{ vars.DEPLOY_RELOAD_CMD }}
+          RELEASE_NAME: ${{ inputs.name }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          ssh -i ~/.ssh/id_deploy "$DEPLOY_USER@$DEPLOY_HOST" \
+            "cd '$DEPLOY_PATH' && RELOAD_CMD='$RELOAD_CMD' sh ./deploy.sh './$ARCHIVE' '$RELEASE_NAME' '$RELEASE_VERSION'; status=\$?; rm -f './$ARCHIVE' ./deploy.sh; exit \$status"
