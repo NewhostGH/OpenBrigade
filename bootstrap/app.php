@@ -4,6 +4,7 @@ use App\Exceptions\UploadRejectedException;
 use App\Http\Middleware\AuditRequests;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\MaintenanceMode;
+use App\Http\Middleware\RequireApiToken;
 use App\Http\Middleware\RequireAuthSetup;
 use App\Http\Middleware\RequireCharterAcceptance;
 use App\Http\Middleware\RequireFeature;
@@ -40,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => RequirePermission::class,
             'feature' => RequireFeature::class,
             'user.active' => EnsureUserIsActive::class,
+            'api.token' => RequireApiToken::class,
         ]);
 
         // Automatically applied to all auth-guarded web routes
